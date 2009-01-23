@@ -42,6 +42,7 @@ import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
@@ -107,14 +108,17 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
                 .addTask(new BootstrapSingleResource("Quickstart page", "The to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
                 .addTask(setDefaultPublicURI)
-
+                .addTask(new ArrayDelegateTask("Update groups tree",new MoveNodeTask("Update groups tree", "Updates incorrectly named usergroup tree",ContentRepository.CONFIG, "/modules/adminInterface/trees/groups", "/modules/adminInterface/trees/usergroups", false),
+                new CheckAndModifyPropertyValueTask("Update Group tree reference", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/groups", "onclick", "MgnlAdminCentral.showTree('groups')", "MgnlAdminCentral.showTree('usergroups')"),
+                new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
+                new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
         );
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List tasks = new ArrayList();
         tasks.add(new AddMainMenuItemTask("security", "menu.security", "info.magnolia.modules.admininterface.messages", "", "/.resources/icons/24/key1.gif", "config"));
-        tasks.add(new AddSubMenuItemTask("security", "groups", "menu.groups", "MgnlAdminCentral.showTree('groups')", "/.resources/icons/16/group.gif"));
+        tasks.add(new AddSubMenuItemTask("security", "groups", "menu.groups", "MgnlAdminCentral.showTree('usergroups')", "/.resources/icons/16/group.gif"));
         tasks.add(new AddSubMenuItemTask("security", "roles", "menu.roles", "MgnlAdminCentral.showTree('userroles')", "/.resources/icons/16/hat_white.gif"));
         tasks.add(adminUsersSubMenu);
         tasks.add(sysUsersSubMenu);

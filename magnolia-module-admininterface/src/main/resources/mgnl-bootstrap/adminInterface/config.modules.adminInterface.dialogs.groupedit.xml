@@ -205,7 +205,7 @@
         <sv:value>multiselect</sv:value>
       </sv:property>
       <sv:property sv:name="chooseOnclick" sv:type="String">
-        <sv:value>mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');</sv:value>
+        <sv:value>mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">

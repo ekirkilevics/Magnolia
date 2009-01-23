@@ -258,7 +258,7 @@
         <sv:value>faa732f7-cbe4-46d4-8046-96bac8cea81a</sv:value>
       </sv:property>
       <sv:property sv:name="chooseOnclick" sv:type="String">
-        <sv:value>mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');</sv:value>
+        <sv:value>mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>users.edit.groups</sv:value>
