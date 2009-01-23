@@ -50,13 +50,7 @@ import java.util.Map;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class Template extends AbstractRenderable{
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
+public class Template extends AbstractRenderable {
     private Content content;
 
     private boolean visible;
@@ -76,7 +70,7 @@ public class Template extends AbstractRenderable{
      * @deprecated since 4.0. use getTemplatePath() instead
      */
     public String getPath() {
-        DeprecationUtil.isDeprecated("path property is deprecated use the templatePath property instead");
+        DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (set to value: " + getTemplatePath() + ")");
         return getTemplatePath();
     }
 
@@ -119,7 +113,8 @@ public class Template extends AbstractRenderable{
      * @deprecated since 4.0 use {@link #setTemplatePath(String)}
      */
     public void setPath(String path) {
-        DeprecationUtil.isDeprecated("path property is deprecated use the templatePath property instead");
+        // log message can only output the templatePath, as there is not guarantee the name or content name have been set already
+        DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (" + path + ")");
         setTemplatePath(path);
     }
 
@@ -137,6 +132,7 @@ public class Template extends AbstractRenderable{
         return this.content;
     }
 
+    // this is set by content2bean
     public void setContent(Content content) {
         this.content = content;
     }
