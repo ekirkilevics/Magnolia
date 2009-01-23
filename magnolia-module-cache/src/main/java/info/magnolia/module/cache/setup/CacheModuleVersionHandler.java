@@ -40,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.cache.RegisterWorkspaceForCacheFlushingTask;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
@@ -159,6 +160,22 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 content.createNodeData("delegatePath","/modules/cache/config/compression/voters");
             }
         });
+        list.add(new AbstractRepositoryTask("Cache Flushing", "Migrate old cache flushing configuration to new location." ) {
+            protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
+                final String reposPath= "/modules/cache/config/repositories";
+                final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
+                if (!hm.isExist(reposPath)) {
+                    return;
+                }
+                Content cnt = hm.getContent(reposPath);
+                for (Iterator iter = cnt.getChildren().iterator(); iter.hasNext();) {
+                    Content c = (Content) iter.next();
+                    if (c.hasNodeData("name")) {
+                        new RegisterWorkspaceForCacheFlushingTask(c.getName()).execute(installContext);
+                    }
+                }
+                cnt.delete();
+            }});
         return list;
     }
 
