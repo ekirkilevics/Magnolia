@@ -290,7 +290,6 @@ public class ModuleManagerImpl implements ModuleManager {
 
                 // TODO : why would this return anything else than null ?
                 Object moduleInstance = registry.getModuleInstance(moduleName);
-                System.out.println("moduleInstance = " + moduleInstance);
 
                 if (moduleInstance == null && moduleClassName != null) {
                     try {
