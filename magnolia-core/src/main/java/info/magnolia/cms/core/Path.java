@@ -205,12 +205,11 @@ public final class Path {
         StringBuffer newLabel = new StringBuffer();
         for (int i = 0; i < s.length(); i++) {
             int charCode = s.charAt(i);
-            // charCodes: 48-57: [0-9]; 65-90: [A-Z]; 97-122: [a-z]; 45: [-]; 46 [.]; 95:[_]
+            // charCodes: 48-57: [0-9]; 65-90: [A-Z]; 97-122: [a-z]; 45: [-]; 95:[_]
             if (((charCode >= 48) && (charCode <= 57))
                 || ((charCode >= 65) && (charCode <= 90))
                 || ((charCode >= 97) && (charCode <= 122))
                 || charCode == 45
-                || charCode == 46
                 || charCode == 95) {
                 newLabel.append(s.charAt(i));
             }
