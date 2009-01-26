@@ -53,16 +53,16 @@ public class SiblingsHelperTest extends TestCase {
     public void testCanTellPosition() throws Exception {
         final Content n = hm.getContent("/parent/sub2");
         final SiblingsHelper s = SiblingsHelper.of(n);
-        assertEquals("Positions are 0-based indexes, so /parent/sub2 should be in position 1.", 1, s.getPosition());
+        assertEquals("Indexes are 0-based, so /parent/sub2 should be at index 1.", 1, s.getIndex());
         s.next();
         s.next();
-        assertEquals("Should have skipped nodes of different type.", 3, s.getPosition());
+        assertEquals("Should have skipped nodes of different type.", 3, s.getIndex());
     }
 
     public void testCanTellIfFirstWhenInitializingWithFirst() throws Exception {
         final Content n = hm.getContent("/parent/sub1");
         final SiblingsHelper s = SiblingsHelper.of(n);
-        assertEquals(0, s.getPosition());
+        assertEquals(0, s.getIndex());
         assertEquals(true, s.isFirst());
         assertEquals(false, s.isLast());
     }
@@ -71,7 +71,7 @@ public class SiblingsHelperTest extends TestCase {
         final Content n = hm.getContent("/parent/sub2");
         final SiblingsHelper s = SiblingsHelper.of(n);
         s.prev();
-        assertEquals(0, s.getPosition());
+        assertEquals(0, s.getIndex());
         assertEquals(true, s.isFirst());
         assertEquals(false, s.isLast());
     }
@@ -80,7 +80,7 @@ public class SiblingsHelperTest extends TestCase {
         final Content n = hm.getContent("/parent/sub6");
         final SiblingsHelper s = SiblingsHelper.of(n);
         // sub6 is of type mgnl:other, there are only 2 nodes of that type
-        assertEquals(1, s.getPosition());
+        assertEquals(1, s.getIndex());
         assertEquals(true, s.isLast());
         assertEquals(false, s.isFirst());
         assertEquals("ID-6", s.getCurrent().getUUID());
@@ -89,9 +89,9 @@ public class SiblingsHelperTest extends TestCase {
     public void testCanTellIfLastAfterNavigating() throws Exception {
         final Content n = hm.getContent("/parent/sub4");
         final SiblingsHelper s = SiblingsHelper.of(n);
-        assertEquals(2, s.getPosition());
+        assertEquals(2, s.getIndex());
         s.next();
-        assertEquals(3, s.getPosition());
+        assertEquals(3, s.getIndex());
         assertEquals(true, s.isLast());
         assertEquals(false, s.isFirst());
         assertEquals("ID-5", s.getCurrent().getUUID());
@@ -100,7 +100,7 @@ public class SiblingsHelperTest extends TestCase {
     public void testCanTellIfLastEvenIfThereAreOtherNodesOfAnotherType() throws Exception {
         final Content n = hm.getContent("/parent/sub5");
         final SiblingsHelper s = SiblingsHelper.of(n);
-        assertEquals(3, s.getPosition());
+        assertEquals(3, s.getIndex());
         assertEquals(true, s.isLast());
         assertEquals(false, s.isFirst());
     }
@@ -108,7 +108,7 @@ public class SiblingsHelperTest extends TestCase {
     public void testFactoryMethodProperlyInstanciatesWithFirstChildOfParent() throws Exception {
         final Content parent = hm.getContent("/parent");
         final SiblingsHelper s = SiblingsHelper.childrenOf(parent);
-        assertEquals(0, s.getPosition());
+        assertEquals(0, s.getIndex());
         assertEquals(true, s.isFirst());
         assertEquals(false, s.isLast());
         assertEquals("ID-1", s.getCurrent().getUUID());

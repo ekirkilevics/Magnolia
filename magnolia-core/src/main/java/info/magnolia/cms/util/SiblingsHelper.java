@@ -117,9 +117,9 @@ public class SiblingsHelper {
     }
 
     /**
-     * Position is a zero-based index.
+     * Returns the zero-based index of the current node.
      */
-    public int getPosition() {
+    public int getIndex() {
         return currentIndex;
     }
 
