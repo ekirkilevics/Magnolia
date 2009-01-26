@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.samples.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
@@ -46,6 +47,7 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
+import info.magnolia.module.delta.RemoveNodeTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +110,12 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                         "/mgnl-bootstrap-samples/samples/users.admin.eve.xml"))
                 .addTask(new BootstrapConditionally("Samples user", "Adds user if does not exist",
                         "/mgnl-bootstrap-samples/samples/users.admin.patrick.xml"))
+                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample templates.",
+                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-templates"))
+                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample paragraphs.",
+                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-paragraphs"))
+                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample dialogs.",
+                            ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/sample-dialogs"))
 
                 .addTask(new RegisterModuleServletsTask())
                 .addTasks(getCommonTasks())
