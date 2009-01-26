@@ -11,8 +11,9 @@
 }
 
 #mgnl table.data th {
-    background-color: #9DB517;
-    color: #fff;
+    background-color: #D8EFB6;
+    color: #000;
+    font-size: 11px;
     font-weight: bold;
 }
 
