@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -69,7 +70,7 @@ public class ConfigurationPage extends TemplatedMVCHandler {
     }
 
     public Map getSystemProperties() {
-        return SystemProperty.getProperties();
+        return new TreeMap(SystemProperty.getProperties());
     }
 
 }
