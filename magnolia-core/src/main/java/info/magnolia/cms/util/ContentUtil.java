@@ -324,7 +324,6 @@ public class ContentUtil {
         for (int i = nodes.length - 1; i > 0; i--) {
             node.orderBefore(nodes[i-1], nodes[i]);
         }
-        node.save();
     }
 
     /**
