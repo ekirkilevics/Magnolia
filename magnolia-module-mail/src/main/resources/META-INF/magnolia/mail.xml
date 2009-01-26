@@ -11,9 +11,5 @@
       <name>adminInterface</name>
       <version>4.0/*</version>
     </dependency>
-    <dependency>
-      <name>templating</name>
-      <version>4.0/*</version>
-    </dependency>
   </dependencies>
 </module>
