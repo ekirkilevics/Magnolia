@@ -72,7 +72,7 @@ public class ServletTemplateRenderer extends AbstractTemplateRenderer {
 
     public void renderTemplate(Content content, Template template, Writer out) throws IOException, RenderException {
         final HttpServletRequest request = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getRequest();
-        final HttpServletResponse response = MgnlContext.getWebContext().getResponse();
+        final HttpServletResponse response = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getResponse();
         final String className = template.getParameter("className");
 
         if (StringUtils.isEmpty(className)) {
