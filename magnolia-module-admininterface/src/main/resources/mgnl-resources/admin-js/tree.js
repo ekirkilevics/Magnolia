@@ -734,10 +734,10 @@
 
 
 
-    mgnlTree.prototype.editNodeData = function(span,id,columnNumber)
+    mgnlTree.prototype.editNodeData = function(span,id,columnNumber,htmlEdit)
         {
         var column=this.columns[columnNumber];
-        var htmlEdit=column.htmlEdit;
+        //var htmlEdit=column.htmlEdit;
         if (htmlEdit!="")
             {
             var value=span.innerHTML;
