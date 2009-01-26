@@ -56,7 +56,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         if (accessManager == null) {
-            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(getSystemPermissions());
+            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(getSystemPermissions(), repositoryId, workspaceId);
         }
 
         return accessManager;

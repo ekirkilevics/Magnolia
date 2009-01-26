@@ -149,17 +149,14 @@ public class WorkspaceAccessUtil {
                 permissionList = acl.getList();
             }
         }
-        AccessManager accessManager = new AccessManagerImpl();
-        accessManager.setPermissionList(permissionList);
-
-        return accessManager;
+        return createAccessManager(permissionList, repositoryName, workspaceName);
     }
 
     /**
      * Create access manager for the given permission list
      * @param permissions
      * */
-    public AccessManager createAccessManager(List permissions) {
+    public AccessManager createAccessManager(List permissions, String repositoryName, String workspaceName) {
         AccessManager accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(permissions);
         return accessManager;
