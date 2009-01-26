@@ -53,7 +53,7 @@ import java.util.Map;
 public class Template extends AbstractRenderable {
     private Content content;
 
-    private boolean visible;
+    private boolean visible = true;
 
     private Map subTemplates = new HashMap();
 
