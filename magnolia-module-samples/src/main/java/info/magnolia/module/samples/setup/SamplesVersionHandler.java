@@ -39,11 +39,13 @@ import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.admininterface.setup.SetDefaultPublicURI;
 import info.magnolia.module.delta.BackupTask;
+import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
-import info.magnolia.module.delta.ReplaceIfExistsTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,21 +68,47 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
      */
     public SamplesVersionHandler() {
         register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
-                .addTask(new BackupTask("config", "/modules/samples", true))
-                .addTask(new ReplaceIfExistsTask("Configuration","Replace configuration.",
-                        "Samples configuration doesn't exist", "config",
-                        "/modules/samples/config", "config.modules.samples.config.xml"))
-                .addTask(new ReplaceIfExistsTask("Dialogs","Replace dialogs.",
-                        "Samples dialogs don't exist", "config",
-                        "/modules/samples/dialogs", "config.modules.samples.dialogs.xml"))
-                .addTask(new ReplaceIfExistsTask("Templates","Replace templates.",
-                        "Samples templates don't exist", "config",
-                        "/modules/samples/templates", "config.modules.samples.templates.xml"))
-                .addTask(new ReplaceIfExistsTask("Paragraphs","Replace paragraphs.",
-                        "Samples paragraphs don't exist", "config",
-                        "/modules/samples/paragraphs", "config.modules.samples.paragraphs.xml"))
-                .addTask(new BootstrapSingleResource("Sample Filter", "Adds a sample filter",
-                        "/mgnl-bootstrap/samples/config.server.filters.sample.xml"))
+                .addTask(new NodeExistsDelegateTask("Backup samples config", "Creates a backup", "config",
+                        "/modules/samples", new BackupTask("config", "/modules/samples", true)))
+                .addTask(new NodeExistsDelegateTask("Backup samples website samples", "Creates a backup", "website",
+                        "/help", new BackupTask("website", "/help", true)))
+                .addTask(new NodeExistsDelegateTask("Backup samples website samples", "Creates a backup", "website",
+                        "/mailform", new BackupTask("website", "/mailform", true)))
+                .addTask(new NodeExistsDelegateTask("Backup samples website samples", "Creates a backup", "website",
+                        "/mails", new BackupTask("website", "/mails", true)))
+                .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default samples configuration.") {
+                    protected String[] getResourcesToBootstrap(final InstallContext installContext) {
+                        return new String[]{
+                                "/mgnl-bootstrap/samples/config.modules.samples.dialogs.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.templates.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.xml",
+                                "/mgnl-bootstrap/samples/config.server.filters.sample.xml",
+                        };
+                    }
+                })
+                .addTask(new BootstrapSingleResource("Sample VirtualUri", "Adds a sample",
+                        "/mgnl-bootstrap-samples/samples/config.modules.samples.virtualURIMapping.xml"))
+                .addTask(new BootstrapSingleResource("Sample how to freemarker", "Adds a sample",
+                        "/mgnl-bootstrap-samples/samples/website.howTo-freemarker.xml"))
+                .addTask(new BootstrapSingleResource("Sample how to jsp", "Adds a sample",
+                        "/mgnl-bootstrap-samples/samples/website.howTo-jsp.xml"))
+                .addTask(new BootstrapSingleResource("Sample of search result", "Adds a sample",
+                        "/mgnl-bootstrap-samples/samples/website.searchResult-jsp.xml"))
+                .addTask(new BootstrapSingleResource("Sample using wirtual uri", "Adds a sample",
+                        "/mgnl-bootstrap-samples/samples/website.products-freemarker.xml"))
+                .addTask(new BootstrapConditionally("Samples developers", "Adds developers group if does not exist",
+                        "/mgnl-bootstrap-samples/samples/usergroups.developers.xml"))
+                .addTask(new BootstrapConditionally("Samples employees", "Adds employees group if does not exist",
+                        "/mgnl-bootstrap-samples/samples/usergroups.employees.xml"))
+                .addTask(new BootstrapConditionally("Samples editor", "Adds editor role if does not exist",
+                        "/mgnl-bootstrap-samples/samples/userroles.editor.xml"))
+                .addTask(new BootstrapConditionally("Samples user", "Adds user if does not exist",
+                        "/mgnl-bootstrap-samples/samples/users.admin.david.xml"))
+                .addTask(new BootstrapConditionally("Samples user", "Adds user if does not exist",
+                        "/mgnl-bootstrap-samples/samples/users.admin.eve.xml"))
+                .addTask(new BootstrapConditionally("Samples user", "Adds user if does not exist",
+                        "/mgnl-bootstrap-samples/samples/users.admin.patrick.xml"))
+
                 .addTask(new RegisterModuleServletsTask())
                 .addTasks(getCommonTasks())
         );

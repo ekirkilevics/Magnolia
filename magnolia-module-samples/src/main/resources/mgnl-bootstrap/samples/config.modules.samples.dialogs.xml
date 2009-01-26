@@ -387,7 +387,7 @@
       <sv:value>mgnl:content</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>1472c317-e119-449f-8978-f4a4e68509fc</sv:value>
+      <sv:value>1472c317-e119-449f-8978-f4a4e68509fd</sv:value>
     </sv:property>
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
@@ -426,7 +426,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4a30be4f-4e42-41a9-a28a-c86384579f5c</sv:value>
+        <sv:value>4a30be4f-4e42-41a9-a28a-c86384579f5d</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -465,7 +465,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>02bab35a-a190-47a2-b543-5b34366cd7d7</sv:value>
+          <sv:value>02bab35a-a190-47a2-b543-5b34366cd7d8</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -511,7 +511,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d296ec8c-12b5-446b-a95f-20b22b4ee175</sv:value>
+          <sv:value>d296ec8c-12b5-446b-a95f-20b22b4ee176</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -560,7 +560,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>9f75ca20-ed81-4b2e-ba8b-6950e5514845</sv:value>
+          <sv:value>9f75ca20-ed81-4b2e-ba8b-6950e5514846</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -609,7 +609,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d2d082de-b508-45d9-8418-da1536c04f2a</sv:value>
+          <sv:value>d2d082de-b508-45d9-8418-da1536c04f2b</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -658,7 +658,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d75a13c8-a2cc-4df1-8a79-e45fc68cd552</sv:value>
+          <sv:value>d75a13c8-a2cc-4df1-8a79-e45fc68cd553</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -707,7 +707,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>a17aa741-1ec5-46bb-b250-471b915c65d6</sv:value>
+          <sv:value>a17aa741-1ec5-46bb-b250-471b915c65d7</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -757,7 +757,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>3fec513e-a157-47f1-9119-aa8291fd323c</sv:value>
+        <sv:value>3fec513e-a157-47f1-9119-aa8291fd323d</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -796,7 +796,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>5508bc2e-12b8-442b-8fe4-fde62b8a24f4</sv:value>
+          <sv:value>5508bc2e-12b8-442b-8fe4-fde62b8a24f5</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>select</sv:value>
@@ -841,7 +841,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>21b656c1-b428-442b-8aed-1052557a638c</sv:value>
+            <sv:value>21b656c1-b428-442b-8aed-1052557a638d</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -874,7 +874,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>2c4eca2a-a80e-48c3-bfdf-508e84a3bad5</sv:value>
+              <sv:value>2c4eca2a-a80e-48c3-bfdf-508e84a3bad6</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.select.option.option1</sv:value>
@@ -914,7 +914,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>030579ba-c514-4170-92cc-7ef0fe79f85e</sv:value>
+              <sv:value>030579ba-c514-4170-92cc-7ef0fe79f85f</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.select.option.option3</sv:value>
@@ -957,7 +957,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>b6e7f4e9-17ae-45b2-87ba-f0fa6197ac15</sv:value>
+              <sv:value>b6e7f4e9-17ae-45b2-87ba-f0fa6197ac16</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.select.option.option2</sv:value>
@@ -999,7 +999,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>5de888a1-5a68-47e3-8ac8-44841a919fa5</sv:value>
+          <sv:value>5de888a1-5a68-47e3-8ac8-44841a919fa6</sv:value>
         </sv:property>
         <sv:property sv:name="cols" sv:type="String">
           <sv:value>3</sv:value>
@@ -1047,7 +1047,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>8efa267b-830e-40ed-a8da-2728ef1effb5</sv:value>
+            <sv:value>8efa267b-830e-40ed-a8da-2728ef1effb6</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1080,7 +1080,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>e93f4de5-389b-400a-94de-113b76917848</sv:value>
+              <sv:value>e93f4de5-389b-400a-94de-113b76917849</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.radio.option.green</sv:value>
@@ -1123,7 +1123,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>8d44b4e7-53fb-4bdc-a397-19f49b98bb0b</sv:value>
+              <sv:value>8d44b4e7-53fb-4bdc-a397-19f49b98bb0c</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.radio.option.blue</sv:value>
@@ -1163,7 +1163,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>9f4bd8f3-62a0-470f-9005-42021e5a1f68</sv:value>
+              <sv:value>9f4bd8f3-62a0-470f-9005-42021e5a1f69</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.radio.option.red</sv:value>
@@ -1203,7 +1203,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>caabaf9b-2ae3-4b4a-b94c-e34c13d8636a</sv:value>
+              <sv:value>caabaf9b-2ae3-4b4a-b94c-e34c13d8636b</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.radio.option.yellow</sv:value>
@@ -1243,7 +1243,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>ba3b2041-2036-4e63-9f3f-113160a7c975</sv:value>
+              <sv:value>ba3b2041-2036-4e63-9f3f-113160a7c976</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.radio.option.orange</sv:value>
@@ -1285,7 +1285,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>a0ce05d1-ee27-4fa0-aa66-212842f6f9d3</sv:value>
+          <sv:value>a0ce05d1-ee27-4fa0-aa66-212842f6f9d4</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>checkbox</sv:value>
@@ -1330,7 +1330,7 @@
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>b1c0db64-f435-4660-a3a7-b265c8e278ce</sv:value>
+            <sv:value>b1c0db64-f435-4660-a3a7-b265c8e278cf</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1363,7 +1363,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>a7935b36-c56e-45a4-b972-d8a556219cfa</sv:value>
+              <sv:value>a7935b36-c56e-45a4-b972-d8a556219cfb</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.checkbox.option.bold</sv:value>
@@ -1403,7 +1403,7 @@
               <sv:value>mgnl:contentNode</sv:value>
             </sv:property>
             <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>3e9ba2a8-a6e4-4ecb-bd83-4b1624f33fc6</sv:value>
+              <sv:value>3e9ba2a8-a6e4-4ecb-bd83-4b1624f33fc7</sv:value>
             </sv:property>
             <sv:property sv:name="label" sv:type="String">
               <sv:value>dialog.devShow.allControls.tabSelections.checkbox.option.italic</sv:value>
@@ -1445,7 +1445,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>b8b9b04a-12f0-454c-a532-c2ffbd6cb420</sv:value>
+          <sv:value>b8b9b04a-12f0-454c-a532-c2ffbd6cb421</sv:value>
         </sv:property>
         <sv:property sv:name="buttonLabel" sv:type="String">
           <sv:value>dialog.devShow.allControls.tabSelections.checkboxSwich.buttonLabel</sv:value>
@@ -1495,7 +1495,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>5a2c529f-3842-4664-8c53-d296810c9d50</sv:value>
+        <sv:value>5a2c529f-3842-4664-8c53-d296810c9d51</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -1534,7 +1534,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>ed67c626-7bc7-4a65-b0a9-fe2523a1bca4</sv:value>
+          <sv:value>ed67c626-7bc7-4a65-b0a9-fe2523a1bca5</sv:value>
         </sv:property>
         <sv:property sv:name="buttonLabel" sv:type="String">
           <sv:value>dialog.devShow.allControls.tabLinks.link.buttonLabel</sv:value>
@@ -1583,7 +1583,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>3e05b69e-f159-4ee6-b3e2-d1942b80e7b2</sv:value>
+          <sv:value>3e05b69e-f159-4ee6-b3e2-d1942b80e7b3</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>date</sv:value>
@@ -1632,7 +1632,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>9ebd49ad-e543-4010-9c2c-292a740c9645</sv:value>
+          <sv:value>9ebd49ad-e543-4010-9c2c-292a740c9646</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>date</sv:value>
@@ -1679,7 +1679,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>62777434-5692-4619-9354-104aaf8cd1ed</sv:value>
+        <sv:value>62777434-5692-4619-9354-104aaf8cd1ee</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -1718,7 +1718,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>6462c25a-7537-4864-a874-d1d9df51756c</sv:value>
+          <sv:value>6462c25a-7537-4864-a874-d1d9df51756d</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>file</sv:value>
@@ -1765,7 +1765,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>80243fef-2bfd-48d9-8c38-1ae7db2dfeca</sv:value>
+        <sv:value>80243fef-2bfd-48d9-8c38-1ae7db2dfecb</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -1804,7 +1804,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>1816452e-9147-41aa-96ab-5829d0396209</sv:value>
+          <sv:value>1816452e-9147-41aa-96ab-5829d039620a</sv:value>
         </sv:property>
         <sv:property sv:name="boxType" sv:type="String">
           <sv:value>1Col</sv:value>
@@ -1853,7 +1853,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>918e4715-75a7-4b44-bf98-b1f6bcecaabb</sv:value>
+          <sv:value>918e4715-75a7-4b44-bf98-b1f6bcecaabc</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -1902,7 +1902,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d440ea63-dc3c-420b-a67c-3250f4814bcf</sv:value>
+          <sv:value>d440ea63-dc3c-420b-a67c-3250f4814bc0</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>edit</sv:value>
@@ -1952,7 +1952,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>cda7f720-7ae9-4563-8e06-21bb9faf6df5</sv:value>
+        <sv:value>cda7f720-7ae9-4563-8e06-21bb9faf6df6</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>tab</sv:value>
@@ -1991,7 +1991,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>ef8208fa-3c53-49a7-9b26-8ab738adaedc</sv:value>
+          <sv:value>ef8208fa-3c53-49a7-9b26-8ab738adaedd</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>static</sv:value>
@@ -2040,7 +2040,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>af62ee1c-beb6-49ff-99b0-72c6108a067a</sv:value>
+          <sv:value>af62ee1c-beb6-49ff-99b0-72c6108a067b</sv:value>
         </sv:property>
         <sv:property sv:name="buttonLabel" sv:type="String">
           <sv:value>dialog.devShow.allControls.tabStatic.buttonSmall.buttonLabel</sv:value>
@@ -2092,7 +2092,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>0545333a-d689-4f5b-b58a-4b1cc9d3d31d</sv:value>
+          <sv:value>0545333a-d689-4f5b-b58a-4b1cc9d3d31e</sv:value>
         </sv:property>
         <sv:property sv:name="buttonLabel" sv:type="String">
           <sv:value>dialog.devShow.allControls.tabStatic.buttonLarge.buttonLabel</sv:value>
@@ -2144,7 +2144,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>ee414038-07ee-4082-816f-8b4edc8c45f7</sv:value>
+          <sv:value>ee414038-07ee-4082-816f-8b4edc8c45f8</sv:value>
         </sv:property>
         <sv:property sv:name="controlType" sv:type="String">
           <sv:value>static</sv:value>
