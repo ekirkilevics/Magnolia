@@ -96,6 +96,9 @@ public class FreemarkerHelper {
         //cfg.setTemplateUpdateDelay(10);
     }
 
+    /**
+     * Called by constructor, and by FreemarkerConfig on config changes.
+     */
     public void resetObjectWrapper() {
         cfg.setObjectWrapper(newObjectWrapper());
     }

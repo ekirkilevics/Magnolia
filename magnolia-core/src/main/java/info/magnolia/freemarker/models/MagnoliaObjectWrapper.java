@@ -66,7 +66,6 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
         add(calendarFactory);
         add(UserModel.FACTORY);
         add(ContextModelFactory.INSTANCE);
-        // put(RenderableDefinition.class, RenderableDefinitionModel.FACTORY);
     }};
 
     public MagnoliaObjectWrapper() {
@@ -91,7 +90,8 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     public TemplateModel wrap(Object obj) throws TemplateModelException {
         if (obj instanceof Context) {
-            // bypass the default SimpleHash wrapping, we need a MapModel, see contextModelFactory
+            // bypass the default SimpleHash wrapping, we need a MapModel.
+            // handleUnknownType() will relay to our ContextModelFactory.
             return handleUnknownType(obj);
         }
         return super.wrap(obj);
