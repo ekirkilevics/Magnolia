@@ -107,7 +107,6 @@ public class NewBar extends TagSupport implements BarTag {
      * A single new paragraph will be stored as a node with this name.
      * @param contentNodeName name of the node
      * @jsp.attribute required="false" rtexprvalue="true"
-     * TODO : the doc used to say that this attribute was required, although the TLD declared the opposite - quid ?
      */
     public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;
