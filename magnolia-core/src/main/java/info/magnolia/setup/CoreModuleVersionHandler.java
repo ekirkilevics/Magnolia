@@ -36,6 +36,7 @@ package info.magnolia.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AddMimeMappingTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
@@ -100,8 +101,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new UpdateGroups())
                 .addTask(log4jServletMapping)
         );
-        
+
         register(DeltaBuilder.update("3.6.4", "")
+                .addTask(new AddMimeMappingTask("flv", "video/x-flv","/.resources/file-icons/flv.png"))
                 .addTask(new CheckAndModifyPropertyValueTask("PNG MIME mapping", "Checks and updates PNG MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "application/octet-stream", "image/png;"))
                 .addTask(new CheckAndModifyPropertyValueTask("SWF MIME mapping", "Checks and updates SWF MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream", "application/x-shockwave-flash;"))
         );

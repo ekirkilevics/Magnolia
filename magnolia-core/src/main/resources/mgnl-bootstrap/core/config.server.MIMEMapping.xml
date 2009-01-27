@@ -1768,6 +1768,9 @@
     <sv:property sv:name="extension" sv:type="String">
       <sv:value>flv</sv:value>
     </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/flv.png</sv:value>
+    </sv:property>
     <sv:property sv:name="mime-type" sv:type="String">
       <sv:value>video/x-flv</sv:value>
     </sv:property>
