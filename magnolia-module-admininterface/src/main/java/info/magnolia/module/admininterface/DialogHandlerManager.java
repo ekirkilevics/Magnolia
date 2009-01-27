@@ -74,7 +74,7 @@ public class DialogHandlerManager extends ObservedManager {
     private final Map dialogHandlers = new HashMap();
 
     /**
-     * register the dialogs from the config.
+     * register the dialogs from the condfig.
      */
     protected void onRegister(Content node) {
         List dialogNodes = new ArrayList();
@@ -86,13 +86,20 @@ public class DialogHandlerManager extends ObservedManager {
         }
 
         for (Iterator iter = dialogNodes.iterator(); iter.hasNext();) {
-            Content dialog = new SystemContentWrapper((Content) iter.next());
-
-            String name = dialog.getNodeData(ND_NAME).getString();
-            if (StringUtils.isEmpty(name)) {
-                name = dialog.getName();
+            Content dialogNode = new SystemContentWrapper((Content) iter.next());
+            try {
+                if(dialogNode.getItemType().equals(ItemType.CONTENT)){
+                    log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
+                }
             }
-            String className = NodeDataUtil.getString(dialog, CLASS);
+            catch (RepositoryException e) {
+                throw new IllegalStateException("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]", e);
+            }
+            String name = dialogNode.getNodeData(ND_NAME).getString();
+            if (StringUtils.isEmpty(name)) {
+                name = dialogNode.getName();
+            }
+            String className = NodeDataUtil.getString(dialogNode, CLASS);
 
             try {
                 // dialog class is not mandatory
@@ -102,7 +109,7 @@ public class DialogHandlerManager extends ObservedManager {
                 } else {
                     dialogClass = null;
                 }
-                registerDialogHandler(name, dialogClass, dialog);
+                registerDialogHandler(name, dialogClass, dialogNode);
             }
             catch (ClassNotFoundException e) {
                 log.warn("Can't find dialog handler class " + className, e); //$NON-NLS-1$
