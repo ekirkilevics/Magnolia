@@ -687,6 +687,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                     if (move) {
                         tomove.getParent().orderBefore(nameOrigin, nameSelected);
                         // deactivate
+                        tomove.updateMetaData();
                         // this.deactivateNode(pathOrigin);
                         tomove.getParent().save();
                     }
