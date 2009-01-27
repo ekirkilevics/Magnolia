@@ -14,7 +14,7 @@
     <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeHandler</sv:value>
   </sv:property>
   <sv:property sv:name="configurationClass" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration</sv:value>
+    <sv:value>info.magnolia.module.workflow.trees.WorkflowTreeConfiguration</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>Store</sv:value>
