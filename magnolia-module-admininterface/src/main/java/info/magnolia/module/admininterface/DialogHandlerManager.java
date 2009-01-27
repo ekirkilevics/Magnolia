@@ -44,11 +44,13 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -75,8 +77,15 @@ public class DialogHandlerManager extends ObservedManager {
      * register the dialogs from the config.
      */
     protected void onRegister(Content node) {
-        List dialogs = ContentUtil.collectAllChildren(node, ItemType.CONTENT);
-        for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
+        List dialogNodes = new ArrayList();
+        try {
+            collectDialogNodes(node, dialogNodes);
+        }
+        catch (RepositoryException e) {
+            throw new IllegalStateException("can't collect dialog nodes for [" + node.getHandle() + "]", e);
+        }
+
+        for (Iterator iter = dialogNodes.iterator(); iter.hasNext();) {
             Content dialog = new SystemContentWrapper((Content) iter.next());
 
             String name = dialog.getNodeData(ND_NAME).getString();
@@ -169,6 +178,47 @@ public class DialogHandlerManager extends ObservedManager {
             throw new InvalidDialogHandlerException(name, e);
         }
     }
+
+    protected void collectDialogNodes(Content current, List dialogNodes) throws RepositoryException {
+        if(isDialogNode(current)){
+            dialogNodes.add(current);
+            return;
+        }
+        for (Iterator iterator = ContentUtil.getAllChildren(current).iterator(); iterator.hasNext();) {
+            Content child = (Content) iterator.next();
+            collectDialogNodes(child, dialogNodes);
+        }
+    }
+
+    protected boolean isDialogNode(Content node) throws RepositoryException{
+        if(isDialogControlNode(node)){
+            return false;
+        }
+
+        // if leave
+        if(ContentUtil.getAllChildren(node).isEmpty()){
+            return true;
+        }
+
+        // if has node datas
+        if(!node.getNodeDataCollection().isEmpty()){
+            return true;
+        }
+
+        // if one subnode is a control
+        for (Iterator iterator = node.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
+            Content child = (Content) iterator.next();
+            if(isDialogControlNode(child)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isDialogControlNode(Content node) throws RepositoryException{
+        return node.hasNodeData("controlType") || node.hasNodeData("reference");
+    }
+
 
     /**
      * @return Returns the instance.
