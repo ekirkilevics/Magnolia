@@ -457,7 +457,8 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
         RepositoryException {
         // todo: ??? generic -> RequestInterceptor.java
-        if (getHierarchyManager().isExist(destination)) {
+        final HierarchyManager hm = getHierarchyManager();
+        if (hm.isExist(destination)) {
             String parentPath = StringUtils.substringBeforeLast(destination, "/"); //$NON-NLS-1$
             String label = StringUtils.substringAfterLast(destination, "/"); //$NON-NLS-1$
             label = Path.getUniqueLabel(getHierarchyManager(), parentPath, label);
@@ -466,12 +467,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         if (move) {
             if (destination.indexOf(source + "/") == 0) { //$NON-NLS-1$
                 // todo: disable this possibility in javascript
-                // move source into destinatin not possible
+                // move source into destination not possible
                 return null;
             }
-            //this.deactivateNode(source);
             try {
-                getHierarchyManager().moveTo(source, destination);
+                hm.moveTo(source, destination);
             }
             catch (Exception e) {
                 // try to move below node data
@@ -480,12 +480,15 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         }
         else {
             // copy
-            getHierarchyManager().copyTo(source, destination);
+            hm.copyTo(source, destination);
         }
-        Content newContent = getHierarchyManager().getContent(destination);
+        Content newContent = hm.getContent(destination);
         try {
             newContent.updateMetaData();
-            newContent.getMetaData().setUnActivated();
+            if (!move) {
+                // move doesn't deactivate. Updating metadata is enough to notice the change (status modified)
+                newContent.getMetaData().setUnActivated();
+            }
         }
         catch (Exception e) {
             if (log.isDebugEnabled()) {
