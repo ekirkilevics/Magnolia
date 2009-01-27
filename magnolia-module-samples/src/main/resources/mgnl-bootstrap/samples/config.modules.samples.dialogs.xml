@@ -29,7 +29,7 @@
   </sv:node>
   <sv:node sv:name="howTo">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:content</sv:value>
+      <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
       <sv:value>mix:lockable</sv:value>
@@ -245,7 +245,7 @@
   </sv:node>
   <sv:node sv:name="mainProperties">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:content</sv:value>
+      <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
       <sv:value>mix:lockable</sv:value>
@@ -384,7 +384,7 @@
   </sv:node>
   <sv:node sv:name="controlsShowRoom">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:content</sv:value>
+      <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>1472c317-e119-449f-8978-f4a4e68509fd</sv:value>
