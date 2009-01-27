@@ -121,6 +121,9 @@ public class ModuleManagerImpl implements ModuleManager {
         }
 
         final Map moduleDefinitions = moduleDefinitionReader.readAll();
+        if (moduleDefinitions.isEmpty()) {
+            throw new ModuleManagementException("No module definition was found.");
+        }
         log.debug("Loaded definitions: {}", moduleDefinitions);
 
         final DependencyChecker dependencyChecker = new DependencyChecker();
