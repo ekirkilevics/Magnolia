@@ -146,7 +146,7 @@
     <attribute>
       <description>Comma separated list of allowed paragraph types.</description>
       <name>paragraph</name>
-      <required>false</required>
+      <required>true</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>

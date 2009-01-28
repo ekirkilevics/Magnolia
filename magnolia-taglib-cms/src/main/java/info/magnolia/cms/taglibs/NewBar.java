@@ -124,7 +124,7 @@ public class NewBar extends TagSupport implements BarTag {
 
     /**
      * Comma separated list of allowed paragraph types.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setParagraph(String list) {
         this.paragraph = list;
