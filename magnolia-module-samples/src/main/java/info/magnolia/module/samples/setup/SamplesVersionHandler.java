@@ -81,9 +81,16 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default samples configuration.") {
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
-                                "/mgnl-bootstrap/samples/config.modules.samples.dialogs.xml",
-                                "/mgnl-bootstrap/samples/config.modules.samples.templates.xml",
-                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.dialogs.controlsShowRoom.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.dialogs.howTo.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.dialogs.mainProperties.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesControlsShowRoom.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesHowToFTL.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesHowToJSP.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.paragraphs.samplesSearchResult.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainFTL.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesMainJSP.xml",
+                                "/mgnl-bootstrap/samples/config.modules.samples.templates.samplesVirtualURI.xml",
                                 "/mgnl-bootstrap/samples/config.server.filters.sample.xml",
                         };
                     }
