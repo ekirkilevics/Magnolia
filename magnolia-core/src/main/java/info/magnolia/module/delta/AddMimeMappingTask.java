@@ -70,7 +70,7 @@ public class AddMimeMappingTask extends AbstractRepositoryTask {
      * @param icon Icon path.
      */
     public AddMimeMappingTask(String extension, String mime, String icon) {
-        super("Add mime mapping task", "Adds a MIME mapping for the " + extension + " extension");
+        super("Add " + extension + " mime mapping", "Adds a MIME mapping for the " + extension + " extension");
         this.extension = extension;
         this.mime = mime;
         this.icon = icon;
