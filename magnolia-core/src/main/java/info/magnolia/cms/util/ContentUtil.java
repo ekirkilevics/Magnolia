@@ -89,7 +89,7 @@ public class ContentUtil {
     };
 
     /**
-     * Content filter accepting everything exept meta data and jcr:
+     * Content filter accepting everything except meta data and jcr:
      */
     public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
         public boolean accept(Content content) {
@@ -327,7 +327,7 @@ public class ContentUtil {
     }
 
     /**
-     * Uses the passed comperater to create the jcr ordering of the children
+     * Uses the passed comparator to create the jcr ordering of the children
      * @throws RepositoryException
      */
     public static void orderNodes(Content node, Comparator comparator) throws RepositoryException {
