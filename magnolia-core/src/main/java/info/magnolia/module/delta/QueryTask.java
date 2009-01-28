@@ -34,6 +34,7 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.module.InstallContext;
@@ -44,6 +45,10 @@ import java.util.Iterator;
 
 /**
  * An abstract task to perform operations on nodes returned by a given query.
+ * Keep in mind that results returned by a query will reflect the current
+ * content of the repository, not of your session; i.e if a previous task
+ * modified a property, the query might still return the node as if it had
+ * the previous value.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -59,7 +64,7 @@ public abstract class QueryTask extends AbstractRepositoryTask {
     }
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        final Collection nodes = QueryUtil.query(repositoryName, query, Query.SQL);
+        final Collection nodes = QueryUtil.exceptionThrowingQuery(repositoryName, query, Query.SQL, ItemType.NT_BASE);
         final Iterator it = nodes.iterator();
         while (it.hasNext()) {
             final Content paragraphNode = (Content) it.next();
