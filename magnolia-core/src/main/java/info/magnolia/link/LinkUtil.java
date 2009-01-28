@@ -123,7 +123,7 @@ public class LinkUtil {
                     linkStr = StringUtils.replace(linkStr, "$", "\\$");
                     matcher.appendReplacement(res, "$1" + linkStr + "$5");
                 }
-                catch (info.magnolia.link.LinkException e) {
+                catch (LinkException e) {
                     // this is expected if the link is an absolute path to something else
                     // than content stored in the repository
                     matcher.appendReplacement(res, "$0");
