@@ -41,7 +41,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllModulesNodeOperation;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -62,16 +61,16 @@ public class NestPropertiesAllModulesNodeTask extends AllModulesNodeOperation {
     private static Logger log = LoggerFactory.getLogger(NestPropertiesAllModulesNodeTask.class);
 
     private final String baseNodeName;
-    private final String type;
+    private final String newNodeType;
     private final String newNodeName;
-    private final List exclude;
+    private final List excludePropertiesList;
 
-    public NestPropertiesAllModulesNodeTask(String name, String description, String baseNodeName, List exclude, String newNodeName, String type) {
+    public NestPropertiesAllModulesNodeTask(String name, String description, String baseNodeName, List excludePropertiesList, String newNodeName, String newNodeType) {
         super(name, description);
         this.baseNodeName = baseNodeName;
         this.newNodeName = newNodeName;
-        this.exclude = exclude;
-        this.type = type;
+        this.excludePropertiesList = excludePropertiesList;
+        this.newNodeType = newNodeType;
     }
 
 
@@ -79,28 +78,28 @@ public class NestPropertiesAllModulesNodeTask extends AllModulesNodeOperation {
             throws RepositoryException, TaskExecutionException {
         try {
             if(node.hasContent(baseNodeName)){
-                Content srcNode = node.getContent(baseNodeName);
-                if(srcNode.hasChildren(ItemType.CONTENTNODE.getSystemName())) {
-                    final Collection children = srcNode.getChildren(ItemType.CONTENTNODE.getSystemName());
+                Content baseNode = node.getContent(baseNodeName);
+                if(baseNode.hasChildren(ItemType.CONTENTNODE.getSystemName())) {
+                    final Collection children = baseNode.getChildren(ItemType.CONTENTNODE.getSystemName());
                     final Iterator it = children.iterator();
-                    Content nodeTemplate;
+                    Content baseNodeChild;
                     while(it.hasNext()) {
-                        nodeTemplate = (Content) it.next();
+                        baseNodeChild = (Content) it.next();
                         Content newNode;
-                        if(nodeTemplate.hasContent(newNodeName) ) {
-                            newNode = nodeTemplate.getContent(newNodeName);
+                        if(baseNodeChild.hasContent(newNodeName) ) {
+                            newNode = baseNodeChild.getContent(newNodeName);
                         } else {
-                            newNode = nodeTemplate.createContent(newNodeName, type);
+                            newNode = baseNodeChild.createContent(newNodeName, newNodeType);
                         }
-                        if(nodeTemplate.hasChildren()) {
-                            final Collection childrenDatas = nodeTemplate.getNodeDataCollection();
-                            final Iterator it2 = childrenDatas.iterator();
+                        if(baseNodeChild.hasChildren()) {
+                            final Collection childrenNodeData = baseNodeChild.getNodeDataCollection();
+                            final Iterator it2 = childrenNodeData.iterator();
                             NodeData nodeData;
                             while(it2.hasNext()) {
                                 nodeData = (NodeData) it2.next();
-                                if(!exclude.contains(nodeData.getName())) {
+                                if(!excludePropertiesList.contains(nodeData.getName())) {
                                     newNode.createNodeData(nodeData.getName(), nodeData.getValue());
-                                    nodeTemplate.deleteNodeData(nodeData.getName());
+                                    baseNodeChild.deleteNodeData(nodeData.getName());
                                 }
                             }
                         }

@@ -50,7 +50,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Renames property node in all subnodes of all modules
+ * Renames property node in all subnodes of all modules, from a base node, i.e. in every paragraph definition
+ * rename property 'a' to 'b'
  * @author tmiyar
  *
  */
@@ -60,26 +61,26 @@ public class RenamePropertyAllModulesNodeTask extends AllModulesNodeOperation {
 
     private final String srcPropertyName;
     private final String destPropertyName;
-    private final String nodeName;
+    private final String baseNodeName;
 
-    public RenamePropertyAllModulesNodeTask(String name, String description, String nodeName, String srcPropertyName, String destPropertyName) {
+    public RenamePropertyAllModulesNodeTask(String name, String description, String baseNodeName, String srcPropertyName, String destPropertyName) {
         super(name, description);
         this.srcPropertyName = srcPropertyName;
         this.destPropertyName = destPropertyName;
-        this.nodeName = nodeName;
+        this.baseNodeName = baseNodeName;
     }
 
 
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
         try {
-            if(node.hasContent(nodeName)){
-                ContentUtil.visit(node.getContent(nodeName), new ContentUtil.Visitor(){
-                   public void visit(Content node) throws Exception {
-                       if(node.hasNodeData(srcPropertyName)){
-                           Value value = node.getNodeData(srcPropertyName).getValue();
-                           node.deleteNodeData(srcPropertyName);
-                           NodeData newNodeData = NodeDataUtil.getOrCreate(node, destPropertyName);
+            if(node.hasContent(baseNodeName)){
+                ContentUtil.visit(node.getContent(baseNodeName), new ContentUtil.Visitor(){
+                   public void visit(Content subNode) throws Exception {
+                       if(subNode.hasNodeData(srcPropertyName)){
+                           Value value = subNode.getNodeData(srcPropertyName).getValue();
+                           subNode.deleteNodeData(srcPropertyName);
+                           NodeData newNodeData = NodeDataUtil.getOrCreate(subNode, destPropertyName);
                            newNodeData.setValue(value);
                        }
                    }

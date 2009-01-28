@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Renames dialogPath to dialog and sets the property to the dialog name
+ * Renames dialogPath to dialog and sets the property to the dialog name, in all modules in all paragraphs nodes
  * @author tmiyar
  *
  */
@@ -66,19 +66,16 @@ public class DeprecateDialogPathAllModules extends AllModulesNodeOperation {
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
             throws RepositoryException, TaskExecutionException {
         try {
-            final String nodeName = "paragraphs";
-            final String srcPropertyName = "dialogPath";
-            final String destPropertyName = "dialog";
-
-            if(node.hasContent(nodeName)){
-                Content srcNode = node.getContent(nodeName);
-                ContentUtil.visit(srcNode, new ContentUtil.Visitor(){
-                   public void visit(Content node) throws Exception {
-                       if(node.hasNodeData(srcPropertyName)){
-                           String value = node.getNodeData(srcPropertyName).getString();
-                           node.deleteNodeData(srcPropertyName);
-                           NodeData newNodeData = NodeDataUtil.getOrCreate(node, destPropertyName);
-                           newNodeData.setValue(StringUtils.substring(value, StringUtils.lastIndexOf(value, "/") + 1));
+            //find in paragraphs definitions property name dialogPath and rename it to dialog
+            if(node.hasContent("paragraphs")){
+                Content paragraphsNode = node.getContent("paragraphs");
+                ContentUtil.visit(paragraphsNode, new ContentUtil.Visitor(){
+                   public void visit(Content paragraphDefNode) throws Exception {
+                       if(paragraphDefNode.hasNodeData("dialogPath")){
+                           String dialogPath = paragraphDefNode.getNodeData("dialogPath").getString();
+                           paragraphDefNode.deleteNodeData("dialogPath");
+                           NodeData dialogNameNodeData = NodeDataUtil.getOrCreate(paragraphDefNode, "dialog");
+                           dialogNameNodeData.setValue(StringUtils.substring(dialogPath, StringUtils.lastIndexOf(dialogPath, "/") + 1));
                        }
                    }
                 });
