@@ -107,6 +107,9 @@ public class AuditLoggingUtil {
     }
 
     private static String getUser() {
+        if (MgnlContext.isSystemInstance()) {
+            return "SystemUser";
+        }
         try {
             if(MgnlContext.hasInstance() && MgnlContext.getUser() != null) {
                 return MgnlContext.getUser().getName();

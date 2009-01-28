@@ -113,6 +113,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(updateLinkResolverClass )
                 .addTask(renameLinkResolver )
                 .addTask(new AddMimeMappingTask("flv", "video/x-flv","/.resources/file-icons/flv.png"))
+                .addTask(new ChangeNodeTypesInUserWorkspace())
         );
     }
 
