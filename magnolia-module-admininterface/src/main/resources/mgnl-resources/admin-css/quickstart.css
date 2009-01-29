@@ -26,7 +26,7 @@ h2 {
 li {
     list-style-type: none;
     list-style-position: outside;
-    list-style-image: url(images/listItem.gif);
+    list-style-image: url(../admin-images/listItem.gif);
     margin: 0 0 5px 0;
     padding-left: 0;
     font-size: 9pt;
@@ -42,7 +42,7 @@ li {
     margin: 0;
     padding: 20px;
     height: 40px;
-    background: white url(images/backgroundBar.gif) repeat-x;
+    background: white url(../admin-images/backgroundBar.gif) repeat-x;
 }
 
 #footer {
@@ -78,17 +78,26 @@ li {
 }
 
 div.options {
-    margin: 10px 0 15px 35px;
-    padding: 0;
+    margin:25px 0 15px 35px;
+    padding:0;
 }
 
 div.option {
-    background-color: #F6F6F6;
-    padding: 10px;
-    width: 380px;
-    height: 160px;
-    margin-bottom: 20px;
+    background-color:#F6F6F6;
+    height:160px;
+    margin-bottom:20px;
+    padding:10px;
+    width:390px;
 }
+div#stk {
+    float:left;
+    margin-right:30px;
+}
+
+div#templates {
+    float:left;
+}
+
 
 div.option h3 {
     margin: 10px 0 10px 0;
