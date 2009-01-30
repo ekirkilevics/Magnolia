@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.0-SNAPSHOT</version>
+    <version>4.0-rc2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -13,12 +13,12 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.0-SNAPSHOT</version>
+      <version>4.0-rc2</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>4.0-SNAPSHOT</version>
+      <version>4.0-rc2</version>
     </dependency>
     <dependency>
       <groupId>net.sf.json-lib</groupId>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.0-SNAPSHOT</version>
+      <version>4.0-rc2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
