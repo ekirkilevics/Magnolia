@@ -47,6 +47,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -57,6 +59,11 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @version $Revision$ ($Author$)
  */
 public class QueryTag extends TagSupport {
+
+    /**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(QueryTag.class);
 
     /**
      * The query result will be set in the pageContext using this name.
@@ -141,7 +148,8 @@ public class QueryTag extends TagSupport {
             queryResult = q.execute();
         }
         catch (RepositoryException e) {
-            throw new NestableRuntimeException(e);
+            log.error("Error running query \"" + query + "\": " + e.getClass().getName() + " " + e.getMessage(), e);
+            return EVAL_PAGE;
         }
         Collection result = queryResult.getContent(nodeType);
         pageContext.setAttribute(var, result);
