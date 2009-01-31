@@ -28,6 +28,11 @@
     padding: 0 3px 0 3px !important;
 }
 
+.mgnlControlButtonSmall,.mgnlControlButton {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
 .mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
     font-family: Verdana, sans-serif !important;
     color: #F0F2E6 !important;
@@ -35,6 +40,7 @@
     white-space: nowrap;
     display: inline !important;
     width: auto !important;
+    margin-right: 2px;
 }
 
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
@@ -43,11 +49,9 @@
 }
 
 .mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
-    background-color: #5E9201;
-    border-top: 1px solid #ADC97B;
-    border-left: 1px solid #ADC97B;
-    border-bottom: 1px solid #396101;
-    border-right: 1px solid #396101;
+    background-color: #89AF46 !important;
+    cursor: pointer;
+    border: 1px solid #ADC97B;
 }
 
 .mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
