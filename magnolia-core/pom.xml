@@ -33,20 +33,6 @@
     <dependency>
       <groupId>org.openwfe</groupId>
       <artifactId>openwfe-jcr</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>ant</groupId>
-          <artifactId>ant</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>ant</groupId>
-          <artifactId>ant-launcher</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xml-apis</groupId>
-          <artifactId>xml-apis</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
