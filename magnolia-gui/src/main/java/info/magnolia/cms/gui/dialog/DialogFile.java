@@ -88,9 +88,6 @@ public class DialogFile extends DialogBox {
         this.getImageExtensions().add("swf"); //$NON-NLS-1$
     }
 
-    /**
-     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
-     */
     public void drawHtml(Writer out) throws IOException {
         File control = getFileControl();
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
@@ -103,24 +100,13 @@ public class DialogFile extends DialogBox {
 
         String width = this.getConfigValue("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 
+
         final boolean preview = Boolean.valueOf(getConfigValue("preview", "true")).booleanValue();
         final boolean extensionIsDisplayableImage = this.getImageExtensions().contains(control.getExtension().toLowerCase());
         final boolean showImage = extensionIsDisplayableImage && preview;
 
-        String htmlControlBrowse = control.getHtmlBrowse();
-        StringBuffer htmlControlFileName = new StringBuffer();
-        htmlControlFileName.append("<span class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_DESCRIPTION
-            + "\">" //$NON-NLS-1$
-            + getMessage("dialog.file.filename") //$NON-NLS-1$
-            + "</span>"); //$NON-NLS-1$
-        htmlControlFileName.append(Spacer.getHtml(1, 1));
-        htmlControlFileName.append(control.getHtmlFileName() + "<span id=\"" //$NON-NLS-1$
-            + this.getName()
-            + "_fileNameExtension\">." //$NON-NLS-1$
-            + control.getExtension()
-            + "</span>"); //$NON-NLS-1$
-        String htmlContentEmpty = htmlControlBrowse + Spacer.getHtml(0, 0) + htmlControlFileName;
+        StringBuffer htmlControlFileName = getHtmlControlFileName(control);
+        String htmlContentEmpty = control.getHtmlBrowse() + Spacer.getHtml(0, 0) + htmlControlFileName;
         out.write("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">"); //$NON-NLS-1$ //$NON-NLS-2$
         boolean exists = false;
 
@@ -133,6 +119,8 @@ public class DialogFile extends DialogBox {
             out.write("</div>"); //$NON-NLS-1$
         }
         else {
+            String link = getLink(control);
+
             if (showImage) {
 
                 out.write("\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -142,8 +130,7 @@ public class DialogFile extends DialogBox {
 
                     // flash movie
                     out.write("<object type=\"application/x-shockwave-flash\" data=\"");
-                    out.write(this.getRequest().getContextPath());
-                    out.write(getFileURI(control));
+                    out.write(link);
                     out.write("\" title=\"");
                     out.write(control.getFileName());
                     out.write("\" ");
@@ -152,8 +139,7 @@ public class DialogFile extends DialogBox {
                     out.write(">");
 
                     out.write("<param name=\"movie\" value=\"");
-                    out.write(this.getRequest().getContextPath());
-                    out.write(getFileURI(control));
+                    out.write(link);
                     out.write("\"/>");
 
                     out.write("</object>\n");
@@ -178,14 +164,19 @@ public class DialogFile extends DialogBox {
                     catch(NumberFormatException e){
                         // ignore (is 150)
                     }
-                    int bigger = Math.max(imgwidth,imgheight);
-                    if(bigger > 150){
-                        imgwidth=150;
+
+                    // resize if to big
+                    if(imgwidth > imgheight && imgwidth > 150){
+                        imgheight = (int)(150.0/imgwidth * imgheight);
+                        imgwidth = 150;
+                    }
+                    else if(imgheight > imgwidth && imgheight > 150){
+                        imgwidth = (int)(150.0/imgheight * imgwidth);
+                        imgheight = 150;
                     }
 
-                    out.write("<img width=\"" + imgwidth + "\" src=\""); //$NON-NLS-1$
-                    out.write(this.getRequest().getContextPath());
-                    out.write(getFileURI(control));
+                    out.write("<img width=\"" + imgwidth + "\" height=\"" + imgheight + "\"src=\""); //$NON-NLS-1$
+                    out.write(link);
                     out.write("\" class=\""); //$NON-NLS-1$
                     out.write(CssConstants.CSSCLASS_FILEIMAGE);
                     out.write("\" alt=\""); //$NON-NLS-1$
@@ -193,7 +184,6 @@ public class DialogFile extends DialogBox {
                     out.write("\" title=\""); //$NON-NLS-1$
                     out.write(control.getFileName());
                     out.write("\" />\n"); //$NON-NLS-1$
-
 
                     if (StringUtils.isNotEmpty(control.getImageWidth())) {
                         out.write("<em style='white-space:nowrap'>"); //$NON-NLS-1$
@@ -211,27 +201,8 @@ public class DialogFile extends DialogBox {
 
                 out.write("</td><td>"); //$NON-NLS-1$
             }
-            out.write(htmlControlFileName.toString());
-            if (!showImage) {
-                String iconPath = MIMEMapping.getMIMETypeIcon(control.getExtension());
+            writeInnerHtml(out, showImage, control, htmlControlFileName, link);
 
-                out.write(Spacer.getHtml(0, 0));
-                
-                out.write("<a href=");
-                out.write(this.getRequest().getContextPath() + this.getFileURI(control));
-                if (!StringUtils.isEmpty(control.getExtension())) {
-                    out.write("." + control.getExtension());
-                }
-                out.write(" target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$
-                
-                out.write("<img src=\"" //$NON-NLS-1$
-                    + this.getRequest().getContextPath()
-                    + iconPath
-                    + "\" class=\"" //$NON-NLS-1$
-                    + CssConstants.CSSCLASS_FILEICON
-                    + "\" border=\"0\">"); //$NON-NLS-1$
-                out.write(control.getFileName() + "." + control.getExtension() + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
             out.write(Spacer.getHtml(12, 12));
             out.write(control.getHtmlRemove("mgnlDialogFileRemove('" + this.getName() + "');")); //$NON-NLS-1$ //$NON-NLS-2$
             if (showImage) {
@@ -252,6 +223,51 @@ public class DialogFile extends DialogBox {
         control.setNodeDataTemplate(this.getConfigValue("nodeDataTemplate", null)); //$NON-NLS-1$
         out.write(control.getHtmlNodeDataTemplate());
         this.drawHtmlPost(out);
+    }
+
+    protected String getLink(File control) {
+        String link = this.getRequest().getContextPath() + getFileURI(control);
+        if (!StringUtils.isEmpty(control.getExtension())) {
+            link += "." + control.getExtension();
+        }
+        return link;
+    }
+
+    protected void writeInnerHtml(Writer out, final boolean showImage, File control, StringBuffer htmlControlFileName, String link) throws IOException {
+        out.write(htmlControlFileName.toString());
+        if (!showImage) {
+            String iconPath = MIMEMapping.getMIMETypeIcon(control.getExtension());
+
+            out.write(Spacer.getHtml(0, 0));
+
+            out.write("<a href=");
+            out.write(link);
+            out.write(" target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$
+
+            out.write("<img src=\"" //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + iconPath
+                + "\" class=\"" //$NON-NLS-1$
+                + CssConstants.CSSCLASS_FILEICON
+                + "\" border=\"0\">"); //$NON-NLS-1$
+            out.write(control.getFileName() + "." + control.getExtension() + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
+
+    protected StringBuffer getHtmlControlFileName(File control) {
+        StringBuffer htmlControlFileName = new StringBuffer();
+        htmlControlFileName.append("<span class=\"" //$NON-NLS-1$
+            + CssConstants.CSSCLASS_DESCRIPTION
+            + "\">" //$NON-NLS-1$
+            + getMessage("dialog.file.filename") //$NON-NLS-1$
+            + "</span>"); //$NON-NLS-1$
+        htmlControlFileName.append(Spacer.getHtml(1, 1));
+        htmlControlFileName.append(control.getHtmlFileName() + "<span id=\"" //$NON-NLS-1$
+            + this.getName()
+            + "_fileNameExtension\">." //$NON-NLS-1$
+            + control.getExtension()
+            + "</span>"); //$NON-NLS-1$
+        return htmlControlFileName;
     }
 
     public boolean validate() {
