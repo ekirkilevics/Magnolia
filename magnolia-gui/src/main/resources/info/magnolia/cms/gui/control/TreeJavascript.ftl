@@ -18,7 +18,6 @@
     <#list columns as tc>
         ${tree.javascriptTree}.columns[${columns?seq_index_of(tc)}]=new mgnlTreeColumn(
             ${tc.width},
-            '${tc.htmlEdit}',
             '${tc.name?default('column'+ columns?seq_index_of(tc))}',
             ${tc.isMeta?string},
             ${tc.isLabel?string},

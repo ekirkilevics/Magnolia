@@ -737,7 +737,6 @@
     mgnlTree.prototype.editNodeData = function(span,id,columnNumber,htmlEdit)
         {
         var column=this.columns[columnNumber];
-        //var htmlEdit=column.htmlEdit;
         if (htmlEdit!="")
             {
             var value=span.innerHTML;
@@ -983,10 +982,9 @@
     //### TreeColumn
     //#################
 
-    function mgnlTreeColumn(width,htmlEdit,name,isMeta,isLabel,isNodeDataValue,isNodeDataType)
+    function mgnlTreeColumn(width,name,isMeta,isLabel,isNodeDataValue,isNodeDataType)
         {
         this.width=width;
-        this.htmlEdit=htmlEdit;
         this.name=name;
         this.isMeta=isMeta;
         this.isLabel=isLabel;
