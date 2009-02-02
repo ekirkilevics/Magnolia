@@ -95,6 +95,8 @@ public class InstallFilter extends AbstractMgnlFilter {
                 final boolean installDone = ui.execute(out, command);
                 if (installDone) {
                     mainFilter.reset();
+                    // invalidate session: MAGNOLIA-2611
+                    request.getSession().invalidate();
                     // redirect to root
                     response.sendRedirect(contextPath + "/");
                 }
