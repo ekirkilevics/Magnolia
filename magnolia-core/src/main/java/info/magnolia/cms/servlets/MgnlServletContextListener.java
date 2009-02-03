@@ -222,10 +222,6 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         try {
             servername = StringUtils.lowerCase(InetAddress.getLocalHost().getHostName());
-
-            if (StringUtils.contains(servername, ".")) {
-                servername = StringUtils.substringBefore(servername, ".");
-            }
             SystemProperty.setProperty(SystemProperty.MAGNOLIA_SERVERNAME, servername);
         }
         catch (UnknownHostException e) {
