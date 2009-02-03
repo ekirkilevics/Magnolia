@@ -10,14 +10,13 @@
   <packaging>pom</packaging>
   <name>magnolia-project</name>
   <version>4.0-SNAPSHOT</version>
-  <description> Magnolia is an open-source enterprise class Content Management System developed by Magnolia
-    International, based on the standard API for Java Content Repositories (JCR).</description>
+  <description>Magnolia is an open-source enterprise class Content Management System
+    developed by Magnolia International, based on the standard API for Java Content Repositories (JCR).</description>
   <url>http://www.magnolia-cms.com</url>
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
-    <documentationURL>http://documentation.magnolia-cms.com/release/4-0.html
-    </documentationURL>
+    <documentationURL>http://documentation.magnolia-cms.com/release/4-0.html</documentationURL>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -169,10 +168,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <!--
-          We don't want the release plugin to generate a site for this big project, we'll generate it manually as a
-          separate process
-        -->
+        <!-- We don't want the release plugin to generate a site for this big project,
+             we'll generate it manually as a separate process -->
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
           <goals>deploy</goals>
@@ -377,10 +374,7 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <!--
-        required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of
-        commons-logging
-      -->
+      <!-- required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of commons-logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
@@ -390,10 +384,7 @@
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>1.2.15</version>
-        <!--
-          1.2.15 being log4j's first maven-based release, they have a bunch of things to learn, i.e that most of their
-          dependencies should be flagged as optional
-        -->
+        <!-- 1.2.15 being log4j's first maven-based release, they have a bunch of things to learn, i.e that most of their dependencies should be flagged as optional -->
         <exclusions>
           <exclusion>
             <groupId>javax.mail</groupId>
@@ -545,8 +536,7 @@
     <site>
       <id>dev.magnolia-cms.com</id>
       <name>dev.magnolia-cms.com</name>
-      <url>scp://dev.magnolia-cms.com/sites/dev/ref/${project.version}
-      </url>
+      <url>scp://dev.magnolia-cms.com/sites/dev/ref/${project.version}</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
