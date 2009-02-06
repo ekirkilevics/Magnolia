@@ -38,6 +38,7 @@ import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.ContentUtil;
 
 import java.util.HashMap;
@@ -202,6 +203,16 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     public void setWorkspace(Workspace workspace) {
         this.session.setWorkspace(workspace);
     }
+    
+    /**
+     * Set access manager for this hierarchy
+     * @param accessManager
+     */
+    public void setAccessManager(AccessManager accessManager) {
+        super.setAccessManager(accessManager);
+    }
+
+
 
     public String getName() {
         return this.name;
