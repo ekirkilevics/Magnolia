@@ -40,7 +40,7 @@ package info.magnolia.cms.link;
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
- * @deprecated use {@link info.magnolia.link.CompleteUrlPathTransformer} instead
+ * @deprecated since 4.0 use {@link info.magnolia.link.CompleteUrlPathTransformer} instead
  */
 public class CompleteUrlPathTransformer extends info.magnolia.link.CompleteUrlPathTransformer {
 

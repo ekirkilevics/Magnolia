@@ -39,7 +39,7 @@ import info.magnolia.link.LinkTransformer;
 /**
  * 
  * @author had
- * @deprecated use {@link LinkTransformer} instead. 
+ * @deprecated since 4.0 use {@link LinkTransformer} instead. 
  */
 public interface PathToLinkTransformer extends LinkTransformer {
 }

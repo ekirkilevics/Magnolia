@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 
 /**
- * @deprecated use {@link info.magnolia.link.RelativePathTransformer} instead
+ * @deprecated since 4.0 use {@link info.magnolia.link.RelativePathTransformer} instead
  * @author had
  * @version $Id$
  */

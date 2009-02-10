@@ -37,7 +37,7 @@ package info.magnolia.cms.link;
  * Add the context path only to the binaries.
  * @author philipp
  * @version $Id$
- * @deprecated use {@link info.magnolia.link.EditorLinkTransformer} instead
+ * @deprecated since 4.0 use {@link info.magnolia.link.EditorLinkTransformer} instead
  */
 public class EditorLinkTransformer extends info.magnolia.link.EditorLinkTransformer {
 }

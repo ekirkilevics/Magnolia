@@ -46,7 +46,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author had
  * @version $Id$
- * @deprecated use {@link info.magnolia.link.AbsolutePathTransformer} instead
+ * @deprecated since 4.0 use {@link info.magnolia.link.AbsolutePathTransformer} instead
  */
 public class AbsolutePathTransformer{
 

@@ -55,7 +55,7 @@ import info.magnolia.cms.util.FactoryUtil;
  *
  * @author philipp
  * @version $Id$
- * @deprecated use {@link LinkHelper} instead
+ * @deprecated since 4.0 use {@link LinkHelper} instead
  *
  */
 public interface LinkResolver {

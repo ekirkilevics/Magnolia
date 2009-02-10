@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author philipp
  * @version $Id$
- * @deprecated use {@link info.magnolia.link.Link} instead
+ * @deprecated since 4.0 use {@link info.magnolia.link.Link} instead
  */
 public class UUIDLink {
 

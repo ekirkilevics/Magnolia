@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author philipp
  * @version $Id$
- * @deprecated use {@link LinkUtil} instead
+ * @deprecated since 4.0 use {@link LinkUtil} instead
  */
 public class LinkResolverImpl implements LinkResolver {
 
