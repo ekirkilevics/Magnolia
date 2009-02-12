@@ -144,12 +144,12 @@ public class MagnoliaTemplatingUtilities {
     }
 
     public String createLink(Content node) {
-        return LinkUtil.createAbsoluteLink(node);
+        return LinkUtil.createBrowserLink(node);
     }
 
     public String createLink(NodeData nd) {
         try {
-            return LinkUtil.createAbsoluteLink(nd);
+            return LinkUtil.createBrowserLink(nd);
         } catch (LinkException e) {
             log.error("Can't resolve link defined in node {} because of {}.", nd.getHandle(), ExceptionUtils.getRootCauseMessage(e));
             return null;
@@ -158,7 +158,7 @@ public class MagnoliaTemplatingUtilities {
 
     public String createLink(String repositoryId, String uuid) {
         try {
-            return LinkUtil.createAbsoluteLink(repositoryId, uuid);
+            return LinkUtil.createBrowserLink(repositoryId, uuid);
         } catch (RepositoryException e) {
             log.error("Can't resolve link with UUID {} because of {}.", uuid , ExceptionUtils.getRootCauseMessage(e));
             return null;

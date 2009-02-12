@@ -129,8 +129,8 @@ public abstract class AbstractRenderer {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final Content page = aggregationState.getMainContent();
 
-        setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(page, page));
-        setContextAttribute(ctx, "content", wrapNodeForTemplate(content, page));
+        setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(page));
+        setContextAttribute(ctx, "content", wrapNodeForTemplate(content));
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", aggregationState);
         setContextAttribute(ctx, "mgnl", getMagnoliaTemplatingUtilities());
@@ -145,11 +145,10 @@ public abstract class AbstractRenderer {
     /**
      * Wraps a node before exposing it to the template renderer.
      * @param currentContent the actual content being exposed to the template
-     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      * @see info.magnolia.module.templating.paragraphs.JspParagraphRenderer
      * TODO : return an Object instance instead - more flexibility for the template engine ?
      */
-    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
+    protected Content wrapNodeForTemplate(Content currentContent) {
         return new I18nContentWrapper(currentContent);
     }
 

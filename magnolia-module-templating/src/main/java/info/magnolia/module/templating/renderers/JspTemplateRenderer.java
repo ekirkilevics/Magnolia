@@ -80,9 +80,9 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
     /**
      * We expose nodes as Map instances in JSPs.
      */
-    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
-        final Content wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
-        return new NodeMapWrapper(wrapped, mainContent.getHandle());
+    protected Content wrapNodeForTemplate(Content currentContent) {
+        final Content wrapped = super.wrapNodeForTemplate(currentContent);
+        return new NodeMapWrapper(wrapped);
     }
 
     protected Map newContext() {
