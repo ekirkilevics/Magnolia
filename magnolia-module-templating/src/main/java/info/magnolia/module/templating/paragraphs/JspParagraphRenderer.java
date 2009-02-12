@@ -67,9 +67,9 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
     /**
      * We expose nodes as Map instances in JSPs.
      */
-    protected Content wrapNodeForTemplate(Content currentContent) {
-        final Content wrapped = super.wrapNodeForTemplate(currentContent);
-        return new NodeMapWrapper(wrapped);
+    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
+        final Content wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
+        return new NodeMapWrapper(wrapped, mainContent.getHandle());
     }
 
     protected String getPageAttributeName() {
