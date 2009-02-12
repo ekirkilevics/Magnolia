@@ -96,14 +96,14 @@ public class LinkUtil {
     }
 
     /**
-     * Transforms a uuid to an uri. It does not add the context path. In difference from {@link Link#getHandle()}, 
+     * Transforms a uuid to an uri. It does not add the context path. In difference from {@link Link#getHandle()},
      * this method will apply all uri to repository mappings as well as i18n.
      */
     public static String convertUUIDtoURI(String uuid, String repository) throws LinkException {
         return LinkTransformerManager.getInstance().getAbsolute(false).transform(LinkFactory.createLink(repository, uuid));
     }
 
-    //-- conversions to UUID - bulk 
+    //-- conversions to UUID - bulk
     /**
      * Parses provided html and transforms all the links to the magnolia format. Used during storing.
      * @param html html code with links to be converted
@@ -240,7 +240,7 @@ public class LinkUtil {
             throw new RuntimeException("It seems your system does not support UTF-8 !?", e);
         }
     }
-    
+
     /**
      * Creates absolute link including context path for provided node data.
      * @param nodedata Node data to create link for.
@@ -251,11 +251,11 @@ public class LinkUtil {
         if(nodedata == null || !nodedata.isExist()){
             return null;
         }
-        return LinkTransformerManager.getInstance().getAbsolute().transform(LinkFactory.createLink(nodedata));
+        return getAbsolutLinkTransformer().transform(LinkFactory.createLink(nodedata));
     }
 
     /**
-     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales. 
+     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
      * @param uuid UUID of content to create link to.
      * @param repository Name of the repository where content is located.
      * @return Absolute link to the provided content.
@@ -268,7 +268,7 @@ public class LinkUtil {
     }
 
     /**
-     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales. 
+     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
      * @param content content to create link to.
      * @return Absolute link to the provided content.
      * @see AbstractI18nContentSupport
@@ -277,6 +277,63 @@ public class LinkUtil {
         if(content == null){
             return null;
         }
-        return LinkTransformerManager.getInstance().getAbsolute().transform(LinkFactory.createLink(content));
+        return getAbsolutLinkTransformer().transform(LinkFactory.createLink(content));
     }
+
+    private static AbsolutePathTransformer getAbsolutLinkTransformer() {
+        return LinkTransformerManager.getInstance().getAbsolute();
+    }
+
+    /**
+     * Creates a link as returned to the client. Based on the server configuration this might be an absolute or relative link.
+     * @param nodedata Node data to create link for.
+     * @return link to the provided node data.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createBrowserLink(NodeData nodedata) throws LinkException {
+        if(nodedata == null || !nodedata.isExist()){
+            return null;
+        }
+        return getBrowserLinkTransformer().transform(LinkFactory.createLink(nodedata));
+    }
+
+    /**
+     * Creates a link as returned to the client. Based on the server configuration this might be an absolute or relative link.
+     * @param uuid UUID of content to create link to.
+     * @param repository Name of the repository where content is located.
+     * @return link to the provided content.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createBrowserLink(String repository, String uuid) throws RepositoryException {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+        Content node = hm.getContentByUUID(uuid);
+        return createBrowserLink(node);
+    }
+
+    /**
+     * Creates a link as returned to the client. Based on the server configuration this might be an absolute or relative link.
+     * @param content content to create link to.
+     * @return link to the provided content.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createBrowserLink(Content content) {
+        if(content == null){
+            return null;
+        }
+        return getBrowserLinkTransformer().transform(LinkFactory.createLink(content));
+    }
+
+    /**
+     * Returns a browser link transformer configured based on the original uri (in case the transformer creates relative links)
+     */
+    public static LinkTransformer getBrowserLinkTransformer() {
+        final String extension = MgnlContext.getAggregationState().getExtension();
+        // remove extension
+        String currentPath = MgnlContext.getAggregationState().getOriginalURI();
+        if(StringUtils.isNotEmpty(extension)){
+            currentPath  = StringUtils.removeEnd(currentPath, "." + extension);
+        }
+        return LinkTransformerManager.getInstance().getBrowserLink(currentPath);
+    }
+
 }

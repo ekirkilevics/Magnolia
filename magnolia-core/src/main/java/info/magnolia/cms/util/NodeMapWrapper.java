@@ -36,8 +36,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,20 +60,13 @@ import org.slf4j.LoggerFactory;
  */
 public class NodeMapWrapper extends ContentWrapper implements Map {
     private static final Logger log = LoggerFactory.getLogger(NodeMapWrapper.class);
-    
-    /**
-     * Handle used to construct links.
-     */
-    private final String handle;
 
     /**
      * Instantiates a new NodeMapWrapper for the given node.
      * @param node Content node
-     * @param handle Parent page handle or other prefix for links.
      */
-    public NodeMapWrapper(Content node, String handle) {
+    public NodeMapWrapper(Content node) {
         super(node);
-        this.handle = handle;
     }
 
     /**
@@ -144,7 +137,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
         }
         else {
             try {
-                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(nodeData.getString(), LinkTransformerManager.getInstance().getBrowserLink(handle));
+                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(nodeData.getString(), LinkUtil.getBrowserLinkTransformer());
             } catch (LinkException e) {
                 log.warn("Failed to parse links with from " + nodeData.getName(), e);
                 value = nodeData.getString();

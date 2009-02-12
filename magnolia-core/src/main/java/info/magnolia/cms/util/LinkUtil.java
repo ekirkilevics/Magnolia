@@ -93,7 +93,7 @@ public final class LinkUtil extends info.magnolia.link.LinkUtil {
      */
     public static String convertUUIDsToBrowserLinks(String str, String url) {
         try {
-            return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getBrowserLink(url));
+            return convertLinksFromUUIDPattern(str, LinkUtil.getBrowserLinkTransformer());
         } catch (LinkException e) {
             return null;
         }

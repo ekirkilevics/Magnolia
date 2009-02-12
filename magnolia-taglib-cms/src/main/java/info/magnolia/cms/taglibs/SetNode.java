@@ -34,9 +34,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.PageContext;
 
@@ -122,7 +119,7 @@ public class SetNode extends BaseContentTag {
 
         // set attribute
         if (contentNode != null) {
-            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, MgnlContext.getAggregationState().getMainContent()), this.scope);
+            pageContext.setAttribute(this.var, new info.magnolia.cms.util.NodeMapWrapper(contentNode), this.scope);
         }
         else {
             pageContext.removeAttribute(this.var);
@@ -141,12 +138,12 @@ public class SetNode extends BaseContentTag {
      * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
      * @author fgiust
      * @version $Revision$ ($Author$)
-     * @deprecated use info.magnolia.cms.util.NodeMapWrapper instead
+     * @deprecated since 4.0, use info.magnolia.cms.util.NodeMapWrapper instead
      */
     public class NodeMapWrapper extends info.magnolia.cms.util.NodeMapWrapper {
 
         public NodeMapWrapper(Content node, Content actPage) {
-            super(node, actPage.getHandle());
+            super(node);
         }
     }
 
