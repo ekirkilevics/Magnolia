@@ -73,7 +73,7 @@ public class PropertiesImportExport {
 
             //if this is a node definition (no property)
             String key = orgKey;
-            if (StringUtils.isEmpty(valueStr) && !key.contains(".") && !key.contains("@")) {
+            if (StringUtils.isEmpty(valueStr) && !contains(key, '.') && !contains(key,'@')) {
                 key += "@type";
                 valueStr = "nt:base";
             }
@@ -118,7 +118,7 @@ public class PropertiesImportExport {
     protected Object convertNodeDataStringToObject(String valueStr) {
         Object valueObj = valueStr;
 
-        if (valueStr.contains(":")) {
+        if (contains(valueStr, ':')) {
             String type = StringUtils.substringBefore(valueStr, ":");
             if (type.equals("int")) {
                 type = "integer";
@@ -128,7 +128,7 @@ public class PropertiesImportExport {
                 valueObj = ConvertUtils.convert(value, Class.forName("java.lang." + StringUtils.capitalize(type)));
             }
             catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("can't convert value [" + valueStr + "]", e);
+                throw new IllegalArgumentException("Can't convert value [" + valueStr + "], ClassNotFoundException: " + e.getMessage());
             }
         }
         return valueObj;
@@ -155,4 +155,7 @@ public class PropertiesImportExport {
         }
     }
 
+    private static boolean contains(String s, char ch) {
+        return s.indexOf(ch) > -1;
+    }
 }

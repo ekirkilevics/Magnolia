@@ -47,6 +47,8 @@ import java.io.IOException;
  * @version $Revision: $ ($Author: $)
  */
 public class LazyFileTemplateLoader extends AbstractDelegatingTemplateLoader {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LazyFileTemplateLoader.class);
+
     private String basePath;
     private boolean allowLinking;
 
@@ -70,7 +72,8 @@ public class LazyFileTemplateLoader extends AbstractDelegatingTemplateLoader {
         try {
             return new FileTemplateLoader(new File(basePath), allowLinking);
         } catch (IOException e) {
-            throw new IllegalArgumentException("Can't initialize FileTemplateLoader: " + e.getMessage(), e);
+            log.error("Can't initialize FileTemplateLoader: " + e.getMessage(), e);
+            throw new IllegalArgumentException("Can't initialize FileTemplateLoader: " + e.getMessage());
         }
     }
 }

@@ -53,6 +53,7 @@ import javax.jcr.observation.EventListener;
 
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +121,7 @@ public class FactoryUtil {
             }
         }
         catch (Exception e) {
-            throw new IllegalStateException("Can't instantiate an implementation of this class [" + interf.getName() + "]", e);
+            throw new IllegalStateException("Can't instantiate an implementation of this class [" + interf.getName() + "]: " + ExceptionUtils.getMessage(e));
         }
     }
 
