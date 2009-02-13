@@ -926,7 +926,7 @@ public class Tree extends ControlImpl {
         String dblclick = StringUtils.EMPTY;
         String htmlEdit = this.getColumns(0).getHtmlEdit();
         if (permissionWrite && StringUtils.isNotEmpty(htmlEdit)) {
-            dblclick = " ondblclick=\"" + this.javascriptTree + ".editNodeData(this,'" + handle + "',0,'"+ htmlEdit.replace("\"", "&quot;") + "');\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            dblclick = " ondblclick=\"" + this.javascriptTree + ".editNodeData(this,'" + handle + "',0,'"+ StringUtils.replace(htmlEdit, "\"", "&quot;") + "');\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         html.append("<span class=\"mgnlTreeText\" id=\"");
         html.append(idPre);
@@ -991,7 +991,7 @@ public class Tree extends ControlImpl {
                 html.append("',");
                 html.append(i);
                 html.append(",'");
-                html.append(htmlEdit.replace("\"", "&quot;"));
+                html.append(StringUtils.replace(htmlEdit, "\"", "&quot;"));
                 html.append("');\"");
                 html.append(",'");
 

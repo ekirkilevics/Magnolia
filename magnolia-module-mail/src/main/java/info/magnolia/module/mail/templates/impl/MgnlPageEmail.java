@@ -263,9 +263,9 @@ public class MgnlPageEmail extends FreemarkerEmail {
 
     private String getUrl(String currentPagePath, String path) {
         String urlBasePath = currentPagePath.substring(0, currentPagePath.indexOf(MgnlContext.getContextPath()) );
-        if(!path.contains(HTTP) && !path.contains(MgnlContext.getContextPath())) {
+        if(!StringUtils.contains(path, HTTP) && !StringUtils.contains(path, MgnlContext.getContextPath())) {
             return currentPagePath.substring(0, currentPagePath.lastIndexOf("/") + 1) + path;
-        } else if(!path.contains(HTTP)) {
+        } else if(!StringUtils.contains(path, HTTP)) {
             return urlBasePath + path;
         }
         return path;

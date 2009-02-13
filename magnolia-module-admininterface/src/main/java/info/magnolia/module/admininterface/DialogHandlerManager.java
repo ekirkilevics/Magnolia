@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 
 /**
@@ -82,7 +83,8 @@ public class DialogHandlerManager extends ObservedManager {
             collectDialogNodes(node, dialogNodes);
         }
         catch (RepositoryException e) {
-            throw new IllegalStateException("can't collect dialog nodes for [" + node.getHandle() + "]", e);
+            log.error("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
+            throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
         }
 
         for (Iterator iter = dialogNodes.iterator(); iter.hasNext();) {
@@ -93,7 +95,8 @@ public class DialogHandlerManager extends ObservedManager {
                 }
             }
             catch (RepositoryException e) {
-                throw new IllegalStateException("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]", e);
+                log.error("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
+                throw new IllegalStateException("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e));
             }
             String name = dialogNode.getNodeData(ND_NAME).getString();
             if (StringUtils.isEmpty(name)) {
