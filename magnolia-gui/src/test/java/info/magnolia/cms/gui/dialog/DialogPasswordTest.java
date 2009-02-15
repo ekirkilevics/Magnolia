@@ -36,6 +36,8 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -77,16 +79,16 @@ public class DialogPasswordTest extends TestCase {
         Content storageNode = createStrictMock(Content.class);
         Content configNode = createStrictMock(Content.class);
         NodeData pswd = createStrictMock(NodeData.class);
-        
+
         SystemContext ctx = createStrictMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
-        
+
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
         expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
         expect(configNode.getName()).andReturn("pswd");
         expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        
+
         // validate() call
         expect(request.getParameter("pswd")).andReturn("blah");
         expect(request.getParameter("pswd_verification")).andReturn("blah");
@@ -107,16 +109,16 @@ public class DialogPasswordTest extends TestCase {
         Content storageNode = createStrictMock(Content.class);
         Content configNode = createStrictMock(Content.class);
         NodeData pswd = createStrictMock(NodeData.class);
-        
+
         SystemContext ctx = createStrictMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
-        
+
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
         expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
         expect(configNode.getName()).andReturn("pswd");
         expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        
+
         // validate() call
         expect(request.getParameter("pswd")).andReturn("blah");
         expect(request.getParameter("pswd_verification")).andReturn("blah");
@@ -137,16 +139,16 @@ public class DialogPasswordTest extends TestCase {
         Content storageNode = createStrictMock(Content.class);
         Content configNode = createStrictMock(Content.class);
         NodeData pswd = createStrictMock(NodeData.class);
-        
+
         SystemContext ctx = createStrictMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
-        
+
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
         expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
         expect(configNode.getName()).andReturn("pswd");
         expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        
+
         // validate() call
         expect(request.getParameter("pswd")).andReturn("    ");
         expect(request.getParameter("pswd_verification")).andReturn("");
@@ -168,22 +170,23 @@ public class DialogPasswordTest extends TestCase {
         Content configNode = createStrictMock(Content.class);
         Iterator iterator = createStrictMock(Iterator.class);
         NodeData pswd = createStrictMock(NodeData.class);
-        // use nice mock due to issues with MessageManager and its static init block 
+        // use nice mock due to issues with MessageManager and its static init block
         SystemContext ctx = createNiceMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, ctx);
+        FactoryUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         MgnlContext.setInstance(ctx);
-        
+
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
         expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
         expect(configNode.getName()).andReturn("pswd");
         expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        
+
         // validate() call
         expect(request.getParameter("pswd")).andReturn("blah");
         expect(request.getParameter("pswd_verification")).andReturn("huh");
         expect(storageNode.getNodeData("pswd")).andReturn(pswd);
         expect(pswd.getString()).andReturn("oldBlah").times(2);
-        
+
         //ctx.setLocale(Locale.ENGLISH);
         expect(ctx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
 
@@ -212,22 +215,23 @@ public class DialogPasswordTest extends TestCase {
         Content configNode = createStrictMock(Content.class);
         Iterator iterator = createStrictMock(Iterator.class);
         NodeData pswd = createStrictMock(NodeData.class);
-        // use nice mock due to issues with MessageManager and its static init block 
+        // use nice mock due to issues with MessageManager and its static init block
         SystemContext ctx = createNiceMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, ctx);
+        FactoryUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         MgnlContext.setInstance(ctx);
-        
+
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
         expect(configNode.getHandle()).andReturn("/som/dialog/path/pswd");
         expect(configNode.getName()).andReturn("pswd");
         expect(configNode.getChildren(ItemType.CONTENTNODE)).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        
+
         // validate() call
         expect(request.getParameter("pswd")).andReturn("blah");
         expect(request.getParameter("pswd_verification")).andReturn("");
         expect(storageNode.getNodeData("pswd")).andReturn(pswd);
         expect(pswd.getString()).andReturn("oldBlah").times(2);
-        
+
         //ctx.setLocale(Locale.ENGLISH);
         expect(ctx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
 
