@@ -160,9 +160,11 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
                 log.debug("Exception while dispatching resource " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                return;
             }
             catch (Exception e) {
                 log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                return;
             }
             finally {
                 IOUtils.closeQuietly(is);
@@ -174,7 +176,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
         else {
-            log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
+            log.info("Unable to redirect to 404 page for {}, response is already committed", request.getRequestURI()); //$NON-NLS-1$
         }
 
     }
