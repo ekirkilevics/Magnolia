@@ -107,5 +107,7 @@ public abstract class MessagesManager {
 
     public abstract Messages getMessagesInternal(String basename, Locale locale);
 
+    public abstract void reload();
+
     abstract void setDefaultBasename(String basename);
 }
