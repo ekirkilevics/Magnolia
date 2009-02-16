@@ -64,7 +64,6 @@ import java.util.Map;
  * @author philipp
  */
 public class DefaultMessagesManager extends MessagesManager {
-
     private final static Logger log = LoggerFactory.getLogger(DefaultMessagesManager.class);
 
     /**
@@ -92,7 +91,6 @@ public class DefaultMessagesManager extends MessagesManager {
     }
 
     // for tests
-
     void setDefaultBasename(String defaultBasename) {
         this.defaultBasename = defaultBasename;
     }
@@ -146,13 +144,12 @@ public class DefaultMessagesManager extends MessagesManager {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
         try {
-            log.info("Loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
+            log.info("Loading i18n configuration - {}", I18N_CONFIG_PATH); //$NON-NLS-1$
 
             // checks if node exists
             if (!hm.isExist(I18N_CONFIG_PATH)) {
-                // configNode = ContentUtil.createPath(hm, I18N_CONFIG_PATH,
-                // ItemType.CONTENT, true);
-                log.warn(I18N_CONFIG_PATH + " does not exist yet; skipping.");
+                // configNode = ContentUtil.createPath(hm, I18N_CONFIG_PATH, ItemType.CONTENT, true);
+                log.warn("{} does not exist yet; skipping.", I18N_CONFIG_PATH);
                 return;
             }
 
@@ -160,8 +157,7 @@ public class DefaultMessagesManager extends MessagesManager {
 
             setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
-            // get the available languages - creates it if it does not exist -
-            // necessary to update to 3.5
+            // get the available languages - creates it if it does not exist - necessary to update to 3.5
             final Content languagesNode;
             if (configNode.hasContent(LANGUAGES_NODE_NAME)) {
                 languagesNode = configNode.getContent(LANGUAGES_NODE_NAME);
@@ -181,9 +177,8 @@ public class DefaultMessagesManager extends MessagesManager {
                     availableLocales.add(ld.getLocale());
                 }
             }
-        }
-        catch (Exception e) {
-            log.error("Failed to load i18n configuration - " + I18N_CONFIG_PATH, e); //$NON-NLS-1$
+        } catch (Exception e) {
+            log.error("Failed to load i18n configuration - {}", I18N_CONFIG_PATH, e); //$NON-NLS-1$
         }
     }
 
