@@ -138,9 +138,7 @@ public abstract class MessagesManager {
 
     public abstract Locale getDefaultLocale();
 
-    public abstract Messages getMessagesInternal(String basename, Locale locale);
+    protected abstract Messages getMessagesInternal(String basename, Locale locale);
 
     public abstract void reload();
-
-    abstract void setDefaultBasename(String basename);
 }

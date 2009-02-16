@@ -62,11 +62,13 @@ public class MessagesManagerTest extends TestCase {
 
         sysCtx = createStrictMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, sysCtx);
+        FactoryUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
         replay(ctx, sysCtx);
 
         // Replace the default bundle (adminterface) by a fake one - see MAGNOLIA-2528
-        MessagesManager.getInstance().setDefaultBasename("info.magnolia.cms.i18n.fakedefault");
+        final DefaultMessagesManager mm = (DefaultMessagesManager) MessagesManager.getInstance();
+        mm.setDefaultBasename("info.magnolia.cms.i18n.fakedefault");
     }
 
     protected void tearDown() throws Exception {
