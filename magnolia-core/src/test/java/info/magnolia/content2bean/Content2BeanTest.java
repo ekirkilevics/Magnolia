@@ -42,28 +42,11 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
  */
 public class Content2BeanTest extends MgnlTestCase {
-
-    /**
-     *
-     */
-    public Content2BeanTest() throws IOException {
-        super();
-    }
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(Content2BeanTest.class);
-
     public void testContentToBeanWithClassDefined() throws RepositoryException, Content2BeanException{
         Content node = MockUtil.createNode("node", new Object[][]{
             {"class", "info.magnolia.content2bean.SimpleBean"},

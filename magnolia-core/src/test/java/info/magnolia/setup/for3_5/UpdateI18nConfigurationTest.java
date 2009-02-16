@@ -115,6 +115,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         MgnlContext.setInstance(null);
+        FactoryUtil.clear();
     }
 
     public void testUpdatesProperlyWhenAlreadyExisting() throws Exception {
