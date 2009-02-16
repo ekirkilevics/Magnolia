@@ -44,10 +44,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Pattern;
@@ -67,11 +68,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ClasspathResourcesUtil {
-
-    /**
-     * logger
-     */
-    private static Logger log = LoggerFactory.getLogger(ClasspathResourcesUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(ClasspathResourcesUtil.class);
 
     /**
      * Filter for filtering the resources.
@@ -83,8 +80,7 @@ public class ClasspathResourcesUtil {
     }
 
     public static class PatternFilter implements Filter{
-
-        private Pattern pattern;
+        private final Pattern pattern;
 
         public PatternFilter(String pattern) {
             this.pattern = Pattern.compile(pattern);
@@ -102,7 +98,6 @@ public class ClasspathResourcesUtil {
 
     /**
      * Return a collection containing the resource names which match the regular expression.
-     * @param filter
      * @return string array of found resources TODO : (lazy) cache ?
      */
     public static String[] findResources(String regex) {
@@ -115,21 +110,21 @@ public class ClasspathResourcesUtil {
      * @return string array of found resources TODO : (lazy) cache ?
      */
     public static String[] findResources(Filter filter) {
-
-        Collection resources = new ArrayList();
-
-        ClassLoader cl = getCurrentClassLoader();
+        final Set resources = new HashSet();
+        final ClassLoader cl = getCurrentClassLoader();
 
         // if the classloader is an URLClassloader we have a better method for discovering resources
         // whis will also fetch files from jars outside WEB-INF/lib, useful during development
         if (cl instanceof URLClassLoader) {
-            // tomcat classloader is org.apache.catalina.loader.WebappClassLoader
-            URL[] urls = ((URLClassLoader) cl).getURLs();
-            for (int j = 0; j < urls.length; j++) {
-                final File tofile = sanitizeToFile(urls[j]);
-                collectFiles(resources, tofile, filter);
+            final URLClassLoader urlClassLoader = (URLClassLoader) cl;
+            final URL[] urls = urlClassLoader.getURLs();
+            if (urls.length == 1 && urls[0].getPath().endsWith("WEB-INF/classes/")) {
+                // working around MAGNOLIA-2577
+                log.warn("Looks like we're in a JBoss 5 expanded war directory, will attempt to load resources from the file system instead; see MAGNOLIA-2577.");
+            } else {
+                collectFromURLs(resources, urls, filter);
+                return (String[]) resources.toArray(new String[resources.size()]);
             }
-            return (String[]) resources.toArray(new String[resources.size()]);
         }
 
         try {
@@ -141,14 +136,7 @@ public class ClasspathResourcesUtil {
             String classpath = BeanUtils.getProperty(cl, "classPath");
 
             if (StringUtils.isNotEmpty(classpath)) {
-                String[] paths = classpath.split(File.pathSeparator);
-                for (int j = 0; j < paths.length; j++) {
-                    final File tofile = new File(paths[j]);
-                    // there can be several missing (optional?) paths here...
-                    if (tofile.exists()) {
-                        collectFiles(resources, tofile, filter);
-                    }
-                }
+                collectFromClasspathString(resources, classpath, filter);
                 return (String[]) resources.toArray(new String[resources.size()]);
             }
         }
@@ -158,10 +146,33 @@ public class ClasspathResourcesUtil {
 
         // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
         // read the jars in the lib dir
+        collectFromFileSystem(filter, resources);
+        return (String[]) resources.toArray(new String[resources.size()]);
+    }
+
+    protected static void collectFromURLs(Collection resources, URL[] urls, Filter filter) {
+        // tomcat classloader is org.apache.catalina.loader.WebappClassLoader
+        for (int j = 0; j < urls.length; j++) {
+            final File tofile = sanitizeToFile(urls[j]);
+            collectFiles(resources, tofile, filter);
+        }
+    }
+
+    protected static void collectFromClasspathString(Collection resources, String classpath, Filter filter) {
+        String[] paths = classpath.split(File.pathSeparator);
+        for (int j = 0; j < paths.length; j++) {
+            final File tofile = new File(paths[j]);
+            // there can be several missing (optional?) paths here...
+            if (tofile.exists()) {
+                collectFiles(resources, tofile, filter);
+            }
+        }
+    }
+
+    protected static void collectFromFileSystem(Filter filter, Collection resources) {
         File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
         if (dir.exists()) {
             File[] files = dir.listFiles(new FilenameFilter() {
-
                 public boolean accept(File file, String name) {
                     return name.endsWith(".jar");
                 }
@@ -177,8 +188,6 @@ public class ClasspathResourcesUtil {
         if (classFileDir.exists()) {
             collectFiles(resources, classFileDir, filter);
         }
-
-        return (String[]) resources.toArray(new String[resources.size()]);
     }
 
     protected static File sanitizeToFile(URL url) {
@@ -211,13 +220,9 @@ public class ClasspathResourcesUtil {
         }
 
         if (jarOrDir.isDirectory()) {
-            if (log.isDebugEnabled()) {
-                log.debug("looking in dir {}", jarOrDir.getAbsolutePath());
-            }
+            log.debug("looking in dir {}", jarOrDir.getAbsolutePath());
 
-            Collection files = FileUtils.listFiles(jarOrDir, new TrueFileFilter() {
-            }, new TrueFileFilter() {
-            });
+            Collection files = FileUtils.listFiles(jarOrDir, TrueFileFilter.TRUE, TrueFileFilter.TRUE);
             for (Iterator iter = files.iterator(); iter.hasNext();) {
                 File file = (File) iter.next();
                 String name = StringUtils.substringAfter(file.getPath(), jarOrDir.getPath());
@@ -234,9 +239,7 @@ public class ClasspathResourcesUtil {
             }
         }
         else if (jarOrDir.getName().endsWith(".jar")) {
-            if (log.isDebugEnabled()) {
-                log.debug("looking in jar {}", jarOrDir.getAbsolutePath());
-            }
+            log.debug("looking in jar {}", jarOrDir.getAbsolutePath());
             JarFile jar;
             try {
                 jar = new JarFile(jarOrDir);
@@ -262,9 +265,7 @@ public class ClasspathResourcesUtil {
             }
         }
         else {
-            if (log.isDebugEnabled()) {
-                log.debug("Unknown (not jar) file in classpath: {}, skipping.", jarOrDir.getName());
-            }
+            log.debug("Unknown (not jar) file in classpath: {}, skipping.", jarOrDir.getName());
         }
 
     }
@@ -290,9 +291,7 @@ public class ClasspathResourcesUtil {
             return url.openStream();
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Can't find {}", name);
-        }
+        log.debug("Can't find {}", name);
         return null;
     }
 
