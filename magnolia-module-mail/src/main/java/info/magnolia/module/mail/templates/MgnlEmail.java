@@ -54,6 +54,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,11 +201,17 @@ public abstract class MgnlEmail extends MimeMessage {
 
         URL url = this.getClass().getResource("/" + template.getTemplateFile());
         log.info("This is the url:" + url);
-        BufferedReader br = new BufferedReader(new FileReader(url.getFile()));
+        FileReader fr = new FileReader(url.getFile());
+        BufferedReader br = new BufferedReader(fr);
         String line;
         StringBuffer buffer = new StringBuffer();
-        while ((line = br.readLine()) != null) {
-            buffer.append(line).append(File.separator);
+        try {
+            while ((line = br.readLine()) != null) {
+                buffer.append(line).append(File.separator);
+            }
+        } finally {
+            IOUtils.closeQuietly(br);
+            IOUtils.closeQuietly(fr);
         }
 
         this.setBody(buffer.toString());
@@ -222,7 +229,7 @@ public abstract class MgnlEmail extends MimeMessage {
     public void setBody() throws Exception {
         if(this.getTemplate() != null && this.getTemplate().getText() != null) {
             setBody(this.getTemplate().getText());
-        } else if(this.getContent() == null){
+        } else if(this.getContent() == null) {
             throw new Exception("no message set");
         }
     }
