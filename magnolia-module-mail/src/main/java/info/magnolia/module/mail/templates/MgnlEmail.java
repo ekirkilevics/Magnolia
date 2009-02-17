@@ -201,8 +201,7 @@ public abstract class MgnlEmail extends MimeMessage {
 
         URL url = this.getClass().getResource("/" + template.getTemplateFile());
         log.info("This is the url:" + url);
-        FileReader fr = new FileReader(url.getFile());
-        BufferedReader br = new BufferedReader(fr);
+        BufferedReader br = new BufferedReader(new FileReader(url.getFile()));
         String line;
         StringBuffer buffer = new StringBuffer();
         try {
@@ -211,7 +210,6 @@ public abstract class MgnlEmail extends MimeMessage {
             }
         } finally {
             IOUtils.closeQuietly(br);
-            IOUtils.closeQuietly(fr);
         }
 
         this.setBody(buffer.toString());
