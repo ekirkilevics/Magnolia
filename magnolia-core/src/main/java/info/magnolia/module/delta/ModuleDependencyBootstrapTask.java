@@ -37,8 +37,7 @@ import info.magnolia.module.InstallContext;
 
 /**
  * A Task which will bootstrap files if an optional module is installed or registered:
- * any resource directly under "/mgnl-bootstrap/moduleName/dependencyName"
- * (but not recursive into sub-directories)
+ * any resource under "/info/magnolia/module/moduleName/setup/dependencyName".
  *
  * @author vsteller
  * @version $Id$
@@ -46,14 +45,14 @@ import info.magnolia.module.InstallContext;
 public class ModuleDependencyBootstrapTask extends IsModuleInstalledOrRegistered {
 
     public ModuleDependencyBootstrapTask(final String dependencyName) {
-        super("Bootstrap " + dependencyName, "Bootstraps " + dependencyName + " content if installed.", dependencyName, new BootstrapResourcesTask("", "") {
-
-            protected boolean acceptResource(InstallContext ctx, String name) {
-                final String moduleName = ctx.getCurrentModuleDefinition().getName();
-                final String path = "/info/magnolia/module/" + moduleName + "/setup/" + dependencyName + "/";
-                return name.startsWith(path) && name.endsWith(".xml");
-            }
-        });
+        super("Bootstrap " + dependencyName, "Bootstraps " + dependencyName + " content if installed.", dependencyName,
+                new BootstrapResourcesTask("", "") {
+                    protected boolean acceptResource(InstallContext ctx, String name) {
+                        final String moduleName = ctx.getCurrentModuleDefinition().getName();
+                        final String path = "/info/magnolia/module/" + moduleName + "/setup/" + dependencyName + "/";
+                        return name.startsWith(path) && name.endsWith(".xml");
+                    }
+                });
     }
 
 }
