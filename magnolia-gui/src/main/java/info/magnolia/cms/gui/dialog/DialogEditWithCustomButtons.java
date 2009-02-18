@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 /**
  * <p>
  * A simple input text with additional configurable buttons. For most uses you can probably stay with the standard date
- * and link dialogs provided with Magnolia, but if you need additional or custom buttoms you can use this control.
+ * and link dialogs provided with Magnolia, but if you need additional or custom buttons you can use this control.
  * </p>
  * <p>
  * Sample configuration:
