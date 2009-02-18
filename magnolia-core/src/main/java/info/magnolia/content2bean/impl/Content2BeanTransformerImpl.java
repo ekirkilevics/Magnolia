@@ -206,7 +206,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             value = values.get("class");
         }
 
-        // do no try to set a bean-property that has no correspoding node-property
+        // do no try to set a bean-property that has no corresponding node-property
         //else if (!values.containsKey(propertyName)) {
         if (value == null) {
             return;

@@ -36,7 +36,7 @@ package info.magnolia.content2bean;
 import java.lang.reflect.Method;
 
 /**
- * Describes a property. Type, type used for ceating concrete instances, is it a map/collection, adder method, ...
+ * Describes a property. Type, type used for creating concrete instances, is it a map/collection, adder method, ...
  * @author philipp
  * @version $Id$
  *
