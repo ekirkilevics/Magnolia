@@ -33,7 +33,14 @@
  */
 package info.magnolia.test;
 
+import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.test.mock.MockContext;
 import junit.framework.TestCase;
+
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory;
 
@@ -41,7 +48,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.jcr.SimpleCredentials;
 import javax.jcr.Repository;
+
 import java.util.Hashtable;
+import java.util.Locale;
 
 /**
  * Ensures some issues we encountered with 3rd party libraries are gone for good.
@@ -82,5 +91,18 @@ public class SelfTest extends TestCase {
             RegistryHelper.unregisterRepository(context, key);
         }
     }
+    
 
+    
+    /**
+     * This test breaks currently when run against commons-beanutils 1.8, but works fine with version 1.7
+     */
+    public void testCommandIsSetCorrectlyFromPrototype() throws Exception {
+        MockContext ctx = new MockContext();
+        ctx.setLocale(Locale.ENGLISH);
+        FactoryUtil.setDefaultImplementation(SystemContext.class, MockContext.class);
+        FactoryUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        MgnlContext.setInstance(ctx);
+        new TestCommand().execute((org.apache.commons.chain.Context)ctx);
+    }
 }
