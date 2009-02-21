@@ -137,7 +137,7 @@ public class QueryTag extends TagSupport {
             q = MgnlContext.getQueryManager(repository).createQuery(query, type);
         }
         catch (InvalidQueryException e) {
-            throw new NestableRuntimeException(e);
+            throw new NestableRuntimeException("Invalid query: " + query, e);
         }
         catch (RepositoryException e) {
             throw new NestableRuntimeException(e);
