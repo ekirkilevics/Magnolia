@@ -112,8 +112,9 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/tools/deployment"))))
 
                 .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
-                .addTask(new BootstrapSingleResource("Quickstart page", "The to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
+                .addTask(new BootstrapSingleResource("Quickstart page", "Registers the page to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
                 .addTask(setDefaultPublicURI)
+                .addTask(new BootstrapSingleResource("User preferences dialog", "The user preferences dialog is not the user edit dialog anymore.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.userpreferences.xml"))
         );
     }
 
