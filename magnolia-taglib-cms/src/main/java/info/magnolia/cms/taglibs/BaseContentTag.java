@@ -36,6 +36,8 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.util.ContentUtil;
 
 import javax.jcr.RepositoryException;
@@ -157,15 +159,17 @@ public abstract class BaseContentTag extends TagSupport {
             return null;
         }
 
+        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
         if (StringUtils.isNotEmpty(this.nodeDataName)) {
             Content currentPage = getCurrentPage();
-            NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
-
+            NodeData nodeData = i18nSupport.getNodeData(contentNode, this.nodeDataName);
             try {
                 while (inherit && currentPage.getLevel() > 0 && !nodeData.isExist()) {
                     currentPage = currentPage.getParent();
                     contentNode = resolveNode(currentPage);
-                    nodeData = contentNode.getNodeData(this.nodeDataName);
+                    if (contentNode != null) {
+                    	nodeData = i18nSupport.getNodeData(contentNode, this.nodeDataName);
+                    }
                 }
             }
             catch (RepositoryException e) {
@@ -233,9 +237,7 @@ public abstract class BaseContentTag extends TagSupport {
             }
         }
         catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug(re.getMessage());
-            }
+            log.debug(re.getMessage(), re);
         }
         return null;
     }
