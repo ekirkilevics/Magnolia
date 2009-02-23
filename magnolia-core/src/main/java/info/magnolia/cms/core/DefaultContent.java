@@ -652,14 +652,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public boolean isNodeType(String type) {
-        try {
-            return this.node.isNodeType(type);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            log.debug(re.getMessage(), re);
-        }
-        return false;
+        return isNodeType(this.node, type);
     }
 
     /**
@@ -676,7 +669,7 @@ public class DefaultContent extends ContentHandler implements Content {
                 final String s = p.getString();
                 return s.equalsIgnoreCase(type);
             } else {
-                return actualType.equalsIgnoreCase(type);
+                return node.isNodeType(type);
             }
         }
         catch (RepositoryException re) {
