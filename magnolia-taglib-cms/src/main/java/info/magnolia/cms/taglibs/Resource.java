@@ -115,7 +115,7 @@ public class Resource {
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
     public static Content getLocalContentNode() {
-        return (Content) MgnlContext.getAttribute(Resource.LOCAL_CONTENT_NODE);
+        return MgnlContext.getAggregationState().getCurrentContent();
     }
 
     /**
@@ -180,7 +180,7 @@ public class Resource {
      * removes ContentNode object in resources , scope:TAG
      */
     public static void removeLocalContentNode() {
-        MgnlContext.removeAttribute(Resource.LOCAL_CONTENT_NODE);
+        MgnlContext.getAggregationState().setCurrentContent(null);
     }
 
     /**
@@ -222,7 +222,7 @@ public class Resource {
      * @param node to be set
      */
     public static void setLocalContentNode(Content node) {
-        MgnlContext.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
+        MgnlContext.getAggregationState().setCurrentContent(node);
     }
 
     /**
