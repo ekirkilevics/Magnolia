@@ -13,24 +13,35 @@
   </appender>
   <!-- mail appender. You may want to enable this on production to be immediately notified in case of errors -->
   <!--
-    <appender name="mail" class="it.openutils.log4j.DynamicSubjectSMTPAppender">
+  <appender name="mail" class="it.openutils.log4j.AlternateSMTPAppender">
     <param name="Threshold" value="ERROR" />
     <param name="To" value="myerrormailbox@mymailserver.com" />
     <param name="From" value="my magnolia website &lt;magnolia@mymagnoliasite.com&gt;" />
     <param name="SMTPHost" value="localhost" />
-    <param name="BufferSize" value="1" />
-    <param name="Subject" value="[magnolia error] %m" />
+    <param name="Subject" value="[magnolia error ${pom.version} ${server}] %m" />
+    <param name="Timeout" value="300" />
     <layout class="it.openutils.log4j.FilteredPatternLayout">
-    <param name="ConversionPattern" value="%-5p  %c %F(%M:%L) %d{dd.MM.yyyy HH:mm:ss}  %m%n" />
-    <param name="Filter" value="org.apache.catalina" />
-    <param name="Filter" value="org.apache.coyote" />
-    <param name="Filter" value="org.apache.tomcat" />
-    <param name="Filter" value="org.apache.jasper" />
-    <param name="Filter" value="sun.reflect" />
-    <param name="Filter" value="javax.servlet.http" />
-    <param name="Filter" value="info.magnolia.cms.filters" />
+      <param name="ConversionPattern" value="[${server}] %-5p %d{dd.MM.yyyy HH:mm:ss} %c %F(%M:%L) -- %m%n" />
+      <param name="Filter" value="org.apache.catalina" />
+      <param name="Filter" value="org.apache.coyote" />
+      <param name="Filter" value="org.apache.tomcat" />
+      <param name="Filter" value="org.apache.jasper" />
+      <param name="Filter" value="sun.reflect" />
+      <param name="Filter" value="javax.servlet.http" />
+      <param name="Header"
+        value="%n
+===================================%n
+Magnolia%n
+Version: ${pom.version}%n
+Server: ${server}%n
+Url: %X{requesturi}%n
+Userid: %X{userid}%n
+Number of occurrences: %o%n
+===================================%n
+        " />
+      <param name="Footer" value="%n===================================%n" />
     </layout>
-    </appender>
+  </appender>
   -->
   <appender name="sync-log-debug" class="org.apache.log4j.RollingFileAppender">
     <param name="File" value="${magnolia.logs.dir}/magnolia-debug.log" />

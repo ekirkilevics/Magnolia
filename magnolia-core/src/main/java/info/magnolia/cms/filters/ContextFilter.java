@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 
 /**
@@ -70,6 +71,14 @@ public class ContextFilter extends AbstractMgnlFilter {
         if (!MgnlContext.hasInstance() || MgnlContext.isSystemInstance()) {
             MgnlContext.initAsWebContext(request, response, servletContext);
             contextSet = true;
+            try {
+                MDC.put("requesturi", request.getRequestURI());
+                MDC.put("userid", MgnlContext.getUser().getName());
+            }
+            catch (Throwable e) {
+                // whatever it happens, only log
+                log.debug(e.getMessage(), e);
+            }
         }
         if (!contextSet) {
             // push req/res every time except the first time
@@ -86,6 +95,10 @@ public class ContextFilter extends AbstractMgnlFilter {
             if (contextSet) {
                 MgnlContext.release();
                 MgnlContext.setInstance(null);
+
+                // cleanup
+                MDC.remove("requesturi");
+                MDC.remove("userid");
             }
         }
     }
