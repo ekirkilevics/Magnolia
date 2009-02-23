@@ -5,7 +5,7 @@
   <display-name>cms functions</display-name>
   <tlib-version>3.5</tlib-version>
   <short-name>cmsfn</short-name>
-  <uri>http://www.magnolia-cms.com/tlds/cmsfn-taglib.tld</uri>
+  <uri>http://www.magnolia.info/tlds/cmsfn-taglib.tld</uri>
   <function>
     <description>Returns the current active page (can be set using the loadPage tag).</description>
     <name>currentPage</name>
