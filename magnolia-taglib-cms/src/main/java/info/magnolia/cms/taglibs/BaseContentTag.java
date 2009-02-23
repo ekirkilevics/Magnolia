@@ -168,7 +168,7 @@ public abstract class BaseContentTag extends TagSupport {
                     currentPage = currentPage.getParent();
                     contentNode = resolveNode(currentPage);
                     if (contentNode != null) {
-                    	nodeData = i18nSupport.getNodeData(contentNode, this.nodeDataName);
+                        nodeData = i18nSupport.getNodeData(contentNode, this.nodeDataName);
                     }
                 }
             }
