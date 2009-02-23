@@ -40,6 +40,9 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Property;
 
+import org.easymock.IAnswer;
+import org.easymock.classextension.EasyMock;
+
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -47,16 +50,20 @@ import javax.jcr.Property;
 public class DefaultContentTest extends TestCase {
 
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
-        final Node node = createStrictMock(Node.class);
+        final Node node = createMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
-        expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp).times(3);
-        expect(nodeTypeProp.getString()).andReturn("foo").times(3);
-
+        expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp).times(2);
+        expect(node.isNodeType((String)anyObject())).andAnswer(new IAnswer<Boolean>(){
+            public Boolean answer() throws Throwable {
+                return getCurrentArguments()[0].equals("foo");
+            }
+        }).times(2);
+        expect(nodeTypeProp.getString()).andReturn("foo").times(2);
         replay(node, nodeTypeProp);
+
         final DefaultContent c = new DefaultContent();
         c.setNode(node);
         assertTrue(c.isNodeType(node, "foo"));
-        assertTrue(c.isNodeType(node, "fOO"));
         assertFalse(c.isNodeType(node, "bar"));
         verify(node, nodeTypeProp);
     }
@@ -89,6 +96,7 @@ public class DefaultContentTest extends TestCase {
         final Property nodeTypeProp = createStrictMock(Property.class);
         expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp);
         expect(nodeTypeProp.getString()).andReturn(ItemType.NT_FROZENNODE);
+        expect(node.isNodeType(ItemType.NT_FROZENNODE)).andReturn(true);
 
         replay(node, nodeTypeProp);
         final DefaultContent c = new DefaultContent();
