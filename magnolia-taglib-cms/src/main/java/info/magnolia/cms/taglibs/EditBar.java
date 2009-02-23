@@ -196,10 +196,10 @@ public class EditBar extends TagSupport {
                 }
 
                 final String paragraphToUse;
-                if (this.paragraph == null && localContentNode != null) {
-                    paragraphToUse = localContentNode.getMetaData().getTemplate();
-                } else  if (this.dialog != null) {
+                if (this.dialog != null) {
                     paragraphToUse = this.dialog;
+                } else if (this.paragraph == null && localContentNode != null) {
+                    paragraphToUse = localContentNode.getMetaData().getTemplate();
                 } else {
                     paragraphToUse = this.paragraph;
                 }
