@@ -501,4 +501,25 @@ public class ContentUtil {
         src.getWorkspace().getSession().move(src.getHandle(), dest);
     }
 
+    public static void rename(Content node, String newName) throws RepositoryException{
+        Content parent = node.getParent();
+        String placedBefore = null;
+        for (Iterator iter = parent.getChildren(node.getNodeTypeName()).iterator(); iter.hasNext();) {
+            Content child = (Content) iter.next();
+            if (child.getUUID().equals(node.getUUID())) {
+                if (iter.hasNext()) {
+                    child = (Content) iter.next();
+                    placedBefore = child.getName();
+                }
+            }
+        }
+
+        moveInSession(node, PathUtil.createPath(node.getParent().getHandle(), newName));
+
+        // now set at the same place as before
+        if (placedBefore != null) {
+            parent.orderBefore(newName, placedBefore);
+            parent.save();
+        }
+    }
 }

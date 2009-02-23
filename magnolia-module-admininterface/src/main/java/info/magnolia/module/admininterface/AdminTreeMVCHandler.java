@@ -48,6 +48,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.commands.CommandsManager;
@@ -523,6 +524,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
             dest = parentPath + "/" + newLabel; //$NON-NLS-1$
         }
+
         //this.deactivateNode(this.getPath());
 
         if (log.isInfoEnabled()) {
@@ -537,28 +539,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             dest = parentPath;
         }
         else {
-            // we can't rename a node. we must move
-            // we must place the node at the same position
             Content current = getHierarchyManager().getContent(this.getPath());
-            Content parent = current.getParent();
-            String placedBefore = null;
-            for (Iterator iter = parent.getChildren(current.getNodeTypeName()).iterator(); iter.hasNext();) {
-                Content child = (Content) iter.next();
-                if (child.getHandle().equals(this.getPath())) {
-                    if (iter.hasNext()) {
-                        child = (Content) iter.next();
-                        placedBefore = child.getName();
-                    }
-                }
-            }
-
-            getHierarchyManager().moveTo(this.getPath(), dest);
-
-            // now set at the same place as before
-            if (placedBefore != null) {
-                parent.orderBefore(newLabel, placedBefore);
-                parent.save();
-            }
+            ContentUtil.rename(current, newLabel);
+            current.getParent().save();
         }
 
         Content newPage = getHierarchyManager().getContent(dest);
