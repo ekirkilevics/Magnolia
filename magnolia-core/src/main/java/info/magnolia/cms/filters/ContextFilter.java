@@ -74,9 +74,8 @@ public class ContextFilter extends AbstractMgnlFilter {
             try {
                 MDC.put("requesturi", request.getRequestURI());
                 MDC.put("userid", MgnlContext.getUser().getName());
-            }
-            catch (Throwable e) {
-                // whatever it happens, only log
+            } catch (Throwable e) {
+                // if for any reason the MDC couldn't be set, just ignore it.
                 log.debug(e.getMessage(), e);
             }
         }
@@ -86,8 +85,7 @@ public class ContextFilter extends AbstractMgnlFilter {
         }
         try {
             chain.doFilter(request, response);
-        }
-        finally {
+        } finally {
             if (!contextSet) {
                 // pop req/res every time except the first time
                 MgnlContext.pop();

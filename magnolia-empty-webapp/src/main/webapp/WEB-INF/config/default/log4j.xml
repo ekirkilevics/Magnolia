@@ -21,7 +21,7 @@
     <param name="Subject" value="[magnolia error ${pom.version} ${server}] %m" />
     <param name="Timeout" value="300" />
     <layout class="it.openutils.log4j.FilteredPatternLayout">
-      <param name="ConversionPattern" value="[${server}] %-5p %d{dd.MM.yyyy HH:mm:ss} %c %F(%M:%L) -- %m%n" />
+      <param name="ConversionPattern" value="[${server}] %-5p %d{dd.MM.yyyy HH:mm:ss} %c %F(%M:%L) - %m%n" />
       <param name="Filter" value="org.apache.catalina" />
       <param name="Filter" value="org.apache.coyote" />
       <param name="Filter" value="org.apache.tomcat" />
