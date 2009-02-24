@@ -188,7 +188,7 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
-          <!-- maybe this will have to be un-excluded if remove out explicit usage of it in magnolia-core -->
+          <!-- maybe this will have to be un-excluded if we remove our explicit usage of it in magnolia-core -->
           <exclusion>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
