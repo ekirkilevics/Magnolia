@@ -60,6 +60,7 @@
 
 table.mgnlControlBar, table.mgnlControlBarSmall {
     /* this is the default, but enforcing it seems to make safari happier when we embed another table in table-layout:fixed */
+    clear: both;
     table-layout: auto;
     border-collapse: collapse !important;
 }
