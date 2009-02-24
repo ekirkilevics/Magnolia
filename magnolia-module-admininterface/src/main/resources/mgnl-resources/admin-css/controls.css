@@ -58,7 +58,7 @@
     border-right: 1px solid #8a2;
 }
 
-table.mgnlControlBar, table.mgnlControlBarSmall {
+table.mgnlControlBar, table.mgnlControlBarSmall, table.mgnlControlBarSmall_PUSHED, table.mgnlControlBarSmall_MOUSEOVER {
     /* this is the default, but enforcing it seems to make safari happier when we embed another table in table-layout:fixed */
     margin: 0px !important;
     padding: 0px !important;
