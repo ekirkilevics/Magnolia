@@ -60,13 +60,14 @@
 
 table.mgnlControlBar, table.mgnlControlBarSmall {
     /* this is the default, but enforcing it seems to make safari happier when we embed another table in table-layout:fixed */
-    clear: both;
+    margin: 0px !important;
+    padding: 0px !important;
     table-layout: auto;
     border-collapse: collapse !important;
 }
 
 .mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER {
-    width: 100%;
+    width: 100% !important;
 }
 
 .mgnlControlBar,.mgnlControlBarSmall {
