@@ -109,5 +109,6 @@ public class SelfTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         FactoryUtil.clear();
+        MgnlContext.setInstance(null);
     }
 }
