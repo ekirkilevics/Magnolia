@@ -105,4 +105,9 @@ public class SelfTest extends TestCase {
         MgnlContext.setInstance(ctx);
         new TestCommand().execute((org.apache.commons.chain.Context)ctx);
     }
+    
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        FactoryUtil.clear();
+    }
 }
