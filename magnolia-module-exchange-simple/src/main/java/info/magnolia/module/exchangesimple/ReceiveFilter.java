@@ -92,6 +92,26 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      */
     private static final String SIBLING_UUID_3_0 = "UUID";
 
+    private int unlockRetries = 10;
+    
+    private int retryWait = 2;
+    
+    public int getUnlockRetries() {
+        return unlockRetries;
+    }
+
+    public void setUnlockRetries(int unlockRetries) {
+        this.unlockRetries = unlockRetries;
+    }
+
+    public long getRetryWait() {
+        return retryWait;
+    }
+
+    public void setRetryWait(int retryWait) {
+        this.retryWait = retryWait;
+    }
+
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String statusMessage = "";
         String status = "";
@@ -507,7 +527,20 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       */
      protected void applyLock(HttpServletRequest request) throws ExchangeException {
          try {
+             int retries = getUnlockRetries();
+             long retryWait = getRetryWait() * 1000;
              Content content = this.getNode(request);
+             while (content.isLocked() && retries > 0) {
+                 log.info("Content " + content.getHandle() + " is locked. Will retry " + retries + " more times.");
+                 try {
+                    Thread.sleep(retryWait);
+                } catch (InterruptedException e) {
+                    // Restore the interrupted status
+                    Thread.currentThread().interrupt();
+                }
+                 retries--;
+                 content = this.getNode(request);
+             }
              if (content.isLocked()) {
                  throw new ExchangeException("Operation not permitted, " + content.getHandle() + " is locked");
              }
@@ -523,10 +556,10 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      protected Content getNode(HttpServletRequest request) throws ExchangeException, RepositoryException {
-         String action = request.getHeader(BaseSyndicatorImpl.ACTION);
          if (request.getHeader(BaseSyndicatorImpl.PARENT_PATH) != null) {
-             log.debug("parent path:" + this.getParentPath(request));
-             return this.getHierarchyManager(request).getContent(this.getParentPath(request));
+             String parentPath = this.getParentPath(request);
+             log.debug("parent path:" + parentPath);
+             return this.getHierarchyManager(request).getContent(parentPath);
          } else if (request.getHeader(BaseSyndicatorImpl.NODE_UUID) != null){
              log.debug("node uuid:" + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
              return this.getHierarchyManager(request).getContentByUUID(request.getHeader(BaseSyndicatorImpl.NODE_UUID));

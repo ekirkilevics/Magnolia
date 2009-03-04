@@ -256,7 +256,8 @@ public class ReceiveFilterTest extends TestCase {
 
     
     public void testCantActivateInLockedNode() throws Exception {
-        final Content parentNode = createStrictMock(Content.class);
+        // use a nice mock as because of multithreading we are not able to specify exact order and number of calls
+        final Content parentNode = createNiceMock(Content.class);
         final Content existingNode = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
 
@@ -271,11 +272,12 @@ public class ReceiveFilterTest extends TestCase {
                 expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
                 expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
                 // check the lock
-                expect(parentNode.isLocked()).andReturn(true);
+                expect(parentNode.isLocked()).andReturn(true).anyTimes();
                 // create exception message
-                expect(parentNode.getHandle()).andReturn(PARENT_PATH);
+                expect(parentNode.getHandle()).andReturn(PARENT_PATH).anyTimes();
+                
                 // clean up ... check the lock again 
-                expect(parentNode.isLocked()).andReturn(true);
+                //expect(parentNode.isLocked()).andReturn(true).times(2);
                 // try to unlock ... TODO: is that a right thing to do ... we are not the ones who locked it here
                 parentNode.unlock();
             }
@@ -332,6 +334,7 @@ public class ReceiveFilterTest extends TestCase {
         // TODO : check if different rules are passed in different cases ?
         expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:contentNode,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
         expect(request.getHeader("Authorization")).andReturn(null).anyTimes();
+        expect(request.getSession()).andReturn(null).anyTimes();
         expect(request.getParameter("mgnlUserId")).andReturn("testuser").anyTimes();
 
         // checking parent node
@@ -354,6 +357,7 @@ public class ReceiveFilterTest extends TestCase {
         response.setHeader("sa_attribute_message", expectedMessage);
 
         final ReceiveFilter filter = new ReceiveFilter();
+        filter.setUnlockRetries(1);
         replay(request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode());
         filter.doFilter(request, response, filterChain);
         verify(request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode());
