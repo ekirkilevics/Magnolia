@@ -82,11 +82,6 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 "/modules/adminInterface/config/menu/tools/mails"
         );
 
-        final RemoveNodeTask replaceMailCommand = new RemoveNodeTask("Remove mail command", "Removes the mail command from the admininterface module.",
-                ContentRepository.CONFIG,
-                "/modules/adminInterface/commands/default/sendMail"
-        );
-
         final MoveNodeContentTask moveTemplates = new MoveNodeContentTask("Rename templates", "Templates will be renamed to templatesConfiguration.",
                 ContentRepository.CONFIG,
                 "/modules/mail/config/templates",
@@ -98,8 +93,6 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(removeMailServletMapping)
                 .addTask(replaceConfigMenuMail)
                 .addTask(moveTemplates)
-                .addTask(replaceMailCommand)
-                .addTask(new BootstrapConditionally("Mail command", "Installs mail command into mail module configuration.", "/mgnl-bootstrap/mail/config.modules.mail.commands.default.sendMail.xml"))
                 .addTask(new BootstrapConditionally("Mail handlers", "Installs mail handlers.", "/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml"))
                 .addTask(new BootstrapConditionally("Mail page", "Installs mail page.", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
                 .addTask(new BootstrapConditionally("Mail factory", "Installs mail factories.", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
