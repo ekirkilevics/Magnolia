@@ -490,6 +490,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                 // move doesn't deactivate. Updating metadata is enough to notice the change (status modified)
                 newContent.getMetaData().setUnActivated();
             }
+            updateChildMetaData(move, newContent);
         }
         catch (Exception e) {
             if (log.isDebugEnabled()) {
@@ -498,6 +499,19 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         }
         newContent.save();
         return newContent;
+    }
+
+    private void updateChildMetaData(boolean move, Content newContent) throws RepositoryException, AccessDeniedException {
+        // update all children as well
+        for (Iterator iter = newContent.getChildren().iterator(); iter.hasNext();) {
+            Content child = (Content) iter.next();
+            child.updateMetaData();
+            if (!move) {
+                // move doesn't deactivate. Updating metadata is enough to notice the change (status modified)
+                child.getMetaData().setUnActivated();
+            }
+            updateChildMetaData(move, child);
+        }
     }
 
     public void moveNode(String source, String destination) throws ExchangeException, RepositoryException {

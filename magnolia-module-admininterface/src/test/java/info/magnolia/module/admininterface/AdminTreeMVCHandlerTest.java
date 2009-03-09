@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admininterface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
@@ -44,6 +47,9 @@ import info.magnolia.test.mock.MockMetaData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.ListUtils;
+
 import static org.easymock.EasyMock.*;
 
 import junit.framework.TestCase;
@@ -79,6 +85,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         hm.moveTo("/test/foo", "/bar/foo");
         expect(hm.getContent("/bar/foo")).andReturn(cnt);
         cnt.updateMetaData();
+        expect(cnt.getChildren()).andReturn(ListUtils.EMPTY_LIST);
         cnt.save();
 
         objs = new Object[] {req, res, ctx, hm, cnt};
@@ -103,9 +110,48 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         expect(hm.getContent("/bar/foo")).andReturn(cnt);
         cnt.updateMetaData();
         expect(cnt.getMetaData()).andReturn(meta);
+        expect(cnt.getChildren()).andReturn(ListUtils.EMPTY_LIST);
         cnt.save();
 
         objs = new Object[] {req, res, ctx, hm, cnt};
+        replay(objs);
+        handler.copyNode("/test/foo", "/bar/foo");
+        verify(objs);
+        assertTrue(unactivated[0]);
+    }
+
+    public void testDeepCopy() throws Exception {
+        final boolean unactivated[] = new boolean[1];
+        MetaData meta = new MockMetaData(new MockContent("blah")) {
+            public void setUnActivated() throws AccessDeniedException {
+                unactivated[0] = true;
+            }
+        };
+        Content child = createStrictMock(Content.class);
+        MetaData childMeta = new MockMetaData(new MockContent("blah")) {
+            public void setUnActivated() throws AccessDeniedException {
+                unactivated[0] = true;
+            }
+        };
+        
+        List children = new ArrayList();
+        children.add(child);
+        // sanity check
+        assertFalse(unactivated[0]);
+
+        expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);
+        expect(hm.isExist("/bar/foo")).andReturn(false);
+        hm.copyTo("/test/foo", "/bar/foo");
+        expect(hm.getContent("/bar/foo")).andReturn(cnt);
+        cnt.updateMetaData();
+        expect(cnt.getMetaData()).andReturn(meta);
+        expect(cnt.getChildren()).andReturn(children);
+        child.updateMetaData();
+        expect(child.getMetaData()).andReturn(childMeta);
+        expect(child.getChildren()).andReturn(ListUtils.EMPTY_LIST);
+        cnt.save();
+
+        objs = new Object[] {req, res, ctx, hm, cnt, child};
         replay(objs);
         handler.copyNode("/test/foo", "/bar/foo");
         verify(objs);
