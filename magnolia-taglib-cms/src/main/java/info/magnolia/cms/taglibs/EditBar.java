@@ -186,9 +186,9 @@ public class EditBar extends TagSupport {
 
                 Content localContentNode = Resource.getLocalContentNode();
 
-                if(localContentNode == null && StringUtils.isNotEmpty(this.nodeName)){
+                if(StringUtils.isNotEmpty(this.nodeName)){
                     try {
-                        localContentNode = MgnlContext.getAggregationState().getMainContent().getContent(this.nodeName);
+                        localContentNode = localContentNode.getContent(this.nodeName);
                     }
                     catch (Exception e) {
                         // TODO: handle exception
