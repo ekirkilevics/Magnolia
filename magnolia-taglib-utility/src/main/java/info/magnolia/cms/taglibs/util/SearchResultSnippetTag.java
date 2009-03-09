@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import javax.jcr.PropertyType;
 import javax.servlet.jsp.JspException;
@@ -67,16 +68,9 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class SearchResultSnippetTag extends TagSupport {
+    private static final Pattern HTML_STRIP = Pattern.compile("<.*?>", Pattern.DOTALL);
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SearchResultSnippetTag.class);
+    private static final Logger log = LoggerFactory.getLogger(SearchResultSnippetTag.class);
 
     /**
      * Start level.
@@ -269,8 +263,8 @@ public class SearchResultSnippetTag extends TagSupport {
      * @param resultString
      * @return
      */
-    protected String stripHtmlTags(String resultString) {
-        return resultString.replaceAll("\\<(.*?\\s*)*\\>", StringUtils.EMPTY); //$NON-NLS-1$
+    protected String stripHtmlTags(String input) {
+        return HTML_STRIP.matcher(input).replaceAll("");
     }
 
     /**
