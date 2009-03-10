@@ -3,15 +3,18 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>6</version>
+    <version>7-SNAPSHOT</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
   <version>4.0.2-SNAPSHOT</version>
-  <description>Magnolia is an open-source enterprise class Content Management System
-    developed by Magnolia International, based on the standard API for Java Content Repositories (JCR).</description>
+  <description>
+Magnolia is an open-source enterprise class Content Management System
+developed by Magnolia International, based on the standard API
+for Java Content Repositories (JCR).
+  </description>
   <url>http://www.magnolia-cms.com</url>
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
@@ -22,16 +25,6 @@
     <system>Jira</system>
     <url>http://jira.magnolia-cms.com/browse/MAGNOLIA</url>
   </issueManagement>
-  <licenses>
-    <license>
-      <name>GPLv3</name>
-      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
-    </license>
-    <license>
-      <name>Magnolia Network Agreement</name>
-      <url>http://www.magnolia-cms.com/mna.html</url>
-    </license>
-  </licenses>
   <ciManagement>
     <notifiers>
       <notifier>
