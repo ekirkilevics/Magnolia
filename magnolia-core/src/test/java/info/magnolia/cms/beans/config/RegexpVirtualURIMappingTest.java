@@ -66,11 +66,11 @@ public class RegexpVirtualURIMappingTest extends TestCase {
     public void testSupportsMoreThan9Groups() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z).html");
-        mapping.setToURI("/bar.action?param=$266$15");
+        mapping.setToURI("/bar.action?param=$9-$266$10");
 
         final VirtualURIMapping.MappingResult res = mapping.mapURI("/abcdefghijklmnopqrstuvwxyz.html");
-        // there is no group #266, so we expect group 26, followed by "6", followed by group 15
-        assertEquals("/bar.action?param=z6o", res.getToURI());
+        // there is no group #266, so we expect group 9, "-", group 26, followed by "6", followed by group 10
+        assertEquals("/bar.action?param=i-z6j", res.getToURI());
         assertEquals(27, res.getLevel());
     }
     */
