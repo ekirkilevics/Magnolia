@@ -84,7 +84,7 @@ public class Default implements CachePolicy {
     }
 
     /**
-     * Checks whether reuqested content should be served from cache or refreshed instead.
+     * Checks whether requested content should be served from cache or refreshed instead.
      * @param aggregationState
      * @param key
      * @return True if cache entry for the key should be recreated, false otherwise.
