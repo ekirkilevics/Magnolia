@@ -165,7 +165,7 @@ public class ClasspathSpool extends HttpServlet {
     }
 
     /**
-     * Join and strem multiple files, using a "regexp-like" pattern. Only a single "*" is allowed as keyword in the
+     * Join and stream multiple files, using a "regexp-like" pattern. Only a single "*" is allowed as keyword in the
      * request URI.
      * @param response
      * @param filePath
