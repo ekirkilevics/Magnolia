@@ -114,9 +114,9 @@ for Java Content Repositories (JCR).
     </contributor>
   </contributors>
   <scm>
-    <connection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia-cms.com/view/community/magnolia/trunk</url>
+    <connection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.0</connection>
+    <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.0</developerConnection>
+    <url>http://svn.magnolia-cms.com/view/community/magnolia/branches/magnolia-4.0</url>
   </scm>
   <profiles>
     <profile>
