@@ -64,11 +64,11 @@ import java.security.NoSuchAlgorithmException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class MDChecking5FileExtractorOperation extends BasicFileExtractorOperation {
+class MD5CheckingFileExtractorOperation extends BasicFileExtractorOperation {
     private final FileExtractionLogger log;
     private final HierarchyManager hm;
 
-    MDChecking5FileExtractorOperation(FileExtractionLogger log, HierarchyManager hm, String resourcePath, String absoluteTargetPath) {
+    MD5CheckingFileExtractorOperation(FileExtractionLogger log, HierarchyManager hm, String resourcePath, String absoluteTargetPath) {
         super(resourcePath, absoluteTargetPath);
         this.log = log;
         this.hm = hm;

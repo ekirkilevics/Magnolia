@@ -50,6 +50,6 @@ public class MD5CheckingFileExtractor extends BasicFileExtractor {
     }
 
     protected FileExtractorOperation newOperation(String resourcePath, String absTargetPath) {
-        return new MDChecking5FileExtractorOperation(log, hm, resourcePath, absTargetPath);
+        return new MD5CheckingFileExtractorOperation(log, hm, resourcePath, absTargetPath);
     }
 }
