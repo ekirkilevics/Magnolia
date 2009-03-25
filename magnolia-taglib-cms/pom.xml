@@ -8,6 +8,14 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-taglib-cms</artifactId>
   <name>magnolia-taglib-cms</name>
+  <!--
+  <name>CMS Tag Library</name>
+  <description>Core tag library for CMS</description>
+  <properties>
+    <taglib.shortname>cms</taglib.shortname>
+    <taglib.uri>cms-taglib</taglib.uri>
+  </properties>
+  -->
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -63,6 +71,16 @@
        <scope>test</scope>
     </dependency>
   </dependencies>
+  <!--
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.xdoclet</groupId>
+        <artifactId>maven2-xdoclet2-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+  -->
   <reporting>
     <plugins>
       <plugin>

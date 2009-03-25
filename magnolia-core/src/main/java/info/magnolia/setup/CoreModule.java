@@ -43,6 +43,8 @@ import info.magnolia.module.ModuleLifecycleContext;
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
+ *
+ * @content2bean.module name="core"
  */
 public class CoreModule implements ModuleLifecycle {
 

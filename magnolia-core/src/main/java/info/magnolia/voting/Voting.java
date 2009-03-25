@@ -38,6 +38,8 @@ import info.magnolia.cms.util.FactoryUtil;
 /**
  * @author philipp
  * @version $Id$
+ * 
+ * @content2bean
  */
 public interface Voting {
 

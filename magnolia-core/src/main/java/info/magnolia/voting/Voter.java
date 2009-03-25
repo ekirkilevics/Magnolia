@@ -37,6 +37,7 @@ package info.magnolia.voting;
  * @author philipp
  * @version $Id$
  *
+ * @content2bean
  */
 public interface Voter {
 

@@ -38,7 +38,9 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sameer Charles
- *         $Id$
+ * $Id$
+ * 
+ * @content2bean
  */
 public interface HttpClientCallback {
 

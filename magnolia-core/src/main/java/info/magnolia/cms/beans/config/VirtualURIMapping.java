@@ -37,6 +37,7 @@ package info.magnolia.cms.beans.config;
  * @author philipp
  * @version $Id$
  *
+ * @content2bean.component path="/modules/.../virtualURIMapping"
  */
 public interface VirtualURIMapping {
     public MappingResult mapURI(String uri);

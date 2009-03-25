@@ -40,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Sameer Charles
  * $Id$
+ *
+ * @content2bean
  */
 public interface LoginHandler {
 

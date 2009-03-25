@@ -169,6 +169,94 @@ for Java Content Repositories (JCR).
         </configuration>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <!-- generate TLDs and Content2Beand doc :
+        <plugin>
+          <groupId>org.codehaus.xdoclet</groupId>
+          <artifactId>maven2-xdoclet2-plugin</artifactId>
+          <version>2.0.7-SNAPSHOT</version>
+          <executions>
+            <execution>
+              <id>xdoclet-tld</id>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>xdoclet</goal>
+              </goals>
+              <configuration>
+                <sourceArtifacts>info.magnolia:magnolia-taglib-*</sourceArtifacts>
+                <configs>
+                  <config>
+                    <components>
+                      <component>
+                        <classname>org.xdoclet.plugin.web.TaglibPlugin</classname>
+                        <params>
+                          <!- - let's only generate for sources here, not the dependencies : - ->
+                          <restrictedpath>file://${settings.localRepository}</restrictedpath>
+                          <validate>false</validate>
+                          <jspversion>2.0</jspversion>
+                          <!- - this will only work if we don't validate: - ->
+                          <taglibversion>${project.version}</taglibversion>
+                          <shortname>${taglib.shortname}</shortname>
+                          <uri>${taglib.uri}</uri>
+                          <displayname>${project.name}</displayname>
+                          <description>${project.description}</description>
+                        </params>
+                      </component>
+                    </components>
+                    <includes>**/*.java</includes>
+                  </config>
+                </configs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>xdoclet-c2b-doc</id>
+              <!- -<phase>pre-site</phase>- ->
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>xdoclet</goal>
+              </goals>
+              <configuration>
+                <configs>
+                  <config>
+                    <components>
+                      <component>
+                        <classname>info.magnolia.content2beandoc.Content2BeanDoc</classname>
+                      </component>
+                      <component>
+                        <classname>info.magnolia.content2beandoc.NavigationPlugin</classname>
+                      </component>
+                      <component>
+                        <classname>info.magnolia.content2beandoc.NavigationAllPlugin</classname>
+                      </component>
+                      <component>
+                        <classname>info.magnolia.content2beandoc.IndexPlugin</classname>
+                      </component>
+                      <component>
+                        <classname>info.magnolia.content2beandoc.StaticResources</classname>
+                      </component>
+                    </components>
+                  </config>
+                </configs>
+              </configuration>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.codehaus.xdoclet</groupId>
+              <artifactId>xdoclet-plugin-web</artifactId>
+              <version>1.0.5-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+              <groupId>info.magnolia</groupId>
+              <artifactId>content2bean-xdoclet-plugin</artifactId>
+              <version>1.0-SNAPSHOT</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        -->
+      </plugins>
+    </pluginManagement>
   </build>
   <dependencyManagement>
     <dependencies>
@@ -553,7 +641,27 @@ for Java Content Repositories (JCR).
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <!--
+    <repository>
+      <id>codehaus-snapshots</id>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>http://snapshots.repository.codehaus.org</url>
+    </repository>
+    -->
   </repositories>
+  <!--
+  <pluginRepositories>
+    <pluginRepository>
+      <id>codehaus-snapshots</id>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <url>http://snapshots.repository.codehaus.org</url>
+    </pluginRepository>
+  </pluginRepositories>
+  -->
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
