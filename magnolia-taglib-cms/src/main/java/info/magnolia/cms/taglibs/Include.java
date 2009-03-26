@@ -83,7 +83,6 @@ public class Include extends BodyTagSupport {
 
     /**
      * Set to true if the content should not be rendered in edit mode (edit bars, ...)
-     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Boolean"
      */
     private boolean noEditBars = false;
 
@@ -133,14 +132,12 @@ public class Include extends BodyTagSupport {
         attributes.add(attributesArray);
     }
 
-
-    public boolean getNoEditBars() {
-        return this.noEditBars;
-    }
-
-
-    public void setNoEditBars(boolean showPreview) {
-        this.noEditBars = showPreview;
+    /**
+     * Set to true if the content should not be rendered in edit mode (edit bars, ...)
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setNoEditBars(boolean noEditBars) {
+        this.noEditBars = noEditBars;
     }
 
     public int doAfterBody() {
