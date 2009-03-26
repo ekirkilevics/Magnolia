@@ -606,7 +606,7 @@ for Java Content Repositories (JCR).
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <!--
+    <!-- remove this once xdoclet 2.0.7 is out -->
     <repository>
       <id>codehaus-snapshots</id>
       <snapshots>
@@ -614,9 +614,8 @@ for Java Content Repositories (JCR).
       </snapshots>
       <url>http://snapshots.repository.codehaus.org</url>
     </repository>
-    -->
   </repositories>
-  <!--
+  <!-- remove this once xdoclet 2.0.7 is out -->
   <pluginRepositories>
     <pluginRepository>
       <id>codehaus-snapshots</id>
@@ -626,7 +625,6 @@ for Java Content Repositories (JCR).
       <url>http://snapshots.repository.codehaus.org</url>
     </pluginRepository>
   </pluginRepositories>
-  -->
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
