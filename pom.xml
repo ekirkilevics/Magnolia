@@ -171,7 +171,7 @@ for Java Content Repositories (JCR).
     </plugins>
     <pluginManagement>
       <plugins>
-        <!-- generate TLDs and Content2Beand doc :
+        <!-- generate TLDs -->
         <plugin>
           <groupId>org.codehaus.xdoclet</groupId>
           <artifactId>maven2-xdoclet2-plugin</artifactId>
@@ -184,6 +184,8 @@ for Java Content Repositories (JCR).
                 <goal>xdoclet</goal>
               </goals>
               <configuration>
+                <!-- You might need to use mvn source:jar install, or configure the source plugin
+                     in taglib modules, if other modules extend the functionality of these taglibs -->
                 <sourceArtifacts>info.magnolia:magnolia-taglib-*</sourceArtifacts>
                 <configs>
                   <config>
@@ -191,11 +193,11 @@ for Java Content Repositories (JCR).
                       <component>
                         <classname>org.xdoclet.plugin.web.TaglibPlugin</classname>
                         <params>
-                          <!- - let's only generate for sources here, not the dependencies : - ->
+                          <!-- let's only generate for sources here, not the dependencies : -->
                           <restrictedpath>file://${settings.localRepository}</restrictedpath>
                           <validate>false</validate>
                           <jspversion>2.0</jspversion>
-                          <!- - this will only work if we don't validate: - ->
+                          <!-- this will only work if we don't validate: -->
                           <taglibversion>${project.version}</taglibversion>
                           <shortname>${taglib.shortname}</shortname>
                           <uri>${taglib.uri}</uri>
@@ -209,37 +211,6 @@ for Java Content Repositories (JCR).
                 </configs>
               </configuration>
             </execution>
-            <execution>
-              <id>xdoclet-c2b-doc</id>
-              <!- -<phase>pre-site</phase>- ->
-              <phase>generate-resources</phase>
-              <goals>
-                <goal>xdoclet</goal>
-              </goals>
-              <configuration>
-                <configs>
-                  <config>
-                    <components>
-                      <component>
-                        <classname>info.magnolia.content2beandoc.Content2BeanDoc</classname>
-                      </component>
-                      <component>
-                        <classname>info.magnolia.content2beandoc.NavigationPlugin</classname>
-                      </component>
-                      <component>
-                        <classname>info.magnolia.content2beandoc.NavigationAllPlugin</classname>
-                      </component>
-                      <component>
-                        <classname>info.magnolia.content2beandoc.IndexPlugin</classname>
-                      </component>
-                      <component>
-                        <classname>info.magnolia.content2beandoc.StaticResources</classname>
-                      </component>
-                    </components>
-                  </config>
-                </configs>
-              </configuration>
-            </execution>
           </executions>
           <dependencies>
             <dependency>
@@ -247,14 +218,8 @@ for Java Content Repositories (JCR).
               <artifactId>xdoclet-plugin-web</artifactId>
               <version>1.0.5-SNAPSHOT</version>
             </dependency>
-            <dependency>
-              <groupId>info.magnolia</groupId>
-              <artifactId>content2bean-xdoclet-plugin</artifactId>
-              <version>1.0-SNAPSHOT</version>
-            </dependency>
           </dependencies>
         </plugin>
-        -->
       </plugins>
     </pluginManagement>
   </build>

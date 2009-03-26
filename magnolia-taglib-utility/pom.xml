@@ -8,15 +8,12 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-taglib-utility</artifactId>
-  <name>magnolia-taglib-utility</name>
-  <!--
   <name>CMS Utility Tag Library</name>
   <description>CMS Utility Tag Library</description>
   <properties>
     <taglib.shortname>cmsu</taglib.shortname>
     <taglib.uri>cms-util-taglib</taglib.uri>
   </properties>
-  -->
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -66,7 +63,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <!--
   <build>
     <plugins>
       <plugin>
@@ -75,7 +71,6 @@
       </plugin>
     </plugins>
   </build>
-  -->
   <reporting>
     <plugins>
       <plugin>

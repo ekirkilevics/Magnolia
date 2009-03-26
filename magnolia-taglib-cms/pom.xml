@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
@@ -7,15 +8,12 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-taglib-cms</artifactId>
-  <name>magnolia-taglib-cms</name>
-  <!--
   <name>CMS Tag Library</name>
   <description>Core tag library for CMS</description>
   <properties>
     <taglib.shortname>cms</taglib.shortname>
     <taglib.uri>cms-taglib</taglib.uri>
   </properties>
-  -->
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -64,23 +62,37 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-       <groupId>info.magnolia</groupId>
-       <artifactId>magnolia-core</artifactId>
-       <type>test-jar</type>
-       <version>4.1-SNAPSHOT</version>
-       <scope>test</scope>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-core</artifactId>
+      <type>test-jar</type>
+      <version>4.1-SNAPSHOT</version>
+      <scope>test</scope>
     </dependency>
+
   </dependencies>
-  <!--
   <build>
     <plugins>
+      <!-- making sure the source jar will be available for other taglibs that depend this -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- generating the TLD file -->
       <plugin>
         <groupId>org.codehaus.xdoclet</groupId>
         <artifactId>maven2-xdoclet2-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
-  -->
   <reporting>
     <plugins>
       <plugin>
