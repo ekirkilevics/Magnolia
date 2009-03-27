@@ -95,6 +95,14 @@ public class VersionCommand extends RuleBasedCommand {
         if(StringUtils.isEmpty((String)ctx.getAttribute(Context.ATTRIBUTE_VERSION))){
             ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
         }
+
+        Iterator children = node.getChildren(getFilter()).iterator();
+        while (children.hasNext()) {
+            versionRecursively((Content) children.next(), ctx, versionMap);
+        }
+    }
+
+    protected Content.ContentFilter getFilter() {
         Content.ContentFilter filter = new Content.ContentFilter() {
             public boolean accept(Content content) {
                 try {
@@ -106,13 +114,7 @@ public class VersionCommand extends RuleBasedCommand {
                 }
             }
         };
-
-        Iterator children = node.getChildren(filter).iterator();
-
-        while (children.hasNext()) {
-            versionRecursively((Content) children.next(), ctx, versionMap);
-        }
-
+        return filter;
     }
 
     /**
