@@ -60,6 +60,7 @@ import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
@@ -440,6 +441,7 @@ public class ModuleManagerImpl implements ModuleManager {
      */
     protected void applyDeltas(ModuleDefinition moduleDef, List deltas, InstallContextImpl ctx) {
         boolean success = true;
+        Task task = null;
         try {
             final Iterator it = deltas.iterator();
             while (it.hasNext()) {
@@ -447,17 +449,17 @@ public class ModuleManagerImpl implements ModuleManager {
                 final List tasks = d.getTasks();
                 final Iterator itT = tasks.iterator();
                 while (itT.hasNext()) {
-                    final Task task = (Task) itT.next();
+                    task = (Task) itT.next();
                     log.debug("Module {}, executing {}", moduleDef, task);
                     task.execute(ctx);
                     ctx.incExecutedTaskCount();
                 }
             }
         } catch (TaskExecutionException e) {
-            ctx.error("Could not install or update " + moduleDef.getName() + " module. (" + e.getMessage() + ")", e);
+            ctx.error("Could not install or update " + moduleDef.getName() + " module. Task '" + task.getName() + "' failed. (" + ExceptionUtils.getRootCauseMessage(e) + ")", e);
             success = false;
         } catch (RuntimeException e) {
-            ctx.error("Error while installing or updating " + moduleDef.getName() + " module. (" + e.getMessage() + ")", e);
+            ctx.error("Error while installing or updating " + moduleDef.getName() + " module. Task '" + task.getName() + "' failed. (" + ExceptionUtils.getRootCauseMessage(e) + ")", e);
             throw e;
         } finally {
             // TODO : ctx.info("Successful installation/update."); after save ?
