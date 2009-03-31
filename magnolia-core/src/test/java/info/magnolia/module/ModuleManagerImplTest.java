@@ -150,7 +150,8 @@ public class ModuleManagerImplTest extends TestCase {
         expect(d1.getTasks()).andReturn(Arrays.asList(t1, t2));
         t1.execute(ctx);
         expectLastCall().andThrow(new TaskExecutionException("boo"));
-        ctx.error(eq("Could not install or update foo module. (boo)"), isA(TaskExecutionException.class));
+        expect(t1.getName()).andReturn("task#1").anyTimes();
+        ctx.error(eq("Could not install or update foo module. Task 'task#1' failed. (TaskExecutionException: boo)"), isA(TaskExecutionException.class));
         ctx.setCurrentModule(null);
 
         replay(ctx, d1, t1, t2);
