@@ -117,7 +117,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new ChangeNodeTypesInUserWorkspace())
         );
         register(DeltaBuilder.update("4.1", "")
-                .addTask(new UpdateUsers()));
+                .addTask(new UpdateUsers())
+                .addTask(new CheckAndModifyPropertyValueTask("Anonymous user rights", "Update anonymous user access rights.", ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", "/system/anonymous/*")));
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
