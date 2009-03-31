@@ -47,6 +47,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -119,6 +120,12 @@ public class MockContent extends DefaultContent {
         nodeDatas.put(nd.getName(), nd);
     }
 
+    public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        final MockNodeData nd = new MockNodeData(name, PropertyType.STRING);
+        addNodeData(nd);
+        return nd;
+    }
+
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         final MockNodeData nd = new MockNodeData(name, type);
         addNodeData(nd);
@@ -143,6 +150,7 @@ public class MockContent extends DefaultContent {
 
     public Content createContent(String name, ItemType contentType) {
         MockContent c = new MockContent(name, contentType);
+        c.setHierarchyManager(this.getHierarchyManager());
         addContent(c);
         return c;
     }
@@ -209,6 +217,10 @@ public class MockContent extends DefaultContent {
     }
 
     public boolean hasNodeData(String name) throws RepositoryException {
+        return nodeDatas.containsKey(name);
+    }
+
+    public boolean isNodeData(String name) throws RepositoryException {
         return nodeDatas.containsKey(name);
     }
 
