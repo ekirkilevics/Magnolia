@@ -361,8 +361,8 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath(), name);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), nodePath, Permission.REMOVE);
         if (this.node.hasNode(name)) {
             this.node.getNode(name).remove();
         }
@@ -790,7 +790,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public void delete() throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
-        String nodePath = Path.getAbsolutePath(this.node.getPath(), path);
+        String nodePath = Path.getAbsolutePath(this.node.getPath());
         this.node.remove();
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
     }

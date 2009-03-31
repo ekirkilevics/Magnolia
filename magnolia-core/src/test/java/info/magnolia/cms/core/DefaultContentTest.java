@@ -33,7 +33,13 @@
  */
 package info.magnolia.cms.core;
 
-import junit.framework.TestCase;
+import java.util.List;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockHierarchyManager;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.Node;
@@ -41,13 +47,58 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Property;
 
 import org.easymock.IAnswer;
-import org.easymock.classextension.EasyMock;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DefaultContentTest extends TestCase {
+public class DefaultContentTest extends RepositoryTestCase {
+
+    public void testPermissionCheckedOnDeleteNodeData() throws Exception {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        AccessManager am = createStrictMock(AccessManager.class);
+        ((DefaultHierarchyManager) hm).setAccessManager(am);
+        
+        // create foo
+        expect(am.isGranted("/foo", 11)).andReturn(true);
+        expect(am.isGranted("/foo", 2)).andReturn(true);
+        expect(am.isGranted("/foo/MetaData", 11)).andReturn(true).anyTimes();
+        // create bar
+        expect(am.isGranted("/foo/bar", 11)).andReturn(true);
+        // get foo
+        expect(am.isGranted("/foo", 8)).andReturn(true);
+
+        // delete("bar")
+        expect(am.isGranted("/foo/bar", 4)).andReturn(true);
+        expect(am.isGranted("/foo/bar", 8)).andReturn(true).times(2);
+        expect(am.isGranted("/foo/bar", 4)).andReturn(true);
+        expect(am.isGranted("/foo/bar", 8)).andReturn(true);
+
+        // create bar again
+        expect(am.isGranted("/foo/bar", 11)).andReturn(true);
+
+        // deleteNodeData("bar");
+        expect(am.isGranted("/foo/bar", 4)).andReturn(true);
+        expect(am.isGranted("/foo/bar", 8)).andReturn(true);
+        
+
+        Object[] objs = new Object[] {am};
+        replay(objs);
+        Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
+        node.createNodeData("bar");
+        node = hm.getContent("/foo");
+        assertTrue(node.hasNodeData("bar"));
+        
+        node.delete("bar");
+        assertFalse(node.hasNodeData("bar"));
+        
+        node.createNodeData("bar");
+        assertTrue(node.hasNodeData("bar"));
+        
+        node.deleteNodeData("bar");
+        assertFalse(node.hasNodeData("bar"));
+        verify(objs);
+    }
 
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
         final Node node = createMock(Node.class);
@@ -108,5 +159,4 @@ public class DefaultContentTest extends TestCase {
 //    public void testIsNodeForThisNodeAlsoWorks()throws RepositoryException {
 //        fail();
 //    }
-
 }
