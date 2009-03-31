@@ -116,6 +116,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(renameLinkResolver )
                 .addTask(new ChangeNodeTypesInUserWorkspace())
         );
+        register(DeltaBuilder.update("4.1", "")
+                .addTask(new UpdateUsers()));
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
