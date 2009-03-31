@@ -194,12 +194,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- generate content2bean doc
-      <plugin>
-        <groupId>org.codehaus.xdoclet</groupId>
-        <artifactId>maven2-xdoclet2-plugin</artifactId>
-      </plugin>
-       -->
     </plugins>
   </build>
 </project>
