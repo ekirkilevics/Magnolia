@@ -78,7 +78,7 @@ public class SetExpirationHeadersTest extends TestCase {
         final Never fixed = new Never();
         cacheConfig.setBrowserCachePolicy(fixed);
         
-        response.setHeader("Pragma", "No-cache");
+        response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
         response.setDateHeader("Expires", 0L);
         

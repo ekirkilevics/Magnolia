@@ -65,7 +65,7 @@ public class CacheHeadersFilterTest extends TestCase {
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
         
-        response.setHeader("Pragma", "No-cache");
+        response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
         response.setDateHeader("Expires", 0L);
         chain.doFilter(request, response);

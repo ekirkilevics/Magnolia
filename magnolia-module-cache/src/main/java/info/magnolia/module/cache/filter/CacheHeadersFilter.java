@@ -108,7 +108,7 @@ public class CacheHeadersFilter extends AbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (nocache) {
-            response.setHeader("Pragma", "No-cache");
+            response.setHeader("Pragma", "no-cache");
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
             response.setDateHeader("Expires", 0L);
         } else {
