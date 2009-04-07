@@ -7,7 +7,7 @@
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d %-5p %-50.50c: %m%n"/>
       <!-- this pattern can be used for debugging - has a performance impact.
-      <param name="ConversionPattern" value="%-5p  %c %F(%M:%L) %t %d %m%n" />
+      <param name="ConversionPattern" value="%-5p  %c %F(%M:%L) %t %d %m (uri:%X{requesturi} userid:%X{userid})%n" />
       -->
     </layout>
   </appender>
