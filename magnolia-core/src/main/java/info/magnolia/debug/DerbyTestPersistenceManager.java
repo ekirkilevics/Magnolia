@@ -41,11 +41,12 @@ import org.apache.jackrabbit.core.state.PropertyState;
 
 
 /**
- * A PM which messures the time spent in saving. You must enable the PersistanceTestFilter
+ * A PM which measures the time spent in saving. You must enable the PerformanceTestFilter.
+ * 
  * @author philipp
  * @version $Id$
  */
-public class DerbyTestPersistanceManager extends DerbyPersistenceManager {
+public class DerbyTestPersistenceManager extends DerbyPersistenceManager {
 
     /**
      * Configure that with a parameter in the jackrabbit configuration file. Make sure that you change that value for

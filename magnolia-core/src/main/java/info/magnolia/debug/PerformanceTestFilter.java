@@ -46,16 +46,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Logs what ever has got recorded with the {@link PerformanceTestStatus}
+ * Logs whatever has been recorded with the {@link PerformanceTestStatus}.
+ *
  * @author philipp
  * @version $Id$
  */
 public class PerformanceTestFilter extends AbstractMgnlFilter {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger("info.magnolia.debug");
+    private static final Logger log = LoggerFactory.getLogger("info.magnolia.debug");
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {

@@ -54,13 +54,9 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class DumpHeadersFilter extends AbstractMgnlFilter {
+    private static final Logger log = LoggerFactory.getLogger("info.magnolia.debug");
+
     private long count = 0;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger("info.magnolia.debug");
-
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         long nr = count++;
