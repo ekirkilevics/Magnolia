@@ -159,6 +159,19 @@
           <scanIntervalSeconds>5</scanIntervalSeconds>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>winstone-maven-plugin</artifactId>
+        <version>1.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>embed</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
