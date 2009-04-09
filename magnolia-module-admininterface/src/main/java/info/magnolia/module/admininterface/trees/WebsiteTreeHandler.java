@@ -54,8 +54,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class WebsiteTreeHandler extends AdminTreeMVCHandler {
 
-    protected static final String VIEW_SHOW = "show";
-
     public WebsiteTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
@@ -91,10 +89,11 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         if(!TemplateManager.getInstance().getAvailableTemplates().hasNext()) {
             try {
                 request.getRequestDispatcher("/.magnolia/pages/quickstart.html").forward(request, response);
-            } catch (Exception e1) {
-                log.error("Couldn't load quickstart page");
+                return "";
+            } catch (Exception e) {
+                log.error("Couldn't forward to quickstart page: " + e.getMessage());
             }
         }
-        return VIEW_TREE;
+        return super.show();
     }
 }
