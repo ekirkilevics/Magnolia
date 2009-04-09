@@ -516,7 +516,7 @@ public class MetaData {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
         }
         return null;
     }
@@ -537,7 +537,7 @@ public class MetaData {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
         }
         return false;
     }
@@ -558,7 +558,7 @@ public class MetaData {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
         }
         return 0d;
     }
@@ -579,7 +579,7 @@ public class MetaData {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
         }
         return 0L;
     }
@@ -602,7 +602,7 @@ public class MetaData {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
         }
         return StringUtils.EMPTY;
     }
