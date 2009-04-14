@@ -44,18 +44,15 @@ import java.util.Collection;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.InvalidQueryException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 /**
  * @author Sameer Charles $Id:RepositorySearchListModel.java 2544 2006-04-04 12:47:32Z philipp $
  */
 public class RepositorySearchListModel extends AbstractSearchableListModel {
-
-    /**
-     * Logger
-     */
-    private static Logger log = Logger.getLogger(RepositorySearchListModel.class);
+    private static final Logger log = LoggerFactory.getLogger(RepositorySearchListModel.class);
 
     /**
      * repository id

@@ -57,7 +57,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 /**
@@ -85,6 +86,7 @@ import org.apache.log4j.Logger;
  * @version 1.0
  */
 public class ScaleImageTag extends BaseImageTag {
+    private static final Logger log = LoggerFactory.getLogger(ScaleImageTag.class);
 
     /**
      * Location for folder for temporary image creation.
@@ -122,11 +124,6 @@ public class ScaleImageTag extends BaseImageTag {
      * Attribute: The name of the data node that contains the existing image.
      */
     private String parentNodeDataName;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(ScaleImageTag.class);
 
     /**
      * The maximum height of the image in pixels.

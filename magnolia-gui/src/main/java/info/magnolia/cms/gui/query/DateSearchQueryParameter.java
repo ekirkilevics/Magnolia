@@ -36,18 +36,15 @@ package info.magnolia.cms.gui.query;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 /**
  * @author Sameer Charles $Id$
  */
 public class DateSearchQueryParameter extends SearchQueryParameter {
-
-    /**
-     * Logger
-     */
-    private static Logger log = Logger.getLogger(DateSearchQueryParameter.class);
+    private static final Logger log = LoggerFactory.getLogger(DateSearchQueryParameter.class);
 
     /**
      * sql constraint "TODAY"

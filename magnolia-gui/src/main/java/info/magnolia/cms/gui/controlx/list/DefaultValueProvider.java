@@ -45,18 +45,15 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 /**
  * @author Sameer Charles $Id$
  */
 public class DefaultValueProvider implements ValueProvider {
-
-    /**
-     * Logger
-     */
-    private static final Logger log = Logger.getLogger(DefaultValueProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultValueProvider.class);
 
     /**
      * singleton
