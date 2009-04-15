@@ -838,14 +838,6 @@
             {
             exit=true;
             }
-        else if (this.lastEditedIsLabel && this.lastEditedNode.isActivated)
-            {
-            if (!mgnlConfirm(mgnlMessages.get('tree.savenode.confirmDeactivation.text.js'),
-                                mgnlMessages.get('tree.savenode.confirmDeactivation.title.js')))
-                {
-                exit=true;
-                }
-            }
 
         if (exit)
             {
