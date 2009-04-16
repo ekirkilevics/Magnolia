@@ -470,18 +470,6 @@ for Java Content Repositories (JCR).
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
-          <exclusion>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>javax.portlet</groupId>
-            <artifactId>portlet-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>myfaces</groupId>
-            <artifactId>myfaces-api</artifactId>
-          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
