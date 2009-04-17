@@ -33,9 +33,12 @@
  */
 package info.magnolia.module.admininterface.pages;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
+import info.magnolia.cms.security.ExternalUser;
+import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.MgnlContext;
@@ -77,6 +80,14 @@ public class AdminCentralPage extends TemplatedMVCHandler {
 
     public User getUser() {
         return MgnlContext.getUser();
+    }
+
+    public Content getUserNode() {
+        if (getUser() instanceof MgnlUser) {
+            return ((MgnlUser) getUser()).getUserNode();
+        } else {
+            return null;  
+        }
     }
 
     public Messages getMessages() {
