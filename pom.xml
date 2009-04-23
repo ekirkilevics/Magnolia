@@ -3,7 +3,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -20,6 +20,7 @@ for Java Content Repositories (JCR).
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
     <documentationURL>http://documentation.magnolia-cms.com/release/4-0.html</documentationURL>
+    <javaVersion>1.5</javaVersion>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -118,40 +119,6 @@ for Java Content Repositories (JCR).
     <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</developerConnection>
     <url>http://svn.magnolia-cms.com/view/community/magnolia/trunk</url>
   </scm>
-  <profiles>
-    <profile>
-      <id>java-1.4</id>
-      <activation>
-        <jdk>1.4</jdk>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>javax.management</groupId>
-          <artifactId>jmx</artifactId>
-          <version>1.2.1</version>
-          <scope>provided</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-jar-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <classifier>jdk14</classifier>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   <build>
     <plugins>
       <plugin>
