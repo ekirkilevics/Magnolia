@@ -121,12 +121,19 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
         } catch (SAXException e) {
             throw new ModuleManagementException(e.getMessage(), e);
         }
-
     }
 
     public ModuleDefinition readFromResource(String resourcePath) throws ModuleManagementException {
         final InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(resourcePath));
-        return read(reader);
+        try {
+            return read(reader);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                log.error("Can't close input for " + resourcePath);
+            }
+        }
     }
 
     /**
