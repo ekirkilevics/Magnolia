@@ -565,7 +565,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws RepositoryException
       */
      protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
-         File file = File.createTempFile("exchange_" + content.getName(), ".xml.gz", Path.getTempDirectory());
+         File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
          GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
          if (content.getWorkspace().getName().equalsIgnoreCase(ContentRepository.VERSION_STORE)) {
