@@ -119,6 +119,25 @@ for Java Content Repositories (JCR).
     <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</developerConnection>
     <url>http://svn.magnolia-cms.com/view/community/magnolia/trunk</url>
   </scm>
+  <profiles>
+    <profile>
+      <id>show-compile-warnings</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <!--<compilerArgument>-Xlint:unchecked,deprecation,fallthrough,finally</compilerArgument>-->
+                <compilerArgument>-Xlint:all</compilerArgument>
+                <showWarnings>true</showWarnings>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
   <build>
     <plugins>
       <plugin>
