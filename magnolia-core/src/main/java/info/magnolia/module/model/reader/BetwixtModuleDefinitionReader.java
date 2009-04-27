@@ -62,7 +62,7 @@ import java.util.regex.Pattern;
 /**
  * This implementation of ModuleDefinitionReader uses Betwixt to read and convert module
  * descriptor files.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -71,9 +71,16 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
 
     private static final String DTD = "/info/magnolia/module/model/module.dtd";
 
+    private final String dtdUrl;
     private final BeanReader beanReader;
 
     public BetwixtModuleDefinitionReader() {
+        final URL dtd = getClass().getResource(DTD);
+        if (dtd == null) {
+            throw new IllegalStateException("DTD not found at " + DTD);
+        }
+        dtdUrl = dtd.toString();
+        
         final BetwixtBindingStrategy bindingStrategy = new BetwixtBindingStrategy();
         bindingStrategy.registerConverter(Version.class, new VersionConverter());
 
@@ -124,10 +131,10 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
 
     /**
      * @deprecated TODO very ugly hack to force documents to be validated against OUR DTD.
+     * We could use an EntityResolver, but it seems that with SAX, the documents will only be
+     * validated if they original have a doctype declaration.
      */
     private Reader replaceDtd(Reader reader) throws IOException {
-        URL dtdUrl = getClass().getResource(DTD);
-
         String content = IOUtils.toString(reader);
 
         // remove doctype
@@ -138,7 +145,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
         // set doctype to the dtd
         try {
             Document doc = new SAXBuilder().build(new StringReader(content));
-            doc.setDocType(new DocType("module", dtdUrl.toString()));
+            doc.setDocType(new DocType("module", dtdUrl));
             // write the xml to the string
             XMLOutputter outputter = new XMLOutputter();
             StringWriter writer = new StringWriter();
