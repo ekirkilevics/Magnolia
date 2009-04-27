@@ -573,7 +573,7 @@ for Java Content Repositories (JCR).
   <!-- remove this once xdoclet 2.0.7 is out -->
   <pluginRepositories>
     <pluginRepository>
-      <id>codehaus-snapshots</id>
+      <id>codehaus-snapshots-plugins</id>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
