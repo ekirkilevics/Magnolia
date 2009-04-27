@@ -40,11 +40,12 @@ import info.magnolia.module.model.VersionRange;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Utility class to check dependencies between instances of ModuleDescriptors and sort them according to
+ * their dependencies.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -52,16 +53,14 @@ import java.util.Map;
 public class DependencyChecker {
 
     /**
+     * Checks dependencies between the given modules, throws a ModuleDependencyException if there is
+     * a dependency mismatch.
+     *
      * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
      */
-    public void checkDependencies(Map moduleDefinitions) throws ModuleDependencyException {
-        final Iterator it = moduleDefinitions.values().iterator();
-        while (it.hasNext()) {
-            final ModuleDefinition def = (ModuleDefinition) it.next();
-
-            final Iterator dependenciesIter = def.getDependencies().iterator();
-            while (dependenciesIter.hasNext()) {
-                final DependencyDefinition dep = (DependencyDefinition) dependenciesIter.next();
+    public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
+        for (ModuleDefinition def : moduleDefinitions.values()) {
+            for (DependencyDefinition dep : def.getDependencies()) {
                 if (!dep.isOptional()) {
                     checkSpecificDependency(def, dep, moduleDefinitions);
                 }
@@ -72,16 +71,16 @@ public class DependencyChecker {
     /**
      * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
      */
-    public List sortByDependencyLevel(Map moduleDefinitions) {
-        final List modules = new ArrayList(moduleDefinitions.values());
+    public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
+        final List<ModuleDefinition> modules = new ArrayList<ModuleDefinition>(moduleDefinitions.values());
 
         Collections.sort(modules, new DependencyLevelComparator(moduleDefinitions));
 
         return modules;
     }
 
-    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map moduleDefinitions) throws ModuleDependencyException {
-        final ModuleDefinition dependencyModuleDef = (ModuleDefinition) moduleDefinitions.get(requiredDependency.getName());
+    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
+        final ModuleDefinition dependencyModuleDef = moduleDefinitions.get(requiredDependency.getName());
         if (dependencyModuleDef == null) {
             throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", which was not found.");
         }

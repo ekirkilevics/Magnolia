@@ -49,10 +49,10 @@ import java.util.Set;
  * @version $Id$
  */
 public class ModuleRegistryImpl implements ModuleRegistry {
-    private final Map entries;
+    private final Map<String, ModuleEntry> entries;
 
     public ModuleRegistryImpl() {
-        entries = MapUtils.lazyMap(new HashMap(), new org.apache.commons.collections.Factory() {
+        entries = MapUtils.lazyMap(new HashMap<String, ModuleEntry>(), new org.apache.commons.collections.Factory() {
             public Object create() {
                 return new ModuleEntry();
             }
@@ -60,30 +60,30 @@ public class ModuleRegistryImpl implements ModuleRegistry {
     }
 
     public void registerModuleDefinition(String name, ModuleDefinition moduleDefinition) {
-        ((ModuleEntry) entries.get(name)).moduleDefinition = moduleDefinition;
+        entries.get(name).moduleDefinition = moduleDefinition;
     }
 
     public void registerModuleInstance(String name, Object moduleInstance) {
-        ((ModuleEntry) entries.get(name)).moduleInstance = moduleInstance;
+        entries.get(name).moduleInstance = moduleInstance;
     }
 
     public void registerModuleVersionHandler(String name, ModuleVersionHandler moduleVersionHandler) {
-        ((ModuleEntry) entries.get(name)).moduleVersionHandler = moduleVersionHandler;
+        entries.get(name).moduleVersionHandler = moduleVersionHandler;
     }
 
     public ModuleDefinition getDefinition(String name) {
-        return ((ModuleEntry) entries.get(name)).moduleDefinition;
+        return entries.get(name).moduleDefinition;
     }
 
     public Object getModuleInstance(String name) {
-        return ((ModuleEntry) entries.get(name)).moduleInstance;
+        return entries.get(name).moduleInstance;
     }
 
     public ModuleVersionHandler getVersionHandler(String name) {
-        return ((ModuleEntry) entries.get(name)).moduleVersionHandler;
+        return entries.get(name).moduleVersionHandler;
     }
 
-    public Set getModuleNames() {
+    public Set<String> getModuleNames() {
         return Collections.unmodifiableSet(entries.keySet());
     }
 

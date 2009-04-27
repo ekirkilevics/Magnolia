@@ -39,25 +39,24 @@ import info.magnolia.module.model.ModuleDefinition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * A comparator used to sort modules according to their dependencies.
+ * It hardcodes "core" to be first and "webapp" to be last.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class DependencyLevelComparator implements Comparator {
-    private final Map modulesDefinitions;
+class DependencyLevelComparator implements Comparator<ModuleDefinition> {
+    private final Map<String, ModuleDefinition> allKnownModulesDefinitions;
 
-    DependencyLevelComparator(Map modulesDefinitions) {
-        this.modulesDefinitions = modulesDefinitions;
+    DependencyLevelComparator(Map<String, ModuleDefinition> allKnownModulesDefinitions) {
+        this.allKnownModulesDefinitions = allKnownModulesDefinitions;
     }
 
-    public int compare(Object arg1, Object arg2) {
-        final ModuleDefinition def1 = (ModuleDefinition) arg1;
-        final ModuleDefinition def2 = (ModuleDefinition) arg2;
+    public int compare(ModuleDefinition def1, ModuleDefinition def2) {
 
         // the core module must always be installed/updated/started first
         if ("core".equals(def1.getName())) {
@@ -73,8 +72,8 @@ class DependencyLevelComparator implements Comparator {
             return -1;
         }
 
-        int level1 = calcDependencyLevel(def1);
-        int level2 = calcDependencyLevel(def2);
+        int level1 = calcDependencyDepth(def1);
+        int level2 = calcDependencyDepth(def2);
 
         // lower level first
         int dif = level1 - level2;
@@ -88,26 +87,34 @@ class DependencyLevelComparator implements Comparator {
     }
 
     /**
-     * Calculates the level of dependency. 0 means no dependency. If no of the dependencies has itself dependencies is
-     * this level 1. If one or more of the dependencies has a dependencies has a dependency it would return 2. And so on
-     * ...
+     * Calculates the depth of dependency. 0 means no dependency. If none of the dependencies
+     * has itself dependencies, the level will be 1. If one or more of the dependencies has
+     * dependencies that has a dependency it would return 2. And so on...
+     *
      * @param def module definition
      * @return the level
      */
-    protected int calcDependencyLevel(ModuleDefinition def) {
+    protected int calcDependencyDepth(ModuleDefinition def) {
         if (def.getDependencies() == null || def.getDependencies().size() == 0) {
             return 0;
         }
-        final List dependencyLevels = new ArrayList();
-        for (Iterator iter = def.getDependencies().iterator(); iter.hasNext();) {
-            final DependencyDefinition dep = (DependencyDefinition) iter.next();
-            final ModuleDefinition depDef = (ModuleDefinition) modulesDefinitions.get(dep.getName());
+        final List<Integer> dependencyLevels = new ArrayList<Integer>();
+        for (final DependencyDefinition dep : def.getDependencies()) {
+            final ModuleDefinition depDef = allKnownModulesDefinitions.get(dep.getName());
             if (depDef == null && !dep.isOptional()) {
                 throw new RuntimeException("Missing definition for module:" + dep.getName());
             } else if (depDef != null) {
                 dependencyLevels.add(new Integer(calcDependencyLevel(depDef)));
             }
         }
-        return ((Integer) Collections.max(dependencyLevels)).intValue() + 1;
+        return (Collections.max(dependencyLevels)).intValue() + 1;
     }
+
+    /**
+     * @deprecated since Magnolia 4.1, renamed to calcDependencyDepth()
+     */
+    protected int calcDependencyLevel(ModuleDefinition def) {
+        return calcDependencyDepth(def);
+    }
+
 }

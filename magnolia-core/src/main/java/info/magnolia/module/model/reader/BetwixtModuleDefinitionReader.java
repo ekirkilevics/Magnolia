@@ -60,7 +60,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ * This implementation of ModuleDefinitionReader uses Betwixt to read and convert module
+ * descriptor files.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -86,8 +88,8 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
         }
     }
 
-    public Map readAll() throws ModuleManagementException {
-        final Map moduleDefinitions = new HashMap();
+    public Map<String, ModuleDefinition> readAll() throws ModuleManagementException {
+        final Map<String, ModuleDefinition> moduleDefinitions = new HashMap<String, ModuleDefinition>();
 
         final String[] defResources = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
             public boolean accept(String name) {
@@ -95,8 +97,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
             }
         });
 
-        for (int j = 0; j < defResources.length; j++) {
-            final String resourcePath = defResources[j];
+        for (final String resourcePath : defResources) {
             log.debug("Parsing module file {}", resourcePath);
             final ModuleDefinition def = readFromResource(resourcePath);
             moduleDefinitions.put(def.getName(), def);
@@ -150,6 +151,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
     }
 
     private static class ErrorHandler implements org.xml.sax.ErrorHandler {
+        // TODO -- pass source (url, content, ...) for each parse ?
         public void warning(SAXParseException e) throws SAXException {
             log.warn("Warning on module definition " + getSaxParseExceptionMessage(e));
         }

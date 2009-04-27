@@ -48,29 +48,29 @@ import java.util.Collection;
 public class ServletDefinition {
 
     /**
-     * The name of the servlet
+     * The name of the servlet.
      */
     private String name;
 
     /**
-     * The class name of the servlet
+     * The class name of the servlet.
      */
     private String className;
 
     /**
-     * Comment added to this servlet
+     * Comment added to this servlet.
      */
     private String comment;
 
     /**
-     * The mapping used for this servlet
+     * The mapping used for this servlet.
      */
-    private Collection mappings = new ArrayList();
+    private Collection<String> mappings = new ArrayList<String>();
 
     /**
-     * The mapping used for this servlet
+     * The mapping used for this servlet.
      */
-    private Collection params = new ArrayList();
+    private Collection<ServletParameterDefinition> params = new ArrayList<ServletParameterDefinition>();
 
     public String getClassName() {
         return this.className;
@@ -88,7 +88,7 @@ public class ServletDefinition {
         this.name = name;
     }
 
-    public Collection getMappings() {
+    public Collection<String> getMappings() {
         return this.mappings;
     }
 
@@ -96,7 +96,7 @@ public class ServletDefinition {
         this.mappings.add(mapping);
     }
 
-    public Collection getParams() {
+    public Collection<ServletParameterDefinition> getParams() {
         return this.params;
     }
 

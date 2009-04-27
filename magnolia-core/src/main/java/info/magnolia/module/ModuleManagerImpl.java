@@ -94,7 +94,7 @@ public class ModuleManagerImpl implements ModuleManager {
     /**
      * List<ModuleDefinition> of modules found to be deployed.
      */
-    private List orderedModuleDescriptors;
+    private List<ModuleDefinition> orderedModuleDescriptors;
 
     private ModuleManagementState state;
 
@@ -116,12 +116,12 @@ public class ModuleManagerImpl implements ModuleManager {
         this.registry = ModuleRegistry.Factory.getInstance();
     }
 
-    public List loadDefinitions() throws ModuleManagementException {
+    public List<ModuleDefinition> loadDefinitions() throws ModuleManagementException {
         if (state != null) {
             throw new IllegalStateException("ModuleManager was already initialized !");
         }
 
-        final Map moduleDefinitions = moduleDefinitionReader.readAll();
+        final Map<String, ModuleDefinition> moduleDefinitions = moduleDefinitionReader.readAll();
         if (moduleDefinitions.isEmpty()) {
             throw new ModuleManagementException("No module definition was found.");
         }
@@ -130,8 +130,7 @@ public class ModuleManagerImpl implements ModuleManager {
         final DependencyChecker dependencyChecker = new DependencyChecker();
         dependencyChecker.checkDependencies(moduleDefinitions);
         orderedModuleDescriptors = dependencyChecker.sortByDependencyLevel(moduleDefinitions);
-        for (Iterator iter = orderedModuleDescriptors.iterator(); iter.hasNext();) {
-            ModuleDefinition moduleDefinition = (ModuleDefinition) iter.next();
+        for (ModuleDefinition moduleDefinition : orderedModuleDescriptors) {
             registry.registerModuleDefinition(moduleDefinition.getName(), moduleDefinition);
         }
         return orderedModuleDescriptors;
@@ -147,22 +146,18 @@ public class ModuleManagerImpl implements ModuleManager {
         // compare and determine if we need to do anything
         state = new ModuleManagementState();
         int taskCount = 0;
-        final Iterator it = orderedModuleDescriptors.iterator();
-        while (it.hasNext()) {
-            final ModuleDefinition module = (ModuleDefinition) it.next();
+        for (ModuleDefinition module : orderedModuleDescriptors) {
             log.debug("Checking for installation or update [{}]", module);
             final ModuleVersionHandler versionHandler = newVersionHandler(module);
             registry.registerModuleVersionHandler(module.getName(), versionHandler);
             installContext.setCurrentModule(module);
 
             final Version currentVersion = versionHandler.getCurrentlyInstalled(installContext);
-            final List deltas = versionHandler.getDeltas(installContext, currentVersion);
+            final List<Delta> deltas = versionHandler.getDeltas(installContext, currentVersion);
             if (deltas.size() > 0) {
                 state.addModule(module, currentVersion, deltas);
-                final Iterator itD = deltas.iterator();
-                while (itD.hasNext()) {
-                    final Delta d = (Delta) itD.next();
-                    taskCount += d.getTasks().size();
+                for (Delta delta : deltas) {
+                    taskCount += delta.getTasks().size();
                 }
             }
         }
@@ -197,9 +192,9 @@ public class ModuleManagerImpl implements ModuleManager {
 
     protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
         try {
-            final Class versionHandlerClass = module.getVersionHandler();
+            final Class<ModuleVersionHandler> versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
-                return (ModuleVersionHandler) versionHandlerClass.newInstance();
+                return versionHandlerClass.newInstance();
             } else {
                 return new DefaultModuleVersionHandler();
             }
@@ -226,18 +221,12 @@ public class ModuleManagerImpl implements ModuleManager {
 
         // check all conditions
         boolean conditionsChecked = true;
-        final Iterator it = state.getList().iterator();
-        while (it.hasNext()) {
+        for (ModuleAndDeltas moduleAndDeltas : state.getList()) {
             // TODO extract "do for all deltas" logic ?
-            final ModuleAndDeltas moduleAndDeltas = (ModuleAndDeltas) it.next();
             installContext.setCurrentModule(moduleAndDeltas.getModule());
-            final Iterator itD = moduleAndDeltas.getDeltas().iterator();
-            while (itD.hasNext()) {
-                final Delta d = (Delta) itD.next();
-                final List conditions = d.getConditions();
-                final Iterator itC = conditions.iterator();
-                while (itC.hasNext()) {
-                    final Condition cond = (Condition) itC.next();
+            for (Delta delta : moduleAndDeltas.getDeltas()) {
+                final List<Condition> conditions = delta.getConditions();
+                for (Condition cond : conditions) {
                     if (!cond.check(installContext)) {
                         conditionsChecked = false;
                         installContext.info(cond.getDescription());
@@ -255,9 +244,9 @@ public class ModuleManagerImpl implements ModuleManager {
 
         MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
             public void exec() {
-                final Iterator it = state.getList().iterator();
+                final Iterator<ModuleAndDeltas> it = state.getList().iterator();
                 while (it.hasNext()) {
-                    final ModuleAndDeltas moduleAndDeltas = (ModuleAndDeltas) it.next();
+                    final ModuleAndDeltas moduleAndDeltas = it.next();
                     installOrUpdateModule(moduleAndDeltas, installContext);
                     it.remove();
                 }
@@ -283,11 +272,9 @@ public class ModuleManagerImpl implements ModuleManager {
             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
             final Content modulesParentNode = hm.getContent(MODULES_NODE);
-            final Collection moduleNodes = new ArrayList();
-            final Iterator it = orderedModuleDescriptors.iterator();
+            final Collection<Content> moduleNodes = new ArrayList<Content>();
 
-            while (it.hasNext()) {
-                final ModuleDefinition moduleDefinition = (ModuleDefinition) it.next();
+            for (ModuleDefinition moduleDefinition : orderedModuleDescriptors) {
                 final String moduleClassName = moduleDefinition.getClassName();
                 final String moduleName = moduleDefinition.getName();
                 log.debug("Initializing module {}", moduleName);
@@ -305,8 +292,9 @@ public class ModuleManagerImpl implements ModuleManager {
                     registry.registerModuleInstance(moduleName, moduleInstance);
                 }
 
-                // TODO - isn't all this code only there to support "old style" modules ?
-                final Map moduleProperties = new HashMap();
+                // Prepare properties for module instances; if the bean has "moduleDefinition",
+                // "name", "moduleNode" or "configNode" properties, they will be populated accordingly.
+                final Map<String, Object> moduleProperties = new HashMap<String, Object>();
                 moduleProperties.put("moduleDefinition", moduleDefinition);
                 moduleProperties.put("name", moduleName);
 
@@ -335,7 +323,7 @@ public class ModuleManagerImpl implements ModuleManager {
                             // TODO we should keep only one instance of the lifecycle context
                             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
                             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
-                            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
+                            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
                                 public void exec() {
                                     stopModule(moduleInstance, moduleDefinition, lifecycleContext);
                                     populateModuleInstance(moduleInstance, moduleProperties);
@@ -360,9 +348,7 @@ public class ModuleManagerImpl implements ModuleManager {
     protected void executeStartupTasks() {
         MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
             public void exec() {
-                final Iterator it = orderedModuleDescriptors.iterator();
-                while (it.hasNext()) {
-                    final ModuleDefinition module = (ModuleDefinition) it.next();
+                for (ModuleDefinition module : orderedModuleDescriptors) {
                     final ModuleVersionHandler versionHandler = registry.getVersionHandler(module.getName());
                     installContext.setCurrentModule(module);
                     final Delta startup = versionHandler.getStartupDelta(installContext);
@@ -388,8 +374,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    protected void populateModuleInstance(Object moduleInstance, Map moduleProperties) {
-        // TODO - isn't all this code only there to support "old style" modules ?
+    protected void populateModuleInstance(Object moduleInstance, Map<String, Object> moduleProperties) {
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
         }
@@ -412,10 +397,9 @@ public class ModuleManagerImpl implements ModuleManager {
         lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN);
         if (orderedModuleDescriptors != null) {
             // if module descriptors were read, let's shut down modules in reverse order
-            final ArrayList shutdownOrder = new ArrayList(orderedModuleDescriptors);
+            final ArrayList<ModuleDefinition> shutdownOrder = new ArrayList<ModuleDefinition>(orderedModuleDescriptors);
             Collections.reverse(shutdownOrder);
-            for (Iterator iter = shutdownOrder.iterator(); iter.hasNext();) {
-                ModuleDefinition md = (ModuleDefinition) iter.next();
+            for (ModuleDefinition md : shutdownOrder) {
                 Object module = registry.getModuleInstance(md.getName());
                 if (module instanceof ModuleLifecycle) {
                     stopModule(module, md, lifecycleContext);
@@ -427,7 +411,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
     protected void installOrUpdateModule(ModuleAndDeltas moduleAndDeltas, InstallContextImpl ctx) {
         final ModuleDefinition moduleDef = moduleAndDeltas.getModule();
-        final List deltas = moduleAndDeltas.getDeltas();
+        final List<Delta> deltas = moduleAndDeltas.getDeltas();
         ctx.setCurrentModule(moduleDef);
         log.debug("Install/update for {} is starting: {}", moduleDef, moduleAndDeltas);
         applyDeltas(moduleDef, deltas, ctx);
@@ -439,27 +423,24 @@ public class ModuleManagerImpl implements ModuleManager {
      * module as being the current module in the given context, but it is responsible for unsetting
      * it when done, and for saving upon success.
      */
-    protected void applyDeltas(ModuleDefinition moduleDef, List deltas, InstallContextImpl ctx) {
+    protected void applyDeltas(ModuleDefinition moduleDef, List<Delta> deltas, InstallContextImpl ctx) {
         boolean success = true;
-        Task task = null;
+        Task currentTask = null;
         try {
-            final Iterator it = deltas.iterator();
-            while (it.hasNext()) {
-                final Delta d = (Delta) it.next();
-                final List tasks = d.getTasks();
-                final Iterator itT = tasks.iterator();
-                while (itT.hasNext()) {
-                    task = (Task) itT.next();
-                    log.debug("Module {}, executing {}", moduleDef, task);
+            for (Delta delta : deltas) {
+                final List<Task> tasks = delta.getTasks();
+                for (Task task : tasks) {
+                    currentTask = task;
+                    log.debug("Module {}, executing {}", moduleDef, currentTask);
                     task.execute(ctx);
                     ctx.incExecutedTaskCount();
                 }
             }
         } catch (TaskExecutionException e) {
-            ctx.error("Could not install or update " + moduleDef.getName() + " module. Task '" + task.getName() + "' failed. (" + ExceptionUtils.getRootCauseMessage(e) + ")", e);
+            ctx.error("Could not install or update " + moduleDef.getName() + " module. Task '" + currentTask.getName() + "' failed. (" + ExceptionUtils.getRootCauseMessage(e) + ")", e);
             success = false;
         } catch (RuntimeException e) {
-            ctx.error("Error while installing or updating " + moduleDef.getName() + " module. Task '" + task.getName() + "' failed. (" + ExceptionUtils.getRootCauseMessage(e) + ")", e);
+            ctx.error("Error while installing or updating " + moduleDef.getName() + " module. Task '" + currentTask.getName() + "' failed. (" + ExceptionUtils.getRootCauseMessage(e) + ")", e);
             throw e;
         } finally {
             // TODO : ctx.info("Successful installation/update."); after save ?
@@ -475,9 +456,9 @@ public class ModuleManagerImpl implements ModuleManager {
      */
     private void saveChanges(boolean persist) {
         // save all repositories once a module was properly installed/updated, or rollback changes.
-        final Iterator reposIt = ContentRepository.getAllRepositoryNames();
+        final Iterator<String> reposIt = ContentRepository.getAllRepositoryNames();
         while (reposIt.hasNext()) {
-            final String repoName = (String) reposIt.next();
+            final String repoName = reposIt.next();
             log.debug((persist ? "Saving" : "Rolling back") + " repository " + repoName);
             final HierarchyManager hm = MgnlContext.getHierarchyManager(repoName);
             try {
@@ -503,20 +484,15 @@ public class ModuleManagerImpl implements ModuleManager {
      * always before starting the new module.
      */
     private void loadModulesRepositories() {
-
-        final Iterator it = orderedModuleDescriptors.iterator();
-
-        while (it.hasNext()) {
-            final ModuleDefinition def = (ModuleDefinition) it.next();
+        for (ModuleDefinition def : orderedModuleDescriptors) {
             // register repositories
-            for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
-                final RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
+            for (final RepositoryDefinition repDef : def.getRepositories()) {
                 final String repositoryName = repDef.getName();
 
                 final String nodetypeFile = repDef.getNodeTypeFile();
 
-                List wsList = repDef.getWorkspaces();
-                String[] workSpaces = (String[]) wsList.toArray(new String[wsList.size()]);
+                final List<String> wsList = repDef.getWorkspaces();
+                String[] workSpaces = wsList.toArray(new String[wsList.size()]);
 
                 loadRepository(repositoryName, nodetypeFile, workSpaces);
             }
@@ -575,9 +551,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
 
         if (workspaces != null) {
-            for (int j = 0; j < workspaces.length; j++) {
-                String workspace = workspaces[j];
-
+            for (String workspace : workspaces) {
                 if (!rm.getWorkspaces().contains(workspace)) {
                     log.debug("Loading new workspace: {}", workspace);
 

@@ -37,7 +37,8 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+
+import info.magnolia.module.ModuleVersionHandler;
 
 /**
  * Describes a module. Bean representation of a module's xml descriptor.
@@ -50,17 +51,17 @@ public class ModuleDefinition {
     private String displayName;
     private String description;
     private String className;
-    private Class versionHandler;
+    private Class<ModuleVersionHandler> versionHandler;
     private Version version;
-    private Collection dependencies = new ArrayList();
-    private Collection servlets = new ArrayList();
-    private Collection repositories = new ArrayList();
-    private Collection properties = new ArrayList();
+    private Collection<DependencyDefinition> dependencies = new ArrayList<DependencyDefinition>();
+    private Collection<ServletDefinition> servlets = new ArrayList<ServletDefinition>();
+    private Collection<RepositoryDefinition> repositories = new ArrayList<RepositoryDefinition>();
+    private Collection<PropertyDefinition> properties = new ArrayList<PropertyDefinition>();
 
     public ModuleDefinition() {
     }
 
-    public ModuleDefinition(String name, Version version, String className, Class versionHandler) {
+    public ModuleDefinition(String name, Version version, String className, Class<ModuleVersionHandler> versionHandler) {
         this.name = name;
         this.version = version;
         this.className = className;
@@ -76,7 +77,7 @@ public class ModuleDefinition {
     }
 
     /**
-     * @return the displayName. (or the name if displayName wasn't set)
+     * Returns the displayName or the name if displayName wasn't set.
      */
     public String getDisplayName() {
         if (StringUtils.isEmpty(this.displayName)) {
@@ -106,11 +107,11 @@ public class ModuleDefinition {
         this.className = className;
     }
 
-    public Class getVersionHandler() {
+    public Class<ModuleVersionHandler> getVersionHandler() {
         return versionHandler;
     }
 
-    public void setVersionHandler(Class versionHandler) {
+    public void setVersionHandler(Class<ModuleVersionHandler> versionHandler) {
         this.versionHandler = versionHandler;
     }
 
@@ -122,7 +123,7 @@ public class ModuleDefinition {
         return version;
     }
 
-    public Collection getDependencies() {
+    public Collection<DependencyDefinition> getDependencies() {
         return this.dependencies;
     }
 
@@ -130,7 +131,7 @@ public class ModuleDefinition {
         dependencies.add(dep);
     }
 
-    public Collection getServlets() {
+    public Collection<ServletDefinition> getServlets() {
         return this.servlets;
     }
 
@@ -141,7 +142,7 @@ public class ModuleDefinition {
         this.servlets.add(def);
     }
 
-    public Collection getRepositories() {
+    public Collection<RepositoryDefinition> getRepositories() {
         return this.repositories;
     }
 
@@ -149,7 +150,7 @@ public class ModuleDefinition {
         this.repositories.add(repository);
     }
 
-    public Collection getProperties() {
+    public Collection<PropertyDefinition> getProperties() {
         return properties;
     }
 
@@ -162,9 +163,7 @@ public class ModuleDefinition {
      * or null if it does not exist.
      */
     public String getProperty(String propertyName) {
-        final Iterator it = properties.iterator();
-        while (it.hasNext()) {
-            final PropertyDefinition p = (PropertyDefinition) it.next();
+        for (PropertyDefinition p : properties) {
             if (propertyName.equals(p.getName())) {
                 return p.getValue();
             }

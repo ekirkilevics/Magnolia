@@ -51,13 +51,13 @@ import java.util.Set;
  */
 class BetwixtBindingStrategy extends TypeBindingStrategy {
     private final TypeBindingStrategy delegate = new TypeBindingStrategy.Default();
-    private final Set convertedClasses;
+    private final Set<Class<?>> convertedClasses;
 
     BetwixtBindingStrategy() {
-        this.convertedClasses = new HashSet();
+        this.convertedClasses = new HashSet<Class<?>>();
     }
 
-    void registerConverter(Class clazz, Converter converter) {
+    void registerConverter(Class<?> clazz, Converter converter) {
         convertedClasses.add(clazz);
         // yuck, configuring the beanutils singleton - should be OK though, it's unlikely a 3rd party would use our model classes.
         ConvertUtils.register(converter, clazz);

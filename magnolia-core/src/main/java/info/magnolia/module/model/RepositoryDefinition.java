@@ -48,19 +48,19 @@ import java.util.List;
 public class RepositoryDefinition {
 
     /**
-     * The name of the repository to register
+     * The name of the repository to register.
      */
     private String name;
 
     /**
-     * The file containing the nodeTypes
+     * The file containing the nodeTypes.
      */
     private String nodeTypeFile;
 
     /**
-     * workspaces
+     * workspaces.
      */
-    private List workspaces = new ArrayList();
+    private List<String> workspaces = new ArrayList<String>();
 
     public String getName() {
         return this.name;
@@ -78,7 +78,7 @@ public class RepositoryDefinition {
         this.nodeTypeFile = nodeTypeFile;
     }
 
-    public List getWorkspaces() {
+    public List<String> getWorkspaces() {
         return this.workspaces;
     }
 

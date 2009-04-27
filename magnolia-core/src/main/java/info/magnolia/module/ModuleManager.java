@@ -37,6 +37,7 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.ui.ModuleManagerUI;
+import info.magnolia.module.delta.Delta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public interface ModuleManager {
      * Loads modules definitions, validates dependencies and sorts modules
      * by dependencies.
      */
-    List loadDefinitions() throws ModuleManagementException;
+    List<ModuleDefinition> loadDefinitions() throws ModuleManagementException;
 
     /**
      * Checks if we need to do any module installation, update or uninstall.
@@ -90,21 +91,21 @@ public interface ModuleManager {
      * Represent what's to be done for all modules.
      */
     public final static class ModuleManagementState {
-        private final List list;
+        private final List<ModuleAndDeltas> list;
 
         public ModuleManagementState() {
-            this.list = new ArrayList();
+            this.list = new ArrayList<ModuleAndDeltas>();
         }
 
         public boolean needsUpdateOrInstall() {
             return !(list.isEmpty());
         }
 
-        void addModule(ModuleDefinition module, Version currentVersion, List deltas) {
+        void addModule(ModuleDefinition module, Version currentVersion, List<Delta> deltas) {
             list.add(new ModuleAndDeltas(module, currentVersion, deltas));
         }
 
-        public List getList() {
+        public List<ModuleAndDeltas> getList() {
             return list;
         }
     }
@@ -115,9 +116,9 @@ public interface ModuleManager {
     public final static class ModuleAndDeltas {
         private final ModuleDefinition module;
         private final Version currentVersion;
-        private final List deltas;
+        private final List<Delta> deltas;
 
-        public ModuleAndDeltas(ModuleDefinition module, Version currentVersion, List deltas) {
+        public ModuleAndDeltas(ModuleDefinition module, Version currentVersion, List<Delta> deltas) {
             this.module = module;
             this.currentVersion = currentVersion;
             this.deltas = deltas;
@@ -131,7 +132,7 @@ public interface ModuleManager {
             return currentVersion;
         }
 
-        public List getDeltas() {
+        public List<Delta> getDeltas() {
             return deltas;
         }
 

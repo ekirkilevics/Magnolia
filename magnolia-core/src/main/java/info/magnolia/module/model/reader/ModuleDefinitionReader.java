@@ -40,6 +40,8 @@ import java.io.Reader;
 import java.util.Map;
 
 /**
+ * ModuleDefinitionReader is responsible for reading/decoding module descriptor files
+ * into ModuleDefinition instances.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -50,7 +52,7 @@ public interface ModuleDefinitionReader {
      * Reads all found module definitions.
      * @return a Map<String, ModuleDefinition> where the key is the module name.
      */
-    Map readAll() throws ModuleManagementException;
+    Map<String, ModuleDefinition> readAll() throws ModuleManagementException;
 
     ModuleDefinition read(Reader in) throws ModuleManagementException;
 
