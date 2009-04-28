@@ -99,7 +99,7 @@ public class FreemarkerUtil {
      */
     public static void process(String name, Map data, Writer writer) {
         try {
-            // add some usfull default data
+            // add some useful default data
             if (AlertUtil.isMessageSet()) {
                 data.put("message", AlertUtil.getMessage());
             }
