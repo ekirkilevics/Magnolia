@@ -387,7 +387,7 @@ public final class ContentRepository {
         Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
-            Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, wspID);
+            Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, repository, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
         }
