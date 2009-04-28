@@ -791,20 +791,27 @@ public class DefaultContent extends ContentHandler implements Content {
     public void delete() throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath());
+        ItemType nodeType = this.getItemType();
         this.node.remove();
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodeType, nodePath);
     }
 
     public void delete(String path) throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath(), path);
+        ItemType nodeType = null;
         if (this.isNodeData(path)) {
             this.getNodeData(path).delete();
         }
         else {
-            this.node.getNode(path).remove();
+            Node aNode = this.node.getNode(path);
+            if (aNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+                nodeType = new ItemType(aNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString());
+            }
+            nodeType = new ItemType(aNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString());
+            aNode.remove();
         }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodeType, nodePath);
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {

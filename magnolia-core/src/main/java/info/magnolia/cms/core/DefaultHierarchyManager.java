@@ -335,13 +335,19 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.REMOVE);
+        ItemType type = null;
         if (this.isNodeData(path)) {
             this.getNodeData(makeRelative(path)).delete();
         }
         else {
-            this.getRootNode().getNode(makeRelative(path)).remove();
+            Node aNode = this.getRootNode().getNode(makeRelative(path));
+            if (aNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+                type = new ItemType(aNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString());
+            }
+            type = new ItemType(aNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString());
+            aNode.remove();
         }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, workspaceName, path);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, workspaceName, type, path);
     }
 
     private String makeRelative(String path) {

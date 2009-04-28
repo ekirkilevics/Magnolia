@@ -33,8 +33,10 @@
  */
 package info.magnolia.logging;
 
+import javax.jcr.nodetype.NodeType;
 import javax.servlet.http.HttpServletRequest;
 
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.auth.login.FormLogin;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
@@ -75,7 +77,7 @@ public class AuditLoggingUtil {
      * log user logout
      */
     public static void log(final UserContext userContext ) {
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGOUT, null, null, null);
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGOUT, null, (String) null, null);
     }
 
     /**
@@ -118,6 +120,13 @@ public class AuditLoggingUtil {
             return "system user";
         }
         return "user not set";
+    }
+
+    /**
+     * log deletes incl. node type
+     */
+    public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {
+        AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getSystemName(), nodePath});
     }
 
 }
