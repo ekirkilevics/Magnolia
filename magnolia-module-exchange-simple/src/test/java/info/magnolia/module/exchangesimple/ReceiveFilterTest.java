@@ -41,6 +41,7 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import static org.easymock.EasyMock.*;
@@ -95,11 +96,13 @@ public class ReceiveFilterTest extends TestCase {
                 expect(hm.getAccessManager()).andReturn(null);
 
             }
-
+      
             public void checkNode(HierarchyManager hm) throws Exception {
+                //before
                 expect(hm.getContentByUUID("DUMMY-UUID")).andThrow(new ItemNotFoundException());
+                // after it have been created already
+                expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(new MockContent("blah"));
             }
-
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
                 session.importXML(eq(PARENT_PATH), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING));

@@ -419,7 +419,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param data as sent
       * @param resourceElement parent file element
       * @param hm
-      * @param parentPath
+      * @param parentPath Path to the node parent
       * @throws Exception
       */
      protected synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm, String parentPath) throws Exception {
@@ -431,14 +431,18 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
          // do actual import
          GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
+         log.debug("Importing {} into parent path {}", new Object[] {name, parentPath});
          hm.getWorkspace().getSession().importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
          IOUtils.closeQuietly(inputStream);
          Iterator fileListIterator = resourceElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
          // parent path
-         if (parentPath.equals("/")) {
-             parentPath = ""; // remove / if its a root
+         try {
+             parentPath = hm.getContentByUUID(resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_UUID_ATTRIBUTE)).getHandle();
+         } catch (ItemNotFoundException e) {
+             // non referencable content like meta data ... 
+             // FYI: if we ever have non referencable same name sibling content the trouble will be here with child content being mixed 
+             parentPath = StringUtils.removeEnd(parentPath, "/") + "/" + name; 
          }
-         parentPath += ("/" + name);
          while (fileListIterator.hasNext()) {
              Element fileElement = (Element) fileListIterator.next();
              importResource(data, fileElement, hm, parentPath);

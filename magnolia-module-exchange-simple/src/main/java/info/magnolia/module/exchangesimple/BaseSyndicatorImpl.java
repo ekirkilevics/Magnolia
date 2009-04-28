@@ -344,6 +344,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              log.debug("Clean temporary store - nothing to do");
              return;
          }
+         if (log.isDebugEnabled()) {
+             log.debug("Debugging is enabled. Keeping temporary files in store for debugging purposes. Clean the store manually once done with debugging.");
+             return;
+         }
+         
          Iterator keys = activationContent.getFiles().keySet().iterator();
          while (keys.hasNext()) {
              String key = (String) keys.next();
