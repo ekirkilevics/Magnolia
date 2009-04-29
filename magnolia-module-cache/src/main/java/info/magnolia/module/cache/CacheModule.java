@@ -33,11 +33,8 @@
  */
 package info.magnolia.module.cache;
 
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.cache.cachepolicy.Default;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,9 +56,9 @@ import org.slf4j.LoggerFactory;
 public class CacheModule implements ModuleLifecycle {
     private static final Logger log = LoggerFactory.getLogger(CacheModule.class);
 
-    private final Set listeners = new HashSet();
+    private final Set<CacheModuleLifecycleListener> listeners = new HashSet<CacheModuleLifecycleListener>();
     private CacheFactory cacheFactory;
-    private Map configurations = new HashMap();
+    private Map<String, CacheConfiguration> configurations = new HashMap<String, CacheConfiguration>();
     private ContentCompression compression;
 
     public CacheFactory getCacheFactory() {
@@ -72,11 +69,11 @@ public class CacheModule implements ModuleLifecycle {
         this.cacheFactory = cacheFactory;
     }
 
-    public Map getConfigurations() {
+    public Map<String, CacheConfiguration> getConfigurations() {
         return configurations;
     }
 
-    public void setConfigurations(Map configurations) {
+    public void setConfigurations(Map<String, CacheConfiguration> configurations) {
         this.configurations = configurations;
     }
 
@@ -85,7 +82,7 @@ public class CacheModule implements ModuleLifecycle {
     }
 
     public CacheConfiguration getConfiguration(String name) {
-        return (CacheConfiguration) configurations.get(name);
+        return configurations.get(name);
     }
 
     public void setCompression(ContentCompression compression) {
@@ -102,14 +99,14 @@ public class CacheModule implements ModuleLifecycle {
 
     // TODO : i still feel like we should separate module config bean and lifecycle
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
-        // TODO : this is implementation dependant - some factories might need or want to be notified also on restart..
+        // TODO : this is implementation dependent - some factories might need or want to be notified also on restart..
 //        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
         cacheFactory.start();
 //        }
 
-        final Iterator it = configurations.values().iterator();
+        final Iterator<CacheConfiguration> it = configurations.values().iterator();
         while (it.hasNext()) {
-            final CacheConfiguration cfg = (CacheConfiguration) it.next();
+            final CacheConfiguration cfg = it.next();
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
             if (cfg.getFlushPolicy() != null) {
@@ -119,17 +116,17 @@ public class CacheModule implements ModuleLifecycle {
             }
         }
 
-        final Iterator itL = listeners.iterator();
+        final Iterator<CacheModuleLifecycleListener> itL = listeners.iterator();
         while (itL.hasNext()) {
-            final CacheModuleLifecycleListener listener = (CacheModuleLifecycleListener) itL.next();
+            final CacheModuleLifecycleListener listener = itL.next();
             listener.onCacheModuleStart();
         }
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-        final Iterator it = configurations.values().iterator();
+        final Iterator<CacheConfiguration> it = configurations.values().iterator();
         while (it.hasNext()) {
-            final CacheConfiguration cfg = (CacheConfiguration) it.next();
+            final CacheConfiguration cfg = it.next();
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
             if (cfg.getFlushPolicy() != null) {
@@ -144,23 +141,5 @@ public class CacheModule implements ModuleLifecycle {
 //        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
         cacheFactory.stop();
 //        }
-    }
-
-    /**
-     * Flushes single page from all registered cache instances. Does nothing in case page was not found or is stored under different key. 
-     * @param cacheEntryKey Key used to store the cached page. In default cache policy implementation this is equivalent of page original URI.
-     * @see CachePolicy
-     * @see Default#getCacheKey(AggregationState state) 
-     */
-    public void flushSinglePage(String cacheEntryKey) {
-        for (Iterator iter = getConfigurations().values().iterator(); iter.hasNext();) {
-            String name = ((CacheConfiguration) iter.next()).getName();
-            Cache cache = getCacheFactory().getCache(name);
-            if (log.isDebugEnabled()) {
-                // cache.hasElement() is blocking method, so don't call it unless really necessary
-                log.debug("In cache {} Found key {} :: {}", new Object[] {name, cacheEntryKey, "" + cache.hasElement(cacheEntryKey)});
-            }
-            cache.put(cacheEntryKey, null);
-        }
     }
 }

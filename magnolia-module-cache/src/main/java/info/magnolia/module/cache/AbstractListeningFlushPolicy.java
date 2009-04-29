@@ -119,7 +119,7 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
      */
     protected abstract void handleSingleEvent(Cache cache, String repository, Event event);
 
-    private class CacheCleaner implements EventListener {
+    protected class CacheCleaner implements EventListener {
         private final Cache cache;
         private final String repository;
 

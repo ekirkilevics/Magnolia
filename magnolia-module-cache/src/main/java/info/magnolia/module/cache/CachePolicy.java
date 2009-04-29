@@ -51,11 +51,22 @@ import info.magnolia.cms.core.AggregationState;
 public interface CachePolicy {
 
     /**
-     * Implementations can chose wether to cache or not - but note that the
+     * Implementations can chose whether to cache or not - but note that the
      * aggregationState might not be completely populated. Every request should be
      * cacheable, not only those processed through Magnolia's RenderingFilter.
      *
      * TODO : check how to handle request parameters
      */
     CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy);
+
+    /**
+     * Returns cache key for the given item or null if such key can't be created or policy doesn't want to share it.
+     */
+    Object getCacheKey(final AggregationState aggregationState);
+
+
+    /**
+     * Returns cache key for the given item or null if such key can't be created or policy doesn't want to share it.
+     */
+    Object getCacheKey(final String uuid, final String repository);
 }

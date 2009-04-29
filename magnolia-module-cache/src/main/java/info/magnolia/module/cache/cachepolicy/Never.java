@@ -50,4 +50,14 @@ public class Never implements CachePolicy {
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         return NEVER;
     }
+
+    public Object getCacheKey(AggregationState aggregationState) {
+        // there are no keys since we don't cache
+        return null;
+    }
+
+    public Object getCacheKey(String uuid, String repository) {
+        // there are no keys since we don't cache
+        return null;
+    }
 }

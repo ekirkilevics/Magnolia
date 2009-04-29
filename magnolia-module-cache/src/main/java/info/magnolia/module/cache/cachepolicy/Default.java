@@ -36,6 +36,9 @@ package info.magnolia.module.cache.cachepolicy;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.link.Link;
+import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkUtil;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
@@ -101,8 +104,17 @@ public class Default implements CachePolicy {
         return voters.vote(uri) <= 0;
     }
 
-    protected Object getCacheKey(final AggregationState aggregationState) {
+    public Object getCacheKey(final AggregationState aggregationState) {
         return aggregationState.getOriginalURI();
+    }
+
+    public Object getCacheKey(final String uuid, final String repository) {
+        try {
+            return LinkUtil.convertUUIDtoURI(uuid, repository);
+        } catch (LinkException e) {
+            log.debug("Failed to convert " + uuid + " from " + repository + " repository to URI.", e);
+            return null;
+        }
     }
 
     public VoterSet getVoters() {
