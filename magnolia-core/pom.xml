@@ -95,6 +95,10 @@
       <artifactId>commons-fileupload</artifactId>
     </dependency>
     <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-betwixt</groupId>
       <artifactId>commons-betwixt</artifactId>
       <!-- Following exclusions are not inherited from the parent pom and need to be defined here. If you think about removing them, be sure to build DMS afterwards. -->
