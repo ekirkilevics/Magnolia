@@ -60,10 +60,17 @@ public class AuditLoggingUtil {
     public static final String ACTION_LOGOUT = "logout";
 
     /**
-     * log create, modify, delete, activate, deactivate
+     * log create, modify, activate, deactivate
      */
     public static void log(String action, String workspaceName, String nodePath) {
         AuditLoggingUtil.log( action, workspaceName, nodePath, null );
+    }
+
+    /**
+     * log delete incl. node type
+     */
+    public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {
+        AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getSystemName(), nodePath});
     }
 
     /**
@@ -120,13 +127,6 @@ public class AuditLoggingUtil {
             return "system user";
         }
         return "user not set";
-    }
-
-    /**
-     * log deletes incl. node type
-     */
-    public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {
-        AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getSystemName(), nodePath});
     }
 
 }
