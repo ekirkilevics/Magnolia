@@ -388,8 +388,13 @@ public final class ContentRepository {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
             Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, repository, wspID);
-            provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
-            provider.registerNodeTypes();
+            try {
+                provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
+                provider.registerNodeTypes();
+            }
+            finally {
+                session.logout();
+            }
         }
         catch (RepositoryException e) {
             log.error("Failed to initialize hierarchy manager for JCR " + map.getName(), e);

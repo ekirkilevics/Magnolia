@@ -279,58 +279,66 @@ public class ProviderImpl implements Provider {
             ContentRepository.REPOSITORY_USER,
             ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
-        Workspace workspace = jcrSession.getWorkspace();
 
-        // should never happen
-        if (xmlStream == null) {
-            throw new MissingNodetypesException();
-        }
-
-        NodeTypeDef[] types;
         try {
-            types = NodeTypeReader.read(xmlStream);
-        }
-        catch (InvalidNodeTypeDefException e) {
-            throw new RepositoryException(e.getMessage(), e);
-        }
-        catch (IOException e) {
-            throw new RepositoryException(e.getMessage(), e);
-        }
-        finally {
-            IOUtils.closeQuietly(xmlStream);
-        }
 
-        NodeTypeManager ntMgr = workspace.getNodeTypeManager();
-        NodeTypeRegistry ntReg;
-        try {
-            ntReg = ((NodeTypeManagerImpl) ntMgr).getNodeTypeRegistry();
-        } catch (ClassCastException e) {
-            // this could happen if the repository provider does not have proper Shared API for the
-            // application server like at the moment in Jackrabbit
-            log.debug("Failed to get NodeTypeRegistry: ",e);
-            return;
-        }
+            Workspace workspace = jcrSession.getWorkspace();
 
-        for (int j = 0; j < types.length; j++) {
-            NodeTypeDef def = types[j];
-
-            try {
-                ntReg.getNodeTypeDef(def.getName());
+            // should never happen
+            if (xmlStream == null) {
+                throw new MissingNodetypesException();
             }
-            catch (NoSuchNodeTypeException nsne) {
-                log.info("Registering nodetype {}", def.getName()); //$NON-NLS-1$
+
+            NodeTypeDef[] types;
+            try {
+                types = NodeTypeReader.read(xmlStream);
+            }
+            catch (InvalidNodeTypeDefException e) {
+                throw new RepositoryException(e.getMessage(), e);
+            }
+            catch (IOException e) {
+                throw new RepositoryException(e.getMessage(), e);
+            }
+            finally {
+                IOUtils.closeQuietly(xmlStream);
+            }
+
+            NodeTypeManager ntMgr = workspace.getNodeTypeManager();
+            NodeTypeRegistry ntReg;
+            try {
+                ntReg = ((NodeTypeManagerImpl) ntMgr).getNodeTypeRegistry();
+            }
+            catch (ClassCastException e) {
+                // this could happen if the repository provider does not have proper Shared API for the
+                // application server like at the moment in Jackrabbit
+                log.debug("Failed to get NodeTypeRegistry: ", e);
+                return;
+            }
+
+            for (int j = 0; j < types.length; j++) {
+                NodeTypeDef def = types[j];
 
                 try {
-                    ntReg.registerNodeType(def);
+                    ntReg.getNodeTypeDef(def.getName());
                 }
-                catch (InvalidNodeTypeDefException e) {
-                    throw new RepositoryException(e.getMessage(), e);
-                }
-                catch (RepositoryException e) {
-                    throw new RepositoryException(e.getMessage(), e);
+                catch (NoSuchNodeTypeException nsne) {
+                    log.info("Registering nodetype {}", def.getName()); //$NON-NLS-1$
+
+                    try {
+                        ntReg.registerNodeType(def);
+                    }
+                    catch (InvalidNodeTypeDefException e) {
+                        throw new RepositoryException(e.getMessage(), e);
+                    }
+                    catch (RepositoryException e) {
+                        throw new RepositoryException(e.getMessage(), e);
+                    }
                 }
             }
 
+        }
+        finally {
+            jcrSession.logout();
         }
     }
 
