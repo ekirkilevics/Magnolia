@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MgnlUserManager implements UserManager {
+
     private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     private static final String PASSWORD_PROPERTY = "pswd";
@@ -75,7 +76,8 @@ public class MgnlUserManager implements UserManager {
     public MgnlUserManager() {
     }
 
-    // TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the parent's node name)
+    // TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the
+    // parent's node name)
     public String getName() {
         return getRealmName();
     }
@@ -134,12 +136,12 @@ public class MgnlUserManager implements UserManager {
 
     protected User getFromRepository(String name) throws RepositoryException {
         final Content node = findUserNode(this.realmName, name);
-        if (node == null){
+        if (node == null) {
             log.debug("User not found: [{}]", name);
             return null;
         }
         final MgnlUser user = new MgnlUser(node);
-        if(!user.getName().equals(ANONYMOUS_USER)){
+        if (!user.getName().equals(ANONYMOUS_USER)) {
             user.setLastAccess();
         }
         return user;
@@ -153,19 +155,19 @@ public class MgnlUserManager implements UserManager {
         where += " or jcr:path like '/" + realm + "/%/" + name + "'";
 
         // the all realm searches the repository
-        if(Realm.REALM_ALL.equals(realm)){
+        if (Realm.REALM_ALL.equals(realm)) {
             where = "where jcr:path like '%/" + name + "'";
         }
 
-        String statement = "select * from " + ItemType.USER + " " + where ;
+        String statement = "select * from " + ItemType.USER + " " + where;
 
         QueryManager qm = getHierarchyManager().getQueryManager();
         Query query = qm.createQuery(statement, Query.SQL);
         Collection users = query.execute().getContent(ItemType.USER.getSystemName());
-        if(users.size() == 1){
+        if (users.size() == 1) {
             return (Content) users.iterator().next();
         }
-        else if(users.size() >1){
+        else if (users.size() > 1) {
             log.error("More than one user found with name [{}] in realm [{}]");
         }
         return null;
@@ -175,7 +177,7 @@ public class MgnlUserManager implements UserManager {
      * SystemUserManager does this.
      */
     public User getSystemUser() throws UnsupportedOperationException {
-         throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -228,7 +230,8 @@ public class MgnlUserManager implements UserManager {
         try {
             setPasswordProperty(userNode, newPassword);
             userNode.save();
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeException(e); // TODO
         }
     }
