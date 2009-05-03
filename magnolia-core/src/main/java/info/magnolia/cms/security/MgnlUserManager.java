@@ -35,8 +35,8 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.auth.Entity;
@@ -140,7 +140,7 @@ public class MgnlUserManager implements UserManager {
             log.debug("User not found: [{}]", name);
             return null;
         }
-        final MgnlUser user = new MgnlUser(node);
+        final MgnlUser user = userInstance(node);
         if (!user.getName().equals(ANONYMOUS_USER)) {
             user.setLastAccess();
         }
@@ -195,7 +195,7 @@ public class MgnlUserManager implements UserManager {
         try {
             Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
             for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-                users.add(new MgnlUser((Content) iter.next()));
+                users.add(userInstance((Content) iter.next()));
             }
         }
         catch (Exception e) {
@@ -217,7 +217,7 @@ public class MgnlUserManager implements UserManager {
             setPasswordProperty(node, pw);
             node.createNodeData("language").setValue("en");
             getHierarchyManager().save();
-            return new MgnlUser(node);
+            return userInstance(node);
         }
         catch (Exception e) {
             log.info("can't create user [" + name + "]", e);
@@ -260,6 +260,16 @@ public class MgnlUserManager implements UserManager {
      */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
+    }
+
+    /**
+     * Creates a {@link MgnlUser} out of a jcr node. Can be overridden in order to provide a different implementation
+     * (which extends MgnlUser)
+     * @param node user node
+     * @return MgnlUser instance
+     */
+    protected MgnlUser userInstance(Content node) {
+        return new MgnlUser(node);
     }
 
 }

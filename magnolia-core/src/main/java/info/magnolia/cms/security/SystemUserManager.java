@@ -152,7 +152,7 @@ public class SystemUserManager extends MgnlUserManager {
             return null;
         }
 
-        user = new MgnlUser(node);
+        user = userInstance(node);
         Subject subject = getSubject(username, password);
         user.setSubject(subject);
         return user;
