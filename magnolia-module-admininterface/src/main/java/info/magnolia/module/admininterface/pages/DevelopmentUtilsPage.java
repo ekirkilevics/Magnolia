@@ -50,22 +50,25 @@ import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.files.BasicFileExtractor;
 import info.magnolia.module.files.FileExtractor;
 import info.magnolia.module.files.ModuleFileExtractorTransformer;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -344,7 +347,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         try {
             extractor.extractFiles(new ModuleFileExtractorTransformer(module));
             AlertUtil.setMessage("Files extracted");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             AlertUtil.setMessage("Could not extract files for module " + module + ": " + e.getMessage(), e);
         }
 
@@ -386,13 +390,9 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                     ItemType.CONTENTNODE}, false);
             }
             if (dialogs) {
-                exportChildren(
-                    ContentRepository.CONFIG,
-                    session,
-                    moduleroot,
-                    "dialogs",
-                    new ItemType[]{ItemType.CONTENT},
-                    true);
+                exportChildren(ContentRepository.CONFIG, session, moduleroot, "dialogs", new ItemType[]{
+                    ItemType.CONTENT,
+                    ItemType.CONTENTNODE}, true);
             }
             if (virtualURIs) {
                 exportChildren(
@@ -515,12 +515,30 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             return;
         }
 
+        // we need to track exported paths, or it will export any single control for dialogs
+        Set alreadyExported = new HashSet();
+
         Iterator children = ContentUtil.collectAllChildren(templateRoot, itemTypes).iterator();
         while (children.hasNext()) {
             Content exported = (Content) children.next();
             if (!exported.getNodeDataCollection().isEmpty() // ignore "directories"
                 || (exportContentContainingContentNodes && exported.hasChildren(ItemType.CONTENTNODE.getSystemName()))) {
-                exportNode(repository, session, exported);
+
+                String current = exported.getHandle();
+                boolean dontexport = false;
+
+                for (Iterator iterator = alreadyExported.iterator(); iterator.hasNext();) {
+                    String already = (String) iterator.next();
+                    if (current.startsWith(already)) {
+                        dontexport = true;
+                        break;
+                    }
+                }
+
+                if (!dontexport) {
+                    alreadyExported.add(exported.getHandle() + "/");
+                    exportNode(repository, session, exported);
+                }
             }
         }
     }
