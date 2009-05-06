@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.taglibs;
 
+import java.io.Writer;
+
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
@@ -43,7 +45,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -64,7 +65,7 @@ public class EditButton extends TagSupport {
 
     private String nodeCollectionName;
 
-    private String paragraph;
+    private String dialog;
 
     private String label;
 
@@ -88,9 +89,9 @@ public class EditButton extends TagSupport {
                     return EVAL_PAGE;
                 }
                 JspWriter out = pageContext.getOut();
-                ButtonEdit button = new ButtonEdit(((HttpServletRequest) pageContext.getRequest()));
+                ButtonEdit button = new ButtonEdit();
                 button.setPath(this.getPath());
-                button.setParagraph(this.getParagraph());
+                button.setDialog(this.getDialog());
                 button.setNodeCollectionName(this.getNodeCollectionName());
                 button.setNodeName(this.getNodeName());
                 button.setDefaultOnclick();
@@ -100,7 +101,7 @@ public class EditButton extends TagSupport {
                 if (this.small) {
                     button.setSmall(true);
                 }
-                button.drawHtml(out);
+                button.drawHtml((Writer) out);
             }
             catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -119,10 +120,11 @@ public class EditButton extends TagSupport {
 
     private String getNodeName() {
         if (this.nodeName == null) {
-            if (Resource.getLocalContentNode() == null) {
+            Content current = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
+            if (current == null) {
                 return null;
             }
-            return Resource.getLocalContentNode().getName();
+            return current.getName();
         }
         return this.nodeName;
     }
@@ -146,36 +148,37 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * @deprecated use the paragraph attribute
-     * @param type , content type
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setParFile(String type) {
-        this.setParagraph(type);
-    }
+    *  The paragraph type.
+    * @deprecated since 4.1, use the setDialog() instead.
+    * @param type , content type
+    * @jsp.attribute required="false" rtexprvalue="true"
+    */
+   public void setParagraph(String type) {
+       setDialog(type);
+   }
 
-    /**
-     * The paragraph type.
-     * @param type , content type
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setParagraph(String type) {
-        this.paragraph = type;
-    }
+   /**
+    * @return String paragraph (type of par)
+    * @deprecated since 4.1, use the getDialog() instead.
+    */
+   private String getParagraph() {
+       return getDialog();
+   }
 
-    /**
-     * @return String paragraph (type of par)
-     */
-    private String getParagraph() {
-        if (this.paragraph == null) {
-
-            return Resource.getLocalContentNode().getNodeData("paragraph").getString(); //$NON-NLS-1$
-
-        }
-        return this.paragraph;
-    }
-
-    /**
+   /**
+    * The dialog type.
+    * @param type , content type
+    * @jsp.attribute required="false" rtexprvalue="true"
+    */
+   public void setDialog (String dialog) {
+       this.dialog = dialog;
+   }
+   
+   public String getDialog () {
+       return this.dialog;
+   }
+   
+   /**
      * Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.
      * @TODO: deprecate this ???
      * @param path relative to WEB-INF.
@@ -198,8 +201,8 @@ public class EditButton extends TagSupport {
      */
     public String getTemplate() {
         if (this.displayHandler == null) {
-            Content localContainer = Resource.getLocalContentNode();
-            String templateName = localContainer.getNodeData("paragraph").getString(); //$NON-NLS-1$
+            Content localContainer = MgnlContext.getWebContext().getAggregationState().getCurrentContent();
+            String templateName = localContainer.getNodeData("dialog").getString(); //$NON-NLS-1$
             return ParagraphManager.getInstance().getParagraphDefinition(templateName).getTemplatePath();
         }
         return this.displayHandler;
@@ -211,7 +214,7 @@ public class EditButton extends TagSupport {
      */
     private String getPath() {
         try {
-            return Resource.getCurrentActivePage().getHandle();
+            return MgnlContext.getWebContext().getAggregationState().getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;
@@ -252,7 +255,7 @@ public class EditButton extends TagSupport {
     public void release() {
         this.nodeName = null;
         this.nodeCollectionName = null;
-        this.paragraph = null;
+        this.dialog = null;
         this.label = null;
         this.displayHandler = null;
         this.small = true;

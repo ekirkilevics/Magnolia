@@ -53,6 +53,7 @@ import java.io.Writer;
 public class ButtonEdit extends Button {
     private String label = "buttons.edit"; //$NON-NLS-1$
     private String dialogPath;
+    private String dialog;
 
     public ButtonEdit() {
     }
@@ -66,15 +67,15 @@ public class ButtonEdit extends Button {
     /**
      * @deprecated since 4.0 - do not pass an HttpServletRequest
      */
-    public ButtonEdit(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String paragraph) {
-        this(path, nodeCollectionName, nodeName, paragraph);
+    public ButtonEdit(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String dialog) {
+        this(path, nodeCollectionName, nodeName, dialog);
     }
 
-    public ButtonEdit(String path, String nodeCollectionName, String nodeName, String paragraph) {
+    public ButtonEdit(String path, String nodeCollectionName, String nodeName, String dialog) {
         this.setPath(path);
         this.setNodeCollectionName(nodeCollectionName);
         this.setNodeName(nodeName);
-        this.setParagraph(paragraph);
+        this.setDialog(dialog);
     }
 
     /**
@@ -102,7 +103,7 @@ public class ButtonEdit extends Button {
             + "','" //$NON-NLS-1$
             + nodeName
             + "','" //$NON-NLS-1$
-            + this.getParagraph()
+            + this.getDialog()
             + "','" //$NON-NLS-1$
             + repository
             + "'"
@@ -120,6 +121,14 @@ public class ButtonEdit extends Button {
 
     public void setDialogPath(String dialogPath) {
         this.dialogPath = dialogPath;
+    }
+    
+    public void setDialog (String dialog) {
+        this.dialog = dialog;
+    }
+    
+    public String getDialog () {
+        return this.dialog;
     }
 
     /**
