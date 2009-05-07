@@ -103,7 +103,7 @@ public class ProviderImpl implements Provider {
 
     private String bindName;
 
-    private Hashtable jndiEnv;
+    private Hashtable<String, Object> jndiEnv;
 
     private static final String REPO_HOME_PREFIX = "${repository.home}";
 
@@ -171,7 +171,7 @@ public class ProviderImpl implements Provider {
         log.info("Loading repository at {} (config file: {})", repositoryHome, configFile); //$NON-NLS-1$
 
         bindName = (String) params.get(BIND_NAME_KEY);
-        jndiEnv = new Hashtable();
+        jndiEnv = new Hashtable<String, Object>();
         jndiEnv.put(Context.INITIAL_CONTEXT_FACTORY, params.get(CONTEXT_FACTORY_CLASS_KEY));
         jndiEnv.put(Context.PROVIDER_URL, params.get(PROVIDER_URL_KEY));
 
@@ -330,9 +330,6 @@ public class ProviderImpl implements Provider {
                     catch (InvalidNodeTypeDefException e) {
                         throw new RepositoryException(e.getMessage(), e);
                     }
-                    catch (RepositoryException e) {
-                        throw new RepositoryException(e.getMessage(), e);
-                    }
                 }
             }
 
@@ -412,9 +409,9 @@ public class ProviderImpl implements Provider {
      * checks if all workspaces are present according to the repository mapping, creates any missing workspace
      */
     private void validateWorkspaces() throws RepositoryException {
-        Iterator configuredNames = repositoryMapping.getWorkspaces().iterator();
+        Iterator<String> configuredNames = repositoryMapping.getWorkspaces().iterator();
         while (configuredNames.hasNext()) {
-            registerWorkspace((String) configuredNames.next());
+            registerWorkspace(configuredNames.next());
         }
     }
 
