@@ -316,6 +316,13 @@ public final class CopyUtil {
                 if (property.getDefinition().isProtected()) {
                     continue;
                 }
+                if ("jcr:isCheckedOut".equals(property.getName())) {
+                    // do not attempt to restore isCheckedOut property as it makes no sense to restore versioned node with
+                    // checkedOut status and value for this property might not be set even though the property itself is set.
+                    // Since JCR-1272 attempt to restore the property with no value will end up with RepositoryException instead
+                    // of ConstraintViolationException and hence will not be caught by the catch{} block below.
+                    continue;
+                }
                 if (property.getType() == PropertyType.REFERENCE) {
                     // first check for the referenced node existence
                     try {
