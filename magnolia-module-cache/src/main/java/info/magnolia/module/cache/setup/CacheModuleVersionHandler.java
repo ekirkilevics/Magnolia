@@ -46,11 +46,15 @@ import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.SetPropertyTask;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -114,8 +118,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps new default cache configuration.") {
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
-                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.executors.store.cacheContent.compressible.xml",
-                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.executors.store.serveContent.xml"
+                                "/mgnl-bootstrap/cache/setup/config.modules.cache.config.configurations.default.executors.store.cacheContent.compressible.xml",
+                                "/mgnl-bootstrap/cache/setup/config.modules.cache.config.configurations.default.executors.store.serveContent.xml"
                         };
                     }
                 })
@@ -123,6 +127,18 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("3.6.4", "Update gzip and cache compression configuration.").addTasks(getTasksFor364()));
+
+        register(DeltaBuilder.update("4.1", "New flush policy configuration.").addTask(
+                new ArrayDelegateTask("", "", new Task[] {
+                        // move existing policy to temp
+                        new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy","/modules/cache/config/configurations/default/tmp", false),
+                        // create new policy configuration
+                        new CreateNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default", "flushPolicy", ItemType.CONTENTNODE.getSystemName()),
+                        new SetPropertyTask(ContentRepository.CONFIG,"/modules/cache/config/configurations/default/flushPolicy", "class", "info.magnolia.module.cache.DelegateFlushPolicy"),
+                        new CreateNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy", "policies", ItemType.CONTENTNODE.getSystemName()),
+                        // move original config under the new one
+                        new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/tmp","/modules/cache/config/configurations/default/flushPolicy/policies/flushAll", false)
+                })));
 
 
     }
@@ -138,13 +154,13 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         // remove previously used compressible content types configuration
         list.add(new DefaultCompressibleContentTypesCondition("Cache cleanup", "Removes obsolete cache compression list in favor of new global configuration.",
-                        new RemoveNodeTask("Remove obsolete compression list configuration.", "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"), 
+                        new RemoveNodeTask("Remove obsolete compression list configuration.", "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"),
                         new WarnTask("Warning", "The compression list configuration have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration."),
                         "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"));
 
         // remove bypass for compressible content types from gzip filter
-        list.add(new DefaultCompressibleContentTypesCondition("GZip cleanup", "Removes obsolete gzip bypass in favor of new global configuration.", 
-                        new RemoveNodeTask("Remove obsolete bypass.", "Removes content type bypass from gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"), 
+        list.add(new DefaultCompressibleContentTypesCondition("GZip cleanup", "Removes obsolete gzip bypass in favor of new global configuration.",
+                        new RemoveNodeTask("Remove obsolete bypass.", "Removes content type bypass from gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"),
                         new WarnTask("Warning", "The list of compressible types have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration."),
                         "/server/filters/gzip/bypasses/contentType/allowed"));
 
@@ -157,7 +173,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 content.createNodeData("delegatePath","/modules/cache/config/compression/voters");
             }
         });
-        
+
         list.add(new AbstractRepositoryTask("Cache Flushing", "Migrate old cache flushing configuration to new location." ) {
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final String reposPath= "/modules/cache/config/repositories";
@@ -183,7 +199,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(new FilterOrderingTask("cache", new String[]{"gzip"}));
         return tasks;
     }
-    
+
 
     /* TODO : if we keep this, they should move to cacheStrategy now
     public List getStartupTasks(InstallContext installContext) {

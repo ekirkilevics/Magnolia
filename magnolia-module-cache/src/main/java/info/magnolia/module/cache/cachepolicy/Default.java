@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
+import java.util.Set;
+
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -62,7 +64,7 @@ public class Default implements CachePolicy {
     private VoterSet voters;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
-        final Object key = getCacheKey(aggregationState);
+        final Object key = retrieveCacheKey(aggregationState);
 
         if (shouldBypass(aggregationState, key)) {
             return new CachePolicyResult(CachePolicyResult.bypass, key, null);
@@ -104,16 +106,17 @@ public class Default implements CachePolicy {
         return voters.vote(uri) <= 0;
     }
 
-    public Object getCacheKey(final AggregationState aggregationState) {
+    public Object retrieveCacheKey(final AggregationState aggregationState) {
         return aggregationState.getOriginalURI();
     }
 
-    public Object getCacheKey(final String uuid, final String repository) {
+    public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         try {
-            return LinkUtil.convertUUIDtoURI(uuid, repository);
+            //TODO: retrieve multiple keys when i18n is enabled
+            return new Object[] {LinkUtil.convertUUIDtoURI(uuid, repository)};
         } catch (LinkException e) {
             log.debug("Failed to convert " + uuid + " from " + repository + " repository to URI.", e);
-            return null;
+            return new Object[] {};
         }
     }
 

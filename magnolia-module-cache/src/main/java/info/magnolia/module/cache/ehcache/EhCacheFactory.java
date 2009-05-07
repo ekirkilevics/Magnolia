@@ -111,7 +111,7 @@ public class EhCacheFactory implements CacheFactory {
             createCache(name);
             return getCache(name);
         }
-        return new EhCacheWrapper(ehcache);
+        return new EhCacheWrapper(ehcache, name);
     }
 
     protected void createCache(String name) {

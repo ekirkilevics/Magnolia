@@ -60,13 +60,21 @@ public interface CachePolicy {
     CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy);
 
     /**
-     * Returns cache key for the given item or null if such key can't be created or policy doesn't want to share it.
+     * Returns cache key for the given item or null if such key can't be obtained or policy doesn't want to share it.
+     * When using aggregationState, key is expected to be composed with aggregated request in mind and policy has to choose only
+     * one such key denoting item to return to the client, if such an item indeed exists and can be served.
+     * When not existing key might be used to store the cache entry. Since only one version of the content can be streamed back to
+     * the client, it makes sense to create only one cache entry for the such a key as well.
      */
-    Object getCacheKey(final AggregationState aggregationState);
+    Object retrieveCacheKey(final AggregationState aggregationState);
 
 
     /**
-     * Returns cache key for the given item or null if such key can't be created or policy doesn't want to share it.
+     * Returns cache keys for the given item or null if such keys can't be obtained or policy doesn't want to share it. Since in
+     * this case uuid is used to retrieve the cache key, it is quite possible that multiple different representations of the content
+     * denoted by uuid exist and all such keys should be returned leaving it up to requesting object to deal with such a multiplicity.
+     * Please note that returned keys might not be necessary multiple representations of the content denoted by provided uuid, but
+     * also quite possibly all the content deemed related or partially used to construct any of the returned cache keys.
      */
-    Object getCacheKey(final String uuid, final String repository);
+    Object[] retrieveCacheKeys(final String uuid, final String repository);
 }

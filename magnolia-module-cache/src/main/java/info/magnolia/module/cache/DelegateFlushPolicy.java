@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,33 +31,48 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.cachepolicy;
+package info.magnolia.module.cache;
 
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.CachePolicy;
-import info.magnolia.module.cache.CachePolicyResult;
-import info.magnolia.module.cache.FlushPolicy;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * Simple policy that delegates all the requests to any policies added in its policies list.
+ * The policies in the list are invoked in the order in which they were added.
+ * @author had
+ * @version $Id:$
  */
-public class Never implements CachePolicy {
-    private static final CachePolicyResult NEVER = new CachePolicyResult(CachePolicyResult.bypass, null, null);
+public class DelegateFlushPolicy implements FlushPolicy {
 
-    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
-        return NEVER;
+    Logger log = LoggerFactory.getLogger(DelegateFlushPolicy.class);
+
+    List<FlushPolicy> policies = new ArrayList<FlushPolicy>();
+
+    public List<FlushPolicy> getPolicies() {
+        return policies;
     }
 
-    public Object retrieveCacheKey(AggregationState aggregationState) {
-        // there are no keys since we don't cache
-        return null;
+    public void setPolicies(List<FlushPolicy> policies) {
+        this.policies.clear();
+        this.policies.addAll(policies);
     }
 
-    public Object[] retrieveCacheKeys(String uuid, String repository) {
-        // there are no keys since we don't cache
-        return null;
+    public void addPolicy(FlushPolicy policy) {
+        this.policies.add(policy);
+    }
+
+    public void start(Cache cache) {
+        for (FlushPolicy policy : policies) {
+            policy.start(cache);
+        }
+    }
+
+    public void stop(Cache cache) {
+        for (FlushPolicy policy : policies) {
+            policy.stop(cache);
+        }
     }
 }

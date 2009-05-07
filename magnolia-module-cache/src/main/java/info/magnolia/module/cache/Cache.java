@@ -50,4 +50,6 @@ public interface Cache {
     void remove(Object key);
 
     void clear();
+
+    String getName();
 }

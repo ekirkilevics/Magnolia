@@ -50,9 +50,9 @@ import info.magnolia.module.delta.TaskExecutionException;
 /**
  * Adds repository to the list of repositories observed for cache flushing upon activation.
  * Tasks checks for existence of the repository in the list before adding it so it is safe to execute multiple times.
- * 
+ *
  * @author had
- * 
+ *
  */
 public class RegisterWorkspaceForCacheFlushingTask extends AbstractTask implements Task {
 
@@ -69,7 +69,7 @@ public class RegisterWorkspaceForCacheFlushingTask extends AbstractTask implemen
     public void execute(InstallContext ctx) throws TaskExecutionException {
         HierarchyManager hm = ctx.getConfigHierarchyManager();
         try {
-            String nodePath = "/modules/cache/config/configurations/default/flushPolicy/repositories";
+            String nodePath = "/modules/cache/config/configurations/default/flushPolicy/policies/flushAll/repositories";
             if (!ctx.getModulesNode().hasContent("cache") || !hm.isExist(nodePath)) {
                 // cache is not installed or other then default flush policy is used - ignore
                 return;

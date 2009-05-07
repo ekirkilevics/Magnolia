@@ -128,7 +128,12 @@ public class CacheModule implements ModuleLifecycle {
         while (it.hasNext()) {
             final CacheConfiguration cfg = it.next();
             final String name = cfg.getName();
-            final Cache cache = cacheFactory.getCache(name);
+            Cache cache = null;
+            try {
+                cache = cacheFactory.getCache(name);
+            } catch (IllegalStateException e) {
+                log.warn("Cache {} is not running anymore. Check your configuration and log files to find out if there were any errors forcing cache shutdown.", name);
+            }
             if (cfg.getFlushPolicy() != null) {
                 cfg.getFlushPolicy().stop(cache);
             } else {
@@ -136,7 +141,7 @@ public class CacheModule implements ModuleLifecycle {
             }
         }
 
-        // TODO : this is implementation dependant - some factories might need or want to be notified also on restart..
+        // TODO : this is implementation dependent - some factories might need or want to be notified also on restart..
         // TODO : there was a reason for this checking  of the phase, but i can't remember ...
 //        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
         cacheFactory.stop();

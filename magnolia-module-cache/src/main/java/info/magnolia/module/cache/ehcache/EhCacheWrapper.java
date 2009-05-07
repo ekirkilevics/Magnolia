@@ -44,9 +44,11 @@ import net.sf.ehcache.Element;
  */
 public class EhCacheWrapper implements Cache {
     private final Ehcache ehcache;
+    private String name;
 
-    public EhCacheWrapper(Ehcache ehcache) {
+    public EhCacheWrapper(Ehcache ehcache, String name) {
         this.ehcache = ehcache;
+        this.name = name;
     }
 
     public Object get(Object key) {
@@ -79,6 +81,10 @@ public class EhCacheWrapper implements Cache {
 
     public Ehcache getWrappedEhcache() {
         return ehcache;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

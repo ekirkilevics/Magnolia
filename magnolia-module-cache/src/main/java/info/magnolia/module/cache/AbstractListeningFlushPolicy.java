@@ -34,6 +34,7 @@
 package info.magnolia.module.cache;
 
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.module.ModuleRegistry;
 
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -44,6 +45,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +55,9 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
-    
+
     private static final Logger log = LoggerFactory.getLogger(AbstractListeningFlushPolicy.class);
-    
+
     private List repositories = new ArrayList();
     private Map registeredListeners = new HashMap();
 
@@ -95,6 +97,10 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
         while (i.hasNext()) {
             final String repository = (String) i.next();
             final EventListener listener = (EventListener) registeredListeners.get(repository);
+            if (listener == null) {
+                // happens on restart of cache module after someone configures new listener repository ... we are trying to stop the listener which was not created yet
+                continue;
+            }
             ObservationUtil.unregisterChangeListener(repository, listener);
         }
     }
@@ -118,6 +124,32 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
      * This method will be invoked only if {@link #preHandleEvents(Cache, String)} returns true;
      */
     protected abstract void handleSingleEvent(Cache cache, String repository, Event event);
+
+    /**
+     * Flushes all content related to given uuid&repository combination from provided cache.
+     * Note that more then only one pages can be flushed when this method is called.
+     * @param uuid
+     */
+    protected void flushByUUID(String uuid, String repository, Cache cache) {
+        CacheModule cacheModule = ((CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache"));
+
+            CacheConfiguration config = cacheModule.getConfiguration(cache.getName());
+            Object[] cacheEntryKeys = config.getCachePolicy().retrieveCacheKeys(uuid, repository);
+            log.debug("Flushing {} due to detected content update.", ToStringBuilder.reflectionToString(cacheEntryKeys));
+
+            if (cacheEntryKeys == null || cacheEntryKeys.length == 0) {
+                // nothing to remove
+                return;
+            }
+            for (Object key : cacheEntryKeys) {
+                if (log.isDebugEnabled()) {
+                    // cache.hasElement() is blocking method, so don't call it unless really necessary
+                    log.debug("In cache {} Found key {} :: {}", new Object[] {cache.getName(), key, "" + cache.hasElement(key)});
+                }
+                cache.put(key, null);
+            }
+            // we are done here
+    }
 
     protected class CacheCleaner implements EventListener {
         private final Cache cache;
