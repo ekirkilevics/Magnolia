@@ -53,6 +53,8 @@ import java.io.Writer;
  */
 public class BarNew extends Bar {
 
+    private String paragraph;
+    
     private Button buttonNew = new Button();
 
     /**
@@ -150,5 +152,13 @@ public class BarNew extends Bar {
             this.setId(this.getNodeCollectionName() + "__" + this.getNodeName()); //$NON-NLS-1$
             println(out, this.getHtml());
         }
+    }
+    
+    public String getParagraph() {
+        return this.paragraph;
+    }
+    
+    public void setParagraph(String paragraph) {
+        this.paragraph = paragraph;
     }
 }

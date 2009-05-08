@@ -61,6 +61,8 @@ public class BarMain extends Bar {
     private Button buttonProperties = new Button();
 
     private Button buttonSiteAdmin = new Button();
+    
+    private String dialog;
 
     private int top;
 
@@ -88,11 +90,11 @@ public class BarMain extends Bar {
         this(path, nodeCollectionName, nodeName, paragraph);
     }
 
-    public BarMain(String path, String nodeCollectionName, String nodeName, String paragraph) {
+    public BarMain(String path, String nodeCollectionName, String nodeName, String dialog) {
         this.setPath(path);
         this.setNodeCollectionName(nodeCollectionName);
         this.setNodeName(nodeName);
-        this.setParagraph(paragraph);
+        this.setDialog(dialog);
     }
 
     public BarMain() {
@@ -116,7 +118,7 @@ public class BarMain extends Bar {
             this.getButtonsLeft().add(0, this.getButtonSiteAdmin());
         }
         this.getButtonsLeft().add(0, this.getButtonPreview());
-        if (this.getParagraph() != null) {
+        if (this.getDialog() != null) {
             this.getButtonsRight().add(this.getButtonsRight().size(), this.getButtonProperties());
         }
     }
@@ -130,20 +132,20 @@ public class BarMain extends Bar {
     }
 
     public void setButtonProperties() {
-        this.setButtonProperties(this.getPath(), this.getParagraph());
+        this.setButtonProperties(this.getPath(), this.getDialog());
     }
 
     /**
      * Sets the default page properties button.
      *
      * @param path , path of the current page
-     * @param paragraph , paragraph type
+     * @param dialog , paragraph type
      */
-    public void setButtonProperties(String path, String paragraph) {
+    public void setButtonProperties(String path, String dialog) {
         ButtonEdit b = new ButtonEdit();
         b.setLabel(MessagesManager.get("buttons.properties")); //$NON-NLS-1$
         b.setPath(path);
-        b.setParagraph(paragraph);
+        b.setDialog(dialog);
         b.setDefaultOnclick();
         this.setButtonProperties(b);
     }
@@ -243,6 +245,14 @@ public class BarMain extends Bar {
 
     public boolean getOverlay() {
         return this.overlay;
+    }
+
+    public String getDialog() {
+        return this.dialog;
+    }
+    
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
     }
 
     /**

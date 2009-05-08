@@ -142,7 +142,7 @@ public class MainBar extends TagSupport implements BarTag {
             try {
                 BarMain bar = new BarMain();
                 bar.setPath(this.getPath());
-                bar.setParagraph(this.dialog);
+                bar.setDialog(this.dialog);
                 bar.setAdminButtonVisible(this.adminButtonVisible);
                 bar.setDefaultButtons();
 

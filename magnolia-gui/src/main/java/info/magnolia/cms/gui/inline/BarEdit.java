@@ -59,6 +59,8 @@ public class BarEdit extends Bar {
     private Button buttonMove = new Button();
 
     private Button buttonDelete = new Button();
+    
+    private String paragraph;
 
     /**
      * @deprecated since 4.0 - use the empty constructor.
@@ -192,5 +194,13 @@ public class BarEdit extends Bar {
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             println(out, getHtml());
         }
+    }
+    
+    public String getParagraph() {
+        return this.paragraph;
+    }
+    
+    public void setParagraph(String paragraph) {
+        this.paragraph = paragraph;
     }
 }

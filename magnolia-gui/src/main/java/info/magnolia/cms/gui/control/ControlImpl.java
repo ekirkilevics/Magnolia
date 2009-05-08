@@ -140,8 +140,6 @@ public class ControlImpl implements Control {
 
     private String nodeName;
 
-    private String paragraph;
-
     private final String newLine;
 
     public ControlImpl() {
@@ -204,14 +202,6 @@ public class ControlImpl implements Control {
         }
 
         return this.getNodeName();
-    }
-
-    public void setParagraph(String paragraph) {
-        this.paragraph = paragraph;
-    }
-
-    public String getParagraph() {
-        return this.paragraph;
     }
 
     /**
