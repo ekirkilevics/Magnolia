@@ -75,7 +75,7 @@ public class PlainTextTemplateRenderer extends AbstractTemplateRenderer {
             if (content.isGranted(Permission.SET)) {
                 BarMain bar = new BarMain();
                 bar.setPath(content.getHandle());
-                bar.setParagraph(dialogName);
+                bar.setDialog(dialogName);
                 bar.setAdminButtonVisible(true);
                 bar.setDefaultButtons();
                 bar.placeDefaultButtons();
