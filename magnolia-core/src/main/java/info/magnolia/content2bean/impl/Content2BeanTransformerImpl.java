@@ -72,7 +72,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     public Content2BeanTransformerImpl() {
         try {
             Method onResolveClass = this.getClass().getDeclaredMethod("onResolveClass", new Class[]{TransformationState.class});
-            log.error("onResolceClass(state) is not supported anymore please override onResolveType(state, resolvedType) instead: " + onResolveClass);
+            log.error("onResolveClass(state) is not supported anymore please override onResolveType(state, resolvedType) instead: " + onResolveClass);
         } catch (NoSuchMethodException e) {
             // As the class should not define this method everything is fine
         }
