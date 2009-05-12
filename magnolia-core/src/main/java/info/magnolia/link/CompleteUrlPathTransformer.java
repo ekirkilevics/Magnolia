@@ -50,6 +50,10 @@ public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
     }
 
     protected String prefixLink(String linkStr) {
-        return ServerConfiguration.getInstance().getDefaultBaseUrl() + linkStr;
+        final String base = ServerConfiguration.getInstance().getDefaultBaseUrl();
+        if (base.endsWith("/") && linkStr.startsWith("/")) {
+            return base + linkStr.substring(1);
+        }
+        return base + linkStr;
     }
 }

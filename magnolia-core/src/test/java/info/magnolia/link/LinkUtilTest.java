@@ -34,9 +34,12 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockHierarchyManager;
 
 import javax.jcr.RepositoryException;
 
@@ -59,12 +62,12 @@ public class LinkUtilTest extends BaseLinkTest {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs(HTML_WITH_ABSOLUTE_LINK);
         assertEquals(HTML_WITH_UUIDS, res);
     }
-    
+
     public void testParsingLinksWithBackslashInQueryParam() throws IOException, RepositoryException {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs("look <a href=\"/parent/sub.html?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results");
         assertEquals("look <a href=\"${link:{uuid:{2},repository:{website},handle:{/parent/sub},nodeData:{},extension:{html}}}?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results", res);
     }
-    
+
     public void testParsingLinksShouldNotTouchNonContentAbsoluteLinks() throws IOException, RepositoryException {
         doTestParsingLinksShouldNotParse("/somthing/else.html");
     }
@@ -117,7 +120,7 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testUUIDToAbsoluteLinkWithDollar() throws LinkException {
-        String htmlAbsoluteWithDollar = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "?var=${some_var}\">test</a>";       
+        String htmlAbsoluteWithDollar = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "?var=${some_var}\">test</a>";
         String htmlUuidWithDollar = "this is a <a href=\"" + UUID_PATTERN_SIMPLE + "?var=${some_var}\">test</a>";
 
         String res = LinkUtil.convertLinksFromUUIDPattern(htmlUuidWithDollar, LinkTransformerManager.getInstance().getAbsolute(false));
@@ -201,6 +204,23 @@ public class LinkUtilTest extends BaseLinkTest {
     public void testMakeAbsolutePathFromUUID() throws LinkException {
         String absolutePath = LinkFactory.createLink(ContentRepository.WEBSITE, "2").getHandle();
         assertEquals("/parent/sub", absolutePath);
+    }
+
+    public void testMakeCompleteURL() throws LinkException {
+        ServerConfiguration serverConfiguration = (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
+        String base = serverConfiguration.getDefaultBaseUrl();
+        serverConfiguration.setDefaultBaseUrl("http://some.site/yay/");
+        String url = null;
+        try {
+            MockContent c = new MockContent("bla");
+            c.setHierarchyManager(new MockHierarchyManager("website"));
+            url = LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkFactory.createLink(c));
+        } finally {
+            // restore
+            serverConfiguration.setDefaultBaseUrl(base);
+        }
+        assertNotNull(url);
+        assertEquals(-1, StringUtils.substringAfter(url, "http://").indexOf("//"));
     }
 
 }
