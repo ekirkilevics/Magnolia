@@ -96,14 +96,14 @@ public class LinkUtil {
     }
 
     /**
-     * Transforms a uuid to an uri. It does not add the context path. In difference from {@link Link#getHandle()}, 
+     * Transforms a uuid to an uri. It does not add the context path. In difference from {@link Link#getHandle()},
      * this method will apply all uri to repository mappings as well as i18n.
      */
     public static String convertUUIDtoURI(String uuid, String repository) throws LinkException {
         return LinkTransformerManager.getInstance().getAbsolute(false).transform(LinkFactory.createLink(repository, uuid));
     }
 
-    //-- conversions to UUID - bulk 
+    //-- conversions to UUID - bulk
     /**
      * Parses provided html and transforms all the links to the magnolia format. Used during storing.
      * @param html html code with links to be converted
@@ -240,7 +240,7 @@ public class LinkUtil {
             throw new RuntimeException("It seems your system does not support UTF-8 !?", e);
         }
     }
-    
+
     /**
      * Creates absolute link including context path for provided node data.
      * @param nodedata Node data to create link for.
@@ -255,7 +255,7 @@ public class LinkUtil {
     }
 
     /**
-     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales. 
+     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
      * @param uuid UUID of content to create link to.
      * @param repository Name of the repository where content is located.
      * @return Absolute link to the provided content.
@@ -268,7 +268,7 @@ public class LinkUtil {
     }
 
     /**
-     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales. 
+     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
      * @param content content to create link to.
      * @return Absolute link to the provided content.
      * @see AbstractI18nContentSupport
@@ -278,5 +278,17 @@ public class LinkUtil {
             return null;
         }
         return LinkTransformerManager.getInstance().getAbsolute().transform(LinkFactory.createLink(content));
+    }
+
+    /**
+     * Creates a complete url to access given content from external systems applying all the URI2Repository mappings and locales.
+     * @param content
+     * @return
+     */
+    public static String createCompleteURL(Content content) {
+        if(content == null){
+            return null;
+        }
+        return LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkFactory.createLink(content));
     }
 }
