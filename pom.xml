@@ -287,12 +287,12 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>jdom</groupId>
         <artifactId>jdom</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>jaxen</groupId>
         <artifactId>jaxen</artifactId>
-        <version>1.0-FCS</version>
+        <version>1.1.1</version>
         <exclusions>
           <exclusion>
             <artifactId>xom</artifactId>
@@ -301,6 +301,10 @@ for Java Content Repositories (JCR).
           <exclusion>
             <artifactId>dom4j</artifactId>
             <groupId>dom4j</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>xml-apis</artifactId>
+            <groupId>xml-apis</groupId>
           </exclusion>
         </exclusions>
       </dependency>
