@@ -192,7 +192,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             RepositoryException, AccessDeniedException {
         Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType, this);
         setMetaData(content.getMetaData());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, content.getHandle());
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, content.getItemType(), content.getHandle());
         return content;
     }
 
@@ -258,7 +258,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
                 node = this.createContent(StringUtils.substringBeforeLast(path, "/"), StringUtils.substringAfterLast(
                     path,
                     "/"), type.toString());
-                AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, node.getHandle());
+                AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, node.getItemType(), node.getHandle());
             }
             else {
                 throw e;

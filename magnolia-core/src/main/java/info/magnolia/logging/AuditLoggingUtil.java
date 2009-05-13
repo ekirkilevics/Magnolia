@@ -33,7 +33,6 @@
  */
 package info.magnolia.logging;
 
-import javax.jcr.nodetype.NodeType;
 import javax.servlet.http.HttpServletRequest;
 
 import info.magnolia.cms.core.ItemType;
@@ -60,14 +59,7 @@ public class AuditLoggingUtil {
     public static final String ACTION_LOGOUT = "logout";
 
     /**
-     * log create, modify, activate, deactivate
-     */
-    public static void log(String action, String workspaceName, String nodePath) {
-        AuditLoggingUtil.log( action, workspaceName, nodePath, null );
-    }
-
-    /**
-     * log delete incl. node type
+     * log create, modify, activate, deactivate, delete incl. node type
      */
     public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {
         AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getSystemName(), nodePath});

@@ -162,7 +162,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      /**
      * Runs a given job in the thread pool.
-     * 
+     *
      * @param job the job to run
      * @throws ExchangeException if the job could not be put in the pool
      */
@@ -184,9 +184,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * Acquires a {@link Sync} ignoring any interruptions. Should any
      * interruption occur the interruption status will be set. Might
      * potentially block/wait forever.
-     * 
+     *
      * @see Sync#acquire()
-     * 
+     *
      * @param latch the latch on which to wait
      */
     protected static void acquireIgnoringInterruption(Sync latch) {
@@ -298,7 +298,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              }
              this.updateActivationDetails();
              log.info("Exchange: activation succeeded [{}]", content.getHandle());
-             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, this.path );
+             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, content.getItemType(), this.path );
          }
          catch (Exception e) {
              if (log.isDebugEnabled()) {
@@ -348,7 +348,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              log.debug("Debugging is enabled. Keeping temporary files in store for debugging purposes. Clean the store manually once done with debugging.");
              return;
          }
-         
+
          Iterator keys = activationContent.getFiles().keySet().iterator();
          while (keys.hasNext()) {
              String key = (String) keys.next();
@@ -465,7 +465,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
          updateMetaData(page, DEACTIVATE);
          page.save();
-         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getHandle() );
+         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getItemType(), page.getHandle() );
      }
 
 

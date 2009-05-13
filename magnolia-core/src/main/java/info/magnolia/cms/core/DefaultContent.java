@@ -169,7 +169,7 @@ public class DefaultContent extends ContentHandler implements Content {
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
         this.addMixin(ItemType.MIX_LOCKABLE);
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, hierarchyManager.getName(), this.getItemType(), Path.getAbsolutePath(node.getPath()));
     }
 
     /**
@@ -369,7 +369,7 @@ public class DefaultContent extends ContentHandler implements Content {
         else {
             this.node.getProperty(name).remove();
         }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), (ItemType) null, nodePath );
 
     }
 
@@ -377,7 +377,7 @@ public class DefaultContent extends ContentHandler implements Content {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),this.getItemType(), Path.getAbsolutePath(node.getPath()));
     }
 
     public Collection getChildren(ContentFilter filter) {
