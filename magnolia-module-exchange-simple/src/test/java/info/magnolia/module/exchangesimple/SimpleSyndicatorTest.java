@@ -67,7 +67,7 @@ import static org.easymock.EasyMock.*;
  * @version $Id:$
  */
 public class SimpleSyndicatorTest extends TestCase {
-    
+
     ActivationManager actMan;
     WebContext ctx;
     SimpleSyndicator ss;
@@ -97,16 +97,16 @@ public class SimpleSyndicatorTest extends TestCase {
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_METADATA);
         rule.addAllowType(ItemType.NT_RESOURCE);
-        ss.contentFilterRule = rule; 
+        ss.contentFilterRule = rule;
     }
-    
+
     public void tearDown() {
         MgnlContext.setInstance(null);
         FactoryUtil.setInstance(ActivationManager.class, null);
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_APP_ROOTDIR);
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
     }
-    
+
     public void testDeactivateWithNoSubscriber() throws Exception {
         runDeactivateTest(new Runnable() {
             public void run() {
@@ -121,6 +121,7 @@ public class SimpleSyndicatorTest extends TestCase {
                     //meta.setLastActivationActionDate();
                     expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
                     cnt.save();
+                    expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
                     expect(cnt.getHandle()).andReturn("/path");
                     expect(ctx.getUser()).andReturn(user).times(2);
                     expect(user.getName()).andReturn("Dummy");
@@ -128,9 +129,9 @@ public class SimpleSyndicatorTest extends TestCase {
                     throw new RuntimeException(e);
                 }
             }});
-        
+
     }
-    
+
     public void testDeactivateWithNoActiveSubscriber() throws Exception {
         runDeactivateTest(new Runnable() {
             public void run() {
@@ -148,6 +149,7 @@ public class SimpleSyndicatorTest extends TestCase {
                     //meta.setLastActivationActionDate();
                     expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
                     cnt.save();
+                    expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
                     expect(cnt.getHandle()).andReturn("/path");
                     expect(ctx.getUser()).andReturn(user).times(2);
                     expect(user.getName()).andReturn("Dummy");
@@ -155,9 +157,9 @@ public class SimpleSyndicatorTest extends TestCase {
                     throw new RuntimeException(e);
                 }
             }});
-        
+
     }
-        
+
     public void testActivateLooongName() throws Exception {
         // name of the content has to be more then 256 chars to make sure that if used somewhere to create files it will fail the test.
         StringBuilder sb = new StringBuilder("/");
@@ -176,7 +178,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(ctx.getHierarchyManager(null,null)).andReturn(hm);
         expect(subscriber.isActive()).andReturn(true);
         expect(subscriber.getMatchedSubscription(path, null)).andReturn(subscription);
-        
+
         expect(cnt.getUUID()).andReturn("some-real-uuid");
         Workspace wks = createStrictMock(Workspace.class);
         expect(cnt.getWorkspace()).andReturn(wks);
@@ -197,7 +199,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
 
         //expect(hm.getContentByUUID("some-real-uuid")).andReturn(cnt);
-        
+
         expect(hm.getContent(path)).andReturn(cnt);
         expect(cnt.getMetaData()).andReturn(meta);
         meta.setActivated();
@@ -206,11 +208,11 @@ public class SimpleSyndicatorTest extends TestCase {
         meta.setLastActivationActionDate();
         expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
         cnt.save();
-
         expect(cnt.getHandle()).andReturn(path);
+        expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
         expect(ctx.getUser()).andReturn(user).times(2);
         expect(user.getName()).andReturn("Dummy");
-    
+
         all.addAll(subscribers);
         all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, hm, user, wks, session, jcr}));
         Object[] objs =  all.toArray();
@@ -218,7 +220,7 @@ public class SimpleSyndicatorTest extends TestCase {
         ss.activate("/", cnt);
         verify(objs);
     }
-        
+
     public void runDeactivateTest(Runnable run) throws Exception {
         expect(cnt.getUUID()).andReturn("some-real-uuid");
         expect(cnt.getHandle()).andReturn("/path");
