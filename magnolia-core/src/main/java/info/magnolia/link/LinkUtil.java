@@ -285,7 +285,7 @@ public class LinkUtil {
      * @param content
      * @return
      */
-    public static String createCompleteURL(Content content) {
+    public static String createExternalLink(Content content) {
         if(content == null){
             return null;
         }
