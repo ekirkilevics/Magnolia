@@ -54,8 +54,6 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
-import org.apache.commons.lang.ClassUtils;
-
 public abstract class ContentWrapper implements Content {
 
     private Content wrappedContent;
@@ -82,6 +80,15 @@ public abstract class ContentWrapper implements Content {
         return node;
     }
 
+    public String toString() {
+        final StringBuilder buffer = new StringBuilder();
+        buffer.append(getClass().getSimpleName());
+        buffer.append(" for ");
+        buffer.append(getWrappedContent().toString());
+        return buffer.toString();
+    }
+
+    // ---- below are only generated delegate methods
     public void addMixin(String type) throws RepositoryException {
         this.getWrappedContent().addMixin(type);
     }
@@ -387,14 +394,6 @@ public abstract class ContentWrapper implements Content {
 
     public HierarchyManager getHierarchyManager(){
         return this.getWrappedContent().getHierarchyManager();
-    }
-
-    public String toString() {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append(ClassUtils.getShortClassName(getClass()));
-        buffer.append(" for ");
-        buffer.append(getWrappedContent().toString());
-        return buffer.toString();
     }
 
 }
