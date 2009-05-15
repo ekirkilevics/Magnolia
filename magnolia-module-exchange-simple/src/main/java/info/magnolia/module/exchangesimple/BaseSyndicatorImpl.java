@@ -298,7 +298,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              }
              this.updateActivationDetails();
              log.info("Exchange: activation succeeded [{}]", content.getHandle());
-             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, content.getItemType(), this.path );
          }
          catch (Exception e) {
              if (log.isDebugEnabled()) {
@@ -452,9 +451,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws RepositoryException
       */
      protected void updateActivationDetails() throws RepositoryException {
-         Content page = getHierarchyManager().getContent(this.path);
+         // page activated already use system context to ensure metadata is activated even if activating user has no rights to the activated page children
+         Content page = getSystemHierarchyManager().getContent(this.path);
          updateMetaData(page, ACTIVATE);
          page.save();
+         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, page.getItemType(), this.path );
      }
 
      /**
@@ -462,7 +463,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws RepositoryException
       */
      protected void updateDeactivationDetails() throws RepositoryException {
-         Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
+         // page deactivated already use system context to ensure metadata is activated even if activating user has no rights to the activated page children
+         Content page = getSystemHierarchyManager().getContentByUUID(this.nodeUUID);
          updateMetaData(page, DEACTIVATE);
          page.save();
          AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getItemType(), page.getHandle() );
@@ -471,6 +473,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      private HierarchyManager getHierarchyManager() {
          return MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+     }
+
+     private HierarchyManager getSystemHierarchyManager() {
+         return MgnlContext.getSystemContext().getHierarchyManager(this.repositoryName, this.workspaceName);
      }
 
      /**

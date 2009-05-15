@@ -58,6 +58,7 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
@@ -70,6 +71,7 @@ public class SimpleSyndicatorTest extends TestCase {
 
     ActivationManager actMan;
     WebContext ctx;
+    SystemContext sysctx;
     SimpleSyndicator ss;
     User user;
     Content cnt;
@@ -83,6 +85,8 @@ public class SimpleSyndicatorTest extends TestCase {
         FactoryUtil.setInstance(ActivationManager.class, actMan);
         ctx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(ctx);
+        sysctx = createStrictMock(SystemContext.class);
+        FactoryUtil.setInstance(SystemContext.class, sysctx);
         ss = new SimpleSyndicator();
         user = createStrictMock(User.class);
         ss.user = user;
@@ -103,6 +107,7 @@ public class SimpleSyndicatorTest extends TestCase {
     public void tearDown() {
         MgnlContext.setInstance(null);
         FactoryUtil.setInstance(ActivationManager.class, null);
+        FactoryUtil.setInstance(SystemContext.class, null);
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_APP_ROOTDIR);
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
     }
@@ -112,7 +117,7 @@ public class SimpleSyndicatorTest extends TestCase {
             public void run() {
                 try {
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
-                    expect(ctx.getHierarchyManager(null,null)).andReturn(hm);
+                    expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
                     expect(hm.getContentByUUID("some-real-uuid")).andReturn(cnt);
                     expect(cnt.getMetaData()).andReturn(meta);
                     //meta.setUnActivated();
@@ -139,7 +144,7 @@ public class SimpleSyndicatorTest extends TestCase {
                     Subscriber subscriber = createStrictMock(Subscriber.class);
                     subscribers.add(subscriber);
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
-                    expect(ctx.getHierarchyManager(null,null)).andReturn(hm);
+                    expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
                     expect(hm.getContentByUUID("some-real-uuid")).andReturn(cnt);
                     expect(subscriber.isActive()).andReturn(false);
                     expect(cnt.getMetaData()).andReturn(meta);
@@ -175,7 +180,7 @@ public class SimpleSyndicatorTest extends TestCase {
         all.add(subscription);
         subscribers.add(subscriber);
         // TODO: shouldn't repo be set even tho there is no  subscriber???
-        expect(ctx.getHierarchyManager(null,null)).andReturn(hm);
+        expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
         expect(subscriber.isActive()).andReturn(true);
         expect(subscriber.getMatchedSubscription(path, null)).andReturn(subscription);
 
@@ -208,13 +213,13 @@ public class SimpleSyndicatorTest extends TestCase {
         meta.setLastActivationActionDate();
         expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
         cnt.save();
-        expect(cnt.getHandle()).andReturn(path);
         expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
+        expect(cnt.getHandle()).andReturn(path);
         expect(ctx.getUser()).andReturn(user).times(2);
         expect(user.getName()).andReturn("Dummy");
 
         all.addAll(subscribers);
-        all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, hm, user, wks, session, jcr}));
+        all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, sysctx, hm, user, wks, session, jcr}));
         Object[] objs =  all.toArray();
         replay(objs);
         ss.activate("/", cnt);
@@ -227,7 +232,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(actMan.getSubscribers()).andReturn(subscribers);
         run.run();
         all.addAll(subscribers);
-        all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, hm, user}));
+        all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, sysctx, hm, user}));
         Object[] objs =  all.toArray();
         replay(objs);
         ss.deactivate(cnt);
