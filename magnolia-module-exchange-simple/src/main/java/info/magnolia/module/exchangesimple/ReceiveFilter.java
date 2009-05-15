@@ -79,7 +79,7 @@ import java.util.zip.GZIPInputStream;
 
 /**
  * This filter receives activation requests from another instance and applies them.
- * 
+ *
  * @author Sameer Charles
  * $Id$
  */
@@ -93,9 +93,9 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     private static final String SIBLING_UUID_3_0 = "UUID";
 
     private int unlockRetries = 10;
-    
+
     private int retryWait = 2;
-    
+
     public int getUnlockRetries() {
         return unlockRetries;
     }
@@ -282,6 +282,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                     siblingUUID = sibling.getAttributeValue(SIBLING_UUID_3_0);
                 }
                 Content beforeContent = hm.getContentByUUID(siblingUUID);
+                log.debug("Ordering {} before {}", name, beforeContent.getName());
                 parent.orderBefore(name, beforeContent.getName());
                 parent.save();
                 break;
@@ -291,6 +292,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                 log.warn("Failed to order node");
                 log.debug("Failed to order node", re);
             }
+        }
+
+        // ensure the no sibling nodes are at the end ... since move is not activated immediately it is sometimes necessary to preserve right order
+        if (siblings.isEmpty()) {
+            parent.orderBefore(name, null);
+            parent.save();
         }
         return name;
     }
@@ -439,9 +446,9 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          try {
              parentPath = hm.getContentByUUID(resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_UUID_ATTRIBUTE)).getHandle();
          } catch (ItemNotFoundException e) {
-             // non referencable content like meta data ... 
-             // FYI: if we ever have non referencable same name sibling content the trouble will be here with child content being mixed 
-             parentPath = StringUtils.removeEnd(parentPath, "/") + "/" + name; 
+             // non referencable content like meta data ...
+             // FYI: if we ever have non referencable same name sibling content the trouble will be here with child content being mixed
+             parentPath = StringUtils.removeEnd(parentPath, "/") + "/" + name;
          }
          while (fileListIterator.hasNext()) {
              Element fileElement = (Element) fileListIterator.next();

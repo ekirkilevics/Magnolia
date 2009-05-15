@@ -69,9 +69,9 @@ public class ReceiveFilterTest extends TestCase {
     private static final String PARENT_PATH = "/foo/bar";
 
     private static interface TestCallBack {
-        
+
         Content getParentNode();
-        
+
         void checkPermissions(HierarchyManager hm);
 
         void checkNode(HierarchyManager hm) throws Exception;
@@ -82,7 +82,7 @@ public class ReceiveFilterTest extends TestCase {
 
         void saveSession(HierarchyManager hm) throws Exception;
     }
-    
+
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
@@ -96,7 +96,7 @@ public class ReceiveFilterTest extends TestCase {
                 expect(hm.getAccessManager()).andReturn(null);
 
             }
-      
+
             public void checkNode(HierarchyManager hm) throws Exception {
                 //before
                 expect(hm.getContentByUUID("DUMMY-UUID")).andThrow(new ItemNotFoundException());
@@ -210,7 +210,7 @@ public class ReceiveFilterTest extends TestCase {
         });
         verify(existingNode, tempNode);
     }
-    
+
     public void testActivateShouldMoveWhenParentHasChanged() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
         final Content tempNode = createStrictMock(Content.class);
@@ -257,7 +257,7 @@ public class ReceiveFilterTest extends TestCase {
         verify(existingNode, tempNode);
     }
 
-    
+
     public void testCantActivateInLockedNode() throws Exception {
         // use a nice mock as because of multithreading we are not able to specify exact order and number of calls
         final Content parentNode = createNiceMock(Content.class);
@@ -278,8 +278,8 @@ public class ReceiveFilterTest extends TestCase {
                 expect(parentNode.isLocked()).andReturn(true).anyTimes();
                 // create exception message
                 expect(parentNode.getHandle()).andReturn(PARENT_PATH).anyTimes();
-                
-                // clean up ... check the lock again 
+
+                // clean up ... check the lock again
                 //expect(parentNode.isLocked()).andReturn(true).times(2);
                 // try to unlock ... TODO: is that a right thing to do ... we are not the ones who locked it here
                 parentNode.unlock();
@@ -413,13 +413,17 @@ public class ReceiveFilterTest extends TestCase {
             return stream;
         }
     }
-    
+
     public abstract class AbstractTestCallBack implements TestCallBack {
         private final Content parentNode = createMock(Content.class); // TODO this should maybe be strict
 
         public void checkParent(HierarchyManager hm) throws Exception {
             expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
             expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
+            // order last child
+            parentNode.orderBefore(isA(String.class), (String) isNull());
+            parentNode.save();
+            //cleanup
             expect(parentNode.isLocked()).andReturn(false).anyTimes();
             expect(parentNode.lock(true, true)).andReturn(null);
         }
@@ -433,7 +437,7 @@ public class ReceiveFilterTest extends TestCase {
         }
 
         public void saveSession(HierarchyManager hm) throws Exception {
-            hm.save();            
+            hm.save();
         }
     }
 }

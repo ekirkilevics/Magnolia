@@ -40,6 +40,7 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,7 @@ public class ActivationCommand extends BaseActivationCommand {
 
         getSyndicator().activate(parentPath, node, getOrderingInfo(node));
 
-        Iterator children = node.getChildren(new Content.ContentFilter() {
+        Collection children = node.getChildren(new Content.ContentFilter() {
             public boolean accept(Content content) {
                 try {
                     return !getRule().isAllowed(content.getNodeTypeName());
@@ -134,10 +135,14 @@ public class ActivationCommand extends BaseActivationCommand {
                     return false;
                 }
             }
-        }).iterator();
+        });
 
-        while (children.hasNext()) {
-            this.activateRecursive(node.getHandle(), ((Content) children.next()), ctx);
+        // FYI: need to reverse order of child activation since content ordering info is also bottom-up
+        // Hackish at best. If changing this, don't forget to also change other activateRecursive() method
+        // and most importantly ensure that ordering of siblings in ReceiveFilter is done in same direction!
+        Content[] childArray = (Content[]) children.toArray(new Content[children.size()]);
+        for (int i = childArray.length - 1; i >=0; i--) {
+            this.activateRecursive(node.getHandle(), childArray[i], ctx);
         }
     }
 
@@ -148,13 +153,16 @@ public class ActivationCommand extends BaseActivationCommand {
     protected void activateRecursive(Context ctx, List versionMap)
             throws ExchangeException, RepositoryException {
         // activate all uuid's present in versionMap
-        Iterator entries = versionMap.iterator();
-        while (entries.hasNext()) {
-            Map entry = (Map) entries.next();
+        Map[] versions = (Map[]) versionMap.toArray(new Map[0]);
+        // FYI: need to reverse order of child activation since content ordering info is also bottom-up
+        // Hackish at best. If changing this, don't forget to also change other activateRecursive() method
+        // and most importantly ensure that ordering of siblings in ReceiveFilter is done in same direction!
+        for (int i = versions.length - 1; i >= 0; i--) {
+            Map entry = versions[i];
             String uuid = (String) entry.get("uuid");
             String versionNumber = (String) entry.get("version");
             if (StringUtils.equalsIgnoreCase("class", uuid)) {
-                // todo , this should not happen in between the serialized list, somewhere a bug
+                // TODO: this should not happen in between the serialized list, somewhere a bug
                 // for the moment simply ignore it
                 continue;
             }
