@@ -232,9 +232,7 @@ public class SaveHandlerImpl implements SaveHandler {
                     log.error("Could not delete temp documents from form");
                 }
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Saving {}", path); //$NON-NLS-1$
-                }
+                log.debug("Saving {}", path); //$NON-NLS-1$
 
                 // update meta data (e.g. last modified) of this paragraph and the page
                 node.updateMetaData();
@@ -362,9 +360,7 @@ public class SaveHandlerImpl implements SaveHandler {
     protected void processDate(Content node, String name, int type, int valueType, int encoding, String[] values) {
         try {
             if (StringUtils.isEmpty(values[0])) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Date has no value. Deleting node data" + name);
-                }
+                log.debug("Date has no value. Deleting node data {}", name);
                 if (node.hasNodeData(name)) {
                     node.deleteNodeData(name);
                 }
@@ -891,9 +887,7 @@ public class SaveHandlerImpl implements SaveHandler {
             catch (RepositoryException re) {
                 // nodeCollection does not exist -> create
                 nodeCollection = rootNode.createContent(this.getNodeCollectionName(), ItemType.CONTENTNODE);
-                if (log.isDebugEnabled()) {
-                    log.debug("Create - " + nodeCollection.getHandle()); //$NON-NLS-1$
-                }
+                log.debug("Create - {}" + nodeCollection.getHandle()); //$NON-NLS-1$
             }
         }
         else {
@@ -943,9 +937,7 @@ public class SaveHandlerImpl implements SaveHandler {
 
             }
             data.setValue(doc.getStream());
-            if (log.isDebugEnabled()) {
-                log.debug("Node data updated"); //$NON-NLS-1$
-            }
+            log.debug("Node data updated"); //$NON-NLS-1$
         }
         if (data != null) {
             if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
