@@ -40,6 +40,7 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.LocaleUtils;
 
 public class UserContextImpl extends AbstractContext implements UserContext {
     private static final Logger log = LoggerFactory.getLogger(UserContextImpl.class);
@@ -56,7 +57,9 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     public Locale getLocale() {
         if(this.locale == null){
-            this.locale = new Locale(getUser().getLanguage());
+            // despite this being called "language", it sometimes contains the country (i.e. fr_CH), so we need to parse it
+            final String userLanguage = getUser().getLanguage();
+            this.locale = LocaleUtils.toLocale(userLanguage);
         }
         return locale;
     }
