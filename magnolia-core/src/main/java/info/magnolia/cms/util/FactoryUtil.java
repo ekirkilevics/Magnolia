@@ -121,7 +121,7 @@ public class FactoryUtil {
             }
         }
         catch (Exception e) {
-            throw new IllegalStateException("Can't instantiate an implementation of this class [" + interf.getName() + "]: " + ExceptionUtils.getMessage(e));
+            throw new IllegalStateException("Can't instantiate an implementation of this class [" + interf.getName() + "]: " + ExceptionUtils.getMessage(e), e);
         }
     }
 
