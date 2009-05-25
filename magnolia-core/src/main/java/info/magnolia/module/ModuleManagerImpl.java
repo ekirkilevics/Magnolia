@@ -266,19 +266,25 @@ public class ModuleManagerImpl implements ModuleManager {
         // process startup tasks before actually starting modules
         executeStartupTasks();
 
+        // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle methods.
+        final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+        lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+        Content modulesParentNode;
         try {
-            // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle methods.
-            final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
-            lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
-            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
-            final Content modulesParentNode = hm.getContent(MODULES_NODE);
-            final Collection<Content> moduleNodes = new ArrayList<Content>();
+            modulesParentNode = hm.getContent(MODULES_NODE);
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException("Can't start module due to failing to load the /modules node.",e);
+        }
+        final Collection<Content> moduleNodes = new ArrayList<Content>();
 
-            for (ModuleDefinition moduleDefinition : orderedModuleDescriptors) {
-                final String moduleClassName = moduleDefinition.getClassName();
-                final String moduleName = moduleDefinition.getName();
-                log.debug("Initializing module {}", moduleName);
+        for (ModuleDefinition moduleDefinition : orderedModuleDescriptors) {
+            final String moduleClassName = moduleDefinition.getClassName();
+            final String moduleName = moduleDefinition.getName();
+            log.debug("Initializing module {}", moduleName);
 
+            try {
                 // TODO : why would this return anything else than null ?
                 Object moduleInstance = registry.getModuleInstance(moduleName);
 
@@ -334,11 +340,12 @@ public class ModuleManagerImpl implements ModuleManager {
                     }, DEFAULT_MODULE_OBSERVATION_DELAY, DEFAULT_MODULE_OBSERVATION_MAX_DELAY);
                 }
             }
-            lifecycleContext.start(moduleNodes);
+            catch (Throwable th) {
+                log.error("Can't start module " + moduleName, th);
+            }
         }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
-        }
+        
+        lifecycleContext.start(moduleNodes);
     }
 
     /**
