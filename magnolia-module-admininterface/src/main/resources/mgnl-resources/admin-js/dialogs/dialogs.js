@@ -163,15 +163,16 @@ function mgnlControlFileSetFileName(id,clear)
 /* ###################################
 ### control link: open link browser
 ################################### */
-
 function mgnlDialogLinkOpenBrowser(controlName,repository,extension,addcontext){
     var control = document.getElementById(controlName);
     var pathSelected = control.value;
     pathSelected = pathSelected.replace(".html","");
 
     var pathOpen=""; //without selection: open path of editing page
-    var pathElem=document.getElementById("mgnlPath");
-    if (pathElem) pathOpen=pathElem.value;
+    if(pathSelcted==""){
+        var pathElem=document.getElementById("mgnlPath");
+        if (pathElem) pathOpen=pathElem.value;
+    }
 
     mgnlDebug("link: selectedPath: " + pathSelected, "dialog");
     mgnlDebug("link: pathOpen: " + pathOpen, "dialog");
