@@ -83,7 +83,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         try {
             type = transformer.resolveType(state);
         }
-        catch (ClassNotFoundException e) {
+        catch (Throwable e) {
             if(isForceCreation()){
                 log.warn("can't resolve class for node " +  node.getHandle(), e);
             }
