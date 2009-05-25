@@ -67,16 +67,8 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter  {
+    
     private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
-
-    public Content2BeanTransformerImpl() {
-        try {
-            Method onResolveClass = this.getClass().getDeclaredMethod("onResolveClass", new Class[]{TransformationState.class});
-            log.error("onResolveClass(state) is not supported anymore please override onResolveType(state, resolvedType) instead: " + onResolveClass);
-        } catch (NoSuchMethodException e) {
-            // As the class should not define this method everything is fine
-        }
-    }
 
     /**
      * Resolves in this order
