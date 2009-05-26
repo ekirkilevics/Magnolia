@@ -150,9 +150,11 @@ public class NodeDataUtil {
     }
 
     /**
-     * Inherit a value. Uses the string value
-     * @param node
-     * @param name
+     * Inherit a value. Uses the string value. The "inherit" means that the method will look for the value in the content itself and if not found
+     * it will go up in the tree and try to locate value in one of the parents of the content until reaching the root. The first value found while
+     * traversing the tree way up is the one that will be returned.
+     * @param node Node expected to define or inherit the searched node value.
+     * @param name Name of the nodeData.
      */
     public static String inheritString(Content node, String name) throws RepositoryException{
         String value = "";
