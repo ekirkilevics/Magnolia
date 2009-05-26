@@ -169,7 +169,7 @@ function mgnlDialogLinkOpenBrowser(controlName,repository,extension,addcontext){
     pathSelected = pathSelected.replace(".html","");
 
     var pathOpen=""; //without selection: open path of editing page
-    if(pathSelcted==""){
+    if(pathSelected == ""){
         var pathElem=document.getElementById("mgnlPath");
         if (pathElem) pathOpen=pathElem.value;
     }
