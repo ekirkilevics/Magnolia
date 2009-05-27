@@ -36,6 +36,9 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
@@ -69,6 +72,16 @@ public class MgnlUserTest extends TestCase {
                 return getHierarchyManager().getContent("/" + realm + "/" + name);
             }
         };
+    }
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    @Override
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        FactoryUtil.clear();
+        super.tearDown();
     }
 
     public void testGetGroupsReturnsOnlyDirectGroups() {
