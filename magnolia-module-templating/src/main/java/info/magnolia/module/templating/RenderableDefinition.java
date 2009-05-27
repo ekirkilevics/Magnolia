@@ -54,7 +54,7 @@ public interface RenderableDefinition {
     public String getDialog();
 
     /**
-     * An arbitary list of parameters. Used to omit subclass with getters and setters for each extra parameter.
+     * An arbitrary list of parameters. Used to omit subclass with getters and setters for each extra parameter.
      */
     public Map getParameters();
 

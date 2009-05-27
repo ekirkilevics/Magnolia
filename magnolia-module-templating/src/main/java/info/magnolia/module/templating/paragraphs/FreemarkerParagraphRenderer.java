@@ -84,7 +84,7 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         boolean wrap = false;
         try {
             if (out instanceof JspWriter) {
-                // when FM wrapps writer in a parent tag it gets confused and doesn't wrap the inner one again
+                // when FM wraps writer in a parent tag it gets confused and doesn't wrap the inner one again
                 wrap = true;
                 out = new PrintWriter(out);
             }
