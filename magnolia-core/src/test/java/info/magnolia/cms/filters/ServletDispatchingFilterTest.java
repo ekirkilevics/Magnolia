@@ -34,6 +34,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import junit.framework.TestCase;
@@ -52,6 +53,11 @@ import java.lang.reflect.Field;
  * @version $Revision: $ ($Author: $)
  */
 public class ServletDispatchingFilterTest extends TestCase {
+    protected void tearDown() throws Exception {
+        FactoryUtil.clear();
+        MgnlContext.setInstance(null); // not needed for this test - kept for consistency with other tests tearDown()
+        super.tearDown();
+    }
 
     public void testEscapeMetaCharacters() {
         assertEquals("a\\{b\\)c\\(d\\}e\\^f\\]g\\[h\\*i\\$j\\+kl",
