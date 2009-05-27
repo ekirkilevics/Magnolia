@@ -114,7 +114,7 @@ public abstract class NodeDataWrapper implements NodeData {
         return getWrappedNodeData().getHandle();
     }
 
-    public HierarchyManager getHierarchyManager() throws RepositoryException {
+    public HierarchyManager getHierarchyManager() {
         return getWrappedNodeData().getHierarchyManager();
     }
 

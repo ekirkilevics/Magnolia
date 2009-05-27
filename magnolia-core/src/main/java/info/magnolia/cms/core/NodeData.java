@@ -314,6 +314,6 @@ public interface NodeData extends Cloneable {
      */
     Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException;
 
-    HierarchyManager getHierarchyManager() throws RepositoryException;
+    HierarchyManager getHierarchyManager();
 
 }
