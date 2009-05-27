@@ -103,7 +103,7 @@ public class URI2RepositoryMapping {
         //remove extension (ignore . anywhere else in the uri)
         String fileName = StringUtils.substringAfterLast(handle, "/");
         String extension = StringUtils.substringAfterLast(fileName, ".");
-        handle = StringUtils.removeEnd(handle, extension);
+        handle = StringUtils.removeEnd(handle, "." + extension);
         return cleanHandle(handle);
     }
 

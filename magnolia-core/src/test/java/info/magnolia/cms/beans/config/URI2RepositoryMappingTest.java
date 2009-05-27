@@ -96,4 +96,16 @@ public class URI2RepositoryMappingTest extends TestCase {
         assertTrue("Incorrect file name generated.",uri.endsWith("/blah.jpg"));
         verify(context, hm, cnt, root, docu);
     }
+
+    public void testGetHandleStripsExtensionInclTheDot() throws Exception {
+        FactoryUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
+        ServerConfiguration.getInstance().setDefaultExtension("ext");
+        String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
+        assertEquals("/blah", handle);
+        handle = URI2RepositoryManager.getInstance().getHandle("/b.l/ah.ext");
+        assertEquals("/b.l/ah", handle);
+        handle = URI2RepositoryManager.getInstance().getHandle("/bl.ah.ext");
+        assertEquals("/bl.ah", handle);
+        FactoryUtil.setInstance(ServerConfiguration.class, null);
+    }
 }
