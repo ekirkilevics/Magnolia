@@ -46,9 +46,6 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.ModuleManager;
-import info.magnolia.module.ModuleManagerImpl;
-import info.magnolia.module.ModuleRegistry;
 import info.magnolia.test.mock.MockRepositoryAcquiringStrategy;
 
 /**
@@ -57,14 +54,18 @@ import info.magnolia.test.mock.MockRepositoryAcquiringStrategy;
  */
 public class URI2RepositoryMappingTest extends TestCase {
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
     @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        FactoryUtil.setInstance(ServerConfiguration.class, null);
+        FactoryUtil.clear();
         super.tearDown();
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        MgnlContext.setInstance(null);
+        FactoryUtil.clear();
     }
 
     public void testGetUri() throws Exception {
@@ -119,6 +120,7 @@ public class URI2RepositoryMappingTest extends TestCase {
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ServerConfiguration.getInstance().setDefaultExtension("ext");
+        FactoryUtil.setInstance(URI2RepositoryManager.class, new URI2RepositoryManager());
         Object[] objs = new Object[] {context, hm};
         replay(objs);
         String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
