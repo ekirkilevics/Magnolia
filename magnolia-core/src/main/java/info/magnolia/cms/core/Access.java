@@ -39,8 +39,9 @@ import info.magnolia.cms.security.PermissionImpl;
 
 import java.text.MessageFormat;
 
-
 /**
+ * Simply utility class for AccessManager.
+ *
  * @author Sameer Charles $Id$
  */
 public final class Access {
@@ -53,15 +54,14 @@ public final class Access {
     }
 
     /**
-     * Checks if the accessmanager allows specified permission on the given path
-     * @param manager accessmanager
-     * @param path which needs to be tested using given accessmanager
-     * @param permissions
+     * Checks if the given AccessManager allows specified permission on the given path.
+     * If no AccessManager is passed, the permission is assumed granted, no exception is thrown.
+     *
+     * @throws AccessDeniedException if the permission isn't granted.
      */
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {
-            throw new AccessDeniedException(MessageFormat.format("User not allowed to {0} path [{1}]", //$NON-NLS-1$
-                new Object[]{PermissionImpl.getPermissionAsName(permissions), path}));
+            throw new AccessDeniedException(MessageFormat.format("User not allowed to {0} path [{1}]", PermissionImpl.getPermissionAsName(permissions), path));
         }
     }
 }
