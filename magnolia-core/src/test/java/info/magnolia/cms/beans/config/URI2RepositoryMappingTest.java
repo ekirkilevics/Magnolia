@@ -33,12 +33,11 @@
  */
 package info.magnolia.cms.beans.config;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 import javax.jcr.PropertyType;
+
+import junit.framework.TestCase;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -46,13 +45,27 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import junit.framework.TestCase;
+import info.magnolia.context.WebContext;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleManagerImpl;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.test.mock.MockRepositoryAcquiringStrategy;
 
 /**
  * @author had
  * @version $Id:$
  */
 public class URI2RepositoryMappingTest extends TestCase {
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    @Override
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        FactoryUtil.setInstance(ServerConfiguration.class, null);
+        super.tearDown();
+    }
 
     public void testGetUri() throws Exception {
         FactoryUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
@@ -98,14 +111,22 @@ public class URI2RepositoryMappingTest extends TestCase {
     }
 
     public void testGetHandleStripsExtensionInclTheDot() throws Exception {
-        FactoryUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
+        WebContext context = createNiceMock(WebContext.class);
+        HierarchyManager hm = createNiceMock(HierarchyManager.class);
+        MgnlContext.setInstance(context);
+        MockRepositoryAcquiringStrategy strategy = (MockRepositoryAcquiringStrategy) FactoryUtil.getSingleton(MockRepositoryAcquiringStrategy.class);
+        strategy.addHierarchyManager("config", hm);
+        final ServerConfiguration serverConfiguration = new ServerConfiguration();
+        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ServerConfiguration.getInstance().setDefaultExtension("ext");
+        Object[] objs = new Object[] {context, hm};
+        replay(objs);
         String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
         assertEquals("/blah", handle);
         handle = URI2RepositoryManager.getInstance().getHandle("/b.l/ah.ext");
         assertEquals("/b.l/ah", handle);
         handle = URI2RepositoryManager.getInstance().getHandle("/bl.ah.ext");
         assertEquals("/bl.ah", handle);
-        FactoryUtil.setInstance(ServerConfiguration.class, null);
+        verify(objs);
     }
 }
