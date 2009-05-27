@@ -64,6 +64,7 @@ public class URI2RepositoryMappingTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        // some tests do not cleanup properly so we need to cleanup here before starting to be sure.
         MgnlContext.setInstance(null);
         FactoryUtil.clear();
     }
