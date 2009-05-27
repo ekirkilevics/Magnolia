@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.InputStream;
@@ -631,5 +632,20 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     public void setParent(Content parent) {
         this.parent = parent;
+    }
+    
+    public String toString() {
+        if (this.property == null || this.node ==  null) {
+            return super.toString();
+        }
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(getHierarchyManager().getName() + ":");
+        buffer.append(getHandle());
+        String type = NodeDataUtil.getTypeName(this);
+        buffer.append("[");
+        buffer.append(type);
+        buffer.append("]");
+
+        return buffer.toString();
     }
 }

@@ -924,6 +924,7 @@ public class DefaultContent extends ContentHandler implements Content {
             return super.toString();
         }
         StringBuffer buffer = new StringBuffer();
+        buffer.append(getHierarchyManager().getName() + ":");
         buffer.append(getHandle());
         String type = "";
         try {
