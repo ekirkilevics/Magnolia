@@ -176,6 +176,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(actMan.getSubscribers()).andReturn(subscribers);
 
         Subscriber subscriber = createStrictMock(Subscriber.class);
+        makeThreadSafe(subscriber, true);
         Subscription subscription = createStrictMock(Subscription.class);
         all.add(subscription);
         subscribers.add(subscriber);
