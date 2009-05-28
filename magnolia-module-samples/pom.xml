@@ -9,6 +9,10 @@
   <artifactId>magnolia-module-samples</artifactId>
   <name>magnolia-module-samples</name>
   <packaging>jar</packaging>
+  <description/>
+  <properties>
+    <documentationURL>http://documentation.magnolia-cms.com/modules/samples.html</documentationURL>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
