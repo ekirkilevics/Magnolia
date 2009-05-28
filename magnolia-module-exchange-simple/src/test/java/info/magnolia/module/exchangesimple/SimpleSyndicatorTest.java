@@ -69,16 +69,16 @@ import static org.easymock.EasyMock.*;
  */
 public class SimpleSyndicatorTest extends TestCase {
 
-    ActivationManager actMan;
-    WebContext ctx;
-    SystemContext sysctx;
-    SimpleSyndicator ss;
-    User user;
-    Content cnt;
-    HierarchyManager hm;
-    MetaData meta;
-    Collection subscribers;
-    List all;
+    private ActivationManager actMan;
+    private WebContext ctx;
+    private SystemContext sysctx;
+    private SimpleSyndicator syndicator;
+    private User user;
+    private Content content;
+    private HierarchyManager hm;
+    private MetaData meta;
+    private Collection<Subscriber> subscribers;
+    private List<Object> allMocks;
 
     public void setUp() {
         actMan = createStrictMock(ActivationManager.class);
@@ -87,21 +87,21 @@ public class SimpleSyndicatorTest extends TestCase {
         MgnlContext.setInstance(ctx);
         sysctx = createStrictMock(SystemContext.class);
         FactoryUtil.setInstance(SystemContext.class, sysctx);
-        ss = new SimpleSyndicator();
+        syndicator = new SimpleSyndicator();
         user = createStrictMock(User.class);
-        ss.user = user;
-        cnt = createStrictMock(Content.class);
+        syndicator.user = user;
+        content = createStrictMock(Content.class);
         hm = createStrictMock(HierarchyManager.class);
         meta = new MetaData() {};
-        subscribers = new ArrayList();
-        all = new ArrayList();
+        subscribers = new ArrayList<Subscriber>();
+        allMocks = new ArrayList<Object>();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR, ".");
-        Rule rule = new Rule();
+        final Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_METADATA);
         rule.addAllowType(ItemType.NT_RESOURCE);
-        ss.contentFilterRule = rule;
+        syndicator.contentFilterRule = rule;
     }
 
     public void tearDown() {
@@ -118,16 +118,16 @@ public class SimpleSyndicatorTest extends TestCase {
                 try {
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
                     expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
-                    expect(hm.getContentByUUID("some-real-uuid")).andReturn(cnt);
-                    expect(cnt.getMetaData()).andReturn(meta);
+                    expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
+                    expect(content.getMetaData()).andReturn(meta);
                     //meta.setUnActivated();
                     expect(user.getName()).andReturn("Dummy");
                     //meta.setActivatorId("Dummy");
                     //meta.setLastActivationActionDate();
-                    expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
-                    cnt.save();
-                    expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
-                    expect(cnt.getHandle()).andReturn("/path");
+                    expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
+                    content.save();
+                    expect(content.getItemType()).andReturn(ItemType.CONTENT);
+                    expect(content.getHandle()).andReturn("/path");
                     expect(ctx.getUser()).andReturn(user).times(2);
                     expect(user.getName()).andReturn("Dummy");
                 } catch (Exception e) {
@@ -145,17 +145,17 @@ public class SimpleSyndicatorTest extends TestCase {
                     subscribers.add(subscriber);
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
                     expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
-                    expect(hm.getContentByUUID("some-real-uuid")).andReturn(cnt);
+                    expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
                     expect(subscriber.isActive()).andReturn(false);
-                    expect(cnt.getMetaData()).andReturn(meta);
+                    expect(content.getMetaData()).andReturn(meta);
                     //meta.setUnActivated();
                     expect(user.getName()).andReturn("Dummy");
                     //meta.setActivatorId("Dummy");
                     //meta.setLastActivationActionDate();
-                    expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
-                    cnt.save();
-                    expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
-                    expect(cnt.getHandle()).andReturn("/path");
+                    expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
+                    content.save();
+                    expect(content.getItemType()).andReturn(ItemType.CONTENT);
+                    expect(content.getHandle()).andReturn("/path");
                     expect(ctx.getUser()).andReturn(user).times(2);
                     expect(user.getName()).andReturn("Dummy");
                 } catch (Exception e) {
@@ -172,72 +172,70 @@ public class SimpleSyndicatorTest extends TestCase {
             sb.append(i % 10 == 0 ? 'A' : 'x');
         }
         String path = sb.toString();
-        expect(cnt.getHandle()).andReturn(path);
+        expect(content.getHandle()).andReturn(path);
         expect(actMan.getSubscribers()).andReturn(subscribers);
 
         Subscriber subscriber = createStrictMock(Subscriber.class);
         makeThreadSafe(subscriber, true);
         Subscription subscription = createStrictMock(Subscription.class);
-        all.add(subscription);
+        allMocks.add(subscription);
         subscribers.add(subscriber);
         // TODO: shouldn't repo be set even tho there is no  subscriber???
         expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
         expect(subscriber.isActive()).andReturn(true);
         expect(subscriber.getMatchedSubscription(path, null)).andReturn(subscription);
 
-        expect(cnt.getUUID()).andReturn("some-real-uuid");
+        expect(content.getUUID()).andReturn("some-real-uuid");
         Workspace wks = createStrictMock(Workspace.class);
-        expect(cnt.getWorkspace()).andReturn(wks);
+        expect(content.getWorkspace()).andReturn(wks);
         Session session = createStrictMock(Session.class);
         expect(wks.getSession()).andReturn(session);
-        expect(cnt.getUUID()).andReturn("some-real-uuid");
-        expect(cnt.getWorkspace()).andReturn(wks);
+        expect(content.getUUID()).andReturn("some-real-uuid");
+        expect(content.getWorkspace()).andReturn(wks);
         expect(wks.getName()).andReturn("dummy-wks");
-        boolean isFile = false;
-        expect(cnt.isNodeType("nt:file")).andReturn(isFile);
+        final boolean isFile = false;
+        expect(content.isNodeType("nt:file")).andReturn(isFile);
         Node jcr = createStrictMock(Node.class);
-        expect(cnt.getJCRNode()).andReturn(jcr);
+        expect(content.getJCRNode()).andReturn(jcr);
         expect(jcr.getPath()).andReturn(path);
         session.exportSystemView(eq(path), isA(GZIPOutputStream.class), eq(false), eq(!isFile));
-        expect(cnt.getName()).andReturn(path.substring(1));
-        expect(cnt.getUUID()).andReturn("some-real-uuid");
+        expect(content.getName()).andReturn(path.substring(1));
+        expect(content.getUUID()).andReturn("some-real-uuid");
 
-        expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
 
-        //expect(hm.getContentByUUID("some-real-uuid")).andReturn(cnt);
+        //expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
 
-        expect(hm.getContent(path)).andReturn(cnt);
-        expect(cnt.getMetaData()).andReturn(meta);
+        expect(hm.getContent(path)).andReturn(content);
+        expect(content.getMetaData()).andReturn(meta);
         meta.setActivated();
         expect(user.getName()).andReturn("Dummy");
         meta.setActivatorId("Dummy");
         meta.setLastActivationActionDate();
-        expect(cnt.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        cnt.save();
-        expect(cnt.getItemType()).andReturn(ItemType.CONTENT);
-        expect(cnt.getHandle()).andReturn(path);
+        expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        content.save();
+        expect(content.getItemType()).andReturn(ItemType.CONTENT);
+        expect(content.getHandle()).andReturn(path);
         expect(ctx.getUser()).andReturn(user).times(2);
         expect(user.getName()).andReturn("Dummy");
 
-        all.addAll(subscribers);
-        all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, sysctx, hm, user, wks, session, jcr}));
-        Object[] objs =  all.toArray();
-        replay(objs);
-        ss.activate("/", cnt);
-        verify(objs);
+        allMocks.addAll(subscribers);
+        allMocks.addAll(Arrays.asList(content, actMan, ctx, sysctx, hm, user, wks, session, jcr));
+        replay(allMocks.toArray());
+        syndicator.activate("/", content);
+        verify(allMocks.toArray());
     }
 
     public void runDeactivateTest(Runnable run) throws Exception {
-        expect(cnt.getUUID()).andReturn("some-real-uuid");
-        expect(cnt.getHandle()).andReturn("/path");
+        expect(content.getUUID()).andReturn("some-real-uuid");
+        expect(content.getHandle()).andReturn("/path");
         expect(actMan.getSubscribers()).andReturn(subscribers);
         run.run();
-        all.addAll(subscribers);
-        all.addAll(Arrays.asList(new Object[] {cnt, actMan, ctx, sysctx, hm, user}));
-        Object[] objs =  all.toArray();
-        replay(objs);
-        ss.deactivate(cnt);
-        verify(objs);
+        allMocks.addAll(subscribers);
+        allMocks.addAll(Arrays.asList(content, actMan, ctx, sysctx, hm, user));
+        replay(allMocks.toArray());
+        syndicator.deactivate(content);
+        verify(allMocks.toArray());
     }
 
 }
