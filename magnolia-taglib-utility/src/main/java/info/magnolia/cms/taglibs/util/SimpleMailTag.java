@@ -295,20 +295,21 @@ public class SimpleMailTag extends TagSupport {
             Map parameters = new HashMap(request.getParameterMap());
             // TODO: avoid those kinds of redundacies in the mail system
             if (StringUtils.isEmpty(template)) {
-                email = MailModule.getInstance().getFactory().getEmail(parameters);
-                email.setBody();
+                parameters.put("ContentType", "text");
+                email = MailModule.getInstance().getFactory().getEmailFromType(parameters, mailType);
+                email.setBody(body.toString());
             }
             else {
                 parameters.put("all", body.toString());
                 email = MailModule.getInstance().getFactory().getEmailFromTemplate(template, parameters);
                 email.setBodyFromResourceFile();
             }
-          /*  email.setToList(to);
+            email.setToList(to);
             email.setCcList(cc);
             email.setBccList(bcc);
             email.setReplyToList(replyTo);
             email.setFrom(from);
-            email.setSubject(subject);*/
+            email.setSubject(subject);
             MailModule.getInstance().getFactory().getEmailHandler().sendMail(email);
         }
         catch (Exception e) {
