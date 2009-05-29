@@ -3,13 +3,13 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.1-SNAPSHOT</version>
+    <version>4.1-rc1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-module-samples</artifactId>
   <name>magnolia-module-samples</name>
   <packaging>jar</packaging>
-  <description/>
+  <description />
   <properties>
     <documentationURL>http://documentation.magnolia-cms.com/modules/samples.html</documentationURL>
   </properties>
@@ -17,19 +17,19 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>4.1-SNAPSHOT</version>
+      <version>4.1-rc1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-cms</artifactId>
-      <version>4.1-SNAPSHOT</version>
+      <version>4.1-rc1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
-      <version>4.1-SNAPSHOT</version>
+      <version>4.1-rc1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
