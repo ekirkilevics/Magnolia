@@ -62,7 +62,7 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals(3, res.getLevel());
     }
 
-    /* TODO - see MAGNOLIA-2659
+    // see MAGNOLIA-2659
     public void testSupportsMoreThan9Groups() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z).html");
@@ -73,5 +73,4 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals("/bar.action?param=i-z6j", res.getToURI());
         assertEquals(27, res.getLevel());
     }
-    */
 }

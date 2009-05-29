@@ -36,9 +36,6 @@ package info.magnolia.cms.beans.config;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * Virtual uri mapping implementation that uses regular expressions in fromURI/toURI. When using regular expression in
  * <code>fromURI</code>, <code>toURI</code> can contain references to the regexp matches. For example:
@@ -53,25 +50,18 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id: DefaultVirtualURIMapping.java 10295 2007-08-02 21:33:58Z fgiust $
  */
 public class RegexpVirtualURIMapping implements VirtualURIMapping {
-
     private String fromURI;
-
     private String toURI;
-
     private Pattern regexp;
 
-    public MappingResult mapURI(String uri) {
+    public MappingResult mapURI(final String uri) {
 
         if (regexp != null) {
-            Matcher matcher = regexp.matcher(uri);
+            final Matcher matcher = regexp.matcher(uri);
             if (matcher.find()) {
-                MappingResult r = new MappingResult();
-                String replaced = toURI;
-                int matcherCount = matcher.groupCount();
-                for (int j = 0; j <= matcherCount; j++) {
-                    // @todo of course we should improve this using a stringbuffer
-                    replaced = StringUtils.replace(replaced, "$" + j, matcher.group(j));
-                }
+                final MappingResult r = new MappingResult();
+                final int matcherCount = matcher.groupCount();
+                final String replaced = matcher.replaceAll(toURI);
 
                 r.setLevel(matcherCount + 1);
                 r.setToURI(replaced);
@@ -101,7 +91,7 @@ public class RegexpVirtualURIMapping implements VirtualURIMapping {
     }
 
     public String toString() {
-        return fromURI + " --> " + toURI;
+        return "RegexpVirtualURIMapping[" + fromURI + " --> " + toURI + "]";
     }
 
 }
