@@ -161,7 +161,7 @@ for Java Content Repositories (JCR).
         <plugin>
           <groupId>org.codehaus.xdoclet</groupId>
           <artifactId>maven2-xdoclet2-plugin</artifactId>
-          <version>2.0.7-SNAPSHOT</version>
+          <version>2.0.7-20090592-magnolia</version>
           <executions>
             <execution>
               <id>xdoclet-tld</id>
@@ -199,10 +199,29 @@ for Java Content Repositories (JCR).
             </execution>
           </executions>
           <dependencies>
+            <!-- maven2-xdoclet2-plugin defines its own repository;
+                 we have to redefine these dependencies here so that
+                 they're found in our own repositories. This can be
+                 removed as soon as xdoclet 2.0.7 proper is released
+                 and available on the central repo.
+                 The order of these dependencies is important, they
+                 must be before the xdoclet plugin itself for correct
+                 resolution. -->
+            <dependency>
+              <groupId>org.codehaus.generama</groupId>
+              <artifactId>generama</artifactId>
+              <version>1.2.4-20090592-magnolia</version>
+            </dependency>
+            <dependency>
+              <groupId>org.codehaus.xdoclet</groupId>
+              <artifactId>xdoclet</artifactId>
+              <version>2.0.7-20090592-magnolia</version>
+            </dependency>
+            <!-- the xdoclet plugin itself -->
             <dependency>
               <groupId>org.codehaus.xdoclet</groupId>
               <artifactId>xdoclet-plugin-web</artifactId>
-              <version>1.0.5-SNAPSHOT</version>
+              <version>1.0.5-20090592-magnolia</version>
             </dependency>
           </dependencies>
         </plugin>
@@ -584,25 +603,7 @@ for Java Content Repositories (JCR).
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <!-- remove this once xdoclet 2.0.7 is out -->
-    <repository>
-      <id>codehaus-snapshots</id>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <url>http://snapshots.repository.codehaus.org</url>
-    </repository>
   </repositories>
-  <!-- remove this once xdoclet 2.0.7 is out -->
-  <pluginRepositories>
-    <pluginRepository>
-      <id>codehaus-snapshots-plugins</id>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <url>http://snapshots.repository.codehaus.org</url>
-    </pluginRepository>
-  </pluginRepositories>
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
