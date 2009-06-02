@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
+public class VirtualUriFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(VirtualUriFilter.class);
 
