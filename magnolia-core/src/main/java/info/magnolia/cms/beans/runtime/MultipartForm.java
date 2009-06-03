@@ -52,14 +52,14 @@ public class MultipartForm {
      */
     public static final String REQUEST_ATTRIBUTE_NAME = "multipartform"; //$NON-NLS-1$
 
-    private Map<String, String[]> parameters;
+    private Map parameters;
 
     private Map documents;
 
     private Map parameterList;
 
     public MultipartForm() {
-        this.parameters = new Hashtable<String, String[]>();
+        this.parameters = new Hashtable();
         this.documents = new Hashtable();
         this.parameterList = new Hashtable();
     }
@@ -68,14 +68,7 @@ public class MultipartForm {
      * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
      */
     public void addParameter(String name, Object value) {
-        if (value instanceof String[])
-        {
-            this.parameters.put(name, (String[]) value);
-        }
-        else
-        {
-            this.parameters.put(name, new String[]{(String) value });
-        }
+        this.parameters.put(name, value);
     }
 
     /**
@@ -88,7 +81,7 @@ public class MultipartForm {
     /**
      * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
      */
-    public Map<String, String[]> getParameters() {
+    public Map getParameters() {
         return this.parameters;
     }
 
@@ -96,17 +89,10 @@ public class MultipartForm {
      * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
      */
     public String getParameter(String name) {
-        try
-        {
-            String[] params = this.parameters.get(name);
-            if (params != null && params.length > 0)
-            {
-                return params[0];
-            }
-            return null;
+        try {
+            return (String) this.parameters.get(name);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
