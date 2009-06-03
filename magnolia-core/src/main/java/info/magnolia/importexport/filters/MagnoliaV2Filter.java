@@ -54,7 +54,6 @@ public class MagnoliaV2Filter extends XMLFilterImpl {
 
     private boolean skipProperty;
 
-    private boolean skipWs;
     /**
      * Instantiates a new version filter.
      * @param parent wrapped XMLReader
@@ -62,6 +61,7 @@ public class MagnoliaV2Filter extends XMLFilterImpl {
     public MagnoliaV2Filter(XMLReader parent) {
         super(parent);
     }
+
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#endElement(String, String, String)
      */
@@ -73,14 +73,12 @@ public class MagnoliaV2Filter extends XMLFilterImpl {
 
         if (skipNode && "sv:node".equals(qName)) {
             skipNode = false;
-            skipWs = true; // skip additional whitespace after skipped tag
             return;
         }
 
         if (skipProperty) {
             if ("sv:property".equals(qName)) {
                 skipProperty = false;
-                skipWs = true; // skip additional whitespace after skipped tag
             }
             return;
         }
@@ -92,18 +90,10 @@ public class MagnoliaV2Filter extends XMLFilterImpl {
      * @see org.xml.sax.helpers.XMLFilterImpl#characters(char[], int, int)
      */
     public void characters(char[] ch, int start, int length) throws SAXException {
-        // do not emit text inside of skipped elements
-        if (!(skipNode || skipProperty)) {
-            while ( skipWs && length>0
-                    && Character.isWhitespace(ch[start]) ){
-                start ++;
-                length--;
-            }
-            if ( length>0){
-                super.characters(ch, start, length);
-            }
-        }
-        skipWs = false;
+        // filter content
+        // if (inMetadataElement == 0) {
+        super.characters(ch, start, length);
+        // }
     }
 
     /**
@@ -122,11 +112,6 @@ public class MagnoliaV2Filter extends XMLFilterImpl {
         }
 
         if (inMetadataElement > 0) {
-            // MAGNOILA-2653 skip nested elements (sv:value)
-            // os skipped property
-            if ( skipProperty ){
-                return;
-            }
             // remove
             // <sv:node sv:name="jcr:content">
             if ("sv:node".equals(qName) && "jcr:content".equals(svname)) {
