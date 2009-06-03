@@ -35,9 +35,7 @@ package info.magnolia.module.fckeditor.pages;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.admininterface.InvalidTreeHandlerException;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
-import info.magnolia.module.admininterface.TreeHandlerManager;
 import info.magnolia.module.fckeditor.FCKEditorModule;
 
 import java.util.Collection;
@@ -59,63 +57,46 @@ public class RepositoryBrowserPage extends TemplatedMVCHandler {
     private String selectedPath;
     private String selectedRepository;
     private String absoluteURI;
-
+    
     public RepositoryBrowserPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
         moduleConfig = (FCKEditorModule) ModuleRegistry.Factory.getInstance().getModuleInstance(FCKEditorModule.MODULE_FCKEDITOR);
     }
-
+    
     public String resolveAbsoluteURI() {
         if (StringUtils.isNotEmpty(getSelectedRepository()) && StringUtils.isNotEmpty(getSelectedPath())) {
             final URI2RepositoryManager manager = URI2RepositoryManager.getInstance();
-
-            String repo;
-            try
-            {
-                repo = TreeHandlerManager
-                    .getInstance()
-                    .getTreeHandler(getSelectedRepository(), request, response)
-                    .getRepository();
-            }
-            catch (InvalidTreeHandlerException e)
-            {
-                // should never happen, but let's be careful with invalid configurations
-                // getSelectedRepository() returns the *tree* name
-                repo = getSelectedRepository();
-            }
-
-
-            final String absoluteURI = manager.getURI(repo, getSelectedPath());
+            final String absoluteURI = manager.getURI(getSelectedRepository(), getSelectedPath());
             setAbsoluteURI(absoluteURI);
         } else {
             setAbsoluteURI(StringUtils.EMPTY);
         }
-
+        
         return "submit";
     }
 
     public String select() {
         final URI2RepositoryManager manager = URI2RepositoryManager.getInstance();
-
+        
         if (StringUtils.isNotEmpty(absoluteURI)) {
             final String repository = manager.getRepository(absoluteURI);
             final String path = manager.getHandle(absoluteURI);
-
+            
             setSelectedRepository(repository);
             setSelectedPath(path);
         }
-
+        
         return "select";
     }
-
+    
     public Collection getRepositories() {
         return moduleConfig.getBrowsableRepositories();
     }
-
+    
     public String getSelectedPath() {
         return selectedPath;
     }
-
+    
     public void setSelectedPath(String selectedPath) {
         this.selectedPath = selectedPath;
     }
@@ -123,15 +104,15 @@ public class RepositoryBrowserPage extends TemplatedMVCHandler {
     public String getSelectedRepository() {
         return selectedRepository;
     }
-
+    
     public void setSelectedRepository(String selectedRepository) {
         this.selectedRepository = selectedRepository;
     }
-
+    
     public String getAbsoluteURI() {
         return absoluteURI;
     }
-
+    
     public void setAbsoluteURI(String absoluteURI) {
         this.absoluteURI = absoluteURI;
     }
