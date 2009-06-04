@@ -140,6 +140,8 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
      * @deprecated TODO very ugly hack to force documents to be validated against OUR DTD.
      * We could use an EntityResolver, but it seems that with SAX, the documents will only be
      * validated if they original have a doctype declaration.
+     * We could also use http://doctypechanger.sourceforge.net/
+     * ... or switch to XmlSchema.
      */
     private Reader replaceDtd(Reader reader) throws IOException {
         String content = IOUtils.toString(reader);
