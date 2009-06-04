@@ -49,6 +49,8 @@ import java.util.Set;
  * @version $Id$
  */
 public class ModuleRegistryImpl implements ModuleRegistry {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModuleRegistryImpl.class);
+
     private final Map<String, ModuleEntry> entries;
 
     public ModuleRegistryImpl() {
@@ -72,15 +74,29 @@ public class ModuleRegistryImpl implements ModuleRegistry {
     }
 
     public ModuleDefinition getDefinition(String name) {
-        return entries.get(name).moduleDefinition;
+        final ModuleDefinition moduleDefinition = entries.get(name).moduleDefinition;
+        if (moduleDefinition == null) {
+            // only logging a debug message here, because some components use this method to determine if a module is present
+            log.debug("No module registered with name {}", name);
+        }
+        return moduleDefinition;
     }
 
     public Object getModuleInstance(String name) {
-        return entries.get(name).moduleInstance;
+        final Object moduleInstance = entries.get(name).moduleInstance;
+        if (moduleInstance == null) {
+            log.warn("No module registered with name {}", name);
+        }
+        return moduleInstance;
     }
 
     public ModuleVersionHandler getVersionHandler(String name) {
-        return entries.get(name).moduleVersionHandler;
+        final ModuleVersionHandler moduleVersionHandler = entries.get(name).moduleVersionHandler;
+        if (moduleVersionHandler == null) {
+            // ModuleManagerImpl currently *always* registers a version handler, even if the module does not specify one
+            log.warn("No module registered with name {}", name);
+        }
+        return moduleVersionHandler;
     }
 
     public Set<String> getModuleNames() {
