@@ -276,12 +276,13 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.RepositoryException
      */
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        String nodePath = getNodePath(path);
-        if (StringUtils.isEmpty(nodePath)) {
+        if (StringUtils.isEmpty(path)) {
             return null;
         }
-
-        return new DefaultNodeData(this.getRootNode(), nodePath, this, this.getRoot());
+        final String nodePath = StringUtils.substringBeforeLast(path, "/");
+        final String nodeDataName = StringUtils.substringAfterLast(path, "/");
+        final Content node = getContent(nodePath);
+        return node.getNodeData(nodeDataName);
     }
 
     /**
