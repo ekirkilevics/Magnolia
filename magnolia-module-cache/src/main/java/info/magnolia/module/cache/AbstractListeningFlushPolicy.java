@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.module.ModuleRegistry;
 
@@ -80,15 +81,23 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
     public void start(Cache cache) {
         for (Iterator iter = repositories.iterator(); iter.hasNext();) {
             final String repository = (String) iter.next();
-            final CacheCleaner cacheCleaner = new CacheCleaner(cache, repository);
-            final EventListener listener = ObservationUtil.instanciateDeferredEventListener(cacheCleaner, 5000, 30000);
-            try {
-                ObservationUtil.registerChangeListener(repository, "/", listener);
-            } catch (Exception e) {
-                log.warn("Failed to register cache flushing observation for repository {} due to {}", repository, e.getMessage());
-                log.warn("Publishing any content to {} will not result in update of the cache. Please flush the cache manually.");
+            if (ContentRepository.getRepositoryMapping(repository) != null) {
+                final CacheCleaner cacheCleaner = new CacheCleaner(cache, repository);
+                final EventListener listener = ObservationUtil.instanciateDeferredEventListener(
+                    cacheCleaner,
+                    5000,
+                    30000);
+                try {
+                    ObservationUtil.registerChangeListener(repository, "/", listener);
+                }
+                catch (Exception e) {
+                    log.warn("Failed to register cache flushing observation for repository {} due to {}", repository, e
+                        .getMessage());
+                    log
+                        .warn("Publishing any content to {} will not result in update of the cache. Please flush the cache manually.");
+                }
+                registeredListeners.put(repository, listener);
             }
-            registeredListeners.put(repository, listener);
         }
     }
 
