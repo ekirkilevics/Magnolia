@@ -83,18 +83,12 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
             final String repository = (String) iter.next();
             if (ContentRepository.getRepositoryMapping(repository) != null) {
                 final CacheCleaner cacheCleaner = new CacheCleaner(cache, repository);
-                final EventListener listener = ObservationUtil.instanciateDeferredEventListener(
-                    cacheCleaner,
-                    5000,
-                    30000);
+                final EventListener listener = ObservationUtil.instanciateDeferredEventListener(cacheCleaner, 5000, 30000);
                 try {
                     ObservationUtil.registerChangeListener(repository, "/", listener);
-                }
-                catch (Exception e) {
-                    log.warn("Failed to register cache flushing observation for repository {} due to {}", repository, e
-                        .getMessage());
-                    log
-                        .warn("Publishing any content to {} will not result in update of the cache. Please flush the cache manually.");
+                } catch (Exception e) {
+                    log.warn("Failed to register cache flushing observation for repository {} due to {}", repository, e.getMessage());
+                    log.warn("Publishing any content to {} will not result in update of the cache. Please flush the cache manually.");
                 }
                 registeredListeners.put(repository, listener);
             }
