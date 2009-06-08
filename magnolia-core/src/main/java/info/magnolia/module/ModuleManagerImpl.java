@@ -251,7 +251,7 @@ public class ModuleManagerImpl implements ModuleManager {
                     it.remove();
                 }
             }
-        }, false);
+        }, true);
 
         // TODO : this isn't super clean.
         final InstallStatus status = installContext.isRestartNeeded() ? InstallStatus.installDoneRestartNeeded : InstallStatus.installDone;
