@@ -53,28 +53,28 @@ for Java Content Repositories (JCR).
       <id>philipp</id>
       <name>Philipp Bracher</name>
       <email>philipp.bracher(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>gjoseph</id>
       <name>Grégory Joseph</name>
       <email>gregory.joseph(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>had</id>
       <name>Jan Haderka</name>
       <email>jan.haderka(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>scharles</id>
       <name>Sameer Charles</name>
       <email>sameer.charles(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
@@ -88,21 +88,21 @@ for Java Content Repositories (JCR).
       <id>vsteller</id>
       <name>Vivian Steller</name>
       <email>vivian.steller(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>bkraft</id>
       <name>Boris Kraft</name>
       <email>boris.kraft(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>pmangold</id>
       <name>Pascal Mangold</name>
       <email>pascal.mangold(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </developer>
   </developers>
@@ -110,7 +110,7 @@ for Java Content Repositories (JCR).
     <contributor>
       <name>Vinzenz Wyser</name>
       <email>vinzenz.wyser(at)magnolia-cms.com</email>
-      <organization>Magnolia Intl</organization>
+      <organization>Magnolia International Ltd.</organization>
       <timezone>+1</timezone>
     </contributor>
   </contributors>
