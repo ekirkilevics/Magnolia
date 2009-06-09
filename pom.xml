@@ -12,7 +12,7 @@
   <version>4.1-SNAPSHOT</version>
   <description>
 Magnolia is an open-source enterprise class Content Management System
-developed by Magnolia International, based on the standard API
+developed by Magnolia International Ltd., based on the standard API
 for Java Content Repositories (JCR).
   </description>
   <url>http://www.magnolia-cms.com</url>
