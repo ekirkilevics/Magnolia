@@ -161,7 +161,7 @@ for Java Content Repositories (JCR).
         <plugin>
           <groupId>org.codehaus.xdoclet</groupId>
           <artifactId>maven2-xdoclet2-plugin</artifactId>
-          <version>2.0.7-20090592-magnolia</version>
+          <version>2.0.7</version>
           <executions>
             <execution>
               <id>xdoclet-tld</id>
@@ -202,8 +202,9 @@ for Java Content Repositories (JCR).
             <!-- maven2-xdoclet2-plugin defines its own repository;
                  we have to redefine these dependencies here so that
                  they're found in our own repositories. This can be
-                 removed as soon as xdoclet 2.0.7 proper is released
-                 and available on the central repo.
+                 removed as soon as xdoclet 2.0.7 proper, as well as
+                 xdoclet-plugin-web 1.0.5, are released and available
+                 on the central repo.
                  The order of these dependencies is important, they
                  must be before the xdoclet plugin itself for correct
                  resolution. -->
