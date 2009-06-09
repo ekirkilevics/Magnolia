@@ -100,7 +100,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
      * <code>nt:resource</code>
      * @param workingNode current active <code>Node</code>
      * @param name <code>NodeData</code> name to be retrieved
-     * @param manager Access manager to be used for this object
+     * @param hierarchyManager HierarchyManager to be used for this object
      */
     protected DefaultNodeData(Node workingNode, String name, HierarchyManager hierarchyManager, Content parent)
         throws PathNotFoundException,
@@ -119,7 +119,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
      * @param name <code>NodeData</code> name to be created
      * @param type
      * @param createNew if true create a new Item
-     * @param manager Access manager to be used for this object
+     * @param hierarchyManager HierarchyManager to be used for this object
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
@@ -611,19 +611,17 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     public int isMultiValue() {
         if(multiValue == MULTIVALUE_UNDEFINED) {
             try {
-                    if(this.property != null) {
-                        this.property.getValue();
-                        multiValue = MULTIVALUE_FALSE;
-                    }
-
-                } catch (ValueFormatException e) {
-                    multiValue = MULTIVALUE_TRUE;
-
-                } catch (Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(e.getMessage(), e);
-                    }
+                if (this.property != null) {
+                    this.property.getValue();
+                    multiValue = MULTIVALUE_FALSE;
                 }
+
+            } catch (ValueFormatException e) {
+                multiValue = MULTIVALUE_TRUE;
+
+            } catch (Exception e) {
+                log.debug(e.getMessage(), e);
+            }
         }
         return this.multiValue;
     }
