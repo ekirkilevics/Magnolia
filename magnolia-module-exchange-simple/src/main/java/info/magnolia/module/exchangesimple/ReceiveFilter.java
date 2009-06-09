@@ -51,6 +51,7 @@ import info.magnolia.context.MgnlContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -138,7 +139,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         }
         catch (Throwable e) {
             log.error(e.getMessage(), e);
-            statusMessage = StringUtils.isEmpty(e.getMessage()) ? (e instanceof NullPointerException ? "NPE" : e.getClass().getName()) : e.getMessage();
+            // we can only rely on the exception's actual message to give something back to the user here.            
+            statusMessage = ExceptionUtils.getMessage(e);
             status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
         finally {
