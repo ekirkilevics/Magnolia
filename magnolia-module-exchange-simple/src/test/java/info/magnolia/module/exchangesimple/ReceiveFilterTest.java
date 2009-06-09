@@ -100,6 +100,7 @@ public class ReceiveFilterTest extends TestCase {
             public void checkNode(HierarchyManager hm) throws Exception {
                 //before
                 expect(hm.getContentByUUID("DUMMY-UUID")).andThrow(new ItemNotFoundException());
+                expect(hm.isExist("/foo/bar/nodename")).andReturn(false);
                 // after it have been created already
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(new MockContent("blah"));
             }
