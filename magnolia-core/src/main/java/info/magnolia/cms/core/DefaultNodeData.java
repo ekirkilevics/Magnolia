@@ -296,14 +296,16 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     public Value[] getValues() {
         try {
-            return this.property.getValues();
-        }
-        catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug(e.getMessage(), e);
+            if(this.isMultiValue() == MULTIVALUE_TRUE) {
+                return this.property.getValues();
+            } else {
+                //JCR-1464 needed for export of multivalue property with only one item
+                return new Value[] { this.property.getValue() };
             }
-            return (Value[])null;
+        } catch (Exception e) {
+            log.error("Error retrieving value of " + this.getName());
         }
+        return (Value[]) null;
     }
 
     public String getString(String lineBreak) {
@@ -633,7 +635,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     public void setParent(Content parent) {
         this.parent = parent;
     }
-    
+
     public String toString() {
         if (this.property == null || this.node ==  null) {
             return super.toString();
