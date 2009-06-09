@@ -139,7 +139,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         }
         catch (Throwable e) {
             log.error(e.getMessage(), e);
-            // we can only rely on the exception's actual message to give something back to the user here.            
+            // we can only rely on the exception's actual message to give something back to the user here.
             statusMessage = StringUtils.defaultIfEmpty(e.getMessage(), e.getClass().getSimpleName());
             status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
