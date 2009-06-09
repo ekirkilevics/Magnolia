@@ -41,6 +41,8 @@ import info.magnolia.context.Context;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -153,12 +155,60 @@ public class ActivationCommand extends BaseActivationCommand {
     protected void activateRecursive(Context ctx, List versionMap)
             throws ExchangeException, RepositoryException {
         // activate all uuid's present in versionMap
-        Map[] versions = (Map[]) versionMap.toArray(new Map[0]);
+        Map<String, Object>[] versions = (Map<String, Object>[]) versionMap.toArray(new Map[0]);
+        // add path and order info into the entries
+        for (int i = 0; i < versions.length; i++) {
+            Map<String, Object> entry = versions[i];
+            String uuid = (String) entry.get("uuid");
+            if (StringUtils.equalsIgnoreCase("class", uuid)) {
+                // TODO: this should not happen in between the serialized list, somewhere a bug
+                // for the moment simply ignore it
+                versionMap.remove(entry);
+            }
+            try {
+                Content content = ctx.getHierarchyManager(getRepository()).getContentByUUID(uuid);
+                entry.put("handle", content.getHandle());
+                entry.put("index", i);
+            } catch (RepositoryException re) {
+                log.error("Failed to activate node with UUID : "+uuid);
+                log.error(re.getMessage());
+                versionMap.remove(entry);
+            }
+        }
+        versions = null;
+
+        // versionMap is a flat list of all activated content. We need to ensure that the content is ordered from top down and siblings are activated from bottom up
+        Collections.sort((List<Map<String, Object>>) versionMap, new Comparator<Map<String, Object>>() {
+
+            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                String handle1 = (String) o1.get("handle");
+                String handle2 = (String) o2.get("handle");
+                if (handle2.startsWith(handle1)) {
+                    // o2 is child of o1, say o1 is smaller to get it ordered BEFORE o2
+                    return -1;
+                }
+                String parent1 = StringUtils.substringBeforeLast(handle1, "/");
+                String parent2 = StringUtils.substringBeforeLast(handle2, "/");
+                if (parent1.equals(parent2)) {
+                    // siblings ... to reverse order, the higher index value get ordered before lower values index
+                    int idx1 = (Integer) o1.get("index");
+                    int idx2 = (Integer) o2.get("index");
+                    // index is generated in the loop above and can be never same for 2 items ... skip equality case
+                    return idx1 < idx2 ? 1 : -1;
+                }
+
+                // unrelated entries, the one closer to the root should be returned first
+                int dirLevels1 = StringUtils.countMatches(handle1, "/");
+                int dirLevels2 = StringUtils.countMatches(handle2, "/");
+                // since parents are checked above, the equality case here means different hierarchy of same depth and is irrelevant to activation order
+                return dirLevels1 < dirLevels2 ? -1 : 1;
+            }});
+
         // FYI: need to reverse order of child activation since content ordering info is also bottom-up
         // Hackish at best. If changing this, don't forget to also change other activateRecursive() method
         // and most importantly ensure that ordering of siblings in ReceiveFilter is done in same direction!
-        for (int i = versions.length - 1; i >= 0; i--) {
-            Map entry = versions[i];
+        for (Map entry : (List<Map>) versionMap) {
+
             String uuid = (String) entry.get("uuid");
             String versionNumber = (String) entry.get("version");
             if (StringUtils.equalsIgnoreCase("class", uuid)) {
