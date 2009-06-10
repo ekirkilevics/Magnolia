@@ -117,11 +117,12 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new ChangeNodeTypesInUserWorkspace())
         );
         register(DeltaBuilder.update("4.0.2", "")
+                // the two tasks below - updateUsers and CAMPVT(Fix anonymous permissions) are also executed for 3.6.6 set on 3.6 branch. This is due to fact that tasks needed to be applied on 3.6 branch after 4.0 release already. Tasks are safe to be executed multiple times.
                 .addTask(new UpdateUsers())
                 .addTask(new CheckAndModifyPropertyValueTask("Fix for anonymous user permissions", "Fix previously incorrect path for anonymous user permissions.", ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", "/system/anonymous/*")));
                 // warning - if adding update tasks for the 4.0.2 release below this point,
                 // make sure they'd also be applied correctly for the 4.1 branch in the various possible update scenarios
-                // since 4.1 will be released before 4.0.2 (4.0.2 -> 4.1 -> 4.1.1; 4.0.1 -> 4.1 -> 4.1.1) 
+                // since 4.1 will be released before 4.0.2 (4.0.2 -> 4.1 -> 4.1.1; 4.0.1 -> 4.1 -> 4.1.1)
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
