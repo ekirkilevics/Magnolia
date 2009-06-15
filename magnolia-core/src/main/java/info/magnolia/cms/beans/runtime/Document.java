@@ -183,8 +183,13 @@ public class Document implements Serializable {
     /**
      * Sets the file extension.
      * @param ext file extension
+     * @deprecated since 4.1.1 typo in method name - use setExtension  instead
      */
     public void setExtention(String ext) {
+        setExtension(ext);
+    }
+
+    public void setExtension(String ext) {
         this.extension = ext;
     }
 
