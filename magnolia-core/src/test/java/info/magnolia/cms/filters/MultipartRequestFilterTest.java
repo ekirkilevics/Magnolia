@@ -157,13 +157,14 @@ public class MultipartRequestFilterTest extends TestCase {
 
         assertTrue(document.getType().startsWith("text/xml"));
 
-        File file1 = document.getFile();
-        assertTrue(file1.exists());
-        assertTrue(file1.canRead());
+        File documentFile = document.getFile();
+        assertTrue(documentFile.exists());
+        assertTrue(documentFile.canRead());
         InputStream stream1 = document.getStream();
         assertEquals(testFile.length(), stream1.available());
         assertEquals(testFile.length(), stream1.skip(testFile.length()));
         assertEquals(0, stream1.available());
+        documentFile.deleteOnExit();
     }
 
 
