@@ -147,10 +147,10 @@ public class ModuleManagerImpl implements ModuleManager {
         state = new ModuleManagementState();
         int taskCount = 0;
         for (ModuleDefinition module : orderedModuleDescriptors) {
+            installContext.setCurrentModule(module);
             log.debug("Checking for installation or update [{}]", module);
             final ModuleVersionHandler versionHandler = newVersionHandler(module);
             registry.registerModuleVersionHandler(module.getName(), versionHandler);
-            installContext.setCurrentModule(module);
 
             final Version currentVersion = versionHandler.getCurrentlyInstalled(installContext);
             final List<Delta> deltas = versionHandler.getDeltas(installContext, currentVersion);
