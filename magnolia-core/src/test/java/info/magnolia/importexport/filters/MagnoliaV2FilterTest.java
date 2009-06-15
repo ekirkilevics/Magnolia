@@ -34,12 +34,12 @@
 package info.magnolia.importexport.filters;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
@@ -70,8 +70,10 @@ public class MagnoliaV2FilterTest extends XMLTestCase {
      * @throws Exception
      */
     public void testBogusMetaElement() throws Exception {
-        final String INPUT_XML_FILE = "/test-v2-filter.xml";
-        File inputFile = new File(getClass().getResource(INPUT_XML_FILE).getFile());
+        final String inputResourcePath = "/test-v2-filter.xml";
+
+        final InputStream input = getClass().getResourceAsStream(inputResourcePath);
+        assertNotNull("Can't open stream to resource " + inputResourcePath, input);
         File outputFile = File.createTempFile("v2filter-out-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream os = new FileOutputStream(outputFile);
 
@@ -90,14 +92,15 @@ public class MagnoliaV2FilterTest extends XMLTestCase {
 
         MagnoliaV2Filter v2Filter = new MagnoliaV2Filter(v2Reader);
         v2Filter.setContentHandler(xmlSerializer);
-        InputStream is = new FileInputStream(inputFile);
-        v2Filter.parse(new InputSource(is));
+        v2Filter.parse(new InputSource(input));
 
-        IOUtils.closeQuietly(is);
+        IOUtils.closeQuietly(input);
         IOUtils.closeQuietly(os);
 
         // XXX: Fixme - UTF-8!
-        Reader expectedReader = new FileReader(new File(getClass().getResource(INPUT_XML_FILE).getFile()));
+        final InputStream expected = getClass().getResourceAsStream(inputResourcePath);
+        assertNotNull("Can't open stream to resource " + inputResourcePath, expected);
+        Reader expectedReader = new InputStreamReader(expected);
         Reader actualReader = new FileReader(outputFile);
 
         DetailedDiff xmlDiff = new DetailedDiff(new Diff(expectedReader, actualReader));
