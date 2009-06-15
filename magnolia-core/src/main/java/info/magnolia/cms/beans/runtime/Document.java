@@ -52,16 +52,13 @@ import java.io.Serializable;
  * @version 1.1
  */
 public class Document implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(Document.class);
 
     /**
-     * Generated id
+     * Generated id.
      */
     private static final long serialVersionUID = -1183373762999086707L;
 
-    /**
-     * Logger
-     */
-    public static Logger log = LoggerFactory.getLogger(Document.class);
 
     /**
      * request parameter name.
@@ -84,7 +81,7 @@ public class Document implements Serializable {
     private String type;
 
     /**
-     * Underlining file.
+     * Underlying file.
      */
     private java.io.File file;
 
@@ -94,26 +91,24 @@ public class Document implements Serializable {
     transient private FileInputStream inputStream;
 
     /**
-     * package private constructor
+     * package private constructor.
      */
     Document() {
     }
 
     /**
-     * Used to create a document pased on a existing file.
-     * @param file
-     * @param type
+     * Used to create a document based on a existing file.
      */
     public Document(java.io.File file, String type) {
         String fileName = file.getName();
         this.setFile(file);
         this.setType(type);
-        this.setExtention(StringUtils.substringAfterLast(fileName, "."));
+        this.setExtension(StringUtils.substringAfterLast(fileName, "."));
         this.setFileName(StringUtils.substringBeforeLast(fileName, "."));
     }
 
     /**
-     * Sets the parameter name
+     * Sets the parameter name.
      * @param name parameter name
      */
     public void setAtomName(String name) {
@@ -121,7 +116,7 @@ public class Document implements Serializable {
     }
 
     /**
-     * Returns the parameter name
+     * Returns the parameter name.
      * @return parameter name
      */
     public String getAtomName() {
@@ -157,7 +152,7 @@ public class Document implements Serializable {
     }
 
     /**
-     * Sets the mime type for this file
+     * Sets the mime type for this file.
      * @param type mime type
      */
     public void setType(String type) {
@@ -165,7 +160,7 @@ public class Document implements Serializable {
     }
 
     /**
-     * Returns the mime type for this file
+     * Returns the mime type for this file.
      * @return mime type
      */
     public String getType() {
@@ -202,7 +197,7 @@ public class Document implements Serializable {
     }
 
     /**
-     * Returns the file length in bytes
+     * Returns the file length in bytes.
      * @return file length
      */
     public long getLength() {
@@ -234,7 +229,7 @@ public class Document implements Serializable {
     }
 
     /**
-     * Delete the file, taking care of closing an open input stream
+     * Delete the file, taking care of closing an open input stream.
      */
     public void delete() {
         IOUtils.closeQuietly(inputStream);
