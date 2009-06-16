@@ -76,6 +76,9 @@
       <plugin>
         <groupId>net.sourceforge.maven-taglib</groupId>
         <artifactId>maven-taglib-plugin</artifactId>
+        <configuration>
+          <srcDir>${project.build.directory}/classes/META-INF/</srcDir>
+        </configuration>
       </plugin>
     </plugins>
   </reporting>
