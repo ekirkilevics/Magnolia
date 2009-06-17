@@ -893,9 +893,9 @@ public class Tree extends ControlImpl {
                 html.append("\" />");
             }
         }
-        html.append("<span id=");
+        html.append("<span id=\"");
         html.append(idPre);
-        html.append("_Name onmouseover=\"");
+        html.append("_Name\" onmouseover=\"");
         html.append(jsHighlightNode);
         html.append("\" onmouseout=\"");
         html.append(jsResetNode);
