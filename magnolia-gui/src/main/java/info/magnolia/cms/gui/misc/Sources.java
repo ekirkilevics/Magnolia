@@ -64,19 +64,19 @@ public class Sources {
 
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.magnolia/pages/javascript.js\"></script>"); //$NON-NLS-1$
+        html.append("/.magnolia/pages/javascript.js\"></script>\n"); //$NON-NLS-1$
 
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.magnolia/pages/messages." + MgnlContext.getUser().getLanguage() + ".js\"></script>"); //$NON-NLS-1$
+        html.append("/.magnolia/pages/messages." + MgnlContext.getUser().getLanguage() + ".js\"></script>\n"); //$NON-NLS-1$
 
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/admin-js/dialogs/dialogs.js\"></script>"); //$NON-NLS-1$
+        html.append("/.resources/admin-js/dialogs/dialogs.js\"></script>\n"); //$NON-NLS-1$
 
         html.append("<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"");
         html.append(contextPath);
-        html.append("/.resources/calendar/skins/aqua/theme.css\" title=\"Aqua\" />");
+        html.append("/.resources/calendar/skins/aqua/theme.css\" title=\"Aqua\" />\n");
 
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
@@ -100,7 +100,7 @@ public class Sources {
         StringBuffer html = new StringBuffer();
         html.append("<link rel=\"stylesheet\" type=\"text/css\" href=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/.resources/admin-css/admin-all.css\" />"); //$NON-NLS-1$
+        html.append("/.resources/admin-css/admin-all.css\" />\n"); //$NON-NLS-1$
         return html.toString();
     }
 
