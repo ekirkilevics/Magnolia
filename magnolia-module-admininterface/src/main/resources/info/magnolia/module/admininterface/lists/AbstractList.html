@@ -22,8 +22,9 @@
                 var height = MgnlDHTMLUtil.getWindowSize().h;
                 var width = MgnlDHTMLUtil.getWindowSize().w;
                 if(functionBar){
-                    $('${this.list.name}Div').style.height = height - MgnlDHTMLUtil.getHeight(functionBar) + "px";
-                    functionBar.style.top=height - MgnlDHTMLUtil.getHeight(functionBar);
+                    var functionBarHeight = MgnlDHTMLUtil.getHeight(functionBar);
+                    $('${this.list.name}Div').style.height = (height - functionBarHeight) + "px";
+                    functionBar.style.top=(height - functionBarHeight) + "px";
                 }
                 else{
                     $('${this.list.name}Div').style.height = height + "px";

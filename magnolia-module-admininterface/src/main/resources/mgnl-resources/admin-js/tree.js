@@ -185,10 +185,10 @@
         if (!mgnlDragTreeColumn)
             {
             var line=this.columnResizerLine;
-            line.style.left=mgnlGetPosX(resizerGif) + 5;
+            line.style.left=(mgnlGetPosX(resizerGif) + 5) + 'px';
             line.style.visibility="visible";
-            line.style.top=mgnlGetPosY(this.divMain);
-            line.style.height=parseInt(this.divMain.style.height)+1;
+            line.style.top=(mgnlGetPosY(this.divMain)) + 'px';
+            line.style.height=(parseInt(this.divMain.style.height)+1) + 'px';
 
             this.columnResizerGif=resizerGif;
             this.columnResizerLine=line;
@@ -249,8 +249,8 @@
     mgnlTree.prototype.dragColumn = function(x,y)
         {
         //todo: stop at next dragger
-        this.columnResizerGif.style.left=x-this.columnResizerGifWidthHalf-2;
-        this.columnResizerLine.style.left=x-1;
+        this.columnResizerGif.style.left=(x-this.columnResizerGifWidthHalf-2) + 'px';
+        this.columnResizerLine.style.left=(x-1) + 'px';
         }
 
     mgnlTree.prototype.getColumnsWidth = function()
@@ -309,7 +309,6 @@
                 var rules=document.styleSheets[elem0][rulesKey];
                 mgnlDebug("mgnlTree.resize: rules", "tree", rules);
 
-                //for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
                 for (var elem1=0; elem1<rules.length; elem1++){
 
                     var cssClass=rules[elem1].selectorText;
@@ -323,7 +322,7 @@
             mgnlDebug("mgnlTree.resize: treeColumnClasses", "tree", treeColumnClasses);
 
             var left=0;
-            for (var elem in this.columns){
+            for (var elem=0; elem<this.columns.length; elem++){
                 // in safari is it lowercase
                 var cssClass="."+this.name.toLowerCase()+"cssclasscolumn"+elem;
                 var cssClassObj=treeColumnClasses[cssClass];
@@ -331,10 +330,10 @@
                 //resize columne (by setting the left and clip attribute of its css class
                 if (cssClassObj){
                     if (!columnNumber || elem==columnNumber){
-                        cssClassObj.style.left=left;
+                        cssClassObj.style.left=left + 'px';
                     }
                     if (!columnNumber || elem==columnNumber || elem==columnNumber-1){
-                        cssClassObj.style.clip="rect(0 " + (columnWidth-8) + " 100 0)";
+                        cssClassObj.style.clip="rect(0 " + (columnWidth-8) + "px 100px 0)";
                     }
                     this.columns[elem].width=columnWidth;
 
@@ -346,14 +345,14 @@
 
                 if (columnResizer){
                     if (!columnNumber || elem==columnNumber){
-                        columnResizer.style.left=left-this.columnResizerGifWidthHalf-1;
+                        columnResizer.style.left=(left-this.columnResizerGifWidthHalf-1) + 'px';
                      }
                 }
 
                 if (columnResizerLine){
                     if (!columnNumber || elem==columnNumber){
-                        columnResizerLine.style.left=left;
-                        columnResizerLine.style.height=this.divMain.style.height;
+                        columnResizerLine.style.left=left + 'px';
+                        columnResizerLine.style.height=this.divMain.style.height + 'px';
                      }
                 }
 
@@ -660,10 +659,10 @@
             this.divMoveShadow.style.visibility="visible";
             this.divMoveDenied.style.visibility="visible";
             }
-        this.divMoveShadow.style.left=x+6;
-        this.divMoveShadow.style.top=y+11;
-        this.divMoveDenied.style.left=x+10;
-        this.divMoveDenied.style.top=y+2;
+        this.divMoveShadow.style.left=(x+6) + 'px';
+        this.divMoveShadow.style.top=(y+11) + 'px';
+        this.divMoveDenied.style.left=(x+10) + 'px';
+        this.divMoveDenied.style.top=(y+2) + 'px';
         }
 
     mgnlTree.prototype.moveNodeHighlightLine = function(divId)

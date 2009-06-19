@@ -202,7 +202,7 @@ classDef("mgnl.util.DHTMLUtil", {
         if(element.style.borderRightStyle && element.style.borderRightStyle != "hidden"){
             border +=1;
         }
-        element.style.width = width - border;
+        element.style.width = (width - border) + 'px';
     },
 
     setHeight: function(element, height){
@@ -214,7 +214,7 @@ classDef("mgnl.util.DHTMLUtil", {
         if(element.style.borderBottomStyle && element.style.borderBottomStyle != "hidden"){
             border +=1;
         }
-        element.style.height = height - border;
+        element.style.height = (height - border) + 'px';
     },
 
 

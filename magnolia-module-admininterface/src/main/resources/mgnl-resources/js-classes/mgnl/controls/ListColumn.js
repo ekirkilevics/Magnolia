@@ -61,8 +61,8 @@ classDef("mgnl.controls.ListColumn", function (list, width, index){
     
     this.resize = function(left, width){
         this.cssClass.style.left = left + "px";
-        this.cssClass.style.width = width;
-        this.cssClass.style.clip="rect(0 " + width + " 20 0)";
+        this.cssClass.style.width = width + "px";
+        this.cssClass.style.clip="rect(0 " + width + "px 20px 0)";
         
         if(this.resizer){
             this.resizer.style.left = left + "px";

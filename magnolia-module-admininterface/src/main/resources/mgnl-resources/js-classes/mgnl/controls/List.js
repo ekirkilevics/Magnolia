@@ -100,8 +100,8 @@ classDef("mgnl.controls.List",
 
         startResizeColumn: function(index){
             this.resizerLine.style.visibility="visible";
-            this.resizerLine.style.left = this.columns[index].left + 5;
-            this.resizerLine.style.height = this.height;
+            this.resizerLine.style.left = (this.columns[index].left + 5) + "px";
+            this.resizerLine.style.height = this.height + "px";
             var list = this;
 
             this.contentDiv.onmousemove = function(event){
@@ -117,7 +117,7 @@ classDef("mgnl.controls.List",
 
         onResizeColumn: function(event, index){
             var pos = mgnl.util.DHTMLUtil.getMousePos(event);
-            this.resizerLine.style.left = pos.x-1;
+            this.resizerLine.style.left = (pos.x-1) + "px";
         },
 
         stopResizeColumn: function(event, index){
@@ -158,8 +158,8 @@ classDef("mgnl.controls.List",
 
             if(this.sortGroupDiv){
                 var sortWidth = MgnlDHTMLUtil.getWidth(this.sortGroupDiv);
-                this.sortGroupDiv.style.left = this.width - sortWidth + "px";
-                this.sortGroupDiv.style.height = this.height -1 + "px";
+                this.sortGroupDiv.style.left = (this.width - sortWidth) + "px";
+                this.sortGroupDiv.style.height = (this.height -1) + "px";
                 this.sortGroupDiv.style.visibility = "visible";
                 this.width -= sortWidth;
             }
@@ -168,7 +168,7 @@ classDef("mgnl.controls.List",
 
             MgnlDHTMLUtil.setWidth(this.contentDiv, this.width);
             MgnlDHTMLUtil.setHeight(this.contentDiv, this.height);
-            this.innerContentDiv.style.height = this.height - 20;
+            this.innerContentDiv.style.height = (this.height - 20) + "px";
 
             // columns
             var factor = this.getWidthFactor(this.width);

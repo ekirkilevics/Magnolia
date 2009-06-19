@@ -89,8 +89,8 @@ mgnlContextMenu.prototype.show = function(event){
             if (left<0) left=5;
             }
 
-        this.divMenu.style.left=left;
-        this.divMenu.style.top=top;
+        this.divMenu.style.left=left + 'px';
+        this.divMenu.style.top=top + 'px';
         this.divMenu.style.visibility="visible";
         }
     this.showing = true;
