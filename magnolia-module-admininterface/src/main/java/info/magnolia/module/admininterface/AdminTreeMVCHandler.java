@@ -779,7 +779,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         tree.setBrowseMode(this.isBrowseMode());
 
         if (!snippetMode) {
-            html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"); //$NON-NLS-1$            
+            html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n"); //$NON-NLS-1$            
             html.append("<html>\n");
             html.append("<head>\n"); //$NON-NLS-1$
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n"); //$NON-NLS-1$
