@@ -69,6 +69,9 @@ public class LazyFileTemplateLoader extends AbstractDelegatingTemplateLoader {
     }
 
     protected TemplateLoader newDelegate() {
+        if (basePath == null) {
+            throw new IllegalArgumentException("Can't initialize FileTemplateLoader: basePath is not set. Please set the basePath property.");
+        }
         try {
             return new FileTemplateLoader(new File(basePath), allowLinking);
         } catch (IOException e) {
