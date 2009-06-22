@@ -179,9 +179,31 @@ public class SimpleSearchTag extends TagSupport {
      * @see "6.6.5.2 jcr:contains Function" from the JCR Spec (pages 110-111) for details.
      */
     protected String generateSimpleQuery(String input) {
+        final String startPathToUse = startPath();
+
         // jcr and xpath escaping :
         final String escapedQuery = input.replaceAll("'", "\\\\''");
-        return "//*[@jcr:primaryType='mgnl:content']//*[jcr:contains(., '"+ escapedQuery +"')]";
+        final String queryString = startPathToUse + "//*[@jcr:primaryType='mgnl:content']//*[jcr:contains(., '" + escapedQuery + "')]";
+        log.debug("query string: " + queryString);
+        return queryString;
+    }
+
+    protected String startPath() {
+        String cleanStartPath = "";
+        // search only in a specific subtree
+        if (this.startLevel > 0) {
+            try {
+                Content activePage = MgnlContext.getAggregationState().getMainContent();
+                if (activePage != null) {
+                    cleanStartPath = activePage.getAncestor(this.startLevel).getHandle();
+                }
+            } catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
+        } else {
+            cleanStartPath = this.startPath;
+        }
+        return StringUtils.strip(cleanStartPath, "/");
     }
 
     /**
@@ -201,20 +223,6 @@ public class SimpleSearchTag extends TagSupport {
      * forces a search on non-indexed word. The better generateSimpleQuery() method is recommened.
      */
     protected String generateXPathQuery() {
-
-        // search only in a specific subtree
-        if (this.startLevel != 0) {
-            try {
-                Content activePage = MgnlContext.getAggregationState().getMainContent();
-                if (activePage != null) {
-                    startPath = StringUtils.strip(activePage.getAncestor(this.startLevel).getHandle(), "/"); //$NON-NLS-1$
-                }
-            }
-            catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-
         // strip reserved chars and split
         String[] tokens = StringUtils.split(StringUtils.lowerCase(StringUtils.replaceChars(
             this.query,
@@ -227,9 +235,7 @@ public class SimpleSearchTag extends TagSupport {
         }
 
         StringBuffer xpath = new StringBuffer(tokens.length * 20);
-        if (StringUtils.isNotEmpty(startPath)) {
-            xpath.append(startPath);
-        }
+        xpath.append(startPath());
         xpath.append("//*[@jcr:primaryType=\'mgnl:content\']//*["); //$NON-NLS-1$
 
         String joinOperator = "and"; //$NON-NLS-1$
