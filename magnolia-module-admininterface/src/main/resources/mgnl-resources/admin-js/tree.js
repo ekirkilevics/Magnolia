@@ -352,7 +352,7 @@
                 if (columnResizerLine){
                     if (!columnNumber || elem==columnNumber){
                         columnResizerLine.style.left=left + 'px';
-                        columnResizerLine.style.height=this.divMain.style.height + 'px';
+                        columnResizerLine.style.height=this.divMain.style.height;
                      }
                 }
 
