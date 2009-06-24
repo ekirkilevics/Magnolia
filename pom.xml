@@ -200,29 +200,17 @@ for Java Content Repositories (JCR).
           </executions>
           <dependencies>
             <!-- maven2-xdoclet2-plugin defines its own repository;
+                 if we need a specific patched version of XDoclet,
                  we have to redefine these dependencies here so that
-                 they're found in our own repositories. This can be
-                 removed as soon as xdoclet 2.0.7 proper, as well as
-                 xdoclet-plugin-web 1.0.5, are released and available
-                 on the central repo.
+                 they're found in our own repositories.
                  The order of these dependencies is important, they
                  must be before the xdoclet plugin itself for correct
                  resolution. -->
-            <dependency>
-              <groupId>org.codehaus.generama</groupId>
-              <artifactId>generama</artifactId>
-              <version>1.2.4-20090592-magnolia</version>
-            </dependency>
-            <dependency>
-              <groupId>org.codehaus.xdoclet</groupId>
-              <artifactId>xdoclet</artifactId>
-              <version>2.0.7-20090592-magnolia</version>
-            </dependency>
             <!-- the xdoclet plugin itself -->
             <dependency>
               <groupId>org.codehaus.xdoclet</groupId>
               <artifactId>xdoclet-plugin-web</artifactId>
-              <version>1.0.5-20090592-magnolia</version>
+              <version>1.0.5</version>
             </dependency>
           </dependencies>
         </plugin>
