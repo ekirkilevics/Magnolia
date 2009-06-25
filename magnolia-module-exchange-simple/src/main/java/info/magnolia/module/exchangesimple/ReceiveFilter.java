@@ -51,7 +51,6 @@ import info.magnolia.context.MgnlContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -402,25 +401,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
          Iterator fileListIterator = topContentElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
          String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
-         String transientStore = existingContent.getHandle() + "/" + uuid;
          try {
              while (fileListIterator.hasNext()) {
                  Element fileElement = (Element) fileListIterator.next();
                  importResource(data, fileElement, hierarchyManager, existingContent.getHandle());
              }
              // use temporary transient store to extract top level node and copy properties
-             existingContent.createContent(uuid, ItemType.CONTENTNODE.toString());
+             Content transientStore = hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
+             String transientStoreHandle = transientStore.getHandle();
+             // import properties into transientStore
              String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
              GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
-             hierarchyManager.getWorkspace().getSession().importXML(transientStore, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+             hierarchyManager.getWorkspace().getSession().importXML(transientStoreHandle, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
              IOUtils.closeQuietly(inputStream);
-             StringBuffer newPath = new StringBuffer();
-             newPath.append(transientStore);
-             newPath.append("/");
-             newPath.append(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
-             Content tmpContent = hierarchyManager.getContent(newPath.toString());
+             // copy properties from transient store to existing content
+             Content tmpContent = transientStore.getChildByName(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
              copyProperties(tmpContent, existingContent);
-             hierarchyManager.delete(transientStore);
+             hierarchyManager.delete(transientStoreHandle);
              hierarchyManager.save();
          } catch (Exception e) {
              hierarchyManager.refresh(false); // revert all transient changes made in this session till now.

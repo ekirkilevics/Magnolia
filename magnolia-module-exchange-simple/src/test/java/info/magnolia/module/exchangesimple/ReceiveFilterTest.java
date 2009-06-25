@@ -37,15 +37,20 @@ import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import static org.easymock.EasyMock.*;
 import org.easymock.IAnswer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MarkerFactory;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -122,13 +127,11 @@ public class ReceiveFilterTest extends TestCase {
     public void testActivateShouldUpdateNodeIfItAlreadyExists() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
         final Content tempNode = createStrictMock(Content.class);
+        final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/nodename").anyTimes();
         expect(existingNode.getName()).andReturn("nodename");
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
-
-        // creating temp node:
-        expect(existingNode.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(null);
 
         // for the sake of this test we'll just pretend we have no properties on the existing node
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
@@ -136,10 +139,16 @@ public class ReceiveFilterTest extends TestCase {
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
-        // for the sake of this test we'll just pretend we have no properties on the imported node either
-        expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        // get temp node handle
+        expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
 
-        replay(existingNode, tempNode);
+        // get node with imported properties
+        expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
+
+        // for the sake of this test we'll just pretend we have no properties on the imported node either
+        expect(importedNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -147,7 +156,10 @@ public class ReceiveFilterTest extends TestCase {
             }
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
-                session.importXML(startsWith(PARENT_PATH + "/nodename/"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
+                // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
+                expect(hm.createContent(eq("/"), isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+
+                session.importXML(startsWith("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
@@ -157,35 +169,37 @@ public class ReceiveFilterTest extends TestCase {
                     }
                 });
 
-                // can't really get the temp uuid here
-                expect(hm.getContent(and(startsWith(PARENT_PATH + "/nodename/"), endsWith("/nodename")))).andReturn(tempNode);
-                hm.delete(startsWith(PARENT_PATH + "/nodename/"));
+                hm.delete(startsWith("/DUMMY-UUID"));
             }
         });
-        verify(existingNode, tempNode);
+        verify(existingNode, tempNode, importedNode);
     }
 
     public void testActivateShouldMoveToNewLocationIfItHasBeenMovedToADifferentPath() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
         final Content tempNode = createStrictMock(Content.class);
+        final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/oldnodename").anyTimes();
         expect(existingNode.getName()).andReturn("oldnodename");
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
 
-        // creating temp node:
-        expect(existingNode.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(null);
+        // get temp node handle
+        expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
 
-        // for the sake of this test we'll just pretend we have no properties on the existing node
+        // get node with imported properties
+        expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
+
+        // for the sake of this test we'll just pretend we have no properties on the imported node
+        expect(importedNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        // for the sake of this test we'll just pretend we have no properties on the existing node either
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
-        // for the sake of this test we'll just pretend we have no properties on the imported node either
-        expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
-
-        replay(existingNode, tempNode);
+        replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -193,7 +207,10 @@ public class ReceiveFilterTest extends TestCase {
             }
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
-                session.importXML(startsWith(PARENT_PATH + "/oldnodename/"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
+                // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
+                expect(hm.createContent(eq("/"), isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+
+                session.importXML(eq("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
@@ -204,34 +221,36 @@ public class ReceiveFilterTest extends TestCase {
                 });
 
                 hm.moveTo(PARENT_PATH + "/oldnodename", PARENT_PATH + "/nodename");
-                // can't really get the temp uuid here
-                expect(hm.getContent(and(startsWith(PARENT_PATH + "/oldnodename/"), endsWith("/nodename")))).andReturn(tempNode);
-                hm.delete(startsWith(PARENT_PATH + "/oldnodename/"));
+                hm.delete("/DUMMY-UUID");
             }
         });
-        verify(existingNode, tempNode);
+        verify(existingNode, tempNode, importedNode);
     }
 
     public void testActivateShouldMoveWhenParentHasChanged() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
         final Content tempNode = createStrictMock(Content.class);
+        final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "old/nodename").anyTimes();
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
 
-        // creating temp node:
-        expect(existingNode.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(null);
+        // get temp node handle
+        expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
 
-        // for the sake of this test we'll just pretend we have no properties on the existing node
-        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        // get node with imported properties
+        expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
+
+        // for the sake of this test we'll just pretend we have no properties on the imported node
+        expect(importedNode.getNodeDataCollection()).andReturn(Collections.emptyList());
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node either
-        expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
 
-        replay(existingNode, tempNode);
+        replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -239,7 +258,10 @@ public class ReceiveFilterTest extends TestCase {
             }
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
-                session.importXML(startsWith(PARENT_PATH + "old/nodename/"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
+                // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
+                expect(hm.createContent(eq("/"), isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+
+                session.importXML(eq("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
                     public Object answer() throws Throwable {
                         final InputStream passedStream = (InputStream) getCurrentArguments()[1];
@@ -250,12 +272,10 @@ public class ReceiveFilterTest extends TestCase {
                 });
 
                 hm.moveTo(PARENT_PATH + "old/nodename", PARENT_PATH + "/nodename");
-                // can't really get the temp uuid here
-                expect(hm.getContent(and(startsWith(PARENT_PATH + "old/nodename/"), endsWith("/nodename")))).andReturn(tempNode);
-                hm.delete(startsWith(PARENT_PATH + "old/nodename/"));
+                hm.delete("/DUMMY-UUID");
             }
         });
-        verify(existingNode, tempNode);
+        verify(existingNode, tempNode, importedNode);
     }
 
 
@@ -264,7 +284,6 @@ public class ReceiveFilterTest extends TestCase {
         final Content parentNode = createNiceMock(Content.class);
         final Content existingNode = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
-
         replay(existingNode, tempNode);
         doTest("activate", "sa_failed", "Operation not permitted, /foo/bar is locked", new AbstractTestCallBack() {
 
@@ -359,6 +378,9 @@ public class ReceiveFilterTest extends TestCase {
         // response
         response.setHeader("sa_attribute_status", expectedStatus);
         response.setHeader("sa_attribute_message", expectedMessage);
+
+        //cleanup()
+        expect(request.getSession(false)).andReturn(null);
 
         final ReceiveFilter filter = new ReceiveFilter();
         filter.setUnlockRetries(1);
