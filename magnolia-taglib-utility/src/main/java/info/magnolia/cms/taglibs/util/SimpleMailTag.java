@@ -72,7 +72,7 @@ import java.util.Map;
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
- * @deprecated
+ * @deprecated since 4.0
  */
 public class SimpleMailTag extends TagSupport {
 
