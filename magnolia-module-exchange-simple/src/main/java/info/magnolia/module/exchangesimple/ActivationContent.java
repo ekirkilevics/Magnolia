@@ -37,13 +37,17 @@ import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class holds all content needed to be activated
  * @author Sameer Charles $Id$
  */
-public class ActivationContent {
+public class ActivationContent implements Cloneable {
 
+    private static final Logger log = LoggerFactory.getLogger(ActivationContent.class);
     /**
      * File list
      */
@@ -136,5 +140,19 @@ public class ActivationContent {
      */
     public Map getProperties() {
         return this.properties;
+    }
+
+    public Object clone() {
+        try {
+            ActivationContent clone = (ActivationContent) super.clone();
+            // need to clone maps otherwise cloned object would reference the original ones
+            clone.properties = new HashMap(this.properties);
+            clone.fileList = new HashMap(this.fileList);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            // should never be thrown since we support cloning.
+            log.error("Failed to clone itself with " + e.getLocalizedMessage(), e);
+            return null;
+        }
     }
 }

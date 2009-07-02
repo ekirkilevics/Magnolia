@@ -426,10 +426,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @return activation handle
       */
      protected String getActivationURL(Subscriber subscriberInfo) {
-         if (!subscriberInfo.getURL().endsWith("/")) {
-             return subscriberInfo.getURL() + "/" + DEFAULT_HANDLER;
+         final String url = subscriberInfo.getURL();
+         if (!url.endsWith("/")) {
+             return url + "/" + DEFAULT_HANDLER;
          }
-         return subscriberInfo.getURL() + DEFAULT_HANDLER;
+         return url + DEFAULT_HANDLER;
      }
 
      /**
