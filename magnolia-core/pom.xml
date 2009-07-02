@@ -81,11 +81,6 @@
       <groupId>jaxen</groupId>
       <artifactId>jaxen</artifactId>
     </dependency>
-    <!-- optional in jdom -->
-    <dependency>
-      <groupId>saxpath</groupId>
-      <artifactId>saxpath</artifactId>
-    </dependency>
     <dependency>
       <groupId>servlets.com</groupId>
       <artifactId>cos</artifactId>
