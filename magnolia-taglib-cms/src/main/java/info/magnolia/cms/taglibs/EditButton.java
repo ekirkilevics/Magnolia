@@ -111,6 +111,10 @@ public class EditButton extends TagSupport {
     }
 
     /**
+     * If attribute is not used, a content node with the name of the page will be added. If contentNodeName attribute is set but with no value
+     * between the quotes, the properties are stored directly under the Web page. If a contentNodeName is set then a content node with the
+     * according name will be added.
+     *
      * @param name Container name which will be used to access/write content.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -173,11 +177,11 @@ public class EditButton extends TagSupport {
    public void setDialog (String dialog) {
        this.dialog = dialog;
    }
-   
+
    public String getDialog () {
        return this.dialog;
    }
-   
+
    /**
      * Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.
      * @TODO: deprecate this ???
