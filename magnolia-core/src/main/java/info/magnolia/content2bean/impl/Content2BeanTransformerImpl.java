@@ -53,9 +53,10 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -69,6 +70,18 @@ import org.slf4j.LoggerFactory;
 public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter  {
     
     private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
+
+    private final BeanUtilsBean beanUtilsBean;
+
+    public Content2BeanTransformerImpl() {
+        super();
+
+        // We use non-static BeanUtils conversion, so we can
+        // * use our custom ConvertUtilsBean
+        // * control converters (convertUtilsBean.register()) - we can register them here, locally, as oppoed to a global ConvertUtils.register()
+        final EnumAwareConvertUtilsBean convertUtilsBean = new EnumAwareConvertUtilsBean();
+        this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
+    }
 
     /**
      * Resolves in this order
@@ -270,7 +283,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         try{
             // this does some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
-            BeanUtils.setProperty(bean, propertyName, value);
+            beanUtilsBean.setProperty(bean, propertyName, value);
             //PropertyUtils.setProperty(bean, propertyName, value);
         }
         catch (Exception e) {

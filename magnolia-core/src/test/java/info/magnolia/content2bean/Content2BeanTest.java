@@ -295,4 +295,19 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("two", bean.getValues().get(1));
     }
 
+    public void testCanConvertStringsToTheAppropriateEnumEquivalent() throws Exception {
+        Content node = MockUtil.createContent("myNode", new String[][]{
+                {"class", "info.magnolia.content2bean.BeanWithEnum"},
+                {"foobar", "Why, Hello !"},
+                {"sample", "two"}
+        }, new Content[0]);
+
+        BeanWithEnum result = (BeanWithEnum) Content2BeanUtil.toBean(node, true);
+        assertEquals("Why, Hello !", result.getFoobar());
+        assertNotNull(result.getSample());
+        assertTrue(result.getSample().getClass().isEnum());
+        assertTrue(result.getSample() instanceof SampleEnum);
+        assertEquals(SampleEnum.two, result.getSample());
+
+    }
 }
