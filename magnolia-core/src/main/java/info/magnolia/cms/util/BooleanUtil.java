@@ -42,6 +42,10 @@ import org.apache.commons.lang.BooleanUtils;
  */
 public class BooleanUtil {
 
+    /**
+     * Behaves much like org.apache.commons.lang.BooleanUtils but returns the defaultValue if
+     * the input string is null, empty, or unrecognized.
+     */
     public static boolean toBoolean(String s, boolean defaultValue) {
         final Boolean b = BooleanUtils.toBooleanObject(s);
         return b == null ? defaultValue : b.booleanValue();
