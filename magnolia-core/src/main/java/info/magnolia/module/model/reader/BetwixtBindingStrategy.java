@@ -44,7 +44,7 @@ import java.util.Set;
  * A TypeBindingStrategy for Betwixt where we can register our own {@link Converter}s. When such a Converter
  * is registered, betwixt will attempt to convert the xml element's value from String to object.
  * <strong>Beware</strong>, these converters are registered globally, thanks to the singleton-esque nature
- * of content2bean. If a cleaner solution is found, it will be much welcome.
+ * of BeanUtils. If a cleaner solution is found, it will be much welcome.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
