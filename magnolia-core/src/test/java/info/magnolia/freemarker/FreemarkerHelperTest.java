@@ -434,7 +434,7 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public void testEvalCanEvaluateDynamicNodeProperties() throws IOException, TemplateException {
-        tplLoader.putTemplate("test.ftl", "evaluated title: ${'content.title'?eval}");
+        tplLoader.putTemplate("test.ftl", "evaluated result: ${'content.title'?eval}");
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
@@ -443,11 +443,12 @@ public class FreemarkerHelperTest extends TestCase {
         Map m = new HashMap();
         m.put("content", c);
 
-        assertRendereredContent("evaluated title: This is my title", m, "test.ftl");
+        assertRendereredContent("evaluated result: This is my title", m, "test.ftl");
     }
 
     public void testInterpretCanBeUsedForDynamicNodeProperties() throws IOException, TemplateException {
-        tplLoader.putTemplate("test.ftl", "[#assign dynTpl='${content.title}'?interpret]evaluated title: [@dynTpl/]");
+        tplLoader.putTemplate("test.ftl", "[#assign dynTpl='${content.title}'?interpret]\n" +
+                "evaluated result: [@dynTpl/]");
 
         final MockContent c = new MockContent("content");
         c.setUUID("123");
@@ -456,7 +457,21 @@ public class FreemarkerHelperTest extends TestCase {
         Map m = new HashMap();
         m.put("content", c);
 
-        assertRendereredContent("evaluated title: This is my other-value title", m, "test.ftl");
+        assertRendereredContent("evaluated result: This is my other-value title", m, "test.ftl");
+    }
+
+    public void testEvalCanAlsoBeUsedForNestedExpressions() throws IOException, TemplateException {
+        // except we need lots of quotes
+        tplLoader.putTemplate("test.ftl", "evaluated result: ${'\"${content.title}\"'?eval}");
+
+        final MockContent c = new MockContent("content");
+        c.setUUID("123");
+        c.addNodeData(new MockNodeData("title", "This is my ${content.other}"));
+        c.addNodeData(new MockNodeData("other", "other-value"));
+        Map m = new HashMap();
+        m.put("content", c);
+
+        assertRendereredContent("evaluated result: This is my other-value", m, "test.ftl");
     }
 
     public void testInterpretCanBeUsedEvenIfPropertyHasNoFreemarkerStuff() throws IOException, TemplateException {
