@@ -82,7 +82,7 @@ public class AbstractRenderable implements RenderableDefinition {
         final Class[] constructorTypes = new Class[]{Content.class, RenderableDefinition.class, RenderingModel.class};
         Constructor constr = ConstructorUtils.getAccessibleConstructor(getModelClass(), constructorTypes);
         if(constr == null){
-            throw new IllegalArgumentException("A model class must define a constructor with types: " + ArrayUtils.toString(constructorTypes));
+            throw new IllegalArgumentException("A model class must define a constructor with types" + ArrayUtils.toString(constructorTypes) + ". Can't instanciate " + getModelClass());
         }
         RenderingModel model = (RenderingModel) constr.newInstance(new Object[]{content, definition, parentModel});
         final Map params = MgnlContext.getParameters();
