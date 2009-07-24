@@ -46,7 +46,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
 
     public CompleteUrlPathTransformer(boolean useURI2RepositoryMapping, boolean useI18N) {
-        super(true, useURI2RepositoryMapping, useI18N);
+        super(false, useURI2RepositoryMapping, useI18N);
     }
 
     protected String prefixLink(String linkStr) {
