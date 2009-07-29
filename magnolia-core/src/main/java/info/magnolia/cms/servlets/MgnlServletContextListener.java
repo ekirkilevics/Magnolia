@@ -159,7 +159,7 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         String webapp = initWebappName(rootPath);
 
-        log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$
+        log.debug("servername is {}, rootPath is {}, webapp is {}", new Object[] {servername, rootPath, webapp}); //$NON-NLS-1$
 
         String propertiesFilesString = getPropertiesFilesString(context, servername, webapp);
 
