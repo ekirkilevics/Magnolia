@@ -48,12 +48,14 @@ import info.magnolia.module.InstallContext;
  */
 public interface Task {
     /**
-     * Description of what has changed. Example: New ACL configuration
+     * Description of what has changed. Example: "New ACL configuration"
      */
     String getName();
 
     /**
-     * Description what will happen during the execution. Example: "Bootstraps the new configuration for the ACL dialogs"
+     * Description what will happen during the execution. Example: "Bootstraps the new configuration for the ACL dialogs."
+     * A good-citizen task description should be written in the third person, be understandable and respect capitalization
+     * and punctuation rules. (start with capital letter, end with a dot)
      */
     String getDescription();
 
