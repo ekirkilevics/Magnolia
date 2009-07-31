@@ -37,7 +37,6 @@ import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.security.auth.Entity;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
@@ -45,6 +44,8 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.AccountLockedException;
 import java.util.Iterator;
 
 
@@ -52,52 +53,30 @@ import java.util.Iterator;
  * @author Sameer Charles $Id$
  */
 public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule {
-
-    private static final String ACCOUNT_LOCKED_EXCEPTION = "javax.security.auth.login.AccountLockedException";
-    private static final String ACCOUNT_NOTFOUND_EXCEPTION = "javax.security.auth.login.AccountNotFoundException";
-
     protected User user;
 
     /**
-     * Releases all associated memory
+     * Releases all associated memory.
      */
     public boolean release() {
         return true;
     }
 
     /**
-     * checks is the credentials exist in the repository
+     * Checks is the credentials exist in the repository.
      * @throws LoginException or specific subclasses (which will be handled further for user feedback)
      */
     public void validateUser() throws LoginException {
         initUser();
 
         if (this.user == null) {
-            throw specificExceptionIfPossible(ACCOUNT_NOTFOUND_EXCEPTION, "User account " + this.name + " not found.");
+            throw new AccountNotFoundException("User account " + this.name + " not found.");
         }
 
         matchPassword();
 
         if (!this.user.isEnabled()) {
-            throw specificExceptionIfPossible(ACCOUNT_LOCKED_EXCEPTION, "User account " + this.name + " is locked.");
-        }
-    }
-
-    /**
-     * Hack to fix MAGNOLIA-1957 : specific LoginException subclasses were introduced in Java5,
-     * so we have to do this do be able to throw them (their type is used to determine the error
-     * message to show to the user) or throw the generic FailedLoginException if they don't exist.
-     */
-    private LoginException specificExceptionIfPossible(String exClass, String msg) throws LoginException {
-        try {
-            final Class cl = ClassUtil.classForName(exClass);
-            return (LoginException) cl.getConstructor(new Class[]{String.class}).newInstance(new Object[]{msg});
-        } catch (NoClassDefFoundError e) {
-            // booh, we're using jdk1.4, the specific login exceptions are not there.
-            return new FailedLoginException(msg);
-        } catch (Exception e) {
-            // generic exception when attempting to instanciate the specific exception
-            throw new LoginException(e.getClass().getName() + " : " + e.getMessage());
+            throw new AccountLockedException("User account " + this.name + " is locked.");
         }
     }
 
@@ -118,15 +97,15 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
     }
 
     /**
-     * override this to support any configured/non-configured user manager
-     * */
+     * Override this to support any configured/non-configured user manager.
+     */
     public UserManager getUserManager() {
         SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
         return securitySupport.getUserManager(this.realm);
     }
 
     /**
-     * set user details
+     * Set user details.
      */
     public void setEntity() {
         EntityImpl entity = new EntityImpl();
@@ -145,13 +124,13 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
     }
 
     /**
-     * set access control list from the user, roles and groups
+     * Set access control list from the user, roles and groups.
      */
     public void setACL() {
     }
 
     /**
-     * Extract all the configured roles from the given node (which can be the user node or a group node)
+     * Extract all the configured roles from the given node. (which can be the user node or a group node)
      */
     public void collectRoleNames() {
         for (Iterator iter = this.user.getAllRoles().iterator(); iter.hasNext();) {
@@ -160,7 +139,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
     }
 
     /**
-     * Extract all the configured groups from the given node (which can be the user node or a group node)
+     * Extract all the configured groups from the given node. (which can be the user node or a group node)
      */
     public void collectGroupNames() {
         for (Iterator iter = this.user.getAllGroups().iterator(); iter.hasNext();) {
