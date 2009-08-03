@@ -85,14 +85,14 @@ public final class SystemProperty {
      * @param value
      */
     public static void setProperty(String name, String value) {
-        SystemProperty.properties.put(name, value);
+        properties.put(name, value);
     }
 
     /**
      * @param name
      */
     public static String getProperty(String name) {
-        return (String) SystemProperty.properties.get(name);
+        return (String) properties.get(name);
     }
 
     /**
@@ -120,11 +120,11 @@ public final class SystemProperty {
      * @deprecated use getProperties() instead
      */
     public static Map getPropertyList() {
-        return SystemProperty.properties;
+        return properties;
     }
 
     public static Properties getProperties() {
-        return SystemProperty.properties;
+        return properties;
     }
 
 }
