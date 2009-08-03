@@ -175,7 +175,7 @@ public final class Path {
         return label;
     }
 
-    protected static boolean isAbsolute(String path) {
+    public static boolean isAbsolute(String path) {
 
         if (path == null) {
             return false;

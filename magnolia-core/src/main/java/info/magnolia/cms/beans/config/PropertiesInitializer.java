@@ -34,6 +34,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
@@ -196,13 +197,18 @@ public class PropertiesInitializer {
     }
 
     /**
-     * Try to load a magnolia.properties file
+     * Try to load a magnolia.properties file.
      * @param rootPath
      * @param location
      * @return
      */
     public boolean loadPropertiesFile(String rootPath, String location) {
-        File initFile = new File(rootPath, location);
+        final File initFile;
+        if (Path.isAbsolute(location)) {
+            initFile = new File(location);
+        } else {
+            initFile = new File(rootPath, location);
+        }
 
         if (!initFile.exists() || initFile.isDirectory()) {
             log.debug("Configuration file not found with path [{}]", initFile.getAbsolutePath()); //$NON-NLS-1$
