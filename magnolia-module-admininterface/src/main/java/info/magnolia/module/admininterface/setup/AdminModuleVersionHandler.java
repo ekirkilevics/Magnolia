@@ -36,6 +36,7 @@ package info.magnolia.module.admininterface.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.admininterface.setup.for4_0.IfQuickStartSetDefaultPublicURITask;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
@@ -62,7 +63,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
-    private final SetDefaultPublicURI setDefaultPublicURI = new SetDefaultPublicURI("defaultPublicURI");
+    private final IfQuickStartSetDefaultPublicURITask setDefaultPublicURI = new IfQuickStartSetDefaultPublicURITask("Set public URI", "Sets the default public URI if there is no templates or website content.", new SetDefaultPublicURI("defaultPublicURI"));
 
     public AdminModuleVersionHandler() {
         final String pathToRestartPage = "/modules/adminInterface/pages/restart";
