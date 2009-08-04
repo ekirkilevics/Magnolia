@@ -218,7 +218,7 @@ public class EditButton extends TagSupport {
      */
     private String getPath() {
         try {
-            return MgnlContext.getWebContext().getAggregationState().getHandle();
+            return MgnlContext.getWebContext().getAggregationState().getCurrentContent().getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;

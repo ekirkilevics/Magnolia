@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -46,14 +44,17 @@ import info.magnolia.test.MgnlTagTestCase;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+
+import com.mockrunner.mock.web.MockHttpServletRequest;
+
 import java.io.IOException;
 import java.util.Collections;
 
 /**
- * @author gjoseph
+ * @author had
  * @version $Revision: $ ($Author: $)
  */
-public class EditBarTest extends MgnlTagTestCase {
+public class EditButtonTest extends MgnlTagTestCase {
     private Content mainContent;
     private Content currentContent;
 
@@ -77,44 +78,30 @@ public class EditBarTest extends MgnlTagTestCase {
 
         webContext.setAggregationState(aggregationState);
         webContext.setParameters(Collections.singletonMap(Resource.MGNL_PREVIEW_ATTRIBUTE, "false"));
+        webContext.setRequest(new MockHttpServletRequest());
     }
 
-    public void testDisplaysParagraphNameAsLabel() throws Exception {
-        final String paraTitle = "testParaTitleKey";
-        final Paragraph paraInfo = new Paragraph();
-        paraInfo.setI18nBasename("test.messages");
-        paraInfo.setTitle(paraTitle);
+    public void testDisplaysDialogWithCurrentNodaHandle() throws Exception {
+        final String dialogName = "test-dial";
+        final String name = "bar";
+        final String handle = "/foo/" + name;
 
-        ParagraphManager.getInstance().getParagraphs().put("test-para", paraInfo);
         expect(mainContent.isGranted(Permission.SET)).andReturn(true).anyTimes();
         expect(currentContent.getName()).andReturn("bar");
-        expect(currentContent.getParent()).andReturn(mainContent);
-        expect(mainContent.getHandle()).andReturn("/foo");
+        expect(currentContent.getHandle()).andReturn(handle);
         replay(mainContent, currentContent);
 
-        final EditBar tag = new EditBar();
-        tag.setShowParagraphName(true);
-
-        tag.setParagraph("test-para");
+        final EditButton tag = new EditButton();
+        tag.setDialog(dialogName);
 
         tag.setPageContext(pageContext);
         tag.doEndTag();
-        // assertJspContent("Should display paragraph name", "--");
         final String output = getJspOutput();
-        assertTrue("Output should contain the paragraph's title", output.contains(paraTitle));
-
-        assertMatches("Output should contain the paragraph's title in a <td>",
-                output, ".*<td class=\"smothBarLabel\"( style=\"[a-z;: -]+\")?>" + paraTitle + "</td>.*");
+        assertTrue("Output should contain the dialog name and _current_ node handle", output.contains("mgnlOpenDialog('"+handle+"','','"+name+"','"+dialogName+"'"));
+        // sanity check
+        assertNotSame(MgnlContext.getAggregationState().getMainContent(), MgnlContext.getAggregationState().getCurrentContent());
 
         verify(mainContent, currentContent);
     }
-
-    // TODO : failing :
-//    public void testShouldDisplayOnPublicIfAdminOnlySetToFalse() {
-//          serverCfg.setAdmin(false)
-//        final EditBar tag = new EditBar();
-//        tag.setAdminOnly(false);
-//        assert(test will fail because BarEdit does its own check for admin)
-//    }
 
 }
