@@ -97,7 +97,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Mail page", "Installs mail page.", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
                 .addTask(new BootstrapConditionally("Mail factory", "Installs mail factories.", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
                 .addTask(new BootstrapSingleResource("Mail menu", "Installs mail tools menu.", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
+                .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", ContentRepository.CONFIG, "/modules/adminInterface/commands/default/sendMail", "class", "info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand" ))
         );
-
     }
 }
