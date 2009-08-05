@@ -239,43 +239,39 @@ public class DefaultContent extends ContentHandler implements Content {
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
-                String nodepath = null;
                 try {
-                    nodepath = this.node.getPath();
-                }
-                catch (RepositoryException e1) {
+                    log.debug("Path not found for property [{}] in node {}", name, this.node.getPath()); //$NON-NLS-1$
+                } catch (RepositoryException e1) {
                     // ignore, debug only
-                }
-                if (log.isDebugEnabled()) {
-                    log.debug("Path not found for property [{}] in node {}", name, nodepath); //$NON-NLS-1$
                 }
             }
         }
         catch (AccessDeniedException e) {
             if (log.isDebugEnabled()) {
-                String nodepath = null;
                 try {
-                    nodepath = this.node.getPath();
-                }
-                catch (RepositoryException e1) {
+                    log.debug("Access denied while trying to read property [{}] in node {}", name, this.node.getPath()); //$NON-NLS-1$
+                } catch (RepositoryException e1) {
                     // ignore, debug only
                 }
-                log.debug("Access denied while trying to read property [{}] in node {}", name, nodepath); //$NON-NLS-1$
             }
         }
         catch (RepositoryException re) {
-            String nodepath = null;
             try {
-                nodepath = this.node.getPath();
-            }
-            catch (RepositoryException e1) {
+                log.warn("Repository exception while trying to read property [" + name + "] for node " + this.node.getPath(), re); //$NON-NLS-1$ //$NON-NLS-2$
+            } catch (RepositoryException e1) {
                 // ignore, debug only
             }
-            log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re); //$NON-NLS-1$ //$NON-NLS-2$
-            nodeData = new DefaultNodeData();
         }
 
-        return (nodeData != null) ? nodeData : new DefaultNodeData();
+        if (nodeData == null) {
+            // the node data could not be constructed properly since the property it is supposed to represent can't be accessed. Return "empty" (i.e. without property and it's value) node data.
+            final DefaultNodeData defNodeData = new DefaultNodeData();
+            defNodeData.setParent(this);
+            this.setHierarchyManager(hierarchyManager);
+            this.setAccessManager(hierarchyManager.getAccessManager());
+            return defNodeData;
+        }
+        return nodeData;
     }
 
     public String getName() {
