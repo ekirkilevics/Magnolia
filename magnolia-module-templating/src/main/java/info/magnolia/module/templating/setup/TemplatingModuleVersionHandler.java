@@ -82,7 +82,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
                 .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
-                        Arrays.asList(new String[]{"name", "type", "path", "title", "description", "i18nBasename", "visible", "class"}), "parameters", ItemType.CONTENTNODE.getSystemName()))
+                        Arrays.asList(new String[]{"name", "type", "templatePath", "title", "description", "i18nBasename", "visible", "class"}), "parameters", ItemType.CONTENTNODE.getSystemName()))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is no type.", "paragraphs", "templateType", "type"))
                 .addTask(new DeprecateDialogPathAllModules("Paragraphs configuration", "Property dialogPath changed to dialog."))
         );
