@@ -75,8 +75,9 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
         if (null != request.getParameter(PARAMETER_LOGOUT)) {
             Context ctx = MgnlContext.getInstance();
             if (ctx instanceof UserContext) {
-                ((UserContext) ctx).logout();
+                // log before actual op, to preserve username for logging
                 AuditLoggingUtil.log((UserContext)ctx);
+                ((UserContext) ctx).logout();
             }
             //MgnlContext.initAsAnonymousContext(request, response, servletContext);
 
