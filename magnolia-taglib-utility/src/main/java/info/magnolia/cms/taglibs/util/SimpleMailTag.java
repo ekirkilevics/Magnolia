@@ -295,7 +295,7 @@ public class SimpleMailTag extends TagSupport {
             Map parameters = new HashMap(request.getParameterMap());
             // TODO: avoid those kinds of redundacies in the mail system
             if (StringUtils.isEmpty(template)) {
-                parameters.put("ContentType", "text");
+                parameters.put("contentType", "text");
                 email = MailModule.getInstance().getFactory().getEmailFromType(parameters, mailType);
                 email.setBody(body.toString());
             }
