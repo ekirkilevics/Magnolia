@@ -57,9 +57,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     public Locale getLocale() {
         if(this.locale == null){
-            // despite this being called "language", it sometimes contains the country (i.e. fr_CH), so we need to parse it
-            final String userLanguage = getUser().getLanguage();
-            this.locale = LocaleUtils.toLocale(userLanguage);
+            setLocaleFor(getUser());
         }
         return locale;
     }
@@ -79,7 +77,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
     }
 
     public void login(User user) {
-        setLocale(new Locale(user.getLanguage()));
+        setLocaleFor(user);
         setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
         this.user = null;
     }
@@ -90,4 +88,11 @@ public class UserContextImpl extends AbstractContext implements UserContext {
         locale = null;
         login(Security.getAnonymousUser());
     }
+
+    protected void setLocaleFor(User user) {
+        // despite this property being called "language", it sometimes contains the country (i.e. fr_CH), so we need to parse it
+        final String userLanguage = user.getLanguage();
+        setLocale(LocaleUtils.toLocale(userLanguage));
+    }
+
 }
