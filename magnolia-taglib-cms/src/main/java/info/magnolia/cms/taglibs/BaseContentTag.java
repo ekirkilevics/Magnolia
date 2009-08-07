@@ -40,6 +40,7 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.util.ContentUtil;
 
+import info.magnolia.context.MgnlContext;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -185,7 +186,7 @@ public abstract class BaseContentTag extends TagSupport {
     }
 
     protected Content resolveNode(Content currentPage) {
-        Content currentParagraph = Resource.getLocalContentNode();
+        Content currentParagraph = MgnlContext.getAggregationState().getCurrentContent();
 
         try {
             if (StringUtils.isNotEmpty(contentNodeName)) {
@@ -198,41 +199,34 @@ public abstract class BaseContentTag extends TagSupport {
                 // e.g. <cms:out nodeDataName="title" contentNodeName="01" contentNodeCollectionName="mainPars"/>
                 // e.g. <cms:out nodeDataName="title" contentNodeName="footer" contentNodeCollectionName=""/>
                 return currentPage.getContent(contentNodeCollectionName).getContent(contentNodeName);
-            }
-            else {
-                if (currentParagraph == null) {
-                    // outside collection iterator
-                    if (StringUtils.isEmpty(contentNodeCollectionName)) {
-                        // e.g. <cms:out nodeDataName="title"/>
-                        // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
-                        // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                        return currentPage;
-                    }
-                    else {
-                        // ERROR: no content node assignable because contentNodeName is empty
-                        // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
-
-                        // but in this case we return contentNodeCollection if existent
-                        if (currentPage.hasContent(contentNodeCollectionName)) {
-                            return currentPage.getContent(contentNodeCollectionName);
-                        }
-                    }
+            } else  if (currentParagraph == null || currentParagraph.getHandle().equals(MgnlContext.getAggregationState().getMainContent().getHandle())) {
+                // outside collection iterator
+                if (StringUtils.isEmpty(contentNodeCollectionName)) {
+                    // e.g. <cms:out nodeDataName="title"/>
+                    // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
+                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
+                    return currentPage;
                 }
-                else {
-                    // inside collection iterator
-                    if (contentNodeName == null && contentNodeCollectionName == null) {
-                        // e.g. <cms:out nodeDataName="title"/>
-                        return currentParagraph;
-                    }
-                    else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
-                        || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
-                        // empty collection name -> use actpage
-                        // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
-                        return currentPage;
-                    }
-                    else if (contentNodeCollectionName != null && !StringUtils.isEmpty(contentNodeCollectionName)) {
-                        return currentParagraph.getContent(contentNodeCollectionName);
-                    }
+                // ERROR: no content node assignable because contentNodeName is empty
+                // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
+
+                // but in this case we return contentNodeCollection if existent
+                if (currentPage.hasContent(contentNodeCollectionName)) {
+                    return currentPage.getContent(contentNodeCollectionName);
+                }
+
+            } else {
+                // inside collection iterator
+                if (contentNodeName == null && contentNodeCollectionName == null) {
+                    // e.g. <cms:out nodeDataName="title"/>
+                    return currentParagraph;
+                } else if ((contentNodeName != null && StringUtils.isEmpty(contentNodeName))
+                    || (contentNodeCollectionName != null && StringUtils.isEmpty(contentNodeCollectionName))) {
+                    // empty collection name -> use actpage
+                    // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
+                    return currentPage;
+                } else if (contentNodeCollectionName != null && !StringUtils.isEmpty(contentNodeCollectionName)) {
+                    return currentParagraph.getContent(contentNodeCollectionName);
                 }
             }
         }

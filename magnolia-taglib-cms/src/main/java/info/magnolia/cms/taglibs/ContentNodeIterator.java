@@ -209,7 +209,7 @@ public class ContentNodeIterator extends BaseContentTag {
             return this.items;
         }
         // If this is a nested iterator, the collection should be from the local content node.
-        Content page = super.resolveNode(Resource.getCurrentActivePage());
+        Content page = super.getFirstMatchingNode();
         return page == null ? Collections.EMPTY_LIST : page.getChildren(ItemType.CONTENTNODE);
     }
 
