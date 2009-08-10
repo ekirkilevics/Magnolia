@@ -61,15 +61,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class Content2BeanProcessorImpl implements Content2BeanProcessor {
+    private static final Logger log = LoggerFactory.getLogger(Content2BeanProcessorImpl.class);
 
-    /**
-     * Logger.
-     */
-    static Logger log = LoggerFactory.getLogger(Content2BeanProcessorImpl.class);
-
-    boolean forceCreation = true;
-
-    protected Content2BeanTransformerImpl defaultTransformer = new Content2BeanTransformerImpl();
+    private boolean forceCreation = true;
 
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
        return toBean(node, recursive, transformer, transformer.newState());
