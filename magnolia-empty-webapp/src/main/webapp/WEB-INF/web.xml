@@ -19,8 +19,10 @@
   <listener>
     <listener-class>info.magnolia.cms.servlets.MgnlServletContextListener</listener-class>
   </listener>
-  <!-- These are the default paths searched for magnolia configuration. Uncomment if you need to customize this. -->
-  <!-- Be aware that your container might do its own variables replacement here. (Resin does, Tomcat doesn't, for instance) -->
+  <!-- These are the default paths searched for magnolia configuration. Uncomment if you need to customize these.
+       Your container might also do its own variables substitution here. Tomcat, for instance, allows you to use
+       system properties, such as ${user.home}.
+       -->
   <!--
   <context-param>
     <param-name>magnolia.initialization.file</param-name>
