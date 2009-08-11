@@ -111,9 +111,14 @@ public class ModuleManagerImpl implements ModuleManager {
 
     // for tests only
     protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
+        this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance());
+    }
+
+    // for tests only
+    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry instance) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;
-        this.registry = ModuleRegistry.Factory.getInstance();
+        this.registry = instance;
     }
 
     public List<ModuleDefinition> loadDefinitions() throws ModuleManagementException {
