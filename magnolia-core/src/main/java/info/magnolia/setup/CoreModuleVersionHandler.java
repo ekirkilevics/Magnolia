@@ -73,9 +73,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
 
-    private final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Update link rendering implementation class",ContentRepository.CONFIG, "/server/rendering/linkResolver","class", "info.magnolia.cms.link.LinkResolverImpl","info.magnolia.link.LinkTransformerManager");
-    private final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates rendering configuration to new link management.", ContentRepository.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
-
     public CoreModuleVersionHandler() {
         super();
 
@@ -109,6 +106,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new CheckAndModifyPropertyValueTask("SWF MIME mapping", "Checks and updates SWF MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream", "application/x-shockwave-flash"))
         );
 
+        final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Updates the link rendering implementation class.",ContentRepository.CONFIG, "/server/rendering/linkResolver","class", "info.magnolia.cms.link.LinkResolverImpl","info.magnolia.link.LinkTransformerManager");
+        final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates the link management configuration.", ContentRepository.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
         register(DeltaBuilder.update("4.0", "")
                 .addTask(auditTrailManagerTask)
                 .addTask(bootstrapFreemarker)
