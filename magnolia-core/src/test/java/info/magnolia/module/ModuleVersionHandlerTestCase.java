@@ -69,7 +69,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
     /**
      * A helper method to quickly set up a few properties to simulate a given environment.
-     * Could be advantageously replaced by a dsl-like api, see MAGNOLIA-
+     * Could be advantageously replaced by a dsl-like api, see MAGNOLIA-2828.
      */
     protected void setupProperty(final String workspace, String path, String propertyName, String value) throws RepositoryException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(workspace);
