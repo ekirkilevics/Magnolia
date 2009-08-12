@@ -53,14 +53,16 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
  * @author fguist
  * @version $Revision: 17383 $ ($Author: gjoseph $)
  */
 public class NodeMapWrapper extends ContentWrapper implements Map {
+
     private static final Logger log = LoggerFactory.getLogger(NodeMapWrapper.class);
-    
+
     /**
      * Handle used to construct links.
      */
@@ -111,14 +113,14 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
      */
     public Object get(Object key) {
         try {
-            if(!getWrappedContent().hasNodeData((String)key)){
+            if (!getWrappedContent().hasNodeData((String) key)) {
                 // support the old lower case value
-                if("uuid".equalsIgnoreCase((String)key)){
+                if ("uuid".equalsIgnoreCase((String) key)) {
                     key = "UUID";
                 }
-                if(hasProperty((String)key)){
+                if (hasProperty((String) key)) {
                     try {
-                        return PropertyUtils.getProperty(this.getWrappedContent(), (String)key);
+                        return PropertyUtils.getProperty(this.getWrappedContent(), (String) key);
                     }
                     catch (Exception e) {
                         log.error("can't read property " + key + " from the node " + this.getWrappedContent(), e);
@@ -144,8 +146,11 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
         }
         else {
             try {
-                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(nodeData.getString(), LinkTransformerManager.getInstance().getBrowserLink(handle));
-            } catch (LinkException e) {
+                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(
+                    nodeData.getString(),
+                    LinkTransformerManager.getInstance().getBrowserLink(handle));
+            }
+            catch (LinkException e) {
                 log.warn("Failed to parse links with from " + nodeData.getName(), e);
                 value = nodeData.getString();
             }
@@ -153,9 +158,9 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
         return value;
     }
 
-    protected boolean hasProperty(Object key){
+    protected boolean hasProperty(Object key) {
         try {
-            return PropertyUtils.getPropertyDescriptor(this.getWrappedContent(), (String)key) != null;
+            return PropertyUtils.getPropertyDescriptor(this.getWrappedContent(), (String) key) != null;
         }
         catch (Exception e) {
             return false;
