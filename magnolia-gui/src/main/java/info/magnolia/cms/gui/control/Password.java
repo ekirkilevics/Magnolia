@@ -74,7 +74,9 @@ public class Password extends ControlImpl {
         else {
             value = this.getValue();
         }
+        value = StringUtils.strip(value);
         html.append("<input type=\"password\""); //$NON-NLS-1$
+        html.append(" autocomplete=\"off\""); //$NON-NLS-1$
         html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" value=\"" + value + "\""); //$NON-NLS-1$ //$NON-NLS-2$
