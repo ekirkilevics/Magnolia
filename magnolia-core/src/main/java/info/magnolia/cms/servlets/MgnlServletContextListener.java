@@ -165,6 +165,10 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         PropertiesInitializer.getInstance().loadAllProperties(propertiesFilesString, rootPath);
 
+        // expose server name as a system property, so it can be used in log4j configurations
+        // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
+        System.setProperty("server", servername);
+
         Log4jConfigurer.initLogging();
 
         this.loader = new ConfigLoader(context);
