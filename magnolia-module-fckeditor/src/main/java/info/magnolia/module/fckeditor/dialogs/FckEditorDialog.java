@@ -403,6 +403,10 @@ public class FckEditorDialog extends DialogBox {
             // we have to add the context path for images and files but not for pages!
             value = LinkUtil.convertUUIDsToEditorLinks(value);
 
+            // see MAGNOLIA-2768
+            if (value != null)
+            {
+
             // this section is for backward compatibility - see MAGNOLIA-2088
             final Matcher matcher = LinkHelper.LINK_OR_IMAGE_PATTERN.matcher(value);
             final StringBuffer res = new StringBuffer();
@@ -422,6 +426,7 @@ public class FckEditorDialog extends DialogBox {
             }
             matcher.appendTail(res);
             return res.toString();
+            }
         }
 
         return StringUtils.EMPTY;
