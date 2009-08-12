@@ -1,3 +1,4 @@
+// NEXT-589 patch per gestire nodedata multiValue - da portare in magnolia
 /**
  * This file Copyright (c) 2008-2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
@@ -36,8 +37,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkTransformerManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +49,7 @@ import java.util.Set;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -57,7 +59,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
  * @author fguist
- * @version $Revision: 17383 $ ($Author: gjoseph $)
+ * @version $Revision: 2161 $ ($Author: fgiust $)
  */
 public class NodeMapWrapper extends ContentWrapper implements Map {
 
@@ -143,6 +145,23 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
             // only file path is supported
             FileProperties props = new FileProperties(getWrappedContent(), (String) key);
             value = props.getProperty(FileProperties.PATH);
+        }
+        else if (nodeData.isMultiValue() == 1) {
+
+            Value[] values = nodeData.getValues();
+
+            String[] valueStrings = new String[values.length];
+
+            for (int j = 0; j < values.length; j++) {
+                try {
+                    valueStrings[j] = values[j].getString();
+                }
+                catch (RepositoryException e) {
+                    log.debug(e.getMessage());
+                }
+            }
+
+            value = valueStrings;
         }
         else {
             try {
