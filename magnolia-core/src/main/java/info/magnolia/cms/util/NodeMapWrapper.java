@@ -1,4 +1,3 @@
-// NEXT-589 patch per gestire nodedata multiValue - da portare in magnolia
 /**
  * This file Copyright (c) 2008-2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
