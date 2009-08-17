@@ -58,11 +58,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+
 /**
  * @author pbracher
  * @author fgiust
  */
 public class PropertiesInitializer {
+
     /**
      * The properties file containing the bean default implementations
      */
@@ -82,7 +84,8 @@ public class PropertiesInitializer {
         return (PropertiesInitializer) FactoryUtil.getSingleton(PropertiesInitializer.class);
     }
 
-    private static Logger log =  LoggerFactory.getLogger(PropertiesInitializer.class);
+    private static Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
+
     /**
      * Default value for the MAGNOLIA_INITIALIZATION_FILE parameter.
      */
@@ -128,7 +131,8 @@ public class PropertiesInitializer {
         try {
             final List moduleDefinitions = moduleManager.loadDefinitions();
             loadModuleProperties(moduleDefinitions);
-        } catch (ModuleManagementException e) {
+        }
+        catch (ModuleManagementException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -154,7 +158,8 @@ public class PropertiesInitializer {
         String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
 
         boolean found = false;
-        // attempt to load each properties file at the given locations in reverse order: first files in the list override the later ones
+        // attempt to load each properties file at the given locations in reverse order: first files in the list
+        // override the later ones
         for (int j = propertiesLocation.length - 1; j >= 0; j--) {
             String location = StringUtils.trim(propertiesLocation[j]);
 
@@ -164,7 +169,9 @@ public class PropertiesInitializer {
         }
 
         if (!found) {
-            String msg = MessageFormat.format("No configuration found using location list {0}. Base path is [{1}]", new Object[]{ArrayUtils.toString(propertiesLocation), rootPath}); //$NON-NLS-1$
+            String msg = MessageFormat
+                .format(
+                    "No configuration found using location list {0}. Base path is [{1}]", new Object[]{ArrayUtils.toString(propertiesLocation), rootPath}); //$NON-NLS-1$
             log.error(msg);
             throw new ConfigurationException(msg);
         }
@@ -192,7 +199,10 @@ public class PropertiesInitializer {
 
         }
         else {
-            log.warn("{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.", MGNL_BEANS_PROPERTIES);
+            log
+                .warn(
+                    "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
+                    MGNL_BEANS_PROPERTIES);
         }
     }
 
@@ -206,7 +216,8 @@ public class PropertiesInitializer {
         final File initFile;
         if (Path.isAbsolute(location)) {
             initFile = new File(location);
-        } else {
+        }
+        else {
             initFile = new File(rootPath, location);
         }
 

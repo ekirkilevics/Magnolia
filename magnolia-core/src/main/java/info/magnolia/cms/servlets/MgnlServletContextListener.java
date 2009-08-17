@@ -49,11 +49,12 @@ import javax.servlet.ServletContextListener;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+
 /**
  * <p>
- * Magnolia main listener: reads initialization parameter from a properties file. The name of the file can be
- * defined as a context parameter in web.xml. Multiple path, comma separated, are supported (the first existing file in
- * the list will be used), and the following variables will be used:
+ * Magnolia main listener: reads initialization parameter from a properties file. The name of the file can be defined as
+ * a context parameter in web.xml. Multiple path, comma separated, are supported (the first existing file in the list
+ * will be used), and the following variables will be used:
  * </p>
  * <ul>
  * <li><code>${servername}</code>: name of the server where the webapp is running, lowercase</li>
@@ -92,34 +93,34 @@ import java.net.UnknownHostException;
  * <ul>
  * <li>a full path</li>
  * <li>a path relative to the webapp root</li>
- * <li> a file name which will be loaded from the classpath</li>
+ * <li>a file name which will be loaded from the classpath</li>
  * </ul>
  * </dd>
  * <dt>magnolia.root.sysproperty</dt>
  * <dd>Name of a system variable which will be set to the webapp root. You can use this property in log4j configuration
- * files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>. <strong>Important</strong>:
- * if you drop multiple magnolia wars in a container which doesn't isolate system properties (e.g. tomcat) you will need
- * to change the name of the <code>magnolia.root.sysproperty</code> variable in web.xml and in log4j configuration
- * files.</dd>
+ * files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>.
+ * <strong>Important</strong>: if you drop multiple magnolia wars in a container which doesn't isolate system properties
+ * (e.g. tomcat) you will need to change the name of the <code>magnolia.root.sysproperty</code> variable in web.xml and
+ * in log4j configuration files.</dd>
  * <dt>magnolia.bootstrap.dir</dt>
- * <dd> Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
+ * <dd>Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
  * the repository, they are initialized importing xml files found in this folder. If you don't want to let magnolia
  * automatically initialize repositories simply remove this parameter.</dd>
  * </dl>
  * <h3>Advance use: deployment service</h3>
  * <p>
- * Using the <code>${servername}</code> and <code>${webapp}</code> properties you can easily bundle in the same
- * webapp different set of configurations which are automatically applied dependending on the server name (useful for
- * switching between development, test and production instances where the repository configuration need to be different)
- * or the webapp name (useful to bundle both the public and admin log4j/jndi/bootstrap configuration in the same war).
- * By default the initializer will try to search for the file in different location with different combination of
- * <code>servername</code> and <code>webapp</code>: the <code>default</code> fallback directory will be used if
- * no other environment-specific directory has been added.
+ * Using the <code>${servername}</code> and <code>${webapp}</code> properties you can easily bundle in the same webapp
+ * different set of configurations which are automatically applied dependending on the server name (useful for switching
+ * between development, test and production instances where the repository configuration need to be different) or the
+ * webapp name (useful to bundle both the public and admin log4j/jndi/bootstrap configuration in the same war). By
+ * default the initializer will try to search for the file in different location with different combination of
+ * <code>servername</code> and <code>webapp</code>: the <code>default</code> fallback directory will be used if no other
+ * environment-specific directory has been added.
  * </p>
  * @author Fabrizio Giustina
- *
  */
 public class MgnlServletContextListener implements ServletContextListener {
+
     private static final Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
 
     /**
@@ -138,6 +139,7 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         if (loader != null) {
             MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+
                 public void exec() {
                     loader.unload(sce.getServletContext());
                 }
@@ -159,7 +161,7 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         String webapp = initWebappName(rootPath);
 
-        log.debug("servername is {}, rootPath is {}, webapp is {}", new Object[] {servername, rootPath, webapp}); //$NON-NLS-1$
+        log.debug("servername is {}, rootPath is {}, webapp is {}", new Object[]{servername, rootPath, webapp}); //$NON-NLS-1$
 
         String propertiesFilesString = getPropertiesFilesString(context, servername, webapp);
 
@@ -176,7 +178,8 @@ public class MgnlServletContextListener implements ServletContextListener {
     }
 
     protected void startServer(final ServletContext context) {
-        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+
             public void exec() {
                 loader.load(context);
             }
@@ -186,11 +189,16 @@ public class MgnlServletContextListener implements ServletContextListener {
     protected String getPropertiesFilesString(ServletContext context, String servername, String webapp) {
         String propertiesFilesString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
         if (StringUtils.isEmpty(propertiesFilesString)) {
-            log.debug("{} value in web.xml is undefined, falling back to default: {}", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER);
+            log.debug(
+                "{} value in web.xml is undefined, falling back to default: {}",
+                MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE,
+                PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER);
             propertiesFilesString = PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER;
         }
         else {
-            log.debug("{} value in web.xml is :'{}'", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
+            log
+                .debug(
+                    "{} value in web.xml is :'{}'", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
         }
         return PropertiesInitializer.processPropertyFilesString(servername, webapp, propertiesFilesString);
     }
@@ -211,7 +219,8 @@ public class MgnlServletContextListener implements ServletContextListener {
         String realPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
         realPath = StringUtils.removeEnd(realPath, "/");
         if (realPath == null) {
-            // don't use new java.io.File("x").getParentFile().getAbsolutePath() to find out real directory, could throw a NPE for unexpanded war
+            // don't use new java.io.File("x").getParentFile().getAbsolutePath() to find out real directory, could throw
+            // a NPE for unexpanded war
             throw new RuntimeException(
                 "Magnolia is not configured properly and therefore unable to start: real path can't be obtained [ctx real path:"
                     + context.getRealPath(StringUtils.EMPTY)

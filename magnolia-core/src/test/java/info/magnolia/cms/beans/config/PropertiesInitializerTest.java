@@ -39,11 +39,13 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.net.URL;
 
+
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
 public class PropertiesInitializerTest extends TestCase {
+
     protected void setUp() throws Exception {
         super.setUp();
         // shunt log4j
