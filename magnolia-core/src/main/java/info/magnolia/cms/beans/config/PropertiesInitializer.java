@@ -33,18 +33,13 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.PropertyDefinition;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,6 +52,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -79,6 +83,18 @@ public class PropertiesInitializer {
      * Placeholder suffix: "}"
      */
     public static final String PLACEHOLDER_SUFFIX = "}";
+
+    /**
+     * Context attribute prefix, to obtain a property definition like ${contextAttribute/property}, that can refer to
+     * any context attribute.
+     */
+    public static final String CONTEXT_ATTRIBUTE_PLACEHOLDER_PREFIX = "contextAttribute/"; //$NON-NLS-1$
+
+    /**
+     * Context parameter prefix, to obtain a property definition like ${contextParam/property}, that can refer to any
+     * context parameter.
+     */
+    public static final String CONTEXT_PARAM_PLACEHOLDER_PREFIX = "contextParam/"; //$NON-NLS-1$
 
     public static PropertiesInitializer getInstance() {
         return (PropertiesInitializer) FactoryUtil.getSingleton(PropertiesInitializer.class);
@@ -264,9 +280,59 @@ public class PropertiesInitializer {
         }
     }
 
-    public static String processPropertyFilesString(String servername, String webapp, String propertiesFilesString) {
+    /**
+     * Returns the property files configuration string passed, replacing all the needed values: ${servername} will be
+     * reaplced with the name of the server, ${webapp} will be replaced with webapp name, and ${contextAttribute/*} and
+     * ${contextParam/*} will be replaced with the corresponding attributes or parameters taken from servlet context.
+     * This can be very useful for all those application servers that has multiple instances on the same server, like
+     * WebSphere. Typical usage in this case:
+     * <code>WEB-INF/config/${servername}/${contextAttribute/com.ibm.websphere.servlet.application.host}/magnolia.properties</code>
+     * @param context Servlet context
+     * @param servername Server name
+     * @param webapp Webapp name
+     * @param propertiesFilesString Property file configuration string.
+     * @return Property file configuration string with everything replaced.
+     */
+    public static String processPropertyFilesString(ServletContext context, String servername, String webapp,
+        String propertiesFilesString) {
+        // Replacing basic properties.
         propertiesFilesString = StringUtils.replace(propertiesFilesString, "${servername}", servername); //$NON-NLS-1$
         propertiesFilesString = StringUtils.replace(propertiesFilesString, "${webapp}", webapp); //$NON-NLS-1$
+
+        // Replacing servlet context attributes (${contextAttribute/something})
+        final String contextAttributePlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_ATTRIBUTE_PLACEHOLDER_PREFIX;
+        String[] contextAttributes = StringUtils.stripAll(StringUtils.substringsBetween(
+            propertiesFilesString,
+            contextAttributePlaceHolder,
+            PLACEHOLDER_SUFFIX));
+        if (!ArrayUtils.isEmpty(contextAttributes)) {
+            for (String contextAttribute : contextAttributes) {
+                if (contextAttribute != null) {
+                    // Some implementation may not accept a null as attribute key, but all should accept an empty
+                    // string.
+                    String originalPlaceHolder = contextAttributePlaceHolder + contextAttribute + PLACEHOLDER_SUFFIX;
+                    propertiesFilesString = StringUtils.replace(propertiesFilesString, originalPlaceHolder, ObjectUtils
+                        .toString(context.getAttribute(contextAttribute), originalPlaceHolder));
+                }
+            }
+        }
+
+        // Replacing servlet context parameters (${contextParam/something})
+        final String contextParamPlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_PARAM_PLACEHOLDER_PREFIX;
+        String[] contextParams = StringUtils.stripAll(StringUtils.substringsBetween(
+            propertiesFilesString,
+            contextParamPlaceHolder,
+            PLACEHOLDER_SUFFIX));
+        if (!ArrayUtils.isEmpty(contextParams)) {
+            for (String contextParam : contextParams) {
+                if (contextParam != null) {
+                    // Some implementation may not accept a null as param key, but an empty string? TODO Check.
+                    String originalPlaceHolder = contextParamPlaceHolder + contextParam + PLACEHOLDER_SUFFIX;
+                    propertiesFilesString = StringUtils.replace(propertiesFilesString, originalPlaceHolder, StringUtils
+                        .defaultString(context.getInitParameter(contextParam), originalPlaceHolder));
+                }
+            }
+        }
 
         return propertiesFilesString;
     }

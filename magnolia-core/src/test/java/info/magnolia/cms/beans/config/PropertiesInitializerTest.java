@@ -39,6 +39,8 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.net.URL;
 
+import com.mockrunner.mock.web.MockServletContext;
+
 
 /**
  * @author fgiust
@@ -84,5 +86,36 @@ public class PropertiesInitializerTest extends TestCase {
 
     public void testSelfReferencingProperty() throws Exception {
         assertEquals("${test.circular3}", SystemProperty.getProperty("test.circular3"));
+    }
+
+    public void testFileResolution() {
+
+        MockServletContext ctx = new MockServletContext();
+        String replaced = PropertiesInitializer.processPropertyFilesString(
+            ctx,
+            "xserver",
+            "xwebapp",
+            PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER);
+
+        assertEquals("WEB-INF/config/xserver/xwebapp/magnolia.properties," //$NON-NLS-1$
+            + "WEB-INF/config/xserver/magnolia.properties," //$NON-NLS-1$
+            + "WEB-INF/config/xwebapp/magnolia.properties," //$NON-NLS-1$
+            + "WEB-INF/config/default/magnolia.properties," //$NON-NLS-1$
+            + "WEB-INF/config/magnolia.properties", replaced);
+    }
+
+    public void testFileResolutionCtxAttributes() {
+
+        MockServletContext ctx = new MockServletContext();
+        ctx.setAttribute("attribute", "attributevalue");
+        ctx.setInitParameter("param", "paramvalue");
+
+        String replaced = PropertiesInitializer.processPropertyFilesString(
+            ctx,
+            "xserver",
+            "xwebapp",
+            "WEB-INF/${contextParam/param}/${contextAttribute/attribute}");
+
+        assertEquals("WEB-INF/paramvalue/attributevalue", replaced);
     }
 }

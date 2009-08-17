@@ -200,7 +200,7 @@ public class MgnlServletContextListener implements ServletContextListener {
                 .debug(
                     "{} value in web.xml is :'{}'", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
         }
-        return PropertiesInitializer.processPropertyFilesString(servername, webapp, propertiesFilesString);
+        return PropertiesInitializer.processPropertyFilesString(context, servername, webapp, propertiesFilesString);
     }
 
     protected String initWebappName(String rootPath) {
