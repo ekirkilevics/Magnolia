@@ -35,6 +35,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -99,7 +100,7 @@ public class PageIterator extends TagSupport {
     }
 
     private void initContentIterator() {
-        Content activePage = Resource.getCurrentActivePage();
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
         Collection children = activePage.getChildren(ItemType.CONTENT);
 
         for (Iterator i = children.iterator(); i.hasNext();) {
