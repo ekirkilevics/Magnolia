@@ -113,7 +113,7 @@ public class Version {
 
         log.debug("parsing version [{}]", versionStr);
 
-        if (UndefinedDevelopmentVersion.KEY.equals(versionStr)) {
+        if (UndefinedDevelopmentVersion.isDevelopmentVersion(versionStr)) {
             // development mode.
             return UNDEFINED_DEVELOPMENT_VERSION;
         }
@@ -207,11 +207,12 @@ public class Version {
     }
 
     /**
-     * A undefined developer version being always equivalent to other versions.
-     * This is mainly used to avoid updates during
+     * A undefined developer version being always equivalent to other versions. Any version in the module xml starting
+     * with <code>${</code> like <code>${project.version}</code> or <code>${buildNumber}</code>
      */
     static final class UndefinedDevelopmentVersion extends Version {
 
+        @Deprecated
         static final String KEY = "${project.version}";
 
         public UndefinedDevelopmentVersion() {
@@ -225,6 +226,11 @@ public class Version {
         public String toString() {
             return KEY;
         }
+
+        public static boolean isDevelopmentVersion(String version) {
+            return version != null && version.startsWith("${");
+        }
+
     }
 
     // generated methods:
