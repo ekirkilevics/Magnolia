@@ -33,12 +33,9 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
-import java.util.Set;
-
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.link.Link;
 import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.module.cache.Cache;
@@ -46,21 +43,25 @@ import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.voting.voters.VoterSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
  * A basic CachePolicy which will drive the usage of the cache based on the fact that the element has already been
- * cached or not. It also supports a simple bypass list and voters.
+ * cached or not. It also supports a simple bypass list and voters. You can set the "multiplehosts" property to true if
+ * cache entries must be based on the request hostname+uri rather than just the uri.
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision: 1821 $ ($Author: fgiust $)
  */
 public class Default implements CachePolicy {
 
     private static final Logger log = LoggerFactory.getLogger(Default.class);
 
     private VoterSet voters;
+
+    private boolean multiplehosts;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState,
         final FlushPolicy flushPolicy) {
@@ -109,7 +110,13 @@ public class Default implements CachePolicy {
     }
 
     public Object retrieveCacheKey(final AggregationState aggregationState) {
-        return aggregationState.getOriginalURI();
+
+        String uri = aggregationState.getOriginalURI();
+        if (multiplehosts) {
+            return MgnlContext.getWebContext().getRequest().getServerName() + "." + uri;
+        }
+
+        return uri;
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
@@ -130,4 +137,21 @@ public class Default implements CachePolicy {
     public void setVoters(VoterSet voters) {
         this.voters = voters;
     }
+
+    /**
+     * Returns the multiplehosts.
+     * @return the multiplehosts
+     */
+    public boolean isMultiplehosts() {
+        return multiplehosts;
+    }
+
+    /**
+     * Sets the multiplehosts.
+     * @param multiplehosts the multiplehosts to set
+     */
+    public void setMultiplehosts(boolean multiplehosts) {
+        this.multiplehosts = multiplehosts;
+    }
+
 }
