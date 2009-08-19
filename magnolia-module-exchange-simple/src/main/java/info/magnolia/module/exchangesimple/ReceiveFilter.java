@@ -65,6 +65,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.lock.LockException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -283,8 +284,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                 }
                 Content beforeContent = hm.getContentByUUID(siblingUUID);
                 log.debug("Ordering {} before {}", name, beforeContent.getName());
-                parent.orderBefore(name, beforeContent.getName());
-                parent.save();
+                order(parent, name, beforeContent.getName());
                 break;
             } catch (ItemNotFoundException e) {
                 // ignore
@@ -296,13 +296,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
 
         // ensure the no sibling nodes are at the end ... since move is not activated immediately it is sometimes necessary to preserve right order
         if (siblings.isEmpty()) {
-            parent.orderBefore(name, null);
-            parent.save();
+            order(parent, name, null);
         }
         return name;
     }
 
-     /**
+
+    protected void order(Content parent, String name, String orderBefore) throws RepositoryException {
+        try {
+            parent.orderBefore(name, orderBefore);
+        } catch (UnsupportedRepositoryOperationException e) {
+            // since not all types support ordering we should not enforce it, but only log the error
+            log.warn("Failed to order unorderable content {} at {} due to {}", new Object[] {name, parent.getHandle(), e.getMessage()});
+        }
+        parent.save();
+    }
+
+    /**
       * Copy all properties from source to destination (by cleaning the old properties).
       * @param source the content node to be copied
       * @param destination the destination node
