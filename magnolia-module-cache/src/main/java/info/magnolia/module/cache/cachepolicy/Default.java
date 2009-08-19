@@ -49,11 +49,10 @@ import info.magnolia.voting.voters.VoterSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * A basic CachePolicy which will drive the usage of the cache
- * based on the fact that the element has already been cached
- * or not. It also supports a simple bypass list and voters.
- *
+ * A basic CachePolicy which will drive the usage of the cache based on the fact that the element has already been
+ * cached or not. It also supports a simple bypass list and voters.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -63,7 +62,8 @@ public class Default implements CachePolicy {
 
     private VoterSet voters;
 
-    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
+    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState,
+        final FlushPolicy flushPolicy) {
         final Object key = retrieveCacheKey(aggregationState);
 
         if (shouldBypass(aggregationState, key)) {
@@ -82,7 +82,8 @@ public class Default implements CachePolicy {
             if (cache.hasElement(key)) {
                 final Object cachedEntry = cache.get(key);
                 return new CachePolicyResult(CachePolicyResult.useCache, key, cachedEntry);
-            } else {
+            }
+            else {
                 return new CachePolicyResult(CachePolicyResult.store, key, null);
             }
         }
@@ -96,7 +97,8 @@ public class Default implements CachePolicy {
      */
     protected boolean shouldRefresh(AggregationState aggregationState, Object key) {
         String cacheControl = ((WebContext) MgnlContext.getInstance()).getRequest().getHeader("Cache-Control");
-        // TODO: check for pragma as well?? RFC says "HTTP/1.1 caches SHOULD treat "Pragma: no-cache" as if the client had sent "Cache-Control: no-cache"
+        // TODO: check for pragma as well?? RFC says "HTTP/1.1 caches SHOULD treat "Pragma:
+        // no-cache" as if the client had sent "Cache-Control: no-cache"
         return cacheControl != null && cacheControl.equals("no-cache");
     }
 
@@ -112,11 +114,12 @@ public class Default implements CachePolicy {
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         try {
-            //TODO: retrieve multiple keys when i18n is enabled
-            return new Object[] {LinkUtil.convertUUIDtoURI(uuid, repository)};
-        } catch (LinkException e) {
+            // TODO: retrieve multiple keys when i18n is enabled
+            return new Object[]{LinkUtil.convertUUIDtoURI(uuid, repository)};
+        }
+        catch (LinkException e) {
             log.debug("Failed to convert " + uuid + " from " + repository + " repository to URI.", e);
-            return new Object[] {};
+            return new Object[]{};
         }
     }
 
