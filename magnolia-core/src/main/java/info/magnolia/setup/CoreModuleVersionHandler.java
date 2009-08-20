@@ -130,15 +130,18 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new UpdateUsers())
                 .addTask(new CheckAndModifyPropertyValueTask("Fix for anonymous user permissions", "Fix previously incorrect path for anonymous user permissions.", ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", "/system/anonymous/*"))
 
-                // since these mimetypes were correct with the 3.6.4 release, but with wrong values, and this
-                // has only been recognized after 4.0.1 and 4.1 were released, we need to apply the same
-                // fix tasks for 3.6.7, 4.0.2 and 4.1.1
-                .addTask(fixMimetype("png", "image/png;", "image/png"))
-                .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
-
                 // warning - if adding update tasks for the 4.0.2 release below this point,
                 // make sure they'd also be applied correctly for the 4.1 branch in the various possible update scenarios
                 // since 4.1 will be released before 4.0.2 (4.0.2 -> 4.1 -> 4.1.1; 4.0.1 -> 4.1 -> 4.1.1)
+        );
+
+        register(DeltaBuilder.update("4.0.3", "")
+
+                // since these mimetypes were correct with the 3.6.4 release, but with wrong values, and this
+                // has only been recognized after 4.0.1 and 4.1 were released, we need to apply the same
+                // fix tasks for 3.6.7, 4.0.3 and 4.1.1
+                .addTask(fixMimetype("png", "image/png;", "image/png"))
+                .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
         );
 
         register(DeltaBuilder.update("4.1.1", "")
