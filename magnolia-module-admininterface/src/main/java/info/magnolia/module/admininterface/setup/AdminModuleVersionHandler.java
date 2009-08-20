@@ -36,7 +36,7 @@ package info.magnolia.module.admininterface.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.admininterface.setup.for4_0.IfQuickStartSetDefaultPublicURITask;
+import info.magnolia.module.admininterface.setup.for4_0.UpdatedDefaultPublicURIWarning;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
@@ -63,7 +63,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
-    private final IfQuickStartSetDefaultPublicURITask setDefaultPublicURI = new IfQuickStartSetDefaultPublicURITask("Set public URI", "Sets the default public URI if there is no templates or website content.", new SetDefaultPublicURI("defaultPublicURI"));
+    //Only for installation
+    private final SetDefaultPublicURI setDefaultPublicURI = new SetDefaultPublicURI("defaultPublicURI");
 
     public AdminModuleVersionHandler() {
         final String pathToRestartPage = "/modules/adminInterface/pages/restart";
@@ -114,8 +115,19 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
 
                 .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
                 .addTask(new BootstrapSingleResource("Quickstart page", "Registers the page to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
-                .addTask(setDefaultPublicURI)
                 .addTask(new BootstrapSingleResource("User preferences dialog", "The user preferences dialog is not the user edit dialog anymore.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.userpreferences.xml"))
+        );
+
+        register(DeltaBuilder.update("4.0.3", "")
+                //since 4.0 defaultPublicURI was updated and it shoudn't have
+                //Warn that defaultPublicURI was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
+                .addTask(new UpdatedDefaultPublicURIWarning())
+        );
+
+        register(DeltaBuilder.update("4.1.1", "")
+                //since 4.0 defaultPublicURI was updated and it shoudn't have
+                //Warn that defaultPublicURI was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
+                .addTask(new UpdatedDefaultPublicURIWarning())
         );
     }
 
@@ -127,6 +139,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(adminUsersSubMenu);
         tasks.add(sysUsersSubMenu);
         tasks.add(subscribersMenu);
+        //set public uri only on installation
         tasks.add(setDefaultPublicURI);
 
         return tasks;
