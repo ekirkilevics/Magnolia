@@ -44,6 +44,7 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
+import info.magnolia.module.templating.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.module.templating.setup.for4_0.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
 
@@ -93,6 +94,18 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
 //                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/dialogs/selectParagraph"),
 //                        new CreateNodeTask(null, null, ContentRepository.CONFIG, "/modules/templating/dialogs", "selectParagraph", ItemType.CONTENT.getSystemName()),
 //                        new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/templating/dialogs/selectParagraph", "class", ParagraphSelectDialog.class.getName())))
+
+      //since 4.0 templatePath property was moved into parameters content node
+        //has to be fixed in 4.0.3 and 4.1.1
+        register(DeltaBuilder.update("4.0.3", "")
+                .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
+        );
+
+        //since 4.0 templatePath property was moved into parameters content node
+        //has to be fixed in 4.0.3 and 4.1.1
+        register(DeltaBuilder.update("4.1.1", "")
+                .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
+        );
 
     }
 
