@@ -169,9 +169,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     /**
-     * This is essentially the same case as testing the update from 4.0.2+, since we have corrected values
+     * This is essentially the same case as testing the update from 4.0.3+, since we have corrected values
      * for the mimetypes; when updating from 4.0.1 in an instance where the user
-     * customized the mime types values, or updating from 4.0.2, where the values would have been fixed
+     * customized the mime types values, or updating from 4.0.3, where the values would have been fixed
      * by update tasks, is equivalent.
      */
     public void testPngSwfMimeTypesOnUpdateFrom401WithUserFixedValues() throws ModuleManagementException, RepositoryException {
