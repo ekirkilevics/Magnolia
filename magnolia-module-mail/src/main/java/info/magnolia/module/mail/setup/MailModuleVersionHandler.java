@@ -40,6 +40,7 @@ import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -99,5 +100,28 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("Mail menu", "Installs mail tools menu.", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
                 .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", ContentRepository.CONFIG, "/modules/adminInterface/commands/default/sendMail", "class", "info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand" ))
         );
+
+        register(DeltaBuilder.update("4.0.3", "")
+                //since 4.0 mail command class was not updated to the new value
+                //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
+                .addTask(fixMailCommand("info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand"))
+        );
+
+        register(DeltaBuilder.update("4.1.1", "")
+              //since 4.0 mail command class was not updated to the new value
+              //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
+              .addTask(fixMailCommand("info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand"))
+        );
+    }
+
+    private PropertyValueDelegateTask fixMailCommand(final String previouslyWrongValue, final String fixedValue) {
+        final String workspaceName = ContentRepository.CONFIG;
+        final String nodePath = "/modules/adminInterface/commands/default/sendMail";
+        final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, nodePath,
+                "class", previouslyWrongValue, fixedValue);
+
+        return new PropertyValueDelegateTask("Mail Command",
+                "Checks and updates the mail command if not correct.",
+                workspaceName, nodePath, "class", previouslyWrongValue, false, fixTask);
     }
 }
