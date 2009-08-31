@@ -10,6 +10,10 @@
       <param name="anonymousId" value="anonymous" />
     </LoginModule>
   </Security>
+  <DataStore class="org.apache.jackrabbit.core.data.FileDataStore">
+    <param name="path" value="${rep.home}/repository/datastore"/>
+    <param name="minRecordLength" value="1024"/>
+  </DataStore>
   <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
   <Workspace name="default">
     <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
