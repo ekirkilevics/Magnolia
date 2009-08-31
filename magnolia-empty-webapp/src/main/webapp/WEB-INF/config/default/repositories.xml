@@ -48,7 +48,7 @@
     </Repository>
 
     <Repository name="access" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
+        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-bundle-derby-search.xml" />
         <param name="repositoryHome" value="repositories/access" />
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
