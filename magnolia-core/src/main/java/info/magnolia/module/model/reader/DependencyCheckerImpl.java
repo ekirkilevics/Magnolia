@@ -44,20 +44,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility class to check dependencies between instances of ModuleDescriptors and sort them according to
- * their dependencies.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class DependencyCheckerImpl implements DependencyChecker {
 
-    /**
-     * Checks dependencies between the given modules, throws a ModuleDependencyException if there is
-     * a dependency mismatch.
-     *
-     * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
-     */
     public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
         for (ModuleDefinition def : moduleDefinitions.values()) {
             for (DependencyDefinition dep : def.getDependencies()) {
@@ -68,9 +60,6 @@ public class DependencyCheckerImpl implements DependencyChecker {
         }
     }
 
-    /**
-     * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
-     */
     public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
         final List<ModuleDefinition> modules = new ArrayList<ModuleDefinition>(moduleDefinitions.values());
 

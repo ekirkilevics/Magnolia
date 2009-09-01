@@ -117,10 +117,10 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     // for tests only
-    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry instance, DependencyChecker dependencyChecker) {
+    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;
-        this.registry = instance;
+        this.registry = moduleRegistry;
         this.dependencyChecker = dependencyChecker;
     }
 

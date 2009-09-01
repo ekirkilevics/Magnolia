@@ -39,12 +39,24 @@ import java.util.Map;
 import java.util.List;
 
 /**
+ * Utility class to check dependencies between instances of ModuleDescriptors and sort them according to
+ * their dependencies.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public interface DependencyChecker {
+
+    /**
+     * Checks dependencies between the given modules, throws a ModuleDependencyException if there is
+     * a dependency mismatch.
+     *
+     * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
+     */
     void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException;
 
+    /**
+     * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
+     */
     List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions);
 }
