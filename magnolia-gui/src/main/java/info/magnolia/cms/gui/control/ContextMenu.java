@@ -87,10 +87,10 @@ public class ContextMenu extends ControlImpl {
      * @return the item
      */
     public ContextMenuItem getMenuItemByName(String name) {
-        java.util.List menuItems = this.getMenuItems();
+        List menuItems = this.getMenuItems();
         for (Iterator iter = menuItems.iterator(); iter.hasNext();) {
             ContextMenuItem menuItem = (ContextMenuItem) iter.next();
-            if (menuItem != null && menuItem.getName() != null && menuItem.getName() == name) {
+            if (menuItem != null && menuItem.getName() != null && menuItem.getName().equals(name)) {
                 return menuItem;
             }
         }
