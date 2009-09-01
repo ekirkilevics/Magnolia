@@ -52,6 +52,7 @@ import info.magnolia.module.model.RepositoryDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
+import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.module.ui.ModuleManagerNullUI;
 import info.magnolia.module.ui.ModuleManagerUI;
@@ -103,6 +104,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
     private final ModuleRegistry registry;
     private final ModuleDefinitionReader moduleDefinitionReader;
+    private final DependencyChecker dependencyChecker;
 
     public ModuleManagerImpl() {
         // load all definitions from classpath
@@ -111,14 +113,15 @@ public class ModuleManagerImpl implements ModuleManager {
 
     // for tests only
     protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
-        this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance());
+        this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance(), new DependencyCheckerImpl());
     }
 
     // for tests only
-    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry instance) {
+    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry instance, DependencyChecker dependencyChecker) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;
         this.registry = instance;
+        this.dependencyChecker = dependencyChecker;
     }
 
     public List<ModuleDefinition> loadDefinitions() throws ModuleManagementException {
@@ -132,7 +135,6 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         log.debug("Loaded definitions: {}", moduleDefinitions);
 
-        final DependencyChecker dependencyChecker = new DependencyChecker();
         dependencyChecker.checkDependencies(moduleDefinitions);
         orderedModuleDescriptors = dependencyChecker.sortByDependencyLevel(moduleDefinitions);
         for (ModuleDefinition moduleDefinition : orderedModuleDescriptors) {

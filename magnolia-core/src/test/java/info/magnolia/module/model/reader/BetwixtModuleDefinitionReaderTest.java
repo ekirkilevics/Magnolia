@@ -204,8 +204,9 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("dummy", m.getName());
         assertEquals("dummy module", m.getDisplayName());
         assertEquals("a dummy module descriptor for tests", m.getDescription());
+        // this dummy module descriptor uses random classes that we know are there when running the test 
         assertEquals(BetwixtModuleDefinitionReaderTest.class.getName(), m.getClassName());
-        assertEquals(DependencyCheckerTest.class, m.getVersionHandler());
+        assertEquals(DependencyCheckerImplTest.class, m.getVersionHandler());
         assertEquals("7.8.9", m.getVersion().toString());
         assertNotNull(m.getProperties());
         assertEquals(2, m.getProperties().size());

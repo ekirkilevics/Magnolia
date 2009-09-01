@@ -45,11 +45,15 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
+import info.magnolia.module.model.reader.DependencyChecker;
+import info.magnolia.module.model.reader.ModuleDependencyException;
 import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.RepositoryException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 import static org.easymock.EasyMock.*;
 
@@ -95,7 +99,8 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         final ModuleVersionHandler versionHandlerUnderTest = newModuleVersionHandlerForTests();
         final InstallContextImpl ctx = new InstallContextImpl();
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
-        final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry) {
+        final DependencyChecker depCheck = new NullDependencyChecker();
+        final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry, depCheck) {
             protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
                 assertEquals("this test doesn't behave as expected", moduleDefinition, module);
                 // wrap and delegate so that we control getCurrentlyInstalled()
@@ -131,4 +136,14 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     protected abstract String getModuleDescriptorPath();
 
     protected abstract ModuleVersionHandler newModuleVersionHandlerForTests();
+
+    private static class NullDependencyChecker implements DependencyChecker {
+        public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
+            return;
+        }
+
+        public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
+            return new ArrayList(moduleDefinitions.values());
+        }
+    }
 }

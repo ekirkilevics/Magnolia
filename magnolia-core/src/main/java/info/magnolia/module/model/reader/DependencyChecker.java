@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,69 +33,18 @@
  */
 package info.magnolia.module.model.reader;
 
-import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.module.model.Version;
-import info.magnolia.module.model.VersionRange;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 /**
- * Utility class to check dependencies between instances of ModuleDescriptors and sort them according to
- * their dependencies.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyChecker {
+public interface DependencyChecker {
+    void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException;
 
-    /**
-     * Checks dependencies between the given modules, throws a ModuleDependencyException if there is
-     * a dependency mismatch.
-     *
-     * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
-     */
-    public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
-        for (ModuleDefinition def : moduleDefinitions.values()) {
-            for (DependencyDefinition dep : def.getDependencies()) {
-                if (!dep.isOptional()) {
-                    checkSpecificDependency(def, dep, moduleDefinitions);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param moduleDefinitions a Map<String, ModuleDefinition> where the key is the module name.
-     */
-    public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
-        final List<ModuleDefinition> modules = new ArrayList<ModuleDefinition>(moduleDefinitions.values());
-
-        Collections.sort(modules, new DependencyLevelComparator(moduleDefinitions));
-
-        return modules;
-    }
-
-    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
-        final ModuleDefinition dependencyModuleDef = moduleDefinitions.get(requiredDependency.getName());
-        if (dependencyModuleDef == null) {
-            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", which was not found.");
-        }
-
-        final VersionRange requiredRange = requiredDependency.getVersionRange();
-        final Version dependencyVersion = dependencyModuleDef.getVersion();
-
-        // TODO ignore ${project.version} ? or be smarter ?
-//        if (instVersion.equals("${project.version}")) {
-//            log.info("module " + requiredDependency.getName() + " has a dynamic version [" + instVersion + "]. checks ignored");
-//            return;
-//        }
-
-        if (!requiredRange.contains(dependencyVersion)) {
-            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", but " + dependencyModuleDef + " is currently installed.");
-        }
-    }
+    List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions);
 }

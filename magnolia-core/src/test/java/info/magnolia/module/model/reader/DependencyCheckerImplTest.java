@@ -47,7 +47,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyCheckerTest extends TestCase {
+public class DependencyCheckerImplTest extends TestCase {
     private DependencyChecker depChecker;
 
     public void testSimpleDependenciesAreResolvedAndChecked() throws Exception {
@@ -216,6 +216,6 @@ public class DependencyCheckerTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        depChecker = new DependencyChecker();
+        depChecker = new DependencyCheckerImpl();
     }
 }
