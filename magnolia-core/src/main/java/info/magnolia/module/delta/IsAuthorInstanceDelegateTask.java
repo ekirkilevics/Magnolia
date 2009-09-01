@@ -36,7 +36,7 @@ package info.magnolia.module.delta;
 import info.magnolia.cms.beans.config.ContentRepository;
 
 /**
- * A task that depends on the value of the /server/admin config value. Depends on one or the other delegates
+ * A task that depends on the value of the /server/admin config value. Delegates to one of the given tasks
  * depending on its value, and fails is that property does not exist.
  *
  * @author gjoseph
