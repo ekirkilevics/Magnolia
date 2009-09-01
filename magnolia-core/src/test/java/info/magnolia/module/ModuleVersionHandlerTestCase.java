@@ -85,10 +85,12 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     /**
      * This essentially fakes calls to ModuleManager and ensures only the ModuleVersionHandler under test
      * is in use.
+     * Returns the InstallContext so one can further assert the state of the install/update (status, messages, ...)
+     *
      * It's likely that this will need improvements when we want to test ModuleVersionHandler which
      * use IsModuleInstalledOrRegistered tasks, for example.
      */
-    protected void executeUpdatesAsIfTheCurrentlyInstalledVersionWas(final Version currentlyInstalledVersion) throws ModuleManagementException {
+    protected InstallContext executeUpdatesAsIfTheCurrentlyInstalledVersionWas(final Version currentlyInstalledVersion) throws ModuleManagementException {
         final BetwixtModuleDefinitionReader reader = new BetwixtModuleDefinitionReader();
         final ModuleDefinition moduleDefinition = reader.readFromResource(getModuleDescriptorPath());
 
@@ -131,6 +133,8 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         assertEquals(InstallStatus.installDone, mm.getInstallContext().getStatus());
 
         verify(readerMock);
+
+        return ctx;
     }
 
     protected abstract String getModuleDescriptorPath();
