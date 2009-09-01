@@ -63,13 +63,13 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
-    //Only for installation
-    private final SetDefaultPublicURI setDefaultPublicURI = new SetDefaultPublicURI("defaultPublicURI");
 
     public AdminModuleVersionHandler() {
         final String pathToRestartPage = "/modules/adminInterface/pages/restart";
         register(DeltaBuilder.update("3.5", "")
+                // sets a default virtual uri mapping - only if node doesn't exist. This is also bootstrapped on installs, but overridden by SetDefaultPublicURI on public instances.
                 .addTask(new BootstrapConditionally("Install VirtualURI mappings", "Installs new configuration of virtualURI mappings.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.default.xml"))
+
                 .addTask(new BootstrapSingleResource("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.securityConfiguration.xml"))
                 .addTask(new RemoveNodeTask("New ACL Dialog", "Deletes the old ACL page.", ContentRepository.CONFIG, "/modules/adminInterface/pages/rolesACL"))
                 .addTask(new RemovePropertyTask("New ACL Dialog", "Removes the include property.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/roleedit", "file"))
@@ -104,6 +104,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
                 new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
         );
+        
         final String pathToDeploymentUtilsPage = "/modules/adminInterface/pages/deploymentUtils";
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"deployment\" page.", ContentRepository.CONFIG,
@@ -118,15 +119,10 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("User preferences dialog", "The user preferences dialog is not the user edit dialog anymore.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.userpreferences.xml"))
         );
 
-        register(DeltaBuilder.update("4.0.3", "")
-                //since 4.0 defaultPublicURI was updated and it shoudn't have
-                //Warn that defaultPublicURI was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
-                .addTask(new UpdatedDefaultPublicURIWarning())
-        );
-
         register(DeltaBuilder.update("4.1.1", "")
-                //since 4.0 defaultPublicURI was updated and it shoudn't have
-                //Warn that defaultPublicURI was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
+                // defaultPublicURI was updated in 4.0, and it shoudn't have.
+                // This warns that defaultPublicURI was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
+                // This task is registered on the 4.0.3 version in the 4.0 branch.
                 .addTask(new UpdatedDefaultPublicURIWarning())
         );
     }
@@ -139,8 +135,9 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(adminUsersSubMenu);
         tasks.add(sysUsersSubMenu);
         tasks.add(subscribersMenu);
+
         //set public uri only on installation
-        tasks.add(setDefaultPublicURI);
+        tasks.add(new SetDefaultPublicURI("defaultPublicURI"));
 
         return tasks;
     }

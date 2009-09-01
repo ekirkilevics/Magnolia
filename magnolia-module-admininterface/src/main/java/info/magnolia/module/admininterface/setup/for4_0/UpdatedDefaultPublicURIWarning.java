@@ -33,12 +33,6 @@
  */
 package info.magnolia.module.admininterface.setup.for4_0;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -46,52 +40,62 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import org.apache.commons.lang.StringUtils;
 
-public class UpdatedDefaultPublicURIWarning extends AbstractTask {
+import javax.jcr.RepositoryException;
+import java.util.Collection;
+import java.util.Iterator;
+
+/**
+ * In 4.0 and 4.1, we accidentally overrode the default uri mapping on public instances to the "Quickstart" page,
+ * even if templates were present.
+ * This task simply warns the user if that hasn't been fixed in the meantime.
+ */
+public class UpdatedDefaultPublicURIWarning extends AbstractRepositoryTask {
 
     public UpdatedDefaultPublicURIWarning() {
-        super("Checks the default public uri is correct", "Warns the user if the URI has been changed worngly.");
+        super("Checks the default public URI is correct", "Warns the user if the URI has been changed wrongly.");
     }
 
-    public void execute(InstallContext installContext) throws TaskExecutionException {
+    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
+        if (templatesExist() && hasDefaultURI(installContext)) {
+            installContext.warn("Please set the default virtual URI mapping; it was incorrectly reset by a previous update.");
+        }
+    }
 
-         Iterator nodesCollectionIt =  getTemplatesNodeCollection();
-         if(nodesCollectionIt != null) {
-            while (nodesCollectionIt.hasNext()) {
-                Content templatesNode = (Content) nodesCollectionIt.next();
-                Iterator templatesCollectionIt = templatesNode.getChildren(ItemType.CONTENTNODE).iterator();
-                while(templatesCollectionIt.hasNext()) {
-                    Content template = (Content) templatesCollectionIt.next();
-                    if(NodeDataUtil.getBoolean(template, "visisble", false) && hasWrongURISet(installContext)) {
-                        return;
-                    }
+    /**
+     * Check if at least one template is visible in the system.
+     */
+    private boolean templatesExist() {
+        Collection nodeCollection = QueryUtil.query(ContentRepository.CONFIG, "select * from mgnl:content where jcr:path like '/modules/%/templates'");
+        Iterator nodesCollectionIt = nodeCollection.iterator();
+        while (nodesCollectionIt.hasNext()) {
+            Content templatesNode = (Content) nodesCollectionIt.next();
+            Iterator templatesCollectionIt = templatesNode.getChildren(ItemType.CONTENTNODE).iterator();
+            while (templatesCollectionIt.hasNext()) {
+                Content template = (Content) templatesCollectionIt.next();
+                if (NodeDataUtil.getBoolean(template, "visible", false)) {
+                    return true;
                 }
             }
-         }
-    }
-
-    private Iterator getTemplatesNodeCollection() {
-        Collection nodeCollection = QueryUtil.query(ContentRepository.CONFIG, "select * from mgnl:content where jcr:path like '/modules/%/templates'");
-        if (nodeCollection != null) {
-            return nodeCollection.iterator();
-        }
-        return null;
-    }
-
-    private boolean hasWrongURISet(InstallContext installContext) {
-        final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
-        final String nodeDataPath = "/modules/adminInterface/virtualURIMapping/default/toURI";
-        final String defaultURI = installContext.getCurrentModuleDefinition().getProperty("defaultPublicURI");
-        try {
-            if(StringUtils.equals(hm.getNodeData(nodeDataPath).getString(), defaultURI)) {
-                installContext.warn("Please set the defaultPublicURI as it has been reset.");
-                return true;
-            }
-        } catch (RepositoryException e) {
-            log.error("Error accessing config repository", e.getMessage());
         }
         return false;
     }
+
+    private boolean hasDefaultURI(InstallContext installContext) throws RepositoryException {
+        final String defaultURI = installContext.getCurrentModuleDefinition().getProperty("defaultPublicURI");
+
+        final String defaultUriMappingPath = "/modules/adminInterface/virtualURIMapping/default/toURI";
+        final HierarchyManager hm = installContext.getConfigHierarchyManager();
+        if (hm.isExist(defaultUriMappingPath)) {
+            final String currentValue = hm.getNodeData(defaultUriMappingPath).getString();
+            if (StringUtils.equals(currentValue, defaultURI)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
