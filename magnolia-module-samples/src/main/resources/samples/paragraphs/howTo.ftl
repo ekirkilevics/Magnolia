@@ -15,7 +15,7 @@
     </div>
     <br />
     [#if content.date?has_content]
-        The date you spedified: ${content.date?string("dd.MM.yyyy")}
+        The date you specified: ${content.date?string("dd.MM.yyyy")}
     [/#if]
     <br />
 </div>
