@@ -46,6 +46,7 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gjoseph
@@ -54,13 +55,10 @@ import java.util.ArrayList;
 public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public MailModuleVersionHandler() {
-        final ArrayList conditions = new ArrayList();
-        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
-        u.servletIsNowWrapped("Mail");
 
         register(DeltaBuilder.update("3.5", "")
                 .addTask(new RegisterModuleServletsTask())
-                .addConditions(conditions)
+                .addConditions(mailServletIsWrappedSince_3_5())
         );
 
         final CheckAndModifyPropertyValueTask mailServletMapping = new CheckAndModifyPropertyValueTask("Mapping for mail servlet", "Fixes the mapping for the mail servlet, making it specification compliant.",
@@ -112,6 +110,13 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
               //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
               .addTask(fixMailCommand("info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand"))
         );
+    }
+
+    protected List mailServletIsWrappedSince_3_5() {
+        final ArrayList conditions = new ArrayList();
+        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
+        u.servletIsNowWrapped("Mail");
+        return conditions;
     }
 
     private PropertyValueDelegateTask fixMailCommand(final String previouslyWrongValue, final String fixedValue) {
