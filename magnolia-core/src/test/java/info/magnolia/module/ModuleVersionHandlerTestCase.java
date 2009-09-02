@@ -33,6 +33,7 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
@@ -44,18 +45,17 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
-import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
+import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.module.model.reader.ModuleDependencyException;
 import info.magnolia.test.RepositoryTestCase;
+import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * A base class for testing implementations of ModuleVersionHandler.
@@ -80,6 +80,21 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         final Content content = ContentUtil.createPath(hm, path);
         NodeDataUtil.getOrCreateAndSet(content, propertyName, value);
         hm.save();
+    }
+
+    /**
+     * Helper to set a property in the config workspace.
+     * @see #setupProperty(String, String, String, String)
+     */
+    protected void setupConfigProperty(String path, String propertyName, String value) throws RepositoryException {
+        setupProperty(ContentRepository.CONFIG, path, propertyName, value);
+    }
+
+    /**
+     * Asserts that a property at the given path as the expected value.
+     */
+    protected void assertConfig(String expectedValue, String path) throws RepositoryException {
+        assertEquals(expectedValue, MgnlContext.getHierarchyManager("config").getNodeData(path).getString());
     }
 
     /**

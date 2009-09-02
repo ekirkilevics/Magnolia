@@ -72,14 +72,14 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom35x() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "application/octet-stream");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "application/octet-stream");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "application/octet-stream");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("3.5"));
 
@@ -89,14 +89,14 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom35xWithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a 3pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect - but values have been customized on this instance
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("3.5"));
 
@@ -106,16 +106,16 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom364() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/flv", "mime-type", "video/x-flv");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
+        setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
+        setupConfigProperty("/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
         // at 3.6.4, the mime types for png and swf were updated, but still incorrectly (; at the end)
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "image/png;");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/x-shockwave-flash;");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "image/png;");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "application/x-shockwave-flash;");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("3.6.4"));
 
@@ -131,16 +131,16 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom364WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/flv", "mime-type", "video/x-flv");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
+        setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
+        setupConfigProperty("/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
         // at 3.6.4, the mime types for png and swf were updated, but still incorrectly (; at the end) - values have been customized on this instance
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("3.6.4"));
 
@@ -150,17 +150,17 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom401() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/flv", "mime-type", "video/x-flv");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
+        setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
+        setupConfigProperty("/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
         // at 3.6.4, the mime types for png and swf were updated, but still incorrectly (; at the end)
         // this was only fixed for 3.6.7, 4.0.2 and 4.1.1
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "image/png;");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/x-shockwave-flash;");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "image/png;");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "application/x-shockwave-flash;");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.0.1"));
 
@@ -176,17 +176,17 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom401WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/flv", "mime-type", "video/x-flv");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
+        setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
+        setupConfigProperty("/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
         // at 3.6.4, the mime types for png and swf were updated, but still incorrectly (; at the end) - values have been customized on this instance
         // this was only fixed for 3.6.7, 4.0.2 and 4.1.1
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.0.1"));
 
@@ -196,17 +196,17 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/flv", "mime-type", "video/x-flv");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
+        setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
+        setupConfigProperty("/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
         // at 3.6.4, the mime types for png and swf were updated, but still incorrectly (; at the end)
         // this was only fixed for 3.6.7, 4.0.2 and 4.1.1
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "image/png;");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/x-shockwave-flash;");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "image/png;");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "application/x-shockwave-flash;");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
 
@@ -222,17 +222,17 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom410WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupProperty(ContentRepository.CONFIG, "server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/flv", "mime-type", "video/x-flv");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
+        setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
+        setupConfigProperty("/server/MIMEMapping/svg", "mime-type", "image/svg+xml");
         // at 3.6.4, the mime types for png and swf were updated, but still incorrectly (; at the end) - values have been customized on this instance
         // this was only fixed for 3.6.7, 4.0.2 and 4.1.1
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
-        setupProperty(ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
+        setupConfigProperty("/server/MIMEMapping/png", "mime-type", "custom-type-for-png");
+        setupConfigProperty("/server/MIMEMapping/swf", "mime-type", "custom-type-for-swf");
 
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
 

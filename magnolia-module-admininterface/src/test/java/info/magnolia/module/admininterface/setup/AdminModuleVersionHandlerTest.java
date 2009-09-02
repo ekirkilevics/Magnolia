@@ -69,9 +69,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
 
     public void testDefaultURISetOnAuthorInstancesIsSetToAdminCentral() throws ModuleManagementException, RepositoryException {
-        setupProperty(ContentRepository.CONFIG, "/server/", "admin", "true");
+        setupConfigProperty("/server/", "admin", "true");
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
 
@@ -81,9 +81,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
 
     public void testDefaultURISetOnPublicInstancesIsSetToQuickStartIfNoTemplatesExist() throws ModuleManagementException, RepositoryException {
-        setupProperty(ContentRepository.CONFIG, "/server/", "admin", "false");
+        setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
 
@@ -92,9 +92,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
 
     public void testDefaultUriOnPublicIsNotChangedIfTemplatesExist() throws ModuleManagementException, RepositoryException {
-        setupProperty(ContentRepository.CONFIG, "/server/", "admin", "false");
+        setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         setupDummyTemplate();
 
@@ -107,9 +107,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
 
     public void testWarnsIfDefaultUriIsQuickstartOnPublicAndTemplatesExist() throws ModuleManagementException, RepositoryException {
-        setupProperty(ContentRepository.CONFIG, "/server/", "admin", "false");
+        setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         setupDummyTemplate();
 
@@ -128,9 +128,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
 
     public void testWarnsOnlyOnceIfDefaultUriIsQuickstartOnPublicAndTemplatesExistWhenUpdatingFromPre4_0_3() throws ModuleManagementException, RepositoryException {
-        setupProperty(ContentRepository.CONFIG, "/server/", "admin", "false");
+        setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
-        setupProperty(ContentRepository.CONFIG, "/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         setupDummyTemplate();
 
@@ -157,20 +157,15 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
 
     private void setupExistingDefaultUriMapping(String toURI) throws RepositoryException {
-        setupProperty(ContentRepository.CONFIG, "/modules/adminInterface/virtualURIMapping/default/", "toURI", toURI);
-        setupProperty(ContentRepository.CONFIG, "/modules/adminInterface/virtualURIMapping/default/", "fromURI", "/");
-        setupProperty(ContentRepository.CONFIG, "/modules/adminInterface/virtualURIMapping/default/", "class", DefaultVirtualURIMapping.class.getName());
+        setupConfigProperty("/modules/adminInterface/virtualURIMapping/default/", "toURI", toURI);
+        setupConfigProperty("/modules/adminInterface/virtualURIMapping/default/", "fromURI", "/");
+        setupConfigProperty("/modules/adminInterface/virtualURIMapping/default/", "class", DefaultVirtualURIMapping.class.getName());
     }
 
     private void checkDefaultUriMapping(String expectedValue) throws RepositoryException {
-        assertEquals(expectedValue, cfgAtPath("/modules/adminInterface/virtualURIMapping/default/toURI"));
-        assertEquals("/", cfgAtPath("/modules/adminInterface/virtualURIMapping/default/fromURI"));
-        assertEquals(DefaultVirtualURIMapping.class.getName(), cfgAtPath("/modules/adminInterface/virtualURIMapping/default/class"));
-    }
-
-    private String cfgAtPath(String path) throws RepositoryException {
-        return MgnlContext.getHierarchyManager("config").getNodeData(path).getString();
-
+        assertConfig(expectedValue, "/modules/adminInterface/virtualURIMapping/default/toURI");
+        assertConfig("/", "/modules/adminInterface/virtualURIMapping/default/fromURI");
+        assertConfig(DefaultVirtualURIMapping.class.getName(), MgnlContext.getHierarchyManager("config").getNodeData("/modules/adminInterface/virtualURIMapping/default/class").getString());
     }
 
 }
