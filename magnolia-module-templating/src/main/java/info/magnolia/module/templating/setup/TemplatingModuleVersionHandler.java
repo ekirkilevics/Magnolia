@@ -84,7 +84,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
                 .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
                         Arrays.asList(new String[]{"name", "type", "templatePath", "title", "description", "i18nBasename", "visible", "class"}), "parameters", ItemType.CONTENTNODE.getSystemName()))
-                .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is no type.", "paragraphs", "templateType", "type"))
+                .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is now type.", "paragraphs", "templateType", "type"))
                 .addTask(new DeprecateDialogPathAllModules("Paragraphs configuration", "Property dialogPath changed to dialog."))
         );
 
