@@ -76,7 +76,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
 
         checkDefaultUriMapping(ADMIN_CENTRAL);
-        assertTrue(installContext.getMessages().isEmpty());
+        assertNoMessages(installContext);
     }
 
 
@@ -88,7 +88,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
 
         checkDefaultUriMapping(QUICKSTART);
-        assertTrue(installContext.getMessages().isEmpty());
+        assertNoMessages(installContext);
     }
 
     public void testDefaultUriOnPublicIsNotChangedIfTemplatesExist() throws ModuleManagementException, RepositoryException {
@@ -103,7 +103,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("3.7"));
 
         checkDefaultUriMapping("custom-value");
-        assertTrue(installContext.getMessages().isEmpty());
+        assertNoMessages(installContext);
     }
 
     public void testWarnsIfDefaultUriIsQuickstartOnPublicAndTemplatesExist() throws ModuleManagementException, RepositoryException {
@@ -118,13 +118,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
 
         checkDefaultUriMapping(QUICKSTART);
-        final Map messages = installContext.getMessages();
-        assertEquals(1, messages.size());
-        final List<InstallContext.Message> messagesForModule = (List<InstallContext.Message>) messages.values().iterator().next();
-        assertEquals(1, messagesForModule.size());
-        final InstallContext.Message msg = messagesForModule.get(0);
-        assertEquals("Please set the default virtual URI mapping; it was incorrectly reset by a previous update.", msg.getMessage());
-        assertEquals(InstallContext.MessagePriority.warning, msg.getPriority());
+        assertSingleMessage(installContext, "Please set the default virtual URI mapping; it was incorrectly reset by a previous update.", InstallContext.MessagePriority.warning);
     }
 
     public void testWarnsOnlyOnceIfDefaultUriIsQuickstartOnPublicAndTemplatesExistWhenUpdatingFromPre4_0_3() throws ModuleManagementException, RepositoryException {
@@ -139,13 +133,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.0.2"));
 
         checkDefaultUriMapping(QUICKSTART);
-        final Map messages = installContext.getMessages();
-        assertEquals(1, messages.size());
-        final List<InstallContext.Message> messagesForModule = (List<InstallContext.Message>) messages.values().iterator().next();
-        assertEquals(1, messagesForModule.size());
-        final InstallContext.Message msg = messagesForModule.get(0);
-        assertEquals("Please set the default virtual URI mapping; it was incorrectly reset by a previous update.", msg.getMessage());
-        assertEquals(InstallContext.MessagePriority.warning, msg.getPriority());
+        assertSingleMessage(installContext, "Please set the default virtual URI mapping; it was incorrectly reset by a previous update.", InstallContext.MessagePriority.warning);
     }
 
     private void setupDummyTemplate() throws RepositoryException {

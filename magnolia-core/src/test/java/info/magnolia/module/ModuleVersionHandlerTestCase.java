@@ -97,6 +97,23 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         assertEquals(expectedValue, MgnlContext.getHierarchyManager("config").getNodeData(path).getString());
     }
 
+    protected void assertNoMessages(InstallContext ctx) {
+        assertTrue(ctx.getMessages().isEmpty());
+    }
+
+    /**
+     * Asserts that the install context contains one single message, with the expected contents and priority.
+     */
+    protected void assertSingleMessage(InstallContext installContext, String expectedMessage, InstallContext.MessagePriority expectedPriority) {
+        final Map messages = installContext.getMessages();
+        assertEquals(1, messages.size());
+        final List<InstallContext.Message> messagesForModule = (List<InstallContext.Message>) messages.values().iterator().next();
+        assertEquals(1, messagesForModule.size());
+        final InstallContext.Message msg = messagesForModule.get(0);
+        assertEquals(expectedMessage, msg.getMessage());
+        assertEquals(expectedPriority, msg.getPriority());
+    }
+
     /**
      * This essentially fakes calls to ModuleManager and ensures only the ModuleVersionHandler under test
      * is in use.
