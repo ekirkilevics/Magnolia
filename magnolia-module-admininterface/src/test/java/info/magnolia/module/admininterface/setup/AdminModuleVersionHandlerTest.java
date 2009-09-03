@@ -48,8 +48,6 @@ import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
