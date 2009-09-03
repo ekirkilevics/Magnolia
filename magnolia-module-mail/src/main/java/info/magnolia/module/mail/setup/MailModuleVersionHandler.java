@@ -36,6 +36,7 @@ package info.magnolia.module.mail.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.mail.commands.MailCommand;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
@@ -53,6 +54,8 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
+    static final String MAIL_COMMAND_CLASS_PRIOR_TO_4_0 = "info.magnolia.cms.mail.commands.MailCommand";
+    static final String COMMAND_IN_ADMININTERFACEMODULE_PATH = "/modules/adminInterface/commands/default/sendMail";
 
     public MailModuleVersionHandler() {
 
@@ -96,19 +99,19 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Mail page", "Installs mail page.", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
                 .addTask(new BootstrapConditionally("Mail factory", "Installs mail factories.", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
                 .addTask(new BootstrapSingleResource("Mail menu", "Installs mail tools menu.", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
-                .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", ContentRepository.CONFIG, "/modules/adminInterface/commands/default/sendMail", "class", "info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand" ))
+                .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", ContentRepository.CONFIG, COMMAND_IN_ADMININTERFACEMODULE_PATH, "class", MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
         );
 
         register(DeltaBuilder.update("4.0.3", "")
                 //since 4.0 mail command class was not updated to the new value
                 //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
-                .addTask(fixMailCommand("info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand"))
+                .addTask(fixMailCommand(MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
         );
 
         register(DeltaBuilder.update("4.1.1", "")
               //since 4.0 mail command class was not updated to the new value
               //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
-              .addTask(fixMailCommand("info.magnolia.cms.mail.commands.MailCommand", "info.magnolia.module.mail.commands.MailCommand"))
+              .addTask(fixMailCommand(MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
         );
     }
 
@@ -121,12 +124,11 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
 
     private PropertyValueDelegateTask fixMailCommand(final String previouslyWrongValue, final String fixedValue) {
         final String workspaceName = ContentRepository.CONFIG;
-        final String nodePath = "/modules/adminInterface/commands/default/sendMail";
-        final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, nodePath,
+        final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, COMMAND_IN_ADMININTERFACEMODULE_PATH,
                 "class", previouslyWrongValue, fixedValue);
 
         return new PropertyValueDelegateTask("Mail Command",
                 "Checks and updates the mail command if not correct.",
-                workspaceName, nodePath, "class", previouslyWrongValue, false, fixTask);
+                workspaceName, COMMAND_IN_ADMININTERFACEMODULE_PATH, "class", previouslyWrongValue, false, fixTask);
     }
 }
