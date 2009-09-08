@@ -151,7 +151,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     private void checkDefaultUriMapping(String expectedValue) throws RepositoryException {
         assertConfig(expectedValue, "/modules/adminInterface/virtualURIMapping/default/toURI");
         assertConfig("/", "/modules/adminInterface/virtualURIMapping/default/fromURI");
-        assertConfig(DefaultVirtualURIMapping.class.getName(), MgnlContext.getHierarchyManager("config").getNodeData("/modules/adminInterface/virtualURIMapping/default/class").getString());
+        assertConfig(DefaultVirtualURIMapping.class.getName(),"/modules/adminInterface/virtualURIMapping/default/class");
     }
 
 }
