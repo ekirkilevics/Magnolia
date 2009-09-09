@@ -451,7 +451,11 @@ public class SimpleNavigationTag extends TagSupport {
                         continue;
                     }
                 }
-
+            } else {
+                if (child.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
+                    visibleChildren.remove(child);
+                    continue;
+                }
             }
         }
 
