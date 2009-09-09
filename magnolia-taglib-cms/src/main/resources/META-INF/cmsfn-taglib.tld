@@ -115,6 +115,12 @@
     <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
     <function-signature>java.util.Collection nodeDataIterator(info.magnolia.cms.core.Content, java.lang.String)</function-signature>
   </function>
-
+  
+  <function>
+    <description></description>
+    <name>getSelector</name>
+    <function-class>info.magnolia.cms.util.SelectorUtil</function-class>
+    <function-signature>java.lang.String getSelector()</function-signature>
+  </function>
 
 </taglib>
