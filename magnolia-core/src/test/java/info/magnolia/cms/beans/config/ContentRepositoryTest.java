@@ -27,7 +27,7 @@ public class ContentRepositoryTest extends TestCase {
             ContentRepository.getRepository("dummy");
             fail("should have failed, since we haven't set any repository at all");
         } catch (Throwable t) {
-            assertEquals("Failed to retrieve repository dummy (mapped as dummy). Your Magnolia instance might not have been initialized properly.", t.getMessage());
+            assertEquals("Failed to retrieve repository 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
         }
     }
 }
