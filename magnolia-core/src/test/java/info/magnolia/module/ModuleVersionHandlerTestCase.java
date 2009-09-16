@@ -34,6 +34,7 @@
 package info.magnolia.module;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
@@ -43,6 +44,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingManager;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.RepositoryDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
@@ -52,6 +54,7 @@ import info.magnolia.test.RepositoryTestCase;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,6 +72,15 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         super.setUp();
         // this should disable observation for audit logging (mgnl-beans.properties registers a path for this componenent)
         FactoryUtil.setInstance(AuditLoggingManager.class, new AuditLoggingManager());
+    }
+
+    protected void initDefaultImplementations() throws IOException {
+        PropertiesInitializer.getInstance().loadBeanProperties();
+        // the super's implementation of this method also loads all module definition's properties, which is problematic
+        // since we're trying to isolate this specific module (the properties aren't the problem as much as the fact
+        // that this implies loading all module definitions, thusly checking module dependencies, etc.
+        // PropertiesInitializer should be CDI'd so that we could also make it behave the way we get the ModuleManager
+        // to behave below.
     }
 
     /**
@@ -126,6 +138,15 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         final BetwixtModuleDefinitionReader reader = new BetwixtModuleDefinitionReader();
         final ModuleDefinition moduleDefinition = reader.readFromResource(getModuleDescriptorPath());
 
+        final String[] extraWorkspaces = getExtraWorkspaces();
+        if (extraWorkspaces.length > 0) {
+            final RepositoryDefinition repo = new RepositoryDefinition();
+            repo.setName("magnolia");
+            for (String wsName : extraWorkspaces) {
+                repo.addWorkspace(wsName);
+            }
+            moduleDefinition.addRepository(repo);
+        }
         final ModuleDefinitionReader readerMock = createStrictMock(ModuleDefinitionReader.class);
         expect(readerMock.readAll()).andReturn(Collections.singletonMap(moduleDefinition.getName(), moduleDefinition));
         replay(readerMock);
@@ -167,6 +188,17 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         verify(readerMock);
 
         return ctx;
+    }
+
+    /**
+     * Extend this method if you need more workspaces than the default ones.
+     * This can be useful if your MVH adds content to workspaces registered by
+     * module it depends upon.
+     * Be aware that this is used in such a way that the ModuleDefinition of the
+     * module under test will be modified to register those repositories itself.
+     */
+    protected String[] getExtraWorkspaces() {
+        return new String[]{};
     }
 
     protected abstract String getModuleDescriptorPath();
