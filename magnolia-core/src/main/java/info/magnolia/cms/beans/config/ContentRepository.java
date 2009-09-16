@@ -499,11 +499,11 @@ public final class ContentRepository {
         Repository repository = (Repository) repositories.get(repositoryID);
         if (repository == null) {
             String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-            if (mappedRepositoryName != null) {
-                return (Repository) repositories.get(mappedRepositoryName);
-            }
+            repository = (Repository) repositories.get(mappedRepositoryName);
             if (repository == null) {
-                log.warn("Failed to retrieve repository "+repositoryID+" mapped as "+mappedRepositoryName+". Your Magnolia instance might not have been initialized properly.");
+                final String s = "Failed to retrieve repository " + repositoryID + " (mapped as " + mappedRepositoryName + "). Your Magnolia instance might not have been initialized properly.";
+                log.warn(s);
+                throw new IllegalStateException(s);
             }
         }
         return repository;
