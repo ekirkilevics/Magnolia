@@ -498,12 +498,14 @@ public final class ContentRepository {
     public static Repository getRepository(String repositoryID) {
         Repository repository = (Repository) repositories.get(repositoryID);
         if (repository == null) {
-            String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-            repository = (Repository) repositories.get(mappedRepositoryName);
+            final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+            if (mappedRepositoryName != null) {
+                repository = (Repository) repositories.get(mappedRepositoryName);
+            }
             if (repository == null) {
-                final String s = "Failed to retrieve repository " + repositoryID + " (mapped as " + mappedRepositoryName + "). Your Magnolia instance might not have been initialized properly.";
+                final String s = "Failed to retrieve repository '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
                 log.warn(s);
-                throw new IllegalStateException(s);
+                throw new IllegalArgumentException(s);
             }
         }
         return repository;
@@ -513,16 +515,16 @@ public final class ContentRepository {
      * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Provider getRepositoryProvider(String repositoryID) {
-
         Provider provider = (Provider) repositoryProviders.get(repositoryID);
-
         if (provider == null) {
-            String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+            final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
             if (mappedRepositoryName != null) {
                 provider = (Provider) repositoryProviders.get(mappedRepositoryName);
             }
             if (provider == null) {
-                log.warn("Failed to retrieve repository provider "+repositoryID+" mapped as "+mappedRepositoryName+". Your Magnolia instance might not have been initialized properly.");
+                final String s = "Failed to retrieve repository provider '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
+                log.warn(s);
+                throw new IllegalArgumentException(s);
             }
         }
         return provider;
