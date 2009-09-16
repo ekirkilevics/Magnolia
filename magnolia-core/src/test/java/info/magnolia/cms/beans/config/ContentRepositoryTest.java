@@ -30,4 +30,12 @@ public class ContentRepositoryTest extends TestCase {
             assertEquals("Failed to retrieve repository 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
         }
     }
+    public void testUnknownRepositoryShouldAlsoYieldMeaningfulExceptionMessageForRepositoryProviders() {
+        try {
+            ContentRepository.getRepositoryProvider("dummy");
+            fail("should have failed, since we haven't set any repository at all");
+        } catch (Throwable t) {
+            assertEquals("Failed to retrieve repository provider 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
+        }
+    }
 }
