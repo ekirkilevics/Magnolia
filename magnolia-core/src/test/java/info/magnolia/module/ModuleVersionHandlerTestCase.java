@@ -139,14 +139,17 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         final ModuleDefinition moduleDefinition = reader.readFromResource(getModuleDescriptorPath());
 
         final String[] extraWorkspaces = getExtraWorkspaces();
-        if (extraWorkspaces.length > 0) {
+        final String nodeTypeFile = getExtraNodeTypes();
+        if (extraWorkspaces.length > 0 || nodeTypeFile != null) {
             final RepositoryDefinition repo = new RepositoryDefinition();
             repo.setName("magnolia");
             for (String wsName : extraWorkspaces) {
                 repo.addWorkspace(wsName);
             }
+            repo.setNodeTypeFile(nodeTypeFile);
             moduleDefinition.addRepository(repo);
         }
+
         final ModuleDefinitionReader readerMock = createStrictMock(ModuleDefinitionReader.class);
         expect(readerMock.readAll()).andReturn(Collections.singletonMap(moduleDefinition.getName(), moduleDefinition));
         replay(readerMock);
@@ -193,12 +196,24 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     /**
      * Extend this method if you need more workspaces than the default ones.
      * This can be useful if your MVH adds content to workspaces registered by
-     * module it depends upon.
+     * a module it depends upon.
      * Be aware that this is used in such a way that the ModuleDefinition of the
      * module under test will be modified to register those repositories itself.
      */
     protected String[] getExtraWorkspaces() {
         return new String[]{};
+    }
+
+    /**
+     * Extend this method if you need more node types than the default ones.
+     * This can be useful if your MVH needs node types registered by a module
+     * it depends upon.
+     * Be aware that this is used in such a way that the ModuleDefinition of the
+     * module under test will be modified to register those repositories itself.
+     * @return the path to the node type definition resource, as found in a module descriptor
+     */
+    protected String getExtraNodeTypes() {
+        return null;
     }
 
     protected abstract String getModuleDescriptorPath();
