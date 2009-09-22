@@ -13,9 +13,9 @@
     Text: <cms:out nodeDataName="text" />
   </div>
   <br />
-  The date you spedified: <cms:out nodeDataName="date" datePattern="EEEE, d. MMMM yyyy" />
+  The date you specified: <cms:out nodeDataName="date" datePattern="EEEE, d. MMMM yyyy" />
   <br />
-  <ul>Parameter set by filter:
+  <ul>Parameters set by filter:
     <li>using model: ${model.filterAttribute} </li>
     <li>get from request: ${sampleFilter}</li>
   </ul>
