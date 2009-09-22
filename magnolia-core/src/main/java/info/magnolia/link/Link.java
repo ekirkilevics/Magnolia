@@ -60,6 +60,12 @@ public class Link {
     private String parameters;
 
     /**
+     * A constructor for undefined links. (i.e linking to a nonexistent page, for instance)
+     */
+    public Link() {    
+    }
+
+    /**
      * @param content
      */
     public Link(Content content) {

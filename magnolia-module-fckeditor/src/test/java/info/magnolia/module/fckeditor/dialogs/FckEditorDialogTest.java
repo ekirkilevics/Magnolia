@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.fckeditor.dialogs;
 
-import info.magnolia.link.BaseLinkTest;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
+import info.magnolia.link.BaseLinkTest;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
@@ -79,7 +79,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
         d.setTopParent(d);
         d.setConfig("path", SOME_PATH);
 
-        assertEquals("<a href=\"" + SOME_CONTEXT  + SOME_PATH  + "/field/image.jpg\">baz</a>", d.convertToView("<a href=\"page/field/image.jpg\">baz</a>"));
+        assertEquals("<a href=\"" + SOME_CONTEXT + SOME_PATH + "/field/image.jpg\">baz</a>", d.convertToView("<a href=\"page/field/image.jpg\">baz</a>"));
     }
 
     public void testConvertToViewShouldNotConvertNonUUIDLinks() throws RepositoryException {
@@ -107,6 +107,18 @@ public class FckEditorDialogTest extends BaseLinkTest {
         assertEquals("<img src=\"https://foo.com/bar/baz.gif\">", d.convertToView("<img src=\"https://foo.com/bar/baz.gif\">"));
 
         verify(mockReq);
+    }
+
+    /* MAGNOLIA-2768, MAGNOLIA-2862, MAGNOLIA-2865, MAGNOLIA-2867 */
+    public void testLinksToRemovedPageAreStillDisplayed() throws Exception {
+        final FckEditorDialogForTest d = new FckEditorDialogForTest();
+        d.init(null, null, null, null);
+        d.setTopParent(d);
+        d.setConfig("path", SOME_PATH);
+
+        final String input = "<p><strong>Some</strong> <em><a href=\"${link:{uuid:{unexi-sting-uuid},repository:{website},handle:{/unexi/sting/path},nodeData:{},extension:{html}}}\">formatted</a></em> text.</p>";
+
+        assertEquals("<p><strong>Some</strong> <em><a href=\"/unexi/sting/path.html\">formatted</a></em> text.</p>", d.convertToView(input));
     }
 
     public void testConvertToViewDoesNotConvertMailtoLinks() throws RepositoryException {

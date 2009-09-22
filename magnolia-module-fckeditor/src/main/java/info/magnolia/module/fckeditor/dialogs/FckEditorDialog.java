@@ -37,8 +37,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.link.LinkHelper;
-import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.link.EditorLinkTransformer;
+import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.link.LinkUtil;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -400,12 +403,14 @@ public class FckEditorDialog extends DialogBox {
      */
     public String convertToView(String value) {
         if (value != null) {
-            // we have to add the context path for images and files but not for pages!
-            value = LinkUtil.convertUUIDsToEditorLinks(value);
-
-            // see MAGNOLIA-2768
-            if (value != null)
-            {
+            final EditorLinkTransformer transformer = LinkTransformerManager.getInstance().getEditorLink();
+            try {
+                value = LinkUtil.convertLinksFromUUIDPattern(value, transformer);
+            } catch (LinkException e) {
+                // LinkUtil.convertLinksFromUUIDPattern should have taken care of unknown nodes properly by now, so all we can do is ...
+                log.warn(e.getMessage());
+                throw new RuntimeException(e);
+            }
 
             // this section is for backward compatibility - see MAGNOLIA-2088
             final Matcher matcher = LinkHelper.LINK_OR_IMAGE_PATTERN.matcher(value);
@@ -426,7 +431,6 @@ public class FckEditorDialog extends DialogBox {
             }
             matcher.appendTail(res);
             return res.toString();
-            }
         }
 
         return StringUtils.EMPTY;

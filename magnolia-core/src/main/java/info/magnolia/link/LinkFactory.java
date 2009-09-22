@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.spi.commons.conversion.MalformedPathException;
@@ -58,6 +59,7 @@ import info.magnolia.context.MgnlContext;
  * @version $Id:$
  */
 public class LinkFactory {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LinkFactory.class);
 
     /**
      * Creates new link from the content node.
@@ -176,7 +178,11 @@ public class LinkFactory {
             link = createLink(repository, uuid);
         } catch (LinkException e) {
             try {
-                link = createLink(MgnlContext.getHierarchyManager(repository).getContent(fallbackHandle));
+                final Content node = MgnlContext.getHierarchyManager(repository).getContent(fallbackHandle);
+                link = createLink(node);
+            } catch (PathNotFoundException e1) {
+                log.warn("Can't find node with uuid " + uuid + " or handle " + fallbackHandle + " in repository " + repository);
+                link = new Link();
             } catch (RepositoryException e1) {
                 throw new LinkException("Failed to create link with uuid " + uuid + " and repository " + repository + " and fallbackhandle " + fallbackHandle, e);
             }
