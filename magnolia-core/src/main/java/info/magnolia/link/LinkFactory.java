@@ -51,7 +51,9 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 
 /**
- * Factory processing various input into the Link objects and back. For parsing html and converting multiple link instances on the fly use {@link LinkUtil}
+ * Factory processing various input into the Link objects and back.
+ * For parsing html and converting multiple link instances on the fly use {@link LinkUtil}.
+ *
  * @author had
  * @version $Id:$
  */
@@ -68,7 +70,7 @@ public class LinkFactory {
 
     /**
      * Creates new link from the node data.
-     * @param node Target node data for the link.
+     * @param nodeData Target node data for the link.
      * @return Link pointing to the provided node data.
      */
     public static Link createLink(NodeData nodeData) throws LinkException {
@@ -81,7 +83,7 @@ public class LinkFactory {
     
     /**
      * Creates link to the content denoted by repository and uuid. 
-     * @param repositoryId Parent repository of the content of interest.
+     * @param repository Parent repository of the content of interest.
      * @param uuid UUID of the content to create link to.
      * @return link to the content with provided UUID.
      */
