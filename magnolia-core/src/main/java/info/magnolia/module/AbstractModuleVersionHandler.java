@@ -133,9 +133,27 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         // if there was no delta for the version being installed, we still need to add the default update tasks
         final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
         if (toVersion.isStrictlyAfter(from) && !allDeltas.containsKey(toVersion)) {
-            deltas.add(getUpdate(installContext));
+            deltas.add(getDefaultUpdate(installContext));
         }
         return deltas;
+    }
+
+    /**
+     * @deprecated since 4.2, renamed to getDefaultUpdate(InstallContext installContext)
+     */
+    protected Delta getUpdate(InstallContext installContext) {
+        return getDefaultUpdate(installContext);
+    }
+
+    /**
+     * The minimal delta to be applied for each update, even if no delta was specifically registered
+     * for the version being installed.
+     */
+    protected Delta getDefaultUpdate(InstallContext installContext) {
+        final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
+        final List defaultUpdateTasks = getDefaultUpdateTasks(toVersion);
+        final List defaultUpdateConditions = getDefaultUpdateConditions(toVersion);
+        return DeltaBuilder.update(toVersion, "").addTasks(defaultUpdateTasks).addConditions(defaultUpdateConditions);
     }
 
     protected List getDefaultUpdateTasks(Version forVersion) {
@@ -147,13 +165,6 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
 
     protected List getDefaultUpdateConditions(Version forVersion) {
         return Collections.EMPTY_LIST;
-    }
-
-    protected Delta getUpdate(InstallContext installContext) {
-        final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
-        final List defaultUpdateTasks = getDefaultUpdateTasks(toVersion);
-        final List defaultUpdateConditions = getDefaultUpdateConditions(toVersion);
-        return DeltaBuilder.update(toVersion, "").addTasks(defaultUpdateTasks).addConditions(defaultUpdateConditions);
     }
 
     /**
