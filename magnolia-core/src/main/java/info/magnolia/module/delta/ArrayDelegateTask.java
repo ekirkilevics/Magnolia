@@ -36,6 +36,8 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 import org.apache.commons.lang.ArrayUtils;
 
+import java.util.Arrays;
+
 /**
  * A tasks that delegates to an array of more tasks.
  *
@@ -55,38 +57,14 @@ public class ArrayDelegateTask implements Task {
         this(name, description, new Task[0]);
     }
 
-    public ArrayDelegateTask(String name, Task[] tasks) {
+    public ArrayDelegateTask(String name, Task... tasks) {
         this(name, null, tasks);
     }
 
-    public ArrayDelegateTask(String name, String description, Task[] tasks) {
+    public ArrayDelegateTask(String name, String description, Task... tasks) {
         this.name = name;
         this.description = description;
         this.tasks = tasks;
-    }
-
-    public ArrayDelegateTask(String name, Task task1, Task task2) {
-        this(name, (String) null, task1, task2);
-    }
-
-    public ArrayDelegateTask(String name, String description, Task task1, Task task2) {
-        this(name, description, new Task[]{task1, task2});
-    }
-
-    public ArrayDelegateTask(String name, Task task1, Task task2, Task task3) {
-        this(name, (String) null, task1, task2, task3);
-    }
-
-    public ArrayDelegateTask(String name, String description, Task task1, Task task2, Task task3) {
-        this(name, description, new Task[]{task1, task2, task3});
-    }
-
-    public ArrayDelegateTask(String name, Task task1, Task task2, Task task3, Task task4) {
-        this(name, null, task1, task2, task3, task4);
-    }
-
-    public ArrayDelegateTask(String name, String description, Task task1, Task task2, Task task3, Task task4) {
-        this(name, description, new Task[]{task1, task2, task3, task4});
     }
 
     public String getName() {
@@ -118,8 +96,7 @@ public class ArrayDelegateTask implements Task {
         }
     }
 
-    // TODO replace this with Arrays.toString() when we switch to java5 ... or change tasks to a List instead ...
     public String toString() {
-        return ArrayUtils.toString(tasks);
+        return Arrays.toString(tasks);
     }
 }
