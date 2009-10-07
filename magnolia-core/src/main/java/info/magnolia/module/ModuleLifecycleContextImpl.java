@@ -39,7 +39,6 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.model.ModuleDefinition;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,14 +51,14 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
     /**
      * A Map&lt;String,ObservedManager%gt;, mapping nodenames to components
      */
-    private final Map components;
+    private final Map<String, ObservedManager> components;
 
     private int phase;
 
     private ModuleDefinition currentModuleDefinition;
 
     ModuleLifecycleContextImpl() {
-        components = new LinkedHashMap();
+        components = new LinkedHashMap<String, ObservedManager>();
     }
 
     public void registerModuleObservingComponent(String nodeName, ObservedManager component) {
@@ -74,14 +73,10 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
     /**
      * @param moduleNodes a Collection&lt;Content&gt; of module nodes.
      */
-    public void start(Collection moduleNodes) {
-        final Iterator managerIt = components.keySet().iterator();
-        while (managerIt.hasNext()) {
-            final String nodeName = (String) managerIt.next();
-            final ObservedManager component = (ObservedManager) components.get(nodeName);
-            final Iterator it = moduleNodes.iterator();
-            while (it.hasNext()) {
-                final Content moduleNode = (Content) it.next();
+    public void start(Collection<Content> moduleNodes) {
+        for (String nodeName : components.keySet()) {
+            final ObservedManager component = components.get(nodeName);
+            for (Content moduleNode : moduleNodes) {
                 initEntry(moduleNode, nodeName, component);
             }
         }

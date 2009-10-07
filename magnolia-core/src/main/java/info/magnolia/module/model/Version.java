@@ -35,9 +35,6 @@ package info.magnolia.module.model;
 
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Represents a module version. Format is x.y.z-classifier. y,z and classifier are
  * optional. The classifier string is ignored in version comparisons.
@@ -46,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: $ ($Author: $)
  */
 public class Version {
-    private static final Logger log = LoggerFactory.getLogger(Version.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Version.class);
 
     public static final Version UNDEFINED_FROM = new UndefinedEarlierVersion();
     public static final Version UNDEFINED_TO = new UndefinedLaterVersion();

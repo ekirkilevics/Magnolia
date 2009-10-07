@@ -62,10 +62,10 @@ public interface ModuleRegistry {
     ModuleDefinition getDefinition(String name);
 
     /**
-     * Returns the names of configured modules (strings)
+     * Returns the names of configured modules.
      * @return unmodifiable set of module names
      */
-    Set getModuleNames();
+    Set<String> getModuleNames();
 
     /**
      * Use this to retrieve the configured singleton impl of ModuleRegistry.

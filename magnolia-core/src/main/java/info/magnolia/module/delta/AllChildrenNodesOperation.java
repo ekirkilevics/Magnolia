@@ -40,7 +40,6 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
@@ -67,10 +66,8 @@ public abstract class AllChildrenNodesOperation extends AbstractRepositoryTask {
 
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final Content parentNode = getParentNode(ctx);
-        final Collection childNodes = parentNode.getChildren(filter);
-        final Iterator it = childNodes.iterator();
-        while (it.hasNext()) {
-            final Content node = (Content) it.next();
+        final Collection<Content> childNodes = parentNode.getChildren(filter);
+        for (Content node : childNodes) {
             operateOnChildNode(node, ctx);
         }
     }

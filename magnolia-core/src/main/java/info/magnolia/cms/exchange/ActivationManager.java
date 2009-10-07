@@ -41,9 +41,9 @@ import java.util.Collection;
  */
 public interface ActivationManager {
 
-    public Collection getSubscribers();
+    public Collection<Subscriber> getSubscribers();
 
-    public void setSubscribers(Collection subscribers);
+    public void setSubscribers(Collection<Subscriber> subscribers);
 
     public void addSubscribers(Subscriber subscriber);
 

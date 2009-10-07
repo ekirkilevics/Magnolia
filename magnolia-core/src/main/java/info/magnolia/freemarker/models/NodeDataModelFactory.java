@@ -92,6 +92,7 @@ class NodeDataModelFactory implements MagnoliaModelFactory {
                     t = LinkTransformerManager.getInstance().getCompleteUrl();
                 }
                 final String transformedString = LinkUtil.convertUUIDsToLinks(s, t);
+//                final String transformedString = LinkUtil.convertLinksFromUUIDPattern(s, t);
                 return new SimpleScalar(transformedString);
 
             case PropertyType.BINARY:

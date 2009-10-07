@@ -38,6 +38,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
@@ -69,18 +70,18 @@ public class WebappVersionHandler implements ModuleVersionHandler {
         }
     }
 
-    public List getDeltas(InstallContext ctx, Version from) {
+    public List<Delta> getDeltas(InstallContext ctx, Version from) {
         if (from == null) {
             final Version version = ctx.getCurrentModuleDefinition().getVersion();
-            return Collections.singletonList(new WebappDelta(version));
+            return Collections.<Delta>singletonList(new WebappDelta(version));
         } else if (!from.equals(Version.UNDEFINED_TO)) {
             throw new IllegalStateException("This is a dummy module. It should not get updated.");
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
     public Delta getStartupDelta(InstallContext ctx) {
-        return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.EMPTY_LIST);
+        return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.<Task>emptyList());
     }
 }

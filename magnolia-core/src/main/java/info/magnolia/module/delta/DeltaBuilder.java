@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Helper class to build Delta instances.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -64,7 +66,7 @@ public class DeltaBuilder implements Delta {
         return new DeltaBuilder(version, description, DeltaType.install);
     }
 
-    public static DeltaBuilder startup(ModuleDefinition moduleDef, List tasks) {
+    public static DeltaBuilder startup(ModuleDefinition moduleDef, List<Task> tasks) {
         final String description = "Tasks executed before starting up module " + moduleDef.getDescription();
         return startup(moduleDef.getVersion(), description).addTasks(tasks);
     }
@@ -79,15 +81,15 @@ public class DeltaBuilder implements Delta {
     private final Version version;
     private final String description;
     private final DeltaType type;
-    private final List tasks;
-    private final List conditions;
+    private final List<Task> tasks;
+    private final List<Condition> conditions;
 
     private DeltaBuilder(Version version, String description, DeltaType type) {
         this.version = version;
         this.description = description;
         this.type = type;
-        this.tasks = new ArrayList();
-        this.conditions = new ArrayList();
+        this.tasks = new ArrayList<Task>();
+        this.conditions = new ArrayList<Condition>();
     }
 
     public DeltaBuilder addTask(Task t) {
@@ -95,7 +97,7 @@ public class DeltaBuilder implements Delta {
         return this;
     }
 
-    public DeltaBuilder addTasks(List tasks) {
+    public DeltaBuilder addTasks(List<Task> tasks) {
         this.tasks.addAll(tasks);
         return this;
     }
@@ -105,7 +107,7 @@ public class DeltaBuilder implements Delta {
         return this;
     }
 
-    public DeltaBuilder addConditions(List conditions) {
+    public DeltaBuilder addConditions(List<Condition> conditions) {
         this.conditions.addAll(conditions);
         return this;
     }
@@ -118,11 +120,11 @@ public class DeltaBuilder implements Delta {
         return description;
     }
 
-    public List getConditions() {
+    public List<Condition> getConditions() {
         return conditions;
     }
 
-    public List getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 

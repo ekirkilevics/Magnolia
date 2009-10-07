@@ -63,7 +63,7 @@ public class InstallContextImpl implements InstallContext {
     private int executedTaskCount;
     private int totalTaskCount;
     // ensure we'll keep messages in the order they were added
-    private final Map messages = new LinkedHashMap();
+    private final Map<String, List<Message>> messages = new LinkedHashMap<String, List<Message>>();
 
     public void setCurrentModule(ModuleDefinition module) {
         this.currentModule = module;
@@ -118,7 +118,7 @@ public class InstallContextImpl implements InstallContext {
         this.status = status;
     }
 
-    public Map getMessages() {
+    public Map<String, List<Message>> getMessages() {
         return messages;
     }
 
@@ -160,9 +160,9 @@ public class InstallContextImpl implements InstallContext {
 
     protected void log(final Message message) {
         final String k = getModuleKey();
-        List messagesForKey = (List) messages.get(k);
+        List<Message> messagesForKey = messages.get(k);
         if (messagesForKey == null) {
-            messagesForKey = new ArrayList();
+            messagesForKey = new ArrayList<Message>();
             messages.put(k, messagesForKey);
         }
         messagesForKey.add(message);

@@ -523,7 +523,7 @@ public class ModuleManagerImpl implements ModuleManager {
         if (rm == null) {
 
             final RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping("magnolia");
-            final Map defaultParameters = defaultRepositoryMapping.getParameters();
+            final Map<String, String> defaultParameters = defaultRepositoryMapping.getParameters();
 
             rm = new RepositoryMapping();
             rm.setName(repositoryName);
@@ -531,7 +531,7 @@ public class ModuleManagerImpl implements ModuleManager {
             rm.setProvider(defaultRepositoryMapping.getProvider());
             rm.setLoadOnStartup(true);
 
-            final Map parameters = new HashMap();
+            final Map<String, String> parameters = new HashMap<String, String>();
             parameters.putAll(defaultParameters);
 
             // override changed parameters

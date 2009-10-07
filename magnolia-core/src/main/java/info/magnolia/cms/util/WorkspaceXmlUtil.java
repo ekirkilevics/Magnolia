@@ -53,11 +53,10 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class WorkspaceXmlUtil {
-
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkspaceXmlUtil.class);
 
-    public static List getWorkspaceNamesWithIndexer() {
-        List names = new ArrayList();
+    public static List<String> getWorkspaceNamesWithIndexer() {
+        final List<String> names = new ArrayList<String>();
         final File sourceDir = new File(Path.getAppRootDir() + "/repositories/magnolia/workspaces/");
         final SAXBuilder builder = new SAXBuilder();
         File[] files = sourceDir.listFiles();
@@ -65,19 +64,18 @@ public class WorkspaceXmlUtil {
             // new repo
             return names;
         }
-        for (int i = 0; i < files.length; i++) {
-            File f = files[i];
+        for (File f : files) {
             if (!f.isDirectory()) {
                 continue;
             }
-            File wks = new File(f, "workspace.xml");
+            final File wks = new File(f, "workspace.xml");
             if (!wks.exists() || !wks.canRead()) {
                 continue;
             }
             log.debug("Checking {} for old indexer.", f.getName());
             try {
                 // check for the indexer def in wks
-                List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
+                final List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
                 if (list.size() > 0 && ((Attribute) list.get(0)).getValue().matches(".*\\.core\\.query\\..*")) {
                     names.add(wks.getAbsolutePath());
                 }

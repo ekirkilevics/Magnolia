@@ -38,41 +38,6 @@ package info.magnolia.module.delta;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DeltaType {
-    public static final DeltaType startup = new DeltaType("startup");
-    public static final DeltaType install = new DeltaType("install");
-    public static final DeltaType update = new DeltaType("update");
-    public static final DeltaType uninstall = new DeltaType("uninstall");
-
-    private final String name;
-
-    private DeltaType(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return name;
-    }
-
-    // generated :
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        DeltaType deltaType = (DeltaType) o;
-
-        if (!name.equals(deltaType.name)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public int hashCode() {
-        return name.hashCode();
-    }
+public enum DeltaType {
+    startup, install, update, uninstall
 }

@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class FilterOrderingTask extends AbstractRepositoryTask {
     private final String filterToBeOrderedName;
-    private final List requiredFilters;
+    private final List<String> requiredFilters;
 
     /**
      * 
@@ -65,7 +65,7 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
     public FilterOrderingTask(String filterName, String description, String[] requiredFiltersBefore) {
         super("Setup " + filterName + " filter", description);
         this.filterToBeOrderedName = filterName;
-        this.requiredFilters = new ArrayList(Arrays.asList(requiredFiltersBefore));
+        this.requiredFilters = new ArrayList<String>(Arrays.asList(requiredFiltersBefore));
     }
 
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
@@ -77,8 +77,8 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
         }
 
         // TODO : this does not take nested filters into account
-        final Collection filters = filtersParent.getChildren();
-        final Iterator it = filters.iterator();
+        final Collection<Content> filters = filtersParent.getChildren();
+        final Iterator<Content> it = filters.iterator();
         while (it.hasNext()) {
             final Content filter = (Content) it.next();
             final String filterName = filter.getName();

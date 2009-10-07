@@ -94,7 +94,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
                     render("inProgress", out);
                 } else {
                     // template names match statuses
-                    render(status.getName(), out);
+                    render(status.name(), out);
                 }
                 return false;
             } else if ("finish".equals(command) && status.equals(InstallStatus.installDone)) {

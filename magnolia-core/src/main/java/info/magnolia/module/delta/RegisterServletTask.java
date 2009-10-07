@@ -42,8 +42,6 @@ import info.magnolia.module.model.ServletDefinition;
 import info.magnolia.module.model.ServletParameterDefinition;
 
 import javax.jcr.RepositoryException;
-import java.util.Iterator;
-
 
 /**
  * @author philipp
@@ -74,17 +72,14 @@ public class RegisterServletTask extends AbstractTask {
             NodeDataUtil.getOrCreateAndSet(servletNode, "comment", servletDefinition.getComment());
 
             final Content mappingsNode = servletNode.createContent("mappings", ItemType.CONTENTNODE);
-            for (Iterator iter = servletDefinition.getMappings().iterator(); iter.hasNext();) {
-                final String pattern = (String) iter.next();
+            for (String pattern : servletDefinition.getMappings()) {
                 String mappingNodeName = Path.getUniqueLabel(mappingsNode, Path.getValidatedLabel(pattern));
                 final Content mappingNode = mappingsNode.createContent(mappingNodeName, ItemType.CONTENTNODE);
                 NodeDataUtil.getOrCreateAndSet(mappingNode, "pattern", pattern);
             }
 
             final Content parametersNode = servletNode.createContent("parameters", ItemType.CONTENTNODE);
-            for (Iterator iter = servletDefinition.getParams().iterator(); iter.hasNext();) {
-                final ServletParameterDefinition parameter = (ServletParameterDefinition) iter.next();
-
+            for (ServletParameterDefinition parameter : servletDefinition.getParams()) {
                 NodeDataUtil.getOrCreateAndSet(parametersNode, parameter.getName(), parameter.getValue());
             }
         }

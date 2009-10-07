@@ -64,10 +64,9 @@ public abstract class QueryTask extends AbstractRepositoryTask {
     }
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        final Collection nodes = QueryUtil.exceptionThrowingQuery(repositoryName, query, Query.SQL, ItemType.NT_BASE);
-        final Iterator it = nodes.iterator();
-        while (it.hasNext()) {
-            final Content paragraphNode = (Content) it.next();
+        final Collection<Content> nodes = QueryUtil.exceptionThrowingQuery(repositoryName, query, Query.SQL, ItemType.NT_BASE);
+        final Iterator<Content> it = nodes.iterator();
+        for (Content paragraphNode : nodes) {
             operateOnNode(installContext, paragraphNode);
         }
     }

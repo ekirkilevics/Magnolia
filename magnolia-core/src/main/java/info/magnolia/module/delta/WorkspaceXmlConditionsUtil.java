@@ -45,9 +45,9 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class WorkspaceXmlConditionsUtil {
-    private final List conditions;
+    private final List<Condition> conditions;
 
-    public WorkspaceXmlConditionsUtil(List conditions) {
+    public WorkspaceXmlConditionsUtil(List<Condition> conditions) {
         this.conditions = conditions;
     }
 

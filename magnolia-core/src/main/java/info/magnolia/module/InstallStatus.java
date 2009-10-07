@@ -40,22 +40,6 @@ package info.magnolia.module;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class InstallStatus {
-    public static final InstallStatus inProgress = new InstallStatus("inProgress");
-    public static final InstallStatus stoppedConditionsNotMet = new InstallStatus("stoppedConditionsNotMet");
-    public static final InstallStatus installDoneRestartNeeded = new InstallStatus("installDoneRestartNeeded");
-    public static final InstallStatus installDone = new InstallStatus("installDone");
-    private final String name;
-
-    private InstallStatus(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String toString() {
-        return name;
-    }
+public enum InstallStatus {
+    inProgress, stoppedConditionsNotMet, installDoneRestartNeeded, installDone
 }

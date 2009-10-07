@@ -43,6 +43,8 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionComparator;
@@ -52,7 +54,6 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +72,10 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Map allDeltas; // <Version, Delta>
+    private final Map<Version, Delta> allDeltas;
 
     public AbstractModuleVersionHandler() {
-        allDeltas = new TreeMap(new VersionComparator());
+        allDeltas = new TreeMap<Version, Delta>(new VersionComparator());
     }
 
     /**
@@ -111,7 +112,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
     }
 
-    public List getDeltas(InstallContext installContext, Version from) {
+    public List<Delta> getDeltas(InstallContext installContext, Version from) {
         if (from == null) {
             return Collections.singletonList(getInstall(installContext));
         }
@@ -119,12 +120,9 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         return getUpdateDeltas(installContext, from);
     }
 
-    protected List getUpdateDeltas(InstallContext installContext, Version from) {
-        final List deltas = new LinkedList();
-        final Iterator it = allDeltas.keySet().iterator();
-        while (it.hasNext()) {
-            final Version v = (Version) it.next();
-
+    protected List<Delta> getUpdateDeltas(InstallContext installContext, Version from) {
+        final List<Delta> deltas = new LinkedList<Delta>();
+        for (Version v : allDeltas.keySet()) {
             if (v.isStrictlyAfter(from)) {
                 deltas.add(allDeltas.get(v));
             }
@@ -151,20 +149,20 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      */
     protected Delta getDefaultUpdate(InstallContext installContext) {
         final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
-        final List defaultUpdateTasks = getDefaultUpdateTasks(toVersion);
-        final List defaultUpdateConditions = getDefaultUpdateConditions(toVersion);
+        final List<Task> defaultUpdateTasks = getDefaultUpdateTasks(toVersion);
+        final List<Condition> defaultUpdateConditions = getDefaultUpdateConditions(toVersion);
         return DeltaBuilder.update(toVersion, "").addTasks(defaultUpdateTasks).addConditions(defaultUpdateConditions);
     }
 
-    protected List getDefaultUpdateTasks(Version forVersion) {
-        final List defaultUpdates = new ArrayList(2);
+    protected List<Task> getDefaultUpdateTasks(Version forVersion) {
+        final List<Task> defaultUpdates = new ArrayList<Task>(2);
         defaultUpdates.add(new ModuleFilesExtraction());
         defaultUpdates.add(new ModuleVersionUpdateTask(forVersion));
         return defaultUpdates;
     }
 
-    protected List getDefaultUpdateConditions(Version forVersion) {
-        return Collections.EMPTY_LIST;
+    protected List<Condition> getDefaultUpdateConditions(Version forVersion) {
+        return Collections.emptyList();
     }
 
     /**
@@ -173,32 +171,32 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * @see #getExtraInstallTasks(InstallContext) override this method if you need extra tasks for install.
      */
     protected Delta getInstall(InstallContext installContext) {
-        final List installTasks = new ArrayList();
+        final List<Task> installTasks = new ArrayList<Task>();
         installTasks.addAll(getBasicInstallTasks(installContext));
         installTasks.addAll(getExtraInstallTasks(installContext));
         installTasks.add(new ModuleVersionToLatestTask());
-        final List conditions = getInstallConditions();
+        final List<Condition> conditions = getInstallConditions();
         final Version version = installContext.getCurrentModuleDefinition().getVersion();
         return DeltaBuilder.install(version, "").addTasks(installTasks).addConditions(conditions);
     }
 
-    protected abstract List getBasicInstallTasks(InstallContext installContext);
+    protected abstract List<Task> getBasicInstallTasks(InstallContext installContext);
 
     /**
      * Override this method to add specific install tasks to your module.
      * Returns an empty list by default.
      */
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        return Collections.EMPTY_LIST;
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        return Collections.emptyList();
     }
 
-    protected List getInstallConditions() {
-        return Collections.EMPTY_LIST;
+    protected List<Condition> getInstallConditions() {
+        return Collections.emptyList();
     }
 
     public Delta getStartupDelta(InstallContext installContext) {
         final ModuleDefinition moduleDef = installContext.getCurrentModuleDefinition();
-        final List tasks = getStartupTasks(installContext);
+        final List<Task> tasks = getStartupTasks(installContext);
         return DeltaBuilder.startup(moduleDef, tasks);
     }
 
@@ -206,8 +204,8 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * Override this method to add specific startup tasks to your module.
      * Returns an empty list by default.
      */
-    protected List getStartupTasks(InstallContext installContext) {
-        return Collections.EMPTY_LIST;
+    protected List<Task> getStartupTasks(InstallContext installContext) {
+        return Collections.emptyList();
     }
 
     // TODO : make this mandatory and "hidden" ?

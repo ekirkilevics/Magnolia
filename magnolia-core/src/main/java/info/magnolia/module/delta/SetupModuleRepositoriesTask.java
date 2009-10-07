@@ -49,11 +49,10 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
 
 import javax.jcr.RepositoryException;
-import java.util.Iterator;
-
 
 /**
- * Bootstrap empty repositories for the current module (loading is already performed before install tasks)
+ * Bootstrap empty repositories for the current module. (loading is already performed before install tasks)
+ * 
  * @author gjoseph
  * @version $Revision$ ($Author$)
  */
@@ -68,12 +67,8 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
         try {
             final ModuleDefinition def = ctx.getCurrentModuleDefinition();
             // register repositories
-            for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
-                final RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
-
-                for (Iterator iterator = repDef.getWorkspaces().iterator(); iterator.hasNext();) {
-                    final String workspace = (String) iterator.next();
-
+            for (RepositoryDefinition repDef : def.getRepositories()) {
+                for (final String workspace : repDef.getWorkspaces()) {
                     // bootstrap the workspace if empty
                     if (!ContentRepository.checkIfInitialized(workspace)) {
                         final String[] bootstrapDirs = Bootstrapper.getBootstrapDirs();
@@ -108,9 +103,7 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
      */
     private void subscribeRepository(String repository) throws TaskExecutionException {
         ActivationManager sManager = ActivationManagerFactory.getActivationManager();
-        Iterator subscribers = sManager.getSubscribers().iterator();
-        while (subscribers.hasNext()) {
-            Subscriber subscriber = (Subscriber) subscribers.next();
+        for (Subscriber subscriber : sManager.getSubscribers()) {
             if (!subscriber.isSubscribed("/", repository)) {
                 Content subscriptionsNode = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()
                         + "/"

@@ -35,6 +35,8 @@ package info.magnolia.module.webapp;
 
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaType;
+import info.magnolia.module.delta.Condition;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 
 import java.util.Collections;
@@ -59,12 +61,12 @@ public class WebappDelta implements Delta {
         return version;
     }
 
-    public List getConditions() {
-        return Collections.EMPTY_LIST;
+    public List<Condition> getConditions() {
+        return Collections.emptyList();
     }
 
-    public List getTasks() {
-        return Collections.singletonList(new WebappBootstrap());
+    public List<Task> getTasks() {
+        return Collections.<Task>singletonList(new WebappBootstrap());
     }
 
     public DeltaType getType() {

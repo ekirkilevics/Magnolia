@@ -53,12 +53,12 @@ public interface Delta {
     /**
      * Returns the list of Conditions which have to be checked before this Delta's Tasks can be executed.
      */
-    List getConditions();
+    List<Condition> getConditions();
 
     /**
      * Should not return a read-only List, as the version handler might add tasks as appropriate.
      */
-    List getTasks();
+    List<Task> getTasks();
 
     String getDescription();
 

@@ -48,13 +48,13 @@ import java.util.List;
  */
 public class WebXmlConditionsUtil {
     private final WebXmlUtil webXmlUtil;
-    private final List conditions;
+    private final List<Condition> conditions;
 
-    public WebXmlConditionsUtil(List conditions) {
+    public WebXmlConditionsUtil(List<Condition> conditions) {
         this(new WebXmlUtil(), conditions);
     }
 
-    WebXmlConditionsUtil(WebXmlUtil webXmlUtil, List conditions) {
+    WebXmlConditionsUtil(WebXmlUtil webXmlUtil, List<Condition> conditions) {
         this.webXmlUtil = webXmlUtil;
         this.conditions = conditions;
     }

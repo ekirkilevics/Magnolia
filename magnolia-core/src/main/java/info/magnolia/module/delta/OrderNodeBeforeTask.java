@@ -46,11 +46,9 @@ import javax.jcr.RepositoryException;
  */
 public class OrderNodeBeforeTask extends AbstractRepositoryTask {
     
-    private String repository;
-    
-    private String path;
-    
-    private String orderBeforeNodeName;
+    private final String repository;
+    private final String path;
+    private final String orderBeforeNodeName;
     
     public OrderNodeBeforeTask(String name, String description, String repository, String path, String orderBeforeNodeName) {
         super(name, description);
@@ -60,7 +58,7 @@ public class OrderNodeBeforeTask extends AbstractRepositoryTask {
     }
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        Content node = installContext.getHierarchyManager(repository).getContent(path);
+        final Content node = installContext.getHierarchyManager(repository).getContent(path);
         node.getParent().orderBefore(node.getName(), orderBeforeNodeName);
     }
 

@@ -91,8 +91,8 @@ public class ArrayDelegateTask implements Task {
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
-        for (int i = 0; i < tasks.length; i++) {
-            tasks[i].execute(ctx);
+        for (Task task : tasks) {
+            task.execute(ctx);
         }
     }
 

@@ -42,11 +42,8 @@ import java.util.Comparator;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class VersionComparator implements Comparator {
-
-    public int compare(Object o1, Object o2) {
-        final Version v1 = (Version) o1;
-        final Version v2 = (Version) o2;
+public class VersionComparator implements Comparator<Version> {
+    public int compare(Version v1, Version v2) {
         if (v1.isStrictlyAfter(v2)) {
             return 1;
         } else if (v1.isEquivalent(v2)) {

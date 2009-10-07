@@ -55,8 +55,7 @@ public class BasicFileExtractor implements FileExtractor {
 
     public void extractFiles(Transformer transformer) throws IOException {
         final String[] resources = collectResources(transformer);
-        for (int i = 0; i < resources.length; i++) {
-            final String resourcePath = resources[i];
+        for (final String resourcePath : resources) {
             final String absTargetPath = transformer.accept(resourcePath);
             extractFile(resourcePath, absTargetPath);
         }

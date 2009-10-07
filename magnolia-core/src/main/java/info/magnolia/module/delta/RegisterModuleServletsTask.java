@@ -52,11 +52,10 @@ public class RegisterModuleServletsTask extends ArrayDelegateTask {
     }
     
     public void execute(InstallContext installContext) throws TaskExecutionException {
-        ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
+        final ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
         
         // register servlets
-        for (Iterator iter = moduleDefinition.getServlets().iterator(); iter.hasNext();) {
-            ServletDefinition servletDefinition = (ServletDefinition) iter.next();
+        for (ServletDefinition servletDefinition : moduleDefinition.getServlets()) {
             addTask(new RegisterServletTask(servletDefinition));
         }
         

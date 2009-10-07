@@ -66,10 +66,8 @@ public class CopyOrReplaceNodePropertiesTask extends AbstractRepositoryTask {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         final Content source = hm.getContent(sourceNodePath);
         final Content target = hm.getContent(targetNodePath);
-        final Collection props = source.getNodeDataCollection();
-        final Iterator it = props.iterator();
-        while (it.hasNext()) {
-            final NodeData prop = (NodeData) it.next();
+        final Collection<NodeData> props = source.getNodeDataCollection();
+        for (NodeData prop : props) {
             final String name = prop.getName();
             final String value = prop.getString();
             if (target.hasNodeData(name)) {

@@ -38,6 +38,7 @@ import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.SetupModuleRepositoriesTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.SamplesBootstrapTask;
+import info.magnolia.module.delta.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +58,8 @@ public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
      *
      * This method should generally not be overridden.
      */
-    protected List getBasicInstallTasks(InstallContext installContext) {
-        final List basicInstallTasks = new ArrayList();
+    protected List<Task> getBasicInstallTasks(InstallContext installContext) {
+        final List<Task> basicInstallTasks = new ArrayList<Task>();
         basicInstallTasks.add(new SetupModuleRepositoriesTask());
         basicInstallTasks.add(new ModuleBootstrapTask());
         basicInstallTasks.add(new SamplesBootstrapTask());

@@ -66,7 +66,7 @@ public interface ModuleVersionHandler {
      * It is also responsible for updating the current version number of the module,
      * wherever it is stored.
      */
-    List getDeltas(InstallContext installContext, Version from);
+    List<Delta> getDeltas(InstallContext installContext, Version from);
 
     /**
      * Returns a list of {@link Task} that needs to be executed always before this module is started. These tasks will

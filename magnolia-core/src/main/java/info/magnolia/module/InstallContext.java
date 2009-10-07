@@ -40,6 +40,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.jcr.RepositoryException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,9 +65,9 @@ public interface InstallContext {
     InstallStatus getStatus();
 
     /**
-     * &lt;String (module), List&lt;Message&gt;&gt;
+     * A Map of messages where the key is the module name.
      */
-    Map getMessages();
+    Map<String, List<Message>> getMessages();
 
     HierarchyManager getHierarchyManager(String workspace);
 
@@ -128,20 +129,7 @@ public interface InstallContext {
         }
     }
 
-    public class MessagePriority {
-        public static final MessagePriority info = new MessagePriority("info");
-        public static final MessagePriority warning = new MessagePriority("warning");
-        public static final MessagePriority error = new MessagePriority("error");
-        public static final MessagePriority restartNeeded = new MessagePriority("restartNeeded");
-
-        private final String name;
-
-        private MessagePriority(String name) {
-            this.name = name;
-        }
-
-        public String toString() {
-            return name;
-        }
+    public enum MessagePriority {
+        info, warning, error, restartNeeded
     }
 }
