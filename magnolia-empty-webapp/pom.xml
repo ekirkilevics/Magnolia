@@ -18,7 +18,7 @@
         <dependency>
           <groupId>info.magnolia</groupId>
           <artifactId>magnolia-module-workflow</artifactId>
-          <version>4.1</version>
+          <version>${project.version}</version>
         </dependency>
         <dependency>
           <groupId>info.magnolia</groupId>
@@ -28,7 +28,7 @@
         <dependency>
           <groupId>info.magnolia</groupId>
           <artifactId>magnolia-module-samples</artifactId>
-          <version>4.1</version>
+          <version>${project.version}</version>
         </dependency>
       </dependencies>
     </profile>
