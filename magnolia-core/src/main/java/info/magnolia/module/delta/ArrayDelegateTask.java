@@ -67,10 +67,55 @@ public class ArrayDelegateTask implements Task {
         this.tasks = tasks;
     }
 
+    /**
+     * Since 4.2: replaced by the varargs constructor. Informally deprecated; will be removed in 4.3.
+     */
+    public ArrayDelegateTask(String name, Task task1, Task task2) {
+        this(name, (String) null, task1, task2);
+    }
+
+    /**
+     * Since 4.2: replaced by the varargs constructor. Informally deprecated; will be removed in 4.3.
+     */
+    public ArrayDelegateTask(String name, String description, Task task1, Task task2) {
+        this(name, description, new Task[]{task1, task2});
+    }
+
+    /**
+     * Since 4.2: replaced by the varargs constructor. Informally deprecated; will be removed in 4.3.
+     */
+    public ArrayDelegateTask(String name, Task task1, Task task2, Task task3) {
+        this(name, (String) null, task1, task2, task3);
+    }
+
+    /**
+     * Since 4.2: replaced by the varargs constructor. Informally deprecated; will be removed in 4.3.
+     */
+    public ArrayDelegateTask(String name, String description, Task task1, Task task2, Task task3) {
+        this(name, description, new Task[]{task1, task2, task3});
+    }
+
+    /**
+     * Since 4.2: replaced by the varargs constructor. Informally deprecated; will be removed in 4.3.
+     */
+    public ArrayDelegateTask(String name, Task task1, Task task2, Task task3, Task task4) {
+        this(name, null, task1, task2, task3, task4);
+    }
+
+    /**
+     * Since 4.2: replaced by the varargs constructor. Informally deprecated; will be removed in 4.3.
+     */
+    public ArrayDelegateTask(String name, String description, Task task1, Task task2, Task task3, Task task4) {
+        this(name, description, new Task[]{task1, task2, task3, task4});
+    }
+
     public String getName() {
         return name;
     }
 
+    /**
+     * Tasks are meant to be immutable. Avoid this if possible.
+     */
     public void addTask(Task task) {
         this.tasks = (Task[]) ArrayUtils.add(tasks, task);
     }
