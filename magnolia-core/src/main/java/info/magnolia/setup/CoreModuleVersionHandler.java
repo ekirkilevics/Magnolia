@@ -40,6 +40,7 @@ import info.magnolia.module.delta.AddMimeMappingTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
@@ -164,8 +165,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 workspaceName, nodePath, "mime-type", previouslyWrongValue, false, fixTask);
     }
 
-    protected List getBasicInstallTasks(InstallContext ctx) {
-        List l = new ArrayList();
+    protected List<Task> getBasicInstallTasks(InstallContext ctx) {
+        final List<Task> l = new ArrayList<Task>();
         l.addAll(GenericTasks.genericTasksFor35());
         l.add(new CheckMagnoliaDevelopProperty());
         l.add(new CheckNodesForMixVersionable());
@@ -174,8 +175,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         return l;
     }
 
-    protected List getInstallConditions() {
-        final ArrayList conditions = new ArrayList();
+    protected List<Condition> getInstallConditions() {
+        final ArrayList<Condition> conditions = new ArrayList<Condition>();
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("ActivationHandler");
         u.servletIsNowWrapped("AdminTreeServlet");

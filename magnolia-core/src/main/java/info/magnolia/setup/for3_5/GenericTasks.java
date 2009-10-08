@@ -79,9 +79,9 @@ public class GenericTasks {
     /**
      * @return tasks which have to be executed whether we're installing or upgrading from 3.0
      */
-    public static List genericTasksFor35() {
+    public static List<Task> genericTasksFor35() {
         final String areWeBootstrappingAuthorInstance = StringUtils.defaultIfEmpty(SystemProperty.getProperty(CoreModuleVersionHandler.BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY), "true");
-        return Arrays.asList(new Task[]{
+        return Arrays.asList(
                 // - install server node
                 new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", ContentRepository.CONFIG, "/server", null,
                         new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "server", ItemType.CONTENT.getSystemName())),
@@ -181,8 +181,8 @@ public class GenericTasks {
                 new RenamedRenderersToTemplateRenderers(),
                 new ReconfigureCommands(),
                 new UpdateURIMappings(),
-                new RemoveModuleDescriptorDetailsFromRepo(),
-        });
+                new RemoveModuleDescriptorDetailsFromRepo()
+        );
     }
 
 }
