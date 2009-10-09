@@ -242,7 +242,7 @@ public interface Content extends Cloneable {
      * @param filter
      * @return Collection of content objects or empty collection when no children are found.
      */
-    Collection getChildren(ContentFilter filter);
+    Collection<Content> getChildren(ContentFilter filter);
 
     /**
      * Get a collection containing child nodes which satisfies the given filter. The returned collection is ordered
@@ -252,27 +252,27 @@ public interface Content extends Cloneable {
      * child nodes
      * @return Collection of content objects or empty collection when no children are found.
      */
-    Collection getChildren(ContentFilter filter, Comparator orderCriteria);
+    Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria);
 
     /**
      * gets a Collection containing all child nodes of the same NodeType as "this" object.
      * @return Collection of content objects
      */
-    Collection getChildren();
+    Collection<Content> getChildren();
 
     /**
      * Get collection of specified content type
      * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
-    Collection getChildren(String contentType);
+    Collection<Content> getChildren(String contentType);
 
     /**
      * Get collection of specified content type
      * @param contentType ItemType
      * @return Collection of content nodes
      */
-    Collection getChildren(ItemType contentType);
+    Collection<Content> getChildren(ItemType contentType);
 
     /**
      * Get collection of specified content type.
@@ -280,7 +280,7 @@ public interface Content extends Cloneable {
      * @param namePattern
      * @return Collection of content nodes
      */
-    Collection getChildren(String contentType, String namePattern);
+    Collection<Content> getChildren(String contentType, String namePattern);
 
     /**
      * Returns the first child with the given name, any node type
@@ -292,13 +292,13 @@ public interface Content extends Cloneable {
     /**
      * Gets all properties bind in NodeData object excluding JCR system properties
      */
-    Collection getNodeDataCollection();
+    Collection<NodeData> getNodeDataCollection();
 
     /**
      * Gets all properties bind in NodeData object which qualify the given namePattern
      * @param namePattern
      */
-    Collection getNodeDataCollection(String namePattern);
+    Collection<NodeData> getNodeDataCollection(String namePattern);
 
     /**
      * @return Boolean, if sub node(s) exists
@@ -354,7 +354,7 @@ public interface Content extends Cloneable {
      * @return Content representing node on level 0
      * @throws RepositoryException if an error occurs
      */
-    Collection getAncestors() throws PathNotFoundException, RepositoryException;
+    Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException;
 
     /**
      * get node level from the ROOT node

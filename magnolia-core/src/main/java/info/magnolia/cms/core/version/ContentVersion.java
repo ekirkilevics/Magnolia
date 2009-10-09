@@ -298,7 +298,7 @@ public class ContentVersion extends DefaultContent {
      * gets a Collection containing all child nodes of the same NodeType as "this" object.
      * @return Collection of content objects
      */
-    public Collection getChildren() {
+    public Collection<Content> getChildren() {
         try {
             if (this.rule.isAllowed(this.base.getNodeTypeName())) {
                 return super.getChildren();
@@ -315,7 +315,7 @@ public class ContentVersion extends DefaultContent {
      * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
-    public Collection getChildren(String contentType) {
+    public Collection<Content> getChildren(String contentType) {
         if (this.rule.isAllowed(contentType)) {
             return super.getChildren(contentType);
         }
@@ -327,7 +327,7 @@ public class ContentVersion extends DefaultContent {
      * @param contentType ItemType
      * @return Collection of content nodes
      */
-    public Collection getChildren(ItemType contentType) {
+    public Collection<Content> getChildren(ItemType contentType) {
         return this.getChildren(contentType.getSystemName());
     }
 
@@ -337,7 +337,7 @@ public class ContentVersion extends DefaultContent {
      * @param namePattern
      * @return Collection of content nodes
      */
-    public Collection getChildren(String contentType, String namePattern) {
+    public Collection<Content> getChildren(String contentType, String namePattern) {
         if (this.rule.isAllowed(contentType)) {
             return super.getChildren(contentType, namePattern);
         }
@@ -388,7 +388,7 @@ public class ContentVersion extends DefaultContent {
      * @return Content representing node on level 0
      * @throws javax.jcr.RepositoryException if an error occurs
      */
-    public Collection getAncestors() throws PathNotFoundException, RepositoryException {
+    public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
         return this.base.getAncestors();
     }
 

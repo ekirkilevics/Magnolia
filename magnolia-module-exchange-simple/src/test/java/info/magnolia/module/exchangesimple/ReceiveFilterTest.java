@@ -37,20 +37,16 @@ import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import org.apache.commons.io.IOUtils;
 import static org.easymock.EasyMock.*;
 import org.easymock.IAnswer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MarkerFactory;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -131,10 +127,10 @@ public class ReceiveFilterTest extends TestCase {
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/nodename").anyTimes();
         expect(existingNode.getName()).andReturn("nodename");
         // TODO : test when existing node has children ?
-        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
+        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
 
         // for the sake of this test we'll just pretend we have no properties on the existing node
-        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
@@ -146,7 +142,7 @@ public class ReceiveFilterTest extends TestCase {
         expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node either
-        expect(importedNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
@@ -182,7 +178,7 @@ public class ReceiveFilterTest extends TestCase {
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/oldnodename").anyTimes();
         expect(existingNode.getName()).andReturn("oldnodename");
         // TODO : test when existing node has children ?
-        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
+        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
 
         // get temp node handle
         expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
@@ -191,10 +187,10 @@ public class ReceiveFilterTest extends TestCase {
         expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node
-        expect(importedNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         // for the sake of this test we'll just pretend we have no properties on the existing node either
-        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
@@ -233,7 +229,7 @@ public class ReceiveFilterTest extends TestCase {
         final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "old/nodename").anyTimes();
         // TODO : test when existing node has children ?
-        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
+        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
 
         // get temp node handle
         expect(tempNode.getHandle()).andReturn("/DUMMY-UUID");
@@ -242,13 +238,13 @@ public class ReceiveFilterTest extends TestCase {
         expect(tempNode.getChildByName("nodename")).andReturn(importedNode);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node
-        expect(importedNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node either
-        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {

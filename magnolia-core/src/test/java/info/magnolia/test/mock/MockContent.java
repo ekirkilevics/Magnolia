@@ -201,7 +201,7 @@ public class MockContent extends DefaultContent {
         return getParent().getLevel() + 1;
     }
 
-    public Collection getNodeDataCollection() {
+    public Collection<NodeData> getNodeDataCollection() {
         return this.nodeDatas.values();
     }
 
@@ -225,7 +225,7 @@ public class MockContent extends DefaultContent {
     }
 
     // TODO : use the given Comparator
-    public Collection getChildren(final ContentFilter filter, Comparator orderCriteria) {
+    public Collection<Content> getChildren(final ContentFilter filter, Comparator<Content> orderCriteria) {
         // copy
         List children = new ArrayList(this.children.values());
 
@@ -239,7 +239,7 @@ public class MockContent extends DefaultContent {
         return children;
     }
 
-    public Collection getChildren(final String contentType, String namePattern) {
+    public Collection<Content> getChildren(final String contentType, String namePattern) {
         if (!"*".equals(namePattern)) {
             throw new IllegalStateException("Only the \"*\" name pattern is currently supported in MockContent.");
         }

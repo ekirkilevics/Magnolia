@@ -95,15 +95,15 @@ public class InheritanceContentWrapper extends ContentWrapper {
     }
 
 
-    public Collection getChildren() {
+    public Collection<Content> getChildren() {
         return getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER);
     }
 
-    public Collection getChildren(ContentFilter filter) {
+    public Collection<Content> getChildren(ContentFilter filter) {
         return getChildren(filter, null);
     }
 
-    public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
+    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
         List children = new ArrayList();
         try {
             collectInheritedChildren(filter, children);

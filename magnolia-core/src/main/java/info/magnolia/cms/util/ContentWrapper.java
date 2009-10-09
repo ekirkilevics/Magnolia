@@ -153,7 +153,7 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getAncestor(digree);
     }
 
-    public Collection getAncestors() throws RepositoryException {
+    public Collection<Content> getAncestors() throws RepositoryException {
         return this.getWrappedContent().getAncestors();
     }
 
@@ -165,27 +165,27 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getChildByName(namePattern);
     }
 
-    public Collection getChildren() {
+    public Collection<Content> getChildren() {
         return this.getWrappedContent().getChildren();
     }
 
-    public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
+    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
         return this.getWrappedContent().getChildren(filter, orderCriteria);
     }
 
-    public Collection getChildren(ContentFilter filter) {
+    public Collection<Content> getChildren(ContentFilter filter) {
         return this.getWrappedContent().getChildren(filter);
     }
 
-    public Collection getChildren(ItemType contentType) {
+    public Collection<Content> getChildren(ItemType contentType) {
         return this.getWrappedContent().getChildren(contentType);
     }
 
-    public Collection getChildren(String contentType, String namePattern) {
+    public Collection<Content> getChildren(String contentType, String namePattern) {
         return this.getWrappedContent().getChildren(contentType, namePattern);
     }
 
-    public Collection getChildren(String contentType) {
+    public Collection<Content> getChildren(String contentType) {
         return this.getWrappedContent().getChildren(contentType);
     }
 
@@ -233,11 +233,11 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getNodeData(name);
     }
 
-    public Collection getNodeDataCollection() {
+    public Collection<NodeData> getNodeDataCollection() {
         return this.getWrappedContent().getNodeDataCollection();
     }
 
-    public Collection getNodeDataCollection(String namePattern) {
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
         return this.getWrappedContent().getNodeDataCollection(namePattern);
     }
 

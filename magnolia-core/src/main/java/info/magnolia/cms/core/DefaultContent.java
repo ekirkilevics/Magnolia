@@ -376,17 +376,17 @@ public class DefaultContent extends ContentHandler implements Content {
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),this.getItemType(), Path.getAbsolutePath(node.getPath()));
     }
 
-    public Collection getChildren(ContentFilter filter) {
+    public Collection<Content> getChildren(ContentFilter filter) {
         return getChildren(filter, null);
     }
 
-    public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
-        Collection children;
+    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
+        Collection<Content> children;
         if (orderCriteria == null) {
-            children = new ArrayList();
+            children = new ArrayList<Content>();
         }
         else {
-            children = new TreeSet(orderCriteria);
+            children = new TreeSet<Content>(orderCriteria);
         }
 
         try {
@@ -414,7 +414,7 @@ public class DefaultContent extends ContentHandler implements Content {
         return children;
     }
 
-    public Collection getChildren() {
+    public Collection<Content> getChildren() {
         String type = null;
 
         try {
@@ -432,28 +432,28 @@ public class DefaultContent extends ContentHandler implements Content {
         return this.getChildren(type);
     }
 
-    public Collection getChildren(String contentType) {
+    public Collection<Content> getChildren(String contentType) {
         return this.getChildren(contentType, "*"); //$NON-NLS-1$
     }
 
-    public Collection getChildren(ItemType contentType) {
+    public Collection<Content> getChildren(ItemType contentType) {
         return this.getChildren(contentType != null ? contentType.getSystemName() : (String) null);
     }
 
-    public Collection getChildren(String contentType, String namePattern) {
-        Collection children = null;
+    public Collection<Content> getChildren(String contentType, String namePattern) {
+        Collection<Content> children = null;
         try {
             children = this.getChildContent(contentType, namePattern);
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
-            children = new ArrayList();
+            children = new ArrayList<Content>();
         }
         return children;
     }
 
     public Content getChildByName(String namePattern) {
-        Collection children = null;
+        Collection<Content> children = null;
         try {
             children = getChildContent(null, namePattern);
         }
@@ -461,7 +461,7 @@ public class DefaultContent extends ContentHandler implements Content {
             log.error(e.getMessage(), e);
         }
         if (!children.isEmpty()) {
-            return (Content) children.iterator().next();
+            return children.iterator().next();
         }
         return null;
     }
@@ -472,8 +472,8 @@ public class DefaultContent extends ContentHandler implements Content {
      * @return Collection of <code>Content</code> objects or empty collection when no children are found.
      * @throws RepositoryException if an error occurs
      */
-    private Collection getChildContent(String contentType, String namePattern) throws RepositoryException {
-        Collection children = new ArrayList();
+    private Collection<Content> getChildContent(String contentType, String namePattern) throws RepositoryException {
+        Collection<Content> children = new ArrayList<Content>();
         NodeIterator nodeIterator = namePattern != null ? this.node.getNodes(namePattern) : this.node.getNodes();
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
@@ -492,15 +492,15 @@ public class DefaultContent extends ContentHandler implements Content {
         return children;
     }
 
-    public Collection getNodeDataCollection() {
-        Collection children = new ArrayList();
+    public Collection<NodeData> getNodeDataCollection() {
+        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
         try {
             PropertyIterator propertyIterator = this.node.getProperties();
             while (propertyIterator.hasNext()) {
                 Property property = (Property) propertyIterator.next();
                 try {
                     if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) { //$NON-NLS-1$ //$NON-NLS-2$
-                        children.add(new DefaultNodeData(property, this.hierarchyManager, this));
+                        nodeDatas.add(new DefaultNodeData(property, this.hierarchyManager, this));
                     }
                 }
                 catch (PathNotFoundException e) {
@@ -511,25 +511,25 @@ public class DefaultContent extends ContentHandler implements Content {
                 }
             }
             // add nt:resource nodes
-            children.addAll(this.getBinaryProperties("*"));
+            nodeDatas.addAll(this.getBinaryProperties("*"));
         }
         catch (RepositoryException re) {
             log.error("Exception caught", re);
         }
-        return children;
+        return nodeDatas;
     }
 
-    public Collection getNodeDataCollection(String namePattern) {
-        Collection children = new ArrayList();
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
+        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
         try {
             PropertyIterator propertyIterator = this.node.getProperties(namePattern);
             if (propertyIterator == null) {
-                return children;
+                return nodeDatas;
             }
             while (propertyIterator.hasNext()) {
                 Property property = (Property) propertyIterator.next();
                 try {
-                    children.add(new DefaultNodeData(property, this.hierarchyManager, this));
+                    nodeDatas.add(new DefaultNodeData(property, this.hierarchyManager, this));
                 }
                 catch (PathNotFoundException e) {
                     log.error("Exception caught", e);
@@ -539,12 +539,12 @@ public class DefaultContent extends ContentHandler implements Content {
                 }
             }
             // add nt:resource nodes
-            children.addAll(this.getBinaryProperties(namePattern));
+            nodeDatas.addAll(this.getBinaryProperties(namePattern));
         }
         catch (RepositoryException re) {
             log.error("Exception caught", re);
         }
-        return children;
+        return nodeDatas;
     }
 
     /**
@@ -552,14 +552,14 @@ public class DefaultContent extends ContentHandler implements Content {
      * @return nodeData collection
      * @throws RepositoryException if an error occurs
      */
-    private Collection getBinaryProperties(String namePattern) throws RepositoryException {
-        Collection children = new ArrayList();
+    private Collection<NodeData> getBinaryProperties(String namePattern) throws RepositoryException {
+        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
         NodeIterator nodeIterator = this.node.getNodes(namePattern);
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
                 if (this.isNodeType(subNode, ItemType.NT_RESOURCE)) {
-                    children.add(new DefaultNodeData(subNode, this.hierarchyManager, this));
+                    nodeDatas.add(new DefaultNodeData(subNode, this.hierarchyManager, this));
                 }
             }
             catch (PathNotFoundException e) {
@@ -569,7 +569,7 @@ public class DefaultContent extends ContentHandler implements Content {
                 // ignore, simply wont add content in a list
             }
         }
-        return children;
+        return nodeDatas;
     }
 
     public boolean hasChildren() {
@@ -617,8 +617,8 @@ public class DefaultContent extends ContentHandler implements Content {
         return (new DefaultContent(this.node.getAncestor(digree), this.hierarchyManager));
     }
 
-    public Collection getAncestors() throws PathNotFoundException, RepositoryException {
-        List allAncestors = new ArrayList();
+    public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
+        List<Content> allAncestors = new ArrayList<Content>();
         int level = this.getLevel();
         while (level != 0) {
             try {
