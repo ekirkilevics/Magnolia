@@ -39,7 +39,7 @@ import org.apache.commons.lang.ArrayUtils;
 import java.util.Arrays;
 
 /**
- * A tasks that delegates to an array of more tasks.
+ * A task that simply delegates to an array of other tasks.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
