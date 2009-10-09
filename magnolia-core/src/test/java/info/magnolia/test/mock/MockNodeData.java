@@ -50,10 +50,9 @@ import javax.jcr.RepositoryException;
  */
 public class MockNodeData extends DefaultNodeData {
 
-    private String name;
-
+    private final String name;
+    private final int type;
     private Object value;
-    private int type;
 
     private Content parent;
 

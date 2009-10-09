@@ -64,11 +64,7 @@ import org.slf4j.LoggerFactory;
  * @version 2.0 $Id$
  */
 public class DefaultNodeData extends ContentHandler implements NodeData {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
 
     /**
      * Wrapped javax.jcr.Property.
@@ -287,9 +283,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             return this.property.getValue();
         }
         catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug(e.getMessage(), e);
-            }
+            log.debug(e.getMessage(), e);
             return null;
         }
     }
@@ -426,7 +420,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
                 return this.property.getType();
             }
             catch (Exception e) {
-                log.warn("Unable to read property type for " + this.property); //$NON-NLS-1$
+                log.warn("Unable to read property type for {}", this.property); //$NON-NLS-1$
             }
         }
         return PropertyType.UNDEFINED;
@@ -441,7 +435,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             return this.property.getName();
         }
         catch (Exception e) {
-            log.warn("Unable to read property name for " + this.property); //$NON-NLS-1$
+            log.warn("Unable to read property name for {}", this.property); //$NON-NLS-1$
             return StringUtils.EMPTY;
         }
     }
@@ -451,7 +445,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             return this.property.getLength();
         }
         catch (RepositoryException re) {
-            log.warn("Unable to read content length for " + this.property); //$NON-NLS-1$
+            log.warn("Unable to read content length for {}", this.property); //$NON-NLS-1$
             return 0;
         }
     }
@@ -536,19 +530,15 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             return this.node.getProperty(name).getString();
         }
         catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute [ " + name + " ] not set");
-            }
+            log.debug("Attribute [ {} ] not set", name);
             return "";
         }
     }
 
-    public Collection getAttributeNames() throws RepositoryException {
-        Collection names = new ArrayList();
+    public Collection<String> getAttributeNames() throws RepositoryException {
+        Collection<String> names = new ArrayList<String>();
         if (this.node == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attributes are only supported for BINARY type");
-            }
+            log.debug("Attributes are only supported for BINARY type");
             return names;
         }
         PropertyIterator properties = this.node.getProperties();
@@ -573,8 +563,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             return this.property.getPath();
         }
         catch (RepositoryException e) {
-            log.error("Failed to get handle"); //$NON-NLS-1$
-            log.error(e.getMessage(), e);
+            log.error("Failed to get handle: " + e.getMessage(), e);
             return StringUtils.EMPTY;
         }
     }
@@ -638,12 +627,11 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         if (this.property == null || this.node ==  null) {
             return super.toString();
         }
-        StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append(getHierarchyManager().getName() + ":");
         buffer.append(getHandle());
-        String type = NodeDataUtil.getTypeName(this);
         buffer.append("[");
-        buffer.append(type);
+        buffer.append(NodeDataUtil.getTypeName(this));
         buffer.append("]");
 
         return buffer.toString();

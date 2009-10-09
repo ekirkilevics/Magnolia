@@ -219,7 +219,7 @@ public interface NodeData extends Cloneable {
 
     /**
      * set value of type <code>Value[]</code>
-     * @param value[]
+     * @param value
      * @throws javax.jcr.RepositoryException
      */
     void setValue(Value[] value) throws RepositoryException, AccessDeniedException;
@@ -258,7 +258,7 @@ public interface NodeData extends Cloneable {
      * @return collection of attribute names
      * @throws javax.jcr.RepositoryException
      */
-    Collection getAttributeNames() throws RepositoryException;
+    Collection<String> getAttributeNames() throws RepositoryException;
 
     /**
      * checks if the atom exists in the repository

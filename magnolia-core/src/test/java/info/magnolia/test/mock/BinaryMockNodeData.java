@@ -58,13 +58,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class BinaryMockNodeData extends MockNodeData {
+    private static final Logger log = LoggerFactory.getLogger(BinaryMockNodeData.class);
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(BinaryMockNodeData.class);
-
-    private Map attributes = new HashMap();
+    private Map<String, String> attributes = new HashMap<String, String>();
 
     public BinaryMockNodeData(String name, InputStream stream, String fileName, String mimeType, int size) {
         super(name, stream);
@@ -88,10 +84,10 @@ public class BinaryMockNodeData extends MockNodeData {
     }
 
     public String getAttribute(String name) {
-        return (String) attributes.get(name);
+        return attributes.get(name);
     }
 
-    public Collection getAttributeNames() throws RepositoryException {
+    public Collection<String> getAttributeNames() throws RepositoryException {
         return attributes.keySet();
     }
 
