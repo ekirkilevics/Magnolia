@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -77,9 +78,9 @@ public class MockContent extends DefaultContent {
 
     private String name;
 
-    private OrderedMap nodeDatas = new ListOrderedMap();
+    private Map<String, NodeData> nodeDatas = new ListOrderedMap();
 
-    private OrderedMap children = new ListOrderedMap();
+    private Map<String, MockContent> children = new ListOrderedMap();
 
     private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
 
@@ -227,7 +228,7 @@ public class MockContent extends DefaultContent {
     // TODO : use the given Comparator
     public Collection<Content> getChildren(final ContentFilter filter, Comparator<Content> orderCriteria) {
         // copy
-        List children = new ArrayList(this.children.values());
+        List<Content> children = new ArrayList<Content>(this.children.values());
 
         CollectionUtils.filter(children, new Predicate() {
 
@@ -256,13 +257,12 @@ public class MockContent extends DefaultContent {
     }
 
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
-        Content movedNode = (Content)children.get(srcName);
-        List tmp = new ArrayList(children.values());
+        MockContent movedNode = children.get(srcName);
+        List<MockContent> tmp = new ArrayList<MockContent>(children.values());
         tmp.remove(movedNode);
         tmp.add(tmp.indexOf(children.get(beforeName)), movedNode);
         children.clear();
-        for (Iterator iter = tmp.iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
+        for (MockContent child : tmp) {
             children.put(child.getName(), child);
         }
     }

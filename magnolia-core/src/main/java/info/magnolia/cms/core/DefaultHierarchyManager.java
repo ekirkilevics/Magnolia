@@ -42,7 +42,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 
@@ -305,10 +304,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         Content pageToBeFound = null;
         try {
             if (page.hasChildren()) {
-                Collection children = page.getChildren(ItemType.CONTENT.getSystemName());
-                Iterator iterator = children.iterator();
-                while (iterator.hasNext()) {
-                    Content child = (Content) iterator.next();
+                Collection<Content> children = page.getChildren(ItemType.CONTENT.getSystemName());
+                for (Content child : children) {
                     if (child.getTemplate().equals(templateName)) {
                         return child;
                     }
