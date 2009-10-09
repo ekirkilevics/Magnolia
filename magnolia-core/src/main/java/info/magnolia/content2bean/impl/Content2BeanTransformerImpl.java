@@ -342,7 +342,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         try {
             init = bean.getClass().getMethod("init", new Class[]{});
             try {
-                init.invoke(bean, null);
+                init.invoke(bean); // no parameters
             }
             catch (Exception e) {
                 throw new Content2BeanException("can't call init method", e);

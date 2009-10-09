@@ -84,7 +84,7 @@ public class RedirectClientCallback implements HttpClientCallback {
         try {
             // formats the target location with the request url, to allow passing it has a parameter, for instance.
             final String encodedUrl = URLEncoder.encode(request.getRequestURL().toString(), "UTF-8");
-            final String formattedTarget = MessageFormat.format(target, new String[]{encodedUrl});
+            final String formattedTarget = MessageFormat.format(target, encodedUrl);
             response.sendRedirect(formattedTarget);
         } catch (IOException e) {
             throw new RuntimeException("Can't redirect to " + target + " : " + e.getMessage(), e);
