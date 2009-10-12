@@ -44,10 +44,12 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jcr.PathNotFoundException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
@@ -76,6 +78,8 @@ public class EditBar extends TagSupport {
     private String deleteLabel;
 
     private String moveLabel;
+    
+    private static final Logger log = LoggerFactory.getLogger(EditBar.class);
 
     /**
      * Show links only in admin instance.
@@ -195,7 +199,7 @@ public class EditBar extends TagSupport {
                             localContentNode = null;
                         }
                     } catch (Exception e) {
-                        // TODO: handle exception
+                        log.warn(e.getMessage(), e);
                     }
                 }
 
