@@ -47,6 +47,7 @@ import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
+import javax.jcr.PathNotFoundException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
@@ -188,9 +189,12 @@ public class EditBar extends TagSupport {
 
                 if(StringUtils.isNotEmpty(this.nodeName)){
                     try {
-                        localContentNode = localContentNode.getContent(this.nodeName);
-                    }
-                    catch (Exception e) {
+                        if (localContentNode.hasContent(this.nodeName)) {
+                            localContentNode = localContentNode.getContent(this.nodeName);
+                        } else {
+                            localContentNode = null;
+                        }
+                    } catch (Exception e) {
                         // TODO: handle exception
                     }
                 }
@@ -229,7 +233,7 @@ public class EditBar extends TagSupport {
                         path = Resource.getCurrentActivePage().getHandle();
                     }
                     bar.setPath(path);
-                }
+                } 
                 catch (Exception re) {
                     bar.setPath(StringUtils.EMPTY);
                 }
