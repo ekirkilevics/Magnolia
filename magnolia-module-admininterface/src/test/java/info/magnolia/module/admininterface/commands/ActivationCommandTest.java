@@ -85,6 +85,7 @@ public class ActivationCommandTest extends TestCase {
         expect(ctx.getHierarchyManager("some-repo")).andReturn(hm);
         expect(hm.getContent(PARENT_PATH)).andReturn(state);
         expect(state.getHandle()).andReturn(PARENT_PATH);
+        expect(state.getName()).andReturn("foo");
         expect(state.getJCRNode()).andReturn(stateJCRNode);
         expect(state.getNodeTypeName()).andReturn("mgnl:contentNode");
         expect(state.getUUID()).andReturn("123-uuid-blablabla-123");
@@ -107,6 +108,6 @@ public class ActivationCommandTest extends TestCase {
     //todo: refactor and test other scenarios
     // - recursive
     // - with siblings before and after in the list
-    
+
 
 }
