@@ -131,4 +131,9 @@ public class VersionCommand extends RuleBasedCommand {
         this.recursive = recursive;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        this.recursive = false;
+    }
 }

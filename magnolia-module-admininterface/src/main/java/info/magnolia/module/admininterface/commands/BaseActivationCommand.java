@@ -73,4 +73,9 @@ public abstract class BaseActivationCommand extends RuleBasedCommand {
         this.syndicator = syndicator;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        this.syndicator = null;
+    }
 }

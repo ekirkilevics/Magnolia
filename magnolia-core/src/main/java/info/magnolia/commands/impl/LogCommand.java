@@ -81,4 +81,10 @@ public class LogCommand extends MgnlCommand {
         return LoggerFactory.getLogger(getLog());
     }
 
+    @Override
+    public void release() {
+        super.release();
+        log = LogCommand.class.getName();
+        msg = null;
+    }
 }

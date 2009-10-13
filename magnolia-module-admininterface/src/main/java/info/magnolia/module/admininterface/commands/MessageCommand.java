@@ -96,4 +96,10 @@ public class MessageCommand extends MgnlCommand {
         this.i18nBasename = basename;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        i18nBasename = MessagesManager.DEFAULT_BASENAME;
+        message = null;
+    }
 }

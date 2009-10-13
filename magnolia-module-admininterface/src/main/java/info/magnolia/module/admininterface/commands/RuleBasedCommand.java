@@ -86,5 +86,11 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
     public void setRule(Rule rule) {
         this.rule = rule;
     }
-    
+
+    @Override
+    public void release() {
+        super.release();
+        this.itemTypes = ItemType.CONTENTNODE.getSystemName();
+        this.rule = null;
+    }
 }

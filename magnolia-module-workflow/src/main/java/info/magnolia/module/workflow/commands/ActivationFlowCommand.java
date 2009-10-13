@@ -135,4 +135,9 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
         return workflowName;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        this.recursive = false;
+    }
 }

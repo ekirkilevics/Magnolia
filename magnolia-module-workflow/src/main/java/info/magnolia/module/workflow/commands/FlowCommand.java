@@ -114,4 +114,11 @@ public class FlowCommand extends MgnlCommand {
     public void setDialogName(String dialogName) {
         this.dialogName = dialogName;
     }
+
+    @Override
+    public void release() {
+        super.release();
+        workflowName = WorkflowConstants.DEFAULT_WORKFLOW;
+        dialogName = WorkflowConstants.DEFAULT_EDIT_DIALOG;
+    }
 }

@@ -62,4 +62,10 @@ public class TestCommand extends MgnlCommand {
         return this.versionMap;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        this.versionMap = null;
+    }
+
 }

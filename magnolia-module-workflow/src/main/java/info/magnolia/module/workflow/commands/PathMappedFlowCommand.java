@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PathMappedFlowCommand extends FlowCommand {
 
-    private Collection mappings = new ArrayList();
+    private Collection<Mapping> mappings = new ArrayList<Mapping>();
 
     private String repository;
 
@@ -57,8 +57,8 @@ public class PathMappedFlowCommand extends FlowCommand {
      * In case there is a mapping defined the mapping is used otherwise we fall back to the normal behavior.
      */
     public String getWorkflowName() {
-        for (Iterator iter = getMappings().iterator(); iter.hasNext();) {
-            Mapping mapping = (Mapping) iter.next();
+        for (Iterator<Mapping> iter = getMappings().iterator(); iter.hasNext();) {
+            Mapping mapping = iter.next();
             if(path.startsWith(mapping.getPath())){
                 return mapping.getWorkflowName();
             }
@@ -66,8 +66,8 @@ public class PathMappedFlowCommand extends FlowCommand {
         return super.getWorkflowName();
     }
     public String getDialogName() {
-        for (Iterator iter = getMappings().iterator(); iter.hasNext();) {
-            Mapping mapping = (Mapping) iter.next();
+        for (Iterator<Mapping> iter = getMappings().iterator(); iter.hasNext();) {
+            Mapping mapping = iter.next();
             if(path.startsWith(mapping.getPath()) && StringUtils.isNotEmpty(mapping.getDialogName())){
                 return mapping.getDialogName();
             }
@@ -75,11 +75,11 @@ public class PathMappedFlowCommand extends FlowCommand {
         return super.getDialogName();
     }
 
-    public Collection getMappings() {
+    public Collection<Mapping> getMappings() {
         return this.mappings;
     }
 
-    public void setMappings(Collection mappings) {
+    public void setMappings(Collection<Mapping> mappings) {
         this.mappings = mappings;
     }
 
@@ -103,6 +103,14 @@ public class PathMappedFlowCommand extends FlowCommand {
 
     public void setRepository(String repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public void release() {
+        super.release();
+        mappings = new ArrayList<Mapping>();
+        repository = null;
+        path = null;
     }
 
     /**
@@ -152,5 +160,6 @@ public class PathMappedFlowCommand extends FlowCommand {
             this.dialogName = dialogName;
         }
     }
+
 
 }
