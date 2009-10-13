@@ -42,6 +42,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.repository.RepositoryNotInitializedException;
 
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
@@ -104,7 +105,11 @@ public class WorkspaceAccessUtil {
     public Session createRepositorySession(SimpleCredentials credentials,
                                               String repositoryName,
                                               String workspaceName) throws RepositoryException {
-        return createRepositorySession(credentials, ContentRepository.getRepository(repositoryName), workspaceName);
+        final Repository repository = ContentRepository.getRepository(repositoryName);
+        if (repository == null) {
+            throw new RepositoryNotInitializedException("Repository " + repositoryName + " have not been found.");
+        }
+        return createRepositorySession(credentials, repository, workspaceName);
     }
 
     /**
