@@ -80,11 +80,13 @@ public class ActivationCommand extends BaseActivationCommand {
     public boolean execute(Context ctx) {
         boolean success = false;
         try {
+            log.debug("Will activate content from {} repository with uuid {} and path {}", new Object[] {getRepository(), getUuid(), getPath()});
             Content thisState = getNode(ctx);
             String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
             if (StringUtils.isEmpty(parentPath)) {
                 parentPath = "/";
             }
+            log.debug("Activate content {} as a child of {}", new Object[] {thisState.getName(), parentPath});
             // make multiple activations instead of a big bulk
             if (recursive) {
                 List versionMap = getVersionMap();
@@ -309,5 +311,12 @@ public class ActivationCommand extends BaseActivationCommand {
         return this.versionMap;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        this.versionMap = null;
+        this.recursive = false;
+        this.versionNumber = null;
+    }
 
 }

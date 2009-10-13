@@ -102,4 +102,12 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
         this.uuid = uuid;
     }
 
+    @Override
+    public void release() {
+        super.release();
+        this.uuid = null;
+        this.path = null;
+        this.repository = null;
+    }
+
 }
