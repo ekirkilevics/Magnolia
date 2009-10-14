@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.fluent;
+package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;

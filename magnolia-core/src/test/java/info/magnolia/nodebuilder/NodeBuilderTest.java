@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.fluent;
+package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -44,7 +44,7 @@ import info.magnolia.test.RepositoryTestCase;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RootTest extends RepositoryTestCase {
+public class NodeBuilderTest extends RepositoryTestCase {
     public void testContextNodeIsProperlyPropagated() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         {
@@ -54,7 +54,7 @@ public class RootTest extends RepositoryTestCase {
             hello.createContent("zing").createNodeData("this", "will be removed");
         }
 
-        final Root root = new Root(hm.getContent("MyRoot"),
+        final NodeBuilder nodeBuilder = new NodeBuilder(hm.getContent("MyRoot"),
                 Ops.getNode("hello").then(
                         Ops.add("newsub").then(
                                 Ops.addProperty("newProp", "New Value")
@@ -68,7 +68,7 @@ public class RootTest extends RepositoryTestCase {
                 Ops.addProperty("lala", "lolo")
 
         );
-        root.exec();
+        nodeBuilder.exec();
         hm.save();
 
         final NodeData prop = hm.getNodeData("/MyRoot/hello/newsub/newProp");

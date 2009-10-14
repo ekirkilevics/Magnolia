@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.fluent;
+package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -65,8 +65,8 @@ public class NodeBuilderTask extends AbstractRepositoryTask {
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         final Content root = hm.getContent(rootPath);
-        final Root rootOp = new Root(root, operations);
-        rootOp.exec();
+        final NodeBuilder nodeBuilder = new NodeBuilder(root, operations);
+        nodeBuilder.exec();
     }
 
 }
