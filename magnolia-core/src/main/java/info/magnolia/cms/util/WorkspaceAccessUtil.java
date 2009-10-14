@@ -105,11 +105,7 @@ public class WorkspaceAccessUtil {
     public Session createRepositorySession(SimpleCredentials credentials,
                                               String repositoryName,
                                               String workspaceName) throws RepositoryException {
-        final Repository repository = ContentRepository.getRepository(repositoryName);
-        if (repository == null) {
-            throw new RepositoryNotInitializedException("Repository " + repositoryName + " have not been found.");
-        }
-        return createRepositorySession(credentials, repository, workspaceName);
+        return createRepositorySession(credentials, ContentRepository.getRepository(repositoryName), workspaceName);
     }
 
     /**
