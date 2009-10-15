@@ -35,6 +35,8 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -138,7 +140,14 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     protected Matcher findMatcher(HttpServletRequest request) {
-        final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
+        WebContext ctx = MgnlContext.getWebContextOrNull();
+        final String uri;
+        if (ctx != null) {
+            uri = MgnlContext.getWebContext().getAggregationState().getCurrentURI();
+        } else {
+            // the web context is not available during installation
+            uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
+        }
         return findMatcher(uri);
     }
 

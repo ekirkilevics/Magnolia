@@ -52,6 +52,24 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals(2, res.getLevel());
     }
 
+    public void testExample2() {
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("^/stk-resources/comics/resources/comics/css/(.*)\\.css$");
+        mapping.setToURI("forward:/docroot/comics/css/$1.css");
+
+        final VirtualURIMapping.MappingResult res = mapping.mapURI("/stk-resources/comics/resources/comics/css/style.css");
+        assertEquals("forward:/docroot/comics/css/style.css", res.getToURI());
+    }
+
+    public void testExample3() {
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("^/stk-resources/comics/resources/comics/css(.*)/(.*)\\.css$");
+        mapping.setToURI("forward:/docroot/comics/css/$2.css");
+
+        final VirtualURIMapping.MappingResult res = mapping.mapURI("/stk-resources/comics/resources/comics/css\b/style.css");
+        assertEquals("forward:/docroot/comics/css/style.css", res.getToURI());
+    }
+
     public void testRegexSubstitutionWorksAndLevelIsSetToGroupCountPlusOne() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
         mapping.setFromURI("/foo/(.*?)-([1-9]).html");

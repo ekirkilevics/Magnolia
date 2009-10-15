@@ -65,11 +65,11 @@ public class AggregationStateTest extends TestCase {
     }
 
     public void testUriDecodingShouldStripCtxPath() {
-        assertEquals("/pouet", aggState.decodeURI("/foo/pouet"));
+        assertEquals("/pouet", aggState.stripContextPathIfExists("/foo/pouet"));
     }
 
     public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
-        assertEquals("/pouet", aggState.decodeURI("/pouet"));
+        assertEquals("/pouet", aggState.stripContextPathIfExists("/pouet"));
     }
 
 }

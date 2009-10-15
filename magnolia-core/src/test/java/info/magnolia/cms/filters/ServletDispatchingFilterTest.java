@@ -33,8 +33,13 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockAggregationState;
+import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockContext;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import junit.framework.TestCase;
@@ -144,10 +149,15 @@ public class ServletDispatchingFilterTest extends TestCase {
 
     private void doTestBypassAndPathInfo(final boolean shouldBypass, final String expectedPathInfo, final String expectedServletPath, final String requestPath, String mapping, boolean shouldCheckPathInfoAndServletPath) throws Exception {
         FactoryUtil.setInstance(Voting.class, new DefaultVoting());
+        WebContext ctx = createStrictMock(WebContext.class);
+        MgnlContext.setInstance(ctx);
+        final AggregationState state = new MockAggregationState();
+        expect(ctx.getContextPath()).andReturn("/magnoliaAuthor").anyTimes();
 
         final FilterChain chain = createNiceMock(FilterChain.class);
         final HttpServletResponse res = createNiceMock(HttpServletResponse.class);
         final HttpServletRequest req = createMock(HttpServletRequest.class);
+        expect(ctx.getAggregationState()).andReturn(state).anyTimes();
         expect(req.getRequestURI()).andReturn("/magnoliaAuthor" + requestPath).anyTimes();
         expect(req.getContextPath()).andReturn("/magnoliaAuthor").anyTimes();
 
@@ -166,8 +176,9 @@ public class ServletDispatchingFilterTest extends TestCase {
             });
         }
 
-        replay(chain, res, req, servlet);
+        replay(chain, res, req, servlet, ctx);
 
+        state.setCurrentURI(requestPath);
         final ServletDispatchingFilter filter = new ServletDispatchingFilter();
         final Field servletField = ServletDispatchingFilter.class.getDeclaredField("servlet");
         servletField.setAccessible(true);
@@ -178,6 +189,6 @@ public class ServletDispatchingFilterTest extends TestCase {
         assertEquals("Should " + (shouldBypass ? "" : "not ") + "have bypassed", shouldBypass, filter.bypasses(req));
         filter.doFilter(req, res, chain);
 
-        verify(chain, res, req, servlet);
+        verify(chain, res, req, servlet, ctx);
     }
 }
