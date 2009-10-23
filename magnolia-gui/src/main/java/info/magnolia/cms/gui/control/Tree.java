@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -1055,8 +1056,8 @@ public class Tree extends ControlImpl {
             Collection nodes = parentNode.getChildren(itemType);
             Comparator comp = this.getSortComparator();
             if(comp != null){
-                List sortedNodes = new ArrayList(nodes);
-                Collections.sort(sortedNodes, comp);
+            	Collection sortedNodes = new TreeSet(comp);
+                sortedNodes.addAll(nodes);
                 nodes = sortedNodes;
             }
             it = nodes.iterator();
