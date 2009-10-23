@@ -1056,7 +1056,7 @@ public class Tree extends ControlImpl {
             Collection nodes = parentNode.getChildren(itemType);
             Comparator comp = this.getSortComparator();
             if(comp != null){
-            	Collection sortedNodes = new TreeSet(comp);
+                Collection sortedNodes = new TreeSet(comp);
                 sortedNodes.addAll(nodes);
                 nodes = sortedNodes;
             }
