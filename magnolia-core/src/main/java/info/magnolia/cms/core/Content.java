@@ -261,7 +261,7 @@ public interface Content extends Cloneable {
     Collection<Content> getChildren();
 
     /**
-     * Get collection of specified content type
+     * Get collection of specified content type and its subtypes
      * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
