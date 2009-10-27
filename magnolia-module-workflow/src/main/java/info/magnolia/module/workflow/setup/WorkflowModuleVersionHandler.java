@@ -48,6 +48,7 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
+import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
@@ -147,6 +148,14 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new AddSystemUserToGroupTask("Superuser", "publishers"))
                 );
+        register(DeltaBuilder.update("4.2", "")
+                // while this is checked and changed by DMS in 1.4 (bundled w/ Mgnl 4.1), there was a brief period of time (between 4.1 to 4.2) when workflow might have had overridden it.
+                // if the property exists with a wrong value, fix it otherwise let it be as someone might have just removed the versioning or it uses custom or correct command
+                .addTask(new IsModuleInstalledOrRegistered("Versioning", "Update of DMS specific versioning command.", "dms",
+                        new PropertyValueDelegateTask("", "", ContentRepository.CONFIG, "/modules/dms/commands/dms/activate/version", "class", "info.magnolia.module.admininterface.commands.VersionCommand", false,
+                                new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/dms/commands/dms/activate/version", "class", "info.magnolia.module.admininterface.commands.VersionCommand", "info.magnolia.module.dms.commands.DocumentVersionCommand"))))
+        );
+
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {

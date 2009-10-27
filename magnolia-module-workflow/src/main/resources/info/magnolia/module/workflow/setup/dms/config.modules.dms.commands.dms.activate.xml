@@ -44,7 +44,7 @@
       <sv:value>8a1ea257-31c6-4fca-9880-89676c71a3e7</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.admininterface.commands.VersionCommand</sv:value>
+      <sv:value>info.magnolia.module.dms.commands.DocumentVersionCommand</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
