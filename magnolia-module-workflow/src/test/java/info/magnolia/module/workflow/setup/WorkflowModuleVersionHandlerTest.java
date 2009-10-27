@@ -1,0 +1,88 @@
+/**
+ * This file Copyright (c) 2009 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ *
+ *
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License.
+ * You may elect to use one or the other of these licenses.
+ *
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
+ *
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia-cms.com/mna.html
+ *
+ * Any modifications to this file must keep this entire header
+ * intact.
+ *
+ */
+package info.magnolia.module.workflow.setup;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleVersionHandler;
+import info.magnolia.module.ModuleVersionHandlerTestCase;
+import info.magnolia.module.model.Version;
+import info.magnolia.nodebuilder.NodeBuilder;
+import info.magnolia.nodebuilder.Ops;
+
+import javax.jcr.RepositoryException;
+
+/**
+ * A test class for WorkflowModuleVersionHandler.
+ * @author had
+ */
+public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
+    protected String getModuleDescriptorPath() {
+        return "/META-INF/magnolia/workflow.xml";
+    }
+
+    protected ModuleVersionHandler newModuleVersionHandlerForTests() {
+        return new WorkflowModuleVersionHandler();
+    }
+
+    /**
+     * Workflow have been overwriting versioning command of DMS when introducing wkf support to DMS. The task to rememdy the situation have been introduced now
+     *
+     * Testing update to 4.2
+     */
+    public void testRSSParagraphSetUpOnUpdateFrom111() throws ModuleManagementException, RepositoryException {
+        // prepare nodes that should exist if the dms was really installed ...
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
+        final NodeBuilder nodeBuilder = new NodeBuilder(commands, Ops.add("activate").then(
+                Ops.add("version").then(Ops.addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
+        nodeBuilder.exec();
+        hm.save();
+
+        // run the test itself
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1.1"));
+
+        // check the proper versioning commmand is used
+        assertEquals("info.magnolia.module.dms.commands.DocumentVersionCommand", hm.getNodeData("/modules/dms/commands/dms/activate/version/class").getString());
+    }
+
+    protected String[] getExtraWorkspaces() {
+        return new String[] { "dms" };
+    }
+}
