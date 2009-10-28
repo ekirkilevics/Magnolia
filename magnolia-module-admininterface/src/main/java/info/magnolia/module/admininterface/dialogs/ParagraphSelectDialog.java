@@ -106,6 +106,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         c1.setBoxType(DialogBox.BOXTYPE_1COL);
         c1.setConfig("saveInfo", "false"); //$NON-NLS-1$ //$NON-NLS-2$
         c1.setConfig("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
+        c1.setRequired(true);
 
         String[] pars = paragraph.split(","); //$NON-NLS-1$
         for (int i = 0; i < pars.length; i++) {
@@ -155,6 +156,12 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
     }
 
     public String save() {
+        // copied from DialogMVCHandler
+        if (!validate()) {
+            return showDialog();
+        }
+
+        // nothing to save, generate a redirect url instead.
         try {
             // copy all parameters except mgnlDialog (which we switch to "editParagraph")
             StringBuffer query = new StringBuffer();
