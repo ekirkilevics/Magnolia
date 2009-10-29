@@ -39,10 +39,8 @@ import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.stats.JCRStats;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventListener;
@@ -60,16 +58,15 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringStrategy {
+    private static final Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
 
-    private static Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
+    private final Map<String, Session> jcrSessions = new HashMap<String, Session>();
 
-    private Map jcrSessions = new HashMap();
-
-    private Map hierarchyManagers = new HashMap();
+    private final Map<String, HierarchyManager> hierarchyManagers = new HashMap<String, HierarchyManager>();
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         final String hmAttrName = repositoryId + "_" + workspaceId;
-        HierarchyManager hm = (HierarchyManager) hierarchyManagers.get(hmAttrName);
+        HierarchyManager hm = hierarchyManagers.get(hmAttrName);
 
         if (hm == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
@@ -93,10 +90,10 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
 
-    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
+    protected Session getRepositorySession(String repositoryName, String workspaceName) throws RepositoryException {
         final String repoSessAttrName = repositoryName + "_" + workspaceName;
 
-        Session jcrSession = (Session) jcrSessions.get(repoSessAttrName);
+        Session jcrSession = jcrSessions.get(repoSessAttrName);
 
         if (jcrSession == null) {
             log.debug("creating jcr session {} by thread {}", repositoryName, Thread.currentThread().getName());
@@ -104,7 +101,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
             jcrSessions.put(repoSessAttrName, jcrSession);
-            JCRStats.getInstance().incSessionCount();
+            incSessionCount(workspaceName);
         }
 
         return jcrSession;
@@ -112,38 +109,48 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
 
     protected void release(boolean checkObservation) {
         log.debug("releasing jcr sessions");
-        for (Iterator iter = jcrSessions.values().iterator(); iter.hasNext();) {
-            Session session = (Session) iter.next();
-            if(session != null && session.isLive()){
-                try {
-                    final ObservationManager observationManager = session.getWorkspace().getObservationManager();
-                    final EventListenerIterator listeners = observationManager.getRegisteredEventListeners();
-                    if(!checkObservation || !listeners.hasNext()){
-                        session.logout();
-                        log.debug("logged out jcr session: {} by thread {}", session, Thread.currentThread().getName());
-
-                        JCRStats.getInstance().decSessionCount();
-                    }
-                    else{
-                        log.warn("won't close session because of registered observation listener {}", session.getWorkspace().getName());
-                        if(log.isDebugEnabled()){
-                            while(listeners.hasNext()) {
-                                EventListener listener = listeners.nextEventListener();
-                                log.debug("registered listener {}", listener);
-                            }
-                        }
-                    }
-                }
-                catch (RepositoryException e) {
-                    log.error("can't check if event listeners are registered", e);
-                }
-            }
-            else{
-                log.warn("session has been already closed {}", session.getWorkspace().getName());
-            }
+        for (Session session : jcrSessions.values()) {
+            releaseSession(session, checkObservation);
         }
         hierarchyManagers.clear();
         jcrSessions.clear();
+    }
+
+    protected void releaseSession(final Session session, boolean checkObservation) {
+        final String workspaceName = session.getWorkspace().getName();
+        if (session.isLive()) {
+            try {
+                final ObservationManager observationManager = session.getWorkspace().getObservationManager();
+                final EventListenerIterator listeners = observationManager.getRegisteredEventListeners();
+                if (!checkObservation || !listeners.hasNext()) {
+                    session.logout();
+                    log.debug("logged out jcr session: {} by thread {}", session, Thread.currentThread().getName());
+
+                    decSessionCount(workspaceName);
+                } else {
+                    log.warn("won't close session because of registered observation listener {}", workspaceName);
+                    if (log.isDebugEnabled()) {
+                        while (listeners.hasNext()) {
+                            EventListener listener = listeners.nextEventListener();
+                            log.debug("registered listener {}", listener);
+                        }
+                    }
+                }
+            }
+            catch (RepositoryException e) {
+                log.error("can't check if event listeners are registered", e);
+            }
+        } else {
+            log.warn("session has been already closed {}", workspaceName);
+        }
+    }
+
+    protected void incSessionCount(String workspaceName) {
+        JCRStats.getInstance().incSessionCount();
+    }
+
+    protected void decSessionCount(String workspaceName) {
+        JCRStats.getInstance().decSessionCount();
     }
 
 }

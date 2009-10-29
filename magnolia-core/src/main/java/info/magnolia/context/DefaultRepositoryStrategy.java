@@ -46,24 +46,18 @@ import java.util.Map;
  * Uses a user based access manager.
  */
 public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
-    static final Logger log = LoggerFactory.getLogger(DefaultRepositoryStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultRepositoryStrategy.class);
 
-    private static final long serialVersionUID = 222L;
-
-
-    private Map accessManagers = new HashMap();
+    private Map<String, AccessManager> accessManagers = new HashMap<String, AccessManager>();
     protected UserContext context;
 
     public DefaultRepositoryStrategy(UserContext context) {
         this.context = context;
     }
 
-
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        AccessManager accessManager = null;
-
         final String amAttrName = repositoryId + "_" + workspaceId;
-        accessManager = (AccessManager) accessManagers.get(amAttrName);
+        AccessManager accessManager = accessManagers.get(amAttrName);
 
         if (accessManager == null) {
             accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(getSubject(), repositoryId, workspaceId);

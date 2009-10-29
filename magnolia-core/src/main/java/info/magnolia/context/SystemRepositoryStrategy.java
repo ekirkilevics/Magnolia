@@ -47,8 +47,6 @@ import java.util.List;
  * Uses a single full access AccessManager. Jcr sessions are only released if no event listener were registered.
  */
 public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
-    private static final long serialVersionUID = 222L;
-
     private AccessManager accessManager;
 
     public SystemRepositoryStrategy(SystemContext context) {
@@ -62,8 +60,8 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
         return accessManager;
     }
 
-    protected List getSystemPermissions() {
-        List acl = new ArrayList();
+    protected List<Permission> getSystemPermissions() {
+        List<Permission> acl = new ArrayList<Permission>();
         UrlPattern p = UrlPattern.MATCH_ALL;
         Permission permission = new PermissionImpl();
         permission.setPattern(p);
