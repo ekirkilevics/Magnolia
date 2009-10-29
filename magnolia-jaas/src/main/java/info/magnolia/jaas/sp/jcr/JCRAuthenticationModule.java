@@ -33,6 +33,7 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
+import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
@@ -77,6 +78,11 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
 
         if (!this.user.isEnabled()) {
             throw new AccountLockedException("User account " + this.name + " is locked.");
+        }
+
+        if (!UserManager.ANONYMOUS_USER.equals(user.getName()) && user instanceof MgnlUser)
+        {
+            ((MgnlUser) user).setLastAccess();
         }
     }
 

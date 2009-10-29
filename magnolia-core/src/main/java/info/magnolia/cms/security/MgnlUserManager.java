@@ -141,9 +141,7 @@ public class MgnlUserManager implements UserManager {
             return null;
         }
         final MgnlUser user = userInstance(node);
-        if (!user.getName().equals(ANONYMOUS_USER)) {
-            user.setLastAccess();
-        }
+
         return user;
     }
 
