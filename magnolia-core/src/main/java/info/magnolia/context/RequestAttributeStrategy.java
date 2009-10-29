@@ -44,19 +44,13 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * An AttributeStrategy which delegates to the given WebContext's request.
+ */
 public class RequestAttributeStrategy implements AttributeStrategy {
-
     private static final Logger log = LoggerFactory.getLogger(RequestAttributeStrategy.class);
 
-    private static final long serialVersionUID = 222L;
-
-    private HttpServletRequest request;
-
-    private WebContext ctx;
-
-    public RequestAttributeStrategy() {
-    }
+    private final WebContext ctx;
 
     public RequestAttributeStrategy(WebContext ctx) {
         this.ctx = ctx;
