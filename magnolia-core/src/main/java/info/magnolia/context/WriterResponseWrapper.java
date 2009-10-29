@@ -58,7 +58,7 @@ class WriterResponseWrapper extends HttpServletResponseWrapper {
             out.write(b);
         }
     };
-    private int status = 200;
+    private int status = SC_OK;
 
     WriterResponseWrapper(HttpServletResponse response, Writer out) {
         super(response);
