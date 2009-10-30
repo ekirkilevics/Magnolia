@@ -84,11 +84,15 @@ div.options {
 
 div.option {
     background-color:#F6F6F6;
-    height:160px;
     margin-bottom:20px;
     padding:10px;
     width:390px;
 }
+
+div.option p {
+    height: 15ex;
+}
+
 div#stk {
     float:left;
     margin-right:30px;
