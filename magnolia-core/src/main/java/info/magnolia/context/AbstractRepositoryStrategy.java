@@ -153,4 +153,11 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         JCRStats.getInstance().decSessionCount();
     }
 
+    /**
+     * Returns the number of sessions managed by this strategy.
+     */
+    protected int getLocalSessionCount() {
+        return jcrSessions.size();
+    }
+
 }
