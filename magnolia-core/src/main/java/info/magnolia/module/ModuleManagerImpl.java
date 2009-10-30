@@ -249,8 +249,8 @@ public class ModuleManagerImpl implements ModuleManager {
 
         loadModulesRepositories();
 
-        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-            public void exec() {
+        MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            public void doExec() {
                 final Iterator<ModuleAndDeltas> it = state.getList().iterator();
                 while (it.hasNext()) {
                     final ModuleAndDeltas moduleAndDeltas = it.next();

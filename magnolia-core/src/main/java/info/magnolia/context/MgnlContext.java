@@ -301,7 +301,7 @@ public class MgnlContext {
 
     /**
      * Throws an IllegalStateException if the current context is not set, or if it is not an instance of WebContext.
-     * @see #getWebContext(String) 
+     * @see #getWebContext(String)
      */
     public static WebContext getWebContext() {
         return getWebContext(null);
@@ -356,12 +356,30 @@ public class MgnlContext {
     }
 
     /**
+     * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
+     */
+    public static Void doInSystemContext(final SystemContextOperation op) {
+        return doInSystemContext(op, false);
+    }
+
+    /**
      * Executes the given operation in the system context and sets it back to the original once done
      * (also if an exception is thrown). Also works if there was no context upon calling. (sets it back
      * to null in this case)
      */
-    public static void doInSystemContext(SystemContextOperation op) {
-        doInSystemContext(op, false);
+    public static <T> T doInSystemContext(final Op<T> op) {
+        return doInSystemContext(op, false);
+    }
+
+    /**
+     * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
+     */
+    public static Void doInSystemContext(final SystemContextOperation op, boolean releaseAfterExecution) {
+        return doInSystemContext(new VoidOp() {
+            public void doExec() {
+                op.exec();
+            }
+        }, releaseAfterExecution);
     }
 
     /**
@@ -370,21 +388,44 @@ public class MgnlContext {
      * to null in this case)
      * @param releaseAfterExecution TODO
      */
-    public static void doInSystemContext(SystemContextOperation op, boolean releaseAfterExecution) {
+    public static <T> T doInSystemContext(final Op<T> op, boolean releaseAfterExecution) {
         final Context originalCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
+        T result;
         try {
             MgnlContext.setInstance(MgnlContext.getSystemContext());
-            op.exec();
-            if(releaseAfterExecution){
+            result = op.exec();
+            if (releaseAfterExecution) {
                 MgnlContext.release();
             }
         } finally {
             MgnlContext.setInstance(originalCtx);
         }
+        return result;
     }
 
+    /**
+     * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
+     * @see info.magnolia.context.MgnlContext.Op
+     * @see info.magnolia.context.MgnlContext.VoidOp
+     */
     public static interface SystemContextOperation {
         void exec();
+    }
+
+    public static interface Op<T> {
+        T exec();
+    }
+
+    /**
+     * An Op that does not return values.
+     */
+    public abstract static class VoidOp implements Op<Void> {
+        public Void exec()  {
+            doExec();
+            return null;
+        }
+
+        abstract public void doExec();
     }
 
     /**
