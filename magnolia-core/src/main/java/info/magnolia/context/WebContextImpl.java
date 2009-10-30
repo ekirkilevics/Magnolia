@@ -59,7 +59,6 @@ import java.util.Stack;
  * @version $Id$
  */
 public class WebContextImpl extends UserContextImpl implements WebContext {
-
     private static final Logger log = LoggerFactory.getLogger(WebContextImpl.class);
 
     private static final long serialVersionUID = 222L;
@@ -77,9 +76,9 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     protected AggregationState aggregationState;
 
-    private Stack responseStack = new Stack();
+    private Stack<HttpServletResponse> responseStack = new Stack<HttpServletResponse>();
 
-    private Stack requestStack = new Stack();
+    private Stack<HttpServletRequest> requestStack = new Stack<HttpServletRequest>();
 
     /**
      * Use init to initialize the object.
@@ -137,11 +136,11 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * String[]>, so don't expect to retrieve multiple-valued form parameters here)
      * @return parameter values
      */
-    public Map getParameters() {
-        Map map = new HashMap();
-        Enumeration paramEnum = this.request.getParameterNames();
+    public Map<String, String> getParameters() {
+        Map<String, String> map = new HashMap<String, String>();
+        Enumeration<String> paramEnum = this.request.getParameterNames();
         while (paramEnum.hasMoreElements()) {
-            final String name = (String) paramEnum.nextElement();
+            final String name = paramEnum.nextElement();
             map.put(name, this.request.getParameter(name));
         }
         return map;
@@ -239,8 +238,8 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @see info.magnolia.context.WebContext#pop()
      */
     public void pop() {
-        request = (HttpServletRequest) requestStack.pop();
-        response = (HttpServletResponse) responseStack.pop();
+        request = requestStack.pop();
+        response = responseStack.pop();
     }
 
     /* (non-Javadoc)

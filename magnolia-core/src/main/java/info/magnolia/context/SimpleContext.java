@@ -58,13 +58,13 @@ public class SimpleContext extends AbstractMapBasedContext {
      * Using the threads locale context for getting hierarchy managers or similar
      */
     public SimpleContext() {
-        this(MgnlContext.getInstance());
+        this((Map<String, Object>) MgnlContext.getInstance());
     }
 
     /**
      * Decorate a map
      */
-    public SimpleContext(Map map) {
+    public SimpleContext(Map<String, Object> map) {
         super(map);
         this.ctx = MgnlContext.getInstance();
     }

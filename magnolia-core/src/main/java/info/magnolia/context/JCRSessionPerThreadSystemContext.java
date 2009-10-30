@@ -44,17 +44,13 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class JCRSessionPerThreadSystemContext extends AbstractSystemContext implements ThreadDependentSystemContext {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(JCRSessionPerThreadSystemContext.class);
+    private static final Logger log = LoggerFactory.getLogger(JCRSessionPerThreadSystemContext.class);
 
     public RepositoryAcquiringStrategy getRepositoryStrategy() {
         if (repositoryStrategyThreadLocal.get() == null) {
             repositoryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
         }
-        return (RepositoryAcquiringStrategy) repositoryStrategyThreadLocal.get();
+        return repositoryStrategyThreadLocal.get();
     }
 
     public void releaseThread() {

@@ -37,10 +37,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class MapAttributeStrategy implements AttributeStrategy {
-
-    private static final long serialVersionUID = 222L;
-
-    private Map map = new Hashtable();
+    private Map<String, Object> map = new Hashtable<String, Object>();
 
     public MapAttributeStrategy() {
     }
@@ -69,24 +66,24 @@ public class MapAttributeStrategy implements AttributeStrategy {
     /**
      * Ignore scope and return the inner map
      */
-    public Map getAttributes(int scope) {
+    public Map<String, Object> getAttributes(int scope) {
         return this.getAttributes();
     }
 
     /**
      * Returns the inner map
      */
-    public Map getAttributes() {
+    public Map<String, Object> getAttributes() {
         return this.map;
     }
 
 
-    public Map getMap() {
+    public Map<String, Object> getMap() {
         return map;
     }
 
 
-    public void setMap(Map map) {
+    public void setMap(Map<String, Object> map) {
         this.map = map;
     }
 

@@ -47,13 +47,13 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * The map containing the values
      */
-    private Map map = new HashMap();
+    private Map<String, Object> map = new HashMap<String, Object>();
 
 
     public AbstractMapBasedContext() {
     }
 
-    public AbstractMapBasedContext(Map map) {
+    public AbstractMapBasedContext(Map<String, Object> map) {
         super();
         this.map = map;
     }
@@ -82,24 +82,24 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     /**
      * Ignore scope and return the inner map
      */
-    public Map getAttributes(int scope) {
+    public Map<String, Object> getAttributes(int scope) {
         return this.getAttributes();
     }
 
     /**
      * Returns the inner map
      */
-    public Map getAttributes() {
+    public Map<String, Object> getAttributes() {
         return this.map;
     }
 
 
-    public Map getMap() {
+    public Map<String, Object> getMap() {
         return map;
     }
 
 
-    public void setMap(Map map) {
+    public void setMap(Map<String, Object> map) {
         this.map = map;
     }
 

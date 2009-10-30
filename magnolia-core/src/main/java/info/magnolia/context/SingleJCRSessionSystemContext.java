@@ -44,11 +44,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SingleJCRSessionSystemContext extends AbstractSystemContext {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SingleJCRSessionSystemContext.class);
+    private static final Logger log = LoggerFactory.getLogger(SingleJCRSessionSystemContext.class);
 
     public SingleJCRSessionSystemContext() {
         this.setRepositoryStrategy(new SystemRepositoryStrategy(this));

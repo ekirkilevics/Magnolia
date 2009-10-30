@@ -67,7 +67,7 @@ public class MgnlContext {
     /**
      * The thread local variable holding the current context
      */
-    private static ThreadLocal localContext = new ThreadLocal();
+    private static ThreadLocal<Context> localContext = new ThreadLocal<Context>();
 
     /**
      * Do not instantiate this class. The constructor must be public to use discovery
@@ -187,9 +187,9 @@ public class MgnlContext {
     }
 
     /**
-     * Get parameter value as string.
+     * Get parameter value as a Map&lt;String, String&gt;.
      */
-    public static Map getParameters() {
+    public static Map<String, String> getParameters() {
         WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getParameters();
@@ -289,7 +289,7 @@ public class MgnlContext {
      * Get the current context of this thread.
      */
     public static Context getInstance() {
-        Context context = (Context) localContext.get();
+        Context context = localContext.get();
         // It should never fall back, We need to fix all false callers instead
         if (context == null) {
             IllegalStateException ise = new IllegalStateException("MgnlContext is not set for this thread");
@@ -420,7 +420,7 @@ public class MgnlContext {
         if(hasInstance() && !(getInstance() instanceof SystemContext)){
             getInstance().release();
         }
-        SystemContext systemContext = (SystemContext) getSystemContext();
+        SystemContext systemContext = getSystemContext();
         if(systemContext instanceof ThreadDependentSystemContext){
             ((ThreadDependentSystemContext)systemContext).releaseThread();
         }

@@ -60,11 +60,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public abstract class AbstractContext implements Context, Serializable {
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(AbstractContext.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractContext.class);
 
     public User getUser() {
         return Security.getSystemUser();
@@ -99,7 +95,7 @@ public abstract class AbstractContext implements Context, Serializable {
         return getAttributeStrategy().getAttribute(name, scope);
     }
 
-    public Map getAttributes(int scope) {
+    public Map<String, Object> getAttributes(int scope) {
         return getAttributeStrategy().getAttributes(scope);
     }
 
@@ -142,8 +138,8 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * Merge the scopes maps
      */
-    public Map getAttributes() {
-        Map map = new HashMap();
+    public Map<String, Object> getAttributes() {
+        final Map<String, Object> map = new HashMap<String, Object>();
         map.putAll(this.getAttributes(Context.LOCAL_SCOPE));
         map.putAll(this.getAttributes(Context.SESSION_SCOPE));
         map.putAll(this.getAttributes(Context.APPLICATION_SCOPE));
@@ -228,7 +224,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * Map implementation
      */
-    public Set entrySet() {
+    public Set<Entry<String, Object>> entrySet() {
         return this.getAttributes().entrySet();
     }
 
@@ -242,7 +238,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * Map implementation
      */
-    public Set keySet() {
+    public Set<String> keySet() {
         return this.getAttributes().keySet();
     }
 
@@ -268,7 +264,7 @@ public abstract class AbstractContext implements Context, Serializable {
     /**
      * Map implementation
      */
-    public Collection values() {
+    public Collection<Object> values() {
         return this.getAttributes().values();
     }
 

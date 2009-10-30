@@ -174,7 +174,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * @param scope
      * @return the map
      */
-    public Map getAttributes(int scope);
+    public Map<String, Object> getAttributes(int scope);
 
     /**
      * Remove an attribute
@@ -187,7 +187,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * Get an over all map
      * @return the map
      */
-    public Map getAttributes();
+    public Map<String, Object> getAttributes();
 
     /**
      * Get the default messages. It uses the locale set on this context

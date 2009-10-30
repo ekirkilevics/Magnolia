@@ -62,7 +62,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     private HttpServletRequest request;
     private HttpServletResponse response;
     private String contextPath;
-    private Map parameters;
+    private Map<String, String> parameters;
     private ServletContext servletContext;
     private PageContext pageContext;
     private MultipartForm postedForm;
@@ -70,7 +70,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     public MockWebContext() {
     }
 
-    public MockWebContext(String contextPath, String uri, Map parameters) {
+    public MockWebContext(String contextPath, String uri, Map<String, String> parameters) {
         this.contextPath = contextPath;
         this.parameters = parameters;
         this.getAggregationState().setCurrentURI(uri);
@@ -86,11 +86,11 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     }
 
     public String getParameter(String name) {
-        return (String)getParameters().get(name);
+        return getParameters().get(name);
     }
 
-    public void include(String path, Writer out) throws ServletException,
-            IOException {
+    public void include(String path, Writer out) throws ServletException, IOException {
+        throw new IllegalStateException("not implemented !");
     }
 
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
@@ -151,11 +151,11 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
         this.contextPath = contextPath;
     }
 
-    public Map getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
     }
 

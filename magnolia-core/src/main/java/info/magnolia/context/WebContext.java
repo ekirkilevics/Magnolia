@@ -89,16 +89,16 @@ public interface WebContext extends Context {
     public MultipartForm getPostedForm();
 
     /**
-     * Get parameter value as string.
+     * Get a parameter value as string.
      * @return parameter value
      */
     public String getParameter(String name);
 
     /**
-     * Get parameter value as a Map<String, String>.
+     * Get all parameter values as a Map&lt;String, String&gt;.
      * @return parameter values
      */
-    public Map getParameters();
+    public Map<String, String> getParameters();
 
     /**
      * Get the current context path.

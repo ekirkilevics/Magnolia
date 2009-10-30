@@ -74,7 +74,7 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegate
      */
-    public Map getAttributes(int scope) {
+    public Map<String, Object> getAttributes(int scope) {
         return this.ctx.getAttributes(scope);
     }
 

@@ -53,8 +53,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class WorkItemContext extends ContextDecorator {
-
-    private static Logger log = LoggerFactory.getLogger(WorkItemContext.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkItemContext.class);
 
     /**
      * The wrapped workitem
@@ -88,7 +87,7 @@ public class WorkItemContext extends ContextDecorator {
     /**
      * Use work item if request scope
      */
-    public Map getAttributes(int scope) {
+    public Map<String, Object> getAttributes(int scope) {
         if (scope == Context.LOCAL_SCOPE) {
             return AttributeUtils.map2java(this.workItem.getAttributes());
         }

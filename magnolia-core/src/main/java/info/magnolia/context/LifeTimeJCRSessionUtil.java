@@ -48,18 +48,14 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class LifeTimeJCRSessionUtil {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(LifeTimeJCRSessionUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(LifeTimeJCRSessionUtil.class);
 
     private static SystemRepositoryStrategy repositoryStrategy;
 
     private static boolean useSystemContext;
 
     static {
-        SystemContext ctx = (SystemContext) MgnlContext.getSystemContext();
+        SystemContext ctx = MgnlContext.getSystemContext();
         useSystemContext = !(ctx instanceof ThreadDependentSystemContext);
         if (!useSystemContext) {
             log.info("Will handle lifetime sessions because the system context is of type {}", ThreadDependentSystemContext.class);

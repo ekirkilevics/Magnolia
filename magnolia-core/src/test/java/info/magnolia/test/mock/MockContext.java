@@ -37,10 +37,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.SystemContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * A mock context where you can set a mocked hierarchy manger on it.
  * @author philipp
@@ -48,8 +44,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MockContext extends AbstractMapBasedContext implements SystemContext{
-
-    private static Logger log = LoggerFactory.getLogger(MockContext.class);
 
     public MockContext() {
         this.setRepositoryStrategy(new MockRepositoryAcquiringStrategy());
