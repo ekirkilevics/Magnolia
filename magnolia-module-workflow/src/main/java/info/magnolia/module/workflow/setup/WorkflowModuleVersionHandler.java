@@ -34,8 +34,10 @@
 package info.magnolia.module.workflow.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.ModuleManager;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration;
@@ -44,12 +46,14 @@ import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.ConditionalDelegateTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
@@ -63,6 +67,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.RepositoryException;
 
 /**
  *
@@ -154,6 +159,20 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new IsModuleInstalledOrRegistered("Versioning", "Update of DMS specific versioning command.", "dms",
                         new PropertyValueDelegateTask("", "", ContentRepository.CONFIG, "/modules/dms/commands/dms/activate/version", "class", "info.magnolia.module.admininterface.commands.VersionCommand", false,
                                 new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/dms/commands/dms/activate/version", "class", "info.magnolia.module.admininterface.commands.VersionCommand", "info.magnolia.module.dms.commands.DocumentVersionCommand"))))
+                .addTask(new IsModuleInstalledOrRegistered("Activation update","Enable workflow use for activation of data entries.", "data",
+                        new ConditionalDelegateTask("", "", new ArrayDelegateTask("","", new BackupTask(ContentRepository.CONFIG, "/modules/data/commands/data/activate"), new BootstrapSingleResource("","", "/info/magnolia/module/workflow/setup/data/config.modules.data.commands.data.activate.xml"))) {
+                            @Override
+                            protected boolean condition(InstallContext installContext) throws TaskExecutionException {
+                                // the installation of the activation command is backported also to 1.2 branch, so it is possible that this particular activation command have been already bootstrapped. Do not backup & re-bootstrap it in this case again
+                                try {
+                                    Content activation = installContext.getHierarchyManager(ContentRepository.CONFIG).getContentByUUID("a71a96a9-0c2b-4358-90f0-0be55e79361c");
+                                    return activation == null;
+                                } catch (RepositoryException e) {
+                                    // doesn't exist, install
+                                    return true;
+                                }
+                            }
+                }))
         );
 
     }
@@ -161,6 +180,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     protected List getExtraInstallTasks(InstallContext ctx) {
         final List tasks = new ArrayList();
         tasks.add(new ModuleDependencyBootstrapTask("dms"));
+        tasks.add(new ModuleDependencyBootstrapTask("data"));
         tasks.add(inboxMenu);
         tasks.add(flowsPageMenu);
         tasks.add(new InstallWorkflowDefinitionTask("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.",

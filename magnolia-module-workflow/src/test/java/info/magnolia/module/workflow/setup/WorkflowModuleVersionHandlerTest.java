@@ -66,7 +66,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
      *
      * Testing update to 4.2
      */
-    public void testRSSParagraphSetUpOnUpdateFrom111() throws ModuleManagementException, RepositoryException {
+    public void testDMSVersioningCommandUpdate() throws ModuleManagementException, RepositoryException {
         // prepare nodes that should exist if the dms was really installed ...
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
@@ -82,7 +82,24 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         assertEquals("info.magnolia.module.dms.commands.DocumentVersionCommand", hm.getNodeData("/modules/dms/commands/dms/activate/version/class").getString());
     }
 
+    /**
+     * Workflow should enable itself for data module content activation if data module is installed.
+     * Testing update to 4.2
+     */
+    public void testDataActivationCommandUpdate() throws ModuleManagementException, RepositoryException {
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        // workflow configuration
+        Content path = ContentUtil.createPath(hm, "modules/data/commands/data/",ItemType.CONTENT);
+        path.createContent("activate", ItemType.CONTENTNODE);
+
+        hm.save();
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1.1"));
+
+        // workflow is not installed so the wkf config class will not be set
+        assertFalse(hm.isExist("/modules/data/trees/data/configurationClass"));
+    }
+
     protected String[] getExtraWorkspaces() {
-        return new String[] { "dms" };
+        return new String[] { "dms", "data" };
     }
 }
