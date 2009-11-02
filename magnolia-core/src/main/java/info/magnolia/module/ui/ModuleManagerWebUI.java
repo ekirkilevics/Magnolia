@@ -98,8 +98,8 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
                 }
                 return false;
             } else if ("finish".equals(command) && status.equals(InstallStatus.installDone)) {
-                MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-                    public void exec() {
+                MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                    public void doExec() {
                         //TODO : actually check for status before executing
                         moduleManager.startModules();
                         //moduleManager.getStatus().done();

@@ -367,7 +367,7 @@ public class MgnlContext {
      * (also if an exception is thrown). Also works if there was no context upon calling. (sets it back
      * to null in this case)
      */
-    public static <T> T doInSystemContext(final Op<T> op) {
+    public static <T, E extends Throwable> T doInSystemContext(final Op<T, E> op) throws E {
         return doInSystemContext(op, false);
     }
 
@@ -386,9 +386,9 @@ public class MgnlContext {
      * Executes the given operation in the system context and sets it back to the original once done
      * (also if an exception is thrown). Also works if there was no context upon calling (sets it back
      * to null in this case)
-     * @param releaseAfterExecution TODO
+     * @param releaseAfterExecution TODO document this parameter
      */
-    public static <T> T doInSystemContext(final Op<T> op, boolean releaseAfterExecution) {
+    public static <T, E extends Throwable> T doInSystemContext(final Op<T, E> op, boolean releaseAfterExecution) throws E {
         final Context originalCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
         T result;
         try {
@@ -412,15 +412,24 @@ public class MgnlContext {
         void exec();
     }
 
-    public static interface Op<T> {
-        T exec();
+    /**
+     * A simple execution interface to be used with the doInSystemContext method.
+     * If no return value is necessary, return null (for semantic's sake, declare T as <Void>)
+     * If no checked exception need to be thrown, declare E as <RuntimeException>)
+     *
+     * @see MgnlContext#doInSystemContext(Op op)
+     * @param <T> the return type of this operation
+     * @param <E> an exception this operation can throw
+     */
+    public static interface Op<T, E extends Throwable> {
+        T exec() throws E;
     }
 
     /**
-     * An Op that does not return values.
+     * An Op that does not return values and can only throw RuntimeExceptions.
      */
-    public abstract static class VoidOp implements Op<Void> {
-        public Void exec()  {
+    public abstract static class VoidOp implements Op<Void, RuntimeException> {
+        public Void exec() {
             doExec();
             return null;
         }

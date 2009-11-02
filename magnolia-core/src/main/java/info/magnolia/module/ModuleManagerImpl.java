@@ -336,8 +336,8 @@ public class ModuleManagerImpl implements ModuleManager {
                             // TODO we should keep only one instance of the lifecycle context
                             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
                             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
-                            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-                                public void exec() {
+                            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                                public void doExec() {
                                     stopModule(moduleInstance, moduleDefinition, lifecycleContext);
                                     populateModuleInstance(moduleInstance, moduleProperties);
                                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
@@ -360,8 +360,8 @@ public class ModuleManagerImpl implements ModuleManager {
      * do not require manual intervention.
      */
     protected void executeStartupTasks() {
-        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-            public void exec() {
+        MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            public void doExec() {
                 for (ModuleDefinition module : orderedModuleDescriptors) {
                     final ModuleVersionHandler versionHandler = registry.getVersionHandler(module.getName());
                     installContext.setCurrentModule(module);

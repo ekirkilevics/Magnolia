@@ -138,9 +138,8 @@ public class MgnlServletContextListener implements ServletContextListener {
         }
 
         if (loader != null) {
-            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-
-                public void exec() {
+            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                public void doExec() {
                     loader.unload(sce.getServletContext());
                 }
             }, true);
@@ -178,9 +177,8 @@ public class MgnlServletContextListener implements ServletContextListener {
     }
 
     protected void startServer(final ServletContext context) {
-        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-
-            public void exec() {
+        MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+            public void doExec() {
                 loader.load(context);
             }
         }, true);

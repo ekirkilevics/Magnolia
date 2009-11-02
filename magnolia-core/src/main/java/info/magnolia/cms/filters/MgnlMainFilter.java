@@ -81,8 +81,8 @@ public class MgnlMainFilter implements Filter {
 
     private final EventListener filtersEventListener = new EventListener() {
         public void onEvent(EventIterator arg0) {
-            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-                public void exec() {
+            MgnlContext.doInSystemContext(new MgnlContext.VoidOp() {
+                public void doExec() {
                     reset();
                 }
             }, true);
@@ -104,8 +104,8 @@ public class MgnlMainFilter implements Filter {
         instance = this;
         // remember this config
         this.filterConfig = filterConfig;
-        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
-            public void exec() {
+        MgnlContext.doInSystemContext(new MgnlContext.VoidOp(){
+            public void doExec() {
                 if (!isSystemUIMode()) {
                     startObservation();
                 }
