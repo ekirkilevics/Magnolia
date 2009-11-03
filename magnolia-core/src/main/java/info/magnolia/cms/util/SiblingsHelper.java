@@ -62,11 +62,11 @@ public class SiblingsHelper {
      */
     public static SiblingsHelper childrenOf(Content parent) throws RepositoryException {
         final NodeTypeFilter filter = filterForTypeOf(parent);
-        final Collection children = parent.getChildren(filter);
+        final Collection<Content> children = parent.getChildren(filter);
         if (children.size() < 1) {
             throw new IllegalStateException(parent + " has no children for " + filter);
         }
-        final Content firstChild = (Content) children.iterator().next();
+        final Content firstChild = children.iterator().next();
         return new SiblingsHelper(firstChild, filter);
     }
 
@@ -75,18 +75,18 @@ public class SiblingsHelper {
         return new NodeTypeFilter(type);
     }
 
-    private final List siblings;
+    private final List<Content> siblings;
     private final int lastIndex;
     private Content current = null;
     private int currentIndex = -1;
 
-    public SiblingsHelper(Content node, Content.ContentFilter filter) throws RepositoryException {
-        this.siblings = new ArrayList(node.getParent().getChildren(filter));
+    private SiblingsHelper(Content node, Content.ContentFilter filter) throws RepositoryException {
+        this.siblings = new ArrayList<Content>(node.getParent().getChildren(filter));
         this.lastIndex = siblings.size() - 1;
         this.current = node;
         // can't use indexOf to determine current index, as getParent().getChildren() returns a different instance of the node
         for (int i = 0; i <= lastIndex; i++) {
-            final Content c = (Content) siblings.get(i);
+            final Content c = siblings.get(i);
             if (c.getUUID().equals(current.getUUID())) {
                 this.currentIndex = i;
                 break;
@@ -101,14 +101,14 @@ public class SiblingsHelper {
     public Content next() {
         // TODO : check if iterator hasNext();
         this.currentIndex = currentIndex + 1;
-        this.current = (Content) siblings.get(currentIndex);
+        this.current = siblings.get(currentIndex);
         return current;
     }
 
     public Content prev() {
         // TODO : check if hasPrevious();
         this.currentIndex = currentIndex - 1;
-        this.current = (Content) siblings.get(currentIndex);
+        this.current = siblings.get(currentIndex);
         return current;
     }
 
