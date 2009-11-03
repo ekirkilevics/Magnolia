@@ -35,15 +35,17 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 
+import java.util.Comparator;
+
 /**
  * Compares 2 nodes by their name.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeNameComparator extends AbstractContentComparator {
+public class NodeNameComparator implements Comparator<Content> {
 
-    protected int compare(Content c1, Content c2) {
+    public int compare(Content c1, Content c2) {
         return c1.getName().compareTo(c2.getName());
     }
 }

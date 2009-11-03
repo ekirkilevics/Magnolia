@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -43,9 +44,9 @@ import java.util.Date;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CreationDateComparator extends AbstractContentComparator {
+public class CreationDateComparator implements Comparator<Content> {
 
-    protected int compare(Content c1, Content c2) {
+    public int compare(Content c1, Content c2) {
         final Date date1 = c1.getMetaData().getCreationDate().getTime();
         final Date date2 = c2.getMetaData().getCreationDate().getTime();
         return date1.compareTo(date2);

@@ -40,16 +40,11 @@ import java.util.Comparator;
 /**
  * Abstract Comparator use to compares nodes (for sorting etc.)
  *
+ * @deprecated since 4.2 - now irrelevant since using generics
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public abstract class AbstractContentComparator implements Comparator {
+public abstract class AbstractContentComparator implements Comparator<Content> {
 
-    public int compare(Object o1, Object o2) throws ClassCastException {
-        final Content c1 = (Content) o1;
-        final Content c2 = (Content) o2;
-        return compare(c1, c2);
-    }
-
-    protected abstract int compare(Content c1, Content c2);
+    public abstract int compare(Content c1, Content c2);
 }

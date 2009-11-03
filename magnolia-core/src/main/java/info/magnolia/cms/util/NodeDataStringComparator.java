@@ -35,13 +35,15 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 
+import java.util.Comparator;
+
 /**
  * Compares 2 nodes property of type String.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeDataStringComparator extends AbstractContentComparator {
+public class NodeDataStringComparator implements Comparator<Content> {
     private final String nodeDataName;
 
     /**
@@ -52,7 +54,7 @@ public class NodeDataStringComparator extends AbstractContentComparator {
         this.nodeDataName = nodeDataName;
     }
 
-    protected int compare(Content c1, Content c2) {
+    public int compare(Content c1, Content c2) {
         final String s1 = c1.getNodeData(this.nodeDataName).getString();
         final String s2 = c2.getNodeData(this.nodeDataName).getString();
 

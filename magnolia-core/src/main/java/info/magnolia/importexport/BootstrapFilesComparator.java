@@ -42,13 +42,9 @@ import java.util.Comparator;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class BootstrapFilesComparator implements Comparator {
-
+class BootstrapFilesComparator implements Comparator<File> {
     // remove file with the same name in different dirs
-    public int compare(Object file1obj, Object file2obj) {
-        File file1 = (File) file1obj;
-        File file2 = (File) file2obj;
-
+    public int compare(File file1, File file2) {
         String name1 = getName(file1);
         String name2 = getName(file2);
 

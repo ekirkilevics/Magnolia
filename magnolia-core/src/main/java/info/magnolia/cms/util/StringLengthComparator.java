@@ -40,9 +40,9 @@ import java.util.Comparator;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class StringLengthComparator implements Comparator {
+public class StringLengthComparator implements Comparator<String> {
 
-    public int compare(Object name1, Object name2) {
-        return ((String) name1).length() - ((String) name2).length();
+    public int compare(String name1, String name2) {
+        return name1.length() - name2.length();
     }
 }
