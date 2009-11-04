@@ -473,7 +473,6 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             }
             try {
                 hm.moveTo(source, destination);
-                this.path = destination;
             }
             catch (Exception e) {
                 // try to move below node data
@@ -561,7 +560,6 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         returnValue = newLabel;
         newPage.updateMetaData();
         newPage.save();
-        this.path = newPage.getHandle();
 
         return returnValue;
     }
