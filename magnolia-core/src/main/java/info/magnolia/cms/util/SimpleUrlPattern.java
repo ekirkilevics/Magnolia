@@ -51,9 +51,9 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 223L;
 
-    public static final String URL_CHAR_PATTERN = "[\\p{L}\\w!\"#$%&'*+,-./:; <=>?@`|~\\^\\(\\)\\{\\}\\[\\]]"; //$NON-NLS-1$
+    public static final String URL_CHAR_PATTERN = "[\\p{L}\\p{Mn}\\w!\"#$%&'*+,-./:; <=>?@`|~\\^\\(\\)\\{\\}\\[\\]]"; //$NON-NLS-1$
 
     /**
      * Regexp pattern used for the simple keyword <code>*</code>. Matches 0 or more characters.

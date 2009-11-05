@@ -35,9 +35,11 @@ package info.magnolia.cms.util;
 
 import junit.framework.TestCase;
 
+import java.io.UnsupportedEncodingException;
 
 /**
  * Tests for info.magnolia.cms.util.SimpleUrlPattern
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -134,14 +136,35 @@ public class SimpleUrlPatternTest extends TestCase {
         assertTrue(new SimpleUrlPattern("/[a,b]/num/*").match("/b/num/blah"));
     }
 
+    private static final byte[] MACROMAN_BYTES = new byte[]{47, 121, -118, -118, -118, -118, -118};
+    private static final byte[] NFC_BYTES = new byte[]{47, 121, -61, -92, -61, -92, -61, -92, -61, -92, -61, -92};
+    private static final byte[] NFD_BYTES = new byte[]{47, 121, 97, -52, -120, 97, -52, -120, 97, -52, -120, 97, -52, -120, 97, -52, -120};
+    private static final String MACROMAN;
+    private static final String NFC;
+    private static final String NFD;
+
+    static {
+        try {
+            MACROMAN = new String(MACROMAN_BYTES, "MacRoman");
+            NFC = new String(NFC_BYTES, "UTF-8");
+            NFD = new String(NFD_BYTES, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
-     * Test with the <code>*</code> and <code>?</code> wildcards.
-     * The accented chars here seem to be platform specific.
+     * Tests with variously encoded paths.
      */
     public void testEncodedMatch() {
-        // encoded url:
+        // url-encoded path:
         assertTrue(new SimpleUrlPattern("/*").match("/magnoliaAuthor/dms/M--ller_PP-Praesentation/M%E2%94%9C%E2%95%9Dller_PP-Praesentation.doc"));
         // decoded url (should match):
         assertTrue(new SimpleUrlPattern("/*").match("/dms/M--ller_PP-Praesentation/M\u00FCller_PP-Praesentation.doc"));
+
+        assertTrue(new SimpleUrlPattern("/*").match(NFC));
+        assertTrue(new SimpleUrlPattern("/*").match(NFD));
+        assertTrue(new SimpleUrlPattern("/*").match(MACROMAN));
     }
+
 }
