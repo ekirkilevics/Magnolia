@@ -34,13 +34,14 @@
 package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import javax.jcr.ItemExistsException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-import javax.jcr.ItemNotFoundException;
 
 /**
  *
@@ -58,6 +59,14 @@ public abstract class Ops {
     }
 
     public static NodeOperation addNode(final String name, final String type) {
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                return context.createContent(name, type);
+            }
+        };
+    }
+
+    public static NodeOperation addNode(final String name, final ItemType type) {
         return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 return context.createContent(name, type);
@@ -132,7 +141,7 @@ public abstract class Ops {
                 }
                 final NodeData current = context.getNodeData(name);
                 if (!expectedCurrentValue.equals(NodeDataUtil.getValueObject(current))) {
-                    throw new RepositoryException("Expected " + expectedCurrentValue + " and found " + current.getString() + " instead.");   
+                    throw new RepositoryException("Expected " + expectedCurrentValue + " and found " + current.getString() + " instead.");
                 }
                 final Value value = NodeDataUtil.createValue(newValue, context.getJCRNode().getSession().getValueFactory());
                 context.setNodeData(name, value);
