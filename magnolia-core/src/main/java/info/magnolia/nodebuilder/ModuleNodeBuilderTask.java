@@ -34,34 +34,22 @@
 package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
 
 /**
- * A task using the NodeBuilder API, applying operations on a given path.
+ * A task using the NodeBuilder API, applying operations on a the root node of the current module.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeBuilderTask extends AbstractNodeBuilderTask {
-    private final String workspaceName;
-    private final String rootPath;
-
-    public NodeBuilderTask(String taskName, String description, String workspaceName, NodeOperation... operations) {
-        this(taskName, description, workspaceName, "/", operations);
-    }
-
-    public NodeBuilderTask(String taskName, String description, String workspaceName, String rootPath, NodeOperation... operations) {
-        super(taskName, description, operations);
-        this.workspaceName = workspaceName;
-        this.rootPath = rootPath;
+public class ModuleNodeBuilderTask extends AbstractNodeBuilderTask {
+    public ModuleNodeBuilderTask(String name, String description, NodeOperation... operations) {
+        super(name, description, operations);
     }
 
     protected Content getRootNode(InstallContext ctx) throws RepositoryException {
-        final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
-        return hm.getContent(rootPath);
+        return ctx.getOrCreateCurrentModuleNode();
     }
-
 }
