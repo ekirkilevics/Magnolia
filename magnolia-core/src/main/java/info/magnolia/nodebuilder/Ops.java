@@ -55,7 +55,6 @@ public abstract class Ops {
                 return context.createContent(name);
             }
         };
-
     }
 
     public static NodeOperation addNode(final String name, final String type) {
@@ -73,7 +72,6 @@ public abstract class Ops {
             }
         };
     }
-
 
     public static NodeOperation getNode(final String name) {
         return new AbstractOp() {
@@ -148,7 +146,6 @@ public abstract class Ops {
                 return context;
             }
         };
-
     }
 
     abstract static class AbstractOp implements NodeOperation {
