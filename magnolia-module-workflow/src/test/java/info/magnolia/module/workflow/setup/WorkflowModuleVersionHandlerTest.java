@@ -70,8 +70,8 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         // prepare nodes that should exist if the dms was really installed ...
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
-        final NodeBuilder nodeBuilder = new NodeBuilder(commands, Ops.add("activate").then(
-                Ops.add("version").then(Ops.addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
+        final NodeBuilder nodeBuilder = new NodeBuilder(commands, Ops.addNode("activate").then(
+                Ops.addNode("version").then(Ops.addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
         nodeBuilder.exec();
         hm.save();
 

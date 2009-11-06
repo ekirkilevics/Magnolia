@@ -56,7 +56,7 @@ public class NodeBuilderTest extends RepositoryTestCase {
 
         final NodeBuilder nodeBuilder = new NodeBuilder(hm.getContent("MyRoot"),
                 Ops.getNode("hello").then(
-                        Ops.add("newsub").then(
+                        Ops.addNode("newsub").then(
                                 Ops.addProperty("newProp", "New Value")
                         ),
                         Ops.remove("zing"),
@@ -64,7 +64,7 @@ public class NodeBuilderTest extends RepositoryTestCase {
                                 Ops.remove("foo")
                         )
                 ),
-                Ops.add("other").then(Ops.addProperty("X", "Y")),
+                Ops.addNode("other").then(Ops.addProperty("X", "Y")),
                 Ops.addProperty("lala", "lolo")
 
         );

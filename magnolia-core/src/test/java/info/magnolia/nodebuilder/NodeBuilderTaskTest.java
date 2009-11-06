@@ -68,21 +68,21 @@ public class NodeBuilderTaskTest extends RepositoryTestCase {
 
                 getNode("stkSection/mainArea").then(
                         addProperty("template", "/templates/xxx/pages/section/pageIntroMainArea.ftl"),
-                        add("floating").then(
+                        addNode("floating").then(
                                 addProperty("columns", "2"),
                                 addProperty("enabled", "true")),
-                        add("opener/paragraphs/xxxTeaserOpener").then(
+                        addNode("opener/paragraphs/xxxTeaserOpener").then(
                                 addProperty("name", "xxxTeaserOpener")),
-                        add("paragraphs").then(
-                                add("xxxSingleLink").then(
+                        addNode("paragraphs").then(
+                                addNode("xxxSingleLink").then(
                                         addProperty("name", "xxxSingleLink")),
-                                add("stkTeaserFingerTabbed").then(
+                                addNode("stkTeaserFingerTabbed").then(
                                         addProperty("name", "stkTeaserFingerTabbed")),
-                                add("xxxTeaserNewsList").then(
+                                addNode("xxxTeaserNewsList").then(
                                         addProperty("name", "xxxTeaserNewsList")),
-                                add("xxxExternalTeaser").then(
+                                addNode("xxxExternalTeaser").then(
                                         addProperty("name", "xxxExternalTeaser")),
-                                add("xxxChronicleTeaser").then(
+                                addNode("xxxChronicleTeaser").then(
                                         addProperty("name", "xxxChronicleTeaser"))),
                         remove("opener/paragraphs/stkTeaserOpener"))
         );

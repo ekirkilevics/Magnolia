@@ -48,8 +48,8 @@ import javax.jcr.ItemNotFoundException;
  * @version $Revision: $ ($Author: $)
  */
 public abstract class Ops {
-    public static NodeOperation add(final String name) {
-        return new A() {
+    public static NodeOperation addNode(final String name) {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 return context.createContent(name);
             }
@@ -57,8 +57,8 @@ public abstract class Ops {
 
     }
 
-    public static NodeOperation add(final String name, final String type) {
-        return new A() {
+    public static NodeOperation addNode(final String name, final String type) {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 return context.createContent(name, type);
             }
@@ -67,7 +67,7 @@ public abstract class Ops {
 
 
     public static NodeOperation getNode(final String name) {
-        return new A() {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 return context.getContent(name);
             }
@@ -78,7 +78,7 @@ public abstract class Ops {
      * Can remove either a node or property.
      */
     public static NodeOperation remove(final String name) {
-        return new A() {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 context.delete(name);
                 return context;
@@ -86,10 +86,11 @@ public abstract class Ops {
         };
     }
 
-    // TODO - do we really want to differentiate between set and add property ?
-
+    /**
+     * Adds a currently non-existing property. Throws an ItemExistsException if the property already exists.
+     */
     public static NodeOperation addProperty(final String name, final Object value) {
-        return new A() {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 if (context.hasNodeData(name)) {
                     // throw new ItemExistsException("Property " + name + " already exists at " + context.getHandle());
@@ -101,8 +102,12 @@ public abstract class Ops {
         };
     }
 
+    /**
+     * Sets the value of an existing property, ignoring its current value.
+     * @throws ItemNotFoundException if the property does not exist.
+     */
     public static NodeOperation setProperty(final String name, final Object newValue) {
-        return new A() {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
@@ -114,8 +119,13 @@ public abstract class Ops {
         };
     }
 
+    /**
+     * Sets the value of an existing property, only if the actual current value matches the given expected current value.
+     * @throws ItemNotFoundException if the property does not exist.
+     * @throws RepositoryException if the current value does not match the expected one.
+     */
     public static NodeOperation setProperty(final String name, final Object expectedCurrentValue, final Object newValue) {
-        return new A() {
+        return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
@@ -132,7 +142,7 @@ public abstract class Ops {
 
     }
 
-    abstract static class A implements NodeOperation {
+    abstract static class AbstractOp implements NodeOperation {
         private NodeOperation[] childrenOps = {};
 
         public void exec(Content context) throws RepositoryException {
