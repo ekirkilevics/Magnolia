@@ -36,7 +36,9 @@ package info.magnolia.nodebuilder;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.NodeTypeFilter;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -143,6 +145,180 @@ public abstract class Ops {
                 }
                 final Value value = NodeDataUtil.createValue(newValue, context.getJCRNode().getSession().getValueFactory());
                 context.setNodeData(name, value);
+                return context;
+            }
+        };
+    }
+    
+    /**
+     * Renames the current node.
+     */
+    public static NodeOperation renameNode(final String newName){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                ContentUtil.rename(context, newName);
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Renames the node defined by the name parameter.
+     */
+    public static NodeOperation renameNode(final String name, final String newName){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                ContentUtil.rename(context.getContent(name), newName);
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Renames a property by creating a new one and copying the value.
+     */
+    public static NodeOperation renameProperty(final String name, final String newName){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                Object value = context.getNodeData(name);
+                context.createNodeData(newName, value);
+                context.deleteNodeData(name);
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Moves the current node in the session 
+     */
+    public static NodeOperation moveNode(final String dest){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                ContentUtil.moveInSession(context, dest);
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Moves the node defined by the name parameter in the session 
+     */
+    public static NodeOperation moveNode(final String name ,final String dest){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                ContentUtil.moveInSession(context.getContent(name), dest);
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Copies the current node in the session. 
+     */
+    public static NodeOperation copyNode(final String dest){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                ContentUtil.copyInSession(context, dest);
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Copies the node defined by the name parameter in the session. 
+     */
+    public static NodeOperation copyNode(final String name, final String dest){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                ContentUtil.copyInSession(context.getContent(name), dest);
+                return context;
+            }
+        };
+    }
+    
+    /**
+     * Executes the operation for each child node excluding meta data and jcr base node.
+     */
+    public static NodeOperation onChildNodes(final NodeOperation... childrenOps){
+        return onChildNodes(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, childrenOps);
+    }
+
+    /**
+     * Executes the operation for each child node of a certain type.
+     */
+    public static NodeOperation onChildNodes(final String type, final NodeOperation... childrenOps){
+        return onChildNodes(new NodeTypeFilter(type), childrenOps);
+    }
+
+    /**
+     * Executes the operation for each child node of a certain type.
+     */
+    public static NodeOperation onChildNodes(final ItemType type, final NodeOperation... childrenOps){
+        return onChildNodes(new NodeTypeFilter(type), childrenOps);
+    }
+
+    /**
+     * Executes the operation for each child node matching the filter.
+     */
+    public static NodeOperation onChildNodes(final Content.ContentFilter filter, final NodeOperation... childrenOps){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                for (Content subNode: context.getChildren(filter)) {
+                    for (NodeOperation nodeOperation : childrenOps) {
+                        nodeOperation.exec(subNode);
+                    }
+                }
+                return context;
+            }
+        };
+    }
+
+    /**
+     * Visits the hierarchy recursively and executes the operations on all nodes excluding meta data and jcr base nodes. The recursion does not stop if a node does not match!
+     */
+    public static NodeOperation recursive(final NodeOperation... childrenOps){
+        return recursive(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, childrenOps);
+    }
+
+    /**
+     * Visits the hierarchy recursively and executes the operations on all nodes matching a certain type. The recursion does not stop if a node does not match!
+     */
+    public static NodeOperation recursive(final String type, final NodeOperation... childrenOps){
+        return recursive(new NodeTypeFilter(type), childrenOps);
+    }
+
+    /**
+     * Visits the hierarchy recursively and executes the operations on all nodes matching a certain type. The recursion does not stop if a node does not match!
+     */
+    public static NodeOperation recursive(final ItemType type, final NodeOperation... childrenOps){
+        return recursive(new NodeTypeFilter(type), childrenOps);
+    }
+
+    /**
+     * Visits the hierarchy recursively and executes the operations on all nodes matching the filter. The recursion does not stop if a node does not match!
+     */
+    public static NodeOperation recursive(final Content.ContentFilter filter, final NodeOperation... childrenOps){
+        return new AbstractOp() {
+            Content doExec(Content context) throws RepositoryException {
+                try {
+                    ContentUtil.visit(context, new ContentUtil.Visitor(){
+                        public void visit(Content node) throws Exception {
+                            if(filter.accept(node)){
+                                for (NodeOperation nodeOperation : childrenOps) {
+                                    nodeOperation.exec(node);
+                                }
+                            }
+                        }
+                    }, ContentUtil.ALL_NODES_CONTENT_FILTER);
+                }
+                catch (Exception e) {
+                    if(e instanceof RepositoryException){
+                        throw (RepositoryException) e;
+                    }
+                    else{
+                        throw new RuntimeException(e);
+                    }
+                }
                 return context;
             }
         };
