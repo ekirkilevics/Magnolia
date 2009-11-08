@@ -99,8 +99,10 @@ public abstract class AbstractRenderer {
      * Creates the model for this rendering process. Will set the properties
      */
     protected RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return definition.newModel(content, definition, parentModel);
+        final Content wrappedContent = wrapNodeForModel(content, MgnlContext.getAggregationState().getMainContent());
+        return definition.newModel(wrappedContent, definition, parentModel);
     }
+
 
     protected Map saveContextState(final Map ctx) {
         Map state = new HashMap();
@@ -127,10 +129,10 @@ public abstract class AbstractRenderer {
 
     protected void setupContext(final Map ctx, Content content, RenderableDefinition definition, RenderingModel model, Object actionResult){
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final Content page = aggregationState.getMainContent();
+        final Content mainContent = aggregationState.getMainContent();
 
-        setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(page, page));
-        setContextAttribute(ctx, "content", wrapNodeForTemplate(content, page));
+        setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
+        setContextAttribute(ctx, "content", wrapNodeForTemplate(content, mainContent));
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", aggregationState);
         setContextAttribute(ctx, "mgnl", getMagnoliaTemplatingUtilities());
@@ -143,7 +145,16 @@ public abstract class AbstractRenderer {
     }
 
     /**
-     * Wraps a node before exposing it to the template renderer.
+     * Wraps the current content node before passing it to the model. Default implementation falls back to {@link #wrapNodeForTemplate(Content, Content)}
+     * @param currentContent the actual content
+     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
+     */
+    protected Content wrapNodeForModel(Content currentContent, Content mainContent) {
+        return wrapNodeForTemplate(currentContent, mainContent);
+    }
+
+    /**
+     * Wraps the current content node before exposing it to the template renderer.
      * @param currentContent the actual content being exposed to the template
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      * @see info.magnolia.module.templating.paragraphs.JspParagraphRenderer
