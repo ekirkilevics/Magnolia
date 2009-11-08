@@ -41,6 +41,10 @@ public class NodeTypeFilter implements ContentFilter {
 
     private String systemName;
 
+    public NodeTypeFilter(String typeName) {
+        this.systemName = typeName;
+    }
+
     public NodeTypeFilter(ItemType type) {
         this.systemName = type.getSystemName();
     }
