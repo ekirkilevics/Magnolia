@@ -56,7 +56,7 @@ import static org.easymock.EasyMock.*;
  * @version $Id:$
  */
 public class LockTest extends RepositoryTestCase {
-    
+
     // while normally not using logs in test, multithreaded nature of this test makes it hard to debug without log messages in case of failure
     private static final Logger log = LoggerFactory.getLogger(LockTest.class);
 
@@ -87,7 +87,7 @@ public class LockTest extends RepositoryTestCase {
                             hm.getContent("/page").unlock();
                             fail("This thead has to run in separate session, thus can't be allowed to unlock content locked by that other session. Either it is not running in separate session or if it is, the locking is not configured properly.");
                         } catch (LockException e) {
-                            assertEquals("Node not locked by session: node /page", e.getMessage());
+                            assertTrue(e.getMessage().matches("Node not locked( by session)?: node /page"));
                         }
                     }
                     Thread.sleep(500);
@@ -98,7 +98,7 @@ public class LockTest extends RepositoryTestCase {
                     Thread.currentThread().interrupt();
                     break;
                 }
-                
+
             }
         }
 
@@ -134,11 +134,11 @@ public class LockTest extends RepositoryTestCase {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            
+
             ReceiveFilter rf = new ReceiveFilter();
             rf.setRetryWait(0);
             rf.setUnlockRetries(1);
-            
+
 
             while (true) {
                 try {
@@ -160,7 +160,7 @@ public class LockTest extends RepositoryTestCase {
                     Thread.currentThread().interrupt();
                     break;
                 }
-                
+
             }
         }
 
@@ -186,11 +186,11 @@ public class LockTest extends RepositoryTestCase {
         hm.save();
 
         hm.getContent("/page").lock(true, true);
-        
+
         assertTrue(hm.getContent("/page").isLocked());
         LockCheck check = new LockCheck();
         Thread t2 = new Thread(check);
-        
+
         t2.start();
         // give it time to run through the loop
         Thread.sleep(1000);
@@ -243,11 +243,11 @@ public class LockTest extends RepositoryTestCase {
         assertTrue(hm.getContent("/page").isLocked());
         log.debug("locked in session1!");
 
-        
+
         ReceiveFilterLockCheck check = new ReceiveFilterLockCheck();
         check.setRequest(request2);
         Thread t2 = new Thread(check);
-        
+
         t2.start();
         check.setRetry(true);
         // give it time to run through the loop
