@@ -99,7 +99,7 @@ public abstract class AbstractRenderer {
      * Creates the model for this rendering process. Will set the properties
      */
     protected RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        final Content wrappedContent = wrapNodeForModel(content, MgnlContext.getAggregationState().getMainContent());
+        final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
         return definition.newModel(wrappedContent, definition, parentModel);
     }
 
@@ -128,16 +128,36 @@ public abstract class AbstractRenderer {
     }
 
     protected void setupContext(final Map ctx, Content content, RenderableDefinition definition, RenderingModel model, Object actionResult){
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final Content mainContent = aggregationState.getMainContent();
+        final Content mainContent = getMainContentSafely(content);
 
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
         setContextAttribute(ctx, "content", wrapNodeForTemplate(content, mainContent));
         setContextAttribute(ctx, "def", definition);
-        setContextAttribute(ctx, "state", aggregationState);
+        setContextAttribute(ctx, "state", getAggrigationStateSafely());
         setContextAttribute(ctx, "mgnl", getMagnoliaTemplatingUtilities());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
+    }
+
+    /**
+     * Gets the current main contain and treats the situation where the context is not a web context nicely by using the current content instead.
+     */
+    protected Content getMainContentSafely(Content current) {
+        AggregationState state = getAggrigationStateSafely();
+        if(state != null){
+            return state.getMainContent();
+        }
+        return current;
+    }
+
+    /**
+     * This gets the aggregation state without throwing an exception if the current context is not a WebContext 
+     */
+    protected AggregationState getAggrigationStateSafely() {
+        if(MgnlContext.isWebContext()){
+            return MgnlContext.getAggregationState();
+        }
+        return null;
     }
 
     protected MagnoliaTemplatingUtilities getMagnoliaTemplatingUtilities() {
@@ -145,12 +165,12 @@ public abstract class AbstractRenderer {
     }
 
     /**
-     * Wraps the current content node before passing it to the model. Default implementation falls back to {@link #wrapNodeForTemplate(Content, Content)}
+     * Wraps the current content node before passing it to the model.
      * @param currentContent the actual content
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
     protected Content wrapNodeForModel(Content currentContent, Content mainContent) {
-        return wrapNodeForTemplate(currentContent, mainContent);
+        return new I18nContentWrapper(currentContent);
     }
 
     /**

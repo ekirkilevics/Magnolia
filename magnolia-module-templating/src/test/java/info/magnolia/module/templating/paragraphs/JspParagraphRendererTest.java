@@ -47,7 +47,6 @@ import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -85,7 +84,7 @@ public class JspParagraphRendererTest extends TestCase {
 
         final AggregationState aggState = new AggregationState();
         aggState.setMainContent(page);
-        expect(magnoliaCtx.getAggregationState()).andReturn(aggState);
+        expect(magnoliaCtx.getAggregationState()).andStubReturn(aggState);
 
         replay(magnoliaCtx, page, paragraph);
         final Map templateCtx = new HashMap();
@@ -142,6 +141,8 @@ public class JspParagraphRendererTest extends TestCase {
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         final WebContext webContext = createNiceMock(WebContext.class);
         MgnlContext.setInstance(webContext);
+        final AggregationState aggState = new AggregationState();
+        expect(webContext.getAggregationState()).andReturn(aggState);
         replay(webContext);
         final Content c = new MockContent("pouet");
         final Paragraph paragraph = new Paragraph();
