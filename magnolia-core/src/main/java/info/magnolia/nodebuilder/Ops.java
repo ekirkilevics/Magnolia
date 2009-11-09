@@ -151,18 +151,6 @@ public abstract class Ops {
     }
     
     /**
-     * Renames the current node.
-     */
-    public static NodeOperation renameNode(final String newName){
-        return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
-                ContentUtil.rename(context, newName);
-                return context;
-            }
-        };
-    }
-
-    /**
      * Renames the node defined by the name parameter.
      */
     public static NodeOperation renameNode(final String name, final String newName){
@@ -189,36 +177,12 @@ public abstract class Ops {
     }
 
     /**
-     * Moves the current node in the session 
-     */
-    public static NodeOperation moveNode(final String dest){
-        return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
-                ContentUtil.moveInSession(context, dest);
-                return context;
-            }
-        };
-    }
-
-    /**
      * Moves the node defined by the name parameter in the session 
      */
     public static NodeOperation moveNode(final String name ,final String dest){
         return new AbstractOp() {
             Content doExec(Content context) throws RepositoryException {
                 ContentUtil.moveInSession(context.getContent(name), dest);
-                return context;
-            }
-        };
-    }
-
-    /**
-     * Copies the current node in the session. 
-     */
-    public static NodeOperation copyNode(final String dest){
-        return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
-                ContentUtil.copyInSession(context, dest);
                 return context;
             }
         };
@@ -266,57 +230,6 @@ public abstract class Ops {
                 for (Content subNode: context.getChildren(filter)) {
                     for (NodeOperation nodeOperation : childrenOps) {
                         nodeOperation.exec(subNode);
-                    }
-                }
-                return context;
-            }
-        };
-    }
-
-    /**
-     * Visits the hierarchy recursively and executes the operations on all nodes excluding meta data and jcr base nodes. The recursion does not stop if a node does not match!
-     */
-    public static NodeOperation recursive(final NodeOperation... childrenOps){
-        return recursive(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, childrenOps);
-    }
-
-    /**
-     * Visits the hierarchy recursively and executes the operations on all nodes matching a certain type. The recursion does not stop if a node does not match!
-     */
-    public static NodeOperation recursive(final String type, final NodeOperation... childrenOps){
-        return recursive(new NodeTypeFilter(type), childrenOps);
-    }
-
-    /**
-     * Visits the hierarchy recursively and executes the operations on all nodes matching a certain type. The recursion does not stop if a node does not match!
-     */
-    public static NodeOperation recursive(final ItemType type, final NodeOperation... childrenOps){
-        return recursive(new NodeTypeFilter(type), childrenOps);
-    }
-
-    /**
-     * Visits the hierarchy recursively and executes the operations on all nodes matching the filter. The recursion does not stop if a node does not match!
-     */
-    public static NodeOperation recursive(final Content.ContentFilter filter, final NodeOperation... childrenOps){
-        return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
-                try {
-                    ContentUtil.visit(context, new ContentUtil.Visitor(){
-                        public void visit(Content node) throws Exception {
-                            if(filter.accept(node)){
-                                for (NodeOperation nodeOperation : childrenOps) {
-                                    nodeOperation.exec(node);
-                                }
-                            }
-                        }
-                    }, ContentUtil.ALL_NODES_CONTENT_FILTER);
-                }
-                catch (Exception e) {
-                    if(e instanceof RepositoryException){
-                        throw (RepositoryException) e;
-                    }
-                    else{
-                        throw new RuntimeException(e);
                     }
                 }
                 return context;
