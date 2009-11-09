@@ -36,39 +36,76 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.misc.CssConstants;
 
-import javax.jcr.PropertyType;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.jcr.PropertyType;
+
+import org.apache.commons.lang.StringUtils;
+
 
 /**
- * Sets monospace font type
+ * Turns a textarea into a basic code editor with the <a href="http://codepress.sourceforge.net/">CodePress</a> js
+ * library. To handle submits correctly it is <strong>mandatory</strong> to configure the dialog with the
+ * <code>saveOnclick</code> node set as <code>CodePress.submitForm()</code>. If this value is not set correctly, falls
+ * back to a plain textarea. Control (optional) configuration values are:
+ * <ul>
+ * <li><strong>language</strong>: one of the languages (e.g. 'css', 'javascript', 'html') supported by CodePress.
+ * Default value is <code>generic</code>
+ * <li><strong>readOnly</strong>: make the editor read-only. Default value is <code>false</code>
+ * <li><strong>lineNumbers</strong>: shows/hide line numbers. Default value is <code>true</code>
+ * </ul>
  * @author tmiyar
- *
+ * @version $Id$
  */
 public class DialogEditCode extends DialogBox {
 
+    protected static final String SAVE_ONCLICK = "CodePress.submitForm()";
 
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());
-        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
-        if (this.getConfigValue("saveInfo").equals("false")) {
+        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
+        if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
-        control.setCssClass(CssConstants.CSSCLASS_EDIT);
-        control.setRows(this.getConfigValue("rows", "1"));
-        control.setCssStyles("width", this.getConfigValue("width", "100%"));
-        control.setCssStyles("font-family", "Courier New, monospace");
-        control.setCssStyles("font-size", "14px");
-        if (this.getConfigValue("onchange", null) != null) {
-            control.setEvent("onchange", this.getConfigValue("onchange"));
+        String saveOnclick = this.getTopParent().getConfigValue("saveOnclick");
+        // use CodePress only if the saveOnclick value is correctly set,
+        // else fall back to plain textarea with sans type font
+        Boolean useCodePress = StringUtils.isNotEmpty(saveOnclick)
+            && SAVE_ONCLICK.equals(saveOnclick.trim().replaceAll(";", ""));
+        
+        if (useCodePress) {
+            control.setRows(this.getConfigValue("rows", "25")); //$NON-NLS-1$ //$NON-NLS-2$
+            control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            StringBuilder codePressClasses = new StringBuilder(" codepress ");
+            codePressClasses.append(this.getConfigValue("language", "generic "));
+            Boolean readOnly = Boolean.valueOf(this.getConfigValue("readOnly", "false"));
+            Boolean lineNumbers = Boolean.valueOf(this.getConfigValue("lineNumbers", "true"));
+            codePressClasses.append(readOnly ? " readonly-on " : " readonly-off ");
+            codePressClasses.append(lineNumbers ? " linenumbers-on " : " linenumbers-off ");
+            control.setCssClass(CssConstants.CSSCLASS_EDIT + codePressClasses.toString());
         }
+        else {
+            control.setCssClass(CssConstants.CSSCLASS_EDIT);
+            control.setRows(this.getConfigValue("rows", "1"));
+            control.setCssStyles("width", this.getConfigValue("width", "100%"));
+            control.setCssStyles("font-family", "Courier New, monospace");
+            control.setCssStyles("font-size", "14px");
+            if (this.getConfigValue("onchange", null) != null) {
+                control.setEvent("onchange", this.getConfigValue("onchange"));
+            }
+        }
+
         this.drawHtmlPre(out);
         out.write(control.getHtml());
+        if (useCodePress) {
+            out.write("<input type=\"hidden\" name=\"");
+            out.write(this.getName());
+            out.write("\" class=\"codepress\" />");
+        }
         this.drawHtmlPost(out);
     }
-
 }
