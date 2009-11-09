@@ -69,7 +69,7 @@ public class JspTemplateRendererTest extends TestCase {
 
         final AggregationState aggState = new AggregationState();
         aggState.setMainContent(page);
-        expect(magnoliaCtx.getAggregationState()).andReturn(aggState);
+        expect(magnoliaCtx.getAggregationState()).andStubReturn(aggState);
 
         replay(magnoliaCtx, page);
         final Map templateCtx = new HashMap();
