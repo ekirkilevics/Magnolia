@@ -122,17 +122,12 @@ public class ReceiveFilterTest extends TestCase {
 
     public void testActivateShouldUpdateNodeIfItAlreadyExists() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
-        final Content existingParent = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/nodename").anyTimes();
         expect(existingNode.getName()).andReturn("nodename");
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
-
-        expect(existingNode.getParent()).andReturn(existingParent);
-
-        expect(existingParent.getHandle()).andReturn("/");
 
         // for the sake of this test we'll just pretend we have no properties on the existing node
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
@@ -149,7 +144,7 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node either
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        replay(existingNode, tempNode, importedNode, existingParent);
+        replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -173,12 +168,11 @@ public class ReceiveFilterTest extends TestCase {
                 hm.delete(startsWith("/DUMMY-UUID"));
             }
         });
-        verify(existingNode, tempNode, importedNode, existingParent);
+        verify(existingNode, tempNode, importedNode);
     }
 
     public void testActivateShouldMoveToNewLocationIfItHasBeenMovedToADifferentPath() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
-        final Content existingParent = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/oldnodename").anyTimes();
@@ -195,16 +189,13 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        expect(existingNode.getParent()).andReturn(existingParent);
-        expect(existingParent.getHandle()).andReturn("/");
-
         // for the sake of this test we'll just pretend we have no properties on the existing node either
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
-        replay(existingNode, tempNode, importedNode, existingParent);
+        replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -229,12 +220,11 @@ public class ReceiveFilterTest extends TestCase {
                 hm.delete("/DUMMY-UUID");
             }
         });
-        verify(existingNode, tempNode, importedNode, existingParent);
+        verify(existingNode, tempNode, importedNode);
     }
 
     public void testActivateShouldMoveWhenParentHasChanged() throws Exception {
         final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
-        final Content existingParent = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         final Content importedNode = createStrictMock(Content.class);
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "old/nodename").anyTimes();
@@ -250,16 +240,13 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        expect(existingNode.getParent()).andReturn(existingParent);
-        expect(existingParent.getHandle()).andReturn("/");
-
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
         // for the sake of this test we'll just pretend we have no properties on the imported node either
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        replay(existingNode, tempNode, importedNode, existingParent);
+        replay(existingNode, tempNode, importedNode);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
@@ -284,7 +271,7 @@ public class ReceiveFilterTest extends TestCase {
                 hm.delete("/DUMMY-UUID");
             }
         });
-        verify(existingNode, tempNode, importedNode, existingParent);
+        verify(existingNode, tempNode, importedNode);
     }
 
 

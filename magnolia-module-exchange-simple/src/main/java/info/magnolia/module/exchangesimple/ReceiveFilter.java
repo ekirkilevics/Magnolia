@@ -409,25 +409,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       */
      protected synchronized void importOnExisting(Element topContentElement, MultipartForm data,
          HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
-         final Iterator fileListIterator = topContentElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
-         final String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
-         final String handle = existingContent.getHandle();
+         Iterator fileListIterator = topContentElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
+         String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
          try {
              while (fileListIterator.hasNext()) {
                  Element fileElement = (Element) fileListIterator.next();
-                 importResource(data, fileElement, hierarchyManager, handle);
+                 importResource(data, fileElement, hierarchyManager, existingContent.getHandle());
              }
-             // use temporary node under the parent of the content itself to extract the top level node and copy its properties
-             // TODO: This solution has still some limitations in case the parent content or amount of children is restricted by the node type definition (e.g. data module custom nodes or other custom nodes introduced by modules (e.g. forum))
-             final Content transientNode = hierarchyManager.createContent(existingContent.getParent().getHandle(), uuid, ItemType.CONTENTNODE.toString());
-             final String transientStoreHandle = transientNode.getHandle();
+             // use temporary transient store to extract top level node and copy properties
+             Content transientStore = hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
+             String transientStoreHandle = transientStore.getHandle();
              // import properties into transientStore
-             final String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
-             final GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
+             String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
+             GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
              hierarchyManager.getWorkspace().getSession().importXML(transientStoreHandle, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
              IOUtils.closeQuietly(inputStream);
              // copy properties from transient store to existing content
-             Content tmpContent = transientNode.getChildByName(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
+             Content tmpContent = transientStore.getChildByName(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
              copyProperties(tmpContent, existingContent);
              hierarchyManager.delete(transientStoreHandle);
              hierarchyManager.save();
