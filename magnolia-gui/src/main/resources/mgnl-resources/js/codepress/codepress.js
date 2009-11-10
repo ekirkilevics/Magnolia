@@ -84,7 +84,7 @@ CodePress = function(obj) {
 	self.toggleReadOnly = function() {
 		self.textarea.readOnly = (self.textarea.readOnly) ? false : true;
 		if (self.style.display != 'none') // prevent exception on FF + iframe
-											// with display:none
+			// with display:none
 			self.editor.readOnly(self.textarea.readOnly ? true : false);
 	}
 
@@ -148,8 +148,8 @@ CodePress.run = function() {
 /**
  * This function handles the special case of submitting a Magnolia dialog. In
  * order to correctly save the contents of the textarea we need to get it from
- * the iframe created by CodePress and manipulate the dom so that the value of
- * the hidden field named 'mgnlSaveInfo' contains the same name as the textarea.
+ * the iframe created by CodePress and put it in a hidden field with class
+ * 'codepress'.
  * 
  * @author fgrilli
  */
