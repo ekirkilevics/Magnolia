@@ -92,11 +92,6 @@ public class Sources {
         html.append(contextPath);
         html.append("/.resources/calendar/calendar-setup.js\"></script>\n");
         
-        html.append("<script type=\"text/javascript\" src=\"");
-        html.append(contextPath);
-        html.append("/.resources/js/codepress/codepress.js\"></script>\n");
-
-
         return html.toString();
     }
 

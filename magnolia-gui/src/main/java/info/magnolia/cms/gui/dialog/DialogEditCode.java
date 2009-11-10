@@ -63,6 +63,11 @@ public class DialogEditCode extends DialogBox {
     protected static final String SAVE_ONCLICK = "CodePress.submitForm()";
 
     /**
+     * Used to make sure that the javascript files are loaded only once
+     */
+    private static final String ATTRIBUTE_CODEPRESS_LOADED = "info.magnolia.cms.gui.dialog.codepress.loaded";
+
+    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
@@ -100,6 +105,13 @@ public class DialogEditCode extends DialogBox {
         }
 
         this.drawHtmlPre(out);
+        // load the script once: if there are multiple instances
+        if (getRequest().getAttribute(ATTRIBUTE_CODEPRESS_LOADED) == null) {
+            out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + "/.resources/js/codepress/codepress.js\"></script>"); //$NON-NLS-1$
+            getRequest().setAttribute(ATTRIBUTE_CODEPRESS_LOADED, "true"); //$NON-NLS-1$
+        }
         out.write(control.getHtml());
         // on submitting the dialog put the code into this hidden field. See codepress.js#submitForm()
         if (useCodePress) {
