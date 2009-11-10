@@ -47,8 +47,8 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Turns a textarea into a basic code editor with the <a href="http://codepress.sourceforge.net/">CodePress</a> js
  * library. To handle submits correctly it is <strong>mandatory</strong> to configure the dialog with the
- * <code>saveOnclick</code> node set as <code>CodePress.submitForm()</code>. If this value is not set correctly, falls
- * back to a plain textarea. Control (optional) configuration values are:
+ * <code>saveOnclick</code> node set as <code>CodePress.submitForm()</code>. If this value is missing or it is not set
+ * correctly, falls back to a plain textarea. Control (optional) configuration values are:
  * <ul>
  * <li><strong>language</strong>: one of the languages (e.g. 'css', 'javascript', 'html') supported by CodePress.
  * Default value is <code>generic</code>
@@ -76,7 +76,7 @@ public class DialogEditCode extends DialogBox {
         // else fall back to plain textarea with sans type font
         Boolean useCodePress = StringUtils.isNotEmpty(saveOnclick)
             && SAVE_ONCLICK.equals(saveOnclick.trim().replaceAll(";", ""));
-        
+
         if (useCodePress) {
             control.setRows(this.getConfigValue("rows", "25")); //$NON-NLS-1$ //$NON-NLS-2$
             control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -101,7 +101,7 @@ public class DialogEditCode extends DialogBox {
 
         this.drawHtmlPre(out);
         out.write(control.getHtml());
-        //on submitting the dialog put the code into this hidden field. See codepress.js#submitForm() 
+        // on submitting the dialog put the code into this hidden field. See codepress.js#submitForm()
         if (useCodePress) {
             out.write("<input type=\"hidden\" name=\"");
             out.write(this.getName());
