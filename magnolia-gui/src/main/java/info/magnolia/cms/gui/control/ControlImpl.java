@@ -511,7 +511,7 @@ public class ControlImpl implements Control {
     }
 
     public static String escapeHTML(String str) {
-        return str.replaceAll("\"", "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+        return str.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     protected void println(Writer out, String s) throws IOException {

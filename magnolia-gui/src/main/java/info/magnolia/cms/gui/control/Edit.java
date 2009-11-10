@@ -73,13 +73,12 @@ public class Edit extends ControlImpl {
             html.append("<input type=\"text\""); //$NON-NLS-1$
             html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-            html.append(" value=\"" + ControlImpl.escapeHTML(this.getValue()) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" value=\"" + getEncodedValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(getHtmlEvents());
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());
             html.append(" />"); //$NON-NLS-1$
-        }
-        else {
+        } else {
             html.append("<textarea"); //$NON-NLS-1$
             html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -89,12 +88,16 @@ public class Edit extends ControlImpl {
             html.append(this.getHtmlCssStyles());
             html.append(getHtmlEvents());
             html.append(">"); //$NON-NLS-1$
-            html.append(this.getValue());
+            html.append(getEncodedValue());
             html.append("</textarea>"); //$NON-NLS-1$
         }
         if (this.getSaveInfo()) {
             html.append(this.getHtmlSaveInfo());
         }
         return html.toString();
+    }
+
+    protected String getEncodedValue() {
+        return escapeHTML(this.getValue());
     }
 }
