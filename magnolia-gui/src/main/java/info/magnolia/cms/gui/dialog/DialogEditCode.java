@@ -101,6 +101,7 @@ public class DialogEditCode extends DialogBox {
 
         this.drawHtmlPre(out);
         out.write(control.getHtml());
+        //on submitting the dialog put the code into this hidden field. See codepress.js#submitForm() 
         if (useCodePress) {
             out.write("<input type=\"hidden\" name=\"");
             out.write(this.getName());
