@@ -35,6 +35,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.util.BooleanUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -79,7 +80,7 @@ public class DialogEditCode extends DialogBox {
         String saveOnclick = this.getTopParent().getConfigValue("saveOnclick");
         // use CodePress only if the saveOnclick value is correctly set,
         // else fall back to plain textarea with sans type font
-        Boolean useCodePress = StringUtils.isNotEmpty(saveOnclick)
+        boolean useCodePress = StringUtils.isNotEmpty(saveOnclick)
             && SAVE_ONCLICK.equals(saveOnclick.trim().replaceAll(";", ""));
 
         if (useCodePress) {
@@ -87,8 +88,8 @@ public class DialogEditCode extends DialogBox {
             control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             StringBuilder codePressClasses = new StringBuilder(" codepress ");
             codePressClasses.append(this.getConfigValue("language", "generic "));
-            Boolean readOnly = Boolean.valueOf(this.getConfigValue("readOnly", "false"));
-            Boolean lineNumbers = Boolean.valueOf(this.getConfigValue("lineNumbers", "true"));
+            boolean readOnly = BooleanUtil.toBoolean(this.getConfigValue("readOnly"), false);
+            boolean lineNumbers = BooleanUtil.toBoolean(this.getConfigValue("lineNumbers"), true);
             codePressClasses.append(readOnly ? " readonly-on " : " readonly-off ");
             codePressClasses.append(lineNumbers ? " linenumbers-on " : " linenumbers-off ");
             control.setCssClass(CssConstants.CSSCLASS_EDIT + codePressClasses.toString());
