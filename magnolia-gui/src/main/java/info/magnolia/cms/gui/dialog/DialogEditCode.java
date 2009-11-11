@@ -42,26 +42,24 @@ import java.io.Writer;
 
 import javax.jcr.PropertyType;
 
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * Turns a textarea into a basic code editor with the <a href="http://codepress.sourceforge.net/">CodePress</a> js
- * library. To handle submits correctly it is <strong>mandatory</strong> to configure the dialog with the
- * <code>saveOnclick</code> node set as <code>CodePress.submitForm()</code>. If this value is missing or it is not set
- * correctly, falls back to a plain textarea. Control (optional) configuration values are:
+ * library. Configuration options are:
  * <ul>
- * <li><strong>language</strong>: one of the languages (e.g. 'css', 'javascript', 'html') supported by CodePress.
- * Default value is <code>generic</code>
- * <li><strong>readOnly</strong>: make the editor read-only. Default value is <code>false</code>
- * <li><strong>lineNumbers</strong>: shows/hide line numbers. Default value is <code>true</code>
+ * <li><strong>toggleEditor</strong>: activate/deactivate the editor. Default value is <code>true</code>. If set as
+ * <code>false</code>, falls back to a plain textarea.
+ * <li><strong>language</strong>: one of the languages (e.g. <em>css</em>, <em>javascript</em>, <em>html</em>) supported
+ * by CodePress. Default value is <code>generic</code>.
+ * <li><strong>readOnly</strong>: make the editor read-only. Default value is <code>false</code>.
+ * <li><strong>lineNumbers</strong>: shows/hide line numbers. Default value is <code>true</code>.
  * </ul>
+ * <strong>Warning</strong>: Any custom <code>onclick</code> event handler attached to the <em>Save</em> button which
+ * submits this dialog will be superseded by the dialog's own specific event handler.
  * @author tmiyar
- * @version $Id$
+ * @author fgrilli
  */
 public class DialogEditCode extends DialogBox {
-
-    protected static final String SAVE_ONCLICK = "CodePress.submitForm()";
 
     /**
      * Used to make sure that the javascript files are loaded only once
@@ -77,11 +75,8 @@ public class DialogEditCode extends DialogBox {
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
-        String saveOnclick = this.getTopParent().getConfigValue("saveOnclick");
-        // use CodePress only if the saveOnclick value is correctly set,
-        // else fall back to plain textarea with sans type font
-        boolean useCodePress = StringUtils.isNotEmpty(saveOnclick)
-            && SAVE_ONCLICK.equals(saveOnclick.trim().replaceAll(";", ""));
+
+        Boolean useCodePress = Boolean.valueOf(this.getConfigValue("toggleEditor", "true"));
 
         if (useCodePress) {
             control.setRows(this.getConfigValue("rows", "25")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,19 +101,31 @@ public class DialogEditCode extends DialogBox {
         }
 
         this.drawHtmlPre(out);
-        // load the script once: if there are multiple instances
-        if (getRequest().getAttribute(ATTRIBUTE_CODEPRESS_LOADED) == null) {
+        // load the script once if there are multiple instances
+        if (useCodePress && getRequest().getAttribute(ATTRIBUTE_CODEPRESS_LOADED) == null) {
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
                 + "/.resources/js/codepress/codepress.js\"></script>"); //$NON-NLS-1$
             getRequest().setAttribute(ATTRIBUTE_CODEPRESS_LOADED, "true"); //$NON-NLS-1$
         }
         out.write(control.getHtml());
-        // on submitting the dialog put the code into this hidden field. See codepress.js#submitForm()
+        // on submit put the code into a hidden field. OK, this is really ugly.
         if (useCodePress) {
+            out.write("\n<script>\n");
+            out.write("MgnlDHTMLUtil.addOnLoad(function(){\n");
+            out.write("    var b = document.getElementById('mgnlSaveButton');\n");
+            out.write("    b.onclick=function(){\n");
+            out.write("        document.getElementById('cp_hidden_"
+                + this.getName()
+                + "').value = eval('"
+                + this.getName()
+                + "').getCode();\n");
+            out.write("        document.forms['mgnlFormMain'].submit();\n");
+            out.write("    }\n});\n");
+            out.write("</script>\n");
             out.write("<input type=\"hidden\" name=\"");
             out.write(this.getName());
-            out.write("\" class=\"codepress\" />");
+            out.write("\" id=\"cp_hidden_" + this.getName() + "\" />\n");
         }
         this.drawHtmlPost(out);
     }
