@@ -129,6 +129,11 @@ CodePress.languages = {
 }
 
 CodePress.run = function() {
+	ua = navigator.userAgent;
+	if(ua.match('Opera') != null){
+		//unsupported for now, falls back to plain textarea
+		return;
+	}
 	s = document.getElementsByTagName('script');
 	for ( var i = 0, n = s.length; i < n; i++) {
 		if (s[i].src.match('codepress.js')) {

@@ -1,2 +1,3 @@
 This CodePress distribution has been patched to support chrome+safari. 
-See http://sourceforge.net/tracker/index.php?func=detail&aid=2209244&group_id=186981&atid=919469 
+See http://sourceforge.net/tracker/index.php?func=detail&aid=2209244&group_id=186981&atid=919469
+It also disables Opera support (falls back to plain textarea) which is problematic at least in version 10. 
