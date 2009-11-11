@@ -145,23 +145,6 @@ CodePress.run = function() {
 		}
 	}
 }
-/**
- * This function handles the special case of submitting a Magnolia dialog. In
- * order to correctly save the contents of the textarea we need to get it from
- * the iframe created by CodePress and put it in a hidden field with class
- * 'codepress'.
- * 
- * @author fgrilli
- */
-CodePress.submitForm = function() {
-	t = document.getElementsByTagName('input');
-	for ( var i = 0, n = t.length; i < n; i++) {
-		if (t[i].className.match('codepress')) {
-			t[i].value = eval(t[i].name).getCode();
-		}
-	}
-	document.forms['mgnlFormMain'].submit();
-}
 
 if (window.attachEvent)
 	window.attachEvent('onload', CodePress.run);
