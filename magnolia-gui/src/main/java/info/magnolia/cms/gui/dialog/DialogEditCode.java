@@ -45,7 +45,11 @@ import javax.jcr.PropertyType;
 
 /**
  * Turns a textarea into a basic code editor with the <a href="http://codepress.sourceforge.net/">CodePress</a> js
- * library. Configuration options are:
+ * library. <strong>Warning</strong>: When the CodePress editor is active, any custom <code>onclick</code> event handler
+ * attached to the <em>Save</em> button which submits this dialog will be superseded by the dialog's own specific event
+ * handler.
+ * <p>
+ * Configuration options are:
  * <ul>
  * <li><strong>toggleEditor</strong>: activate/deactivate the editor. Default value is <code>true</code>. If set as
  * <code>false</code>, falls back to a plain textarea.
@@ -54,8 +58,6 @@ import javax.jcr.PropertyType;
  * <li><strong>readOnly</strong>: make the editor read-only. Default value is <code>false</code>.
  * <li><strong>lineNumbers</strong>: shows/hide line numbers. Default value is <code>true</code>.
  * </ul>
- * <strong>Warning</strong>: Any custom <code>onclick</code> event handler attached to the <em>Save</em> button which
- * submits this dialog will be superseded by the dialog's own specific event handler.
  * @author tmiyar
  * @author fgrilli
  */
