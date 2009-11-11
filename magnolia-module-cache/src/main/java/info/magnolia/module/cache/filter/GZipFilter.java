@@ -81,6 +81,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
         };
         chain.doFilter(request, responseWrapper);
 
+        // flush only internal buffers, not the actual response's !
         responseWrapper.flush();
 
         //return on error or redirect code, because response is already committed
