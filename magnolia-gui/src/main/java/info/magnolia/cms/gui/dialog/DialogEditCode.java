@@ -51,8 +51,8 @@ import javax.jcr.PropertyType;
  * <p>
  * Configuration options are:
  * <ul>
- * <li><strong>toggleEditor</strong>: activate/deactivate the editor. Default value is <code>true</code>. If set as
- * <code>false</code>, falls back to a plain textarea.
+ * <li><strong>useCodeHighlighter</strong>: activate/deactivate the editor with code highlighting. Default value is
+ * <code>true</code>. If set as <code>false</code>, falls back to a plain textarea.
  * <li><strong>language</strong>: one of the languages (e.g. <em>css</em>, <em>javascript</em>, <em>html</em>) supported
  * by CodePress. Default value is <code>generic</code>.
  * <li><strong>readOnly</strong>: make the editor read-only. Default value is <code>false</code>.
@@ -78,7 +78,7 @@ public class DialogEditCode extends DialogBox {
             control.setSaveInfo(false);
         }
 
-        boolean useCodePress = BooleanUtil.toBoolean(this.getConfigValue("toggleEditor"), true);
+        boolean useCodePress = BooleanUtil.toBoolean(this.getConfigValue("useCodeHighlighter"), true);
 
         if (useCodePress) {
             control.setRows(this.getConfigValue("rows", "25")); //$NON-NLS-1$ //$NON-NLS-2$
