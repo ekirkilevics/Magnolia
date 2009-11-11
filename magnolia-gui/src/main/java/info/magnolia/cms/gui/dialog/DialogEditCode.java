@@ -78,7 +78,7 @@ public class DialogEditCode extends DialogBox {
             control.setSaveInfo(false);
         }
 
-        Boolean useCodePress = Boolean.valueOf(this.getConfigValue("toggleEditor", "true"));
+        boolean useCodePress = BooleanUtil.toBoolean(this.getConfigValue("toggleEditor"), true);
 
         if (useCodePress) {
             control.setRows(this.getConfigValue("rows", "25")); //$NON-NLS-1$ //$NON-NLS-2$
