@@ -57,8 +57,8 @@ public class MD5CheckingFileExtractorOperationTest extends TestCase {
         final File testOut = new File(System.getProperty("java.io.tmpdir"), "MD5CheckingFileExtractorOperationTest-testAbsentFilesAreRecreated.tmp");
         testOut.deleteOnExit();
 
-        // the file is gone from the file system
-        assertEquals(false, testOut.exists());
+        // make sure the test file is not already on the file system
+        assertEquals("test file already present when starting test, can't continue", false, testOut.exists());
 
         final HierarchyManager hm = createStrictMock(HierarchyManager.class);
         final Content fileInfoNode = createStrictMock(Content.class);
