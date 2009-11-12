@@ -45,6 +45,10 @@ public class NodeBuilder {
     private final Content root;
     private final NodeOperation[] childrenOps;
 
+    public NodeBuilder(Content root, NodeOperation... childrenOps) {
+        this(new StrictErrorHandler(), root, childrenOps);
+    }
+
     public NodeBuilder(ErrorHandler errorHandler, Content root, NodeOperation... childrenOps) {
         this.errorHandler = errorHandler;
         this.root = root;
