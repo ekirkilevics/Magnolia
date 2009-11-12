@@ -46,6 +46,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
 /**
+ * Factory methods for most common NodeOperation implementations.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -248,7 +249,7 @@ public abstract class Ops {
         }
 
         /**
-         * @param context the node that should now be used as the context for subsequent operations
+         * @return the node that should now be used as the context for subsequent operations
          */
         abstract Content doExec(Content context) throws RepositoryException;
 
