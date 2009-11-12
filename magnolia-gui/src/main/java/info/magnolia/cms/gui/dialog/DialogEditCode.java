@@ -115,6 +115,8 @@ public class DialogEditCode extends DialogBox {
         if (useCodePress) {
             out.write("\n<script>\n");
             out.write("MgnlDHTMLUtil.addOnLoad(function(){\n");
+            //TODO make codepress for Opera work
+            out.write("    if(navigator.userAgent.match('Opera') != null) return;\n");
             out.write("    var b = document.getElementById('mgnlSaveButton');\n");
             out.write("    b.onclick=function(){\n");
             out.write("        document.getElementById('cp_hidden_"
