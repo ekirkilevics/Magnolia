@@ -31,37 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.nodebuilder;
+package info.magnolia.nodebuilder.task;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.module.InstallContext;
+import info.magnolia.nodebuilder.NodeOperation;
+
+import javax.jcr.RepositoryException;
 
 /**
+ * A task using the NodeBuilder API, applying operations on a the root node of the current module.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeBuilder {
-    private final ErrorHandler errorHandler;
-    private final Content root;
-    private final NodeOperation[] childrenOps;
-
-    public NodeBuilder(ErrorHandler errorHandler, Content root, NodeOperation... childrenOps) {
-        this.errorHandler = errorHandler;
-        this.root = root;
-        this.childrenOps = childrenOps;
+public class ModuleNodeBuilderTask extends AbstractNodeBuilderTask {
+    public ModuleNodeBuilderTask(String name, String description, ErrorHandling errorHandling, NodeOperation... operations) {
+        super(name, description, errorHandling, operations);
     }
 
-    /**
-     *
-     * @throws NodeOperationException if the given ErrorHandler decided to do so !
-     */
-    public void exec() throws NodeOperationException {
-        for (NodeOperation childrenOp : childrenOps) {
-            childrenOp.exec(root, errorHandler);
-        }
+    protected Content getRootNode(InstallContext ctx) throws RepositoryException {
+        return ctx.getOrCreateCurrentModuleNode();
     }
-
-    // TODO some context passed around, configuration at beginning
-    // (what to do with exceptions, what to do with warnings
-
 }

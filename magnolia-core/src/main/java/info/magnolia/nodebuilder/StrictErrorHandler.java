@@ -33,35 +33,15 @@
  */
 package info.magnolia.nodebuilder;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.module.InstallContext;
-
-import javax.jcr.RepositoryException;
-
 /**
- * A task using the NodeBuilder API, applying operations on a given path.
+ * An ErrorHandler which interrupts operations as soon as one error happens,
+ * by throwing a NodeOperationException.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeBuilderTask extends AbstractNodeBuilderTask {
-    private final String workspaceName;
-    private final String rootPath;
-
-    public NodeBuilderTask(String taskName, String description, String workspaceName, NodeOperation... operations) {
-        this(taskName, description, workspaceName, "/", operations);
+public class StrictErrorHandler extends AbstractErrorHandler {
+    public void report(String message) throws NodeOperationException {
+        throw new NodeOperationException(message);
     }
-
-    public NodeBuilderTask(String taskName, String description, String workspaceName, String rootPath, NodeOperation... operations) {
-        super(taskName, description, operations);
-        this.workspaceName = workspaceName;
-        this.rootPath = rootPath;
-    }
-
-    protected Content getRootNode(InstallContext ctx) throws RepositoryException {
-        final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
-        return hm.getContent(rootPath);
-    }
-
 }

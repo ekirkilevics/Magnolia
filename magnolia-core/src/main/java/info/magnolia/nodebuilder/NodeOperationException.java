@@ -33,32 +33,30 @@
  */
 package info.magnolia.nodebuilder;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractRepositoryTask;
-import info.magnolia.module.delta.TaskExecutionException;
-
-import javax.jcr.RepositoryException;
-
 /**
+ * A RuntimeException thrown by ErrorHandler implementations;
+ * clients of NodeBuilder should expect and handle this.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public abstract class AbstractNodeBuilderTask extends AbstractRepositoryTask {
-    private final NodeOperation[] operations;
-
-    public AbstractNodeBuilderTask(String name, String description, NodeOperation... operations) {
-        super(name, description);
-        this.operations = operations;
+public class NodeOperationException extends RuntimeException {
+    // Implementation note: the choice of making this a RuntimeException is arguable,
+    // but driven by the fact that NodeOperation implementations should *not* throw
+    // this exception directly (it should only be thrown by ErrorHandlers.
+    // While they obviously still can, here's hoping that they won't be tempted to do
+    // so. If it were a checked exception, having this exception in the throws clause
+    // might make it more tempting to throw them directly.
+    // TODO : scratch the above and solve the problem !
+    public NodeOperationException(String message) {
+        super(message);
     }
 
-    protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final Content root = getRootNode(ctx);
-        final NodeBuilder nodeBuilder = new NodeBuilder(root, operations);
-        nodeBuilder.exec();
+    public NodeOperationException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    protected abstract Content getRootNode(InstallContext ctx) throws RepositoryException;
-
+    public NodeOperationException(Throwable cause) {
+        super(cause);
+    }
 }

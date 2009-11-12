@@ -31,37 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.nodebuilder;
+package info.magnolia.nodebuilder.task;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.InstallContext;
+import info.magnolia.nodebuilder.NodeOperation;
+
+import javax.jcr.RepositoryException;
 
 /**
+ * A task using the NodeBuilder API, applying operations on a given path.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeBuilder {
-    private final ErrorHandler errorHandler;
-    private final Content root;
-    private final NodeOperation[] childrenOps;
+public class NodeBuilderTask extends AbstractNodeBuilderTask {
+    private final String workspaceName;
+    private final String rootPath;
 
-    public NodeBuilder(ErrorHandler errorHandler, Content root, NodeOperation... childrenOps) {
-        this.errorHandler = errorHandler;
-        this.root = root;
-        this.childrenOps = childrenOps;
+    public NodeBuilderTask(String taskName, String description, ErrorHandling errorHandling, String workspaceName, NodeOperation... operations) {
+        this(taskName, description, errorHandling, workspaceName, "/", operations);
     }
 
-    /**
-     *
-     * @throws NodeOperationException if the given ErrorHandler decided to do so !
-     */
-    public void exec() throws NodeOperationException {
-        for (NodeOperation childrenOp : childrenOps) {
-            childrenOp.exec(root, errorHandler);
-        }
+    public NodeBuilderTask(String taskName, String description, ErrorHandling errorHandling, String workspaceName, String rootPath, NodeOperation... operations) {
+        super(taskName, description, errorHandling, operations);
+        this.workspaceName = workspaceName;
+        this.rootPath = rootPath;
     }
 
-    // TODO some context passed around, configuration at beginning
-    // (what to do with exceptions, what to do with warnings
+    protected Content getRootNode(InstallContext ctx) throws RepositoryException {
+        final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
+        return hm.getContent(rootPath);
+    }
 
 }

@@ -88,13 +88,13 @@ public class RecursiveOp extends AbstractOp {
         this.childrenOps = childrenOps;
     }
 
-    Content doExec(Content context) throws RepositoryException {
+    Content doExec(Content context,final ErrorHandler errorHandler) throws RepositoryException {
         try {
             ContentUtil.visit(context, new ContentUtil.Visitor(){
                 public void visit(Content node) throws Exception {
                     if(filter.accept(node)){
                         for (NodeOperation nodeOperation : childrenOps) {
-                            nodeOperation.exec(node);
+                            nodeOperation.exec(node,errorHandler);
                         }
                     }
                 }

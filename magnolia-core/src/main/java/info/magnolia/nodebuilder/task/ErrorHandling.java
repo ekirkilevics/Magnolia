@@ -31,25 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.nodebuilder;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.InstallContext;
-
-import javax.jcr.RepositoryException;
+package info.magnolia.nodebuilder.task;
 
 /**
- * A task using the NodeBuilder API, applying operations on a the root node of the current module.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleNodeBuilderTask extends AbstractNodeBuilderTask {
-    public ModuleNodeBuilderTask(String name, String description, NodeOperation... operations) {
-        super(name, description, operations);
-    }
-
-    protected Content getRootNode(InstallContext ctx) throws RepositoryException {
-        return ctx.getOrCreateCurrentModuleNode();
-    }
+public enum ErrorHandling {
+    strict, logging
 }

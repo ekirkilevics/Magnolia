@@ -38,10 +38,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.RepositoryTestCase;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.ItemExistsException;
-import javax.jcr.ItemNotFoundException;
 
 /**
  *
@@ -49,6 +46,16 @@ import javax.jcr.ItemNotFoundException;
  * @version $Revision: $ ($Author: $)
  */
 public class OpsTest extends RepositoryTestCase {
+    private final ErrorHandler eh = new ErrorHandler() {
+        public void report(String message) {
+            throw new RuntimeException(message); // TODO
+        }
+
+        public void handle(RepositoryException e, Content context) {
+            throw new RuntimeException(e.getMessage());
+        }
+    };
+
     public void testAddPropertyFailsIfPropertyExists() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content node = hm.getRoot().createContent("hello");
@@ -56,9 +63,9 @@ public class OpsTest extends RepositoryTestCase {
         hm.save();
         try {
             final NodeOperation op = Ops.addProperty("foo", "zazoo");
-            op.exec(node);
+            op.exec(node, eh);
             fail("should have failed");
-        } catch (ItemExistsException e) {
+        } catch (Throwable e) { // (ItemExistsException e)
             assertEquals("foo", e.getMessage());
         }
     }
@@ -70,21 +77,22 @@ public class OpsTest extends RepositoryTestCase {
         hm.save();
         try {
             final NodeOperation op = Ops.setProperty("foo", "baz", "zazoo");
-            op.exec(node);
+            op.exec(node, eh);
             fail("should have failed");
-        } catch (RepositoryException e) {
-            assertEquals("Expected baz and found bar instead.", e.getMessage());
+        } catch (Throwable e) { // (RepositoryException e)
+            assertEquals("Expected baz at /hello/foo but found bar instead; can't set value to zazoo.", e.getMessage());
         }
     }
+
     public void testSetPropertyFailsIfPropertyDoesNotHaveExpectedValue() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         final Content node = hm.getRoot().createContent("hello");
         hm.save();
         try {
             final NodeOperation op = Ops.setProperty("foo", "zazoo");
-            op.exec(node);
+            op.exec(node, eh);
             fail("should have failed");
-        } catch (ItemNotFoundException e) {
+        } catch (Throwable e) { // (ItemNotFoundException e)
             assertEquals("foo", e.getMessage());
         }
     }
@@ -94,10 +102,12 @@ public class OpsTest extends RepositoryTestCase {
         hm.getRoot().createContent("hello").createNodeData("foo", "bar");
         hm.save();
 
+        final Content root = hm.getContent("/hello");
         try {
-            Ops.remove("non-existing").exec(hm.getContent("/hello"));
+            final NodeOperation op = Ops.remove("non-existing");
+            op.exec(root, eh);
             fail("should have failed");
-        } catch (PathNotFoundException e) {
+        } catch (Throwable e) { // (PathNotFoundException e)
             assertEquals("non-existing", e.getMessage());
         }
     }

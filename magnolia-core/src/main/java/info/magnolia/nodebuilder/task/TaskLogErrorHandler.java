@@ -31,37 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.nodebuilder;
+package info.magnolia.nodebuilder.task;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.nodebuilder.AbstractErrorHandler;
+import info.magnolia.nodebuilder.NodeOperationException;
+
+import javax.jcr.RepositoryException;
 
 /**
+ * An ErrorHandler which logs handled errors to the InstallContext
+ * as warnings, and wraps unhandled exceptions in NodeOperationException.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeBuilder {
-    private final ErrorHandler errorHandler;
-    private final Content root;
-    private final NodeOperation[] childrenOps;
+public class TaskLogErrorHandler extends AbstractErrorHandler {
+    private final InstallContext installCtx;
 
-    public NodeBuilder(ErrorHandler errorHandler, Content root, NodeOperation... childrenOps) {
-        this.errorHandler = errorHandler;
-        this.root = root;
-        this.childrenOps = childrenOps;
+    public TaskLogErrorHandler(InstallContext installCtx) {
+        this.installCtx = installCtx;
     }
 
-    /**
-     *
-     * @throws NodeOperationException if the given ErrorHandler decided to do so !
-     */
-    public void exec() throws NodeOperationException {
-        for (NodeOperation childrenOp : childrenOps) {
-            childrenOp.exec(root, errorHandler);
-        }
+    public void report(String message) {
+        installCtx.warn(message);
     }
-
-    // TODO some context passed around, configuration at beginning
-    // (what to do with exceptions, what to do with warnings
-
 }

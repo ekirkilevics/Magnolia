@@ -37,7 +37,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
+import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.test.RepositoryTestCase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -54,7 +58,8 @@ public class NodeBuilderTest extends RepositoryTestCase {
             hello.createContent("zing").createNodeData("this", "will be removed");
         }
 
-        final NodeBuilder nodeBuilder = new NodeBuilder(hm.getContent("MyRoot"),
+        final MessageTracker messageTracker = new MessageTracker();
+        final NodeBuilder nodeBuilder = new NodeBuilder(messageTracker, hm.getContent("MyRoot"),
                 Ops.getNode("hello").then(
                         Ops.addNode("newsub").then(
                                 Ops.addProperty("newProp", "New Value")
@@ -78,5 +83,80 @@ public class NodeBuilderTest extends RepositoryTestCase {
         assertEquals("lolo", hm.getNodeData("/MyRoot/lala").getString());
         assertFalse("Node should have been removed", hm.isExist("/MyRoot/hello/zing"));
         assertFalse("Property should have been removed", hm.isExist("/MyRoot/hello/world/foo"));
+        assertEquals(0, messageTracker.getMessages().size());
+    }
+
+    public void testErrorMessages() throws Exception {
+        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        {
+            final Content hello = hm.getRoot().createContent("MyRoot").createContent("hello");
+            final Content world = hello.createContent("world");
+            world.createNodeData("foo", "bar");
+            world.createNodeData("baz", "baz-current");
+        }
+
+        final MessageTracker messageTracker = new MessageTracker();
+        final NodeBuilder nodeBuilder = new NodeBuilder(messageTracker, hm.getContent("MyRoot"),
+                getNode("hello").then(
+                        setProperty("unexisting1", "won't be set"),
+                        setProperty("unexisting2", "does not exist and", "won't be set"),
+                        remove("unexisting3"),
+                        getNode("world").then(
+                                addProperty("baz", "baz"),
+                                setProperty("baz", "expected", "new"),
+                                getNode("subsub"),
+                                getNode("chalala/zeuzeu")
+                        )
+                ));
+        nodeBuilder.exec();
+        hm.save();
+
+        assertEquals(7, messageTracker.getMessages().size());
+        assertEquals("unexisting1 can't be found at /MyRoot/hello.", messageTracker.getMessages().get(0));
+        assertEquals("unexisting2 can't be found at /MyRoot/hello.", messageTracker.getMessages().get(1));
+        assertEquals("unexisting3 can't be found at /MyRoot/hello.", messageTracker.getMessages().get(2));
+        assertEquals("baz already exists at /MyRoot/hello/world.", messageTracker.getMessages().get(3));
+        assertEquals("Expected expected at /MyRoot/hello/world/baz but found baz-current instead; can't set value to new.", messageTracker.getMessages().get(4));
+        assertEquals("subsub can't be found at /MyRoot/hello/world.", messageTracker.getMessages().get(5));
+        assertEquals("chalala/zeuzeu can't be found at /MyRoot/hello/world.", messageTracker.getMessages().get(6));
+    }
+
+    public void testPropertyNotReplaceIfCurrentValueDoesNotMatchExpectations() throws Exception {
+        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        {
+            final Content hello = hm.getRoot().createContent("MyRoot").createContent("hello");
+            hello.createNodeData("foo", "foo-current");
+            hello.createNodeData("baz", "baz-current");
+        }
+
+        final MessageTracker messageTracker = new MessageTracker();
+        final NodeBuilder nodeBuilder = new NodeBuilder(messageTracker, hm.getContent("MyRoot"),
+                getNode("hello").then(
+                        setProperty("foo", "foo-current", "foo-replaced"),
+                        setProperty("baz", "baz-unexpected", "baz-not-replaced")
+                ));
+        nodeBuilder.exec();
+        hm.save();
+
+        assertEquals("foo-replaced", hm.getNodeData("/MyRoot/hello/foo").getString());
+        assertEquals(1, messageTracker.getMessages().size());
+        assertEquals("Expected baz-unexpected at /MyRoot/hello/baz but found baz-current instead; can't set value to baz-not-replaced.", messageTracker.getMessages().get(0));
+        assertEquals("baz-current", hm.getNodeData("/MyRoot/hello/baz").getString());
+    }
+
+    /**
+     * An error handler which keeps the error messages in a List but otherwise ignores
+     * them, except unhandled RepositoryExceptions, which are rethrown.
+     */
+    private static class MessageTracker extends AbstractErrorHandler {
+        private final List<String> messages = new ArrayList<String>();
+
+        public List<String> getMessages() {
+            return messages;
+        }
+
+        public void report(String message) {
+            messages.add(message);
+        }
     }
 }

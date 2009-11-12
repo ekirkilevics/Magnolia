@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.nodebuilder;
+package info.magnolia.nodebuilder.task;
 
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
@@ -64,6 +64,7 @@ public class NodeBuilderTaskTest extends RepositoryTestCase {
         ContentUtil.createPath(MgnlContext.getHierarchyManager("config"), "/modules/stk/templates/stkSection/mainArea/opener/paragraphs/stkTeaserOpener");
 
         final Task configurateTemplateStkSection = new NodeBuilderTask("Config Task stkSection", "Configure stkSection template.",
+                ErrorHandling.logging,
                 "config", "/modules/stk/templates",
 
                 getNode("stkSection/mainArea").then(

@@ -35,33 +35,32 @@ package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
 
+import javax.jcr.RepositoryException;
+
 /**
+ * ErrorHandler implementation can decide what to do with certain conditions;
+ * specifically, they'll usually log or throw exceptions. They can only throw
+ * NodeOperationException (or other RuntimeExceptions, obviously), which
+ * the client code is expected to handle.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NodeBuilder {
-    private final ErrorHandler errorHandler;
-    private final Content root;
-    private final NodeOperation[] childrenOps;
-
-    public NodeBuilder(ErrorHandler errorHandler, Content root, NodeOperation... childrenOps) {
-        this.errorHandler = errorHandler;
-        this.root = root;
-        this.childrenOps = childrenOps;
-    }
+public interface ErrorHandler {
 
     /**
-     *
-     * @throws NodeOperationException if the given ErrorHandler decided to do so !
+     * The operation calling this method is expected to pass a fully formed message;
+     * it should ideally contain some context information about the operation that
+     * caused an issue. The ErrorHandler implementation will decide what to do
+     * with it (log, throw a NodeOperationException, ...)
      */
-    public void exec() throws NodeOperationException {
-        for (NodeOperation childrenOp : childrenOps) {
-            childrenOp.exec(root, errorHandler);
-        }
-    }
+    void report(String message) throws NodeOperationException;
 
-    // TODO some context passed around, configuration at beginning
-    // (what to do with exceptions, what to do with warnings
+    /**
+     * The operation calling this method isn't expected to do anything here;
+     * The ErrorHandler implementation will attempt to build a fully formed message,
+     * then decide what to do with it (log, throw a NodeOperationException, ...)
+     */
+    void handle(RepositoryException e, Content context) throws NodeOperationException;
 
 }

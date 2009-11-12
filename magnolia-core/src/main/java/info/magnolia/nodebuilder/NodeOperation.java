@@ -35,8 +35,6 @@ package info.magnolia.nodebuilder;
 
 import info.magnolia.cms.core.Content;
 
-import javax.jcr.RepositoryException;
-
 /**
  *
  * @author gjoseph
@@ -48,5 +46,7 @@ public interface NodeOperation {
     NodeOperation then(NodeOperation... childrenOps);
 
     // TODO exec should not appear in public interface
-    void exec(Content context) throws RepositoryException;
+    void exec(Content context, ErrorHandler errorHandler);
+
+    // TODO - description ... ?
 }

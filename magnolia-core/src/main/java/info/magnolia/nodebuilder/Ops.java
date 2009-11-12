@@ -54,7 +54,7 @@ import javax.jcr.Value;
 public abstract class Ops {
     public static NodeOperation addNode(final String name) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.createContent(name);
             }
         };
@@ -62,7 +62,7 @@ public abstract class Ops {
 
     public static NodeOperation addNode(final String name, final String type) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.createContent(name, type);
             }
         };
@@ -70,7 +70,7 @@ public abstract class Ops {
 
     public static NodeOperation addNode(final String name, final ItemType type) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.createContent(name, type);
             }
         };
@@ -78,7 +78,7 @@ public abstract class Ops {
 
     public static NodeOperation getNode(final String name) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 return context.getContent(name);
             }
         };
@@ -89,7 +89,7 @@ public abstract class Ops {
      */
     public static NodeOperation remove(final String name) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 context.delete(name);
                 return context;
             }
@@ -101,7 +101,7 @@ public abstract class Ops {
      */
     public static NodeOperation addProperty(final String name, final Object value) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (context.hasNodeData(name)) {
                     // throw new ItemExistsException("Property " + name + " already exists at " + context.getHandle());
                     throw new ItemExistsException(name);
@@ -118,7 +118,7 @@ public abstract class Ops {
      */
     public static NodeOperation setProperty(final String name, final Object newValue) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
                 }
@@ -136,27 +136,29 @@ public abstract class Ops {
      */
     public static NodeOperation setProperty(final String name, final Object expectedCurrentValue, final Object newValue) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 if (!context.hasNodeData(name)) {
                     throw new ItemNotFoundException(name);
                 }
                 final NodeData current = context.getNodeData(name);
                 if (!expectedCurrentValue.equals(NodeDataUtil.getValueObject(current))) {
-                    throw new RepositoryException("Expected " + expectedCurrentValue + " and found " + current.getString() + " instead.");
+                    errorHandler.report("Expected " + expectedCurrentValue + " at " + current.getHandle() + " but found " + current.getString() + " instead; can't set value to " + newValue + ".");
+                    return context;
                 }
+
                 final Value value = NodeDataUtil.createValue(newValue, context.getJCRNode().getSession().getValueFactory());
-                context.setNodeData(name, value);
+                current.setValue(value);
                 return context;
             }
         };
     }
-    
+
     /**
      * Renames the node defined by the name parameter.
      */
-    public static NodeOperation renameNode(final String name, final String newName){
+    public static NodeOperation renameNode(final String name, final String newName) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 ContentUtil.rename(context.getContent(name), newName);
                 return context;
             }
@@ -166,9 +168,9 @@ public abstract class Ops {
     /**
      * Renames a property by creating a new one and copying the value.
      */
-    public static NodeOperation renameProperty(final String name, final String newName){
+    public static NodeOperation renameProperty(final String name, final String newName) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 Object value = context.getNodeData(name);
                 context.createNodeData(newName, value);
                 context.deleteNodeData(name);
@@ -180,9 +182,9 @@ public abstract class Ops {
     /**
      * Moves the node defined by the name parameter in the session 
      */
-    public static NodeOperation moveNode(final String name ,final String dest){
+    public static NodeOperation moveNode(final String name, final String dest) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 ContentUtil.moveInSession(context.getContent(name), dest);
                 return context;
             }
@@ -192,45 +194,46 @@ public abstract class Ops {
     /**
      * Copies the node defined by the name parameter in the session. 
      */
-    public static NodeOperation copyNode(final String name, final String dest){
+    public static NodeOperation copyNode(final String name, final String dest) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
                 ContentUtil.copyInSession(context.getContent(name), dest);
                 return context;
             }
         };
     }
-    
+
     /**
      * Executes the operation for each child node excluding meta data and jcr base node.
      */
-    public static NodeOperation onChildNodes(final NodeOperation... childrenOps){
+    public static NodeOperation onChildNodes(final NodeOperation... childrenOps) {
         return onChildNodes(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, childrenOps);
     }
 
     /**
      * Executes the operation for each child node of a certain type.
      */
-    public static NodeOperation onChildNodes(final String type, final NodeOperation... childrenOps){
+    public static NodeOperation onChildNodes(final String type, final NodeOperation... childrenOps) {
         return onChildNodes(new NodeTypeFilter(type), childrenOps);
     }
 
     /**
      * Executes the operation for each child node of a certain type.
      */
-    public static NodeOperation onChildNodes(final ItemType type, final NodeOperation... childrenOps){
+    public static NodeOperation onChildNodes(final ItemType type, final NodeOperation... childrenOps) {
         return onChildNodes(new NodeTypeFilter(type), childrenOps);
     }
 
     /**
      * Executes the operation for each child node matching the filter.
      */
-    public static NodeOperation onChildNodes(final Content.ContentFilter filter, final NodeOperation... childrenOps){
+    public static NodeOperation onChildNodes(final Content.ContentFilter filter, final NodeOperation... childrenOps) {
         return new AbstractOp() {
-            Content doExec(Content context) throws RepositoryException {
-                for (Content subNode: context.getChildren(filter)) {
+            // TODO shouldn't this implement NodeOperation directly instead? it has no business doing with the then() method anyway
+            Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
+                for (Content subNode : context.getChildren(filter)) {
                     for (NodeOperation nodeOperation : childrenOps) {
-                        nodeOperation.exec(subNode);
+                        nodeOperation.exec(subNode, errorHandler);
                     }
                 }
                 return context;
@@ -241,17 +244,23 @@ public abstract class Ops {
     abstract static class AbstractOp implements NodeOperation {
         private NodeOperation[] childrenOps = {};
 
-        public void exec(Content context) throws RepositoryException {
-            context = doExec(context);
-            for (NodeOperation childrenOp : childrenOps) {
-                childrenOp.exec(context);
+        public void exec(Content context, ErrorHandler errorHandler) {
+            try {
+                context = doExec(context, errorHandler);
+            } catch (RepositoryException e) {
+                errorHandler.handle(e, context);
             }
+
+            for (NodeOperation childrenOp : childrenOps) {
+                childrenOp.exec(context, errorHandler);
+            }
+
         }
 
         /**
          * @return the node that should now be used as the context for subsequent operations
          */
-        abstract Content doExec(Content context) throws RepositoryException;
+        abstract Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException;
 
         public NodeOperation then(NodeOperation... childrenOps) {
             this.childrenOps = childrenOps;
