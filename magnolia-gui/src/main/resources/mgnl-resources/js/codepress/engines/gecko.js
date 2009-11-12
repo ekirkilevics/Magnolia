@@ -157,8 +157,8 @@ CodePress = {
 
 	snippets : function(evt) {
 		/*
-		 * On firefox 3.x TAB indentation is broken. R original implementation
-		 * with this one found on
+		 * On firefox 3.x TAB indentation is broken. Replaced original
+		 * implementation with this one found on
 		 * http://sourceforge.net/projects/codepress/forums/forum/654507/topic/2108862
 		 * which fixes the problem.
 		 */
