@@ -44,7 +44,8 @@ import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
 import info.magnolia.nodebuilder.NodeBuilder;
-import info.magnolia.nodebuilder.Ops;
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
 
 import javax.jcr.RepositoryException;
 
@@ -70,8 +71,8 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         // prepare nodes that should exist if the dms was really installed ...
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
-        final NodeBuilder nodeBuilder = new NodeBuilder(commands, Ops.addNode("activate").then(
-                Ops.addNode("version").then(Ops.addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
+        final NodeBuilder nodeBuilder = new NodeBuilder(commands,
+                addNode("activate").then(addNode("version").then(addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
         nodeBuilder.exec();
         hm.save();
 
@@ -89,7 +90,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
     public void testDataActivationCommandUpdate() throws ModuleManagementException, RepositoryException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         // workflow configuration
-        Content path = ContentUtil.createPath(hm, "modules/data/commands/data/",ItemType.CONTENT);
+        Content path = ContentUtil.createPath(hm, "modules/data/commands/data/", ItemType.CONTENT);
         path.createContent("activate", ItemType.CONTENTNODE);
 
         hm.save();
@@ -100,6 +101,6 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
     }
 
     protected String[] getExtraWorkspaces() {
-        return new String[] { "dms", "data" };
+        return new String[]{"dms", "data"};
     }
 }
