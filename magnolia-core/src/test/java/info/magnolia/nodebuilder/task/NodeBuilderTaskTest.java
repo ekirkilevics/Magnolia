@@ -35,9 +35,9 @@ package info.magnolia.nodebuilder.task;
 
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.delta.Task;
+import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.PathNotFoundException;

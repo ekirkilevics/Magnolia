@@ -60,17 +60,17 @@ public class NodeBuilderTest extends RepositoryTestCase {
 
         final MessageTracker messageTracker = new MessageTracker();
         final NodeBuilder nodeBuilder = new NodeBuilder(messageTracker, hm.getContent("MyRoot"),
-                Ops.getNode("hello").then(
-                        Ops.addNode("newsub").then(
-                                Ops.addProperty("newProp", "New Value")
+                getNode("hello").then(
+                        addNode("newsub").then(
+                                addProperty("newProp", "New Value")
                         ),
-                        Ops.remove("zing"),
-                        Ops.getNode("world").then(
-                                Ops.remove("foo")
+                        remove("zing"),
+                        getNode("world").then(
+                                remove("foo")
                         )
                 ),
-                Ops.addNode("other").then(Ops.addProperty("X", "Y")),
-                Ops.addProperty("lala", "lolo")
+                addNode("other").then(addProperty("X", "Y")),
+                addProperty("lala", "lolo")
 
         );
         nodeBuilder.exec();
