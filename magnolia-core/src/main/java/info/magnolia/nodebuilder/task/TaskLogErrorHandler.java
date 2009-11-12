@@ -33,13 +33,8 @@
  */
 package info.magnolia.nodebuilder.task;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.nodebuilder.AbstractErrorHandler;
-import info.magnolia.nodebuilder.NodeOperationException;
-
-import javax.jcr.RepositoryException;
 
 /**
  * An ErrorHandler which logs handled errors to the InstallContext

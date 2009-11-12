@@ -60,11 +60,11 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
     // rely on this here below)
     public void handle(RepositoryException e, Content context) throws NodeOperationException {
         if (e instanceof ItemExistsException) {
-            report(e.getMessage()  + " already exists at " + context.getHandle() + ".");
+            report(e.getMessage() + " already exists at " + context.getHandle() + ".");
         } else if (e instanceof ItemNotFoundException) {
-            report(e.getMessage()  + " can't be found at " + context.getHandle() + ".");
+            report(e.getMessage() + " can't be found at " + context.getHandle() + ".");
         } else if (e instanceof PathNotFoundException) {
-            report(e.getMessage()  + " can't be found at " + context.getHandle() + ".");
+            report(e.getMessage() + " can't be found at " + context.getHandle() + ".");
         } else {
             unhandledRepositoryException(e, context);
         }
@@ -74,7 +74,7 @@ public abstract class AbstractErrorHandler implements ErrorHandler {
      * Override this method if you need finer grained control on RepositoryExceptions that haven't been handled
      * by the handle() method yet, or if you want to try and keep on proceeding anyway.
      */
-    protected void unhandledRepositoryException(RepositoryException e, Content context) throws NodeOperationException{
+    protected void unhandledRepositoryException(RepositoryException e, Content context) throws NodeOperationException {
         throw new NodeOperationException("Failed to operate on " + context.getHandle() + " with message: " + e.getMessage(), e);
     }
 }
