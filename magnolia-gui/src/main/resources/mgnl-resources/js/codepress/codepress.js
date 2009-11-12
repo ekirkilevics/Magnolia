@@ -130,7 +130,7 @@ CodePress.languages = {
 
 CodePress.run = function() {
     ua = navigator.userAgent;
-    if (ua.match('Opera') != null) {
+    if (ua.match('Opera|AppleWebKit') != null) {
         //unsupported for now, falls back to plain textarea
         return;
     }

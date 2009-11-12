@@ -78,8 +78,13 @@ public class DialogEditCode extends DialogBox {
             control.setSaveInfo(false);
         }
 
-        boolean useCodePress = BooleanUtil.toBoolean(this.getConfigValue("useCodeHighlighter"), true);
-
+        boolean isBrowserSupported = false;
+        String userAgent = getRequest().getHeader("user-agent");
+        if (userAgent != null && !userAgent.matches(".*AppleWebKit.*|.*Opera.*")) {
+            isBrowserSupported = true;
+        }
+        boolean useCodePress = BooleanUtil.toBoolean(this.getConfigValue("useCodeHighlighter"), true)
+            && isBrowserSupported;
         if (useCodePress) {
             control.setRows(this.getConfigValue("rows", "25")); //$NON-NLS-1$ //$NON-NLS-2$
             control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -115,8 +120,6 @@ public class DialogEditCode extends DialogBox {
         if (useCodePress) {
             out.write("\n<script>\n");
             out.write("MgnlDHTMLUtil.addOnLoad(function(){\n");
-            //TODO make codepress for Opera work
-            out.write("    if(navigator.userAgent.match('Opera') != null) return;\n");
             out.write("    var b = document.getElementById('mgnlSaveButton');\n");
             out.write("    b.onclick=function(){\n");
             out.write("        document.getElementById('cp_hidden_"
