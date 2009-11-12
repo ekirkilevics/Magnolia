@@ -35,6 +35,7 @@ package info.magnolia.module.admininterface.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.Task;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,8 +46,8 @@ import java.util.List;
  */
 public class SimpleContentVersionHandler extends DefaultModuleVersionHandler {
 
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        return Collections.singletonList(new SetDefaultPublicURI("defaultPublicURI"));
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        return Collections.<Task>singletonList(new SetDefaultPublicURI("defaultPublicURI"));
     }
 
 }
