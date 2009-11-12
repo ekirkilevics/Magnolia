@@ -98,6 +98,9 @@ public class GZipUtil {
         }
     }
 
+    /**
+     * @deprecated since 4.2 - not used - duplicates isGZipped(byte[] candidate)
+     */
     public static boolean isGZipped(int[] candidate) {
         if (candidate == null || candidate.length < 2) {
             return false;
