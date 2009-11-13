@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlImpl;
@@ -48,17 +46,17 @@ import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
-
-import java.io.IOException;
-import java.util.Iterator;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.Iterator;
 
 
 /**
@@ -67,6 +65,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ParagraphSelectDialog extends DialogMVCHandler {
     private static final Logger log = LoggerFactory.getLogger(ParagraphSelectDialog.class);
+
     private static final String EDIT_PARAGRAPH_DIALOGNAME = "editParagraph";
     public static final String EDITPARAGRAPH_DIALOG_URL = ".magnolia/dialogs/" + EDIT_PARAGRAPH_DIALOGNAME + ".html";
 
@@ -110,32 +109,9 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         String[] pars = paragraph.split(","); //$NON-NLS-1$
         for (int i = 0; i < pars.length; i++) {
             try {
-                Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(pars[i]);
+                addParagraph(c1, pars[i]);
 
-                // prevent NPEs
-                if (paragraphInfo == null) {
-                    log.error("Unable to load paragraph {}", pars[i]);
-                    continue;
-                }
-                Button button = new Button(c1.getName(), paragraphInfo.getName());
-                StringBuffer label = new StringBuffer();
-
-                Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
-
-                label.append("<strong>" //$NON-NLS-1$
-                    + msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle())
-                    + "</strong><br />"); //$NON-NLS-1$
-
-                String description = paragraphInfo.getDescription();
-                if (StringUtils.isNotEmpty(description)) {
-                    label.append(msgs.getWithDefault(description, description));
-                }
-                label.append("<br /><br />"); //$NON-NLS-1$
-                button.setLabel(label.toString());
-                button.setOnclick("document.getElementById('mgnlFormMain').submit();"); //$NON-NLS-1$
-                c1.addOption(button);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // paragraph definition does not exist
                 log.warn("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
@@ -144,6 +120,34 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         tab.addSub(c1);
 
         return dialog;
+    }
+
+    protected void addParagraph(DialogButtonSet radioButtonSet, String paragraph) {
+        final Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(paragraph);
+
+        // prevent NPEs
+        if (paragraphInfo == null) {
+            log.error("Unable to load paragraph {}", paragraph);
+            return;
+        }
+
+        final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
+
+        final StringBuffer label = new StringBuffer();
+        label.append("<strong>" //$NON-NLS-1$
+            + msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle())
+            + "</strong><br />"); //$NON-NLS-1$
+
+        final String description = paragraphInfo.getDescription();
+        if (StringUtils.isNotEmpty(description)) {
+            label.append(msgs.getWithDefault(description, description));
+        }
+        label.append("<br /><br />"); //$NON-NLS-1$
+
+        final Button button = new Button(radioButtonSet.getName(), paragraphInfo.getName());
+        button.setLabel(label.toString());
+        button.setOnclick("document.getElementById('mgnlFormMain').submit();"); //$NON-NLS-1$
+        radioButtonSet.addOption(button);
     }
 
     public Content getStorageNode() {
