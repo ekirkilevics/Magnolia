@@ -93,7 +93,7 @@ public class TreeHandlerManager extends ObservedManager {
                 name,
                 request,
                 response});
-            Content2BeanUtil.setProperties(newInstance, th.getTreeDefinition());
+            Content2BeanUtil.setProperties(newInstance, th.getTreeDefinition(), true);
             return newInstance;
         }
         catch (Exception e) {

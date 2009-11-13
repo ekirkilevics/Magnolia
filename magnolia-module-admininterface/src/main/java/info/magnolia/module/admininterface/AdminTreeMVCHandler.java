@@ -886,7 +886,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     }
 
     /**
-     * @return Returns the configuration.
+     * Returns the configuration object for this tree; if it's not been instanciated yet,
+     * this method attempts to instanciate the configurationClass. (i.e a pre-instanciated
+     * AdminTreeConfiguration could already have been set by content2bean)
      */
     public AdminTreeConfiguration getConfiguration() {
         if (this.configuration == null) {
@@ -898,8 +900,6 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     /**
      * @param configuration The configuration to set.
-     *
-     * @deprecated don't set this manually !
      */
     public void setConfiguration(AdminTreeConfiguration configuration) {
         this.configuration = configuration;
