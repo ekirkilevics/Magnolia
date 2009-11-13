@@ -115,6 +115,16 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     /**
+     * Delegates the destroy() call to the wrapper servlet, then to this filter itself.
+     */
+    public void destroy() {
+        if (servlet != null) {
+            servlet.destroy();
+        }
+        super.destroy();
+    }
+
+    /**
      * Bypasses if the current request does not match any of the mappings of the servlet. Explicit bypasses defined in
      * the bypasses content node of this filter are taken into account as well.
      */
