@@ -66,9 +66,10 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
             // + ",'.magnolia/adminCentral/users/dialog.html');");
             + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
         tree.addItemType(ItemType.USER);
-        // TODO : MAGNOLIA-2372/MAGNOLIA-2407 - let's show the nt:folder nodes as well for now, they might have been created by public-user-registration for example
-        tree.addItemType("nt:folder", Tree.ICONDOCROOT + "folder_inactive.gif");
-        tree.addItemType(ItemType.NT_FOLDER, Tree.ICONDOCROOT + "folder.gif");
+
+        // we don't use mgnl:folder, which is a subtype of nt:folder
+        // see MAGNOLIA-2950 for details
+        tree.addItemType("nt:folder", Tree.ICONDOCROOT + "folder.gif");
 
         final Messages msgs = getMessages();
         TreeColumn column0 = TreeColumn.createLabelColumn(tree, msgs.get("tree.users.name"), !browseMode);
