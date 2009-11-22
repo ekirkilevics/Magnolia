@@ -327,7 +327,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
         // were the propertis transformed?
         if(bean == properties){
-            bean = FactoryUtil.newInstance(state.getCurrentType().getType());
+            try{
+                bean = FactoryUtil.newInstance(state.getCurrentType().getType());
+            }
+            catch(Throwable e){
+                throw new Content2BeanException(e);
+            }
         }
         return bean;
     }

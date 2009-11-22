@@ -94,7 +94,18 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
             Map values = toMap(node, recursive, transformer, state);
 
-            bean = transformer.newBeanInstance(state, values);
+            try {
+                bean = transformer.newBeanInstance(state, values);
+            }
+            catch (Throwable e) {
+                if(isForceCreation()){
+                    log.warn("Can't instantiate bean for " +  node.getHandle(), e);
+                }
+                else{
+                    throw new Content2BeanException("Can't instantiate bean for " +  node.getHandle(), e);
+                }
+            }
+            
             if(bean != null){
                 state.pushBean(bean);
 
