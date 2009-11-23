@@ -49,9 +49,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.jcr.PropertyType;
@@ -118,7 +120,9 @@ public class Tree extends ControlImpl {
 
     private int indentionWidth = 15;
 
-    private List itemTypes = new ArrayList();
+    private List<String> itemTypes = new ArrayList<String>();
+
+    private Set<String> strictTypes = new HashSet<String>();
 
     private int height = 400;
 
@@ -260,12 +264,40 @@ public class Tree extends ControlImpl {
      * @deprecated pass the icon to use as a second parameter
      */
     public void addItemType(String s) {
-        this.itemTypes.add(s);
+        addItemType(s, null);
     }
 
+    /**
+     * Adds an itemType to the list of existing types and associates an icon with it.
+     * This method will cause only items of given type to be displayed. The items of subtype of given type will not be displayed.
+     * To display also subtypes see {@link Tree#addItemType(String, String, boolean)}
+     * @param type The item type
+     * @param icon The icon used to display items of given type
+     *
+     * @see #addItemType(String, String, boolean)
+     */
     public void addItemType(String type, String icon) {
-        addItemType(type);
-        setIcon(type, icon);
+        addItemType(type, icon, true);
+    }
+
+    /**
+     * Adds an itemType to the list of existing types and associates an icon with it.
+     * The type can be specified as a strict, in which case only the items of given type will be displayed, but sub types will be ignored,
+     * or non-strict in which case the items of sub types of given type will also be rendered.
+     * @param type The item type
+     * @param icon The icon used to display items of given type
+     * @param strict Flag specifying whether or not to show also items of sub type of given type
+     */
+    public void addItemType(String type, String icon, boolean strict) {
+        this.itemTypes.add(type);
+        if (icon != null) {
+            setIcon(type, icon);
+        }
+        if (strict) {
+            strictTypes.add(type);
+        } else {
+            strictTypes.remove(type);
+        }
     }
 
     /**
@@ -273,7 +305,7 @@ public class Tree extends ControlImpl {
      * @param s itemType (one of: ItemType.CONTENT, ItemType.CONTENTNODE)
      */
     public void addItemType(ItemType s) {
-        this.itemTypes.add(s.getSystemName());
+        addItemType(s.getSystemName(), null);
     }
 
     /**
@@ -732,7 +764,15 @@ public class Tree extends ControlImpl {
         try {
             Iterator it = collectRenderedItems(parentNode, itemType);
             while (it.hasNext()) {
-                getHtmlOfSingleItem(html, parentNode, itemType, it.next());
+                Object maybeContent = it.next();
+                if (maybeContent instanceof Content) {
+                    Content c = (Content) maybeContent;
+                    // ensure no subtypes of strict types are included by mistake
+                    if (strictTypes.contains(itemType) && !c.getItemType().getSystemName().equals(itemType)) {
+                        continue;
+                    }
+                }
+                getHtmlOfSingleItem(html, parentNode, itemType, maybeContent);
             }
         }
         catch (RepositoryException e) {
