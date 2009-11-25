@@ -45,9 +45,7 @@ import javax.jcr.PropertyType;
 
 /**
  * Turns a textarea into a basic code editor with the <a href="http://codepress.sourceforge.net/">CodePress</a> js
- * library. <strong>Warning</strong>: When the CodePress editor is active, any custom <code>onclick</code> event handler
- * attached to the <em>Save</em> button which submits this dialog will be superseded by the dialog's own specific event
- * handler.
+ * library.
  * <p>
  * Configuration options are:
  * <ul>
