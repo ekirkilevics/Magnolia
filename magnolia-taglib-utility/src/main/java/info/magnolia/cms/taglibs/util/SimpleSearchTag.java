@@ -286,6 +286,11 @@ public class SimpleSearchTag extends TagSupport {
         this.var = null;
         this.scope = PageContext.PAGE_SCOPE;
         this.startLevel = 0;
+        this.startPath = null;
+        this.itemType = null;
+        this.repository = null;
+        this.supportSubstringSearch = false;
+        this.useSimpleJcrQuery = true;
         super.release();
     }
 
