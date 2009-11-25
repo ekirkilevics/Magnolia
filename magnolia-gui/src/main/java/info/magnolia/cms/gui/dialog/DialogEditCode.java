@@ -121,13 +121,14 @@ public class DialogEditCode extends DialogBox {
             out.write("\n<script>\n");
             out.write("MgnlDHTMLUtil.addOnLoad(function(){\n");
             out.write("    var b = document.getElementById('mgnlSaveButton');\n");
+            out.write("    var existingOnClick = b.onclick;\n");
             out.write("    b.onclick=function(){\n");
             out.write("        document.getElementById('cp_hidden_"
                 + this.getName()
                 + "').value = eval('"
                 + this.getName()
                 + "').getCode();\n");
-            out.write("        document.forms['mgnlFormMain'].submit();\n");
+            out.write("        existingOnClick.apply(this);\n");
             out.write("    }\n});\n");
             out.write("</script>\n");
             out.write("<input type=\"hidden\" name=\"");
