@@ -357,11 +357,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      public synchronized void deactivate(String path) throws ExchangeException, RepositoryException {
-         Content node = getHierarchyManager().getContent(path);
-         this.nodeUUID = node.getUUID();
-         this.path = node.getHandle();
-         this.doDeactivate();
-         updateDeactivationDetails();
+         final Content node = getHierarchyManager().getContent(path);
+         deactivate(node);
      }
 
     /**
