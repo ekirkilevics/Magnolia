@@ -33,7 +33,9 @@
  */
 package info.magnolia.importexport;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
@@ -64,7 +66,8 @@ public class DataTransporterTest extends XMLTestCase {
 
     /**
      * Test method for
-     * {@link info.magnolia.importexport.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}.
+     * {@link info.magnolia.importexport.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}
+     * .
      */
     public void testParseAndFormat() throws Exception {
 
@@ -100,4 +103,29 @@ public class DataTransporterTest extends XMLTestCase {
         assertTrue("Document is not formatted as expected", xmlDiff.identical());
     }
 
+    /**
+     * Test method for
+     * {@link info.magnolia.importexport.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}
+     * .
+     */
+    public void testRemoveNs() throws Exception {
+
+        File inputFile = new File(getClass().getResource("/test-unwantedns.xml").getFile());
+        File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        OutputStream outputStream = new FileOutputStream(outputFile);
+
+        XMLReader reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
+
+        DataTransporter.readFormatted(reader, inputFile, outputStream);
+
+        IOUtils.closeQuietly(outputStream);
+
+        String result = FileUtils.readFileToString(outputFile);
+        outputFile.delete();
+
+        assertFalse("'removeme' namespace still found in output file", StringUtils.contains(result, "xmlns:removeme"));
+        assertTrue("'sv' namespace not found in output file", StringUtils.contains(result, "xmlns:sv"));
+        assertTrue("'xsi' namespace not found in output file", StringUtils.contains(result, "xmlns:xsi"));
+
+    }
 }

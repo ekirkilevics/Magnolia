@@ -33,6 +33,7 @@
  */
 package info.magnolia.importexport.filters;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -41,7 +42,8 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
  * A simple filter that strips jcr:uuid properties in MetaData nodes. Needed due to MAGNOLIA-1650 uuids in MetaData
- * nodes are changed during import.
+ * nodes are changed during import. It also supports removal of non-standards namespaces, by setting the
+ * <code>removeUnwantedNamespaces</code> flag in the constructor.
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
@@ -54,12 +56,52 @@ public class MetadataUuidFilter extends XMLFilterImpl {
 
     private boolean skipProperty;
 
+    private boolean inSkippedNs;
+
+    private String[] validNs = new String[]{"sv", "xsi"};
+
+    private boolean removeUnwantedNamespaces;
+
     /**
      * Instantiates a new MetadataUuidFilter filter.
      * @param parent wrapped XMLReader
+     * @deprecated
      */
     public MetadataUuidFilter(XMLReader parent) {
         super(parent);
+    }
+
+    /**
+     * Instantiates a new MetadataUuidFilter filter.
+     * @param parent wrapped XMLReader
+     * @param removeUnwantedNamespaces if set, non standard jcr namespaces will be removed
+     */
+    public MetadataUuidFilter(XMLReader parent, boolean removeUnwantedNamespaces) {
+        super(parent);
+        this.removeUnwantedNamespaces = removeUnwantedNamespaces;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void endPrefixMapping(String prefix) throws SAXException {
+        if (!inSkippedNs) {
+            super.endPrefixMapping(prefix);
+        }
+        inSkippedNs = false;
+
+    }
+
+    /**
+     * Skip unwanted namespaces, see MAGNOLIA-2756
+     */
+    public void startPrefixMapping(String prefix, String uri) throws SAXException {
+        if (!removeUnwantedNamespaces || ArrayUtils.contains(validNs, prefix)) {
+            super.startPrefixMapping(prefix, uri);
+        }
+        else {
+            inSkippedNs = true;
+        }
     }
 
     /**

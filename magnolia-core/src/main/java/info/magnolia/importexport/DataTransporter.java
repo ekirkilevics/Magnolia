@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
@@ -501,7 +502,8 @@ public class DataTransporter {
         outputFormat.setIndent(INDENT_VALUE);
         outputFormat.setLineWidth(120); // need to be set after setIndenting()!
 
-        MetadataUuidFilter metadataUuidFilter = new MetadataUuidFilter(reader); // MAGNOLIA-1650
+        MetadataUuidFilter metadataUuidFilter = new MetadataUuidFilter(reader, !SystemProperty
+            .getBooleanProperty("magnolia.export.keep_extra_namespaces")); // MAGNOLIA-1650
         metadataUuidFilter.setContentHandler(new XMLSerializer(outputStream, outputFormat));
         metadataUuidFilter.parse(new InputSource(inputStream));
 
