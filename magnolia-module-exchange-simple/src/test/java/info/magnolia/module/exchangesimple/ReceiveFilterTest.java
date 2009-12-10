@@ -73,6 +73,8 @@ public class ReceiveFilterTest extends TestCase {
 
         Content getParentNode();
 
+        void createTemp(SystemContext ctx, HierarchyManager hm) throws Exception;
+
         void checkPermissions(HierarchyManager hm);
 
         void checkNode(HierarchyManager hm) throws Exception;
@@ -125,14 +127,16 @@ public class ReceiveFilterTest extends TestCase {
         final Content existingParent = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         final Content importedNode = createStrictMock(Content.class);
+        final Content root = createStrictMock(Content.class);
+        final Content activationTmp = createStrictMock(Content.class);
+
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/nodename").anyTimes();
         expect(existingNode.getName()).andReturn("nodename");
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
 
-        expect(existingNode.getParent()).andReturn(existingParent);
-
-        expect(existingParent.getHandle()).andReturn("/");
+//        expect(existingNode.getParent()).andReturn(existingParent);
+//        expect(existingParent.getHandle()).andReturn("/");
 
         // for the sake of this test we'll just pretend we have no properties on the existing node
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
@@ -149,16 +153,25 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node either
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        replay(existingNode, tempNode, importedNode, existingParent);
+        expect(root.getContent("activation-tmp")).andReturn(activationTmp).anyTimes();
+        // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
+        expect(activationTmp.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+
+        Object[] mocks = new Object[] {existingNode, tempNode, importedNode, existingParent, root, activationTmp};
+        replay(mocks);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
+
+            @Override
+            public void createTemp(SystemContext ctx, HierarchyManager hm) throws Exception {
+                expect(ctx.getHierarchyManager("mgnlSystem")).andReturn(hm).anyTimes();
+                expect(hm.getRoot()).andReturn(root);
+            }
 
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
             }
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
-                // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
-                expect(hm.createContent(eq("/"), isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
 
                 session.importXML(startsWith("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -180,7 +193,7 @@ public class ReceiveFilterTest extends TestCase {
                 hm.save();
             }
         });
-        verify(existingNode, tempNode, importedNode, existingParent);
+        verify(mocks);
     }
 
     public void testActivateShouldMoveToNewLocationIfItHasBeenMovedToADifferentPath() throws Exception {
@@ -188,6 +201,9 @@ public class ReceiveFilterTest extends TestCase {
         final Content existingParent = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         final Content importedNode = createStrictMock(Content.class);
+        final Content root = createStrictMock(Content.class);
+        final Content activationTmp = createStrictMock(Content.class);
+
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/oldnodename").anyTimes();
         expect(existingNode.getName()).andReturn("oldnodename");
         // TODO : test when existing node has children ?
@@ -202,8 +218,8 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        expect(existingNode.getParent()).andReturn(existingParent);
-        expect(existingParent.getHandle()).andReturn("/");
+        //expect(existingNode.getParent()).andReturn(existingParent);
+        //expect(existingParent.getHandle()).andReturn("/");
 
         // for the sake of this test we'll just pretend we have no properties on the existing node either
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
@@ -211,16 +227,25 @@ public class ReceiveFilterTest extends TestCase {
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
-        replay(existingNode, tempNode, importedNode, existingParent);
+        expect(root.getContent("activation-tmp")).andReturn(activationTmp).anyTimes();
+        // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
+        expect(activationTmp.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+
+        Object[] mocks = new Object[] {existingNode, tempNode, importedNode, existingParent, root, activationTmp};
+        replay(mocks);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
+
+            @Override
+            public void createTemp(SystemContext ctx, HierarchyManager hm) throws Exception {
+                expect(ctx.getHierarchyManager("mgnlSystem")).andReturn(hm).anyTimes();
+                expect(hm.getRoot()).andReturn(root);
+            }
 
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
             }
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
-                // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
-                expect(hm.createContent(eq("/"), isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
 
                 session.importXML(eq("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -243,7 +268,7 @@ public class ReceiveFilterTest extends TestCase {
                 hm.save();
             }
         });
-        verify(existingNode, tempNode, importedNode, existingParent);
+        verify(mocks);
     }
 
     public void testActivateShouldMoveWhenParentHasChanged() throws Exception {
@@ -251,6 +276,9 @@ public class ReceiveFilterTest extends TestCase {
         final Content existingParent = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         final Content importedNode = createStrictMock(Content.class);
+        final Content root = createStrictMock(Content.class);
+        final Content activationTmp = createStrictMock(Content.class);
+
         expect(existingNode.getHandle()).andReturn(PARENT_PATH + "old/nodename").anyTimes();
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
@@ -264,8 +292,8 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        expect(existingNode.getParent()).andReturn(existingParent);
-        expect(existingParent.getHandle()).andReturn("/");
+//        expect(existingNode.getParent()).andReturn(existingParent);
+//        expect(existingParent.getHandle()).andReturn("/");
 
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
@@ -273,16 +301,25 @@ public class ReceiveFilterTest extends TestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node either
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-        replay(existingNode, tempNode, importedNode, existingParent);
+        expect(root.getContent("activation-tmp")).andReturn(activationTmp).anyTimes();
+        // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
+        expect(activationTmp.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+
+        Object[] mocks = new Object[] {existingNode, tempNode, importedNode, existingParent, root, activationTmp};
+        replay(mocks);
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
+
+            @Override
+            public void createTemp(SystemContext ctx, HierarchyManager hm) throws Exception {
+                expect(ctx.getHierarchyManager("mgnlSystem")).andReturn(hm).anyTimes();
+                expect(hm.getRoot()).andReturn(root);
+            }
 
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
             }
 
             public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
-                // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
-                expect(hm.createContent(eq("/"), isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
 
                 session.importXML(eq("/DUMMY-UUID"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
                 expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -305,7 +342,7 @@ public class ReceiveFilterTest extends TestCase {
                 hm.save();
             }
         });
-        verify(existingNode, tempNode, importedNode, existingParent);
+        verify(mocks);
     }
 
 
@@ -398,7 +435,7 @@ public class ReceiveFilterTest extends TestCase {
 
         // copying temp node
         // in reality it will be a different hm, but for a sake of the test we use the same one
-        expect(sysCtx.getHierarchyManager("mgnlSystem")).andReturn(hm).anyTimes();
+        testCallBack.createTemp(sysCtx, hm);
 
         testCallBack.checkPermissions(hm);
         testCallBack.checkNode(hm);
@@ -418,9 +455,10 @@ public class ReceiveFilterTest extends TestCase {
 
         final ReceiveFilter filter = new ReceiveFilter();
         filter.setUnlockRetries(1);
-        replay(request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode());
+        Object[] mocks = new Object[] {request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode()};
+        replay(mocks);
         filter.doFilter(request, response, filterChain);
-        verify(request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode());
+        verify(mocks);
     }
 
 
@@ -495,6 +533,10 @@ public class ReceiveFilterTest extends TestCase {
 
         public void saveSession(HierarchyManager hm) throws Exception {
             hm.save();
+        }
+
+        public void createTemp(SystemContext arg0, HierarchyManager arg1) throws Exception {
+            // nothing by default
         }
     }
 }

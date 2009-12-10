@@ -45,6 +45,7 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
@@ -420,7 +421,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                 importResource(data, fileElement, hierarchyManager, handle);
             }
             // use temporary node under the parent of the content itself to extract the top level node and copy its properties
-            final Content transientNode = systemHM.createContent(existingContent.getParent().getHandle(), uuid, ItemType.CONTENTNODE.toString());
+            Content activationTmp = ContentUtil.getOrCreateContent(systemHM.getRoot(), "activation-tmp", ItemType.FOLDER, true);
+            final Content transientNode = activationTmp.createContent(uuid, ItemType.CONTENTNODE.toString());
             final String transientStoreHandle = transientNode.getHandle();
             // import properties into transientStore
             final String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
