@@ -172,6 +172,13 @@ public class ReceiveFilterTest extends TestCase {
 
                 hm.delete(startsWith("/DUMMY-UUID"));
             }
+
+            @Override
+            public void saveSession(HierarchyManager hm) throws Exception {
+                super.saveSession(hm);
+                // save after deleting the temp node
+                hm.save();
+            }
         });
         verify(existingNode, tempNode, importedNode, existingParent);
     }
@@ -228,6 +235,13 @@ public class ReceiveFilterTest extends TestCase {
                 hm.moveTo(PARENT_PATH + "/oldnodename", PARENT_PATH + "/nodename");
                 hm.delete("/DUMMY-UUID");
             }
+
+            @Override
+            public void saveSession(HierarchyManager hm) throws Exception {
+                super.saveSession(hm);
+                // save after deleting the temp node
+                hm.save();
+            }
         });
         verify(existingNode, tempNode, importedNode, existingParent);
     }
@@ -282,6 +296,13 @@ public class ReceiveFilterTest extends TestCase {
 
                 hm.moveTo(PARENT_PATH + "old/nodename", PARENT_PATH + "/nodename");
                 hm.delete("/DUMMY-UUID");
+            }
+
+            @Override
+            public void saveSession(HierarchyManager hm) throws Exception {
+                super.saveSession(hm);
+                // save after deleting the temp node
+                hm.save();
             }
         });
         verify(existingNode, tempNode, importedNode, existingParent);
@@ -374,6 +395,10 @@ public class ReceiveFilterTest extends TestCase {
 
         expect(ctx.getHierarchyManager("some-repo", "some-workspace")).andReturn(hm).anyTimes();
         expect(ctx.getPostedForm()).andReturn(form).anyTimes();
+
+        // copying temp node
+        // in reality it will be a different hm, but for a sake of the test we use the same one
+        expect(sysCtx.getHierarchyManager("mgnlSystem")).andReturn(hm).anyTimes();
 
         testCallBack.checkPermissions(hm);
         testCallBack.checkNode(hm);
