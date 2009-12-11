@@ -358,8 +358,8 @@ public class MgnlContext {
     /**
      * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
      */
-    public static Void doInSystemContext(final SystemContextOperation op) {
-        return doInSystemContext(op, false);
+    public static void doInSystemContext(final SystemContextOperation op) {
+        doInSystemContext(op, false);
     }
 
     /**
@@ -374,8 +374,8 @@ public class MgnlContext {
     /**
      * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
      */
-    public static Void doInSystemContext(final SystemContextOperation op, boolean releaseAfterExecution) {
-        return doInSystemContext(new VoidOp() {
+    public static void doInSystemContext(final SystemContextOperation op, boolean releaseAfterExecution) {
+        doInSystemContext(new VoidOp() {
             public void doExec() {
                 op.exec();
             }
