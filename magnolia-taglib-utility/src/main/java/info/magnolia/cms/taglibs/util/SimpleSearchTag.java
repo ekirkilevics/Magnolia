@@ -189,7 +189,7 @@ public class SimpleSearchTag extends TagSupport {
     }
 
     protected String startPath() {
-        String cleanStartPath = "";
+        String cleanStartPath = null;
         // search only in a specific subtree
         if (this.startLevel > 0) {
             try {
@@ -203,7 +203,7 @@ public class SimpleSearchTag extends TagSupport {
         } else {
             cleanStartPath = this.startPath;
         }
-        return StringUtils.strip(cleanStartPath, "/");
+        return StringUtils.defaultIfEmpty(StringUtils.strip(cleanStartPath, "/"), "");
     }
 
     /**
