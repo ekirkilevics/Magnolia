@@ -338,7 +338,7 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * If set to true, a "first" or "last" css class will be added to the list of css classes of the 
+     * If set to true, a "first" or "last" css class will be added to the list of css classes of the
      * first and the last li in each ul.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
@@ -348,6 +348,14 @@ public class SimpleNavigationTag extends TagSupport {
 
     public int doEndTag() throws JspException {
         Content activePage = Resource.getCurrentActivePage();
+        try {
+            while (!ItemType.CONTENT.getSystemName().equals(activePage.getNodeTypeName()) && activePage.getParent() != null) {
+                activePage = activePage.getParent();
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to obtain parent page for " + Resource.getCurrentActivePage().getHandle(), e);
+            activePage = Resource.getCurrentActivePage();
+        }
         JspWriter out = this.pageContext.getOut();
 
         if (StringUtils.isNotEmpty(this.contentFilter)) {
@@ -418,7 +426,7 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private void drawChildren(Content page, Content activePage, JspWriter out) throws IOException, RepositoryException {
 
-        Collection children = page.getChildren(ItemType.CONTENT);
+        Collection<Content> children = page.getChildren(ItemType.CONTENT);
 
         if (children.size() == 0) {
             return;
@@ -432,10 +440,8 @@ public class SimpleNavigationTag extends TagSupport {
         }
         out.print("\">"); //$NON-NLS-1$
 
-        ArrayList visibleChildren = new ArrayList(children);
-        Iterator it = children.iterator();
-        while (it.hasNext()) {
-            Content child = (Content) it.next();
+        ArrayList<Content> visibleChildren = new ArrayList<Content>(children);
+        for (Content child : visibleChildren) {
 
             if (expandAll.equalsIgnoreCase(EXPAND_NONE) || expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
                 if (child
@@ -459,11 +465,11 @@ public class SimpleNavigationTag extends TagSupport {
             }
         }
 
-        Iterator visibleIt = visibleChildren.iterator();
         boolean isFirst = true;
+        Iterator<Content> visibleIt = visibleChildren.iterator();
         while (visibleIt.hasNext()) {
-            Content child = (Content) visibleIt.next();
-            List cssClasses = new ArrayList(4);
+            Content child = visibleIt.next();
+            List<String> cssClasses = new ArrayList<String>(4);
 
             NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(child, NODEDATA_NAVIGATIONTITLE);
             String title = nodeData.getString(StringUtils.EMPTY);
@@ -527,7 +533,7 @@ public class SimpleNavigationTag extends TagSupport {
             }
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);
-            Iterator iterator = cssClasses.iterator();
+            Iterator<String> iterator = cssClasses.iterator();
             while (iterator.hasNext()) {
                 css.append(iterator.next());
                 if (iterator.hasNext()) {
@@ -595,12 +601,11 @@ public class SimpleNavigationTag extends TagSupport {
      * @return <code>true</code> if the given page has at least one visible child.
      */
     private boolean hasVisibleChildren(Content page) {
-        Iterator it = page.getChildren().iterator();
-        if (it.hasNext() && expandAll.equalsIgnoreCase(EXPAND_ALL)) {
+        Collection<Content> children = page.getChildren();
+        if (children.size() > 0 && expandAll.equalsIgnoreCase(EXPAND_ALL)) {
             return true;
         }
-        while (it.hasNext()) {
-            Content ch = (Content) it.next();
+        for (Content ch : children) {
             if (!ch.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
                 return true;
             }
