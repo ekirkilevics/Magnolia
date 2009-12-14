@@ -41,6 +41,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -84,24 +85,24 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
         // flush only internal buffers, not the actual response's !
         responseWrapper.flush();
 
-        //return on error or redirect code, because response is already committed
-        int statusCode = responseWrapper.getStatus();
-        if (statusCode != HttpServletResponse.SC_OK) {
-            return;
-        }
-
         byte[] array = flat.toByteArray();
-        if (!GZipUtil.isGZipped(array) && RequestHeaderUtil.acceptsGzipEncoding(request)) {
-            array = GZipUtil.gzip(array);
-        }
 
-        // add headers only if not set yet.
-        if (GZipUtil.isGZipped(array) && !response.containsHeader("Content-Encoding")) {
-            RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
-            RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
-        }
+        //GZIP only 200 SC_OK responses as in other cases response might be already committed - only dump bytes and flush ...
+        int statusCode = responseWrapper.getStatus();
+        if (statusCode == HttpServletResponse.SC_OK) {
 
-        response.setContentLength(array.length);
+            if (!GZipUtil.isGZipped(array) && RequestHeaderUtil.acceptsGzipEncoding(request)) {
+                array = GZipUtil.gzip(array);
+            }
+
+            // add headers only if not set yet.
+            if (GZipUtil.isGZipped(array) && !response.containsHeader("Content-Encoding")) {
+                RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
+                RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
+            }
+
+            response.setContentLength(array.length);
+        }
         response.getOutputStream().write(array);
         response.flushBuffer();
 

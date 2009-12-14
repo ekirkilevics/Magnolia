@@ -72,11 +72,11 @@ public class GZipFilterTest extends TestCase {
                 has = false;
                 return "gzip";
             }});
-        // using a nice mock for reponse, because the point here is to not enforce the specific usage of flushBuffer()
+        // using a nice mock for response, because the point here is to not enforce the specific usage of flushBuffer()
         // on the response by the GZipFilter, but rather to make sure that however this is handled, all content
         // is actually there (which last time check was solved by calling flushBuffer() indeed)
         final HttpServletResponse mockResponse = createNiceMock(HttpServletResponse.class);
-        // expectactions - which contradict the comment above - they'll move to another test soonish.
+        // expectations - which contradict the comment above - they'll move to another test soonish.
         expect(mockResponse.containsHeader("Content-Encoding")).andReturn(false);
         mockResponse.addHeader("Content-Encoding", "gzip");
         expect(mockResponse.containsHeader("Content-Encoding")).andReturn(true);
@@ -85,7 +85,7 @@ public class GZipFilterTest extends TestCase {
         expect(mockResponse.getCharacterEncoding()).andReturn("ASCII"); // called when creating the writer in CacheResponseWriter
         mockResponse.setContentLength(anyInt());
 
-        // we need to wrap the mock reponse to be able to get the written output
+        // we need to wrap the mock response to be able to get the written output
         final ByteArrayOutputStream finalOutput = new ByteArrayOutputStream();
         final SimpleServletOutputStream servletOutput = new SimpleServletOutputStream(finalOutput);
         final HttpServletResponse testReponse = new HttpServletResponseWrapper(mockResponse) {
@@ -120,6 +120,57 @@ public class GZipFilterTest extends TestCase {
         assertTrue("output should be gzipped", GZipUtil.isGZipped(compressedBytes));
         final byte[] uncompressed = GZipUtil.ungzip(compressedBytes);
         final int expectedLength = iterations * (SOME_10CHARSLONG_CHAIN.length() + System.getProperty("line.separator").length()); // n chars + newline
+        assertEquals(expectedLength, uncompressed.length);
+    }
+
+
+    public void testBufferIsFlushedAndGZipNotSetOnError() throws Exception {
+
+        final FilterChain chain = createStrictMock(FilterChain.class);
+        final HttpServletRequest mockRequest = createStrictMock(HttpServletRequest.class);
+
+        final HttpServletResponse mockResponse = createStrictMock(HttpServletResponse.class);
+        // TODO: should not rather return all time default ISO-8859-1 as specified by RFC?
+        expect(mockResponse.getCharacterEncoding()).andReturn("ASCII");
+        // send the error
+        mockResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        mockResponse.flushBuffer();
+
+        // we need to wrap the mock response to be able to get the written output
+        final ByteArrayOutputStream finalOutput = new ByteArrayOutputStream();
+        final SimpleServletOutputStream servletOutput = new SimpleServletOutputStream(finalOutput);
+        final HttpServletResponse testReponse = new HttpServletResponseWrapper(mockResponse) {
+            // and we know GZipFilter will only call getOutputStream() on it.
+            public ServletOutputStream getOutputStream() throws IOException {
+                return servletOutput;
+            }
+        };
+
+        chain.doFilter(same(mockRequest), isA(CacheResponseWrapper.class));
+        // fake some chained filter:
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                final Object[] args = getCurrentArguments();
+                final ServletResponse responseFutherDownTheChain = ((ServletResponse) args[1]);
+                // let's pretend we're some filter writing some content
+                final PrintWriter out = responseFutherDownTheChain.getWriter();
+                out.println(SOME_10CHARSLONG_CHAIN);
+                // fake the content denied
+                ((HttpServletResponse) responseFutherDownTheChain).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return null;
+            }
+        });
+
+        replay(mockRequest, mockResponse, chain);
+        final GZipFilter filter = new GZipFilter();
+        filter.doFilter(mockRequest, testReponse, chain);
+        verify(mockRequest, mockResponse, chain);
+
+        // now assert GZipFilter has written the expected amount of characters in the original response
+        final byte[] uncompressed = finalOutput.toByteArray();
+        // errors should be uncompressed
+        assertFalse("output should be gzipped", GZipUtil.isGZipped(uncompressed));
+        final int expectedLength = SOME_10CHARSLONG_CHAIN.length() + System.getProperty("line.separator").length(); // n chars + newline
         assertEquals(expectedLength, uncompressed.length);
     }
 }
