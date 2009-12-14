@@ -41,6 +41,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * Checks if the request used the "POST" method or if there are request parameters.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -48,14 +49,14 @@ public class RequestHasParametersVoter extends AbstractBoolVoter {
 
     protected boolean boolVote(Object value) {
         HttpServletRequest request;
-        if(value instanceof HttpServletRequest){
+        if (value instanceof HttpServletRequest) {
             request = (HttpServletRequest) value;
         }
-        else{
-            if(MgnlContext.isWebContext()) {
+        else {
+            if (MgnlContext.isWebContext()) {
                 request = MgnlContext.getWebContext().getRequest();
             }
-            else{
+            else {
                 return false;
             }
         }

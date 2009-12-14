@@ -41,6 +41,19 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * Parameters (as Magnolia's configuration nodes):
+ * <ul>
+ * <li>allow: comma separated lists of allowed extensions. 
+ * <li>deny: comma separated lists of denied extensions.
+ * </ul>
+ * 
+ * Returns: 
+ * <ul>
+ * <li><code>false</code> if the extension <strong>is not</strong> a valid mimetype (as configured in config:/server/MIMEMapping.
+ * <li><code>false</code> if the allow list exists, but the extension <strong>is not</strong> in the allow list.
+ * <li><code>false</code> if the deny list exists and the extension <strong>is</strong> in the deny list.
+ * <li><code>true</code> in all other cases.
+ *</ul>  
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -60,10 +73,10 @@ public class ExtensionVoter extends AbstractBoolVoter {
 
     protected boolean boolVote(Object value) {
         String extension;
-        if(value instanceof String){
-            extension = StringUtils.substringAfterLast((String)value, ".");
+        if (value instanceof String) {
+            extension = StringUtils.substringAfterLast((String) value, ".");
         }
-        else{
+        else {
             extension = MgnlContext.getAggregationState().getExtension();
         }
 

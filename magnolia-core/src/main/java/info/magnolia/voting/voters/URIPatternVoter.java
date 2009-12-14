@@ -39,10 +39,16 @@ import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.util.SimpleUrlPattern;
 
+
 /**
+ * Checks if URI matches the pattern.
+ * <p>
+ * Parameters (as Magnolia's configuration nodes):
+ * <ul>
+ * <li>pattern: regular expression
+ * </ul>
  * @author philipp
  * @version $Id$
- *
  */
 public class URIPatternVoter extends BasePatternVoter {
     private SimpleUrlPattern pattern;

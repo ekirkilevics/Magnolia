@@ -35,15 +35,23 @@ package info.magnolia.voting.voters;
 
 import org.apache.commons.lang.StringUtils;
 
+
 /**
+ * Checks if the URI starts with the given pattern.
+ * <p>
+ * Parameters (as Magnolia's configuration nodes):
+ * <ul>
+ * <li>pattern: a string
+ * </ul>
  * @author philipp
  * @version $Id$
  */
 public class URIStartsWithVoter extends BasePatternVoter {
 
     protected boolean boolVote(Object value) {
-        String uri = resolveURIFromValue(value);;
-        if(StringUtils.isEmpty(uri)){
+        String uri = resolveURIFromValue(value);
+        ;
+        if (StringUtils.isEmpty(uri)) {
             return false;
         }
 

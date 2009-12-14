@@ -37,10 +37,15 @@ import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.core.SystemProperty;
 
+
 /**
- * Check a magnolia system property
+ * Checks if the named Magnolia property has the expected value. 
+ * <p>Parameters (as Magnolia's configuration nodes):
+ * <ul>
+ * <li>property: property name.
+ * <li>value: expected value.
+ * </ul>
  * @author pbracher
- *
  */
 public class PropertyVoter extends AbstractBoolVoter {
 

@@ -36,6 +36,7 @@ package info.magnolia.voting.voters;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 
 /**
+ * Checks if the admin flag (config:/server/admin) is set.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
