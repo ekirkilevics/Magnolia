@@ -440,33 +440,34 @@ public class SimpleNavigationTag extends TagSupport {
         }
         out.print("\">"); //$NON-NLS-1$
 
-        ArrayList<Content> visibleChildren = new ArrayList<Content>(children);
-        for (Content child : visibleChildren) {
+        final ArrayList<Content> childrenToDisplay = new ArrayList<Content>(children);
+        // loop through all children and discard those we don't want to display
+        for (Content child : children) {
 
             if (expandAll.equalsIgnoreCase(EXPAND_NONE) || expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
                 if (child
                     .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA))
                     .getBoolean()) {
-                    visibleChildren.remove(child);
+                    childrenToDisplay.remove(child);
                     continue;
                 }
                 // use a filter
                 if (filter != null) {
                     if (!filter.accept(child)) {
-                        visibleChildren.remove(child);
+                        childrenToDisplay.remove(child);
                         continue;
                     }
                 }
             } else {
                 if (child.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
-                    visibleChildren.remove(child);
+                    childrenToDisplay.remove(child);
                     continue;
                 }
             }
         }
 
         boolean isFirst = true;
-        Iterator<Content> visibleIt = visibleChildren.iterator();
+        Iterator<Content> visibleIt = childrenToDisplay.iterator();
         while (visibleIt.hasNext()) {
             Content child = visibleIt.next();
             List<String> cssClasses = new ArrayList<String>(4);
