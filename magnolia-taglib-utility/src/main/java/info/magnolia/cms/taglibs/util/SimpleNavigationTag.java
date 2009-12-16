@@ -426,7 +426,7 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private void drawChildren(Content page, Content activePage, JspWriter out) throws IOException, RepositoryException {
 
-        Collection<Content> children = page.getChildren(ItemType.CONTENT);
+        Collection<Content> children = new ArrayList<Content>(page.getChildren(ItemType.CONTENT));
 
         if (children.size() == 0) {
             return;
@@ -440,34 +440,34 @@ public class SimpleNavigationTag extends TagSupport {
         }
         out.print("\">"); //$NON-NLS-1$
 
-        final ArrayList<Content> childrenToDisplay = new ArrayList<Content>(children);
+        Iterator<Content> iter = children.iterator();
         // loop through all children and discard those we don't want to display
-        for (Content child : children) {
+        while(iter.hasNext()) {
+            final Content child = iter.next();
 
             if (expandAll.equalsIgnoreCase(EXPAND_NONE) || expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
                 if (child
-                    .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA))
-                    .getBoolean()) {
-                    childrenToDisplay.remove(child);
+                    .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
+                    iter.remove();
                     continue;
                 }
                 // use a filter
                 if (filter != null) {
                     if (!filter.accept(child)) {
-                        childrenToDisplay.remove(child);
+                        iter.remove();
                         continue;
                     }
                 }
             } else {
                 if (child.getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
-                    childrenToDisplay.remove(child);
+                    iter.remove();
                     continue;
                 }
             }
         }
 
         boolean isFirst = true;
-        Iterator<Content> visibleIt = childrenToDisplay.iterator();
+        Iterator<Content> visibleIt = children.iterator();
         while (visibleIt.hasNext()) {
             Content child = visibleIt.next();
             List<String> cssClasses = new ArrayList<String>(4);
