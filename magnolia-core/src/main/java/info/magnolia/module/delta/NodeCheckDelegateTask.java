@@ -40,7 +40,7 @@ import info.magnolia.cms.core.Content;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * A task that delegates to another if a checkNode is true, or to an optional other if it is false.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

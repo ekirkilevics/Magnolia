@@ -44,7 +44,7 @@ import java.util.Collection;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * This task executes the abstract method on every child node.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

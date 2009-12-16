@@ -36,13 +36,16 @@ package info.magnolia.module.delta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- *
+ * Abstract implementation of the Task interface which handles the mandatory properties name and description
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractTask implements Task {
+
     private final String name;
+
     private final String description;
 
     /**
