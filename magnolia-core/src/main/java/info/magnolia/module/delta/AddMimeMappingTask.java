@@ -43,7 +43,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * Task that adds a mime mapping to <code>server/MIMIMapping</code>.
+ * Task that adds a mime mapping to <code>server/MIMEMapping</code>.
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
