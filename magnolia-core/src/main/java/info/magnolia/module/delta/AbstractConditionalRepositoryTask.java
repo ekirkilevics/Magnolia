@@ -43,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * An abstract implementation of a RepositoyTask that only needs to be executed when a specific node is not found in the
+ * An abstract implementation of a RepositoryTask that only needs to be executed when a specific node is not found in the
  * repository. Can be used to easily create self-check tasks for mandatory configuration.
  * @author fgiust
  * @version $Revision: $ ($Author: $)
