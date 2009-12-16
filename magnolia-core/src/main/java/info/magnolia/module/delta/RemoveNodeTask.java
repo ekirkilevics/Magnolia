@@ -40,7 +40,7 @@ import info.magnolia.module.InstallContext;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * Removes the specified node.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

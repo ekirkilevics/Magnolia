@@ -40,6 +40,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
+ * Orders a node before the specified sibling node.
  * @author philipp
  * @version $Id$
  *

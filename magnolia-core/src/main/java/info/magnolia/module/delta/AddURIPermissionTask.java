@@ -44,6 +44,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
+ * Adds a URI permission to a role 
  * @author vsteller
  * @version $Id$
  *

@@ -39,7 +39,7 @@ import info.magnolia.module.InstallContext;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * A task that delegates to another depending on whether a specified property exists or not.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -40,6 +40,7 @@ import info.magnolia.module.InstallContext;
 import javax.jcr.RepositoryException;
 
 /**
+ * This task moves a specified Node to a new destination.
  * @author philipp
  * @version $Id$
  */

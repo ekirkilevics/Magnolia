@@ -33,14 +33,14 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.module.InstallContext;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.module.InstallContext;
+
+import java.util.Collection;
 
 import javax.jcr.RepositoryException;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Copies a node's properties to another node. Existing properties are overwritten and

@@ -36,7 +36,7 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 
 /**
- *
+ * A task that delegates to another depending on whether a specified node exists or not.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

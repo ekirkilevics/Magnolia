@@ -40,7 +40,7 @@ import info.magnolia.module.InstallContext;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * Creates a new property. Outputs a warning if the property already exists. 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
