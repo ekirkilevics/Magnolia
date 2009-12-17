@@ -91,4 +91,25 @@ public class RegexpVirtualURIMappingTest extends TestCase {
         assertEquals("/bar.action?param=i-z6j", res.getToURI());
         assertEquals(27, res.getLevel());
     }
+
+    public void testGracefullyFailingOnIncompleteConfig() {
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("");
+        mapping.setToURI("/foo.action?param=$0&id=$5");
+
+        final VirtualURIMapping.MappingResult res = mapping.mapURI("/foo/bar.html");
+        assertEquals(null, res);
+    }
+
+    public void testGracefullyFailingOnWrongRegexGroup() {
+        final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();
+        mapping.setFromURI("/foo/([a-z]+)/detail/([0-9]+)\\.html");
+        mapping.setToURI("/foo.action?param=$0&id=$5");
+
+        final String inputUri = "/foo/bar/detail/123.html";
+        assertTrue("test not behaving as expected", inputUri.matches(mapping.getFromURI()));
+        final VirtualURIMapping.MappingResult res = mapping.mapURI(inputUri);
+        assertEquals(null, res);
+    }
+
 }

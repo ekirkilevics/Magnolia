@@ -50,6 +50,8 @@ import java.util.regex.Pattern;
  * @version $Id: DefaultVirtualURIMapping.java 10295 2007-08-02 21:33:58Z fgiust $
  */
 public class RegexpVirtualURIMapping implements VirtualURIMapping {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RegexpVirtualURIMapping.class);
+
     private String fromURI;
     private String toURI;
     private Pattern regexp;
@@ -61,11 +63,15 @@ public class RegexpVirtualURIMapping implements VirtualURIMapping {
             if (matcher.find()) {
                 final MappingResult r = new MappingResult();
                 final int matcherCount = matcher.groupCount();
-                final String replaced = matcher.replaceAll(toURI);
+                try {
+                    final String replaced = matcher.replaceAll(toURI);
 
-                r.setLevel(matcherCount + 1);
-                r.setToURI(replaced);
-                return r;
+                    r.setLevel(matcherCount + 1);
+                    r.setToURI(replaced);
+                    return r;
+                } catch (IndexOutOfBoundsException e) {
+                    log.warn("{} misconfigured: {}", toString(), e.getMessage());
+                }
             }
         }
 
