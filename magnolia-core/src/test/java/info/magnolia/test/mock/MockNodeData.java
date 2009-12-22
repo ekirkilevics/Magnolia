@@ -35,6 +35,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultNodeData;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
@@ -77,6 +78,10 @@ public class MockNodeData extends DefaultNodeData {
 
     public int getType() {
         return type;
+    }
+
+    public HierarchyManager getHierarchyManager() {
+        return ((MockContent) getParent()).getHierarchyManager();
     }
 
     public Content getParent() {

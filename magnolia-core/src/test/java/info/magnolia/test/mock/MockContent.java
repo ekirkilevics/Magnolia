@@ -56,6 +56,7 @@ import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -203,7 +204,26 @@ public class MockContent extends DefaultContent {
     }
 
     public Collection<NodeData> getNodeDataCollection() {
-        return this.nodeDatas.values();
+        final ArrayList<NodeData> all = new ArrayList<NodeData>();
+        all.addAll(this.nodeDatas.values());
+        all.addAll(getBinaryProperties("*"));
+        return all;
+    }
+
+    public Collection<NodeData> getNodeDataCollection(final String namePattern) {
+        final ArrayList<NodeData> all = new ArrayList<NodeData>();
+        all.addAll(CollectionUtils.select(nodeDatas.values(), new NamePatternFilter(namePattern)));
+        all.addAll(getBinaryProperties(namePattern));
+        return all;
+    }
+
+    private Collection<NodeData> getBinaryProperties(String namePattern) {
+        final Collection<NodeData> binaryProps = new ArrayList<NodeData>();
+        final Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
+        for (Content binaryNode : binaryNodes) {
+            binaryProps.add(new BinaryMockNodeData(binaryNode));
+        }
+        return binaryProps;
     }
 
     public NodeData getNodeData(String name) {
@@ -240,19 +260,17 @@ public class MockContent extends DefaultContent {
         return children;
     }
 
-    public Collection<Content> getChildren(final String contentType, String namePattern) {
-        if (!"*".equals(namePattern)) {
-            throw new IllegalStateException("Only the \"*\" name pattern is currently supported in MockContent.");
-        }
+    public Collection<Content> getChildren(final String contentType, final String namePattern) {
         return getChildren(new ContentFilter() {
             public boolean accept(Content content) {
-                return contentType == null || content.isNodeType(contentType);
+                return (contentType == null || content.isNodeType(contentType)) && matchesNamePattern(content, namePattern);
             }
         });
 
     }
 
     public Content getChildByName(String namePattern) {
+        // TODO - this is flawed: the superclass does use the pattern, while here we're return an exact match
         return (Content) children.get(namePattern);
     }
 
@@ -359,5 +377,33 @@ public class MockContent extends DefaultContent {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    /**
+     * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
+     * in the Property and Node interfaces. 
+     */
+    private static class NamePatternFilter implements Predicate {
+        private final String namePattern;
+
+        public NamePatternFilter(String namePattern) {
+            this.namePattern = namePattern;
+        }
+
+        public boolean evaluate(Object object) {
+            return matchesNamePattern(object, namePattern);
+        }
+    }
+
+    public static boolean matchesNamePattern(Object object, String namePattern) {
+        final String name;
+        if (object instanceof NodeData) {
+            name = ((NodeData) object).getName();
+        } else if (object instanceof Content) {
+            name = ((Content) object).getName();
+        } else {
+            throw new IllegalStateException("Unsupported object type: " + object.getClass());
+        }
+        return ChildrenCollectorFilter.matches(name, namePattern);
     }
 }
