@@ -14,7 +14,7 @@
     <sv:value>This group was created by the workflow module, and its users registered upon its installation.</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Publishers of Sample co.</sv:value>
+    <sv:value>Publishers (Workflow)</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

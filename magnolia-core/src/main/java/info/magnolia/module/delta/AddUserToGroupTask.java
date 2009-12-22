@@ -31,17 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.module.workflow.setup.for3_5;
+package info.magnolia.module.delta;
+
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.module.InstallContext;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
- * @deprecated since 4.2.2 use {@link info.magnolia.module.delta.AddUserToGroupTask} instead
  */
-public class AddUserToGroupTask extends info.magnolia.module.delta.AddUserToGroupTask {
+public class AddUserToGroupTask extends AbstractTask {
+    private final String username;
+    private final String groupname;
 
     public AddUserToGroupTask(String taskName, String username, String groupname) {
-        super(taskName, username, groupname);
+        super(taskName, "Adding user \"" + username + "\" to group \"" + groupname + "\"");
+        this.username = username;
+        this.groupname = groupname;
+    }
+
+    public void execute(InstallContext ctx) throws TaskExecutionException {
+        final UserManager userManager = SecuritySupport.Factory.getInstance().getUserManager();
+        final User user = userManager.getUser(username);
+        if (user == null) {
+            ctx.warn("User \"" + username + "\" not found, can't add him/her to the \"" + groupname + "\" group.");
+        } else {
+            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
+            try{
+                user.addGroup(groupname);
+            }
+            catch (UnsupportedOperationException e) {
+                ctx.warn("Can't add the user \"" + username + "\" to the \"" + groupname + "\" group due to an unsupported operation exception. This is most likely the case if the users are managed externaly.");
+            }
+        }
     }
 }

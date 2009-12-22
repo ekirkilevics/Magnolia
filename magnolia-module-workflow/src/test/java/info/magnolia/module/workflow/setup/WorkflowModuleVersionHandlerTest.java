@@ -37,7 +37,13 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.Role;
+import info.magnolia.cms.security.RoleManager;
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
@@ -48,6 +54,8 @@ import static info.magnolia.nodebuilder.Ops.addNode;
 import static info.magnolia.nodebuilder.Ops.addProperty;
 
 import javax.jcr.RepositoryException;
+
+import static org.easymock.classextension.EasyMock.*;
 
 /**
  * A test class for WorkflowModuleVersionHandler.
@@ -62,6 +70,25 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         return new WorkflowModuleVersionHandler();
     }
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        // setup security
+        SecuritySupportImpl securitySupport = new SecuritySupportImpl();
+        RoleManager roleManager = createStrictMock(RoleManager.class);
+        Role role = createStrictMock(Role.class);
+        
+        expect(roleManager.getRole("workflow-base")).andReturn(role);
+        role.addPermission("config", "/modules/workflow/config/flows", Permission.READ);
+        role.addPermission("config", "/modules/workflow/config/flows/*", Permission.READ);
+        securitySupport.setRoleManager(roleManager);
+        replay(roleManager, role);
+        FactoryUtil.setInstance(SecuritySupport.class, securitySupport);
+        
+        // the update tries 
+        bootstrapSingleResource("/mgnl-bootstrap/workflow/userroles.workflow-base.xml");
+        MgnlContext.getHierarchyManager("userroles").save();
+    }
+    
     /**
      * Workflow have been overwriting versioning command of DMS when introducing wkf support to DMS. The task to rememdy the situation have been introduced now
      *
@@ -75,7 +102,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
                 addNode("activate").then(addNode("version").then(addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
         nodeBuilder.exec();
         hm.save();
-
+        
         // run the test itself
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1.1"));
 
@@ -99,7 +126,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         // workflow is not installed so the wkf config class will not be set
         assertFalse(hm.isExist("/modules/data/trees/data/configurationClass"));
     }
-
+    
     protected String[] getExtraWorkspaces() {
         return new String[]{"dms", "data"};
     }

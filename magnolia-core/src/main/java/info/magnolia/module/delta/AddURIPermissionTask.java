@@ -33,15 +33,6 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.module.InstallContext;
-
-import javax.jcr.RepositoryException;
-
 
 /**
  * Adds a URI permission to a role 
@@ -49,29 +40,13 @@ import javax.jcr.RepositoryException;
  * @version $Id$
  *
  */
-public class AddURIPermissionTask extends AbstractRepositoryTask {
+public class AddURIPermissionTask extends AddPermissionTask {
     public final static int DENY = 0;
     public final static int GET = 8;
     public final static int GET_POST = 63;
 
-    private final String roleName;
-    private final String uri;
-    private final int permission;
-
     public AddURIPermissionTask(String name, String description, String roleName, String uri, int permission) {
-        super(name, description);
-        this.roleName = roleName;
-        this.uri = uri;
-        this.permission = permission;
+        super(name, description, roleName, "uri", uri, permission, false);
     }
 
-    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.USER_ROLES);
-        final Content roleNode = hm.getContent("/" + roleName);
-        final Content uriPermissionsNode = ContentUtil.getOrCreateContent(roleNode, "acl_uri", ItemType.CONTENTNODE);
-        
-        final Content permNode = uriPermissionsNode.createContent("0", ItemType.CONTENTNODE);
-        permNode.createNodeData("path", uri);
-        permNode.createNodeData("permissions", new Long(permission));
-    }
 }

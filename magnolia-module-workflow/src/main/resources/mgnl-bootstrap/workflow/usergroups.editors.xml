@@ -14,7 +14,7 @@
     <sv:value>This group was created by the workflow module, and its users registered upon its installation. It is used by the default action workflow: rejected items go to this group's inbox.</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Editors of Sample co.</sv:value>
+    <sv:value>Editors (Workflow)</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -73,9 +73,6 @@
     </sv:property>
     <sv:property sv:name="1" sv:type="String">
       <sv:value>4fd7ab63-7fff-4a27-b16a-ef727cc6a75d</sv:value>
-    </sv:property>
-    <sv:property sv:name="0" sv:type="String">
-      <sv:value>adddfaa5-0f00-4a01-9664-ed5cfd0fdd0f</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">

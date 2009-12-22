@@ -35,12 +35,15 @@ package info.magnolia.module.workflow.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.ModuleManager;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration;
+import info.magnolia.module.delta.AddPermissionTask;
+import info.magnolia.module.delta.AddRoleToGroupTask;
+import info.magnolia.module.delta.AddUserToGroupTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
@@ -56,11 +59,9 @@ import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
-import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_5.CheckAndUpdateDefaultWorkflowDefinition;
 import info.magnolia.module.workflow.setup.for3_5.RemoveMetadataFromExpressionsWorkspace;
 import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivationFlowCommands;
-import info.magnolia.module.workflow.setup.for4_0.AddSystemUserToGroupTask;
 import info.magnolia.module.workflow.trees.WorkflowWebsiteTreeConfiguration;
 
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
+    
     private static final String BACKUP_PATH = "/server/install/backup";
     private final Task inboxMenu = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
             "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
@@ -151,7 +153,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                         new BootstrapSingleResource("Update tree configuration", "Adds Expressions workspace tree configuration.", "/mgnl-bootstrap/workflow/config.modules.adminInterface.trees.Expressions.xml")))
                 );
         register(DeltaBuilder.update("4.0", "")
-                .addTask(new AddSystemUserToGroupTask("Superuser", "publishers"))
+                .addTask(new AddUserToGroupTask("Superuser", "superuser", "publishers"))
                 );
         register(DeltaBuilder.update("4.2", "")
                 // while this is checked and changed by DMS in 1.4 (bundled w/ Mgnl 4.1), there was a brief period of time (between 4.1 to 4.2) when workflow might have had overridden it.
@@ -175,6 +177,11 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 }))
         );
 
+        register(DeltaBuilder.update("4.2.3", "Add read permission to the base role so that users can launch workflows.")
+            // MAGNOLIA-2971
+            .addTask(new AddPermissionTask("Update base role", "Adds permission to read the workflow definitions.", "workflow-base", "config", "/modules/workflow/config/flows", Permission.READ, true))
+        );
+
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
@@ -188,11 +195,19 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(changeWebsiteTreeConfigurationTask);
         tasks.add(changeDMSTreeConfigurationTask);
 
+        // TODO: MAGNOLIA-2979, move that to the samples
         if (ctx.isModuleRegistered("samples")) {
             tasks.add(new AddUserToGroupTask("Sample user", "eve", "editors"));
             tasks.add(new AddUserToGroupTask("Sample user", "patrick", "publishers"));
+            tasks.add(new AddRoleToGroupTask("Update editors group with samples role", "editors","editors"));
         }
-        tasks.add(new AddSystemUserToGroupTask("Superuser", "publishers"));
+
+        tasks.add(new AddUserToGroupTask("Superuser", "superuser", "publishers"));
+        
+        // MAGNOLIA-2603 and MAGNOLIA-2971
+        // the worflow base role grants only read permission. Now that the superuser is added to the publisher group he gets this restrictive permission assigned
+        // to allow the superuser editing the workflow definition we have to add that permission explicitly to the superuser role
+        tasks.add(new AddPermissionTask("Update Superuser Role", "Add all those permissions explicitly which could be overwritten by assigning the workflow base role.", "superuser", "config", "/modules/workflow/config/flows", Permission.ALL, true));
 
         return tasks;
     }

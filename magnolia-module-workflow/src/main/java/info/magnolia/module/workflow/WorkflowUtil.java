@@ -215,8 +215,8 @@ public class WorkflowUtil {
         long start = System.currentTimeMillis();
 
         User user = Security.getUserManager().getUser(userName);
-        Collection groups = user.getGroups();
-        Collection roles = user.getRoles();
+        Collection groups = user.getAllGroups();
+        Collection roles = user.getAllRoles();
 
         StringBuffer queryString = new StringBuffer();
         queryString.append("//*[(@assignTo=\"");

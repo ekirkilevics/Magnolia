@@ -33,33 +33,18 @@
  */
 package info.magnolia.module.workflow.setup.for4_0;
 
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.User;
-import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
-import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.AddUserToGroupTask;
 
 /**
  *
  * @author tmiyar
+ * @deprecated since 4.2 use {@link AddUserToGroupTask} instead
  *
  */
-public class AddSystemUserToGroupTask extends AbstractTask {
-    private final String groupname;
+public class AddSystemUserToGroupTask extends AddUserToGroupTask {
 
     public AddSystemUserToGroupTask(String taskName, String groupname) {
-        super(taskName, "Adding system user to group \"" + groupname + "\"");
-        this.groupname = groupname;
+        super(taskName, "superuser", groupname);
     }
 
-    public void execute(InstallContext ctx) throws TaskExecutionException {
-        User user = Security.getSystemUser();
-
-        if (user == null) {
-            ctx.warn("Sytem user not found, can't add him/her to the \"" + groupname + "\" group.");
-        } else {
-            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :(
-            user.addGroup(groupname);
-        }
-    }
 }

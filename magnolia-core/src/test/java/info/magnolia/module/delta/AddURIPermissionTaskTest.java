@@ -33,11 +33,14 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.MgnlRoleManager;
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.SecuritySupportImpl;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import static org.easymock.EasyMock.*;
 
@@ -71,14 +74,19 @@ public class AddURIPermissionTaskTest extends MgnlTestCase {
         TaskExecutionException, Exception {
         final String testContent = "" + 
             "/rolename";
-        final HierarchyManager hm = MockUtil.createHierarchyManager(testContent);
-        final InstallContext ctx = createStrictMock(InstallContext.class);
-        expect(ctx.getHierarchyManager(ContentRepository.USER_ROLES)).andReturn(hm);
         
-        replay(ctx);
+        MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager("userroles", testContent);
+        
+        SecuritySupportImpl securitySupport = new SecuritySupportImpl();
+        securitySupport.setRoleManager(new MgnlRoleManager());
+        FactoryUtil.setInstance(SecuritySupport.class, securitySupport);
+
+        final InstallContext installCtx = createMock(InstallContext.class);
+        
+        replay(installCtx);
         final AddURIPermissionTask task = new AddURIPermissionTask("Test", "Description", "rolename", "/someURI", permission);
-        task.execute(ctx);
-        verify(ctx);
+        task.execute(installCtx);
+        verify(installCtx);
         
         final Properties result = PropertiesImportExport.toProperties(hm);
         assertEquals("/someURI", result.get("/rolename/acl_uri/0.path"));
