@@ -38,6 +38,8 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
+
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +51,7 @@ import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
 import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
 import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
 import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
+import org.apache.jackrabbit.spi.Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +73,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -289,14 +293,16 @@ public class ProviderImpl implements Provider {
                 throw new MissingNodetypesException();
             }
 
-            NodeTypeDef[] types;
+            // Use Objects so that it works both with jackrabbit 1.x (NodeTypeDef) and jackrabbit 2
+            // (QNodeTypeDefinition)
+            Object[] types;
+
             try {
-                types = NodeTypeReader.read(xmlStream);
+                types = (Object[]) NodeTypeReader.class.getMethod("read", new Class[]{InputStream.class}).invoke(
+                    null,
+                    new Object[]{xmlStream});
             }
-            catch (InvalidNodeTypeDefException e) {
-                throw new RepositoryException(e.getMessage(), e);
-            }
-            catch (IOException e) {
+            catch (Exception e) {
                 throw new RepositoryException(e.getMessage(), e);
             }
             finally {
@@ -316,18 +322,27 @@ public class ProviderImpl implements Provider {
             }
 
             for (int j = 0; j < types.length; j++) {
-                NodeTypeDef def = types[j];
+                Object def = types[j];
+
+                Name ntname;
+                try {
+                    ntname = (Name) PropertyUtils.getProperty(def, "name");
+                }
+                catch (Exception e) {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
 
                 try {
-                    ntReg.getNodeTypeDef(def.getName());
+                    ntReg.getNodeTypeDef(ntname);
                 }
                 catch (NoSuchNodeTypeException nsne) {
-                    log.info("Registering nodetype {}", def.getName()); //$NON-NLS-1$
+                    log.info("Registering nodetype {}", ntname); //$NON-NLS-1$
 
                     try {
-                        ntReg.registerNodeType(def);
+                        // reflection for jackrabbit 1+2 compatibility
+                        getMethod(NodeTypeRegistry.class, "registerNodeType").invoke(ntReg, new Object[]{def});
                     }
-                    catch (InvalidNodeTypeDefException e) {
+                    catch (Exception e) {
                         throw new RepositoryException(e.getMessage(), e);
                     }
                 }
@@ -337,6 +352,18 @@ public class ProviderImpl implements Provider {
         finally {
             jcrSession.logout();
         }
+    }
+
+    private Method getMethod(Class theclass, String methodName) throws NoSuchMethodException {
+        Method[] declaredMethods = theclass.getDeclaredMethods();
+
+        for (Method method : declaredMethods) {
+            if (method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+
+        throw new NoSuchMethodException(theclass.getName() + "." + methodName + "()");
     }
 
     /**

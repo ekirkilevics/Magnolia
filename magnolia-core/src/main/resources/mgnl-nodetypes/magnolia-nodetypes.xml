@@ -129,7 +129,7 @@
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
     </nodeType>
-    <nodeType name="mgnl:resource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="jcr:data">
+    <nodeType name="mgnl:resource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
         <supertypes>
             <supertype>nt:resource</supertype>
         </supertypes>
