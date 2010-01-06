@@ -491,7 +491,7 @@ public abstract class BaseVersionManager {
       * @param permissions
       */
      protected void impersonateAccessManager(List permissions) {
-         // FIXME: this is a very ugly hack but it needs the lessest change in the code
+         // FIXME: this is a very ugly hack but it needs the least change in the code
          // see MAGNOLIA-1753
          if(permissions == null){
              Permission permission = new PermissionImpl();
