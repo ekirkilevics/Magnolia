@@ -40,15 +40,22 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.HierarchyManagerWrapper;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.SimpleUrlPattern;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -109,8 +116,24 @@ public class ContentVersion extends DefaultContent {
         }
         this.state = thisVersion;
         this.base = base;
-        this.hierarchyManager = base.getHierarchyManager();
-        this.accessManager = base.getAccessManager();
+        // child nodes (and metaData if nothing else) depends on this to have access when root access is restricted for given user
+        List<Permission> permissions = new ArrayList<Permission>(base.getAccessManager().getPermissionList());
+        PermissionImpl p = new PermissionImpl();
+        p.setPattern(new SimpleUrlPattern("/jcr:system/jcr:versionStorage/*"));
+        // read only
+        p.setPermissions(8);
+        permissions.add(p);
+        // use dedicated AM and not the one base share with its parent
+        this.accessManager = new AccessManagerImpl();
+        this.accessManager.setPermissionList(permissions);
+
+        this.hierarchyManager = new HierarchyManagerWrapper(base.getHierarchyManager()) {
+
+            @Override
+            public AccessManager getAccessManager() {
+                return ContentVersion.this.accessManager;
+            }
+        };
         this.init();
     }
 
