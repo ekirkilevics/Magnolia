@@ -53,6 +53,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
@@ -577,7 +578,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
          GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
-         if (content.getWorkspace().getName().equalsIgnoreCase(ContentRepository.VERSION_STORE)) {
+         if (content instanceof ContentVersion || content.getWorkspace().getName().equals(ContentRepository.VERSION_STORE)) {
              XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
                  .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
              ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
@@ -592,8 +593,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
               */
              if (content.isNodeType(ItemType.NT_FILE)) {
                  session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, false);
-             }
-             else {
+             } else {
                  session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, true);
              }
          }
@@ -628,6 +628,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          FileInputStream tmpFileInStream = null;
          try {
              tmpFileOutStream = new FileOutputStream(tempFile);
+             // has to get path via JCR node since if "content" is of type ContentVersion, getHandle() call would have returned path to the base
              session.exportSystemView(content.getJCRNode().getPath(), tmpFileOutStream, false, noRecurse);
              tmpFileOutStream.flush();
              tmpFileOutStream.close();

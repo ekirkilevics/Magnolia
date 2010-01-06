@@ -728,4 +728,9 @@ public class ContentVersion extends DefaultContent {
         return this.base.getAccessManager();
     }
 
+    @Override
+    public Workspace getWorkspace() throws RepositoryException {
+        return this.base.getWorkspace();
+    }
+
 }
