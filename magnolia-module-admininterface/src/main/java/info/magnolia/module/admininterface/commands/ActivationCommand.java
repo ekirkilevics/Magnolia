@@ -219,9 +219,8 @@ public class ActivationCommand extends BaseActivationCommand {
             }
             try {
                 Content content = ctx.getHierarchyManager(getRepository()).getContentByUUID(uuid);
-                // NOTE : on activation of the version it uses current hierarchy to order
-                // since admin interface does not protect the state of the hierarchy if its in workflow
-                // we have to use the current state
+                // NOTE : on activation of the version use current hierarchy to order
+                // since versioning operation does not preserve order anywhere
                 List orderedList = getOrderingInfo(content);
                 String parentPath = content.getParent().getHandle();
                 content = content.getVersionedContent(versionNumber);
