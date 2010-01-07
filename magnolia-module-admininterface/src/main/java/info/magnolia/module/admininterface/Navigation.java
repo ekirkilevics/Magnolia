@@ -103,8 +103,8 @@ public class Navigation {
                     jsName,
                     mp.getUUID(),
                     getLabel(mp),
-                    NodeDataUtil.getString(mp, "onclick"),
-                    NodeDataUtil.getString(mp, "icon")}));
+                    NodeDataUtil.getString(mp, "onclick").trim(),
+                    NodeDataUtil.getString(mp, "icon").trim()}));
 
                 // sub menupoints (2 level only)
                 for (Iterator iterator = mp.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
@@ -115,8 +115,8 @@ public class Navigation {
                             mp.getUUID(),
                             sub.getUUID(),
                             getLabel(sub),
-                            NodeDataUtil.getString(sub, "onclick"),
-                            NodeDataUtil.getString(sub, "icon")}));
+                            NodeDataUtil.getString(sub, "onclick").trim(),
+                            NodeDataUtil.getString(sub, "icon").trim()}));
                     }
                 }
             }
