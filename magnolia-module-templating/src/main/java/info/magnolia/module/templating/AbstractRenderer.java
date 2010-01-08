@@ -133,7 +133,7 @@ public abstract class AbstractRenderer {
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(mainContent, mainContent));
         setContextAttribute(ctx, "content", wrapNodeForTemplate(content, mainContent));
         setContextAttribute(ctx, "def", definition);
-        setContextAttribute(ctx, "state", getAggrigationStateSafely());
+        setContextAttribute(ctx, "state", getAggregationStateSafely());
         setContextAttribute(ctx, "mgnl", getMagnoliaTemplatingUtilities());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
@@ -143,7 +143,7 @@ public abstract class AbstractRenderer {
      * Gets the current main contain and treats the situation where the context is not a web context nicely by using the current content instead.
      */
     protected Content getMainContentSafely(Content current) {
-        AggregationState state = getAggrigationStateSafely();
+        AggregationState state = getAggregationStateSafely();
         if(state != null){
             return state.getMainContent();
         }
@@ -151,9 +151,16 @@ public abstract class AbstractRenderer {
     }
 
     /**
-     * This gets the aggregation state without throwing an exception if the current context is not a WebContext 
+     * @deprecated since 4.3 - typo, use getAggregationStateSafely()
      */
     protected AggregationState getAggrigationStateSafely() {
+        return getAggregationStateSafely();
+    }
+
+    /**
+     * This gets the aggregation state without throwing an exception if the current context is not a WebContext 
+     */
+    protected AggregationState getAggregationStateSafely() {
         if(MgnlContext.isWebContext()){
             return MgnlContext.getAggregationState();
         }
