@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
@@ -63,7 +64,7 @@ public class QueryUtil {
      * @param statement
      * @return
      */
-    public static Collection query(String repository, String statement){
+    public static Collection<Content> query(String repository, String statement){
         return query(repository,statement, Query.SQL);
     }
 
@@ -74,14 +75,14 @@ public class QueryUtil {
      * @param language
      * @return
      */
-    public static Collection query(String repository, String statement, String language){
+    public static Collection<Content> query(String repository, String statement, String language){
         return query(repository,statement,language, ItemType.NT_BASE);
     }
 
     /**
      * Executes a query, throwing any exceptions that arise as a result.
      */
-    public static Collection exceptionThrowingQuery(String repository, String statement, String language, String returnItemType) throws RepositoryException {
+    public static Collection<Content> exceptionThrowingQuery(String repository, String statement, String language, String returnItemType) throws RepositoryException {
         QueryManager qm = MgnlContext.getQueryManager(repository);
         Query query= qm.createQuery(statement, language);
         QueryResult result = query.execute();
@@ -96,7 +97,8 @@ public class QueryUtil {
      * @param returnItemType
      * @return
      */
-    public static Collection query(String repository, String statement, String language, String returnItemType) {
+    @SuppressWarnings("unchecked") //Collections.EMPTY_LIST;
+    public static Collection<Content> query(String repository, String statement, String language, String returnItemType) {
         try {
             return exceptionThrowingQuery(repository, statement, language, returnItemType);
         } catch (Exception e) {
@@ -150,7 +152,7 @@ public class QueryUtil {
         cal.set(year, month - 1, day, hour, minutes, seconds);
         return createDateTimeExpression(cal);
     }
-    
+
     /**
      * Do not consider the timezone.
      */

@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core.search;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -73,7 +74,7 @@ public class QueryResultImpl implements QueryResult {
     /**
      * caches all previously queried objects
      */
-    private Map objectStore = new Hashtable();
+    private Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
 
     /**
      * @deprecated
@@ -82,7 +83,7 @@ public class QueryResultImpl implements QueryResult {
 
     private HierarchyManager hm;
 
-    private Map dirtyHandles = new Hashtable();
+    private Map<String, String> dirtyHandles = new Hashtable<String, String>();
 
     protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm) {
         this.result = result;
@@ -105,7 +106,7 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Build required result objects
      */
-    private void build(String nodeType, Collection collection) throws RepositoryException {
+    private void build(String nodeType, Collection<Content> collection) throws RepositoryException {
         this.objectStore.put(nodeType, collection);
         NodeIterator nodeIterator = this.result.getNodes();
         while (nodeIterator.hasNext()) {
@@ -127,7 +128,7 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Build required result objects
      */
-    private void build(Node node, String nodeType, Collection collection) throws RepositoryException {
+    private void build(Node node, String nodeType, Collection<Content> collection) throws RepositoryException {
         /**
          * All custom node types
          */
@@ -149,18 +150,18 @@ public class QueryResultImpl implements QueryResult {
     /**
      * @see info.magnolia.cms.core.search.QueryResult#getContent()
      */
-    public Collection getContent() {
+    public Collection<Content> getContent() {
         return getContent(ItemType.CONTENT.getSystemName());
     }
 
     /**
      * @see info.magnolia.cms.core.search.QueryResult#getContent(java.lang.String)
      */
-    public Collection getContent(String nodeType) {
-        Collection resultSet = (Collection) this.objectStore.get(nodeType);
+    public Collection<Content> getContent(String nodeType) {
+        Collection<Content> resultSet = this.objectStore.get(nodeType);
         if (resultSet == null) {
             /* build it first time */
-            resultSet = new ArrayList();
+            resultSet = new ArrayList<Content>();
             try {
                 this.build(nodeType, resultSet);
             }

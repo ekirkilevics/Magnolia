@@ -34,7 +34,6 @@
 package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.AccessManager;
 
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -58,15 +57,9 @@ public class QueryImpl implements Query {
 
     private HierarchyManager hm;
 
-    /**
-     * @deprecated
-     */
-    private AccessManager accessManager;
-
     protected QueryImpl(javax.jcr.query.Query query, HierarchyManager hm) {
         this.query = query;
         this.hm = hm;
-        this.accessManager = hm.getAccessManager();
     }
 
     public QueryResult execute() throws RepositoryException {

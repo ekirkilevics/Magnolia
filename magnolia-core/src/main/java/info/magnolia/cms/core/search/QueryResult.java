@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core.search;
 
+import info.magnolia.cms.core.Content;
+
 import java.util.Collection;
 
 
@@ -45,11 +47,11 @@ public interface QueryResult {
     /**
      * Gets a collection of Content objects for mgnl:content NodeType
      */
-    Collection getContent();
+    Collection<Content> getContent();
 
     /**
      * Gets a collection of Content objects for specified NodeType
      */
-    Collection getContent(String nodeType);
+    Collection<Content> getContent(String nodeType);
 
 }
