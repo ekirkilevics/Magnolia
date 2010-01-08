@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @deprecated please us info.magnolia.module.workflow.commands.ActivationFlowCommand instead.
+ * @deprecated since 3.0 - please use info.magnolia.module.workflow.commands.ActivationFlowCommand instead.
  */
 public class ActivationFlowCommand extends info.magnolia.module.workflow.commands.ActivationFlowCommand  {
 
