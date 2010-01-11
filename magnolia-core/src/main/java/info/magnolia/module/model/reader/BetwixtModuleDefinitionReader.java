@@ -98,11 +98,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
     public Map<String, ModuleDefinition> readAll() throws ModuleManagementException {
         final Map<String, ModuleDefinition> moduleDefinitions = new HashMap<String, ModuleDefinition>();
 
-        final String[] defResources = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-            public boolean accept(String name) {
-                return name.startsWith("/META-INF/magnolia/") && name.endsWith(".xml");
-            }
-        });
+        final String[] defResources = findModuleDescriptors();
 
         for (final String resourcePath : defResources) {
             log.debug("Parsing module file {}", resourcePath);
@@ -110,6 +106,14 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
             moduleDefinitions.put(def.getName(), def);
         }
         return moduleDefinitions;
+    }
+
+    protected String[] findModuleDescriptors() {
+        return ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+            public boolean accept(String name) {
+                return name.startsWith("/META-INF/magnolia/") && name.endsWith(".xml");
+            }
+        });
     }
 
     public ModuleDefinition read(Reader in) throws ModuleManagementException {
