@@ -63,7 +63,7 @@ public class PropertiesInitializerTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        SystemProperty.getPropertyList().clear();
+        SystemProperty.getProperties().clear();
         super.tearDown();
     }
 

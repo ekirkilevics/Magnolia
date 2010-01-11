@@ -117,7 +117,7 @@ public final class SystemProperty {
     }
 
     /**
-     * @deprecated use getProperties() instead
+     * @deprecated since 3.0 - use getProperties() instead
      */
     public static Map getPropertyList() {
         return properties;
