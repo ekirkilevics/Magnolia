@@ -72,7 +72,7 @@ public class FreemarkerConfig {
         // There is a bit of a messy dependency here: 
         // Ultimately, FreemarkerHelper and FreemarkerConfig could be merged,
         // but since FreemarkerHelper could be kept around, we'll first need
-        // to implement FactoryUtil so that the observed components are wrapped
+        // to implement DefaultComponentProvider so that the observed components are wrapped
         // by a proxy.
         FreemarkerHelper.getInstance().resetObjectWrapper();
     }

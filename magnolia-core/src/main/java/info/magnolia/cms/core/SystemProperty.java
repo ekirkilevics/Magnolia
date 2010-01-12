@@ -116,6 +116,10 @@ public final class SystemProperty {
         return value;
     }
 
+    public static boolean containsKey(String name) {
+        return properties.containsKey(name);
+    }
+
     /**
      * @deprecated since 3.0 - use getProperties() instead
      */

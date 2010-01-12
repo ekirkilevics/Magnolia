@@ -52,13 +52,13 @@ import javax.jcr.observation.EventListener;
 import java.util.Map;
 
 /**
- * Generic observerd singleton factory.
+ * Generic observed singleton factory.
  *
  * @author philipp
- * @version $Id: FactoryUtil.java 25238 2009-05-25 09:48:34Z pbaerfuss $
+ * @version $Id: $
  */
-public class ObservedObjectFactory implements EventListener {
-    private static final Logger log = LoggerFactory.getLogger(ObservedObjectFactory.class);
+public class ObservedComponentFactory implements EventListener {
+    private static final Logger log = LoggerFactory.getLogger(ObservedComponentFactory.class);
 
     private static final int DEFAULT_MAX_DELAY = 5000;
     private static final int DEFAULT_DELAY = 1000;
@@ -80,7 +80,7 @@ public class ObservedObjectFactory implements EventListener {
      */
     protected Object observedObject;
 
-    public ObservedObjectFactory(String repository, String path, Class interf) {
+    public ObservedComponentFactory(String repository, String path, Class interf) {
         this.path = path;
         this.repository = repository;
         this.interf = interf;
@@ -139,7 +139,8 @@ public class ObservedObjectFactory implements EventListener {
         return new Content2BeanTransformerImpl() {
             public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
                 if (state.getCurrentType().getType().equals(interf)) {
-                    return FactoryUtil.newInstanceWithoutDiscovery(interf.getName());
+                    final ClassFactory classFactory = ObjectFactory.classes();
+                    return classFactory.newInstance(interf);
                 }
                 return super.newBeanInstance(state, properties);
             }

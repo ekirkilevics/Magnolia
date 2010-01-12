@@ -36,6 +36,7 @@ package info.magnolia.cms.util;
 import java.util.Collections;
 import java.util.Map;
 
+import info.magnolia.objectfactory.ObjectFactory;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
@@ -44,15 +45,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for classes.
+ *
+ * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory}.
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public final class ClassUtil {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ClassUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(ClassUtil.class);
 
     private static Map subClassCache = Collections.synchronizedMap(new LRUMap(200));
 
@@ -65,32 +65,30 @@ public final class ClassUtil {
 
     /**
      * Load a class trying both with the standard that with the thread classloader.
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}.
+     *
      * @param className class name
      * @return loaded class
      * @throws ClassNotFoundException if the given class can't be loaded by both classloaders.
      */
     public static Class classForName(String className) throws ClassNotFoundException {
-        Class loadedClass;
-        try {
-            loadedClass = Class.forName(className);
-        }
-        catch (ClassNotFoundException e) {
-            loadedClass = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
-        }
-        return loadedClass;
+        return ObjectFactory.classes().forName(className);
     }
 
     /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}.
+     *
      * Shortcut for <code>ClassUtil.classForName(className).newInstance()</code>
+     * 
      * @param className class name
      * @return instance of the given class
      * @throws InstantiationException exception thrown by newInstance()
      * @throws IllegalAccessException exception thrown by newInstance()
      * @throws ClassNotFoundException if the given class can't be loaded by both classloaders
      */
-    public static Object newInstance(String className) throws InstantiationException, IllegalAccessException,
-        ClassNotFoundException {
-        return classForName(className).newInstance();
+    public static Object newInstance(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        final Class clazz = classForName(className);
+        return ObjectFactory.classes().newInstance(clazz);
     }
 
     /**
@@ -98,6 +96,7 @@ public final class ClassUtil {
      */
     public static boolean isSubClass(Class subClass, Class parentClass) {
         // TODO replace this with class.asSubclass as soon we compile with 1.5
+        // TODO or rather ?? parentClass.isAssignableFrom(subClass) ??
         if(subClass.equals(parentClass)){
             return true;
         }

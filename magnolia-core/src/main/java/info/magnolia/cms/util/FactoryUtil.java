@@ -33,78 +33,131 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.DefaultComponentProvider;
+import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.ObservedComponentFactory;
+
 /**
- * @deprecated since 4.3 - use info.magnolia.objectfactory.FactoryUtil
- *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
  */
 public class FactoryUtil {
     private FactoryUtil() {
 
     }
 
-    public static Object newInstance(Class interf) {
-        return info.magnolia.objectfactory.FactoryUtil.newInstance(interf);
-    }
-
-    public static Class getImplementation(Class interf) throws ClassNotFoundException {
-        return info.magnolia.objectfactory.FactoryUtil.getImplementation(interf);
-    }
-
-    public static Object newInstanceWithoutDiscovery(String className, Object[] args) {
-        return info.magnolia.objectfactory.FactoryUtil.newInstanceWithoutDiscovery(className, args);
-    }
-
-    public static Object newInstanceWithoutDiscovery(String className) {
-        return info.magnolia.objectfactory.FactoryUtil.newInstanceWithoutDiscovery(className);
-    }
-
-    public static Object getSingleton(Class interf) {
-        return info.magnolia.objectfactory.FactoryUtil.getSingleton(interf);
-    }
-
-    public static void setDefaultImplementation(Class interf, Class impl) {
-        info.magnolia.objectfactory.FactoryUtil.setDefaultImplementation(interf, impl);
-    }
-
-    public static void setDefaultImplementation(Class interf, String impl) {
-        info.magnolia.objectfactory.FactoryUtil.setDefaultImplementation(interf, impl);
-    }
-
-    public static void setImplementation(Class interf, Class impl) {
-        info.magnolia.objectfactory.FactoryUtil.setImplementation(interf, impl);
-    }
-
-    public static void setImplementation(Class interf, String impl) {
-        info.magnolia.objectfactory.FactoryUtil.setImplementation(interf, impl);
-    }
-
-    public static void setInstance(Class interf, Object instance) {
-        info.magnolia.objectfactory.FactoryUtil.setInstance(interf, instance);
-    }
-
-    public static void setInstanceFactory(Class interf, InstanceFactory factory) {
-        info.magnolia.objectfactory.FactoryUtil.setInstanceFactory(interf, factory);
-    }
-
-    public static void clear() {
-        info.magnolia.objectfactory.FactoryUtil.clear();
-    }
-
     /**
-     * @deprecated since 4.3 - use info.magnolia.objectfactory.InstanceFactory
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
      */
-    public interface InstanceFactory extends info.magnolia.objectfactory.InstanceFactory {
+    public static Object newInstance(Class interf) {
+        return ObjectFactory.components().newInstance(interf);
     }
 
     /**
-     * @deprecated since 4.3 - use info.magnolia.objectfactory.ObservedObjectFactory
-     * 
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
+     */
+    public static Class getImplementation(Class interf) throws ClassNotFoundException {
+        return ObjectFactory.components().getImplementation(interf);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
+     */
+    public static Object newInstanceWithoutDiscovery(String className, Object[] args) {
+        try {
+            final ClassFactory classFactory = ObjectFactory.classes();
+            final Class clazz = classFactory.forName(className);
+            return classFactory.newInstance(clazz, args);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}
+     */
+    public static Object newInstanceWithoutDiscovery(String className) {
+        return newInstanceWithoutDiscovery(className, new Object[]{});
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}
+     */
+    public static Object getSingleton(Class interf) {
+        return ObjectFactory.components().getSingleton(interf);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, Class)}
+     *             todo - this is only used in tests
+     */
+    public static void setDefaultImplementation(Class interf, Class impl) {
+        ((DefaultComponentProvider) ObjectFactory.components()).setDefaultImplementation(interf, impl);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, String)}
+     *             todo - this is only used in tests
+     */
+    public static void setDefaultImplementation(Class interf, String impl) {
+        ((DefaultComponentProvider) ObjectFactory.components()).setDefaultImplementation(interf, impl);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, Class)}
+     *             todo - this is only used in tests
+     */
+    public static void setImplementation(Class interf, Class impl) {
+        ((DefaultComponentProvider) ObjectFactory.components()).setImplementation(interf, impl);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, String)}
+     *             todo - this is not used
+     */
+    public static void setImplementation(Class interf, String impl) {
+        ((DefaultComponentProvider) ObjectFactory.components()).setImplementation(interf, impl);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstance(Class, Object)}
+     *             todo - this is only used in tests
+     */
+    public static void setInstance(Class interf, Object instance) {
+        ((DefaultComponentProvider) ObjectFactory.components()).setInstance(interf, instance);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstanceFactory(Class, info.magnolia.objectfactory.ComponentFactory)}
+     *             todo - this is only used in tests
+     */
+    public static void setInstanceFactory(Class interf, InstanceFactory factory) {
+        ((DefaultComponentProvider) ObjectFactory.components()).setInstanceFactory(interf, factory);
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#clear()}
+     *             todo - this is only used in tests
+     */
+    public static void clear() {
+        ((DefaultComponentProvider) ObjectFactory.components()).clear();
+    }
+
+    /**
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ComponentFactory}
+     */
+    public interface InstanceFactory extends ComponentFactory {
+    }
+
+    /**
      * @author philipp
      * @version $Id$
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObservedComponentFactory}
      */
-    public static class ObservedObjectFactory extends info.magnolia.objectfactory.ObservedObjectFactory {
+    public static class ObservedObjectFactory extends ObservedComponentFactory {
         public ObservedObjectFactory(String repository, String path, Class interf) {
             super(repository, path, interf);
         }

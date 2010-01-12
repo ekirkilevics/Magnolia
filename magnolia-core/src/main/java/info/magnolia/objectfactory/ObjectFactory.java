@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,10 +33,40 @@
  */
 package info.magnolia.objectfactory;
 
+import info.magnolia.cms.core.SystemProperty;
+import org.apache.commons.lang.StringUtils;
+
 /**
+ * The ObjectFactory is the central point for accessing and instantiating objects configured in Magnolia.
+ * It uses the system properties to determine which implementations to use.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface InstanceFactory {
-    public Object newInstance();
+public class ObjectFactory {
+    private static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
+
+    public static ClassFactory classes() {
+        final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
+
+        if (StringUtils.isEmpty(classFactoryClassName)) {
+            // use a DefaultClassFactory until the property is set
+            return new DefaultClassFactory();
+        } else {
+            // whichever ClassFactory is registered will be instantiated with DefaultClassFactory.
+            final DefaultClassFactory temp = new DefaultClassFactory();
+            try {
+                final Class c = temp.forName(classFactoryClassName);
+                // TODO - cache !
+                return (ClassFactory) temp.newInstance(c);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static ComponentProvider components() {
+        return componentProvider;
+    }
+
 }

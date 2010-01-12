@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
@@ -57,6 +56,8 @@ import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.module.ui.ModuleManagerNullUI;
 import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerWebUI;
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.ObjectFactory;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import org.apache.commons.beanutils.BeanUtils;
@@ -297,9 +298,11 @@ public class ModuleManagerImpl implements ModuleManager {
 
                 if (moduleInstance == null && moduleClassName != null) {
                     try {
-                        moduleInstance = ClassUtil.newInstance(moduleClassName);
+                        final ClassFactory classFactory = ObjectFactory.classes();
+                        final Class moduleClass = classFactory.forName(moduleClassName);
+                        moduleInstance = classFactory.newInstance(moduleClass);
                     } catch (Throwable t) {
-                        log.error("Can't instanciate " + moduleClassName + " for module " + moduleName + " : " + t.getClass() + " : " + t.getMessage(), t);
+                        log.error("Can't instantiate " + moduleClassName + " for module " + moduleName + " : " + t.getClass() + " : " + t.getMessage(), t);
                         continue;
                     }
                     registry.registerModuleInstance(moduleName, moduleInstance);
