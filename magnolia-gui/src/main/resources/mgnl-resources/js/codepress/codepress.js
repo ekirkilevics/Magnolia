@@ -120,6 +120,7 @@ CodePress.languages = {
     csharp : 'C#',
     css : 'CSS',
     generic : 'Generic',
+    groovy : 'Groovy',
     html : 'HTML',
     java : 'Java',
     javascript : 'JavaScript',
