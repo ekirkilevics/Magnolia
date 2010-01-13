@@ -116,7 +116,7 @@ public final class SystemProperty {
         return value;
     }
 
-    public static boolean containsKey(String name) {
+    public static boolean hasProperty(String name) {
         return properties.containsKey(name);
     }
 
