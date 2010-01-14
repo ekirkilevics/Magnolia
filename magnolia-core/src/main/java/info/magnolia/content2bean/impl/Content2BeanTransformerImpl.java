@@ -44,31 +44,30 @@ import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
-
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.objectfactory.ObjectFactory;
+import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * Concrete implementation using reflection and adder methods.
+ *
  * @author philipp
  * @version $Id$
  */
-public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter  {
+public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter {
 
     private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
 
@@ -126,14 +125,13 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                     // this is not necesserely the parent node of the current
                     String mapProperyName = state.peekContent(1).getName();
                     propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName);
-                    if(propDscr != null){
+                    if (propDscr != null) {
                         typeDscr = propDscr.getCollectionEntryType();
                     }
                 }
-            }
-            else {
+            } else {
                 propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName());
-                if(propDscr != null){
+                if (propDscr != null) {
                     typeDscr = propDscr.getType();
                 }
             }
@@ -141,16 +139,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         typeDscr = onResolveType(state, typeDscr);
 
-        if(typeDscr != null){
+        if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
             typeDscr = getTypeMapping().getTypeDescriptor(FactoryUtil.getImplementation(typeDscr.getType()));
 
             // now that we know the property type we should delegate to the custom transformer if any defined
             Content2BeanTransformer customTransformer = typeDscr.getTransformer();
-            if(customTransformer != null && customTransformer != this){
+            if (customTransformer != null && customTransformer != this) {
                 TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(state);
                 // if no specific type has been provided by the
-                if(typeFoundByCustomTransformer != TypeMapping.MAP_TYPE){
+                if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
                     // might be that the factory util defines a default implementation for interfaces
                     Class<?> implementation = FactoryUtil.getImplementation(typeFoundByCustomTransformer.getType());
                     typeDscr = getTypeMapping().getTypeDescriptor(implementation);
@@ -159,7 +157,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         }
 
         if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
-            if(typeDscr== null){
+            if (typeDscr == null) {
                 log.debug("was not able to resolve type for node [{}] will use a map", node);
             }
             typeDscr = TypeMapping.MAP_TYPE;
@@ -199,7 +197,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         TypeMapping mapping = getTypeMapping();
 
         String propertyName = descriptor.getName();
-        if(propertyName.equals("class")){
+        if (propertyName.equals("class")) {
             return;
         }
         Object value = values.get(propertyName);
@@ -207,13 +205,9 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         if (propertyName.equals("content") && value == null) {
             value = new SystemContentWrapper(state.getCurrentContent());
-        }
-
-        else if (propertyName.equals("name") && value == null) {
+        } else if (propertyName.equals("name") && value == null) {
             value = state.getCurrentContent().getName();
-        }
-
-        else if (propertyName.equals("className") && value == null) {
+        } else if (propertyName.equals("className") && value == null) {
             value = values.get("class");
         }
 
@@ -233,14 +227,14 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
                     // try to use an adder method for a Collection property of the bean
                     if (dscr.isCollection() || dscr.isMap()) {
-                        log.debug("{} is of type collection, map or /array", propertyName );
+                        log.debug("{} is of type collection, map or /array", propertyName);
                         Method method = dscr.getAddMethod();
 
                         if (method != null) {
                             log.debug("clearing the current content of the collection/map");
                             try {
                                 Object col = PropertyUtils.getProperty(bean, propertyName);
-                                if(col != null){
+                                if (col != null) {
                                     MethodUtils.invokeExactMethod(col, "clear", new Object[]{});
                                 }
                             }
@@ -269,13 +263,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                             return;
                         } else {
                             log.debug("no add method found for property {}", propertyName);
-                            if(dscr.isCollection()){
+                            if (dscr.isCollection()) {
                                 log.debug("transform the valus to a collection", propertyName);
-                                value = ((Map<Object, Object>)value).values();
+                                value = ((Map<Object, Object>) value).values();
                             }
                         }
-                    }
-                    else {
+                    } else {
                         value = convertPropertyValue(dscr.getType().getType(), value);
                     }
                 }
@@ -286,7 +279,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             }
         }
 
-        try{
+        try {
             // This uses the converters registered in beanUtilsBean.convertUtilsBean (see constructor of this class)
             // If a converter is registered, beanutils will convert value.toString(), not the value object as-is.
             // If no converter is registered, then the value Object is set as-is.
@@ -318,38 +311,40 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             }
         }
 
-        if(propertyType == Locale.class){
-            if(value instanceof String){
+        if (Locale.class.equals(propertyType)) {
+            if (value instanceof String) {
                 String localeStr = (String) value;
-                if(StringUtils.isNotEmpty(localeStr)){
+                if (StringUtils.isNotEmpty(localeStr)) {
                     return LocaleUtils.toLocale(localeStr);
                 }
             }
         }
-        if(propertyType == Collection.class && value instanceof Map){
-            return ((Map)value).values();
+
+        if ((Collection.class.equals(propertyType)) && (value instanceof Map)) {
+            return ((Map) value).values();
         }
 
         // this is mainly the case when we are flattening node hierarchies
-        if(propertyType == String.class && value instanceof Map && ((Map)value).size() == 1){
-            return ((Map)value).values().iterator().next();
+        if ((String.class.equals(propertyType)) && (value instanceof Map) && (((Map) value).size() == 1)) {
+            return ((Map) value).values().iterator().next();
         }
+
         return value;
     }
 
     /**
      * Use the factory util to instantiate. This is useful to get default implementation of interfaces
      */
-    public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException{
+    public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
         // we try first to use conversion (Map --> primitive type)
         // this is the case when we flattening the hierarchy?
         Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
         // were the properties transformed?
-        if(bean == properties){
-            try{
+        if (bean == properties) {
+            try {
                 bean = FactoryUtil.newInstance(state.getCurrentType().getType());
             }
-            catch(Throwable e){
+            catch (Throwable e) {
                 throw new Content2BeanException(e);
             }
         }
@@ -378,7 +373,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         catch (NoSuchMethodException e) {
             return;
         }
-        log.debug("{} is initialized" , bean);
+        log.debug("{} is initialized", bean);
     }
 
     public TransformationState newState() {
@@ -386,7 +381,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * Returns the dafault mapping
+     * Returns the default mapping.
      */
     public TypeMapping getTypeMapping() {
         return TypeMapping.Factory.getDefaultMapping();
