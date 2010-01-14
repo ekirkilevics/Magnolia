@@ -39,7 +39,6 @@ import junit.framework.TestCase;
 import java.io.UnsupportedEncodingException;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -61,8 +60,19 @@ public class UnicodeNormalizerTest extends TestCase {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        SystemProperty.getProperties().clear();
+        FactoryUtil.clear();
         SystemProperty.setProperty("info.magnolia.cms.util.UnicodeNormalizer$Normalizer", "info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer");
+    }
+
+    protected void tearDown() throws Exception {
+        SystemProperty.getProperties().clear();
+        FactoryUtil.clear();
+        super.tearDown();
     }
 
     public void testAsciiStringsShouldPassThroughWithAutoDetect() {
