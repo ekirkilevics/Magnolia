@@ -40,10 +40,10 @@ package info.magnolia.objectfactory;
 public interface ComponentProvider {
 
     // TODO - is this needed ?
-    Class getImplementation(Class type) throws ClassNotFoundException;
+    Class<?> getImplementation(Class<?> type) throws ClassNotFoundException;
 
-    Object getSingleton(Class type);
+    Object getSingleton(Class<?> type);
 
-    Object newInstance(Class type);
+    Object newInstance(Class<?> type);
 
 }

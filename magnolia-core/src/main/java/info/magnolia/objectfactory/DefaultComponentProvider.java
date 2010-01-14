@@ -34,6 +34,8 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.util.FactoryUtil.InstanceFactory;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -55,12 +57,12 @@ public class DefaultComponentProvider implements ComponentProvider {
     /**
      * Registered singleton instances.
      */
-    private final Map instances = new HashMap();
+    private final Map<Class<?>, Object> instances = new HashMap<Class<?>, Object>();
 
     /**
      * Registered Prototypes used for new Instance.
      */
-    private final Map factories = new HashMap();
+    private final Map<Class<?>, ComponentFactory<?>> factories = new HashMap<Class<?>, ComponentFactory<?>>();
 
     private final Properties mappings;
 
@@ -73,7 +75,7 @@ public class DefaultComponentProvider implements ComponentProvider {
         // since it might get swapped later
     }
 
-    public synchronized Object getSingleton(Class type) {
+    public synchronized Object getSingleton(Class<?> type) {
         Object instance = instances.get(type);
         if (instance == null) {
             instance = newInstance(type);
@@ -86,19 +88,20 @@ public class DefaultComponentProvider implements ComponentProvider {
     }
 
     /**
-     * Creates a new instance of the passed interfaceace / class by using the registered implementation.
+     * Creates a new instance of the passed interface / class by using the registered implementation.
      * If this fails a {@link IllegalStateException} is thrown.
      *
      * @throws IllegalStateException
      */
-    public Object newInstance(Class type) {
+    public Object newInstance(Class<?> type) {
+        // TODO: the parameter class type should be the same as the used ComponentFactory class type and should by tight to the returnd Object type
         if (type == null) {
             log.error("type can't be null", new Throwable());
             return null;
         }
         try {
             if (factories.containsKey(type)) {
-                return ((ComponentFactory) factories.get(type)).newInstance();
+                return ((ComponentFactory<?>) factories.get(type)).newInstance();
             }
 
             final String className = getImplementationName(type);
@@ -115,8 +118,8 @@ public class DefaultComponentProvider implements ComponentProvider {
                 Object instance = ObjectFactory.classes().newInstance(clazz);
 
                 if (instance instanceof ComponentFactory) {
-                    setInstanceFactory(type, (ComponentFactory) instance);
-                    return ((ComponentFactory) instance).newInstance();
+                    setInstanceFactory(type, (ComponentFactory<?>) instance);
+                    return ((ComponentFactory<?>) instance).newInstance();
                 }
                 return instance;
             }
@@ -126,7 +129,7 @@ public class DefaultComponentProvider implements ComponentProvider {
         }
     }
 
-    public Class getImplementation(Class type) throws ClassNotFoundException {
+    public Class<?> getImplementation(Class<?> type) throws ClassNotFoundException {
         String className = getImplementationName(type);
         if (!isInRepositoryDefinition(className)) {
             return ObjectFactory.classes().forName(className);
@@ -135,7 +138,7 @@ public class DefaultComponentProvider implements ComponentProvider {
         }
     }
 
-    protected String getImplementationName(Class type) {
+    protected String getImplementationName(Class<?> type) {
         final String name = type.getName();
         return mappings.getProperty(name, name);
     }
@@ -147,7 +150,7 @@ public class DefaultComponentProvider implements ComponentProvider {
     /**
      * todo - this is only used in tests
      */
-    public void setDefaultImplementation(Class type, Class impl) {
+    public void setDefaultImplementation(Class<?> type, Class<?> impl) {
         setDefaultImplementation(type, impl.getName());
     }
 
@@ -163,14 +166,14 @@ public class DefaultComponentProvider implements ComponentProvider {
     /**
      * todo - this is only used in tests
      */
-    public void setImplementation(Class type, Class impl) {
+    public void setImplementation(Class<?> type, Class<?> impl) {
         setImplementation(type, impl.getName());
     }
 
     /**
      * todo - this is not used
      */
-    public void setImplementation(Class type, String impl) {
+    public void setImplementation(Class<?> type, String impl) {
         mappings.setProperty(type.getName(), impl);
     }
 
@@ -178,7 +181,7 @@ public class DefaultComponentProvider implements ComponentProvider {
      * Register an instance which will be returned by getSingleton().
      * todo - this is only used in tests
      */
-    public void setInstance(Class type, Object instance) {
+    public void setInstance(Class<?> type, Object instance) {
         instances.put(type, instance);
     }
 
@@ -186,7 +189,7 @@ public class DefaultComponentProvider implements ComponentProvider {
      * newInstance will use this prototype for cloning a new object.
      * todo - this is only used in tests
      */
-    public void setInstanceFactory(Class type, ComponentFactory factory) {
+    public void setInstanceFactory(Class<?> type, ComponentFactory<?> factory) {
         factories.put(type, factory);
     }
 

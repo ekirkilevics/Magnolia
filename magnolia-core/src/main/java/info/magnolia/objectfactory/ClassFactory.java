@@ -43,15 +43,15 @@ package info.magnolia.objectfactory;
  * @version $Revision: $ ($Author: $)
  */
 public interface ClassFactory {
-    Class forName(String className) throws ClassNotFoundException;
+    Class<?> forName(String className) throws ClassNotFoundException;
 
     /**
      * Instantiates the given class.
      */
-    Object newInstance(Class c);
+    Object newInstance(Class<?> c);
 
     /**
      * Instantiates the given class with the given parameters.
      */
-    Object newInstance(Class c, Object... params);
+    Object newInstance(Class<?> c, Object... params);
 }

@@ -39,8 +39,6 @@ import java.util.Map;
 import info.magnolia.objectfactory.ObjectFactory;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.ClassUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -52,9 +50,8 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public final class ClassUtil {
-    private static final Logger log = LoggerFactory.getLogger(ClassUtil.class);
 
-    private static Map subClassCache = Collections.synchronizedMap(new LRUMap(200));
+    private static Map<String, Boolean> subClassCache = Collections.synchronizedMap(new LRUMap(200));
 
     /**
      * Don't instantiate.
@@ -94,7 +91,7 @@ public final class ClassUtil {
     /**
      * Checks if this class is a subclass
      */
-    public static boolean isSubClass(Class subClass, Class parentClass) {
+    public static boolean isSubClass(Class<?> subClass, Class<?> parentClass) {
         // TODO replace this with class.asSubclass as soon we compile with 1.5
         // TODO or rather ?? parentClass.isAssignableFrom(subClass) ??
         if(subClass.equals(parentClass)){
@@ -103,7 +100,7 @@ public final class ClassUtil {
         String key = subClass.getName() + "-" +parentClass.getName();
 
         // lru map
-        Boolean isSubClass = (Boolean) subClassCache.get(key);
+        Boolean isSubClass = subClassCache.get(key);
         if(isSubClass != null){
             return isSubClass.booleanValue();
         }

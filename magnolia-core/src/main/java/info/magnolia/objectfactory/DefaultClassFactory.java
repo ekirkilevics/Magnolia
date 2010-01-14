@@ -45,8 +45,8 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class DefaultClassFactory implements ClassFactory {
 
-    public Class forName(String className) throws ClassNotFoundException {
-        Class loadedClass;
+    public Class<?> forName(String className) throws ClassNotFoundException {
+        Class<?> loadedClass;
         try {
             loadedClass = Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -56,11 +56,11 @@ public class DefaultClassFactory implements ClassFactory {
 
     }
 
-    public Object newInstance(Class c) {
+    public Object newInstance(Class<?> c) {
         return newInstance(c, new Object[]{});
     }
 
-    public Object newInstance(Class c, Object... params) {
+    public Object newInstance(Class<?> c, Object... params) {
         try {
             return ConstructorUtils.invokeConstructor(c, params);
 
