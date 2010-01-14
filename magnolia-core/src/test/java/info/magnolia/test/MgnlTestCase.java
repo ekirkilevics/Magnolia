@@ -52,17 +52,12 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Level;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author philipp
  * @version $Id$
  */
 public abstract class MgnlTestCase extends TestCase {
-
-    private static Logger log = LoggerFactory.getLogger(MgnlTestCase.class);
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -81,6 +76,7 @@ public abstract class MgnlTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         FactoryUtil.clear();
+        SystemProperty.getProperties().clear();        
         MgnlContext.setInstance(null);
         super.tearDown();
     }
