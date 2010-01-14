@@ -83,7 +83,7 @@ public class DelayedExecutor {
         }
         if (taskId != null && (timestamp + maxDelay >= now)) {
             log.debug("execution canceled");
-            timer.cancel(taskId);
+            ClockDaemon.cancel(taskId);
         }
         taskId = timer.executeAfterDelay(delay, command);
     }
