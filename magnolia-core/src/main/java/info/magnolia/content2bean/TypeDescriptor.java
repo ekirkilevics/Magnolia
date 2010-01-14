@@ -50,7 +50,7 @@ import org.apache.commons.beanutils.PropertyUtils;
  */
 public class TypeDescriptor {
 
-    private Class type;
+    private Class<?> type;
 
     private ItemType itemType;
 
@@ -60,7 +60,7 @@ public class TypeDescriptor {
 
     private boolean isCollection;
 
-    private Map descriptors;
+    private Map<String, PropertyTypeDescriptor> descriptors;
 
     public ItemType getItemType() {
         return this.itemType;
@@ -70,11 +70,11 @@ public class TypeDescriptor {
         this.itemType = itemType;
     }
 
-    public Class getType() {
+    public Class<?> getType() {
         return this.type;
     }
 
-    public void setType(Class type) {
+    public void setType(Class<?> type) {
         this.type = type;
     }
 
@@ -99,20 +99,20 @@ public class TypeDescriptor {
     }
 
     public PropertyTypeDescriptor getPropertyTypeDescriptor(String properyName) {
-        return (PropertyTypeDescriptor) getPropertyDescriptors().get(properyName);
+        return getPropertyDescriptors().get(properyName);
     }
 
     /**
-     * This method is not synchronized to avoid thread blockings but the method guaranties that the returned map is not mutated afterward.
+     * This method is not synchronized to avoid thread blocking, but the method guarantees that the returned map is not mutated afterward.
      */
-    public Map getPropertyDescriptors() {
+    public Map<String, PropertyTypeDescriptor> getPropertyDescriptors() {
         if(this.descriptors == null){
             // TODO this breaks the usage of a custom mapping
             TypeMapping mapping = TypeMapping.Factory.getDefaultMapping();
 
-            // for not miking this methos synchronized we crteate a local variable first
-            // this guaranties that the map you get is not changed after retu
-            final Map tmpDescriptors = new HashMap();
+            // for not making this method synchronized we create a local variable first
+            // this guarantees that the map you get is not changed after return
+            final Map<String, PropertyTypeDescriptor> tmpDescriptors = new HashMap<String, PropertyTypeDescriptor>();
             PropertyDescriptor[] dscrs = PropertyUtils.getPropertyDescriptors(this.getType());
             for (int i = 0; i < dscrs.length; i++) {
                 PropertyDescriptor descriptor = dscrs[i];

@@ -56,13 +56,13 @@ public class PropertiesBasedTypeMapping extends TypeMappingImpl {
 
     public PropertiesBasedTypeMapping() {
         Properties properties = SystemProperty.getProperties();
-        for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
+        for (Iterator<Object> iterator = properties.keySet().iterator(); iterator.hasNext();) {
             String key = (String) iterator.next();
             if(key.endsWith(".transformer")){
                 String className = StringUtils.removeEnd(key, ".transformer");
                 String transformerClassName = properties.getProperty(key);
                 try {
-                    Class beanClass = ClassUtil.classForName(className);
+                    Class<?> beanClass = ClassUtil.classForName(className);
                     Content2BeanTransformer transformer = (Content2BeanTransformer) ClassUtil.newInstance(transformerClassName);
                     getTypeDescriptor(beanClass).setTransformer(transformer);
                     log.debug("Registered custom transformer [{}] for [{}]", className, transformerClassName);

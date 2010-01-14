@@ -49,13 +49,13 @@ public interface TypeMapping {
 
     public static TypeDescriptor MAP_TYPE = Factory.getDefaultMapping().getTypeDescriptor(LinkedHashMap.class);
 
-    public PropertyTypeDescriptor getPropertyTypeDescriptor(Class beanClass, String propName);
+    public PropertyTypeDescriptor getPropertyTypeDescriptor(Class<?> beanClass, String propName);
 
-    public TypeDescriptor getTypeDescriptor(Class beanClass);
+    public TypeDescriptor getTypeDescriptor(Class<?> beanClass);
 
-    public void addPropertyTypeDescriptor(Class beanClass, String propName, PropertyTypeDescriptor dscr);
+    public void addPropertyTypeDescriptor(Class<?> beanClass, String propName, PropertyTypeDescriptor dscr);
 
-    public void addTypeDescriptor(Class beanClass, TypeDescriptor dscr);
+    public void addTypeDescriptor(Class<?> beanClass, TypeDescriptor dscr);
 
     /**
      * Get the default transformer.

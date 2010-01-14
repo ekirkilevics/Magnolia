@@ -66,17 +66,17 @@ public class TypeMappingImpl implements TypeMapping {
     /**
      * Property types already resolved
      */
-    protected static Map propertyTypes = new HashMap();
+    protected static Map<String, PropertyTypeDescriptor> propertyTypes = new HashMap<String, PropertyTypeDescriptor>();
 
     /**
      * Descriptors for types
      **/
-    protected static Map types = new HashMap();
+    protected static Map<Class<?>, TypeDescriptor> types = new HashMap<Class<?>, TypeDescriptor>();
 
     /**
      * Get a adder method. Transforms name to singular
      */
-    public Method getAddMethod(Class type, String name, int numberOfParameters) {
+    public Method getAddMethod(Class<?> type, String name, int numberOfParameters) {
         name = StringUtils.capitalize(name);
         Method method = getExactMethod(type, "add" + name, numberOfParameters);
         if (method == null) {
@@ -101,11 +101,11 @@ public class TypeMappingImpl implements TypeMapping {
      * Cache the already resolved types
      *
      */
-    public PropertyTypeDescriptor getPropertyTypeDescriptor(Class beanClass, String propName) {
+    public PropertyTypeDescriptor getPropertyTypeDescriptor(Class<?> beanClass, String propName) {
         PropertyTypeDescriptor dscr;
         String key = beanClass.getName() + "." + propName;
 
-        dscr = (PropertyTypeDescriptor) propertyTypes.get(key);
+        dscr = propertyTypes.get(key);
         if(dscr != null){
             return dscr;
         }
@@ -125,7 +125,7 @@ public class TypeMappingImpl implements TypeMapping {
         for (int i = 0; i < descriptors.length; i++) {
             PropertyDescriptor descriptor = descriptors[i];
             if (descriptor.getName().equals(propName)) {
-                Class propertytype = descriptor.getPropertyType(); // may be null for indexed properties
+                Class<?> propertytype = descriptor.getPropertyType(); // may be null for indexed properties
                 if (propertytype != null) {
                     dscr.setType(getTypeDescriptor(propertytype));
                 }
@@ -156,16 +156,16 @@ public class TypeMappingImpl implements TypeMapping {
         return dscr;
     }
 
-    public void addPropertyTypeDescriptor(Class beanClass, String propName, PropertyTypeDescriptor dscr) {
+    public void addPropertyTypeDescriptor(Class<?> beanClass, String propName, PropertyTypeDescriptor dscr) {
         propertyTypes.put(beanClass.getName() + "." + propName, dscr);
     }
 
-    public void addTypeDescriptor(Class beanClass, TypeDescriptor dscr) {
+    public void addTypeDescriptor(Class<?> beanClass, TypeDescriptor dscr) {
         types.put(beanClass, dscr);
     }
 
-    public TypeDescriptor getTypeDescriptor(Class beanClass) {
-        TypeDescriptor dscr = (TypeDescriptor) types.get(beanClass);
+    public TypeDescriptor getTypeDescriptor(Class<?> beanClass) {
+        TypeDescriptor dscr = types.get(beanClass);
         if(dscr != null){
             return dscr;
         }
@@ -175,7 +175,7 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setCollection(beanClass.isArray() || ClassUtil.isSubClass(beanClass, Collection.class));
         types.put(beanClass, dscr);
         try {
-            Class transformerClass = ClassUtil.classForName(beanClass.getName() + "Transformer");
+            Class<?> transformerClass = ClassUtil.classForName(beanClass.getName() + "Transformer");
 
             if(ClassUtil.isSubClass(transformerClass, Content2BeanTransformer.class)){
                 try {
@@ -198,7 +198,7 @@ public class TypeMappingImpl implements TypeMapping {
      * Find a method
      * @param numberOfParameters
      */
-    protected Method getExactMethod(Class type, String name, int numberOfParameters) {
+    protected Method getExactMethod(Class<?> type, String name, int numberOfParameters) {
         Method[] methods = type.getMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];

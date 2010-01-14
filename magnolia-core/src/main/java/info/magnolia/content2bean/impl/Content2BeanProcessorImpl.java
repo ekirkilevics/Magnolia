@@ -44,7 +44,6 @@ import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -92,7 +91,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
             transformer = resolveTransformer(type, transformer);
 
-            Map values = toMap(node, recursive, transformer, state);
+            Map<String, Object> values = toMap(node, recursive, transformer, state);
 
             try {
                 bean = transformer.newBeanInstance(state, values);
@@ -105,7 +104,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                     throw new Content2BeanException("Can't instantiate bean for " +  node.getHandle(), e);
                 }
             }
-            
+
             if(bean != null){
                 state.pushBean(bean);
 
@@ -142,7 +141,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
         transformer = resolveTransformer(type, transformer);
 
-        Map values = toMap(node, recursive, transformer, state);
+        Map<String, Object> values = toMap(node, recursive, transformer, state);
 
         setProperties(values, transformer, state);
 
@@ -158,10 +157,9 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     /**
      * toBean() is used to build children
      */
-    protected Map toMap(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
-        Map map = new LinkedHashMap();
-        for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-            NodeData nd = (NodeData) iter.next();
+    protected Map<String, Object> toMap(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        for (NodeData nd : node.getNodeDataCollection()) {
             Object val = NodeDataUtil.getValueObject(nd);
             if (val != null) {
                 map.put(nd.getName(), val);
@@ -169,9 +167,8 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         }
 
         if(recursive){
-            Collection children = transformer.getChildren(node);
-            for (Iterator iter = children.iterator(); iter.hasNext();) {
-                final Content childNode = (Content) iter.next();
+            final Collection<Content> children = transformer.getChildren(node);
+            for (Content childNode : children) {
                 // in case the the class can not get resolved we can use now
                 // the parent bean to resolve the class
 
@@ -200,24 +197,23 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
      * @todo in case the bean is a map / collection the transfomer.setProperty() method should be called too
      * @todo if the bean has not a certain property but a value is present, transformer.setProperty() should be called with a fake property descriptor
      */
-    protected void setProperties(Map values, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
+    protected void setProperties(Map<String, Object> values, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
         Object bean = state.getCurrentBean();
         log.debug("will populate bean {} with the values {}", bean.getClass().getName(), values);
 
         if(bean instanceof Map){
-            ((Map)bean).putAll(values);
+            ((Map<String, Object>)bean).putAll(values);
         }
 
         if(bean instanceof Collection){
-            ((Collection)bean).addAll(values.values());
+            ((Collection<Object>)bean).addAll(values.values());
         }
 
         else{
             TypeDescriptor beanTypeDescriptor = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
-            Collection dscrs = beanTypeDescriptor.getPropertyDescriptors().values();
+            final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors().values();
 
-            for (Iterator iter = dscrs.iterator(); iter.hasNext();) {
-                PropertyTypeDescriptor descriptor = (PropertyTypeDescriptor) iter.next();
+            for (PropertyTypeDescriptor descriptor : dscrs) {
                 transformer.setProperty(state, descriptor, values);
             }
         }

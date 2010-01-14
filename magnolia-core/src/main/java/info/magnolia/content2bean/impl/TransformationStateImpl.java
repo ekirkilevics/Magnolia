@@ -38,16 +38,9 @@ import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 
 import org.apache.commons.collections.ArrayStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class TransformationStateImpl implements TransformationState {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(TransformationStateImpl.class);
 
     protected ArrayStack typeStack = new ArrayStack();
 

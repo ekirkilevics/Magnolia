@@ -57,9 +57,9 @@ public interface Content2BeanTransformer {
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
 
     /**
-     * Returns the children of the node to be transformed. This are normaly the direct children but might differ
+     * Returns the children of the node to be transformed. Those are normally the direct children but might differ
      */
-    public Collection getChildren(Content node);
+    public Collection<Content> getChildren(Content node);
 
     /**
      * Instantiates the bean
@@ -74,12 +74,12 @@ public interface Content2BeanTransformer {
     /**
      * Set this property on that bean. Allows excluding of properties
      */
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values);
+    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values);
 
     /**
-     * Transforms the simple basic jcr property value objects to complexer properties
+     * Transforms the simple basic jcr property value objects to more complex properties
      */
-    public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException;
+    public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException;
 
     /**
      * The mapping to use

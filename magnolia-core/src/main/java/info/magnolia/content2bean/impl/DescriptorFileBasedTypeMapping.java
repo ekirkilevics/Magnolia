@@ -88,7 +88,7 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
         className = StringUtils.removeStart(className, ".");
         className = StringUtils.removeEnd(className, ".content2bean");
         try {
-            Class typeClass = ClassUtil.classForName(className);
+            Class<?> typeClass = ClassUtil.classForName(className);
 
             TypeDescriptor typeDescriptor = processProperties(typeClass, props);
             addTypeDescriptor(typeClass, typeDescriptor);
@@ -97,10 +97,10 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
         }
     }
 
-    protected TypeDescriptor processProperties(Class className, Properties props) throws Exception {
+    protected TypeDescriptor processProperties(Class<?> className, Properties props) throws Exception {
             String descriptorClassName = StringUtils.defaultIfEmpty(props.getProperty("descriptorClass"), PropertiesBasedTypeDescriptor.class.getName());
-            Class descriptorClass = ClassUtil.classForName(descriptorClassName);
-            Constructor constructor = descriptorClass.getConstructor(new Class[] {Properties.class});
-            return (TypeDescriptor) constructor.newInstance(new Object[]{props});
+            Class<? extends TypeDescriptor> descriptorClass = ClassUtil.classForName(descriptorClassName);
+            Constructor<? extends TypeDescriptor> constructor = descriptorClass.getConstructor(new Class[] {Properties.class});
+            return constructor.newInstance(new Object[]{props});
     }
 }

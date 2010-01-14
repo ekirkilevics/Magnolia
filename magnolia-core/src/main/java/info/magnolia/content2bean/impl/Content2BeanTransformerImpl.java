@@ -68,7 +68,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter  {
-    
+
     private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
 
     private final BeanUtilsBean beanUtilsBean;
@@ -103,7 +103,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 if (StringUtils.isBlank(className)) {
                     throw new ClassNotFoundException("(no value for class property)");
                 }
-                Class clazz = ClassUtil.classForName(className);
+                Class<?> clazz = ClassUtil.classForName(className);
                 typeDscr = getTypeMapping().getTypeDescriptor(clazz);
             }
         }
@@ -147,7 +147,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 // if no specific type has been provided by the
                 if(typeFoundByCustomTransformer != TypeMapping.MAP_TYPE){
                     // might be that the factory util defines a default implementation for interfaces
-                    Class implementation = FactoryUtil.getImplementation(typeFoundByCustomTransformer.getType());
+                    Class<?> implementation = FactoryUtil.getImplementation(typeFoundByCustomTransformer.getType());
                     typeDscr = getTypeMapping().getTypeDescriptor(implementation);
                 }
             }
@@ -175,7 +175,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         return resolvedType;
     }
 
-    public Collection getChildren(Content node) {
+    public Collection<Content> getChildren(Content node) {
         return node.getChildren(this);
     }
 
@@ -189,7 +189,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Do not set class property. In case of a map/collection try to use adder method.
      */
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         TypeMapping mapping = getTypeMapping();
 
         String propertyName = descriptor.getName();
@@ -242,12 +242,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                                 log.debug("no clear method found on collection {}", propertyName);
                             }
 
-                            Class entryClass = dscr.getCollectionEntryType().getType();
+                            Class<?> entryClass = dscr.getCollectionEntryType().getType();
 
                             log.debug("will add values by using adder method {}", method.getName());
-                            for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
+                            for (Iterator<Object> iter = ((Map<Object, Object>) value).keySet().iterator(); iter.hasNext();) {
                                 Object key = iter.next();
-                                Object entryValue = ((Map) value).get(key);
+                                Object entryValue = ((Map<Object, Object>) value).get(key);
                                 entryValue = convertPropertyValue(entryClass, entryValue);
                                 if (dscr.isCollection()) {
                                     log.debug("will add value {}", entryValue);
@@ -261,12 +261,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                             }
 
                             return;
-                        }
-                        else{
+                        } else {
                             log.debug("no add method found for property {}", propertyName);
                             if(dscr.isCollection()){
                                 log.debug("transform the valus to a collection", propertyName);
-                                value = ((Map)value).values();
+                                value = ((Map<Object, Object>)value).values();
                             }
                         }
                     }
@@ -298,7 +297,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * Most of the conversion is done by the BeanUtils.
      * TODO don't use bean utils converion since it can't be used for the adder methods
      */
-    public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException {
+    public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException {
         if(propertyType == Locale.class){
             if(value instanceof String){
                 String localeStr = (String) value;
@@ -319,13 +318,13 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * Use the factory util to instantiate. This is usefull to get default implementation of interfaces
+     * Use the factory util to instantiate. This is useful to get default implementation of interfaces
      */
     public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException{
-        // we try first to use conversion (Map --> primitive tyoe)
+        // we try first to use conversion (Map --> primitive type)
         // this is the case when we flattening the hierarchy?
         Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
-        // were the propertis transformed?
+        // were the properties transformed?
         if(bean == properties){
             try{
                 bean = FactoryUtil.newInstance(state.getCurrentType().getType());

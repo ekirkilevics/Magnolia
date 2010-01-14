@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -64,7 +63,7 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
 
     protected TypeDescriptor propertyType;
 
-    public CollectionPropertyHidingTransformer(Class beanClass, String collectionName) {
+    public CollectionPropertyHidingTransformer(Class<?> beanClass, String collectionName) {
         this.collectionName = collectionName;
         type =  getTypeMapping().getTypeDescriptor(beanClass);
         propertyDescriptor = type.getPropertyTypeDescriptor(collectionName);
@@ -81,20 +80,19 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
             // this is the case when we are transforming children nodes)
             if(state.getLevel()>1 && state.getCurrentType().equals(type)){
                 // make it the default
-                // use prop descr
+                // use property descriptor
                 resolvedType = propertyType;
             }
         }
         return resolvedType;
     }
 
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         if(descriptor.getName().equals(collectionName)){
             Object bean = state.getCurrentBean();
 
-            for (Iterator iterator = values.entrySet().iterator(); iterator.hasNext();) {
-                Entry entry = (Entry) iterator.next();
-                String key = (String) entry.getKey();
+            for (Entry<String, Object> entry : values.entrySet()) {
+                String key = entry.getKey();
                 Object value = entry.getValue();
 
                 if(propertyType.getType().isInstance(value) ){
