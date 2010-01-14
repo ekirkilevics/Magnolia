@@ -58,7 +58,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
     private final Map<Class<T>, T> instances = new HashMap<Class<T>, T>();
 
     /**
-     * Registered Prototypes used for new Instance.
+     * Registered prototypes used by newInstance().
      */
     private final Map<Class<T>, ComponentFactory<T>> factories = new HashMap<Class<T>, ComponentFactory<T>>();
 
@@ -128,10 +128,11 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
         }
     }
 
+    // TODO - is this needed / correct ?
     public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
         String className = getImplementationName(type);
         if (!isInRepositoryDefinition(className)) {
-            return ObjectFactory.classes().forName(className);
+            return (Class<? extends C>) ObjectFactory.classes().forName(className);
         } else {
             return type;
         }
@@ -172,7 +173,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
     /**
      * todo - this is only used internally
      */
-    public void setImplementation(Class type, String impl) {
+    public void setImplementation(Class<T> type, String impl) {
         mappings.setProperty(type.getName(), impl);
     }
 

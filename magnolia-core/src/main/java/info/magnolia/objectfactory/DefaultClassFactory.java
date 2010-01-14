@@ -45,14 +45,14 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class DefaultClassFactory<T> implements ClassFactory<T> {
 
-    public <C> Class<? extends C> forName(String className) throws ClassNotFoundException {
+    public Class<?> forName(String className) throws ClassNotFoundException {
         Class<?> loadedClass;
         try {
             loadedClass = Class.forName(className);
         } catch (ClassNotFoundException e) {
             loadedClass = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
         }
-        return (Class<? extends C>) loadedClass;
+        return loadedClass;
 
     }
 
