@@ -67,30 +67,36 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     private static final int DEFAULT_DELAY = 1000;
 
     /**
+     * Repository name used.
+     */
+    private final String repository;
+
+    /**
      * Path to the node in the config repository.
      */
     private final String path;
 
     /**
-     * Repository name used.
+     * @deprecated since 4.3 - this should be private - use {@link #getComponentType()} instead.
+     * (rename to "type" once made private)
      */
-    private final String repository;
-
-    private final Class<T> interf;
+    protected final Class<T> interf;
 
     /**
      * The object delivered by this factory.
+     * @deprecated since 4.3 - this should be private - use {@link #getObservedObject()} instead.
      */
-    private T observedObject;
+    protected T observedObject;
 
-    public ObservedComponentFactory(String repository, String path, Class<T> interf) {
+    public ObservedComponentFactory(String repository, String path, Class<T> type) {
         this.path = path;
         this.repository = repository;
-        this.interf = interf;
+        this.interf = type;
         load();
         startObservation(path);
     }
 
+    @SuppressWarnings("unchecked") // until commons-proxy becomes generics-aware, we have to ignore this warning
     public T newInstance() {
         return (T) new CglibProxyFactory().createInvokerProxy(new Invoker() {
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -130,7 +136,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
             final T instance = transformNode(node);
 
             if (this.observedObject != null) {
-                log.info("Loaded {} from {}", interf.getName(), node.getHandle());
+                log.info("Re-loaded {} from {}", interf.getName(), node.getHandle());
             }
             this.observedObject = instance;
 
@@ -156,8 +162,14 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         };
     }
 
+    protected Class<T> getComponentType() {
+        return interf;
+    }
+
     /**
-     * Returns the object observed by this factory. Not synchronized.
+     * Returns the latest converted object observed by this factory.
+     * Since 4.3, if you are using {@link info.magnolia.objectfactory.DefaultClassFactory}, calling this shouldn't be needed,
+     * {@link #newInstance()} returned a proxy, so you'll always see this object.
      *
      * @deprecated since 4.3 - {@link info.magnolia.objectfactory.DefaultComponentProvider#newInstance(Class)} returns a proxy of the observed object instead of this factory, so this method shouldn't be needed publicly.
      */
