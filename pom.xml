@@ -385,6 +385,18 @@ for Java Content Repositories (JCR).
         <version>1.4</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-proxy</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>cglib</groupId>
+        <!-- TODO or cglib-nodep? -->
+        <artifactId>cglib-full</artifactId>
+        <!-- TODO upgrade to 2.2 ? -->
+        <version>2.0.2</version>
+      </dependency>
+      <dependency>
         <groupId>org.freemarker</groupId>
         <artifactId>freemarker</artifactId>
         <version>2.3.15</version>

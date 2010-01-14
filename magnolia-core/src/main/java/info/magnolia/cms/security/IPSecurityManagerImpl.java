@@ -34,11 +34,12 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.ObservedComponentFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -91,17 +92,17 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         rules.put(name, rule);
     }
 
-    public static final class Observer extends FactoryUtil.ObservedObjectFactory {
-        public Observer() {
+    public static final class InstanceFactory<T> extends ObservedComponentFactory<IPSecurityManager> {
+        public InstanceFactory() {
             super(ContentRepository.CONFIG, "/server/IPConfig", IPSecurityManager.class);
         }
 
-        protected info.magnolia.content2bean.Content2BeanTransformer getContent2BeanTransformer() {
-            return new Content2BeanTransformer();
+        protected Content2BeanTransformer getContent2BeanTransformer() {
+            return new IPSecurityManagerTransformer();
         }
     }
 
-    public static final class Content2BeanTransformer extends Content2BeanTransformerImpl {
+    public static final class IPSecurityManagerTransformer extends Content2BeanTransformerImpl {
 
         public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
             final Object currentBean = state.getCurrentBean();

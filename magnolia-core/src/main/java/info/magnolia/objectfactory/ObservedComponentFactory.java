@@ -43,12 +43,15 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.context.MgnlContext;
+import org.apache.commons.proxy.Invoker;
+import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -57,7 +60,7 @@ import java.util.Map;
  * @author philipp
  * @version $Id: $
  */
-public class ObservedComponentFactory implements EventListener {
+public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventListener {
     private static final Logger log = LoggerFactory.getLogger(ObservedComponentFactory.class);
 
     private static final int DEFAULT_MAX_DELAY = 5000;
@@ -73,19 +76,27 @@ public class ObservedComponentFactory implements EventListener {
      */
     private final String repository;
 
-    protected final Class interf;
+    protected final Class<T> interf;
 
     /**
      * The object delivered by this factory.
      */
-    protected Object observedObject;
+    protected T observedObject;
 
-    public ObservedComponentFactory(String repository, String path, Class interf) {
+    public ObservedComponentFactory(String repository, String path, Class<T> interf) {
         this.path = path;
         this.repository = repository;
         this.interf = interf;
         load();
         startObservation(path);
+    }
+
+    public T newInstance() {
+        return (T) new CglibProxyFactory().createInvokerProxy(new Invoker(){
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                return method.invoke(getObservedObject(), args);
+            }
+        }, new Class[]{getObservedObject().getClass()});
     }
 
     protected void startObservation(String handle) {
@@ -118,7 +129,7 @@ public class ObservedComponentFactory implements EventListener {
 
     protected void onRegister(Content node) {
         try {
-            Object instance = transformNode(node);
+            T instance = transformNode(node);
 
             if (this.observedObject != null) {
                 log.info("Loaded {} from {}", interf.getName(), node.getHandle());
@@ -130,8 +141,8 @@ public class ObservedComponentFactory implements EventListener {
         }
     }
 
-    protected Object transformNode(Content node) throws Content2BeanException {
-        return Content2BeanUtil.toBean(node, true, getContent2BeanTransformer());
+    protected T transformNode(Content node) throws Content2BeanException {
+        return (T) Content2BeanUtil.toBean(node, true, getContent2BeanTransformer());
     }
 
     protected Content2BeanTransformer getContent2BeanTransformer() {
@@ -149,12 +160,13 @@ public class ObservedComponentFactory implements EventListener {
 
     /**
      * Returns the object observed by this factory. Not synchronized.
+     * @deprecated since 4.3 - {@link info.magnolia.objectfactory.DefaultComponentProvider#newInstance(Class)} returns a proxy of the observed object instead of this factory, so this method shouldn't be needed publicly.
      */
-    public Object getObservedObject() {
+    public T getObservedObject() {
         return this.observedObject;
     }
 
     public String toString() {
-        return super.toString() + ":" + interf + "(" + repository + ":" + path + ")";
+        return super.toString() + ":" + interf + "(Observing: " + repository + ":" + path + ")";
     }
 }

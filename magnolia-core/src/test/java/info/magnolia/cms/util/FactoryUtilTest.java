@@ -49,7 +49,9 @@ public class FactoryUtilTest extends MgnlTestCase {
     }
 
     public static class TestOtherImplementation extends TestImplementation {
-
+        public String getFoo() {
+            return "bar";
+        }
     }
 
     public static final class TestInstanceFactory implements FactoryUtil.InstanceFactory {
@@ -114,6 +116,19 @@ public class FactoryUtilTest extends MgnlTestCase {
         Object obj = FactoryUtil.getSingleton(TestInterface.class);
         assertNotNull(obj);
         assertTrue(obj instanceof TestImplementation);
+    }
+
+    public void testProxiesReturnedByObserverComponentFactoryCanBeCastToTheirSubclass() throws Exception {
+        FactoryUtil.setDefaultImplementation(TestInterface.class, "config:/test");
+        initMockConfigRepository(
+                "test.class=" + TestOtherImplementation.class.getName()
+        );
+        // TODO - once test is moved to use info.magnolia.objectfactory, this should look like TestInterface obj = ..., if we've done our job with generics properly
+        Object obj = FactoryUtil.getSingleton(TestInterface.class);
+        assertNotNull(obj);
+        // so, I know my project is configured to use a subclass of TestInterface, I can cast away if i want (typically, a module replacing a default implementation)
+        assertTrue(obj instanceof TestOtherImplementation);
+        assertEquals("bar", ((TestOtherImplementation)obj).getFoo());
     }
 
     public void testUseInstanceFactoryAsProperty() throws RepositoryException, IOException {

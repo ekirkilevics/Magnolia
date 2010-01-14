@@ -39,6 +39,7 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.ObservedComponentFactory;
 
 import java.util.Map;
 
@@ -81,15 +82,15 @@ public class ServerConfiguration {
         return (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
     }
 
-    public static final class Observer extends FactoryUtil.ObservedObjectFactory {
-        public Observer() {
+    public static final class InstanceFactory<T> extends ObservedComponentFactory<ServerConfiguration> {
+        public InstanceFactory() {
             super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
         }
 
         // the false parameter here is the important thing to keep (not recursive)
-        protected Object transformNode(Content node) throws Content2BeanException {
-            return Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl() {
-                public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
+        protected ServerConfiguration transformNode(Content node) throws Content2BeanException {
+            return (ServerConfiguration) Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl() {
+                public Object newBeanInstance(TransformationState state, Map properties) {
                     return new ServerConfiguration();
                 }
             });

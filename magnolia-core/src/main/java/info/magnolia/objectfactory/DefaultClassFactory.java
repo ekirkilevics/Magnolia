@@ -43,26 +43,27 @@ import java.lang.reflect.InvocationTargetException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DefaultClassFactory implements ClassFactory {
+public class DefaultClassFactory<T> implements ClassFactory<T> {
 
-    public Class<?> forName(String className) throws ClassNotFoundException {
+    public <C> Class<? extends C> forName(String className) throws ClassNotFoundException {
         Class<?> loadedClass;
         try {
             loadedClass = Class.forName(className);
         } catch (ClassNotFoundException e) {
             loadedClass = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
         }
-        return loadedClass;
+        return (Class<? extends C>) loadedClass;
 
     }
 
-    public Object newInstance(Class<?> c) {
+    public T newInstance(Class<T> c) {
         return newInstance(c, new Object[]{});
     }
 
-    public Object newInstance(Class<?> c, Object... params) {
+    public T newInstance(Class<T> c, Object... params) {
         try {
-            return ConstructorUtils.invokeConstructor(c, params);
+            
+            return (T) ConstructorUtils.invokeConstructor(c, params);
 
         } catch (NoSuchMethodException e) {
             throw new MgnlInstantiationException(e.getMessage(), e);

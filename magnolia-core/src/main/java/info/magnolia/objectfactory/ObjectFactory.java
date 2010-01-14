@@ -46,7 +46,7 @@ import org.apache.commons.lang.StringUtils;
 public class ObjectFactory {
     private static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
 
-    public static ClassFactory classes() {
+    public static ClassFactory<?> classes() {
         final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
 
         if (StringUtils.isEmpty(classFactoryClassName)) {
