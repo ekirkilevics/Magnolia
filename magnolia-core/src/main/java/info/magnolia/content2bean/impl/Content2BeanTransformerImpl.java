@@ -53,6 +53,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.objectfactory.ObjectFactory;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -78,8 +79,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         // We use non-static BeanUtils conversion, so we can
         // * use our custom ConvertUtilsBean
-        // * control converters (convertUtilsBean.register()) - we can register them here, locally, as oppoed to a global ConvertUtils.register()
+        // * control converters (convertUtilsBean.register()) - we can register them here, locally, as opposed to a global ConvertUtils.register()
         final EnumAwareConvertUtilsBean convertUtilsBean = new EnumAwareConvertUtilsBean();
+
+        // de-register the converter for Class, we do our own conversion in convertPropertyValue()
+        convertUtilsBean.deregister(Class.class);
+
         this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
     }
 
@@ -170,6 +175,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * Called once the type should have been resolved. The resolvedType might be
      * null if no type has been resolved. After the call the FactoryUtil and
      * custom transformers are used to get the final type.
+     * TODO - check javadoc
      */
     protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
         return resolvedType;
@@ -281,11 +287,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         }
 
         try{
-            // this does some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
+            // This uses the converters registered in beanUtilsBean.convertUtilsBean (see constructor of this class)
+            // If a converter is registered, beanutils will convert value.toString(), not the value object as-is.
+            // If no converter is registered, then the value Object is set as-is.
+            // If convertPropertyValue() already converted this value, you'll probably want to unregister the beanutils converter.
+            // some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
             beanUtilsBean.setProperty(bean, propertyName, value);
-            //PropertyUtils.setProperty(bean, propertyName, value);
-        }
-        catch (Exception e) {
+
+            // TODO this also does things we probably don't want/need, i.e nested and indexed properties
+
+        } catch (Exception e) {
             // do it better
             log.error("can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "]");
             log.debug("stacktrace", e);
@@ -295,9 +306,18 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
     /**
      * Most of the conversion is done by the BeanUtils.
-     * TODO don't use bean utils converion since it can't be used for the adder methods
+     * TODO don't use bean utils conversion since it can't be used for the adder methods
      */
     public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException {
+        if (Class.class.equals(propertyType)) {
+            try {
+                return ObjectFactory.classes().forName(value.toString());
+            } catch (ClassNotFoundException e) {
+                log.error(e.getMessage());
+                throw new Content2BeanException(e);
+            }
+        }
+
         if(propertyType == Locale.class){
             if(value instanceof String){
                 String localeStr = (String) value;
