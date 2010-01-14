@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.jcr.PathNotFoundException;
@@ -568,8 +569,8 @@ public class NodeDataUtil {
         return PropertyType.UNDEFINED;
     }
 
-    public static ArrayList getValuesStringList(Value[] values) {
-        ArrayList list = new ArrayList();
+    public static List<String> getValuesStringList(Value[] values) {
+        ArrayList<String> list = new ArrayList<String>();
         try{
             Value value;
             for( int i = 0; i < values.length; i++) {
@@ -592,7 +593,7 @@ public class NodeDataUtil {
                         list.add(DateUtil.format(valueDate, NodeDataUtil.getDateFormat()));
                         break;
                     case (PropertyType.BINARY):
-                        // ???
+                        // for lack of better solution, fall through to the default - empty string
                     default:
                         list.add(StringUtils.EMPTY);
                 }

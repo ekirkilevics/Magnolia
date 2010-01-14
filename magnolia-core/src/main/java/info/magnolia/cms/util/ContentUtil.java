@@ -208,8 +208,7 @@ public class ContentUtil {
             return null;
         }
         name = name.toLowerCase();
-        for (Iterator iter = node.getChildren(ALL_NODES_CONTENT_FILTER).iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
+        for (Content child : node.getChildren(ALL_NODES_CONTENT_FILTER)) {
             if (child.getName().toLowerCase().equals(name)) {
                 return child;
             }
@@ -220,8 +219,8 @@ public class ContentUtil {
     /**
      * Get all children recursively (content and contentnode)
      */
-    public static List collectAllChildren(Content node) {
-        List nodes = new ArrayList();
+    public static List<Content> collectAllChildren(Content node) {
+        List<Content> nodes = new ArrayList<Content>();
         return collectAllChildren(nodes, node, new ItemType[]{ItemType.CONTENT, ItemType.CONTENTNODE});
     }
 
@@ -231,8 +230,8 @@ public class ContentUtil {
      * @param filter
      * @return list of all found nodes
      */
-    public static List collectAllChildren(Content node, ContentFilter filter) {
-        List nodes = new ArrayList();
+    public static List<Content> collectAllChildren(Content node, ContentFilter filter) {
+        List<Content> nodes = new ArrayList<Content>();
         return collectAllChildren(nodes, node, filter);
     }
 
@@ -243,20 +242,18 @@ public class ContentUtil {
      * @param filter the filter to use
      * @return
      */
-    private static List collectAllChildren(List nodes, Content node, ContentFilter filter) {
+    private static List<Content> collectAllChildren(List<Content> nodes, Content node, ContentFilter filter) {
         // get filtered sub nodes first
-        Collection children = node.getChildren(filter);
-        for (Iterator iter = children.iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
+        Collection<Content> children = node.getChildren(filter);
+        for (Content child : children) {
             nodes.add(child);
         }
 
         // get all children to find recursively
-        Collection allChildren = node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
+        Collection<Content> allChildren = node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
 
         // recursion
-        for (Iterator iter = allChildren.iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
+        for (Content child : allChildren) {
             collectAllChildren(nodes, child, filter);
         }
 
@@ -269,22 +266,22 @@ public class ContentUtil {
      * @param type
      * @return
      */
-    public static List collectAllChildren(Content node, ItemType type) {
-        List nodes = new ArrayList();
+    public static List<Content> collectAllChildren(Content node, ItemType type) {
+        List<Content> nodes = new ArrayList<Content>();
         return collectAllChildren(nodes, node, new ItemType[]{type});
     }
 
     /**
      * Returns all children (not recursively) independent of there type
      */
-    public static Collection getAllChildren(Content node){
+    public static Collection<Content> getAllChildren(Content node){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
     }
 
     /**
      * Returns all children (not recursively) independent of there type
      */
-    public static Collection getAllChildren(Content node, Comparator comp){
+    public static Collection<Content> getAllChildren(Content node, Comparator<Content> comp){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER, comp);
     }
 
@@ -294,8 +291,8 @@ public class ContentUtil {
      * @param types
      * @return
      */
-    public static List collectAllChildren(Content node, ItemType[] types) {
-        List nodes = new ArrayList();
+    public static List<Content> collectAllChildren(Content node, ItemType[] types) {
+        List<Content> nodes = new ArrayList<Content>();
         return collectAllChildren(nodes, node, types);
     }
 
@@ -306,13 +303,12 @@ public class ContentUtil {
      * @param types
      * @return the list
      */
-    private static List collectAllChildren(List nodes, Content node, ItemType[] types) {
+    private static List<Content> collectAllChildren(List<Content> nodes, Content node, ItemType[] types) {
         for (int i = 0; i < types.length; i++) {
             ItemType type = types[i];
 
-            Collection children = node.getChildren(type);
-            for (Iterator iter = children.iterator(); iter.hasNext();) {
-                Content child = (Content) iter.next();
+            Collection<Content> children = node.getChildren(type);
+            for (Content child : children) {
                 nodes.add(child);
                 collectAllChildren(nodes, child, types);
             }
@@ -330,13 +326,12 @@ public class ContentUtil {
      * Uses the passed comparator to create the jcr ordering of the children
      * @throws RepositoryException
      */
-    public static void orderNodes(Content node, Comparator comparator) throws RepositoryException {
-        Collection children = ContentUtil.getAllChildren(node, comparator);
+    public static void orderNodes(Content node, Comparator<Content> comparator) throws RepositoryException {
+        Collection<Content> children = ContentUtil.getAllChildren(node, comparator);
         String[] names = new String[children.size()];
 
         int i = 0;
-        for (Iterator iter = children.iterator(); iter.hasNext();) {
-            Content childNode = (Content) iter.next();
+        for (Content childNode : children) {
             names[i] = childNode.getName();
             i++;
         }
@@ -349,8 +344,8 @@ public class ContentUtil {
 
     public static void visit(Content node, Visitor visitor, ContentFilter filter) throws Exception{
         visitor.visit(node);
-        for (Iterator iter = node.getChildren(filter).iterator(); iter.hasNext();) {
-            visit((Content) iter.next(), visitor, filter);
+        for (Content content : node.getChildren(filter)) {
+            visit(content, visitor, filter);
         }
         if(visitor instanceof PostVisitor){
             ((PostVisitor)visitor).postVisit(node);
@@ -504,11 +499,11 @@ public class ContentUtil {
     public static void rename(Content node, String newName) throws RepositoryException{
         Content parent = node.getParent();
         String placedBefore = null;
-        for (Iterator iter = parent.getChildren(node.getNodeTypeName()).iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
+        for (Iterator<Content> iter = parent.getChildren(node.getNodeTypeName()).iterator(); iter.hasNext();) {
+            Content child = iter.next();
             if (child.getUUID().equals(node.getUUID())) {
                 if (iter.hasNext()) {
-                    child = (Content) iter.next();
+                    child = iter.next();
                     placedBefore = child.getName();
                 }
             }
