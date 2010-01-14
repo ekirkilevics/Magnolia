@@ -76,12 +76,12 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
      */
     private final String repository;
 
-    protected final Class<T> interf;
+    private final Class<T> interf;
 
     /**
      * The object delivered by this factory.
      */
-    protected T observedObject;
+    private T observedObject;
 
     public ObservedComponentFactory(String repository, String path, Class<T> interf) {
         this.path = path;
@@ -92,7 +92,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     public T newInstance() {
-        return (T) new CglibProxyFactory().createInvokerProxy(new Invoker(){
+        return (T) new CglibProxyFactory().createInvokerProxy(new Invoker() {
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 return method.invoke(getObservedObject(), args);
             }
@@ -112,14 +112,12 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected void load() {
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
         if (hm.isExist(path)) {
-            Content node;
             try {
-                node = hm.getContent(path);
+                final Content node = hm.getContent(path);
                 onRegister(node);
-            }
-            catch (RepositoryException e) {
+            } catch (RepositoryException e) {
                 log.error("Can't read configuration for object " + interf + " from [" + repository + ":" + path + "]", e);
             }
         } else {
@@ -129,14 +127,14 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
 
     protected void onRegister(Content node) {
         try {
-            T instance = transformNode(node);
+            final T instance = transformNode(node);
 
             if (this.observedObject != null) {
                 log.info("Loaded {} from {}", interf.getName(), node.getHandle());
             }
             this.observedObject = instance;
-        }
-        catch (Exception e) {
+
+        } catch (Exception e) {
             log.error("Can't instantiate object from [" + repository + ":" + path + "]", e);
         }
     }
@@ -160,6 +158,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
 
     /**
      * Returns the object observed by this factory. Not synchronized.
+     *
      * @deprecated since 4.3 - {@link info.magnolia.objectfactory.DefaultComponentProvider#newInstance(Class)} returns a proxy of the observed object instead of this factory, so this method shouldn't be needed publicly.
      */
     public T getObservedObject() {

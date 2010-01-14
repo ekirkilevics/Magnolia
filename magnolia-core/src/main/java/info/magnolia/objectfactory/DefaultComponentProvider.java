@@ -94,6 +94,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
             log.error("type can't be null", new Throwable());
             return null;
         }
+
         try {
             if (factories.containsKey(type)) {
                 return factories.get(type).newInstance();
@@ -112,8 +113,8 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
                 // now that the factory is registered, we call ourself again
                 return newInstance(type);
             } else {
-                Class clazz = ObjectFactory.classes().forName(className);
-                Object instance = ObjectFactory.classes().newInstance(clazz);
+                final Class clazz = ObjectFactory.classes().forName(className);
+                final Object instance = ObjectFactory.classes().newInstance(clazz);
 
                 if (instance instanceof ComponentFactory) {
                     final ComponentFactory<T> factory = (ComponentFactory<T>) instance;
@@ -122,15 +123,14 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
                 }
                 return (T) instance;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Can't instantiate an implementation of this class [" + type.getName() + "]: " + ExceptionUtils.getMessage(e), e);
         }
     }
 
     // TODO - is this needed / correct ?
     public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
-        String className = getImplementationName(type);
+        final String className = getImplementationName(type);
         if (!isInRepositoryDefinition(className)) {
             return (Class<? extends C>) ObjectFactory.classes().forName(className);
         } else {

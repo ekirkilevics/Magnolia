@@ -62,7 +62,6 @@ public class DefaultClassFactory<T> implements ClassFactory<T> {
 
     public T newInstance(Class<T> c, Object... params) {
         try {
-            
             return (T) ConstructorUtils.invokeConstructor(c, params);
 
         } catch (NoSuchMethodException e) {
