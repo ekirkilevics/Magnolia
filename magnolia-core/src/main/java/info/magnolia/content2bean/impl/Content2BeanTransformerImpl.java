@@ -53,12 +53,10 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.apache.commons.beanutils.converters.ClassConverter;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -80,11 +78,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         // We use non-static BeanUtils conversion, so we can
         // * use our custom ConvertUtilsBean
-        // * control converters (convertUtilsBean.register()) - we can register them here, locally, as opposed to a global ConvertUtils.register()
+        // * control converters (convertUtilsBean.register()) - we can register them here, locally, as oppoed to a global ConvertUtils.register()
         final EnumAwareConvertUtilsBean convertUtilsBean = new EnumAwareConvertUtilsBean();
-        // de-register the converter for Class, we already do our own conversion in convertPropertyValue()
-        convertUtilsBean.deregister(Class.class);
-
         this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
     }
 
@@ -175,7 +170,6 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * Called once the type should have been resolved. The resolvedType might be
      * null if no type has been resolved. After the call the FactoryUtil and
      * custom transformers are used to get the final type.
-     * TODO - check javadoc
      */
     protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
         return resolvedType;
@@ -289,31 +283,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         try{
             // this does some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
             beanUtilsBean.setProperty(bean, propertyName, value);
-
-            
-            // TODO ? why is this needed here in the context of the groovy changes ?
-
-            // beanUtilsBean.setProperty only accepts String values ?
-            //   ClassConverter does this      if (value instanceof Class) { return value
-            // so we should be fine ?? -- todo test ?
-
-//            if (value instanceof Class) {
-            // this also has some support for nested/indexed props, do we want this ?
-            //    PropertyUtils.setProperty(bean, propertyName, value);
-
-//                final ConvertUtilsBean conv = beanUtilsBean.getConvertUtils();
-//            beanUtilsBean.getPropertyUtils().setSimpleProperty(bean, propertyName, value);
-
-
-//            }
-//            else {
-                // this goes do things we probably don't need, i.e nested and indexed properties
-//                beanUtilsBean.setProperty(bean, propertyName, value);
-//                final ConvertUtilsBean conv = beanUtilsBean.getConvertUtils();
-//                PropertyUtils.get
-//                conv.convert(value, )
-//                bean, propertyName, value);
-//            }
+            //PropertyUtils.setProperty(bean, propertyName, value);
         }
         catch (Exception e) {
             // do it better
@@ -328,16 +298,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * TODO don't use bean utils converion since it can't be used for the adder methods
      */
     public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException {
-        if (Class.class.equals(propertyType)) {
-            try {
-                return ClassUtil.classForName(value.toString());
-            }
-            catch (ClassNotFoundException e) {
-                log.error(e.getMessage());
-                throw new Content2BeanException(e);
-            }
-        }
-        if(Locale.class.equals(propertyType)){
+        if(propertyType == Locale.class){
             if(value instanceof String){
                 String localeStr = (String) value;
                 if(StringUtils.isNotEmpty(localeStr)){
