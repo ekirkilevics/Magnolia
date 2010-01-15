@@ -89,8 +89,8 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     protected T observedObject;
 
     public ObservedComponentFactory(String repository, String path, Class<T> type) {
-        this.path = path;
         this.repository = repository;
+        this.path = path;
         this.interf = type;
         load();
         startObservation(path);
@@ -98,6 +98,12 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
 
     @SuppressWarnings("unchecked") // until commons-proxy becomes generics-aware, we have to ignore this warning
     public T newInstance() {
+        if (getObservedObject() == null) {
+            // TODO - replace this by a default implementation or some form of null proxy
+            log.debug("An instance of {} couldn't be loaded from {}:{} yet, returning null.", new Object[]{interf, repository, path});
+            return null;
+        }
+        
         return (T) new CglibProxyFactory().createInvokerProxy(new Invoker() {
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 return method.invoke(getObservedObject(), args);
@@ -124,10 +130,10 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
                 final Content node = hm.getContent(path);
                 onRegister(node);
             } catch (RepositoryException e) {
-                log.error("Can't read configuration for object " + interf + " from [" + repository + ":" + path + "]", e);
+                log.error("Can't read configuration for " + interf + " from [" + repository + ":" + path + "], will return null.", e);
             }
         } else {
-            log.warn("Can't read configuration for object " + interf + " from [" + repository + ":" + path + "]");
+            log.warn("Configuration for " + interf + " does not exist at [" + repository + ":" + path + "], will return null.");
         }
     }
 
@@ -137,11 +143,13 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
 
             if (this.observedObject != null) {
                 log.info("Re-loaded {} from {}", interf.getName(), node.getHandle());
+            } else {
+                log.debug("Loading {} from {}", interf.getName(), node.getHandle());
             }
             this.observedObject = instance;
 
-        } catch (Exception e) {
-            log.error("Can't instantiate object from [" + repository + ":" + path + "]", e);
+        } catch (Content2BeanException e) {
+            log.error("Can't transform [" + repository + ":" + path + "] to " + interf, e);
         }
     }
 
