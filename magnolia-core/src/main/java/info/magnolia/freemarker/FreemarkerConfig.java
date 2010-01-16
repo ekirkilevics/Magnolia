@@ -44,7 +44,7 @@ import java.util.List;
 
 /**
  * Observed bean holding Freemarker configuration. Not to be confused with
- * Freemarker's own freemarker.template.Configuration. This only exposes the few
+ * Freemarker's own {@link freemarker.template.Configuration}. This only exposes the few
  * properties that Magnolia allows to configure and is able to handle properly.
  * It also provides a few additional methods used internally.
  * 
@@ -58,7 +58,7 @@ public class FreemarkerConfig {
     }
 
     /**
-     * The MagnoliaModelFactory implementations explicitely registered by modules.
+     * The MagnoliaModelFactory implementations explicitly registered by modules.
      */
     private  List registeredModelFactories;
 
@@ -80,10 +80,13 @@ public class FreemarkerConfig {
     // public init() { would be called by content2bean if needed. }
 
     protected TemplateLoader getMultiTemplateLoader() {
+        //TODO - resetState on multiTL on reload ?
         if (multiTL == null) {
+            // ! using getTemplateLoaders() instead of the variable to make sure we go to the proxied object!?
+            final List loaders = getTemplateLoaders();
+            final int s = loaders.size();
             // add a ClassTemplateLoader as our last loader
-            final int s = templateLoaders.size();
-            final TemplateLoader[] tl = (TemplateLoader[]) templateLoaders.toArray(new TemplateLoader[s + 1]);
+            final TemplateLoader[] tl = (TemplateLoader[]) loaders.toArray(new TemplateLoader[s + 1]);
             tl[s] = new ClassTemplateLoader(getClass(), "/");
             multiTL = new MultiTemplateLoader(tl);
         }
