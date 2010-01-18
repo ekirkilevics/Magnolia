@@ -36,8 +36,8 @@ package info.magnolia.freemarker;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.freemarker.models.MagnoliaModelFactory;
+import info.magnolia.objectfactory.ObjectFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,20 +54,20 @@ import java.util.List;
  */
 public class FreemarkerConfig {
     public static FreemarkerConfig getInstance() {
-        return (FreemarkerConfig) FactoryUtil.getSingleton(FreemarkerConfig.class);
+        return ObjectFactory.components().getSingleton(FreemarkerConfig.class);
     }
 
     /**
      * The MagnoliaModelFactory implementations explicitly registered by modules.
      */
-    private  List registeredModelFactories;
+    private List<MagnoliaModelFactory> registeredModelFactories;
 
-    private List templateLoaders;
+    private List<TemplateLoader> templateLoaders;
     private MultiTemplateLoader multiTL;
 
     public FreemarkerConfig() {
-        this.registeredModelFactories = new ArrayList();
-        this.templateLoaders = new ArrayList();
+        this.registeredModelFactories = new ArrayList<MagnoliaModelFactory>();
+        this.templateLoaders = new ArrayList<TemplateLoader>();
 
         // There is a bit of a messy dependency here: 
         // Ultimately, FreemarkerHelper and FreemarkerConfig could be merged,
@@ -83,21 +83,21 @@ public class FreemarkerConfig {
         //TODO - resetState on multiTL on reload ?
         if (multiTL == null) {
             // ! using getTemplateLoaders() instead of the variable to make sure we go to the proxied object!?
-            final List loaders = getTemplateLoaders();
+            final List<TemplateLoader> loaders = getTemplateLoaders();
             final int s = loaders.size();
             // add a ClassTemplateLoader as our last loader
-            final TemplateLoader[] tl = (TemplateLoader[]) loaders.toArray(new TemplateLoader[s + 1]);
+            final TemplateLoader[] tl = loaders.toArray(new TemplateLoader[s + 1]);
             tl[s] = new ClassTemplateLoader(getClass(), "/");
             multiTL = new MultiTemplateLoader(tl);
         }
         return multiTL;
     }
 
-    public void setModelFactories(List registeredModelFactories) {
+    public void setModelFactories(List<MagnoliaModelFactory> registeredModelFactories) {
         this.registeredModelFactories = registeredModelFactories;
     }
 
-    public List getModelFactories() {
+    public List<MagnoliaModelFactory> getModelFactories() {
         return registeredModelFactories;
     }
 
@@ -105,11 +105,11 @@ public class FreemarkerConfig {
         this.registeredModelFactories.add(modelFactory);
     }
 
-    public List getTemplateLoaders() {
+    public List<TemplateLoader> getTemplateLoaders() {
         return templateLoaders;
     }
 
-    public void setTemplateLoaders(List templateLoaders) {
+    public void setTemplateLoaders(List<TemplateLoader> templateLoaders) {
         this.templateLoaders = templateLoaders;
     }
 

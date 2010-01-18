@@ -45,10 +45,10 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
+import info.magnolia.objectfactory.ObjectFactory;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
@@ -72,7 +72,7 @@ public class FreemarkerHelper {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerHelper.class);
 
     public static FreemarkerHelper getInstance() {
-        return (FreemarkerHelper) FactoryUtil.getSingleton(FreemarkerHelper.class);
+        return ObjectFactory.components().getSingleton(FreemarkerHelper.class);
     }
 
     private final Configuration cfg;
@@ -104,7 +104,7 @@ public class FreemarkerHelper {
     }
 
     protected ObjectWrapper newObjectWrapper() {
-        return (ObjectWrapper) FactoryUtil.newInstance(MagnoliaObjectWrapper.class);
+        return ObjectFactory.components().newInstance(MagnoliaObjectWrapper.class);
     }
 
     /**
@@ -169,7 +169,7 @@ public class FreemarkerHelper {
      */
     protected void prepareRendering(Locale checkedLocale, String i18nBasename, Object root) {
         if (root instanceof Map) {
-            final Map data = (Map) root;
+            final Map<String, Object> data = (Map<String, Object>) root;
             addDefaultData(data, checkedLocale, i18nBasename);
         }
 
@@ -188,7 +188,7 @@ public class FreemarkerHelper {
         }
     }
 
-    protected void addDefaultData(Map data, Locale locale, String i18nBasename) {
+    protected void addDefaultData(Map<String, Object> data, Locale locale, String i18nBasename) {
         if (MgnlContext.hasInstance()) {
             data.put("ctx", MgnlContext.getInstance());
         }
@@ -215,7 +215,7 @@ public class FreemarkerHelper {
 //            }
     }
 
-    protected void addTaglibSupportData(Map data, WebContext webCtx) {
+    protected void addTaglibSupportData(Map<String, Object> data, WebContext webCtx) {
         final ServletContext servletContext = webCtx.getServletContext();
         try {
             data.put(FreemarkerServlet.KEY_JSP_TAGLIBS, checkTaglibFactory(servletContext));
