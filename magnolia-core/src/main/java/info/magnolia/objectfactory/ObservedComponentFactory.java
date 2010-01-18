@@ -43,7 +43,7 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.proxy.Invoker;
+import org.apache.commons.proxy.ObjectProvider;
 import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,6 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -104,12 +103,14 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
             return null;
         }
         
-        return (T) new CglibProxyFactory().createInvokerProxy(new Invoker() {
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                return method.invoke(getObservedObject(), args);
+        return (T) new CglibProxyFactory().createDelegatorProxy(new ObjectProvider() {
+            public Object getObject() {
+                return getObservedObject();
             }
-        }, new Class[]{getObservedObject().getClass()});
-        // TODO OR }, new Class[]{interf}); no ?
+        }, new Class[]{
+                // we want to expose the observed object's concrete class and interfaces so that client code can cast if they want 
+                getObservedObject().getClass()
+        });
     }
 
     protected void startObservation(String handle) {
