@@ -34,28 +34,18 @@
 package info.magnolia.commands;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.PropertyTypeDescriptor;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
-
-import javax.jcr.RepositoryException;
+import info.magnolia.objectfactory.ObjectFactory;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
-import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
-import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -145,122 +135,7 @@ public class CommandsManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static CommandsManager getInstance() {
-        return (CommandsManager) FactoryUtil.getSingleton(CommandsManager.class);
+        return ObjectFactory.components().getSingleton(CommandsManager.class);
     }
 
-    private static class CommandTransformer extends Content2BeanTransformerImpl {
-        private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CommandTransformer.class);
-
-        private static final String DEPRECATED_CATALOG_NAME_NODE_DATA = "catalogName";
-
-        private static final String DEPRECATED_IMPL_NODE_DATA = "impl";
-
-        protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
-            if(resolvedType != null){
-                return resolvedType;
-            }
-            Class klass = null;
-            // default class to use
-            if(state.getLevel() == 1){
-                klass = MgnlCatalog.class;
-            }
-            else{
-                Content node = state.getCurrentContent();
-                try {
-                    if(node.hasNodeData(DEPRECATED_IMPL_NODE_DATA)){
-                        log.warn("Rename  '" + DEPRECATED_IMPL_NODE_DATA + "' to 'class' [" + node + "]!");
-                        try {
-                            klass = ClassUtil.classForName(node.getNodeData(DEPRECATED_IMPL_NODE_DATA).getString());
-                        }
-                        catch (ClassNotFoundException e) {
-                            klass = DelegateCommand.class;
-                        }
-                    }
-                    else{
-                        // In case we are not yet building a concreate command we are creating a chain.
-                        // Otherwise we are building command properties
-                        boolean buildingCommand = false;
-                        for (int i = 0; i < state.getLevel() -1; i++) {
-                            TypeDescriptor td = state.peekType(i);
-                            if(ClassUtil.isSubClass(td.getType(), Command.class) && !ClassUtil.isSubClass(td.getType(), Chain.class)){
-                                buildingCommand = true;
-                            }
-                        }
-                        if(!buildingCommand){
-                            klass = ChainBase.class;
-                        }
-                    }
-                }
-                catch (RepositoryException e) {
-                    log.error("Can't check " + DEPRECATED_IMPL_NODE_DATA + " nodedata [" + node + "]", e);
-                }
-            }
-            if(klass != null){
-                return this.getTypeMapping().getTypeDescriptor(klass);
-            }
-            return resolvedType;
-        }
-
-        public void initBean(TransformationState state, Map values) throws Content2BeanException {
-            // we add the commands here (reflection does not work)
-            if(state.getCurrentBean() instanceof Catalog){
-                Catalog catalog = (Catalog) state.getCurrentBean();
-                for (Iterator iter = values.keySet().iterator(); iter.hasNext();) {
-                    String name = (String) iter.next();
-                    if(values.get(name) instanceof Command){
-                        Command command = (Command) values.get(name);
-                        if(!(command instanceof MgnlCommand) || ((MgnlCommand)command).isEnabled()){
-                            catalog.addCommand(name, command);
-                        }
-                    }
-                }
-            }
-
-            // support chains
-            if(state.getCurrentBean() instanceof Chain){
-                Chain chain = (Chain) state.getCurrentBean();
-                for (Iterator iter = values.keySet().iterator(); iter.hasNext();) {
-                    String name = (String) iter.next();
-                    if(values.get(name) instanceof Command){
-                        Command command = (Command) values.get(name);
-                        if(!(command instanceof MgnlCommand) || ((MgnlCommand)command).isEnabled()){
-                            chain.addCommand(command);
-                        }
-                    }
-                }
-            }
-
-            // support old way (using impl) of configuring delegate commands
-            if(state.getCurrentBean() instanceof DelegateCommand){
-                DelegateCommand delegateCommand = (DelegateCommand) state.getCurrentBean();
-                if(StringUtils.isEmpty(delegateCommand.getCommandName())){
-                    log.warn("You should define the commandName property on [{}]", state.getCurrentContent());
-                    delegateCommand.setCommandName((String) values.get(DEPRECATED_IMPL_NODE_DATA));
-                }
-            }
-            super.initBean(state, values);
-        }
-
-        public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
-            Object bean = state.getCurrentBean();
-            if(bean instanceof MgnlCatalog){
-                MgnlCatalog catalog = (MgnlCatalog) bean;
-                if(values.containsKey(DEPRECATED_CATALOG_NAME_NODE_DATA)){
-                    log.warn("Rename the 'catalogName' nodedata to 'name' [" + state.getCurrentContent() + "]");
-                    catalog.setName((String)values.get(DEPRECATED_CATALOG_NAME_NODE_DATA));
-                }
-
-                if (!values.containsKey("name") && state.getCurrentContent().getName().equals("commands")) {
-                    try {
-                        catalog.setName(state.getCurrentContent().getParent().getName());
-                    }
-                    catch (RepositoryException e) {
-                        log.error("Can't resolve catalog name by using parent node [" + state.getCurrentContent() + "]", e);
-                    }
-                }
-            }
-
-            super.setProperty(state, descriptor, values);
-        }
-    }
 }
