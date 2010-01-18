@@ -34,9 +34,7 @@
 package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
@@ -107,7 +105,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 if (StringUtils.isBlank(className)) {
                     throw new ClassNotFoundException("(no value for class property)");
                 }
-                Class<?> clazz = ClassUtil.classForName(className);
+                Class<?> clazz = ObjectFactory.classes().forName(className);
                 typeDscr = getTypeMapping().getTypeDescriptor(clazz);
             }
         }
@@ -141,7 +139,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
-            typeDscr = getTypeMapping().getTypeDescriptor(FactoryUtil.getImplementation(typeDscr.getType()));
+            final Class<?> type = typeDscr.getType();
+            typeDscr = getTypeMapping().getTypeDescriptor(ObjectFactory.components().getImplementation(type));
 
             // now that we know the property type we should delegate to the custom transformer if any defined
             Content2BeanTransformer customTransformer = typeDscr.getTransformer();
@@ -150,7 +149,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 // if no specific type has been provided by the
                 if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
                     // might be that the factory util defines a default implementation for interfaces
-                    Class<?> implementation = FactoryUtil.getImplementation(typeFoundByCustomTransformer.getType());
+                    Class<?> implementation = ObjectFactory.components().getImplementation(typeFoundByCustomTransformer.getType());
                     typeDscr = getTypeMapping().getTypeDescriptor(implementation);
                 }
             }
@@ -342,7 +341,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         // were the properties transformed?
         if (bean == properties) {
             try {
-                bean = FactoryUtil.newInstance(state.getCurrentType().getType());
+                bean = ObjectFactory.components().newInstance(state.getCurrentType().getType());
             }
             catch (Throwable e) {
                 throw new Content2BeanException(e);
@@ -377,7 +376,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     public TransformationState newState() {
-        return (TransformationState) FactoryUtil.newInstance(TransformationState.class);
+        return ObjectFactory.components().newInstance(TransformationState.class);
     }
 
     /**

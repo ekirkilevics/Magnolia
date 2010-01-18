@@ -33,12 +33,9 @@
  */
 package info.magnolia.content2bean;
 
-
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.ObjectFactory;
 
 import java.util.LinkedHashMap;
-
-
 
 /**
  * @author philipp
@@ -62,7 +59,7 @@ public interface TypeMapping {
      */
     class Factory{
         public static TypeMapping getDefaultMapping(){
-            return (TypeMapping) FactoryUtil.getSingleton(TypeMapping.class);
+            return ObjectFactory.components().getSingleton(TypeMapping.class);
         }
     }
 

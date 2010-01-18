@@ -33,27 +33,28 @@
  */
 package info.magnolia.content2bean.impl;
 
-import java.util.Properties;
-
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.ObjectFactory;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Properties;
 
 /**
  * @author pbracher
- *
  */
 public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
 
     public PropertiesBasedTypeDescriptor(Properties properties) throws Exception {
-        String transformerClass = properties.getProperty("transformer");
-        if(StringUtils.isNotEmpty(transformerClass)){
-            this.setTransformer((Content2BeanTransformer)ClassUtil.newInstance(transformerClass));
+        String transformerClassName = properties.getProperty("transformer");
+        if (StringUtils.isNotEmpty(transformerClassName)) {
+            final ClassFactory cl = ObjectFactory.classes();
+            final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
+            final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
+            this.setTransformer(transformer);
         }
     }
-
 
 
 }

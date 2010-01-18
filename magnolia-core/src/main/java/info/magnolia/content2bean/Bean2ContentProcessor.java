@@ -34,7 +34,7 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.ObjectFactory;
 
 /**
  * Transforms beans to nodes. Uncomplete.
@@ -53,7 +53,7 @@ public interface Bean2ContentProcessor {
      */
     class Factory{
         public static Bean2ContentProcessor getProcessor(){
-            return (Bean2ContentProcessor) FactoryUtil.getSingleton(Bean2ContentProcessor.class);
+            return ObjectFactory.components().getSingleton(Bean2ContentProcessor.class);
         }
     }
 }

@@ -33,16 +33,16 @@
  */
 package info.magnolia.content2bean.impl;
 
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.content2bean.TypeDescriptor;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.util.Properties;
 
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.ObjectFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
         className = StringUtils.removeStart(className, ".");
         className = StringUtils.removeEnd(className, ".content2bean");
         try {
-            Class<?> typeClass = ClassUtil.classForName(className);
+            Class<?> typeClass = ObjectFactory.classes().forName(className);
 
             TypeDescriptor typeDescriptor = processProperties(typeClass, props);
             addTypeDescriptor(typeClass, typeDescriptor);
@@ -98,9 +98,9 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
     }
 
     protected TypeDescriptor processProperties(Class<?> className, Properties props) throws Exception {
-            String descriptorClassName = StringUtils.defaultIfEmpty(props.getProperty("descriptorClass"), PropertiesBasedTypeDescriptor.class.getName());
-            Class<? extends TypeDescriptor> descriptorClass = ClassUtil.classForName(descriptorClassName);
-            Constructor<? extends TypeDescriptor> constructor = descriptorClass.getConstructor(new Class[] {Properties.class});
-            return constructor.newInstance(new Object[]{props});
+        String descriptorClassName = StringUtils.defaultIfEmpty(props.getProperty("descriptorClass"), PropertiesBasedTypeDescriptor.class.getName());
+        final ClassFactory cl = ObjectFactory.classes();
+        Class<? extends TypeDescriptor> descriptorClass = cl.forName(descriptorClassName);
+        return cl.newInstance(descriptorClass, props);
     }
 }

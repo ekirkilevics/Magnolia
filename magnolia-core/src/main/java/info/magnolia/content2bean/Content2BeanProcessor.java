@@ -34,7 +34,7 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.ObjectFactory;
 
 
 /**
@@ -59,9 +59,8 @@ public interface Content2BeanProcessor {
      * Get your instance here
      */
     class Factory {
-
         public static Content2BeanProcessor getProcessor() {
-            return (Content2BeanProcessor) FactoryUtil.getSingleton(Content2BeanProcessor.class);
+            return ObjectFactory.components().getSingleton(Content2BeanProcessor.class);
         }
     }
 

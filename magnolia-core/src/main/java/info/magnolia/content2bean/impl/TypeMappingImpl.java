@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.magnolia.objectfactory.ObjectFactory;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -175,7 +176,7 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setCollection(beanClass.isArray() || ClassUtil.isSubClass(beanClass, Collection.class));
         types.put(beanClass, dscr);
         try {
-            Class<?> transformerClass = ClassUtil.classForName(beanClass.getName() + "Transformer");
+            Class<?> transformerClass = ObjectFactory.classes().forName(beanClass.getName() + "Transformer");
 
             if(ClassUtil.isSubClass(transformerClass, Content2BeanTransformer.class)){
                 try {

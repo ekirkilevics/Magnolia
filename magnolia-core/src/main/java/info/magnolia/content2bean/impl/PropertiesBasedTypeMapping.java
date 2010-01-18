@@ -34,12 +34,13 @@
 package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.content2bean.Content2BeanTransformer;
 
 import java.util.Iterator;
 import java.util.Properties;
 
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.ObjectFactory;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +63,11 @@ public class PropertiesBasedTypeMapping extends TypeMappingImpl {
                 String className = StringUtils.removeEnd(key, ".transformer");
                 String transformerClassName = properties.getProperty(key);
                 try {
-                    Class<?> beanClass = ClassUtil.classForName(className);
-                    Content2BeanTransformer transformer = (Content2BeanTransformer) ClassUtil.newInstance(transformerClassName);
+                    final ClassFactory cl = ObjectFactory.classes();
+                    final Class<?> beanClass = cl.forName(className);
+                    final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
+                    final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
+
                     getTypeDescriptor(beanClass).setTransformer(transformer);
                     log.debug("Registered custom transformer [{}] for [{}]", className, transformerClassName);
                 } catch (Exception e) {
