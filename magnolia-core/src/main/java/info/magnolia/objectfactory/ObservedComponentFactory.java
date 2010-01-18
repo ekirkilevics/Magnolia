@@ -109,6 +109,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
                 return method.invoke(getObservedObject(), args);
             }
         }, new Class[]{getObservedObject().getClass()});
+        // TODO OR }, new Class[]{interf}); no ?
     }
 
     protected void startObservation(String handle) {

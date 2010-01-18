@@ -43,7 +43,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DefaultClassFactory<T> implements ClassFactory<T> {
+public class DefaultClassFactory implements ClassFactory {
 
     public Class<?> forName(String className) throws ClassNotFoundException {
         Class<?> loadedClass;
@@ -56,11 +56,11 @@ public class DefaultClassFactory<T> implements ClassFactory<T> {
 
     }
 
-    public T newInstance(Class<T> c) {
+    public <T> T newInstance(Class<T> c) {
         return newInstance(c, new Object[]{});
     }
 
-    public T newInstance(Class<T> c, Object... params) {
+    public <T> T newInstance(Class<T> c, Object... params) {
         try {
             return (T) ConstructorUtils.invokeConstructor(c, params);
 

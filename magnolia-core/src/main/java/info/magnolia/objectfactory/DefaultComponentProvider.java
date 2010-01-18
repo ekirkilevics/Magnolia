@@ -49,18 +49,18 @@ import java.util.Properties;
  * @author Philipp Bracher
  * @version $Revision: 25238 $ ($Author: pbaerfuss $)
  */
-public class DefaultComponentProvider<T> implements ComponentProvider<T> {
+public class DefaultComponentProvider implements ComponentProvider {
     private final static Logger log = LoggerFactory.getLogger(DefaultComponentProvider.class);
 
     /**
      * Registered singleton instances.
      */
-    private final Map<Class<T>, T> instances = new HashMap<Class<T>, T>();
+    private final Map<Class<?>, Object> instances = new HashMap<Class<?>, Object>();
 
     /**
      * Registered prototypes used by newInstance().
      */
-    private final Map<Class<T>, ComponentFactory<T>> factories = new HashMap<Class<T>, ComponentFactory<T>>();
+    private final Map<Class<?>, ComponentFactory<?>> factories = new HashMap<Class<?>, ComponentFactory<?>>();
 
     private final Properties mappings;
 
@@ -73,11 +73,13 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
         // since it might get swapped later
     }
 
-    public synchronized T getSingleton(Class<T> type) {
-        T instance = instances.get(type);
+    public synchronized <T> T getSingleton(Class<T> type) {
+        T instance = (T) instances.get(type);
         if (instance == null) {
+            log.debug("No instance for {} yet, creating new one.", type);
             instance = newInstance(type);
             instances.put(type, instance);
+            log.debug("New instance for {} created: {}", type, instance);
         }
 
         return instance;
@@ -89,7 +91,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
      *
      * @throws IllegalStateException
      */
-    public T newInstance(Class<T> type) {
+    public <T> T newInstance(Class<T> type) {
         if (type == null) {
             log.error("type can't be null", new Throwable());
             return null;
@@ -97,7 +99,8 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
 
         try {
             if (factories.containsKey(type)) {
-                return factories.get(type).newInstance();
+                final ComponentFactory<T> factory = (ComponentFactory<T>) factories.get(type);
+                return factory.newInstance();
             }
 
             final String className = getImplementationName(type);
@@ -113,7 +116,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
                 // now that the factory is registered, we call ourself again
                 return newInstance(type);
             } else {
-                final Class clazz = ObjectFactory.classes().forName(className);
+                final Class<?> clazz = ObjectFactory.classes().forName(className);
                 final Object instance = ObjectFactory.classes().newInstance(clazz);
 
                 if (instance instanceof ComponentFactory) {
@@ -138,7 +141,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
         }
     }
 
-    protected String getImplementationName(Class type) {
+    protected String getImplementationName(Class<?> type) {
         final String name = type.getName();
         return mappings.getProperty(name, name);
     }
@@ -150,14 +153,14 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
     /**
      * todo - this is only used in tests
      */
-    public void setDefaultImplementation(Class<T> type, Class<? extends T> impl) {
+    public void setDefaultImplementation(Class<?> type, Class<?> impl) {
         setDefaultImplementation(type, impl.getName());
     }
 
     /**
      * todo - this is only used in tests
      */
-    public void setDefaultImplementation(Class type, String impl) {
+    public void setDefaultImplementation(Class<?> type, String impl) {
         if (!mappings.containsKey(type.getName())) {
             setImplementation(type, impl);
         }
@@ -166,14 +169,14 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
     /**
      * todo - this is only used in tests
      */
-    public void setImplementation(Class<T> type, Class<? extends T> impl) {
+    public void setImplementation(Class<?> type, Class<?> impl) {
         setImplementation(type, impl.getName());
     }
 
     /**
      * todo - this is only used internally
      */
-    public void setImplementation(Class<T> type, String impl) {
+    public void setImplementation(Class<?> type, String impl) {
         mappings.setProperty(type.getName(), impl);
     }
 
@@ -181,7 +184,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
      * Register an instance which will be returned by getSingleton().
      * todo - this is only used in tests
      */
-    public void setInstance(Class<T> type, T instance) {
+    public void setInstance(Class<?> type, Object instance) {
         instances.put(type, instance);
     }
 
@@ -189,7 +192,7 @@ public class DefaultComponentProvider<T> implements ComponentProvider<T> {
      * newInstance will use this prototype for cloning a new object.
      * todo - this is only used in tests
      */
-    public void setInstanceFactory(Class<T> type, ComponentFactory<T> factory) {
+    public void setInstanceFactory(Class<?> type, ComponentFactory<?> factory) {
         factories.put(type, factory);
     }
 

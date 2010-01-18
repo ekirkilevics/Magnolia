@@ -37,13 +37,13 @@ package info.magnolia.objectfactory;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ComponentProvider<T> {
+public interface ComponentProvider {
 
     // TODO - is this needed ?
     <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
 
-    T getSingleton(Class<T> type);
+    <T> T getSingleton(Class<T> type);
 
-    T newInstance(Class<T> type);
+    <T> T newInstance(Class<T> type);
 
 }

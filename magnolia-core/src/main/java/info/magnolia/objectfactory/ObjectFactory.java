@@ -44,9 +44,11 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision: $ ($Author: $)
  */
 public class ObjectFactory {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ObjectFactory.class);
+
     private static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
 
-    public static ClassFactory<?> classes() {
+    public static ClassFactory classes() {
         final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
 
         if (StringUtils.isEmpty(classFactoryClassName)) {
@@ -56,11 +58,12 @@ public class ObjectFactory {
             // whichever ClassFactory is registered will be instantiated with DefaultClassFactory.
             final DefaultClassFactory temp = new DefaultClassFactory();
             try {
-                final Class c = temp.forName(classFactoryClassName);
+                final Class<ClassFactory> c = (Class<ClassFactory>) temp.forName(classFactoryClassName);
                 // TODO - cache !
-                return (ClassFactory) temp.newInstance(c);
+                return temp.newInstance(c);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                log.error("Could not find {}, will use DefaultClassFactory for now");
+                return new DefaultClassFactory();
             }
         }
     }
