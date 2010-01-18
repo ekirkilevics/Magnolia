@@ -58,7 +58,7 @@ public class ObjectFactory {
             // whichever ClassFactory is registered will be instantiated with DefaultClassFactory.
             final DefaultClassFactory temp = new DefaultClassFactory();
             try {
-                final Class<ClassFactory> c = (Class<ClassFactory>) temp.forName(classFactoryClassName);
+                final Class<ClassFactory> c = temp.forName(classFactoryClassName);
                 // TODO - cache !
                 return temp.newInstance(c);
             } catch (ClassNotFoundException e) {

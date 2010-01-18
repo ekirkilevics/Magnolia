@@ -391,10 +391,10 @@ for Java Content Repositories (JCR).
       </dependency>
       <dependency>
         <groupId>cglib</groupId>
-        <!-- TODO or cglib-nodep? -->
-        <artifactId>cglib-full</artifactId>
+        <!-- cglib-nodep is the one that includes a repackaged asm -->
+        <artifactId>cglib-nodep</artifactId>
         <!-- TODO upgrade to 2.2 ? -->
-        <version>2.0.2</version>
+        <version>2.1_3</version>
       </dependency>
       <dependency>
         <groupId>org.freemarker</groupId>

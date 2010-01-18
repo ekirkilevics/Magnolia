@@ -43,9 +43,7 @@ package info.magnolia.objectfactory;
  * @version $Revision: $ ($Author: $)
  */
 public interface ClassFactory {
-    // TODO - not so sure about the generics for this one. Document !
-    //<C> Class<? extends C> forName(String className) throws ClassNotFoundException;
-    Class<?> forName(String className) throws ClassNotFoundException;
+    <C> Class<C> forName(String className) throws ClassNotFoundException;
 
     /**
      * Instantiates the given class.
