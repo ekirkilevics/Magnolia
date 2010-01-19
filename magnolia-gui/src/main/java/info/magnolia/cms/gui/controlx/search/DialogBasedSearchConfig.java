@@ -35,7 +35,6 @@ package info.magnolia.cms.gui.controlx.search;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import java.util.Collection;
@@ -45,7 +44,7 @@ import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.ConstructorUtils;
+import info.magnolia.objectfactory.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,20 +141,17 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
         }
         else{
             try {
-                Class defClass = ClassUtil.classForName(searchType);
-                try {
-                    SearchControlDefinition def = (SearchControlDefinition) ConstructorUtils.invokeConstructor(defClass, new Object[]{name, label});
-                    if(def instanceof DialogBasedSearchControlDefinition){
-                        ((DialogBasedSearchControlDefinition)def).init(controlNode); 
-                    }
-                    return def;
+                SearchControlDefinition def = Classes.newInstance(searchType, name, label);
+                if(def instanceof DialogBasedSearchControlDefinition){
+                    ((DialogBasedSearchControlDefinition)def).init(controlNode);
                 }
-                catch (Exception e) {
-                    log.error("can't instantiate search control definition " + defClass , e);
-                }
+                return def;
             }
             catch (ClassNotFoundException e) {
                 // this happens if the search Type is not a class
+            }
+            catch (Exception e) {
+                log.error("can't instantiate search control definition " + searchType , e);
             }
         }
         // default to the normal search field

@@ -34,12 +34,10 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.DialogMVCHandler;
-
-import java.lang.reflect.Constructor;
-import java.text.MessageFormat;
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.Classes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -89,26 +87,24 @@ public class ConfiguredDialog extends DialogMVCHandler {
      * @return
      */
     public static ConfiguredDialog getConfiguredDialog(String name, Content configNode, HttpServletRequest request,
-        HttpServletResponse response, Class defaultClass) {
+        HttpServletResponse response, Class<ConfiguredDialog> defaultClass) {
+
+        final ClassFactory classFactory = Classes.getClassFactory();
         // get class name
         String className = null;
         try {
-            Class handlerClass = defaultClass;
+            Class<ConfiguredDialog> handlerClass = defaultClass;
             try {
                 className = configNode.getNodeData("class").getString(); //$NON-NLS-1$
                 if (StringUtils.isNotEmpty(className)) {
-                    handlerClass = ClassUtil.classForName(className);
+                    handlerClass = classFactory.forName(className);
                 }
             }
             catch (Exception e) {
-                log.error(MessageFormat.format("Unable to load class {0}", new Object[]{className})); //$NON-NLS-1$
+                log.error("Unable to load class {}", className); //$NON-NLS-1$
             }
-            Constructor constructor = handlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class,
-                HttpServletResponse.class,
-                Content.class});
-            return (ConfiguredDialog) constructor.newInstance(new Object[]{name, request, response, configNode});
+
+            return classFactory.newInstance(handlerClass, name, request, response, configNode);
         }
         catch (Exception e) {
             log.error("can't instantiate dialog: ", e); //$NON-NLS-1$
