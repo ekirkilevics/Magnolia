@@ -37,10 +37,10 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNameMap;
@@ -346,7 +346,7 @@ public final class ContentRepository {
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
         log.info("Loading JCR {}", map.getName()); //$NON-NLS-1$
-        Provider handlerClass = (Provider) ClassUtil.newInstance(map.getProvider());
+        Provider handlerClass = Classes.newInstance(map.getProvider());
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlyingRepository();
         repositories.put(map.getName(), repository);
