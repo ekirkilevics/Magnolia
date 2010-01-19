@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.objectfactory.Components;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -59,7 +61,7 @@ public class UnicodeNormalizer {
     private static final String JAVA6_FORMPARAM_CLASS = "java.text.Normalizer$Form";
     private static final String ICU_NORMALIZER_CLASS = "com.ibm.icu.text.Normalizer";
 
-    private static final Normalizer normalizer = (Normalizer) FactoryUtil.newInstance(Normalizer.class);
+    private static final Normalizer normalizer = Components.getSingleton(Normalizer.class);
 
     /**
      * Normalizes the given String to the NFC form.
