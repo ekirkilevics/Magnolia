@@ -41,7 +41,6 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -59,25 +58,25 @@ public class TemplateManager extends ObservedManager {
     /**
      * The cached templates
      */
-    private Map cachedContent = new Hashtable();
+    private Map<String, Template> cachedContent = new Hashtable<String, Template>();
 
     /**
      * The templates visible in the templates selection
      */
-    private List visibleTemplates = new ArrayList();
+    private List<Template> visibleTemplates = new ArrayList<Template>();
 
     /**
-     * Called by the ObervedManager
+     * Called by the ObservedManager
      */
     protected void onRegister(Content node) {
         try {
             log.info("Loading Template info from {}", node.getHandle()); //$NON-NLS-1$
 
             // It makes possibly to use templates defined within subfolders of /module/templating/Templates
-            Collection children = collectChildren(node);
+            Collection<Content> children = collectChildren(node);
 
             if ((children != null) && !(children.isEmpty())) {
-                Iterator templates = children.iterator();
+                Iterator<Content> templates = children.iterator();
                 cacheContent(templates);
             }
 
@@ -120,7 +119,7 @@ public class TemplateManager extends ObservedManager {
      * @return TemplateInfo
      */
     public Template getTemplateDefinition(String key) {
-        return (Template) cachedContent.get(key);
+        return cachedContent.get(key);
     }
 
     /**
@@ -134,7 +133,7 @@ public class TemplateManager extends ObservedManager {
      * @return TemplateInfo
      */
     public Template getInfo(String key, String extension) {
-        Template template = (Template) cachedContent.get(key);
+        Template template = cachedContent.get(key);
 
         if (template == null) {
             return null;
@@ -152,9 +151,9 @@ public class TemplateManager extends ObservedManager {
      * @param templates iterator as read from the repository
      * @param visibleTemplates List in with all visible templates will be added
      */
-    private void addTemplatesToCache(Iterator templates, List visibleTemplates) {
+    private void addTemplatesToCache(Iterator<Content> templates, List<Template> visibleTemplates) {
         while (templates.hasNext()) {
-            Content c = (Content) templates.next();
+            Content c = templates.next();
 
             try {
                 Template ti = (Template) Content2BeanUtil.toBean(c, true, Template.class);
@@ -163,9 +162,7 @@ public class TemplateManager extends ObservedManager {
                     visibleTemplates.add(ti);
                 }
 
-                if (log.isDebugEnabled()) {
-                    log.debug(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
-                }
+                log.debug("Registering template [{}]", ti.getName());
             }
             catch (Content2BeanException e) {
                 log.error("Can't register template ["+c.getName()+"]",e);
@@ -178,7 +175,7 @@ public class TemplateManager extends ObservedManager {
      * Load content of this template info page in a hash table caching at the system load, this will save lot of time on
      * every request while matching template info.
      */
-    private void cacheContent(Iterator templates) {
+    private void cacheContent(Iterator<Content> templates) {
         if (templates != null) {
             addTemplatesToCache(templates, visibleTemplates);
         }
@@ -190,18 +187,16 @@ public class TemplateManager extends ObservedManager {
      * @param cnt current folder to look for template's nodes
      * @return collection of template's content nodes from current folder and descendants
      */
-    private Collection collectChildren(Content cnt) {
+    private Collection<Content> collectChildren(Content cnt) {
         // Collect template's content node - children of current node
-        Collection children = cnt.getChildren(ItemType.CONTENTNODE);
+        Collection<Content> children = cnt.getChildren(ItemType.CONTENTNODE);
 
         // Look into subfolders
-        Collection subFolders = cnt.getChildren(ItemType.CONTENT);
+        Collection<Content> subFolders = cnt.getChildren(ItemType.CONTENT);
         if ((subFolders != null) && !(subFolders.isEmpty())) {
 
-            Iterator it = subFolders.iterator();
-            while (it.hasNext()) {
-                Content subCnt = (Content) it.next();
-                Collection grandChildren = collectChildren(subCnt);
+            for (Content subCnt : subFolders) {
+                Collection<Content> grandChildren = collectChildren(subCnt);
 
                 if ((grandChildren != null) && !(grandChildren.isEmpty())) {
                     children.addAll(grandChildren);
@@ -213,11 +208,10 @@ public class TemplateManager extends ObservedManager {
         return children;
     }
 
-    public Iterator getAvailableTemplates(Content node) {
-        List templateList = new ArrayList();
-        Iterator it = visibleTemplates.iterator();
-        while (it.hasNext()) {
-            Template template = (Template) it.next();
+    public Iterator<Template> getAvailableTemplates(Content node) {
+        List<Template> templateList = new ArrayList<Template>();
+        for (Template template : visibleTemplates) {
+            
             if (template.isAvailable(node)) {
                 templateList.add(template);
             }
@@ -229,7 +223,7 @@ public class TemplateManager extends ObservedManager {
      * Get templates collection.
      * @return Collection list containing templates as Template objects
      */
-    public Iterator getAvailableTemplates() {
+    public Iterator<Template> getAvailableTemplates() {
         return visibleTemplates.iterator();
     }
 
@@ -243,9 +237,9 @@ public class TemplateManager extends ObservedManager {
             }
             // otherwise use the first available template
             else{
-                Iterator templates = getAvailableTemplates(node);
+                Iterator<Template> templates = getAvailableTemplates(node);
                 if (templates.hasNext()) {
-                    return (Template) templates.next();
+                    return templates.next();
                 }
             }
         }

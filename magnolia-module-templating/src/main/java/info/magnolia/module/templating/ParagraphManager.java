@@ -42,7 +42,6 @@ import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -66,7 +65,7 @@ public class ParagraphManager extends ObservedManager {
     /**
      * Cached paragraphs
      */
-    private Map paragraphs = new Hashtable();
+    private Map<String, Paragraph> paragraphs = new Hashtable<String, Paragraph>();
 
     /**
      * Returns the cached content of the requested template. TemplateInfo properties :
@@ -94,13 +93,13 @@ public class ParagraphManager extends ObservedManager {
      * @return a Paragraph instance
      */
     public Paragraph getParagraphDefinition(String key) {
-        return (Paragraph) paragraphs.get(key);
+        return paragraphs.get(key);
     }
 
     /**
      * Get a map of all registered paragraphs.
      */
-    public Map getParagraphs() {
+    public Map<String, Paragraph> getParagraphs() {
         return paragraphs;
     }
 
@@ -110,16 +109,13 @@ public class ParagraphManager extends ObservedManager {
     protected void onRegister(Content node) {
         // register a listener
 
-        Collection paragraphNodes = node.getChildren(ItemType.CONTENTNODE);
-        for (Iterator iter = paragraphNodes.iterator(); iter.hasNext();) {
-            Content paragraphNode = (Content) iter.next();
+        Collection<Content> paragraphNodes = node.getChildren(ItemType.CONTENTNODE);
+        for (Content  paragraphNode : paragraphNodes) {
             addParagraphToCache(paragraphNode);
         }
 
-        Collection subDefinitions = node.getChildren(ItemType.CONTENT);
-        Iterator it = subDefinitions.iterator();
-        while (it.hasNext()) {
-            Content subNode = (Content) it.next();
+        Collection<Content> subDefinitions = node.getChildren(ItemType.CONTENT);
+        for (Content subNode : subDefinitions) {
             // do not register other observations
             onRegister(subNode);
         }
