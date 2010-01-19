@@ -37,6 +37,7 @@ import info.magnolia.objectfactory.Classes;
 
 /**
  * Utility methods for classes.
+ * @deprecated since 4.3 - see specific methods for replacements.
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)

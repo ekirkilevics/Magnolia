@@ -72,7 +72,7 @@ public class FreemarkerHelper {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerHelper.class);
 
     public static FreemarkerHelper getInstance() {
-        return Components.getComponentProvider().getSingleton(FreemarkerHelper.class);
+        return Components.getSingleton(FreemarkerHelper.class);
     }
 
     private final Configuration cfg;

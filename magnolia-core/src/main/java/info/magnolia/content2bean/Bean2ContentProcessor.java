@@ -53,7 +53,7 @@ public interface Bean2ContentProcessor {
      */
     class Factory{
         public static Bean2ContentProcessor getProcessor(){
-            return Components.getComponentProvider().getSingleton(Bean2ContentProcessor.class);
+            return Components.getSingleton(Bean2ContentProcessor.class);
         }
     }
 }

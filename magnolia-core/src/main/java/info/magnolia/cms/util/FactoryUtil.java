@@ -41,9 +41,10 @@ import info.magnolia.objectfactory.DefaultComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 /**
+ * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
  */
 public class FactoryUtil {
     private FactoryUtil() {
@@ -51,21 +52,21 @@ public class FactoryUtil {
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()#newInstance(Class)}
      */
     public static Object newInstance(Class interf) {
         return Components.getComponentProvider().newInstance(interf);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()#getImplementation(Class)}
      */
     public static Class getImplementation(Class interf) throws ClassNotFoundException {
         return Components.getComponentProvider().getImplementation(interf);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes}
      */
     public static Object newInstanceWithoutDiscovery(String className, Object[] args) {
         try {
@@ -85,10 +86,10 @@ public class FactoryUtil {
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes#getClassFactory()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getSingleton(Class)}
      */
     public static Object getSingleton(Class interf) {
-        return Components.getComponentProvider().getSingleton(interf);
+        return Components.getSingleton(interf);
     }
 
     /**

@@ -91,7 +91,7 @@ public interface Content2BeanTransformer {
      */
     class Factory {
         public static Content2BeanTransformer getDefaultTransformer() {
-            return Components.getComponentProvider().getSingleton(Content2BeanTransformer.class);
+            return Components.getSingleton(Content2BeanTransformer.class);
         }
     }
 

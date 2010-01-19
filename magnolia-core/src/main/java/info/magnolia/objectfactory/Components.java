@@ -37,13 +37,24 @@ import info.magnolia.cms.core.SystemProperty;
 
 /**
  * Entry point to the ComponentProvider.
+ *
+ * The ComponentProvider implementation can currently not be swapped, as opposed to the {@link info.magnolia.objectfactory.ClassFactory},
+ * using {@link info.magnolia.objectfactory.Classes}.
+ *
  * @see ComponentProvider
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class Components {
-    public static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
+    private static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
+
+    /**
+     * Convenience method for retrieving a singleton our of the {@link ComponentProvider}.
+     */
+    public static <T> T getSingleton(Class<T> type) {
+        return getComponentProvider().getSingleton(type);
+    }
 
     public static ComponentProvider getComponentProvider() {
         return componentProvider;

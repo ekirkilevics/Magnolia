@@ -47,6 +47,15 @@ import org.apache.commons.lang.StringUtils;
 public class Classes {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Classes.class);
 
+    /**
+     * Convenience/shortcut method for instantiating new classes.
+     */
+    public static <T> T newInstance(String className, Object... params) throws ClassNotFoundException {
+        final ClassFactory cf = getClassFactory();
+        final Class<T> cl = cf.forName(className);
+        return cf.newInstance(cl, params);
+    }
+
     public static ClassFactory getClassFactory() {
         final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
 

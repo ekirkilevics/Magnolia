@@ -43,15 +43,14 @@ package info.magnolia.objectfactory;
  * @version $Revision: $ ($Author: $)
  */
 public interface ClassFactory {
+
     <C> Class<C> forName(String className) throws ClassNotFoundException;
 
     /**
-     * Instantiates the given class.
-     */
-    <T> T newInstance(Class<T> c);
-
-    /**
      * Instantiates the given class with the given parameters.
+     * For the empty constructor, pass no parameters (or an empty array, or null). To pass "null" to a single-arg constructor,
+     * use newInstance(c, new Object[]{null}) (otherwise the *array* itself will be considered null)
      */
     <T> T newInstance(Class<T> c, Object... params);
+
 }

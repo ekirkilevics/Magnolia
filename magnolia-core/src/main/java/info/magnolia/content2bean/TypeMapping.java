@@ -59,7 +59,7 @@ public interface TypeMapping {
      */
     class Factory{
         public static TypeMapping getDefaultMapping(){
-            return Components.getComponentProvider().getSingleton(TypeMapping.class);
+            return Components.getSingleton(TypeMapping.class);
         }
     }
 

@@ -135,7 +135,7 @@ public class CommandsManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static CommandsManager getInstance() {
-        return Components.getComponentProvider().getSingleton(CommandsManager.class);
+        return Components.getSingleton(CommandsManager.class);
     }
 
 }

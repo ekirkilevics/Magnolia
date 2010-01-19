@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class FreemarkerConfig {
     public static FreemarkerConfig getInstance() {
-        return Components.getComponentProvider().getSingleton(FreemarkerConfig.class);
+        return Components.getSingleton(FreemarkerConfig.class);
     }
 
     /**

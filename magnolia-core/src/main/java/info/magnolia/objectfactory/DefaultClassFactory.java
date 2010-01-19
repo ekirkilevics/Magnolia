@@ -36,6 +36,7 @@ package info.magnolia.objectfactory;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 /**
  * A ClassFactory implementation which uses the default class loader and the thread context class loader.
@@ -56,14 +57,13 @@ public class DefaultClassFactory implements ClassFactory {
 
     }
 
-    public <T> T newInstance(Class<T> c) {
-        return newInstance(c, new Object[]{});
-    }
-
     public <T> T newInstance(Class<T> c, Object... params) {
         try {
-            return (T) ConstructorUtils.invokeConstructor(c, params);
-
+            if (params == null || params.length == 0) {
+                // shortcut
+                return c.newInstance();
+            }
+            return  (T) ConstructorUtils.invokeConstructor(c, params);
         } catch (NoSuchMethodException e) {
             throw new MgnlInstantiationException(e.getMessage(), e);
         } catch (IllegalAccessException e) {
