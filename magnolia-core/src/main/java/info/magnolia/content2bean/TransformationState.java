@@ -37,7 +37,7 @@ import info.magnolia.cms.core.Content;
 
 /**
  * This state contains three stacks. This allows the transformer to know the full state created during the
- * transoformation process. A stack for classes, beans, and content nodes are kept.
+ * transformation process. A stack for classes, beans, and content nodes are kept.
  * <p/>
  * It is the processors job to populate this state.
  *
