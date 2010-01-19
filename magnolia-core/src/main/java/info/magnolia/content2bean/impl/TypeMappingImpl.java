@@ -172,13 +172,13 @@ public class TypeMappingImpl implements TypeMapping {
         }
         dscr = new TypeDescriptor();
         dscr.setType(beanClass);
-        dscr.setMap(ClassUtil.isSubClass(beanClass, Map.class));
-        dscr.setCollection(beanClass.isArray() || ClassUtil.isSubClass(beanClass, Collection.class));
+        dscr.setMap(Map.class.isAssignableFrom(beanClass));
+        dscr.setCollection(beanClass.isArray() || Collection.class.isAssignableFrom(beanClass));
         types.put(beanClass, dscr);
         try {
             Class<?> transformerClass = Classes.getClassFactory().forName(beanClass.getName() + "Transformer");
 
-            if(ClassUtil.isSubClass(transformerClass, Content2BeanTransformer.class)){
+            if(Content2BeanTransformer.class.isAssignableFrom(transformerClass)){
                 try {
                     Content2BeanTransformer transformer = (Content2BeanTransformer) transformerClass.newInstance();
                     dscr.setTransformer(transformer);
