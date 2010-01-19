@@ -34,8 +34,8 @@
 package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -55,7 +55,7 @@ public class ParagraphRenderingFacade {
     private final ParagraphManager paragraphManager;
 
     public static ParagraphRenderingFacade getInstance() {
-        return (ParagraphRenderingFacade) FactoryUtil.getSingleton(ParagraphRenderingFacade.class);
+        return Components.getSingleton(ParagraphRenderingFacade.class);
     }
 
     public ParagraphRenderingFacade() {

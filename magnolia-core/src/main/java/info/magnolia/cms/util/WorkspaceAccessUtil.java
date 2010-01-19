@@ -42,7 +42,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.repository.RepositoryNotInitializedException;
+import info.magnolia.objectfactory.Components;
 
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
@@ -71,7 +71,7 @@ public class WorkspaceAccessUtil {
     }
 
     public static WorkspaceAccessUtil getInstance() {
-        return (WorkspaceAccessUtil) FactoryUtil.getSingleton(WorkspaceAccessUtil.class);
+        return Components.getSingleton(WorkspaceAccessUtil.class);
     }
 
     /**

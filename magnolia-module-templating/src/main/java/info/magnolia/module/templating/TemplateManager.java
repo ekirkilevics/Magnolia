@@ -35,10 +35,10 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
 import java.text.MessageFormat;
@@ -259,7 +259,7 @@ public class TemplateManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static TemplateManager getInstance() {
-        return (TemplateManager) FactoryUtil.getSingleton(TemplateManager.class);
+        return Components.getSingleton(TemplateManager.class);
     }
 
 }

@@ -33,11 +33,11 @@
  */
 package info.magnolia.module;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.delta.Delta;
+import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public interface ModuleManager {
      */
     public class Factory {
         public static ModuleManager getInstance() {
-            return (ModuleManager) FactoryUtil.getSingleton(ModuleManager.class);
+            return Components.getSingleton(ModuleManager.class);
         }
     }
 

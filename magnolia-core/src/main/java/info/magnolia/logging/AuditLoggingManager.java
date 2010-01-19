@@ -33,12 +33,11 @@
  */
 package info.magnolia.logging;
 
-import info.magnolia.cms.util.FactoryUtil;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +61,7 @@ public class AuditLoggingManager {
 
     public static AuditLoggingManager getInstance() {
         try {
-            return (AuditLoggingManager) FactoryUtil
-                    .getSingleton(AuditLoggingManager.class);
+            return Components.getSingleton(AuditLoggingManager.class);
         } catch (Exception e) {
             // if not defined skip and return null
             applog.info("Class AuditLoggingManager not defined");

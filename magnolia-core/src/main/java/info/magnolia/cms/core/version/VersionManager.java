@@ -34,8 +34,8 @@
 package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.beans.config.VersionConfig;
+import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.version.VersionHistory;
@@ -75,7 +75,7 @@ public final class VersionManager extends BaseVersionManager {
      * get instance
      */
     public static VersionManager getInstance() {
-        return (VersionManager) FactoryUtil.getSingleton(VersionManager.class);
+        return Components.getSingleton(VersionManager.class);
     }
 
     /**

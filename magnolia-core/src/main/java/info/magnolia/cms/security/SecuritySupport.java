@@ -35,7 +35,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.login.LoginResult;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 /**
  *
@@ -62,7 +62,7 @@ public interface SecuritySupport {
 
     public final static class Factory {
         public static SecuritySupport getInstance() {
-            return (SecuritySupport) FactoryUtil.getSingleton(SecuritySupport.class);
+            return Components.getSingleton(SecuritySupport.class);
         }
     }
 }

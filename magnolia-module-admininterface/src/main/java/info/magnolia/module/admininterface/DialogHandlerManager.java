@@ -38,7 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
@@ -234,7 +234,7 @@ public class DialogHandlerManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static DialogHandlerManager getInstance() {
-        return (DialogHandlerManager) FactoryUtil.getSingleton(DialogHandlerManager.class);
+        return Components.getSingleton(DialogHandlerManager.class);
     }
 
 }

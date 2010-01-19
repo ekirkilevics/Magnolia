@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.i18n;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -74,7 +74,7 @@ public abstract class MessagesManager {
     public static final String LANGUAGES_NODE_NAME = "languages"; //$NON-NLS-1$
 
     public static MessagesManager getInstance() {
-        return (MessagesManager) FactoryUtil.getSingleton(MessagesManager.class);
+        return Components.getSingleton(MessagesManager.class);
     }
 
     public static Messages getMessages() {

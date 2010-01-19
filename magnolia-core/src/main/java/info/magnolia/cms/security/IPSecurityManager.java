@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,7 +49,7 @@ public interface IPSecurityManager {
 
     public final static class Factory {
         public static IPSecurityManager getInstance() {
-            return (IPSecurityManager) FactoryUtil.getSingleton(IPSecurityManager.class);
+            return Components.getSingleton(IPSecurityManager.class);
         }
     }
 }

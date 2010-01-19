@@ -35,8 +35,8 @@ package info.magnolia.module;
 
 import java.util.Set;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.objectfactory.Components;
 
 /**
  * Holds instances and definitions of modules.
@@ -72,7 +72,7 @@ public interface ModuleRegistry {
      */
     public class Factory {
         public static ModuleRegistry getInstance() {
-            return (ModuleRegistry) FactoryUtil.getSingleton(ModuleRegistry.class);
+            return Components.getSingleton(ModuleRegistry.class);
         }
     }
 

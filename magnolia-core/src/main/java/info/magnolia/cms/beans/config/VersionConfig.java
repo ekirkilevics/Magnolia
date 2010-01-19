@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 
 /**
@@ -62,7 +62,7 @@ public class VersionConfig {
     }
 
     public static VersionConfig getInstance() {
-        return (VersionConfig) FactoryUtil.getSingleton(VersionConfig.class);
+        return Components.getSingleton(VersionConfig.class);
     }
 
     /**

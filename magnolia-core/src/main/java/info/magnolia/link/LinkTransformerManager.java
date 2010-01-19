@@ -34,7 +34,7 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 /**
  * Single point of access for all Link Transformers.
@@ -66,7 +66,7 @@ public class LinkTransformerManager {
      * Gets the current singleton instance.
      */
     public static LinkTransformerManager getInstance() {
-        return (LinkTransformerManager) FactoryUtil.getSingleton(LinkTransformerManager.class);
+        return Components.getSingleton(LinkTransformerManager.class);
     }
     
     /**

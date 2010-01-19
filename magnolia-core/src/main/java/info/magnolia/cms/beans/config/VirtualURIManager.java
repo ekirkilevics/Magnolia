@@ -34,11 +34,11 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -120,6 +120,6 @@ public final class VirtualURIManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static VirtualURIManager getInstance() {
-        return (VirtualURIManager) FactoryUtil.getSingleton(VirtualURIManager.class);
+        return Components.getSingleton(VirtualURIManager.class);
     }
 }

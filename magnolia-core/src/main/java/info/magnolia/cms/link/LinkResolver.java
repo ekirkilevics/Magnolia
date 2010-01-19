@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 /**
  * Use to transform links
@@ -62,7 +62,7 @@ public interface LinkResolver {
 
     public static class Factory{
         public static LinkResolver getInstance(){
-            return (LinkResolver) FactoryUtil.getSingleton(LinkResolver.class);
+            return Components.getSingleton(LinkResolver.class);
         }
     }
 

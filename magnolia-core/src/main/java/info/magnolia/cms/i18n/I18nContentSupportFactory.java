@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.i18n;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 /**
  * Get the current I18nContentSupport object from this factory. Observation is used.
@@ -44,7 +44,7 @@ import info.magnolia.cms.util.FactoryUtil;
 public class I18nContentSupportFactory {
 
     public static I18nContentSupport getI18nSupport() {
-        return (I18nContentSupport) FactoryUtil.getSingleton(I18nContentSupport.class);
+        return Components.getSingleton(I18nContentSupport.class);
     }
 
 }

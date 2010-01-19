@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.workflow;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
+import info.magnolia.objectfactory.Components;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
 
@@ -144,7 +144,7 @@ public class WorkflowModule implements ModuleLifecycle {
     }
 
     public static FlowDefinitionManager getFlowDefinitionManager() {
-        return (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
+        return Components.getSingleton(FlowDefinitionManager.class);
     }
 
 

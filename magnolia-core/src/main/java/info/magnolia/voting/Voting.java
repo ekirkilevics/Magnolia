@@ -33,7 +33,7 @@
  */
 package info.magnolia.voting;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 /**
  * @author philipp
@@ -47,7 +47,7 @@ public interface Voting {
 
     static class Factory {
         public static Voting getDefaultVoting() {
-            return (Voting) FactoryUtil.getSingleton(Voting.class);
+            return Components.getSingleton(Voting.class);
         }
     }
 }

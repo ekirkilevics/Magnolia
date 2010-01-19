@@ -34,11 +34,11 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 import java.util.Map;
@@ -79,7 +79,7 @@ public class ServerConfiguration {
     }
 
     public static ServerConfiguration getInstance() {
-        return (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
+        return Components.getSingleton(ServerConfiguration.class);
     }
 
     public static final class InstanceFactory<T> extends ObservedComponentFactory<ServerConfiguration> {

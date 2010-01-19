@@ -35,7 +35,6 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
@@ -55,6 +54,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -97,7 +97,7 @@ public class PropertiesInitializer {
     public static final String CONTEXT_PARAM_PLACEHOLDER_PREFIX = "contextParam/"; //$NON-NLS-1$
 
     public static PropertiesInitializer getInstance() {
-        return (PropertiesInitializer) FactoryUtil.getSingleton(PropertiesInitializer.class);
+        return Components.getSingleton(PropertiesInitializer.class);
     }
 
     private static Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);

@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 import java.util.Iterator;
 
@@ -108,7 +108,7 @@ public final class ControlsManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static ControlsManager getInstance() {
-        return (ControlsManager) FactoryUtil.getSingleton(ControlsManager.class);
+        return Components.getSingleton(ControlsManager.class);
     }
 
     protected void onClear() {

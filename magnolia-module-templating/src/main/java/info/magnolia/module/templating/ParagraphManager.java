@@ -35,10 +35,10 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -60,7 +60,7 @@ public class ParagraphManager extends ObservedManager {
      * Gets the current singleton instance.
      */
     public static ParagraphManager getInstance() {
-        return (ParagraphManager) FactoryUtil.getSingleton(ParagraphManager.class);
+        return Components.getSingleton(ParagraphManager.class);
     }
 
     /**

@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.license;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
@@ -87,7 +87,7 @@ public class LicenseFileExtractor {
     private Map values;
 
     public static LicenseFileExtractor getInstance() {
-        return (LicenseFileExtractor) FactoryUtil.getSingleton(LicenseFileExtractor.class);
+        return Components.getSingleton(LicenseFileExtractor.class);
     }
 
     public String get(String id) {

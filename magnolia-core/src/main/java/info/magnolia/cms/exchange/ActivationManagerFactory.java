@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.exchange;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 /**
  * @author Sameer Charles
@@ -42,6 +42,6 @@ import info.magnolia.cms.util.FactoryUtil;
 public class ActivationManagerFactory {
 
     public static ActivationManager getActivationManager() {
-        return (ActivationManager) FactoryUtil.getSingleton(ActivationManager.class);
+        return Components.getSingleton(ActivationManager.class);
     }
 }

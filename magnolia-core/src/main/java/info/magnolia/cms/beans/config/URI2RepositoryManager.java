@@ -36,7 +36,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.link.Link;
 import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkException;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -138,7 +138,7 @@ public class URI2RepositoryManager {
     }
 
     public static URI2RepositoryManager getInstance() {
-        return (URI2RepositoryManager) FactoryUtil.getSingleton(URI2RepositoryManager.class);
+        return Components.getSingleton(URI2RepositoryManager.class);
     }
 
     /**
