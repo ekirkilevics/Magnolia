@@ -36,6 +36,9 @@ package info.magnolia.context;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Security;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +101,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     public AggregationState getAggregationState() {
         if (aggregationState == null) {
-            aggregationState = new AggregationState();
+            aggregationState = Components.getComponentProvider().newInstance(AggregationState.class);
         }
         return aggregationState;
     }
