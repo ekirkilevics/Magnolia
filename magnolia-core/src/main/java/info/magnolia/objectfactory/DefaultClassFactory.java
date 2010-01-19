@@ -36,7 +36,6 @@ package info.magnolia.objectfactory;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 /**
  * A ClassFactory implementation which uses the default class loader and the thread context class loader.
@@ -58,6 +57,12 @@ public class DefaultClassFactory implements ClassFactory {
     }
 
     public <T> T newInstance(Class<T> c, Object... params) {
+
+        // TODO -
+        // c.isAnnotationPresent(Deprecated) - at class or constructor level,
+        // output a warning - todo bis - use a subclass of java.lang.Deprecated which allows a message
+
+
         try {
             if (params == null || params.length == 0) {
                 // shortcut
