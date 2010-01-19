@@ -37,16 +37,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -56,7 +51,8 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public final class DialogFactory {
-    private static final Logger log = LoggerFactory.getLogger(DialogFactory.class);
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DialogFactory.class);
+
 
     /**
      * Registered controls.
@@ -92,70 +88,70 @@ public final class DialogFactory {
      * @throws RepositoryException for errors during initialization of dialog with repository data
      */
     public static DialogControl loadDialog(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                           Content storageNode, Content configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
         return getDialogControlInstanceByName(request, response, storageNode, configNode, controlType);
     }
 
     public static Dialog getDialogInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                           Content storageNode, Content configNode) throws RepositoryException {
         Dialog dialog = new Dialog();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogStatic getDialogStaticInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                       Content storageNode, Content configNode) throws RepositoryException {
         DialogStatic dialog = new DialogStatic();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogHidden getDialogHiddenInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                       Content storageNode, Content configNode) throws RepositoryException {
         DialogHidden dialog = new DialogHidden();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogEdit getDialogEditInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                   Content storageNode, Content configNode) throws RepositoryException {
         DialogEdit dialog = new DialogEdit();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogButton getDialogButtonInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                       Content storageNode, Content configNode) throws RepositoryException {
         DialogButton dialog = new DialogButton();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogPassword getDialogPasswordInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                           Content storageNode, Content configNode) throws RepositoryException {
         DialogPassword dialog = new DialogPassword();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogButtonSet getDialogButtonSetInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                             Content storageNode, Content configNode) throws RepositoryException {
         DialogButtonSet dialog = new DialogButtonSet();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogInclude getDialogIncludeInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                         Content storageNode, Content configNode) throws RepositoryException {
         DialogInclude dialog = new DialogInclude();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
 
     public static DialogSelect getDialogSelectInstance(HttpServletRequest request, HttpServletResponse response,
-        Content storageNode, Content configNode) throws RepositoryException {
+                                                       Content storageNode, Content configNode) throws RepositoryException {
         DialogSelect dialog = new DialogSelect();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
@@ -172,9 +168,8 @@ public final class DialogFactory {
      * @return the conrol
      * @throws RepositoryException
      */
-    public static DialogControl getDialogControlInstanceByName(HttpServletRequest request,
-        HttpServletResponse response, Content storageNode, Content configNode, String controlType)
-        throws RepositoryException {
+    public static DialogControl getDialogControlInstanceByName(HttpServletRequest request, HttpServletResponse response,
+                                                               Content storageNode, Content configNode, String controlType) throws RepositoryException {
 
         final ClassFactory classFactory = Classes.getClassFactory();
         Class<DialogControl> dialogClass = controls.get(controlType);
@@ -188,18 +183,8 @@ public final class DialogFactory {
             }
         }
 
-        DialogControl control = null;
-        try {
-            control = classFactory.newInstance(dialogClass);
-        }
-        catch (Exception e) {
-            // should never happen
-            throw new NestableRuntimeException("Unable to instantiate " //$NON-NLS-1$
-                + dialogClass
-                + " due to: InstantiationException - " //$NON-NLS-1$
-                + e.getMessage());
-        }
-
+        // classFactory.newInstance wraps instantation exception in MgnlInstantiationException, which is a runtime, so no need to catch/wrap here again.
+        final DialogControl control = classFactory.newInstance(dialogClass);
         control.init(request, response, storageNode, configNode);
         return control;
     }
