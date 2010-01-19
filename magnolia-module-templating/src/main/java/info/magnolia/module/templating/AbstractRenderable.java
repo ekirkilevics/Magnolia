@@ -44,9 +44,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.RenderingModelImpl;
-import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.context.MgnlContext;
 
 
@@ -65,7 +62,7 @@ public class AbstractRenderable implements RenderableDefinition {
     private String type;
     private String description;
     private String i18nBasename;
-    private Class modelClass = RenderingModelImpl.class;
+    private Class<? extends RenderingModel> modelClass = RenderingModelImpl.class;
     private Map parameters = new HashMap();
 
     /**
@@ -76,20 +73,34 @@ public class AbstractRenderable implements RenderableDefinition {
     }
 
     /**
-     * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, RenderableDefinition, RenderingModel)}. All the request parameters are then mapped to the models properties.
+     * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a
+     * constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, RenderableDefinition, RenderingModel)}.
+     * All the request parameters are then mapped to the model's properties.
      */
     public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        final Class[] constructorTypes = new Class[]{Content.class, RenderableDefinition.class, RenderingModel.class};
-        Constructor constr = ConstructorUtils.getAccessibleConstructor(getModelClass(), constructorTypes);
+        final Constructor<RenderingModel> constr = ConstructorUtils.getAccessibleConstructor(getModelClass(), MODEL_CONSTRUCTOR_TYPES);
         if(constr == null){
-            throw new IllegalArgumentException("A model class must define a constructor with types" + ArrayUtils.toString(constructorTypes) + ". Can't instanciate " + getModelClass());
+            throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass());
         }
-        RenderingModel model = (RenderingModel) constr.newInstance(new Object[]{content, definition, parentModel});
-        final Map params = MgnlContext.getParameters();
+        RenderingModel model = constr.newInstance(content, definition, parentModel);
+        final Map<String, String> params = MgnlContext.getParameters();
         if (params != null) {
             BeanUtils.populate(model, params);
         }
         return model;
+
+        /** TODO - this would use ClassFactory instead - but currently can't work because parentModel can be null
+         try {
+             final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), content, definition, parentModel);
+             final Map<String, String> params = MgnlContext.getParameters();
+             if (params != null) {
+                 BeanUtils.populate(model, params);
+             }
+             return model;
+         } catch (MgnlInstantiationException e) {
+             throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass());
+         }
+         */
     }
 
     public String getName() {
@@ -156,12 +167,11 @@ public class AbstractRenderable implements RenderableDefinition {
         this.parameters = params;
     }
 
-
-    public Class getModelClass() {
+    public Class<? extends RenderingModel> getModelClass() {
         return this.modelClass;
     }
 
-    public void setModelClass(Class modelClass) {
+    public void setModelClass(Class<? extends RenderingModel> modelClass) {
         this.modelClass = modelClass;
     }
 
@@ -174,5 +184,11 @@ public class AbstractRenderable implements RenderableDefinition {
         .append("title", this.title) //$NON-NLS-1$
         .append("templatePath", this.templatePath) //$NON-NLS-1$
         .toString();
+    }
+
+    private static final Class<?>[] MODEL_CONSTRUCTOR_TYPES = new Class[]{Content.class, RenderableDefinition.class, RenderingModel.class};
+    private static final String MISSING_CONSTRUCTOR_MESSAGE;
+    static {
+        MISSING_CONSTRUCTOR_MESSAGE = "A model class must define a constructor with types " + ArrayUtils.toString(MODEL_CONSTRUCTOR_TYPES) + ". ";
     }
 }
