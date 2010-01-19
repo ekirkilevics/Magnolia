@@ -62,7 +62,7 @@ public class Classes {
      */
     public static <T> T quietNewInstance(String className, Object... params) {
         try {
-            return newInstance(className, params);
+            return Classes.<T>newInstance(className, params);
         } catch (ClassNotFoundException e) {
             log.warn("Couldn't find class with name {}", className);
             return null;
