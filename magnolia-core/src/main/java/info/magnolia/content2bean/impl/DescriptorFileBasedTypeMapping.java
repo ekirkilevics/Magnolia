@@ -42,7 +42,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import info.magnolia.objectfactory.ClassFactory;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Classes;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -88,7 +88,7 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
         className = StringUtils.removeStart(className, ".");
         className = StringUtils.removeEnd(className, ".content2bean");
         try {
-            Class<?> typeClass = ObjectFactory.classes().forName(className);
+            Class<?> typeClass = Classes.getClassFactory().forName(className);
 
             TypeDescriptor typeDescriptor = processProperties(typeClass, props);
             addTypeDescriptor(typeClass, typeDescriptor);
@@ -99,7 +99,7 @@ public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
 
     protected TypeDescriptor processProperties(Class<?> className, Properties props) throws Exception {
         String descriptorClassName = StringUtils.defaultIfEmpty(props.getProperty("descriptorClass"), PropertiesBasedTypeDescriptor.class.getName());
-        final ClassFactory cl = ObjectFactory.classes();
+        final ClassFactory cl = Classes.getClassFactory();
         Class<? extends TypeDescriptor> descriptorClass = cl.forName(descriptorClassName);
         return cl.newInstance(descriptorClass, props);
     }

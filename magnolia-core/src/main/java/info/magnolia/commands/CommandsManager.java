@@ -41,7 +41,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Components;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
@@ -135,7 +135,7 @@ public class CommandsManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static CommandsManager getInstance() {
-        return ObjectFactory.components().getSingleton(CommandsManager.class);
+        return Components.getComponentProvider().getSingleton(CommandsManager.class);
     }
 
 }

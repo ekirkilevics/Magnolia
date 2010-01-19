@@ -34,7 +34,7 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Map;
@@ -91,7 +91,7 @@ public interface Content2BeanTransformer {
      */
     class Factory {
         public static Content2BeanTransformer getDefaultTransformer() {
-            return ObjectFactory.components().getSingleton(Content2BeanTransformer.class);
+            return Components.getComponentProvider().getSingleton(Content2BeanTransformer.class);
         }
     }
 

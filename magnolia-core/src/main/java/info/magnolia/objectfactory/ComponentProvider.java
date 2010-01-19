@@ -34,6 +34,9 @@
 package info.magnolia.objectfactory;
 
 /**
+ * ComponentProvider is responsible for providing components, singletons or new instances.
+ * Magnolia "beans", "managers" etc are all provided by this.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

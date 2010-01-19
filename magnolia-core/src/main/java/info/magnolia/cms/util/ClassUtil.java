@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Classes;
 
 /**
  * Utility methods for classes.
@@ -57,10 +57,10 @@ public final class ClassUtil {
      * @param className class name
      * @return loaded class
      * @throws ClassNotFoundException if the given class can't be loaded by both classloaders.
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}.
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes#getClassFactory()}.
      */
     public static Class classForName(String className) throws ClassNotFoundException {
-        return ObjectFactory.classes().forName(className);
+        return Classes.getClassFactory().forName(className);
     }
 
     /**
@@ -69,17 +69,18 @@ public final class ClassUtil {
      * @throws InstantiationException exception thrown by newInstance()
      * @throws IllegalAccessException exception thrown by newInstance()
      * @throws ClassNotFoundException if the given class can't be loaded by both classloaders
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}.
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes#getClassFactory()}.
      *
      *             Shortcut for <code>ClassUtil.classForName(className).newInstance()</code>
      */
     public static Object newInstance(String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         final Class clazz = classForName(className);
-        return ObjectFactory.classes().newInstance(clazz);
+        return Classes.getClassFactory().newInstance(clazz);
     }
 
     /**
-     * Checks if this class is a subclass
+     * Checks if this class is a subclass.
+     * @deprecated since 4.3 (and Java 5), use parentClass.isAssignableFrom(subClass)
      */
     public static boolean isSubClass(Class<?> subClass, Class<?> parentClass) {
         return parentClass.isAssignableFrom(subClass);

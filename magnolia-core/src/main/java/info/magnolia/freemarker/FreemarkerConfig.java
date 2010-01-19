@@ -37,7 +37,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import info.magnolia.freemarker.models.MagnoliaModelFactory;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class FreemarkerConfig {
     public static FreemarkerConfig getInstance() {
-        return ObjectFactory.components().getSingleton(FreemarkerConfig.class);
+        return Components.getComponentProvider().getSingleton(FreemarkerConfig.class);
     }
 
     /**

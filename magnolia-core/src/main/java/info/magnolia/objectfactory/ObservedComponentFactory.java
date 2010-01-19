@@ -164,7 +164,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         return new Content2BeanTransformerImpl() {
             public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
                 if (state.getCurrentType().getType().equals(interf)) {
-                    final ClassFactory classFactory = ObjectFactory.classes();
+                    final ClassFactory classFactory = Classes.getClassFactory();
                     return classFactory.newInstance(interf);
                 }
                 return super.newBeanInstance(state, properties);

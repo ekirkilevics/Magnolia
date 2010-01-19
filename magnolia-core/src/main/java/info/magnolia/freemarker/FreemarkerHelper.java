@@ -48,7 +48,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Components;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
@@ -72,7 +72,7 @@ public class FreemarkerHelper {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerHelper.class);
 
     public static FreemarkerHelper getInstance() {
-        return ObjectFactory.components().getSingleton(FreemarkerHelper.class);
+        return Components.getComponentProvider().getSingleton(FreemarkerHelper.class);
     }
 
     private final Configuration cfg;
@@ -104,7 +104,7 @@ public class FreemarkerHelper {
     }
 
     protected ObjectWrapper newObjectWrapper() {
-        return ObjectFactory.components().newInstance(MagnoliaObjectWrapper.class);
+        return Components.getComponentProvider().newInstance(MagnoliaObjectWrapper.class);
     }
 
     /**

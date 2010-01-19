@@ -42,7 +42,8 @@ import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -105,7 +106,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 if (StringUtils.isBlank(className)) {
                     throw new ClassNotFoundException("(no value for class property)");
                 }
-                Class<?> clazz = ObjectFactory.classes().forName(className);
+                Class<?> clazz = Classes.getClassFactory().forName(className);
                 typeDscr = getTypeMapping().getTypeDescriptor(clazz);
             }
         }
@@ -140,7 +141,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
             final Class<?> type = typeDscr.getType();
-            typeDscr = getTypeMapping().getTypeDescriptor(ObjectFactory.components().getImplementation(type));
+            typeDscr = getTypeMapping().getTypeDescriptor(Components.getComponentProvider().getImplementation(type));
 
             // now that we know the property type we should delegate to the custom transformer if any defined
             Content2BeanTransformer customTransformer = typeDscr.getTransformer();
@@ -149,7 +150,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 // if no specific type has been provided by the
                 if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
                     // might be that the factory util defines a default implementation for interfaces
-                    Class<?> implementation = ObjectFactory.components().getImplementation(typeFoundByCustomTransformer.getType());
+                    Class<?> implementation = Components.getComponentProvider().getImplementation(typeFoundByCustomTransformer.getType());
                     typeDscr = getTypeMapping().getTypeDescriptor(implementation);
                 }
             }
@@ -303,7 +304,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException {
         if (Class.class.equals(propertyType)) {
             try {
-                return ObjectFactory.classes().forName(value.toString());
+                return Classes.getClassFactory().forName(value.toString());
             } catch (ClassNotFoundException e) {
                 log.error(e.getMessage());
                 throw new Content2BeanException(e);
@@ -341,7 +342,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         // were the properties transformed?
         if (bean == properties) {
             try {
-                bean = ObjectFactory.components().newInstance(state.getCurrentType().getType());
+                bean = Components.getComponentProvider().newInstance(state.getCurrentType().getType());
             }
             catch (Throwable e) {
                 throw new Content2BeanException(e);
@@ -376,7 +377,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     public TransformationState newState() {
-        return ObjectFactory.components().newInstance(TransformationState.class);
+        return Components.getComponentProvider().newInstance(TransformationState.class);
     }
 
     /**

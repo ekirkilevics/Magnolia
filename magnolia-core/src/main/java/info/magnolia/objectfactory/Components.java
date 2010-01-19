@@ -34,42 +34,18 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.SystemProperty;
-import org.apache.commons.lang.StringUtils;
 
 /**
- * The ObjectFactory is the central point for accessing and instantiating objects configured in Magnolia.
- * It uses the system properties to determine which implementations to use.
- *
+ * Entry point to the ComponentProvider.
+ * @see ComponentProvider
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ObjectFactory {
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ObjectFactory.class);
+public class Components {
+    public static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
 
-    private static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
-
-    public static ClassFactory classes() {
-        final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
-
-        if (StringUtils.isEmpty(classFactoryClassName)) {
-            // use a DefaultClassFactory until the property is set
-            return new DefaultClassFactory();
-        } else {
-            // whichever ClassFactory is registered will be instantiated with DefaultClassFactory.
-            final DefaultClassFactory temp = new DefaultClassFactory();
-            try {
-                final Class<ClassFactory> c = temp.forName(classFactoryClassName);
-                // TODO - cache !
-                return temp.newInstance(c);
-            } catch (ClassNotFoundException e) {
-                log.error("Could not find {}, will use DefaultClassFactory for now");
-                return new DefaultClassFactory();
-            }
-        }
-    }
-
-    public static ComponentProvider components() {
+    public static ComponentProvider getComponentProvider() {
         return componentProvider;
     }
-
 }

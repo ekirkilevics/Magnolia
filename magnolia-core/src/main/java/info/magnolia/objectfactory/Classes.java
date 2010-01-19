@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2009 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,30 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.content2bean.impl;
+package info.magnolia.objectfactory;
 
-import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.objectfactory.ClassFactory;
-import info.magnolia.objectfactory.Classes;
+import info.magnolia.cms.core.SystemProperty;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Properties;
-
 /**
- * @author pbracher
+ * Entry point to the currently configured ClassFactory.
+ *
+ * @see info.magnolia.objectfactory.ClassFactory
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
+public class Classes {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Classes.class);
 
-    public PropertiesBasedTypeDescriptor(Properties properties) throws Exception {
-        String transformerClassName = properties.getProperty("transformer");
-        if (StringUtils.isNotEmpty(transformerClassName)) {
-            final ClassFactory cl = Classes.getClassFactory();
-            final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
-            final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
-            this.setTransformer(transformer);
+    public static ClassFactory getClassFactory() {
+        final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
+
+        if (StringUtils.isEmpty(classFactoryClassName)) {
+            // use a DefaultClassFactory until the property is set
+            return new DefaultClassFactory();
+        } else {
+            // whichever ClassFactory is registered will be instantiated with DefaultClassFactory.
+            final DefaultClassFactory temp = new DefaultClassFactory();
+            try {
+                final Class<ClassFactory> c = temp.forName(classFactoryClassName);
+                // TODO - cache !
+                return temp.newInstance(c);
+            } catch (ClassNotFoundException e) {
+                log.error("Could not find {}, will use DefaultClassFactory for now");
+                return new DefaultClassFactory();
+            }
         }
     }
-
-
 }

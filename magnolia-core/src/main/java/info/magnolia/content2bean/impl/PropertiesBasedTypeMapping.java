@@ -40,7 +40,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import info.magnolia.objectfactory.ClassFactory;
-import info.magnolia.objectfactory.ObjectFactory;
+import info.magnolia.objectfactory.Classes;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class PropertiesBasedTypeMapping extends TypeMappingImpl {
                 String className = StringUtils.removeEnd(key, ".transformer");
                 String transformerClassName = properties.getProperty(key);
                 try {
-                    final ClassFactory cl = ObjectFactory.classes();
+                    final ClassFactory cl = Classes.getClassFactory();
                     final Class<?> beanClass = cl.forName(className);
                     final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
                     final Content2BeanTransformer transformer = cl.newInstance(transformerClass);

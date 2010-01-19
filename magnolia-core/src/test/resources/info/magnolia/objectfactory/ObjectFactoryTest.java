@@ -48,11 +48,11 @@ public class ObjectFactoryTest extends TestCase {
 
     public void testInjectingSystemPropertyIntoDefaultComponentStillAllowsToSwapImplementationsLater() {
         SystemProperty.setProperty("java.lang.Object", "java.lang.String");
-        final Object o1 = ObjectFactory.components().newInstance(Object.class);
+        final Object o1 = Components.getComponentProvider().newInstance(Object.class);
         assertTrue(o1 instanceof String);
 
         SystemProperty.setProperty("java.lang.Object", "java.util.Date");
-        final Object o2 = ObjectFactory.components().newInstance(Object.class);
+        final Object o2 = Components.getComponentProvider().newInstance(Object.class);
         assertTrue(o2 instanceof java.util.Date);
 
     }

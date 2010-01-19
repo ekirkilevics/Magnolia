@@ -34,15 +34,16 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
-import info.magnolia.objectfactory.ObjectFactory;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
+ * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
  */
 public class FactoryUtil {
     private FactoryUtil() {
@@ -50,25 +51,25 @@ public class FactoryUtil {
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
      */
     public static Object newInstance(Class interf) {
-        return ObjectFactory.components().newInstance(interf);
+        return Components.getComponentProvider().newInstance(interf);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
      */
     public static Class getImplementation(Class interf) throws ClassNotFoundException {
-        return ObjectFactory.components().getImplementation(interf);
+        return Components.getComponentProvider().getImplementation(interf);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#components()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
      */
     public static Object newInstanceWithoutDiscovery(String className, Object[] args) {
         try {
-            final ClassFactory classFactory = ObjectFactory.classes();
+            final ClassFactory classFactory = Classes.getClassFactory();
             final Class clazz = classFactory.forName(className);
             return classFactory.newInstance(clazz, args);
         } catch (ClassNotFoundException e) {
@@ -77,17 +78,17 @@ public class FactoryUtil {
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes#getClassFactory()}
      */
     public static Object newInstanceWithoutDiscovery(String className) {
         return newInstanceWithoutDiscovery(className, new Object[]{});
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObjectFactory#classes()}
+     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes#getClassFactory()}
      */
     public static Object getSingleton(Class interf) {
-        return ObjectFactory.components().getSingleton(interf);
+        return Components.getComponentProvider().getSingleton(interf);
     }
 
     /**
@@ -95,7 +96,7 @@ public class FactoryUtil {
      *             todo - this is only used in tests
      */
     public static void setDefaultImplementation(Class interf, Class impl) {
-        ((DefaultComponentProvider) ObjectFactory.components()).setDefaultImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
     }
 
     /**
@@ -103,7 +104,7 @@ public class FactoryUtil {
      *             todo - this is only used in tests
      */
     public static void setDefaultImplementation(Class interf, String impl) {
-        ((DefaultComponentProvider) ObjectFactory.components()).setDefaultImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
     }
 
     /**
@@ -111,7 +112,7 @@ public class FactoryUtil {
      *             todo - this is only used in tests
      */
     public static void setImplementation(Class interf, Class impl) {
-        ((DefaultComponentProvider) ObjectFactory.components()).setImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
     }
 
     /**
@@ -119,7 +120,7 @@ public class FactoryUtil {
      *             todo - this is not used
      */
     public static void setImplementation(Class interf, String impl) {
-        ((DefaultComponentProvider) ObjectFactory.components()).setImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
     }
 
     /**
@@ -127,7 +128,7 @@ public class FactoryUtil {
      *             todo - this is only used in tests
      */
     public static void setInstance(Class interf, Object instance) {
-        ((DefaultComponentProvider) ObjectFactory.components()).setInstance(interf, instance);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setInstance(interf, instance);
     }
 
     /**
@@ -135,7 +136,7 @@ public class FactoryUtil {
      *             todo - this is only used in tests
      */
     public static void setInstanceFactory(Class interf, InstanceFactory factory) {
-        ((DefaultComponentProvider) ObjectFactory.components()).setInstanceFactory(interf, factory);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setInstanceFactory(interf, factory);
     }
 
     /**
@@ -143,7 +144,7 @@ public class FactoryUtil {
      *             todo - this is only used in tests
      */
     public static void clear() {
-        ((DefaultComponentProvider) ObjectFactory.components()).clear();
+        ((DefaultComponentProvider) Components.getComponentProvider()).clear();
     }
 
     /**

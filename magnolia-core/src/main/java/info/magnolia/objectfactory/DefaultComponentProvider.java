@@ -44,7 +44,13 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Central factory instantiating most Magnolia beans, managers, observers and so on.
+ * This {@link info.magnolia.objectfactory.ComponentProvider} is using the configuration provided by
+ * {@link info.magnolia.cms.core.SystemProperty}. Each property key is the interface/base-class, and the value
+ * is either the implementation-to-use class name, an implementation of {@link info.magnolia.objectfactory.ComponentFactory}
+ * which is used to instantiate the desired implementation, or the path to a node in the repository (in the form of
+ * <code>repository:/path/to/node</code> or <code>/path/to/node</code>, which defaults to the <code>config</code>
+ * repository). In the latter case, the component is constructed via {@link info.magnolia.objectfactory.ObservedComponentFactory}
+ * and reflects (through observation) the contents of the given path.
  *
  * @author Philipp Bracher
  * @version $Revision: 25238 $ ($Author: pbaerfuss $)
@@ -116,8 +122,8 @@ public class DefaultComponentProvider implements ComponentProvider {
                 // now that the factory is registered, we call ourself again
                 return newInstance(type);
             } else {
-                final Class<?> clazz = ObjectFactory.classes().forName(className);
-                final Object instance = ObjectFactory.classes().newInstance(clazz);
+                final Class<?> clazz = Classes.getClassFactory().forName(className);
+                final Object instance = Classes.getClassFactory().newInstance(clazz);
 
                 if (instance instanceof ComponentFactory) {
                     final ComponentFactory<T> factory = (ComponentFactory<T>) instance;
@@ -135,7 +141,7 @@ public class DefaultComponentProvider implements ComponentProvider {
     public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
         final String className = getImplementationName(type);
         if (!isInRepositoryDefinition(className)) {
-            return (Class<? extends C>) ObjectFactory.classes().forName(className);
+            return (Class<? extends C>) Classes.getClassFactory().forName(className);
         } else {
             return type;
         }
