@@ -49,6 +49,10 @@ public class Classes {
 
     /**
      * Convenience/shortcut method for instantiating new classes.
+     * @see info.magnolia.objectfactory.ClassFactory
+     * @see #getClassFactory() 
+     * @throws ClassNotFoundException
+     * @throws MgnlInstantiationException
      */
     public static <T> T newInstance(String className, Object... params) throws ClassNotFoundException {
         final ClassFactory cf = getClassFactory();
