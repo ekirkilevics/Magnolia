@@ -79,12 +79,12 @@ public class TemplateColumn extends TreeColumn {
     }
 
     public String getHtmlEdit() {
-        Iterator templates = TemplateManager.getInstance().getAvailableTemplates(this.getWebsiteNode());
+        Iterator<Template> templates = TemplateManager.getInstance().getAvailableTemplates(this.getWebsiteNode());
 
         templateSelect.getOptions().clear();
 
         while (templates.hasNext()) {
-            Template template = (Template) templates.next();
+            Template template = templates.next();
             String title = MessagesUtil.javaScriptString(template.getI18NTitle());
             templateSelect.setOptions(title, template.getName());
         }
