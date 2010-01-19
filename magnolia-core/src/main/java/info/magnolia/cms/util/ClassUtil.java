@@ -81,7 +81,7 @@ public final class ClassUtil {
 
     /**
      * Checks if this class is a subclass.
-     * @deprecated since 4.3 (and Java 5), use parentClass.isAssignableFrom(subClass)
+     * @deprecated since 4.3, use parentClass.isAssignableFrom(subClass)
      */
     public static boolean isSubClass(Class<?> subClass, Class<?> parentClass) {
         return parentClass.isAssignableFrom(subClass);
