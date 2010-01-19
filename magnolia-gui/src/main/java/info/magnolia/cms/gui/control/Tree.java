@@ -165,6 +165,7 @@ public class Tree extends ControlImpl {
     /**
      * @deprecated don't pass the request
      */
+    @Deprecated
     public Tree(String name, String repository, HttpServletRequest request) {
         this(name, repository);
     }
@@ -194,6 +195,7 @@ public class Tree extends ControlImpl {
      * @param request
      * @deprecated use Tree(name, repository) instead
      */
+    @Deprecated
     public Tree(String repository, HttpServletRequest request) {
         this(repository, repository, request);
     }
