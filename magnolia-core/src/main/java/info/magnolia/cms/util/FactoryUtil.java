@@ -38,6 +38,7 @@ import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 /**
@@ -47,6 +48,8 @@ import info.magnolia.objectfactory.ObservedComponentFactory;
  * @version $Revision$ ($Author$)
  */
 public class FactoryUtil {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FactoryUtil.class);
+
     private FactoryUtil() {
 
     }
@@ -74,7 +77,11 @@ public class FactoryUtil {
             final Class clazz = classFactory.forName(className);
             return classFactory.newInstance(clazz, args);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            log.error("Can't find class {}", className);
+            return null;
+        } catch (MgnlInstantiationException e) {
+            log.error("Can't instanciate class" + className + " : " + e.getMessage(), e);
+            return null;
         }
     }
 
