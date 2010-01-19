@@ -151,7 +151,7 @@ public abstract class AbstractContext implements Context, Serializable {
      * @see Context#getLocale()
      */
     public Locale getLocale() {
-        if (locale == null) {            
+        if (locale == null) {
             locale = MgnlContext.getSystemContext().getLocale();
         }
         return locale;
@@ -199,17 +199,15 @@ public abstract class AbstractContext implements Context, Serializable {
      */
     public Object put(Object key, Object value) {
         this.setAttribute(key.toString(), value, Context.LOCAL_SCOPE);
-        return value;       
+        return value;
     }
 
     /**
      * Map implementation
      */
     public void clear() {
-        for (Iterator iter = this.getAttributes().keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
+        for (String key : this.getAttributes().keySet()) {
             this.removeAttribute(key, Context.LOCAL_SCOPE);
-
         }
         throw new UnsupportedOperationException("you can not clear a magnolia context");
     }
