@@ -34,62 +34,58 @@
 package info.magnolia.module.mail;
 
 import info.magnolia.module.mail.handlers.MgnlMailHandler;
+import info.magnolia.module.mail.templates.MailAttachment;
 import info.magnolia.module.mail.templates.MgnlEmail;
 import info.magnolia.module.mail.templates.impl.SimpleEmail;
 import info.magnolia.objectfactory.Classes;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
- * This reads the repository to know what kind of email to instanciate
+ * This reads the repository to know what kind of email to instantiate.
+ *
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MgnlMailFactory {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MgnlMailFactory.class);
 
-    private static Logger log = LoggerFactory.getLogger(MgnlMailFactory.class);
-
-    private Map renderers = new HashMap();
+    private Map<String, String> renderers = new HashMap<String, String>();
 
 
     /**
-     * Use getInstance to get the current used instance
+     * Use getInstance to get the current used instance.
      */
     public MgnlMailFactory() {
 
     }
 
-
     public MgnlMailHandler getEmailHandler() {
-        return ((MailModule) MailModule.getInstance()).getHandler();
+        return MailModule.getInstance().getHandler();
     }
 
 
     /**
-     * Creates email with no attachments
+     * Creates email with no attachments.
      */
     public MgnlEmail getEmail(Map params) {
         return getEmail(params, null);
     }
 
     /**
-     * Creates email with no attachments
+     * Creates email with no attachments.
      */
     public MgnlEmail getEmailFromType(Map params, String type) {
 
         return getEmailFromType(params, type, null);
     }
 
-    public MgnlEmail getEmailFromType(Map params, String type,
-            String contentType, List attachments) {
+    public MgnlEmail getEmailFromType(Map params, String type, String contentType, List<MailAttachment> attachments) {
         Map newParams = new HashMap();
         newParams.putAll(params);
         if(!StringUtils.isEmpty(type)) {
@@ -104,14 +100,14 @@ public class MgnlMailFactory {
     /**
      * Creates email with attachments
      */
-    public MgnlEmail getEmailFromType(Map params, String type, List attachments) {
+    public MgnlEmail getEmailFromType(Map params, String type, List<MailAttachment> attachments) {
         return getEmailFromType(params, type, null, attachments);
     }
 
     /**
      * Creates email with attachments
      */
-    public MgnlEmail getEmail(Map params, List attachments) {
+    public MgnlEmail getEmail(Map params, List<MailAttachment> attachments) {
         MailTemplate template = new MailTemplate();
         return getEmail(params, attachments, template);
     }
@@ -119,7 +115,7 @@ public class MgnlMailFactory {
     /**
      * Creates email using predefined template
      */
-    public MgnlEmail getEmailFromTemplate(String id, List attachments, Map params) throws Exception {
+    public MgnlEmail getEmailFromTemplate(String id, List<MailAttachment> attachments, Map params) throws Exception {
         MailTemplate template = getTemplate(id);
         return getEmail(params, attachments, template);
     }
@@ -131,26 +127,23 @@ public class MgnlMailFactory {
         return getEmailFromTemplate(id, null, params);
     }
 
-    protected MgnlEmail getEmail(Map params, List attachments, MailTemplate template) {
+    protected MgnlEmail getEmail(Map params, List<MailAttachment> attachments, MailTemplate template) {
         template.setValues(params, attachments);
 
-        MgnlEmail mail;
         try {
-            mail = getEmailFromType(template);
+            return getEmailFromType(template);
 
         } catch (Exception e) {
             log.error("Couln't instantiate email type: " + template.getType());
             return null;
         }
-
-        return mail;
     }
 
     protected MgnlEmail getEmailFromType(MailTemplate template) throws Exception {
-        MgnlEmail mail = null;
+        final MgnlEmail mail;
         if(renderers.containsKey(template.getType().toLowerCase())){
-            String value = (String) renderers.get(template.getType().toLowerCase());
-            mail = Classes.quietNewInstance(value, template);
+            String rendererClass = renderers.get(template.getType().toLowerCase());
+            mail = Classes.quietNewInstance(rendererClass, template);
         }
         else {
             mail = new SimpleEmail(template);
@@ -181,12 +174,9 @@ public class MgnlMailFactory {
 
 
     protected MailTemplate getTemplate(String templateName) throws Exception {
-
-        Iterator iterator = MailModule.getInstance().getTemplatesConfiguration().iterator();
-        MailTemplate mailTemplate;
-        while(iterator.hasNext()) {
-            mailTemplate = (MailTemplate)iterator.next();
-            if(StringUtils.equals(mailTemplate.getName(), templateName)){
+        final List<MailTemplate> configuration = MailModule.getInstance().getTemplatesConfiguration();
+        for (MailTemplate mailTemplate : configuration) {
+            if (StringUtils.equals(mailTemplate.getName(), templateName)) {
                 return (MailTemplate) BeanUtils.cloneBean(mailTemplate);
             }
         }
@@ -194,11 +184,11 @@ public class MgnlMailFactory {
     }
 
 
-    public Map getRenderers() {
+    public Map<String, String> getRenderers() {
         return renderers;
     }
 
-    public void setRenderers(Map renderers) {
+    public void setRenderers(Map<String, String> renderers) {
         this.renderers = renderers;
     }
 

@@ -51,7 +51,6 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MailModule implements ModuleLifecycle {
-
     private static final Logger log = LoggerFactory.getLogger(MailModule.class);
 
     private static MailModule instance;
@@ -62,7 +61,7 @@ public class MailModule implements ModuleLifecycle {
 
     private Map smtp = new HashMap();
 
-    private List templatesConfiguration = new ArrayList();
+    private List<MailTemplate> templatesConfiguration = new ArrayList<MailTemplate>();
 
 
     public MailModule() {
@@ -90,11 +89,11 @@ public class MailModule implements ModuleLifecycle {
 
     }
 
-    public List getTemplatesConfiguration() {
+    public List<MailTemplate> getTemplatesConfiguration() {
         return templatesConfiguration;
     }
 
-    public void setTemplatesConfiguration(List templatesConfiguration) {
+    public void setTemplatesConfiguration(List<MailTemplate> templatesConfiguration) {
         this.templatesConfiguration = templatesConfiguration;
     }
 

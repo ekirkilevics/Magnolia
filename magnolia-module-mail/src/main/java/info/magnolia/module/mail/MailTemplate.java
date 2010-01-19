@@ -82,7 +82,7 @@ public class MailTemplate {
 
     private Map parameters = new HashMap();
 
-    private List attachments = new ArrayList();
+    private List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 
     private String from;
 
@@ -118,11 +118,11 @@ public class MailTemplate {
         this.parameters = parameters;
     }
 
-    public List getAttachments() {
+    public List<MailAttachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List attachments) {
+    public void setAttachments(List<MailAttachment> attachments) {
         this.attachments = attachments;
     }
 
@@ -196,7 +196,7 @@ public class MailTemplate {
         this.cc = cc;
     }
 
-    public void setValues(Map params, List attachments) {
+    public void setValues(Map params, List<MailAttachment> attachments) {
 
         if(params.containsKey(MAIL_TEMPLATE_FILE)) {
             this.templateFile = (String) params.get(MAIL_TEMPLATE_FILE);
