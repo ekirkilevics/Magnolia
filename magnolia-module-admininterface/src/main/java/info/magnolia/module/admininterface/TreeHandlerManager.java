@@ -44,7 +44,6 @@ import info.magnolia.objectfactory.Components;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -53,7 +52,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
-public class TreeHandlerManager extends ObservedManager {
+public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedManager {
 
     private static final String ND_CLASS = "class";
 
@@ -65,7 +64,7 @@ public class TreeHandlerManager extends ObservedManager {
      * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
      * <code>repository</code>, the corresponding handler will be used top display the admin tree.
      */
-    private final Map treeHandlers = new HashMap();
+    private final Map<String, TreeHandlerConfig> treeHandlers = new HashMap<String, TreeHandlerConfig>();
 
     /**
      * Get the tree handler registered under a particular name.
@@ -76,23 +75,17 @@ public class TreeHandlerManager extends ObservedManager {
      */
     public AdminTreeMVCHandler getTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
-        TreeHandlerConfig th = (TreeHandlerConfig) treeHandlers.get(name);
+        TreeHandlerConfig th = treeHandlers.get(name);
 
         if (th == null) {
             throw new InvalidTreeHandlerException(name);
         }
 
-        Class treeHandlerClass = th.getHandler();
+        Class<H> treeHandlerClass = th.getHandler();
 
         try {
-            Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class,
-                HttpServletResponse.class});
-            AdminTreeMVCHandler newInstance = (AdminTreeMVCHandler) constructor.newInstance(new Object[]{
-                name,
-                request,
-                response});
+            Constructor<H> constructor = treeHandlerClass.getConstructor(String.class, HttpServletRequest.class, HttpServletResponse.class);
+            AdminTreeMVCHandler newInstance = constructor.newInstance(name, request, response);
             Content2BeanUtil.setProperties(newInstance, th.getTreeDefinition(), true);
             return newInstance;
         }
@@ -101,15 +94,15 @@ public class TreeHandlerManager extends ObservedManager {
         }
     }
 
-    protected void registerTreeHandler(String name, String repository, Class treeHandler, Content treeDefinition) {
+    protected void registerTreeHandler(String name, String repository, Class<H> treeHandler, Content treeDefinition) {
         log.info("Registering tree handler {}", name); //$NON-NLS-1$
         treeHandlers.put(name, new TreeHandlerConfig(treeHandler, repository, treeDefinition));
     }
 
     protected void onRegister(Content defNode) {
-        Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
-        for (Iterator iter = trees.iterator(); iter.hasNext();) {
-            Content tree = (Content) iter.next();
+        Collection<Content> trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
+        for (Object tree1 : trees) {
+            Content tree = (Content) tree1;
             String name = tree.getNodeData(ND_NAME).getString();
 
             if (StringUtils.isEmpty(name)) {
@@ -124,7 +117,7 @@ public class TreeHandlerManager extends ObservedManager {
             }
 
             try {
-                final Class treeHandler = Classes.getClassFactory().forName(className);
+                final Class<H> treeHandler = Classes.getClassFactory().forName(className);
                 this.registerTreeHandler(name, repository, treeHandler, new SystemContentWrapper(tree));
             }
             catch (ClassNotFoundException e) {
@@ -147,7 +140,7 @@ public class TreeHandlerManager extends ObservedManager {
     /**
      * @return Returns the instance.
      */
-    public static TreeHandlerManager getInstance() {
+    public static <H extends AdminTreeMVCHandler> TreeHandlerManager<H> getInstance() {
         return Components.getSingleton(TreeHandlerManager.class);
     }
 
@@ -160,19 +153,19 @@ public class TreeHandlerManager extends ObservedManager {
 
     class TreeHandlerConfig {
 
-        private Class handler;
+        private Class<H> handler;
 
         private String repository;
 
         private Content treeDefinition;
 
-        TreeHandlerConfig(Class handler, String repository, Content treeDefinition) {
+        TreeHandlerConfig(Class<H> handler, String repository, Content treeDefinition) {
             this.handler = handler;
             this.repository = repository;
             this.treeDefinition = treeDefinition;
         }
 
-        public Class getHandler() {
+        public Class<H> getHandler() {
             return this.handler;
         }
 

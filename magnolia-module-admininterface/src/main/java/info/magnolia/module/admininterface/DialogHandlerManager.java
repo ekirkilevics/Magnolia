@@ -72,13 +72,13 @@ public class DialogHandlerManager extends ObservedManager {
     /**
      * All handlers are registered here.
      */
-    private final Map dialogHandlers = new HashMap();
+    private final Map<String, Object[]> dialogHandlers = new HashMap<String, Object[]>();
 
     /**
-     * register the dialogs from the condfig.
+     * register the dialogs from the config.
      */
     protected void onRegister(Content node) {
-        List dialogNodes = new ArrayList();
+        final List<Content> dialogNodes = new ArrayList<Content>();
         try {
             collectDialogNodes(node, dialogNodes);
         }
@@ -87,8 +87,8 @@ public class DialogHandlerManager extends ObservedManager {
             throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
         }
 
-        for (Iterator iter = dialogNodes.iterator(); iter.hasNext();) {
-            Content dialogNode = new SystemContentWrapper((Content) iter.next());
+        for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
+            Content dialogNode = new SystemContentWrapper( iter.next());
             try {
                 if(dialogNode.getItemType().equals(ItemType.CONTENT)){
                     log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
@@ -106,7 +106,7 @@ public class DialogHandlerManager extends ObservedManager {
 
             try {
                 // dialog class is not mandatory
-                Class dialogClass;
+                Class<? extends DialogMVCHandler> dialogClass;
                 if (StringUtils.isNotEmpty(className)) {
                     dialogClass = Classes.getClassFactory().forName(className);
                 } else {
@@ -124,7 +124,7 @@ public class DialogHandlerManager extends ObservedManager {
         this.dialogHandlers.clear();
     }
 
-    protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
+    protected void registerDialogHandler(String name, Class<? extends DialogMVCHandler> dialogHandler, Content configNode) {
         log.debug("Registering dialog handler [{}] from {}", name, configNode.getHandle()); //$NON-NLS-1$
 
         // remember the uuid for a reload
@@ -132,7 +132,7 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     public Content getDialogConfigNode(String dialogName) {
-        final Object[] handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+        final Object[] handlerConfig = dialogHandlers.get(dialogName);
         if (handlerConfig == null) {
             throw new InvalidDialogHandlerException(dialogName);
         }
@@ -141,7 +141,7 @@ public class DialogHandlerManager extends ObservedManager {
 
     public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
-        Object[] handlerConfig = (Object[]) dialogHandlers.get(name);
+        Object[] handlerConfig = dialogHandlers.get(name);
 
         if (handlerConfig == null) {
             throw new InvalidDialogHandlerException(name);
@@ -154,48 +154,46 @@ public class DialogHandlerManager extends ObservedManager {
         HttpServletResponse response, Object[] handlerConfig) {
 
         try {
-            Class dialogHandlerClass = (Class) handlerConfig[0];
+            Class<? extends DialogMVCHandler> dialogHandlerClass = (Class<? extends DialogMVCHandler>) handlerConfig[0];
             if (dialogHandlerClass == null) {
                 dialogHandlerClass = ConfiguredDialog.class;
             }
             Content configNode = (Content) handlerConfig[1];
             if (configNode != null) {
                 try {
-                    Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
+                    Constructor<? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
                         String.class,
                         HttpServletRequest.class,
                         HttpServletResponse.class,
                         Content.class});
-                    return (DialogMVCHandler) constructor
-                        .newInstance(new Object[]{name, request, response, configNode});
+                    return constructor.newInstance(name, request, response, configNode);
                 }
                 catch (NoSuchMethodException e) {
-                    Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
+                    Constructor<? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
                         String.class,
                         HttpServletRequest.class,
                         HttpServletResponse.class});
-                    return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+                    return constructor.newInstance(name, request, response);
                 }
             }
 
-            Constructor constructor = dialogHandlerClass.getConstructor(new Class[]{
+            Constructor<? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
                 String.class,
                 HttpServletRequest.class,
                 HttpServletResponse.class});
-            return (DialogMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+            return constructor.newInstance(name, request, response);
         }
         catch (Exception e) {
             throw new InvalidDialogHandlerException(name, e);
         }
     }
 
-    protected void collectDialogNodes(Content current, List dialogNodes) throws RepositoryException {
+    protected void collectDialogNodes(Content current, List<Content> dialogNodes) throws RepositoryException {
         if(isDialogNode(current)){
             dialogNodes.add(current);
             return;
         }
-        for (Iterator iterator = ContentUtil.getAllChildren(current).iterator(); iterator.hasNext();) {
-            Content child = (Content) iterator.next();
+        for (Content child : ContentUtil.getAllChildren(current)) {
             collectDialogNodes(child, dialogNodes);
         }
     }
@@ -216,9 +214,8 @@ public class DialogHandlerManager extends ObservedManager {
         }
 
         // if one subnode is a control
-        for (Iterator iterator = node.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
-            Content child = (Content) iterator.next();
-            if(isDialogControlNode(child)){
+        for (Content child : node.getChildren(ItemType.CONTENTNODE)) {
+            if (isDialogControlNode(child)) {
                 return true;
             }
         }
