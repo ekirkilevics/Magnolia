@@ -36,8 +36,8 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -108,7 +108,7 @@ public class DialogHandlerManager extends ObservedManager {
                 // dialog class is not mandatory
                 Class dialogClass;
                 if (StringUtils.isNotEmpty(className)) {
-                    dialogClass = ClassUtil.classForName(className);
+                    dialogClass = Classes.getClassFactory().forName(className);
                 } else {
                     dialogClass = null;
                 }

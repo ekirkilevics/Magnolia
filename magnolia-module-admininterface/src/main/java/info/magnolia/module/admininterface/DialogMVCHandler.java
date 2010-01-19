@@ -46,12 +46,13 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -269,16 +270,10 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             String className = NodeDataUtil.getString(configNode, "saveHandler");
             if (StringUtils.isNotEmpty(className)) {
                 try {
-                    Class saveHandlerClass = ClassUtil.classForName(className);
-                    try {
-                        this.saveHandler = (SaveHandler) saveHandlerClass.newInstance();
-                    }
-                    catch (InstantiationException e) {
-                        log.error("can't create save handler", e);
-                    }
-                    catch (IllegalAccessException e) {
-                        log.error("can't create save handler", e);
-                    }
+                    this.saveHandler = Classes.newInstance(className);
+                }
+                catch (MgnlInstantiationException e) {
+                    log.error("can't create save handler", e);
                 }
                 catch (ClassNotFoundException e) {
                     log.error("can't create save handler", e);

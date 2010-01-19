@@ -34,12 +34,12 @@
 package info.magnolia.commands;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.Classes;
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
@@ -76,7 +76,8 @@ class CommandTransformer extends Content2BeanTransformerImpl {
                 if(node.hasNodeData(DEPRECATED_IMPL_NODE_DATA)){
                     log.warn("Rename  '" + DEPRECATED_IMPL_NODE_DATA + "' to 'class' [" + node + "]!");
                     try {
-                        klass = ClassUtil.classForName(node.getNodeData(DEPRECATED_IMPL_NODE_DATA).getString());
+                        final String className = node.getNodeData(DEPRECATED_IMPL_NODE_DATA).getString();
+                        klass = Classes.getClassFactory().forName(className);
                     }
                     catch (ClassNotFoundException e) {
                         klass = DelegateCommand.class;

@@ -36,9 +36,9 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 
 import java.lang.reflect.Constructor;
@@ -124,7 +124,8 @@ public class TreeHandlerManager extends ObservedManager {
             }
 
             try {
-                this.registerTreeHandler(name, repository, ClassUtil.classForName(className), new SystemContentWrapper(tree));
+                final Class treeHandler = Classes.getClassFactory().forName(className);
+                this.registerTreeHandler(name, repository, treeHandler, new SystemContentWrapper(tree));
             }
             catch (ClassNotFoundException e) {
                 log.error("Can't register tree handler [{}]: class [{}] not found", name, className);

@@ -33,10 +33,10 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.objectfactory.Classes;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -105,7 +105,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
 
         if (servletClass != null) {
             try {
-                servlet = (Servlet) ClassUtil.newInstance(servletClass);
+                servlet = Classes.newInstance(servletClass);
                 servlet.init(new WrappedServletConfig(servletName, filterConfig, parameters));
             }
             catch (Throwable e) {

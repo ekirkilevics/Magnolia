@@ -35,15 +35,15 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -85,18 +85,16 @@ public class TemplateRendererManager extends ObservedManager {
                 continue;
             }
 
-            TemplateRenderer renderer;
 
             try {
-                renderer = (TemplateRenderer) ClassUtil.newInstance(rendererClass);
+                final TemplateRenderer renderer = (TemplateRenderer) Classes.newInstance(rendererClass);
+                log.debug("Registering template render [{}] for type {}", rendererClass, type);
+                registerTemplateRenderer(type, renderer);
             }
             catch (Exception e) {
-                log.warn("Can't register template render at {}, type=\"{}\" renderer=\"{}\" due to a {} exception: {}", new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}, e);
-                continue;
+                log.warn("Can't register template renderer at {}, type=\"{}\" renderer=\"{}\" due to a {} exception: {}", new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}, e);
             }
 
-            log.debug("Registering template render [{}] for type {}", rendererClass, type);
-            registerTemplateRenderer(type, renderer);
         }
 
     }

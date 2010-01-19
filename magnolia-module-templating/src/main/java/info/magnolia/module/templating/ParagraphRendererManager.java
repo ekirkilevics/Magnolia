@@ -35,9 +35,10 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Collection;
@@ -93,12 +94,10 @@ public class ParagraphRendererManager extends ObservedManager {
             }
 
             try {
-                final ParagraphRenderer renderer = (ParagraphRenderer) ClassUtil.newInstance(clazz);
+                final ParagraphRenderer renderer = Classes.newInstance(clazz);
                 registererParagraphRenderer(name, renderer);
                 log.debug("Registered template render [{}] with name {}.", clazz, name);
-            } catch (InstantiationException e) {
-                throw newInstanciationException(name, clazz, e);
-            } catch (IllegalAccessException e) {
+            } catch (MgnlInstantiationException e) {
                 throw newInstanciationException(name, clazz, e);
             } catch (ClassNotFoundException e) {
                 throw newInstanciationException(name, clazz, e);

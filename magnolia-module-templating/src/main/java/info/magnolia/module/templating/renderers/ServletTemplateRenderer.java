@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderException;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import org.apache.commons.lang.StringUtils;
 
@@ -98,15 +99,13 @@ public class ServletTemplateRenderer extends AbstractTemplateRenderer {
         } else {
             // use className
             try {
-                final HttpServlet servlet = (HttpServlet) ClassUtil.newInstance(className);
+                final HttpServlet servlet = Classes.newInstance(className);
                 servlet.service(request, response);
             } catch (ServletException e) {
                 throw new RenderException(e);
-            } catch (IllegalAccessException e) {
+            } catch (MgnlInstantiationException e) {
                 throw new RenderException(e);
             } catch (ClassNotFoundException e) {
-                throw new RenderException(e);
-            } catch (InstantiationException e) {
                 throw new RenderException(e);
             }
         }
