@@ -46,7 +46,6 @@ import info.magnolia.objectfactory.ObservedComponentFactory;
  * @version $Revision$ ($Author$)
  */
 public class FactoryUtil {
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FactoryUtil.class);
 
     private FactoryUtil() {
 
