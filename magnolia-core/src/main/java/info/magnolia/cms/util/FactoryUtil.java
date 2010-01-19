@@ -33,12 +33,10 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
-import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 /**
