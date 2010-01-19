@@ -34,7 +34,8 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.objectfactory.ClassFactory;
+import info.magnolia.objectfactory.Classes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +61,7 @@ public final class DialogFactory {
     /**
      * Registered controls.
      */
-    private static Map controls = new HashMap();
+    private static Map<String, Class<DialogControl>> controls = new HashMap<String, Class<DialogControl>>();
 
     /**
      * Utility class, don't instantiate.
@@ -75,8 +76,7 @@ public final class DialogFactory {
      * @param dialogClass implementing class. Must implements <code>info.magnolia.cms.gui.dialog.DialogControl</code>
      * @see info.magnolia.cms.gui.dialog.DialogControl
      */
-    public static void registerDialog(String name, Class dialogClass) {
-        // @todo check if dialogClass is a valid dialog
+    public static void registerDialog(String name, Class<DialogControl> dialogClass) {
         // @todo synchronize
 
         log.debug("Registering control [{}]", name); //$NON-NLS-1$
@@ -176,11 +176,12 @@ public final class DialogFactory {
         HttpServletResponse response, Content storageNode, Content configNode, String controlType)
         throws RepositoryException {
 
-        Class dialogClass = (Class) controls.get(controlType);
+        final ClassFactory classFactory = Classes.getClassFactory();
+        Class<DialogControl> dialogClass = controls.get(controlType);
 
         if (dialogClass == null) {
             try {
-                dialogClass = ClassUtil.classForName(controlType);
+                dialogClass = classFactory.forName(controlType);
             }
             catch (ClassNotFoundException e) {
                 throw new IllegalArgumentException("Unknown control type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -189,7 +190,7 @@ public final class DialogFactory {
 
         DialogControl control = null;
         try {
-            control = (DialogControl) dialogClass.newInstance();
+            control = classFactory.newInstance(dialogClass);
         }
         catch (Exception e) {
             // should never happen
