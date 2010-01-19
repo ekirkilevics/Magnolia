@@ -50,11 +50,11 @@ import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.commands.BaseActivationCommand;
+import info.magnolia.objectfactory.Classes;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -826,17 +826,12 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     protected Tree getTree() {
         if (tree == null) {
-            tree = (Tree) FactoryUtil.newInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
-                getName(),
-                getRepository()});
+            tree = Classes.quietNewInstance(getTreeClass(), getName(), getRepository());
 
             if (tree == null) {
                 // try to get the Tree with the deprecated constructor !
                 log.warn("The {} Tree class is probably using the deprecated (String name, String repository, HttpServletRequest request) constructor. Please use the (String name, String repository) constructor instead.", getTreeClass());
-                tree = (Tree) FactoryUtil.newInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
-                getName(),
-                getRepository(),
-                getRequest()});
+                tree = Classes.quietNewInstance(this.getTreeClass(), getName(), getRepository(), getRequest());
             }
             tree.setRootPath(this.getRootPath());
         }
@@ -892,8 +887,8 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     public AdminTreeConfiguration getConfiguration() {
         if (this.configuration == null) {
-            setConfiguration((AdminTreeConfiguration) FactoryUtil.newInstanceWithoutDiscovery(this
-                .getConfigurationClass(), new Object[]{}));
+            final AdminTreeConfiguration treeConfiguration = Classes.quietNewInstance(getConfigurationClass());
+            setConfiguration(treeConfiguration);
         }
         return this.configuration;
     }

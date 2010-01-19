@@ -37,10 +37,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
+import info.magnolia.objectfactory.Components;
 
 /**
  * the deactivation command which do real deactivation
@@ -50,7 +50,7 @@ public class DeactivationCommand extends BaseRepositoryCommand {
 
     public boolean execute(Context ctx) throws Exception {
         try{
-            Syndicator syndicator = (Syndicator) FactoryUtil.newInstance(Syndicator.class);
+            Syndicator syndicator = Components.getComponentProvider().newInstance(Syndicator.class);
             syndicator.init(ctx.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this.getRepository()), new Rule());
             final Content node = getNode(ctx);
             syndicator.deactivate(node);

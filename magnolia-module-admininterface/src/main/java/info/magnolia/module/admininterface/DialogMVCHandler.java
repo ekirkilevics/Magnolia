@@ -48,10 +48,10 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -287,7 +287,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         }
 
         if (this.saveHandler == null) {
-            this.saveHandler = (SaveHandler) FactoryUtil.newInstance(SaveHandler.class);
+            this.saveHandler = Components.getComponentProvider().newInstance(SaveHandler.class);
         }
     }
 

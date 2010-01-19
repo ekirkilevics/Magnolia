@@ -72,17 +72,7 @@ public class FactoryUtil {
      * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Classes}
      */
     public static Object newInstanceWithoutDiscovery(String className, Object[] args) {
-        try {
-            final ClassFactory classFactory = Classes.getClassFactory();
-            final Class clazz = classFactory.forName(className);
-            return classFactory.newInstance(clazz, args);
-        } catch (ClassNotFoundException e) {
-            log.error("Can't find class {}", className);
-            return null;
-        } catch (MgnlInstantiationException e) {
-            log.error("Can't instanciate class" + className + " : " + e.getMessage(), e);
-            return null;
-        }
+        return Classes.quietNewInstance(className, args);
     }
 
     /**

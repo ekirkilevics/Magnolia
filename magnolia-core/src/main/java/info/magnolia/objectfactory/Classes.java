@@ -56,6 +56,22 @@ public class Classes {
         return cf.newInstance(cl, params);
     }
 
+    /**
+     * Convenience/shortcut for {@link #newInstance(String, Object...)}, returning null both in case
+     * of a ClassNotFoundException or if the class could not be instantiated (which could be related to the parameters, etc)
+     */
+    public static <T> T quietNewInstance(String className, Object... params) {
+        try {
+            return newInstance(className, params);
+        } catch (ClassNotFoundException e) {
+            log.warn("Couldn't find class with name {}", className);
+            return null;
+        } catch (MgnlInstantiationException e) {
+            log.warn("Couldn't instantiate {}: {}", className, e.getMessage());
+            return null;
+        }
+    }
+
     public static ClassFactory getClassFactory() {
         final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
 

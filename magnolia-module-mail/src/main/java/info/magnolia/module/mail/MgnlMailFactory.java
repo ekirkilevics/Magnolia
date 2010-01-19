@@ -33,10 +33,10 @@
  */
 package info.magnolia.module.mail;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.mail.handlers.MgnlMailHandler;
 import info.magnolia.module.mail.templates.MgnlEmail;
 import info.magnolia.module.mail.templates.impl.SimpleEmail;
+import info.magnolia.objectfactory.Classes;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -150,7 +150,7 @@ public class MgnlMailFactory {
         MgnlEmail mail = null;
         if(renderers.containsKey(template.getType().toLowerCase())){
             String value = (String) renderers.get(template.getType().toLowerCase());
-            mail =  (MgnlEmail) FactoryUtil.newInstanceWithoutDiscovery(value, new Object[]{template});
+            mail = Classes.quietNewInstance(value, template);
         }
         else {
             mail = new SimpleEmail(template);

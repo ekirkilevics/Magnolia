@@ -35,8 +35,8 @@ package info.magnolia.module.admininterface.commands;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 
 
 /**
@@ -56,7 +56,7 @@ public abstract class BaseActivationCommand extends RuleBasedCommand {
     public Syndicator getSyndicator() {
         // lazy bound, but only if this is a clone
         if (syndicator == null && isClone()) {
-            syndicator = (Syndicator) FactoryUtil.newInstance(Syndicator.class);
+            syndicator = Components.getComponentProvider().newInstance(Syndicator.class);
             syndicator.init(
                 MgnlContext.getUser(),
                 this.getRepository(),
