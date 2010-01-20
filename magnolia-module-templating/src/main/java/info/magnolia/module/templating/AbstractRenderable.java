@@ -33,18 +33,18 @@
  */
 package info.magnolia.module.templating;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 
 
 /**
@@ -78,29 +78,16 @@ public class AbstractRenderable implements RenderableDefinition {
      * All the request parameters are then mapped to the model's properties.
      */
     public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        final Constructor<RenderingModel> constr = ConstructorUtils.getAccessibleConstructor(getModelClass(), MODEL_CONSTRUCTOR_TYPES);
-        if(constr == null){
-            throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass());
+        try {
+            final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), MODEL_CONSTRUCTOR_TYPES, content, definition, parentModel);
+            final Map<String, String> params = MgnlContext.getParameters();
+            if (params != null) {
+                BeanUtils.populate(model, params);
+            }
+            return model;
+        } catch (MgnlInstantiationException e) {
+            throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass(), e);
         }
-        RenderingModel model = constr.newInstance(content, definition, parentModel);
-        final Map<String, String> params = MgnlContext.getParameters();
-        if (params != null) {
-            BeanUtils.populate(model, params);
-        }
-        return model;
-
-        /** TODO - this would use ClassFactory instead - but currently can't work because parentModel can be null
-         try {
-             final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), content, definition, parentModel);
-             final Map<String, String> params = MgnlContext.getParameters();
-             if (params != null) {
-                 BeanUtils.populate(model, params);
-             }
-             return model;
-         } catch (MgnlInstantiationException e) {
-             throw new IllegalArgumentException(MISSING_CONSTRUCTOR_MESSAGE + "Can't instantiate " + getModelClass());
-         }
-         */
     }
 
     public String getName() {

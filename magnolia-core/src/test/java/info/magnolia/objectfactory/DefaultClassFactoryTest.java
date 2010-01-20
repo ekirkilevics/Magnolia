@@ -68,6 +68,47 @@ public class DefaultClassFactoryTest extends TestCase {
     }
     */
 
+    public void testCanInstantiateWithAppropriateConstructorAndNullParamsWhenSignatureIspecified() {
+        final DefaultClassFactory classFactory = new DefaultClassFactory();
+        assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(String.class), "bingo").getValue());
+        assertEquals("bingo123", classFactory.newInstance(FooBar.class, arr(String.class, Object.class), "bingo", Long.valueOf(123)).getValue());
+        assertEquals("bingonull", classFactory.newInstance(FooBar.class, arr(String.class, Object.class), "bingo", null).getValue());
+        assertEquals("null7", classFactory.newInstance(FooBar.class, arr(String.class, Object.class), null, Long.valueOf(7)).getValue());
+    }
+
+    public void testWillFailIfSignatureWrongSpecifiedEvenIfArgumentsCouldFit() {
+        final DefaultClassFactory classFactory = new DefaultClassFactory();
+        try {
+            assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(Object.class), "bingo").getValue());
+            fail("should have failed");
+        } catch (MgnlInstantiationException e) {
+            // this is what we want
+        }
+
+        try {
+            assertEquals("null7", classFactory.newInstance(FooBar.class, arr(String.class, Long.class), null, Long.valueOf(7)).getValue());
+            fail("should have failed");
+        } catch (MgnlInstantiationException e) {
+            // this is what we want
+        }
+    }
+
+    public void testCanInstantiateWithSingleArgConstructorAndNullParamWhenSignatureIspecified() {
+        final DefaultClassFactory classFactory = new DefaultClassFactory();
+        assertEquals(null, classFactory.newInstance(FooBar.class, arr(String.class), new Object[]{null}).getValue());
+        assertEquals(null, classFactory.newInstance(FooBar.class, arr(String.class), new String[]{null}).getValue());
+
+        // not with completely null args
+        // classFactory.newInstance(FooBar.class, arr(String.class), null).getValue());
+
+        // not with no-args either, as this calls the newInstance(Class c, Object... params) method
+        // classFactory.newInstance(FooBar.class, arr(String.class)).getValue());
+    }
+
+    private static Class<?>[] arr(Class<?>... classes) {
+        return classes;
+    }
+
     public static class FooBar {
         private final String value;
 

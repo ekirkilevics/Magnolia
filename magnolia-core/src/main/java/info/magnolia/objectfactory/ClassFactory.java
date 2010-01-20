@@ -47,12 +47,22 @@ public interface ClassFactory {
     <C> Class<C> forName(String className) throws ClassNotFoundException;
 
     /**
-     * Instantiates the given class with the given parameters.
-     * For the empty constructor, pass no parameters (or an empty array, or null). To pass "null" to a single-arg constructor,
-     * use newInstance(c, new Object[]{null}) (otherwise the *array* itself will be considered null)
+     * Instantiates the given class with the given parameters. This attempts to find a matching constructor.
+     * For the empty constructor, pass no parameters (or an empty array, or null).
+     * Null arguments are not supported.
      *
-     * @throws MgnlInstantiationException wrapping possible instantiation exceptions 
+     * @throws MgnlInstantiationException wrapping possible instantiation exceptions
      */
     <T> T newInstance(Class<T> c, Object... params);
+
+    /**
+     * Instantiates the given class with the given parameters, using a constructor that matches the given
+     * <code>argTypes</code> exactly.
+     *
+     * To pass "null" to a single-arg constructor,  use newInstance(c, new Object[]{null}) (otherwise the *array* itself will be considered null)
+     *
+     * @throws MgnlInstantiationException wrapping possible instantiation exceptions
+     */
+    <T> T newInstance(Class<T> c, Class<?>[] argTypes, Object... params);
 
 }

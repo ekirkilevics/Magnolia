@@ -36,6 +36,7 @@ package info.magnolia.objectfactory;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 /**
  * A ClassFactory implementation which uses the default class loader and the thread context class loader.
@@ -56,19 +57,41 @@ public class DefaultClassFactory implements ClassFactory {
 
     }
 
-    public <T> T newInstance(Class<T> c, Object... params) {
+    public <T> T newInstance(final Class<T> c, final Class<?>[] argTypes, final Object... params) {
+        if (argTypes.length != params.length) {
+            throw new IllegalStateException("Argument types and values do not match! " + Arrays.asList(argTypes) + " / " + Arrays.asList(params));
+        }
 
+        return newInstance(c, params, new Invoker<T>() {
+            public T invoke() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+                return (T) ConstructorUtils.invokeExactConstructor(c, params, argTypes);
+            }
+        });
+    }
+
+    public <T> T newInstance(final Class<T> c, final Object... params) {
+        return newInstance(c, params, new Invoker<T>() {
+            public T invoke() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+                return (T) ConstructorUtils.invokeConstructor(c, params);
+            }
+        });
+    }
+
+    private <T> T newInstance(Class<T> c, Object[] params, Invoker<T> invoker) {
         // TODO -
         // c.isAnnotationPresent(Deprecated) - at class or constructor level,
         // output a warning - todo bis - use a subclass of java.lang.Deprecated which allows a message
-
 
         try {
             if (params == null || params.length == 0) {
                 // shortcut
                 return c.newInstance();
             }
-            return  (T) ConstructorUtils.invokeConstructor(c, params);
+
+            // org.apache.commons.beanutils.ConstructorUtils#getMatchingAccessibleConstructor is private,
+            // otherwise, we'd simply extract a getConstructor() method to implement our 2 newInstance() methods.
+            return invoker.invoke();
+
         } catch (NoSuchMethodException e) {
             throw new MgnlInstantiationException(e.getMessage(), e);
         } catch (IllegalAccessException e) {
@@ -79,4 +102,9 @@ public class DefaultClassFactory implements ClassFactory {
             throw new MgnlInstantiationException(e.getMessage(), e);
         }
     }
+
+    private static interface Invoker<T> {
+        T invoke() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException;
+    }
+
 }
