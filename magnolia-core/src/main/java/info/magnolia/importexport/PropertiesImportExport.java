@@ -122,10 +122,10 @@ public class PropertiesImportExport {
     protected Object convertNodeDataStringToObject(String valueStr) {
         if (contains(valueStr, ':')) {
             final String type = StringUtils.substringBefore(valueStr, ":");
-            String value = StringUtils.substringAfter(valueStr, ":");
+            final String value = StringUtils.substringAfter(valueStr, ":");
 
             // there is no beanUtils converter for Calendar
-            if (type.equals("date")) {
+            if (type.equalsIgnoreCase("date")) {
                 return ISO8601.parse(value);
             } else {
                 try {
