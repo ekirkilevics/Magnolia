@@ -36,18 +36,23 @@ package info.magnolia.importexport;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.OrderedProperties;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ISO8601;
 
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Utility class providing support for properties-like format to import/export jcr data. Useful when
@@ -60,20 +65,19 @@ import java.util.Properties;
  * @version $Revision: $ ($Author: $)
  */
 public class PropertiesImportExport {
+
     public void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
         Properties properties = new OrderedProperties();
 
         properties.load(propertiesStream);
 
-        final Iterator it = properties.keySet().iterator();
-        while (it.hasNext()) {
-            final Object o = it.next();
+        for (Object o : properties.keySet()) {
             String orgKey = (String) o;
             String valueStr = properties.getProperty(orgKey);
 
             //if this is a node definition (no property)
             String key = orgKey;
-            if (StringUtils.isEmpty(valueStr) && !contains(key, '.') && !contains(key,'@')) {
+            if (StringUtils.isEmpty(valueStr) && !contains(key, '.') && !contains(key, '@')) {
                 key += "@type";
                 valueStr = "nt:base";
             }
@@ -116,43 +120,218 @@ public class PropertiesImportExport {
     }
 
     protected Object convertNodeDataStringToObject(String valueStr) {
-        Object valueObj = valueStr;
-
         if (contains(valueStr, ':')) {
-            String type = StringUtils.substringBefore(valueStr, ":");
-            if (type.equals("int")) {
-                type = "integer";
-            }
+            final String type = StringUtils.substringBefore(valueStr, ":");
             String value = StringUtils.substringAfter(valueStr, ":");
-            try {
-                valueObj = ConvertUtils.convert(value, Class.forName("java.lang." + StringUtils.capitalize(type)));
+
+            // there is no beanUtils converter for Calendar
+            if (type.equals("date")) {
+                return ISO8601.parse(value);
+            } else {
+                try {
+                    final Class<?> typeCl;
+                    if (type.equals("int")) {
+                        typeCl = Integer.class;
+                    } else {
+                        typeCl = Class.forName("java.lang." + StringUtils.capitalize(type));
+                    }
+                    return ConvertUtils.convert(value, typeCl);
+                } catch (ClassNotFoundException e) {
+                    // possibly a stray :, let's ignore it for now
+                    return valueStr;
+                }
             }
-            catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("Can't convert value [" + valueStr + "], ClassNotFoundException: " + e.getMessage());
-            }
+        } else {
+            // no type specified, we assume it's a string, no conversion
+            return valueStr;
         }
-        return valueObj;
     }
 
-    // TODO : does not take property type into account
+    /**
+     * @deprecated since 4.3
+     *
+     * This method is deprecated, it returns results in a format that does not match
+     * the format that the import method uses (doesn't include @uuid or @type properties)
+     *
+     * It is kept here to support existing test and applications that might break
+     * as a result of these changes (i.e. unit tests that are expecting a specific number of
+     * properties returned, etc)
+     *
+     * For new applications use the contentToProperties methods instead.
+     */
     public static Properties toProperties(HierarchyManager hm) throws Exception {
+        return toProperties(hm.getRoot());
+    }
+
+    public static Properties toProperties(Content rootContent) throws Exception {
+        return toProperties(rootContent, ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, true);
+    }
+
+    public static Properties contentToProperties(HierarchyManager hm) throws Exception {
+        return contentToProperties(hm.getRoot());
+    }
+
+    public static Properties contentToProperties(Content rootContent) throws Exception {
+        return toProperties(rootContent, ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, false);
+    }
+
+    public static Properties contentToProperties(Content rootContent, Content.ContentFilter filter) throws Exception {
+        return toProperties(rootContent, filter, false);
+    }
+
+    /**
+     * This method is private because it includes the boolean "legacymode" filter which
+     * shouldn't be exposed as part of the API because when "legacymode" is removed, it will
+     * force an API change.
+     *
+     * @param rootContent root node to convert into properties
+     * @param contentFilter a content filter to use in selecting what content to export
+     * @param legacyMode if true, will not include @uuid and @type nodes
+     * @return a Properties object representing the content starting at rootContent
+     * @throws Exception
+     */
+    private static Properties toProperties(Content rootContent, Content.ContentFilter contentFilter, final boolean legacyMode) throws Exception {
         final Properties out = new OrderedProperties();
-        ContentUtil.visit(hm.getRoot(), new ContentUtil.Visitor() {
+        ContentUtil.visit(rootContent, new ContentUtil.Visitor() {
             public void visit(Content node) throws Exception {
+                if (!legacyMode) {
+                    appendNodeTypeAndUUID(node, out, true);
+                }
                 appendNodeProperties(node, out);
             }
-        });
+        }, contentFilter);
         return out;
     }
 
-    public static void appendNodeProperties(Content node, Properties out) {
-        final Collection props = node.getNodeDataCollection();
-        final Iterator it = props.iterator();
-        while (it.hasNext()) {
-            final NodeData prop = (NodeData) it.next();
-            final String path = node.getHandle() + "." + prop.getName();
-            out.setProperty(path, prop.getString());
+    private static void appendNodeTypeAndUUID(Content node, Properties out, final boolean dumpMetaData) throws RepositoryException {
+        String path = getExportPath(node);
+        // we don't need to export the JCR root node.
+        if (path.equals("/jcr:root")) {
+            return;
         }
+
+        String nodeTypeName = node.getNodeTypeName();
+        if (nodeTypeName != null && StringUtils.isNotEmpty(nodeTypeName)) {
+            out.put(path + "@type", nodeTypeName);
+        }
+        String nodeUUID = node.getUUID();
+        if (nodeUUID != null && StringUtils.isNotEmpty(nodeUUID)) {
+            out.put(path + "@uuid", node.getUUID());
+        }
+
+        // dumping the metaData of a MetaData node is silly
+        if (dumpMetaData && !(nodeTypeName.equals("mgnl:metaData"))) {
+            Content metaDataNode = (node.getChildByName(MetaData.DEFAULT_META_NODE));
+            if (metaDataNode != null) {
+                // append the UUID and the type with a single recursive call
+                appendNodeTypeAndUUID(metaDataNode, out, false);
+
+                String baseMetadataPath = getExportPath(metaDataNode);
+                MetaData nodeMetaData = node.getMetaData();
+                // dump each metadata property one by one.
+                addStringProperty(out, baseMetadataPath + ".mgnl\\:template", nodeMetaData.getTemplate());
+                addStringProperty(out, baseMetadataPath + ".mgnl\\:authorid", nodeMetaData.getAuthorId());
+                addStringProperty(out, baseMetadataPath + ".mgnl\\:activatorid", nodeMetaData.getActivatorId());
+                addStringProperty(out, baseMetadataPath + ".mgnl\\:title", nodeMetaData.getTitle());
+                addDateProperty(out, baseMetadataPath + ".mgnl\\:creationdate", nodeMetaData.getCreationDate());
+                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastaction", nodeMetaData.getLastActionDate());
+                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastmodified", nodeMetaData.getLastActionDate());
+                addBooleanProeprty(out, baseMetadataPath + ".mgnl\\:activated", nodeMetaData.getIsActivated());
+            }
+        }
+    }
+
+    private static void addBooleanProeprty(Properties out, String path, boolean prop) {
+        out.put(path, convertBooleanToExportString(prop));
+    }
+
+    private static void addDateProperty(Properties out, String path, Calendar date) {
+        if (date != null) {
+            out.put(path, convertCalendarToExportString(date));
+        }
+    }
+
+    private static void addStringProperty(Properties out, String path, String stringProperty) {
+        if (StringUtils.isNotEmpty(stringProperty)) {
+            out.put(path, stringProperty);
+        }
+    }
+
+    public static void appendNodeProperties(Content node, Properties out) {
+        final Collection<NodeData> props = node.getNodeDataCollection();
+        for (NodeData prop : props) {
+            final String path = getExportPath(node) + "." + prop.getName();
+
+            String propertyValue = getPropertyString(prop);
+
+            if (propertyValue != null) {
+                out.setProperty(path, propertyValue);
+            }
+        }
+    }
+
+    private static String getExportPath(Content node) {
+        return node.getHandle();
+    }
+
+    private static String getPropertyString(NodeData prop) {
+        int propType = prop.getType();
+
+        switch (propType) {
+            case (PropertyType.STRING): {
+                return prop.getString();
+            }
+            case (PropertyType.BOOLEAN): {
+                return convertBooleanToExportString(prop.getBoolean());
+            }
+            case (PropertyType.BINARY): {
+                return convertBinaryToExportString(prop.getValue());
+            }
+            case (PropertyType.PATH): {
+                return prop.getString();
+            }
+            case (PropertyType.DATE): {
+                return convertCalendarToExportString(prop.getDate());
+            }
+            default: {
+                return prop.getString();
+            }
+        }
+    }
+
+    private static String convertBooleanToExportString(boolean b) {
+        return "boolean:" + (b ? "true" : "false");
+    }
+
+    private static String convertBinaryToExportString(Value value) {
+        return "binary:" + ConvertUtils.convert(value);
+    }
+
+    private static String convertCalendarToExportString(Calendar calendar) {
+        return "date:" + ISO8601.format(calendar);
+    }
+
+    /**
+     * Dumps content starting at the content node out to a string in the format that matches the
+     * import method.
+     */
+    public static String dumpPropertiesToString(Content content, Content.ContentFilter filter) throws Exception {
+        Properties properties = PropertiesImportExport.contentToProperties(content, filter);
+        return dumpPropertiesToString(properties);
+    }
+
+    public static String dumpPropertiesToString(Properties properties) {
+        final StringBuilder sb = new StringBuilder();
+        final Set<Object> propertyNames = properties.keySet();
+        for (Object propertyKey : propertyNames) {
+            final String name = propertyKey.toString();
+            final String value = properties.getProperty(name);
+            sb.append(name);
+            sb.append("=");
+            sb.append(value);
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     private static boolean contains(String s, char ch) {
