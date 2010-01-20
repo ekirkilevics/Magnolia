@@ -33,80 +33,35 @@
  */
 package info.magnolia.importexport;
 
-import com.mockrunner.mock.web.MockHttpServletRequest;
-import com.mockrunner.mock.web.MockHttpServletResponse;
-import com.mockrunner.mock.web.MockPageContext;
-import com.mockrunner.mock.web.MockServletConfig;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.i18n.DefaultI18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.link.LinkResolver;
-import info.magnolia.cms.link.LinkResolverImpl;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
-import info.magnolia.test.mock.MockWebContext;
+import junit.framework.TestCase;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Properties;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertiesImportExportTest extends MgnlTestCase {
-    private final PropertiesImportExport pie = new PropertiesImportExport();
-    protected MockWebContext webContext;
-    protected HierarchyManager hierarchyManager;
-    protected MockPageContext pageContext;
-    private SystemContext sysContext;
+public class PropertiesImportExportTest extends TestCase {
 
-
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        hierarchyManager = initWebsiteData();
-        webContext = new MockWebContext();
-        webContext.addHierarchyManager(ContentRepository.WEBSITE, hierarchyManager);
-
-        MgnlContext.setInstance(webContext);
-
-        sysContext = createMock(SystemContext.class);
-        expect(sysContext.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
-        replay(sysContext);
-        FactoryUtil.setInstance(SystemContext.class, sysContext);
-
-        // set up necessary items not configured in the repository
-        FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
-        FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        FactoryUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
-
-        setupPageContext();
-    }
-
-    protected void setupPageContext() {
-        MockHttpServletRequest req = new MockHttpServletRequest();
-        pageContext = new MockPageContext(new MockServletConfig(), req, new MockHttpServletResponse());
-    }
 
     public void testConvertsToStringByDefault() throws IOException, RepositoryException {
+        final PropertiesImportExport pie = new PropertiesImportExport();
+
         assertEquals("foo", pie.convertNodeDataStringToObject("foo"));
         assertEquals("bar", pie.convertNodeDataStringToObject("string:bar"));
         assertEquals("2009-10-14T08:59:01.227-04:00", pie.convertNodeDataStringToObject("string:2009-10-14T08:59:01.227-04:00"));
     }
 
     public void testConvertsToWrapperType() {
+        final PropertiesImportExport pie = new PropertiesImportExport();
+
         assertEquals(Boolean.TRUE, pie.convertNodeDataStringToObject("boolean:true"));
         assertEquals(Boolean.FALSE, pie.convertNodeDataStringToObject("boolean:false"));
         assertEquals(new Integer(5), pie.convertNodeDataStringToObject("integer:5"));
@@ -119,6 +74,8 @@ public class PropertiesImportExportTest extends MgnlTestCase {
     }
 
     public void testCanUseIntShortcutForConvertingIntegers() {
+        final PropertiesImportExport pie = new PropertiesImportExport();
+
         assertEquals(new Integer(37), pie.convertNodeDataStringToObject("int:37"));
     }
 
@@ -126,16 +83,17 @@ public class PropertiesImportExportTest extends MgnlTestCase {
     // at least matches. 
 
     public void testPropertiesExport() throws Exception {
+        final HierarchyManager hm = initHM();
         Properties baseProperties = new Properties();
         baseProperties.load(this.getClass().getResourceAsStream("propertiesimportexport-testrepo.properties"));
 
-        Properties exportedProperties = PropertiesImportExport.contentToProperties(hierarchyManager.getRoot());
+        Properties exportedProperties = PropertiesImportExport.contentToProperties(hm.getRoot());
         //System.out.println(PropertiesImportExport.dumpPropertiesToString(exportedProperties));
         assertEquals("exported properties should be identical in size to imported properties",
                 baseProperties.keySet().size(), exportedProperties.keySet().size()
         );
 
-        Properties legacyExportedProperties = PropertiesImportExport.toProperties(hierarchyManager);
+        Properties legacyExportedProperties = PropertiesImportExport.toProperties(hm);
         //System.out.println(PropertiesImportExport.dumpPropertiesToString(legacyExportedProperties));
         assertEquals("Legacy mode export doesn't contain @uuid, metadata, or @type nodes",
                 6, legacyExportedProperties.keySet().size()
@@ -143,7 +101,11 @@ public class PropertiesImportExportTest extends MgnlTestCase {
     }
 
     public void testImportMetadata() throws Exception {
-        Content uuidLinkNode = hierarchyManager.getContentByUUID("2");
+        // TODO - some of these tests, and it's very visible with this one, depend on MockUtil.createHM
+        // ... so in essence, we're testing that, and not PIE
+
+        final HierarchyManager hm = initHM();
+        Content uuidLinkNode = hm.getContentByUUID("2");
         assertNotNull("Content retrievable by its UUID", uuidLinkNode);
         MetaData nodeMetaData = uuidLinkNode.getMetaData();
         assertNotNull("Metadata of node should not be null when it is set explicitly in the properties", nodeMetaData);
@@ -152,7 +114,7 @@ public class PropertiesImportExportTest extends MgnlTestCase {
 
     }
 
-    protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
+    protected HierarchyManager initHM() throws IOException, RepositoryException {
         return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("propertiesimportexport-testrepo.properties"));
     }
 
