@@ -50,7 +50,7 @@ public class Classes {
     /**
      * Convenience/shortcut method for instantiating new classes.
      * @see info.magnolia.objectfactory.ClassFactory
-     * @see #getClassFactory() 
+     * @see #getClassFactory()
      * @throws ClassNotFoundException
      * @throws MgnlInstantiationException
      */
@@ -77,22 +77,48 @@ public class Classes {
     }
 
     public static ClassFactory getClassFactory() {
-        final String classFactoryClassName = SystemProperty.getProperty(ClassFactory.class.getName());
+        return cfp.getCurrent();
+    }
 
-        if (StringUtils.isEmpty(classFactoryClassName)) {
-            // use a DefaultClassFactory until the property is set
-            return new DefaultClassFactory();
-        } else {
-            // whichever ClassFactory is registered will be instantiated with DefaultClassFactory.
-            final DefaultClassFactory temp = new DefaultClassFactory();
-            try {
-                final Class<ClassFactory> c = temp.forName(classFactoryClassName);
-                // TODO - cache !
-                return temp.newInstance(c);
-            } catch (ClassNotFoundException e) {
-                log.error("Could not find {}, will use DefaultClassFactory for now");
-                return new DefaultClassFactory();
+    // this is not final...only for tests' sake...
+    private static ClassFactoryProvider cfp = new ClassFactoryProvider(new DefaultClassFactory());
+
+    protected static class ClassFactoryProvider {
+        private ClassFactory initial;
+        private ClassFactory current;
+        private boolean swapping;
+
+        public ClassFactoryProvider(ClassFactory initial) {
+            this.initial = initial;
+            this.current = initial;
+        }
+
+        public ClassFactory getCurrent() {
+            check();
+            return current;
+        }
+
+        private void check() {
+            final String classFactoryClassName = getCurrentlyConfiguredClassName();
+            final String currentClassName = current.getClass().getName();
+            if (StringUtils.isNotEmpty(classFactoryClassName) && !currentClassName.equals(classFactoryClassName) && !swapping) {
+                // need change
+                swapping = true;
+
+                // whichever ClassFactory is registered will be instantiated with the initial ClassFactory.
+                try {
+                    final Class<ClassFactory> c = initial.forName(classFactoryClassName);
+                    current = initial.newInstance(c);
+                } catch (ClassNotFoundException e) {
+                    log.error("Could not find {}, will keep on using {} for now", current.getClass().getSimpleName());
+                }
+                swapping = false;
             }
         }
+
+        protected String getCurrentlyConfiguredClassName() {
+            return SystemProperty.getProperty(ClassFactory.class.getName());
+        }
     }
+
 }
