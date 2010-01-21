@@ -77,7 +77,7 @@ public class Classes {
     }
 
     public static ClassFactory getClassFactory() {
-        return cfp.getCurrent();
+        return cfp.current();
     }
 
     // this is not final...only for tests' sake...
@@ -93,7 +93,7 @@ public class Classes {
             this.current = initial;
         }
 
-        public ClassFactory getCurrent() {
+        public ClassFactory current() {
             check();
             return current;
         }
@@ -110,7 +110,7 @@ public class Classes {
                     final Class<ClassFactory> c = initial.forName(classFactoryClassName);
                     current = initial.newInstance(c);
                 } catch (ClassNotFoundException e) {
-                    log.error("Could not find {}, will keep on using {} for now", current.getClass().getSimpleName());
+                    log.error("Could not find {}, will keep on using {} for now", classFactoryClassName, current.getClass().getSimpleName());
                 }
                 swapping = false;
             }
