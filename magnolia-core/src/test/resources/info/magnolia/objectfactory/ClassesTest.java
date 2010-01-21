@@ -38,7 +38,8 @@ import junit.framework.TestCase;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
@@ -49,24 +50,28 @@ public class ClassesTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.getProperties().clear();
+        resetCFP();
+    }
 
-//        final Method newDefaultMethod = Classes.class.getDeclaredMethod("newDefault");
-//        System.out.println("newDefaultMethod.isAccessible() = " + newDefaultMethod.isAccessible());
-//        newDefaultMethod.setAccessible(true);
-//        final Object newDefault = newDefaultMethod.invoke(null);
+    protected void tearDown() throws Exception {
+        resetCFP();
+        SystemProperty.getProperties().clear();
+        super.tearDown();
+    }
+
+    private void resetCFP() throws NoSuchFieldException, IllegalAccessException {
+        // reset the classFactoryProvider field. TODO: really which i could have made this one final ...
         final Field cfpField = Classes.class.getDeclaredField("cfp");
         cfpField.setAccessible(true);
         cfpField.set(null, new Classes.ClassFactoryProvider(new DefaultClassFactory()));
     }
 
-    protected void tearDown() throws Exception {
-        SystemProperty.getProperties().clear();
-        super.tearDown();
-    }
-
     public void testDefaultClassFactoryWorksJustFine() throws ClassNotFoundException {
         final String s = Classes.newInstance("java.lang.String", "hello");
         assertEquals("hello", s);
+
+        final ClassFactory cf = Classes.getClassFactory();
+        assertTrue(cf instanceof DefaultClassFactory);
     }
 
     public void testCanSetupADifferentClassFactory() throws ClassNotFoundException {
@@ -74,6 +79,9 @@ public class ClassesTest extends TestCase {
         final String s = Classes.newInstance("chalala", "hello");
         // this validates we're indeed using our custom TestClassFactory, since "chalala" isn't a real class name, afaik.
         assertEquals("hello", s);
+
+        final ClassFactory cf = Classes.getClassFactory();
+        assertTrue(cf instanceof TestClassFactory);
     }
 
     public void testCanSetupADifferentClassFactoryThatNeedsComponents() throws ClassNotFoundException {
@@ -83,6 +91,17 @@ public class ClassesTest extends TestCase {
         assertEquals("hello", s);
         final Whatever w = Components.getSingleton(Whatever.class);
         assertEquals(327, w.blah());
+
+        final ClassFactory cf = Classes.getClassFactory();
+        assertTrue(cf instanceof TestClassFactoryWithComponents);
+        final TestClassFactoryWithComponents cfc = (TestClassFactoryWithComponents) cf;
+        assertTrue(cfc.getWhatever() instanceof Chenanigans);
+        assertEquals(327, cfc.getWhatever().blah());
+        final Calendar now = Calendar.getInstance();
+        // a fairly vague comparison of those two dates
+        final Calendar then = Calendar.getInstance();
+        then.setTime(cfc.getDate());
+        assertEquals(now.get(Calendar.DAY_OF_YEAR), then.get(Calendar.DAY_OF_YEAR));
     }
 
     public static interface Whatever {
@@ -95,8 +114,9 @@ public class ClassesTest extends TestCase {
         }
     }
 
-    // forName only accepts test-specific names, and newInstance() implementations don't handle exceptions, don't check params/types and don't take any shortcut either.
-
+    /**
+     * forName only accepts test-specific names, and newInstance() implementations don't handle exceptions, don't check params/types and don't take any shortcut either. 
+     */
     public static class TestClassFactory implements ClassFactory {
         public TestClassFactory() {
         }
@@ -128,14 +148,20 @@ public class ClassesTest extends TestCase {
     public static class TestClassFactoryWithComponents extends TestClassFactory {
         private final ClassFactory delegate;
         private final Whatever whatever;
+        private final Date date;
 
-        public TestClassFactoryWithComponents() {
+        public TestClassFactoryWithComponents() throws ClassNotFoundException {
             this.delegate = new DefaultClassFactory();
             this.whatever = Components.getSingleton(Whatever.class);
+            this.date = Classes.newInstance("java.util.Date");
         }
 
         public Whatever getWhatever() {
             return whatever;
+        }
+
+        public Date getDate() {
+            return date;
         }
     }
 }
