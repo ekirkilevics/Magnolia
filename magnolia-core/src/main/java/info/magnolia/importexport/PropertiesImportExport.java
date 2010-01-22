@@ -43,7 +43,6 @@ import info.magnolia.cms.util.OrderedProperties;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.ISO8601;
-import org.pdfbox.util.operator.NextLine;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
