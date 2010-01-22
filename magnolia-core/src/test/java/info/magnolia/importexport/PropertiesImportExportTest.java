@@ -36,6 +36,7 @@ package info.magnolia.importexport;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
@@ -87,14 +88,11 @@ public class PropertiesImportExportTest extends TestCase {
         Properties baseProperties = new Properties();
         baseProperties.load(this.getClass().getResourceAsStream("propertiesimportexport-testrepo.properties"));
 
-        Properties exportedProperties = PropertiesImportExport.contentToProperties(hm.getRoot());
-        //System.out.println(PropertiesImportExport.dumpPropertiesToString(exportedProperties));
-        assertEquals("exported properties should be identical in size to imported properties",
-                baseProperties.keySet().size(), exportedProperties.keySet().size()
-        );
+        Properties exportedProperties = PropertiesImportExport.contentToProperties(hm.getRoot(), ContentUtil.ALL_NODES_EXCEPT_JCR_CONTENT_FILTER);
+        assertEquals(baseProperties.keySet().size(), exportedProperties.keySet().size());
+        assertEquals(baseProperties, exportedProperties);
 
         Properties legacyExportedProperties = PropertiesImportExport.toProperties(hm);
-        //System.out.println(PropertiesImportExport.dumpPropertiesToString(legacyExportedProperties));
         assertEquals("Legacy mode export doesn't contain @uuid, metadata, or @type nodes",
                 6, legacyExportedProperties.keySet().size()
         );
