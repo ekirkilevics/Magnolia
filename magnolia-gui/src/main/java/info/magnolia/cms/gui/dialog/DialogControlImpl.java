@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
@@ -438,7 +438,7 @@ public abstract class DialogControlImpl implements DialogControl {
         if (this.getStorageNode() != null) {
             try {
                 NodeData node = this.getStorageNode().getNodeData(this.getName());
-                if(node.isMultiValue() == DefaultNodeData.MULTIVALUE_TRUE) {
+                if(node.isMultiValue() == AbstractPrimitiveNodeData.MULTIVALUE_TRUE) {
                     values = NodeDataUtil.getValuesStringList(node.getValues());
                 } else {
                     Iterator it = this.getStorageNode().getContent(this.getName()).getNodeDataCollection().iterator();

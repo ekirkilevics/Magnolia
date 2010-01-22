@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.gui.control;
 
+import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
@@ -531,7 +531,7 @@ public class Tree extends ControlImpl {
                     type = node.getType();
                 }
                 // todo: share with Contorol.Save
-                if (node.isMultiValue() != DefaultNodeData.MULTIVALUE_TRUE) {
+                if (node.isMultiValue() != AbstractPrimitiveNodeData.MULTIVALUE_TRUE) {
                     switch (type) {
                         case PropertyType.STRING:
                             node.setValue(value);
@@ -593,7 +593,7 @@ public class Tree extends ControlImpl {
                 content.deleteNodeData(nodeDataName);
             }
             NodeData node = content.createNodeData(nodeDataName);
-            if (value != null && node.isMultiValue() != DefaultNodeData.MULTIVALUE_TRUE) {
+            if (value != null && node.isMultiValue() != AbstractPrimitiveNodeData.MULTIVALUE_TRUE) {
                 switch (type) {
                     case PropertyType.STRING:
                         node.setValue(value.getString());
@@ -800,7 +800,7 @@ public class Tree extends ControlImpl {
             handle = d.getHandle();
             name = d.getName();
 
-            if (d.isGranted(info.magnolia.cms.security.Permission.WRITE) && d.isMultiValue() != DefaultNodeData.MULTIVALUE_TRUE) {
+            if (d.isGranted(info.magnolia.cms.security.Permission.WRITE) && d.isMultiValue() != AbstractPrimitiveNodeData.MULTIVALUE_TRUE) {
                 permissionWrite = true;
             }
         }
