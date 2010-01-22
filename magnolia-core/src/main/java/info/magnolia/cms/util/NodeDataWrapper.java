@@ -222,6 +222,10 @@ public abstract class NodeDataWrapper implements NodeData {
         getWrappedNodeData().setValue(value);
     }
 
+    public void setValue(Content value) throws RepositoryException, AccessDeniedException {
+        getWrappedNodeData().setValue(value);
+    }
+    
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
