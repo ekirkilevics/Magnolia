@@ -117,13 +117,19 @@ public class PropertiesImportExport {
             path = StringUtils.removeStart(path, "/");
 
             // if this is a path (no property)
-            if (StringUtils.isEmpty(propertyName)) {
-                if(!properties.containsKey(orgKey + "@type")){
-                    propertyName = "@type";
-                }
-                // useless node path key
-                else{
+            if (StringUtils.isEmpty(propertyName)){
+                // no value --> is a node
+                if(StringUtils.isEmpty(properties.getProperty(orgKey))) {
+                    // make this the type property if not defined otherwise
+                    if(!properties.containsKey(orgKey + "@type")){
+                        cleaned.put(path + ".@type", "nt:base");
+                    }
                     continue;
+                }
+                // /some/path/prop = hello  will be treated as a property
+                else{
+                    propertyName = StringUtils.substringAfterLast(path, "/");
+                    path = StringUtils.substringBeforeLast(path, "/");
                 }
             }
             cleaned.put(path + "." + propertyName, properties.get(orgKey));
