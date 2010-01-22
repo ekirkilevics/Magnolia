@@ -37,6 +37,7 @@ import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -308,10 +309,11 @@ public class MockContent extends AbstractContent {
 
     public MockMetaData getMetaData() {
         try {
-            return new MockMetaData((MockContent) getContent("MetaData"));
+            return new MockMetaData((MockContent) getContent(MetaData.DEFAULT_META_NODE));
         } catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
+            //we mimick the default behaviour here, so lets create an empty metadata node
         }
+        return new MockMetaData(new MockContent(MetaData.DEFAULT_META_NODE));
     }
 
     public String toString() {
