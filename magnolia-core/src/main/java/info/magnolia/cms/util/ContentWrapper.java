@@ -33,20 +33,24 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
 import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.nodetype.NodeType;
@@ -54,7 +58,23 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
-public abstract class ContentWrapper implements Content {
+/**
+ * A base class to implement content wrappers. All returned content objects, including collections, are also wrapped by calling the wrapping methods.
+ * <p>
+ * The following methods you might want to override:
+ * <ul>
+ * <li>{@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, Comparator)} 
+ * <li>{@link #getContent(String)}
+ * <li>{@link #getNodeData(String)}
+ * <li>{@link #wrap(Content)}
+ * <li>{@link #wrap(NodeData)}
+ * </ul>
+ * 
+ * @author pbaerfuss
+ * @version $Id$
+ *
+ */
+public abstract class ContentWrapper extends AbstractContent {
 
     private Content wrappedContent;
 
@@ -74,17 +94,49 @@ public abstract class ContentWrapper implements Content {
     }
 
     /**
-     * Override if a wrapper wants to wrap returned content objects as well (by getContent(), getParent(), ...
+     * Override if a wrapper wants to wrap returned content objects. This method is called by getContent(), getParent(), ...
+     * The default implementation does nothing.
      */
     protected Content wrap(Content node) {
         return node;
     }
 
+    /**
+     * Override if a wrapper wants to wrap returned node data objects. The default implementation returns the original value.
+     */
+    protected NodeData wrap(NodeData nodeData) {
+        return nodeData;
+    }
+
+    /**
+     * Override if a wrapper wants to wrap returned collections as well (by getChildren(..), ...
+     * Delegates to {@link #wrap(Content)}
+     */
+    protected Collection<Content> wrapContentNodes(Collection<Content> collection) {
+        ArrayList<Content> wrapped = new ArrayList<Content>();
+        for (Content content : collection) {
+            wrapped.add(wrap(content));
+        }
+        return wrapped;
+    }
+
+    /**
+     * Override if a wrapper wants to wrap returned collections as well (by getChildren(..), ...
+     * Delegates to {@link #wrap(Content)}
+     */
+    protected Collection<NodeData> wrapNodeDatas(Collection<NodeData> collection) {
+        ArrayList<NodeData> wrapped = new ArrayList<NodeData>();
+        for (NodeData nodeData : collection) {
+            wrapped.add(wrap(nodeData));
+        }
+        return wrapped;
+    }
+    
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getClass().getSimpleName());
         buffer.append(" for ");
-        buffer.append(getWrappedContent().toString());
+        buffer.append(super.toString());
         return buffer.toString();
     }
 
@@ -101,46 +153,14 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().addVersion(rule);
     }
 
-    public Content createContent(String name, ItemType contentType) throws RepositoryException {
-        return this.getWrappedContent().createContent(name, contentType);
-    }
-
     public Content createContent(String name, String contentType) throws RepositoryException {
-        return this.getWrappedContent().createContent(name, contentType);
-    }
-
-    public Content createContent(String name) throws RepositoryException {
-        return this.getWrappedContent().createContent(name);
-    }
-
-    public NodeData createNodeData(String name, int type) throws RepositoryException {
-        return this.getWrappedContent().createNodeData(name, type);
-    }
-
-    public NodeData createNodeData(String name, Object obj) throws RepositoryException {
-        return this.getWrappedContent().createNodeData(name, obj);
-    }
-
-    public NodeData createNodeData(String name, Value value) throws RepositoryException {
-        return this.getWrappedContent().createNodeData(name, value);
-    }
-
-    public NodeData createNodeData(String name, Value[] value) throws RepositoryException {
-        return this.getWrappedContent().createNodeData(name, value);
-    }
-
-    public NodeData createNodeData(String name) throws RepositoryException {
-        return this.getWrappedContent().createNodeData(name);
+        return wrap(this.getWrappedContent().createContent(name, contentType));
     }
 
     public void delete() throws RepositoryException {
         this.getWrappedContent().delete();
     }
-
-    public void delete(String path) throws RepositoryException {
-        this.getWrappedContent().delete(path);
-    }
-
+    
     public void deleteNodeData(String name) throws RepositoryException {
         this.getWrappedContent().deleteNodeData(name);
     }
@@ -150,11 +170,11 @@ public abstract class ContentWrapper implements Content {
     }
 
     public Content getAncestor(int digree) throws RepositoryException {
-        return this.getWrappedContent().getAncestor(digree);
+        return wrap(this.getWrappedContent().getAncestor(digree));
     }
 
     public Collection<Content> getAncestors() throws RepositoryException {
-        return this.getWrappedContent().getAncestors();
+        return wrapContentNodes(this.getWrappedContent().getAncestors());
     }
 
     public ContentVersion getBaseVersion() throws RepositoryException {
@@ -162,31 +182,11 @@ public abstract class ContentWrapper implements Content {
     }
 
     public Content getChildByName(String namePattern) {
-        return this.getWrappedContent().getChildByName(namePattern);
-    }
-
-    public Collection<Content> getChildren() {
-        return this.getWrappedContent().getChildren();
+        return wrap(this.getWrappedContent().getChildByName(namePattern));
     }
 
     public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
-        return this.getWrappedContent().getChildren(filter, orderCriteria);
-    }
-
-    public Collection<Content> getChildren(ContentFilter filter) {
-        return this.getWrappedContent().getChildren(filter);
-    }
-
-    public Collection<Content> getChildren(ItemType contentType) {
-        return this.getWrappedContent().getChildren(contentType);
-    }
-
-    public Collection<Content> getChildren(String contentType, String namePattern) {
-        return this.getWrappedContent().getChildren(contentType, namePattern);
-    }
-
-    public Collection<Content> getChildren(String contentType) {
-        return this.getWrappedContent().getChildren(contentType);
+        return wrapContentNodes(this.getWrappedContent().getChildren(filter, orderCriteria));
     }
 
     public Content getContent(String name) throws RepositoryException {
@@ -228,17 +228,14 @@ public abstract class ContentWrapper implements Content {
     public String getName() {
         return this.getWrappedContent().getName();
     }
-
-    public NodeData getNodeData(String name) {
-        return this.getWrappedContent().getNodeData(name);
+    
+    @Override
+    public NodeData getNodeData(String name, int type) throws RepositoryException {
+        return wrap(((AbstractContent)getWrappedContent()).getNodeData(name, type));
     }
 
     public Collection<NodeData> getNodeDataCollection() {
-        return this.getWrappedContent().getNodeDataCollection();
-    }
-
-    public Collection<NodeData> getNodeDataCollection(String namePattern) {
-        return this.getWrappedContent().getNodeDataCollection(namePattern);
+        return wrapNodeDatas(this.getWrappedContent().getNodeDataCollection());
     }
 
     public NodeType getNodeType() throws RepositoryException {
@@ -281,24 +278,28 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getWorkspace();
     }
 
-    public boolean hasChildren() {
-        return this.getWrappedContent().hasChildren();
-    }
-
-    public boolean hasChildren(String contentType) {
-        return this.getWrappedContent().hasChildren(contentType);
-    }
-
+    /**
+     * Uses {@link #getContent(String)} and caches {@link PathNotFoundException} to make it easier to extend this class.
+     */
     public boolean hasContent(String name) throws RepositoryException {
-        return this.getWrappedContent().hasContent(name);
+        try{
+            getContent(name);
+        }
+        catch(PathNotFoundException e){
+            return false;
+        }
+        return true;
     }
 
     public boolean hasMetaData() {
         return this.getWrappedContent().hasMetaData();
     }
 
+    /**
+     * Uses {@link #getNodeData(String)} and {@link NodeData#isExist()} to make it easier to extend this class.
+     */
     public boolean hasNodeData(String name) throws RepositoryException {
-        return this.getWrappedContent().hasNodeData(name);
+        return getNodeData(name).isExist();
     }
 
     public boolean holdsLock() throws RepositoryException {
@@ -369,27 +370,12 @@ public abstract class ContentWrapper implements Content {
         this.getWrappedContent().save();
     }
 
-    public NodeData setNodeData(String name, Value value) throws RepositoryException {
-        return this.getWrappedContent().setNodeData(name, value);
-    }
-
-    public NodeData setNodeData(String name, Value[] value) throws RepositoryException {
-        return this.getWrappedContent().setNodeData(name, value);
-    }
-
     public void unlock() throws RepositoryException {
         this.getWrappedContent().unlock();
     }
 
     public void updateMetaData() throws RepositoryException {
         this.getWrappedContent().updateMetaData();
-    }
-
-    /**
-     * @deprecated since 4.0 - use getHierarchyManager instead.
-     */
-    public AccessManager getAccessManager() {
-        return this.getWrappedContent().getAccessManager();
     }
 
     public HierarchyManager getHierarchyManager(){

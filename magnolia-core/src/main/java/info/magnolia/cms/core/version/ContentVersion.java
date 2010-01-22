@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core.version;
 
+import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -97,7 +98,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * base content
      */
-    private DefaultContent base;
+    private AbstractContent base;
 
     /**
      * Rule used to create this version
@@ -110,28 +111,32 @@ public class ContentVersion extends DefaultContent {
      * @param base content on which this version is based on
      * @throws RepositoryException
      */
-    public ContentVersion(Version thisVersion, DefaultContent base) throws RepositoryException {
+    public ContentVersion(Version thisVersion, AbstractContent base) throws RepositoryException {
         if (thisVersion == null) {
             throw new RepositoryException("Failed to get ContentVersion, version does not exist");
         }
         this.state = thisVersion;
         this.base = base;
-        // child nodes (and metaData if nothing else) depends on this to have access when root access is restricted for given user
-        List<Permission> permissions = new ArrayList<Permission>(base.getAccessManager().getPermissionList());
-        PermissionImpl p = new PermissionImpl();
-        p.setPattern(new SimpleUrlPattern("/jcr:system/jcr:versionStorage/*"));
-        // read only
-        p.setPermissions(8);
-        permissions.add(p);
-        // use dedicated AM and not the one base share with its parent
-        this.accessManager = new AccessManagerImpl();
-        this.accessManager.setPermissionList(permissions);
 
         this.hierarchyManager = new HierarchyManagerWrapper(base.getHierarchyManager()) {
+            private AccessManagerImpl accessManager;
+
+            {
+                // child nodes (and metaData if nothing else) depends on this to have access when root access is restricted for given user
+                List<Permission> permissions = new ArrayList<Permission>(getDelegate().getAccessManager().getPermissionList());
+                PermissionImpl p = new PermissionImpl();
+                p.setPattern(new SimpleUrlPattern("/jcr:system/jcr:versionStorage/*"));
+                // read only
+                p.setPermissions(8);
+                permissions.add(p);
+                // use dedicated AM and not the one base share with its parent
+                accessManager = new AccessManagerImpl();
+                accessManager.setPermissionList(permissions);
+            }
 
             @Override
             public AccessManager getAccessManager() {
-                return ContentVersion.this.accessManager;
+                return accessManager;
             }
         };
         this.init();
