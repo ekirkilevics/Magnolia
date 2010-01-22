@@ -34,9 +34,9 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkTransformerManager;
 
@@ -78,6 +78,11 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     public NodeMapWrapper(Content node, String handle) {
         super(node);
         this.handle = handle;
+    }
+    
+    @Override
+    protected Content wrap(Content node) {
+        return new NodeMapWrapper(node, handle);
     }
 
     /**
@@ -146,7 +151,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
             FileProperties props = new FileProperties(getWrappedContent(), (String) key);
             value = props.getProperty(FileProperties.PATH);
         }
-        else if (nodeData.isMultiValue() == DefaultNodeData.MULTIVALUE_TRUE) {
+        else if (nodeData.isMultiValue() == AbstractPrimitiveNodeData.MULTIVALUE_TRUE) {
 
             Value[] values = nodeData.getValues();
 
