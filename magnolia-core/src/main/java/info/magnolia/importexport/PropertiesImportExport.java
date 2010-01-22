@@ -43,6 +43,7 @@ import info.magnolia.cms.util.OrderedProperties;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.ISO8601;
+import org.pdfbox.util.operator.NextLine;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -71,37 +72,63 @@ public class PropertiesImportExport {
 
         properties.load(propertiesStream);
 
+        properties = keysToInnerFormat(properties);
+        
+        for (Object o : properties.keySet()) {
+            String key = (String) o;
+            String valueStr = properties.getProperty(key);
+
+            String propertyName = StringUtils.substringAfterLast(key, ".");
+            String path = StringUtils.substringBeforeLast(key, ".");
+
+            String type = null;
+            if (propertyName.equals("@type")) {
+                type = valueStr;
+            } else if (properties.containsKey(path + ".@type")) {
+                type = properties.getProperty(path + ".@type");
+            }
+
+            type = StringUtils.defaultIfEmpty(type, ItemType.CONTENTNODE.getSystemName());
+            Content c = ContentUtil.createPath(root, path, new ItemType(type));
+            populateContent(c, propertyName, valueStr);
+        }
+    }
+
+    /**
+     * Transforms the keys to the following inner notation: some/path/node.prop or some/path/node.@type 
+     */
+    private Properties keysToInnerFormat(Properties properties) {
+        Properties cleaned = new OrderedProperties();
+        
         for (Object o : properties.keySet()) {
             String orgKey = (String) o;
-            String valueStr = properties.getProperty(orgKey);
 
             //if this is a node definition (no property)
-            String key = orgKey;
-            if (StringUtils.isEmpty(valueStr) && !contains(key, '.') && !contains(key, '@')) {
-                key += "@type";
-                valueStr = "nt:base";
-            }
-            key = StringUtils.replace(key, "/", ".");
-            key = StringUtils.removeStart(key, ".");
-            // guarantee a dot in front of @ to make it a property
-            key = StringUtils.replace(StringUtils.replace(key, "@", ".@"), "..@", ".@");
+            String newKey = orgKey;
+            
+            // make sure we have a dot as a property separator
+            newKey = StringUtils.replace(newKey, "@", ".@");
+            // avoid double dots
+            newKey = StringUtils.replace(newKey, "..@", ".@");
 
-            String name = StringUtils.substringAfterLast(key, ".");
-            String path = StringUtils.substringBeforeLast(key, ".");
-            path = StringUtils.replace(path, ".", "/");
+            String propertyName = StringUtils.substringAfterLast(newKey, ".");
+            String keySuffix = StringUtils.substringBeforeLast(newKey, ".");
+            String path = StringUtils.replace(keySuffix, ".", "/");
+            path = StringUtils.removeStart(path, "/");
 
-            final String type;
-            if (name.equals("@type")) {
-                type = valueStr;
-            } else if (properties.containsKey(orgKey + "@type")) {
-                type = properties.getProperty(orgKey + "@type");
-            } else {
-                type = ItemType.CONTENTNODE.getSystemName();
+            // if this is a path (no property)
+            if (StringUtils.isEmpty(propertyName)) {
+                if(!properties.containsKey(orgKey + "@type")){
+                    propertyName = "@type";
+                }
+                // useless node path key
+                else{
+                    continue;
+                }
             }
-//            String type = properties.getProperty(orgKey + "@type", ItemType.CONTENTNODE.getSystemName());
-            Content c = ContentUtil.createPath(root, path, new ItemType(type));
-            populateContent(c, name, valueStr);
+            cleaned.put(path + "." + propertyName, properties.get(orgKey));
         }
+        return cleaned;
     }
 
     protected void populateContent(Content c, String name, String valueStr) throws RepositoryException {
