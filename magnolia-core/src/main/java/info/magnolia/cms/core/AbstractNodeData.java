@@ -35,9 +35,16 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * Implementing some default behavior.
@@ -46,9 +53,11 @@ import javax.jcr.RepositoryException;
  *
  */
 public abstract class AbstractNodeData implements NodeData{
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractNodeData.class);
 
     protected String name;
     protected Content parent;
+    private int multiValue = MULTIVALUE_UNDEFINED;
 
     protected AbstractNodeData(Content parent, String name) {
         this.parent = parent;
@@ -82,7 +91,96 @@ public abstract class AbstractNodeData implements NodeData{
     public void setParent(Content parent) {
         this.parent = parent;
     }
-    
+
+    public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
+        if(this.getHierarchyManager().getName().equals(repositoryId)){
+            return getReferencedContent();
+        }
+        return getReferencedContent(MgnlContext.getHierarchyManager(repositoryId));
+    }
+
+    public Content getReferencedContent() throws PathNotFoundException, RepositoryException {
+        return getReferencedContent(this.getHierarchyManager());
+    }
+
+    protected Content getReferencedContent(HierarchyManager hm) throws PathNotFoundException, RepositoryException {
+        if(!isExist()){
+            return null;
+        }
+        // node containing this property
+        Content node = getParent();
+        Content refNode = null;
+
+        int type = getType();
+
+        if (type == PropertyType.REFERENCE) {
+            String uuid = getString();
+            return hm.getContentByUUID(uuid);
+        }
+
+        else if (type == PropertyType.PATH || type == PropertyType.STRING) {
+            String pathOrUUID = this.getString();
+            String path = pathOrUUID;
+            // is this relative path?
+            if (!path.startsWith("/")) {
+                path = node.getHandle() + "/" + path;
+            }
+            if(hm.isExist(path)){
+                refNode = hm.getContent(path);
+            }
+
+            // we support uuids as strings
+            if (refNode == null && type == PropertyType.STRING && !StringUtils.contains(pathOrUUID, "/")) {
+                try {
+                    refNode = hm.getContentByUUID(pathOrUUID);
+                }
+                catch (ItemNotFoundException e) {
+                    // this is not an uuid
+                }
+            }
+        }
+
+        if(refNode==null){
+            throw new ItemNotFoundException("can't find referenced node for value [" + getString() + "]");
+        }
+
+        return refNode;
+    }
+
+    public int isMultiValue() {
+        if(multiValue == MULTIVALUE_UNDEFINED) {
+            try {
+                if (isExist()) {
+                    getJCRProperty().getValue();
+                    multiValue = MULTIVALUE_FALSE;
+                }
+
+            } catch (ValueFormatException e) {
+                multiValue = MULTIVALUE_TRUE;
+
+            } catch (Exception e) {
+                log.debug(e.getMessage(), e);
+            }
+        }
+        return this.multiValue;
+    }
+
+    public String getAttribute(String name) {
+        throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
+    }
+
+    public Collection<String> getAttributeNames() throws RepositoryException {
+        throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
+    }
+
+    public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
+        throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
+    }
+
+    public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
+        throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
+    }
+
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getHierarchyManager().getName() + ":");

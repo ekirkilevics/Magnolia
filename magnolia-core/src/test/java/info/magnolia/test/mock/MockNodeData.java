@@ -33,7 +33,7 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.AbstractPrimitiveNodeData;
+import info.magnolia.cms.core.AbstractNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -50,7 +50,7 @@ import javax.jcr.Value;
  * @author philipp
  * @version $Id$
  */
-public class MockNodeData extends AbstractPrimitiveNodeData {
+public class MockNodeData extends AbstractNodeData {
 
     private final String name;
     private final int type;

@@ -189,8 +189,21 @@ public class BinaryNodeData extends AbstractNodeData {
         return null;
     }
 
+    public long getContentLength() {
+        if(!isExist()){
+            return 0;
+        }
+
+        try {
+            return getJCRProperty().getLength();
+        }
+        catch (RepositoryException re) {
+            throw new RuntimeException(re);
+        }
+    }
+
     public int isMultiValue() {
-        return AbstractPrimitiveNodeData.MULTIVALUE_FALSE;
+        return MULTIVALUE_FALSE;
     }
 
     public void refresh(boolean keepChanges) throws RepositoryException {
@@ -204,18 +217,13 @@ public class BinaryNodeData extends AbstractNodeData {
             getBinaryNode(false).save();
         }
     }
-    
-    public long getContentLength() {
-        if(!isExist()){
-            return 0;
-        }
-        
-        try {
-            return getJCRProperty().getLength();
-        }
-        catch (RepositoryException re) {
-            throw new RuntimeException(re);
-        }
+
+    public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
     
     public String getString() {
@@ -235,14 +243,6 @@ public class BinaryNodeData extends AbstractNodeData {
     }
 
     public long getLong() {
-        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
-    }
-
-    public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException {
-        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
-    }
-
-    public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 

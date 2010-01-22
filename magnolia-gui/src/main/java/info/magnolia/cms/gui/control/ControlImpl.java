@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.gui.control;
 
-import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -269,7 +268,7 @@ public class ControlImpl implements Control {
         }
         try {
             NodeData node = this.getWebsiteNode().getNodeData(this.getName());
-            if(node.isMultiValue() != AbstractPrimitiveNodeData.MULTIVALUE_FALSE) {
+            if(node.isMultiValue() != NodeData.MULTIVALUE_FALSE) {
                 return NodeDataUtil.getValuesStringList(node.getValues());
             } else {
                 Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();

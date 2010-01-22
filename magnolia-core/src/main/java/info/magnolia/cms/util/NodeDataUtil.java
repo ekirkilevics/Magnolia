@@ -34,7 +34,6 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
@@ -109,7 +108,7 @@ public class NodeDataUtil {
             }
             return nodeData.getHandle() + "/" + fullName;
         }
-        else if (nodeData.isMultiValue() == AbstractPrimitiveNodeData.MULTIVALUE_TRUE){
+        else if (nodeData.isMultiValue() == NodeData.MULTIVALUE_TRUE){
             return StringUtils.join(getValuesStringList(nodeData.getValues()), ",");
         } else {
             return getValueString(nodeData.getValue(), dateFormat);

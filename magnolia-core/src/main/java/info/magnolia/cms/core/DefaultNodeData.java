@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version 2.0 $Id$
  */
-public class DefaultNodeData extends AbstractPrimitiveNodeData {
+public class DefaultNodeData extends AbstractNodeData {
 
     static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
 

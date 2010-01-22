@@ -54,6 +54,9 @@ import java.io.InputStream;
  * @version $Revision: $ ($Author: $)
  */
 public interface NodeData extends Cloneable {
+    int MULTIVALUE_UNDEFINED = -1;
+    int MULTIVALUE_TRUE = 1;
+    int MULTIVALUE_FALSE = 0;
 
     /**
      * Returns the <code>value</code> of this <code>NodeData</code>. One of type:
