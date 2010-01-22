@@ -35,23 +35,16 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.context.MgnlContext;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -63,577 +56,232 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version 2.0 $Id$
  */
-public class DefaultNodeData extends ContentHandler implements NodeData {
-    private static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
+public class DefaultNodeData extends AbstractPrimitiveNodeData {
 
-    /**
-     * Wrapped javax.jcr.Property.
-     */
-    protected Property property;
+    static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
 
-    /**
-     * Wrapped javax.jcr.Node for nt:resource type
-     */
-    protected Node node;
-
-    public static int MULTIVALUE_UNDEFINED = -1;
-    public static int MULTIVALUE_TRUE = 1;
-    public static int MULTIVALUE_FALSE = 0;
-
-    private int multiValue = MULTIVALUE_UNDEFINED;
-
-    private Content parent;
-
-    /**
-     * Empty constructor. Should NEVER be used for standard use, test only.
-     */
-    protected DefaultNodeData() {
-        // property is null
+    protected DefaultNodeData(Content parent, String name) {
+        super(parent, name);
     }
-
-    /**
-     * Constructor. Create nodeData object to work-on based on existing <code>Property</code> or
-     * <code>nt:resource</code>
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be retrieved
-     * @param hierarchyManager HierarchyManager to be used for this object
-     */
-    protected DefaultNodeData(Node workingNode, String name, HierarchyManager hierarchyManager, Content parent)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-        this.init(workingNode, name);
-        this.setParent(parent);
-    }
-
-    /**
-     * Constructor. Creates a new initialized NodeData of given type
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be created
-     * @param type
-     * @param createNew if true create a new Item
-     * @param hierarchyManager HierarchyManager to be used for this object
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    protected DefaultNodeData(Node workingNode, String name, int type, boolean createNew, HierarchyManager hierarchyManager, Content parent)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        if (createNew) {
-            Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.init(workingNode, name, type, (Value) null);
-        }
-        else {
-            Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
-            this.init(workingNode, name);
-        }
-        this.setParent(parent);
-    }
-
-    /**
-     * Constructor. Creates a new initialized NodeData
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be created
-     * @param value Value to be set
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    protected DefaultNodeData(Node workingNode, String name, Value value, HierarchyManager hierarchyManager, Content parent)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.init(workingNode, name, value.getType(), value);
-        this.setParent(parent);
-    }
-
-    /**
-     * Constructor. Creates a new initialized NodeData
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be created
-     * @param value Value to be set
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    protected DefaultNodeData(Node workingNode, String name, Value[] value, HierarchyManager hierarchyManager, Content parent)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.init(workingNode, name, value[0].getType(), value);
-        this.setParent(parent);
-    }
-
-    /**
-     * Constructor. Creates a new initialized NodeData
-     * @param node <code>Node</code> of type nt:resource
-     */
-    public DefaultNodeData(Node node, HierarchyManager hierarchyManager, Content parent)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.READ);
-        this.node = node;
-        this.property = this.node.getProperty(ItemType.JCR_DATA);
-        this.setParent(parent);
-    }
-
-    /**
-     * Constructor. Creates a new initialized NodeData
-     * @param property
-     */
-    public DefaultNodeData(Property property, HierarchyManager hierarchyManager, Content parent)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        this.property = property;
-        this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.READ);
-        this.setParent(parent);
-    }
-
-    /**
-     * create a new nt:resource node
-     * @param workingNode
-     * @param name
-     * @param type
-     * @param value
-     */
-    private void init(Node workingNode, String name, int type, Value value) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
-        if (PropertyType.BINARY == type) {
-            this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
-            if (null != value) {
-                this.property = this.node.setProperty(ItemType.JCR_DATA, value, value.getType());
-            }
-        }
-        else {
-            if (null == value) {
-                this.property = workingNode.setProperty(name, StringUtils.EMPTY);
-            }
-            else {
-                this.property = workingNode.setProperty(name, value, value.getType());
-            }
-        }
-    }
-
-    /**
-     * create a new nt:resource node
-     * @param workingNode
-     * @param name
-     * @param type
-     * @param value
-     */
-    private void init(Node workingNode, String name, int type, Value[] value) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
-        if (PropertyType.BINARY == type) {
-            this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
-            if (null != value) {
-                this.property = this.node.setProperty(ItemType.JCR_DATA, value, value[0].getType());
-            }
-        }
-        else {
-            if (null == value  || value.length == 0) {
-                this.property = workingNode.setProperty(name, new Value[]{null});
-            }
-            else {
-                this.property = workingNode.setProperty(name, value, value[0].getType());
-            }
-        }
-    }
-
-    /**
-     * initialize this object based on existing property or nt:resource node
-     * @param workingNode
-     * @param name
-     * @throws RepositoryException
-     */
-    private void init(Node workingNode, String name) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        try {
-            this.property = workingNode.getProperty(name);
-        }
-        catch (PathNotFoundException e) {
-            if (workingNode.hasNode(name)) {
-                // this node data should wrap nt:resource
-                this.node = workingNode.getNode(name);
-                this.property = this.node.getProperty(ItemType.JCR_DATA);
-            }
-            else {
-                throw e;
-            }
-        }
-    }
-
+    
     public Value getValue() {
-        try {
-            return this.property.getValue();
+        if(isExist()){
+            try {
+                return getJCRProperty().getValue();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
         }
-        catch (Exception e) {
-            log.debug(e.getMessage(), e);
+        else{
             return null;
         }
     }
 
     public Value[] getValues() {
-        try {
-            if(this.isMultiValue() == MULTIVALUE_TRUE) {
-                return this.property.getValues();
-            } else {
-                //JCR-1464 needed for export of multivalue property with only one item
-                return new Value[] { this.property.getValue() };
+        if(isExist()){
+            try {
+                if(this.isMultiValue() == MULTIVALUE_TRUE) {
+                    return getJCRProperty().getValues();
+                } else {
+                    //JCR-1464 needed for export of multivalue property with only one item
+                    return new Value[] { getJCRProperty().getValue() };
+                }
+            } catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
             }
-        } catch (Exception e) {
-            log.error("Error retrieving value of " + this.getName());
         }
-        return (Value[]) null;
-    }
-
-    public String getString(String lineBreak) {
-        try {
-            return this.getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
-        }
-        catch (Exception e) {
-            return StringUtils.EMPTY;
+        else{
+            return (Value[]) null;
         }
     }
 
     public String getString() {
-        try {
-            return this.property.getString();
+        if(isExist()){
+            try {
+                return getJCRProperty().getString();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
         }
-        catch (Exception e) {
+        else{
             return StringUtils.EMPTY;
         }
     }
 
     public long getLong() {
-        try {
-            return this.property.getLong();
+        if(isExist()){
+            try {
+                return getJCRProperty().getLong();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
         }
-        catch (Exception e) {
+        else{
             return 0;
         }
     }
 
     public double getDouble() {
-        try {
-            return this.property.getDouble();
+        if(isExist()){
+            try {
+                return getJCRProperty().getDouble();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
         }
-        catch (Exception e) {
+        else{
             return 0;
         }
     }
 
     public Calendar getDate() {
-        try {
-            return this.property.getDate();
+        if(isExist()){
+            try {
+                return getJCRProperty().getDate();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
         }
-        catch (Exception e) {
+        else{
             return null;
         }
     }
 
     public boolean getBoolean() {
-        try {
-            return this.property.getBoolean();
+        if(isExist()){
+            try {
+                return getJCRProperty().getBoolean();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
         }
-        catch (Exception e) {
+        else{
             return false;
         }
     }
 
-    public InputStream getStream() {
-        try {
-            return this.property.getStream();
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
-
-    public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
-        if(this.getHierarchyManager().getName().equals(repositoryId)){
-            return getReferencedContent();
-        }
-        return getReferencedContent(MgnlContext.getHierarchyManager(repositoryId));
-    }
-
-    public Content getReferencedContent() throws PathNotFoundException, RepositoryException  {
-        return getReferencedContent(this.getHierarchyManager());
-    }
-
-    protected Content getReferencedContent(HierarchyManager hm) throws PathNotFoundException, RepositoryException {
-        // node containing this property
-        Content node = getParent();
-        Content refNode = null;
-
-        if (property.getType() == PropertyType.REFERENCE) {
-            refNode = hm.getContent(property.getNode().getPath());
-        }
-
-        else if (property.getType() == PropertyType.PATH || property.getType() == PropertyType.STRING) {
-            String pathOrUUID = this.getString();
-            String path = pathOrUUID;
-            // is this relative path?
-            if (!path.startsWith("/")) {
-                path = node.getHandle() + "/" + path;
-            }
-            if(hm.isExist(path)){
-                refNode = hm.getContent(path);
-            }
-
-            // we support uuids as strings
-            if (refNode == null && property.getType() == PropertyType.STRING && !StringUtils.contains(pathOrUUID, "/")) {
-                try {
-                    refNode = hm.getContentByUUID(pathOrUUID);
-                }
-                catch (ItemNotFoundException e) {
-                    // this is not an uuid
-                }
-            }
-        }
-
-        if(refNode==null){
-            throw new ItemNotFoundException("can't find referenced node for value [" + getString() + "]");
-        }
-
-        return refNode;
-    }
-
     public int getType() {
-        if (this.property != null) {
+        if (isExist()) {
             try {
-                return this.property.getType();
+                return getJCRProperty().getType();
             }
             catch (Exception e) {
-                log.warn("Unable to read property type for {}", this.property); //$NON-NLS-1$
+                log.warn("Unable to read property type for {}", name); //$NON-NLS-1$
             }
         }
         return PropertyType.UNDEFINED;
     }
 
-    public String getName() {
-        try {
-            // check if its a nt:resource
-            if (null != this.node) {
-                return this.node.getName();
-            }
-            return this.property.getName();
-        }
-        catch (Exception e) {
-            log.warn("Unable to read property name for {}", this.property); //$NON-NLS-1$
-            return StringUtils.EMPTY;
-        }
-    }
-
     public long getContentLength() {
+        if(!isExist()){
+            return 0;
+        }
+        
         try {
-            return this.property.getLength();
+            return getJCRProperty().getLength();
         }
         catch (RepositoryException re) {
-            log.warn("Unable to read content length for {}", this.property); //$NON-NLS-1$
-            return 0;
+            throw new RuntimeException(re);
         }
     }
 
     public Property getJCRProperty() {
-        return this.property;
+        try {
+            return getJCRNode().getProperty(name);
+        }
+        catch (PathNotFoundException e) {
+            return null;
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected Node getJCRNode() {
+        return parent.getJCRNode();
     }
 
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);
     }
 
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);
     }
 
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
-    }
-
-    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        if (this.node != null) {
-            this.property = this.node.setProperty(ItemType.JCR_DATA, value);
-        }
-        else {
-            log.error("This is not a valid Binary type, Binary NodeData must be created with PropertyType.BINARY");
-        }
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);
     }
 
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);
     }
 
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);
     }
 
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
-    }
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);    }
 
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
-    }
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);    }
 
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
-    }
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value);    }
 
-    public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException,
-        UnsupportedOperationException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        if (null == this.node) {
-            throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
-        }
-        this.node.setProperty(name, value);
-    }
-
-    public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException,
-        UnsupportedOperationException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        if (null == this.node) {
-            throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
-        }
-        this.node.setProperty(name, value);
-    }
-
-    public String getAttribute(String name) {
-        if (null == this.node) {
-            return "";
-        }
-        try {
-            return this.node.getProperty(name).getString();
-        }
-        catch (RepositoryException re) {
-            log.debug("Attribute [ {} ] not set", name);
-            return "";
-        }
-    }
-
-    public Collection<String> getAttributeNames() throws RepositoryException {
-        Collection<String> names = new ArrayList<String>();
-        if (this.node == null) {
-            log.debug("Attributes are only supported for BINARY type");
-            return names;
-        }
-        PropertyIterator properties = this.node.getProperties();
-        while (properties.hasNext()) {
-            String name = properties.nextProperty().getName();
-            if (!name.equalsIgnoreCase(ItemType.JCR_DATA)) {
-                names.add(name);
-            }
-        }
-        return names;
+    public void setValue(Content value) throws RepositoryException, AccessDeniedException {
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        getJCRNode().setProperty(name, value.getJCRNode());
     }
 
     public boolean isExist() {
-        return (this.property != null);
-    }
-
-    public String getHandle() {
         try {
-            if (null != this.node) {
-                return this.node.getPath();
-            }
-            return this.property.getPath();
+            return getJCRNode().hasProperty(name);
         }
         catch (RepositoryException e) {
-            log.error("Failed to get handle: " + e.getMessage(), e);
-            return StringUtils.EMPTY;
+            throw new RuntimeException(e);
         }
     }
 
     public void save() throws RepositoryException {
-        this.property.save();
-    }
-
-    public boolean isGranted(long permissions) {
-        try {
-            Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(property.getPath()), permissions);
-            return true;
+        if(isExist()){
+            getJCRProperty().save();
         }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return false;
     }
 
     public void delete() throws RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
-        if (null != this.node) {
-            this.node.remove();
-        }
-        else {
-            this.property.remove();
+        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.REMOVE);
+        if(isExist()){
+            getJCRProperty().remove();
         }
     }
 
     public void refresh(boolean keepChanges) throws RepositoryException {
-        this.property.refresh(keepChanges);
-    }
-
-    public int isMultiValue() {
-        if(multiValue == MULTIVALUE_UNDEFINED) {
-            try {
-                if (this.property != null) {
-                    this.property.getValue();
-                    multiValue = MULTIVALUE_FALSE;
-                }
-
-            } catch (ValueFormatException e) {
-                multiValue = MULTIVALUE_TRUE;
-
-            } catch (Exception e) {
-                log.debug(e.getMessage(), e);
-            }
+        if(isExist()){
+            getJCRProperty().refresh(keepChanges);
         }
-        return this.multiValue;
     }
 
-    public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
-        return this.parent;
+    public InputStream getStream() {
+        throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
     }
 
-    public void setParent(Content parent) {
-        this.parent = parent;
-    }
-
-    public String toString() {
-        if (this.property == null || this.node ==  null) {
-            return super.toString();
-        }
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(getHierarchyManager().getName() + ":");
-        buffer.append(getHandle());
-        buffer.append("[");
-        buffer.append(NodeDataUtil.getTypeName(this));
-        buffer.append("]");
-
-        return buffer.toString();
+    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
+        throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
     }
 }

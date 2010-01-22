@@ -35,9 +35,6 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Content;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -46,7 +43,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.ArrayList;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -62,32 +58,33 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class BinaryMockNodeData extends MockNodeData {
-    private final Map<String, String> attributes;
-    private final MockContent wrappedContent;
+    private static final Logger log = LoggerFactory.getLogger(BinaryMockNodeData.class);
 
-    public BinaryMockNodeData(String name, InputStream stream, String fileName, String mimeType, int size) throws RepositoryException {
+    private Map<String, String> attributes = new HashMap<String, String>();
+
+    public BinaryMockNodeData(String name) {
+        super(name, PropertyType.BINARY);
+    }
+
+    public BinaryMockNodeData(String name, InputStream stream) {
         super(name, stream);
-        attributes = new HashMap<String, String>();
-        setAttribute(FileProperties.PROPERTY_FILENAME, StringUtils.substringBeforeLast(fileName, "."));
-        setAttribute(FileProperties.PROPERTY_EXTENSION, StringUtils.substringAfterLast(fileName, "."));
-        setAttribute(FileProperties.PROPERTY_SIZE, "" + size);
-        setAttribute(FileProperties.PROPERTY_CONTENTTYPE, mimeType);
-
-        final Calendar lastMod = new GregorianCalendar(TimeZone.getDefault());
-        setAttribute(FileProperties.PROPERTY_LASTMODIFIED, lastMod);
-        wrappedContent = null;
     }
 
-    public BinaryMockNodeData(Content wrappedContent) {
-        this((MockContent) wrappedContent);
-    }
+    public BinaryMockNodeData(String name, InputStream stream, String fileName, String mimeType, int size) {
+        this(name, stream);
+        try {
+            setAttribute(FileProperties.PROPERTY_FILENAME, StringUtils.substringBeforeLast(fileName, "."));
+            setAttribute(FileProperties.PROPERTY_EXTENSION, StringUtils.substringAfterLast(fileName, "."));
+            setAttribute(FileProperties.PROPERTY_SIZE, "" + size);
+            setAttribute(FileProperties.PROPERTY_CONTENTTYPE, mimeType);
 
-    public BinaryMockNodeData(MockContent wrappedContent) {
-        super(wrappedContent.getName(), null);
-        setParent(wrappedContent.getParent());
-        // we'll delegate to wrappedContent
-        this.attributes = null;
-        this.wrappedContent = wrappedContent;
+            Calendar value = new GregorianCalendar(TimeZone.getDefault());
+            setAttribute(FileProperties.PROPERTY_LASTMODIFIED, value);
+        }
+        catch (RepositoryException e) {
+            // should really not happen
+            log.error("can't initialize binary mock node data", e);
+        }
     }
 
     public int getType() {
@@ -95,23 +92,11 @@ public class BinaryMockNodeData extends MockNodeData {
     }
 
     public String getAttribute(String name) {
-        return attributes != null ? attributes.get(name) : wrappedContent.getNodeData(name).getString();
+        return attributes.get(name);
     }
 
     public Collection<String> getAttributeNames() throws RepositoryException {
-        if (attributes != null) {
-            return attributes.keySet();
-        } else {
-            final Collection<NodeData> datas = wrappedContent.getNodeDataCollection();
-            final Collection<String> names = new ArrayList<String>();
-            for (NodeData data : datas) {
-                final String name = data.getName();
-                if (!name.equalsIgnoreCase(ItemType.JCR_DATA)) {
-                    names.add(name);
-                }
-            }
-            return names;
-        }
+        return attributes.keySet();
     }
 
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {

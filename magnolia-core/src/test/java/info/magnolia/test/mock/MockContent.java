@@ -33,11 +33,14 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.Rule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,13 +53,20 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.lock.Lock;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.NodeType;
+import javax.jcr.version.Version;
+import javax.jcr.version.VersionException;
+import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +75,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class MockContent extends DefaultContent {
+public class MockContent extends AbstractContent {
 
     private static Logger log = LoggerFactory.getLogger(MockContent.class);
 
@@ -75,8 +85,6 @@ public class MockContent extends DefaultContent {
 
     private Content parent;
 
-    private MockHierarchyManager hierarchyManager;
-
     private String name;
 
     private Map<String, NodeData> nodeDatas = new ListOrderedMap();
@@ -84,6 +92,8 @@ public class MockContent extends DefaultContent {
     private Map<String, MockContent> children = new ListOrderedMap();
 
     private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
+
+    private Node node;
 
     public MockContent(String name) {
         this.name = name;
@@ -122,20 +132,8 @@ public class MockContent extends DefaultContent {
         nodeDatas.put(nd.getName(), nd);
     }
 
-    public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        final MockNodeData nd = new MockNodeData(name, PropertyType.STRING);
-        addNodeData(nd);
-        return nd;
-    }
-
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         final MockNodeData nd = new MockNodeData(name, type);
-        addNodeData(nd);
-        return nd;
-    }
-
-    public NodeData createNodeData(String name, Object obj) throws RepositoryException {
-        final MockNodeData nd = new MockNodeData(name, obj);
         addNodeData(nd);
         return nd;
     }
@@ -145,13 +143,8 @@ public class MockContent extends DefaultContent {
         return getMetaData();
     }
 
-    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        return createContent(name, new ItemType(contentType));
-    }
-
-    public Content createContent(String name, ItemType contentType) {
-        MockContent c = new MockContent(name, contentType);
+    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        MockContent c = new MockContent(name, new ItemType(contentType));
         c.setHierarchyManager(this.getHierarchyManager());
         addContent(c);
         return c;
@@ -193,7 +186,9 @@ public class MockContent extends DefaultContent {
         if (this.getParent() != null && !this.getParent().getName().equals("jcr:root")) {
             return getParent().getHandle() + "/" + this.getName();
         }
-        return "/" + this.getName();
+        else{
+            return "/" + this.getName();
+        }
     }
 
     public int getLevel() throws PathNotFoundException, RepositoryException {
@@ -204,48 +199,18 @@ public class MockContent extends DefaultContent {
     }
 
     public Collection<NodeData> getNodeDataCollection() {
-        final ArrayList<NodeData> all = new ArrayList<NodeData>();
-        all.addAll(this.nodeDatas.values());
-        all.addAll(getBinaryProperties("*"));
-        return all;
-    }
-
-    public Collection<NodeData> getNodeDataCollection(final String namePattern) {
-        final ArrayList<NodeData> all = new ArrayList<NodeData>();
-        all.addAll(CollectionUtils.select(nodeDatas.values(), new NamePatternFilter(namePattern)));
-        all.addAll(getBinaryProperties(namePattern));
-        return all;
-    }
-
-    private Collection<NodeData> getBinaryProperties(String namePattern) {
-        final Collection<NodeData> binaryProps = new ArrayList<NodeData>();
-        final Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
-        for (Content binaryNode : binaryNodes) {
-            binaryProps.add(new BinaryMockNodeData(binaryNode));
+        // FIXME try to find a better solution than filtering now
+        // problem is that getNodeData(name, type) will have to add the node data
+        // as setValue() might be called later on an the node data starts to exist
+        ArrayList<NodeData> onlyExistingNodeDatas = new ArrayList<NodeData>();
+        for (NodeData nodeData : nodeDatas.values()) {
+            if(nodeData.isExist()){
+                onlyExistingNodeDatas.add(nodeData);
+            }
         }
-        return binaryProps;
+        return onlyExistingNodeDatas;
     }
 
-    public NodeData getNodeData(String name) {
-        final MockNodeData nodeData = (MockNodeData) this.nodeDatas.get(name);
-        if (nodeData != null) {
-            return nodeData;
-        } else {
-            final MockNodeData fakeNodeData= new MockNodeData(name, null);
-            fakeNodeData.setParent(this);
-            return fakeNodeData;
-        }
-    }
-
-    public boolean hasNodeData(String name) throws RepositoryException {
-        return nodeDatas.containsKey(name);
-    }
-
-    public boolean isNodeData(String name) throws RepositoryException {
-        return nodeDatas.containsKey(name);
-    }
-
-    // TODO : use the given Comparator
     public Collection<Content> getChildren(final ContentFilter filter, Comparator<Content> orderCriteria) {
         // copy
         List<Content> children = new ArrayList<Content>(this.children.values());
@@ -258,20 +223,6 @@ public class MockContent extends DefaultContent {
         });
 
         return children;
-    }
-
-    public Collection<Content> getChildren(final String contentType, final String namePattern) {
-        return getChildren(new ContentFilter() {
-            public boolean accept(Content content) {
-                return (contentType == null || content.isNodeType(contentType)) && matchesNamePattern(content, namePattern);
-            }
-        });
-
-    }
-
-    public Content getChildByName(String namePattern) {
-        // TODO - this is flawed: the superclass does use the pattern, while here we're return an exact match
-        return (Content) children.get(namePattern);
     }
 
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
@@ -312,7 +263,10 @@ public class MockContent extends DefaultContent {
     public void delete() throws RepositoryException {
         final MockContent parent = (MockContent) getParent();
         final boolean removedFromParent = parent.children.values().remove(this);
-        getHierarchyManager().removedCachedNode(this);
+        HierarchyManager hm = getHierarchyManager();
+        if(hm instanceof MockHierarchyManager){
+            ((MockHierarchyManager)hm).removedCachedNode(this);
+        }
         if (!removedFromParent) {
             throw new RepositoryException("MockContent could not delete itself");
         }
@@ -336,21 +290,14 @@ public class MockContent extends DefaultContent {
         }
         return ancestor;
     }
-
+    
     public MockHierarchyManager getHierarchyManager() {
         if (this.hierarchyManager == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
         }
-        return this.hierarchyManager;
+        return (MockHierarchyManager) this.hierarchyManager;
     }
-
-    /**
-     * @param hm the hm to set
-     */
-    public void setHierarchyManager(MockHierarchyManager hm) {
-        this.hierarchyManager = hm;
-    }
-
+    
     public String getUUID() {
         return this.uuid;
     }
@@ -379,31 +326,138 @@ public class MockContent extends DefaultContent {
         this.index = index;
     }
 
-    /**
-     * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
-     * in the Property and Node interfaces. 
-     */
-    private static class NamePatternFilter implements Predicate {
-        private final String namePattern;
-
-        public NamePatternFilter(String namePattern) {
-            this.namePattern = namePattern;
+    @Override
+    public NodeData getNodeData(String name, int type) throws RepositoryException {
+        if(nodeDatas.containsKey(name)){
+            return nodeDatas.get(name);
         }
-
-        public boolean evaluate(Object object) {
-            return matchesNamePattern(object, namePattern);
+        else{
+            MockNodeData nodeData;
+            if(type == PropertyType.BINARY){
+                nodeData = new BinaryMockNodeData(name);
+            }
+            else{
+                nodeData = new MockNodeData(name, type);
+            }
+            addNodeData(nodeData);
+            return nodeData;
         }
     }
 
-    public static boolean matchesNamePattern(Object object, String namePattern) {
-        final String name;
-        if (object instanceof NodeData) {
-            name = ((NodeData) object).getName();
-        } else if (object instanceof Content) {
-            name = ((Content) object).getName();
-        } else {
-            throw new IllegalStateException("Unsupported object type: " + object.getClass());
+    public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
+        ArrayList<Content> ancestors = new ArrayList<Content>();
+        Content parent = getParent();
+        while(parent != null){
+            ancestors.add(parent);
+            parent.getParent();
         }
-        return ChildrenCollectorFilter.matches(name, namePattern);
+        return ancestors;
+    }
+
+    public ItemType getItemType() throws RepositoryException {
+        return new ItemType(getNodeTypeName());
+    }
+    
+    public Node getJCRNode() {
+        return node;
+    }
+
+    public boolean hasMetaData() {
+        return true;
+    }
+    
+    public void addMixin(String type) throws RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public Lock getLock() throws LockException, RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public NodeType[] getMixinNodeTypes() throws RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public NodeType getNodeType() throws RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public ContentVersion getVersionedContent(Version version) throws RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    public boolean holdsLock() throws RepositoryException {
+        return false;
+    }
+
+    public boolean isLocked() throws RepositoryException {
+        return false;
+    }
+
+    public boolean isModified() {
+        return false;
+    }
+
+    public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
+        return null;
+    }
+
+    public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
+        return null;
+    }
+
+    public void refresh(boolean keepChanges) throws RepositoryException {
+    }
+
+    public void removeMixin(String type) throws RepositoryException {
+    }
+
+    public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
+    }
+
+    public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+    }
+
+    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+    }
+
+    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+    }
+
+    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
+        RepositoryException {
+    }
+
+    public void unlock() throws LockException, RepositoryException {
+    }
+
+    public void updateMetaData() throws RepositoryException, AccessDeniedException {
     }
 }

@@ -51,66 +51,70 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
+
+import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 
+
 /**
- *
+ * Represents a peace of content (node) which has nodedatas (properties) containing the values and
+ * which can have sub contents. This is is very similar to the JCR {@link Node} interface.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public interface Content extends Cloneable {
 
     /**
-     * get Content node of the current node with the specified name
+     * Gets the Content node of the current node with the specified name
      * @param name of the node acting as <code>Content</code>
      * @return <node>Content </node>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      */
     Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * create Content node under the current node with the specified name
+     * Creates a Content node under the current node with the specified name. The default node type
+     * {@link ItemType#CONTENT} will be use as the contents primary type.
      * @param name of the node to be created as <code>Content</code>
      * @return newly created <node>Content </node>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      */
     Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * create Content node under the current node with the specified name
+     * Creates a Content node under the current node with the specified name
      * @param name of the node to be created as <code>Content</code>
      * @param contentType JCR node type as configured
      * @return newly created <node>Content </node>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      */
-    Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Create Content node under the current node with the specified name.
+     * Creates a Content node under the current node with the specified name.
      * @param name of the node to be created as <code>Content</code>
      * @param contentType ItemType
      * @return newly created <node>Content </node>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      */
-    Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * @return String, template name
+     * Returns the template name which is assigned to this content.
      */
     String getTemplate();
 
@@ -120,13 +124,15 @@ public interface Content extends Cloneable {
     String getTitle();
 
     /**
-     * get meta data of the current node
+     * Returns the meta data of the current node
      * @return MetaData meta information of the content <code>Node</code>
      */
     MetaData getMetaData();
 
     /**
-     * get top level NodeData
+     * Returns a {@link NodeData} object. If the node data does not exist (respectively if it has no
+     * value) an empty representation is returned whose {@link NodeData#isExist()} will return
+     * false.
      * @return NodeData requested <code>NodeData</code> object
      */
 
@@ -139,103 +145,136 @@ public interface Content extends Cloneable {
     String getName();
 
     /**
-     * create top level NodeData object
-     * @param name to be created
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * Creates a node data of type STRING with an empty String as default value.
+     * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
+     * recommend to use {@link #setNodeData(String, Object)} instead.
      */
-    NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * create top level NodeData object
-     * @param name to be created
-     * @param type propertyType
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * Creates a node data of type with an default value set. If the no default value can be set
+     * (for BINARY, REFERENCE type) the returned node data will be empty and per definition not yet
+     * exist.
+     * <ul>
+     * <li> STRING: empty string
+     * <li> BOOLEAN: false
+     * <li> DATE: now
+     * <li> LONG/DOUBLE: 0
+     * </ul>
+     * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
+     * recommend to use {@link #setNodeData(String, Object)} instead.
      */
-    NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Create NodeData with the given value and type.
-     * @param name to be created
-     * @param value to be set initially
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * Creates a node data setting the value.
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
+     * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
+     * recommend to use {@link #setNodeData(String, Value)} instead.
      */
-    NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Create NodeData with the given value and type.
-     * @param name to be created
-     * @param value to be set initially
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * Create a multi value node data.
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
+     * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
+     * recommend to use {@link #setNodeData(String, Value[])} instead.
      */
-    NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Creates a property and set its value immediately, according to the type of the
-     * passed instance, hiding the complexity of using JCR's ValueFactory and providing
-     * a sensible default behaviour.
+     * Creates a property and set its value immediately, according to the type of the passed
+     * instance, hiding the complexity of using JCR's ValueFactory and providing a sensible default
+     * behavior.
+     * @deprecated since 4.3, as JCR only supports set or remove operations for properties we
+     * recommend to use {@link #setNodeData(String, Object)} instead.
      */
     NodeData createNodeData(String name, Object obj) throws RepositoryException;
 
     /**
-     * Set NodeData value.
-     * @param name to be created
-     * @param value to be set initially
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null is not allowed
      */
-    NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Set NodeData value.
-     * @param name to be created
-     * @param value to be set initially
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null is not allowed
      */
-    NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * delete NodeData with the specified name
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null is not allowed
+     */
+    NodeData setNodeData(String name, String value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null is not allowed
+     */
+    NodeData setNodeData(String name, long value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null is not allowed
+     */
+    NodeData setNodeData(String name, InputStream value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null will remove the node data.
+     */
+    NodeData setNodeData(String name, double value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null will remove the node data.
+     */
+    NodeData setNodeData(String name, boolean value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null will remove the node data.
+     */
+    NodeData setNodeData(String name, Calendar value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null will remove the node data.
+     */
+    NodeData setNodeData(String name, Content value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Sets the node data. If the node data does not yet exist the node data is created. Setting
+     * null will remove the node data.<br>
+     * The type of the node data will be determined by the type of the passed value
+     */
+    NodeData setNodeData(String name, Object value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+
+    /**
+     * Delete NodeData with the specified name
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      */
     void deleteNodeData(String name) throws PathNotFoundException, RepositoryException;
 
     /**
-     * you could call this method anytime to update working page properties - Modification date & Author ID
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * You could call this method anytime to update working page properties - Modification date &
+     * Author ID
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      * @throws RepositoryException if an error occurs
      */
     void updateMetaData() throws RepositoryException, AccessDeniedException;
+
+    /**
+     * Gets a Collection containing all child nodes of the same NodeType as "this" object.
+     * @return Collection of content objects
+     */
+    Collection<Content> getChildren();
 
     /**
      * Get a collection containing child nodes which satisfies the given filter
@@ -245,20 +284,14 @@ public interface Content extends Cloneable {
     Collection<Content> getChildren(ContentFilter filter);
 
     /**
-     * Get a collection containing child nodes which satisfies the given filter. The returned collection is ordered
-     * according to the passed in criteria.
+     * Get a collection containing child nodes which satisfies the given filter. The returned
+     * collection is ordered according to the passed in criteria.
      * @param filter filter for the child nodes
-     * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt> than no particular order of the
-     * child nodes
+     * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt> than no
+     * particular order of the child nodes
      * @return Collection of content objects or empty collection when no children are found.
      */
     Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria);
-
-    /**
-     * gets a Collection containing all child nodes of the same NodeType as "this" object.
-     * @return Collection of content objects
-     */
-    Collection<Content> getChildren();
 
     /**
      * Get collection of specified content type and its subtypes
@@ -286,6 +319,7 @@ public interface Content extends Cloneable {
      * Returns the first child with the given name, any node type
      * @param namePattern child node name
      * @return first found node with the given name or <code>null</code> if not found
+     * @deprecated since 4.3, either use {@link #getContent(String)} or {@link #getChildren(String)}
      */
     Content getChildByName(String namePattern);
 
@@ -333,8 +367,8 @@ public interface Content extends Cloneable {
      * get parent content object
      * @return Content representing parent node
      * @throws PathNotFoundException
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      * @throws RepositoryException if an error occurs
      */
     Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException;
@@ -343,8 +377,8 @@ public interface Content extends Cloneable {
      * get absolute parent object starting from the root node
      * @param digree level at which the requested node exist, relative to the ROOT node
      * @return Content representing parent node
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      * @throws RepositoryException if an error occurs
      */
     Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException;
@@ -373,10 +407,11 @@ public interface Content extends Cloneable {
     void orderBefore(String srcName, String beforeName) throws RepositoryException;
 
     /**
-     * This method returns the index of this node within the ordered set of its same-name sibling nodes. This index is
-     * the one used to address same-name siblings using the square-bracket notation, e.g., /a[3]/b[4]. Note that the
-     * index always starts at 1 (not 0), for compatibility with XPath. As a result, for nodes that do not have
-     * same-name-siblings, this method will always return 1.
+     * This method returns the index of this node within the ordered set of its same-name sibling
+     * nodes. This index is the one used to address same-name siblings using the square-bracket
+     * notation, e.g., /a[3]/b[4]. Note that the index always starts at 1 (not 0), for compatibility
+     * with XPath. As a result, for nodes that do not have same-name-siblings, this method will
+     * always return 1.
      * @return The index of this node within the ordered set of its same-name sibling nodes.
      * @throws RepositoryException if an error occurs
      */
@@ -417,44 +452,42 @@ public interface Content extends Cloneable {
      * Restores this node to the state defined by the version with the specified versionName.
      * @param versionName
      * @param removeExisting
-     * @throws VersionException if the specified <code>versionName</code> does not exist in this node's version
-     * history
+     * @throws VersionException if the specified <code>versionName</code> does not exist in this
+     * node's version history
      * @throws RepositoryException if an error occurs
      */
-    void restore(String versionName, boolean removeExisting) throws VersionException,
-            UnsupportedRepositoryOperationException, RepositoryException;
+    void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
      * Restores this node to the state defined by the specified version.
      * @param version
      * @param removeExisting
-     * @throws VersionException if the specified <code>version</code> is not part of this node's version history
+     * @throws VersionException if the specified <code>version</code> is not part of this node's
+     * version history
      * @throws RepositoryException if an error occurs
      */
-    void restore(Version version, boolean removeExisting) throws VersionException,
-            UnsupportedRepositoryOperationException, RepositoryException;
+    void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
      * Restores the specified version to relPath, relative to this node.
      * @param version
      * @param relPath
      * @param removeExisting
-     * @throws VersionException if the specified <code>version</code> is not part of this node's version history
+     * @throws VersionException if the specified <code>version</code> is not part of this node's
+     * version history
      * @throws RepositoryException if an error occurs
      */
-    void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
-            UnsupportedRepositoryOperationException, RepositoryException;
+    void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
      * Restores this node to the state recorded in the version specified by versionLabel.
      * @param versionLabel
      * @param removeExisting
-     * @throws VersionException if the specified <code>versionLabel</code> does not exist in this node's version
-     * history
+     * @throws VersionException if the specified <code>versionLabel</code> does not exist in this
+     * node's version history
      * @throws RepositoryException if an error occurs
      */
-    void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException,
-            UnsupportedRepositoryOperationException, RepositoryException;
+    void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
      * add version leaving the node checked out
@@ -473,12 +506,15 @@ public interface Content extends Cloneable {
     Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
-     * Returns <code>true</code> if this <code>Item</code> has been saved but has subsequently been modified through
-     * the current session and therefore the state of this item as recorded in the session differs from the state of
-     * this item as saved. Within a transaction, <code>isModified</code> on an <code>Item</code> may return
-     * <code>false</code> (because the <code>Item</code> has been saved since the modification) even if the
-     * modification in question is not in persistent storage (because the transaction has not yet been committed). <p/>
-     * Note that in level 1 (that is, read-only) implementations, this method will always return <code>false</code>.
+     * Returns <code>true</code> if this <code>Item</code> has been saved but has subsequently been
+     * modified through the current session and therefore the state of this item as recorded in the
+     * session differs from the state of this item as saved. Within a transaction,
+     * <code>isModified</code> on an <code>Item</code> may return <code>false</code> (because the
+     * <code>Item</code> has been saved since the modification) even if the modification in question
+     * is not in persistent storage (because the transaction has not yet been committed).
+     * <p/>
+     * Note that in level 1 (that is, read-only) implementations, this method will always return
+     * <code>false</code>.
      * @return <code>true</code> if this item is modified; <code>false</code> otherwise.
      */
     boolean isModified();
@@ -556,8 +592,8 @@ public interface Content extends Cloneable {
      * @param path of the requested NodeData
      * @return boolean true is the requested content is an NodeData
      * @throws AccessDeniedException
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
+     * @throws AccessDeniedException if the current session does not have sufficient access rights
+     * to complete the operation
      * @throws RepositoryException if an error occurs
      */
     boolean isNodeData(String path) throws AccessDeniedException, RepositoryException;
@@ -583,17 +619,18 @@ public interface Content extends Cloneable {
     void addMixin(String type) throws RepositoryException;
 
     /**
-     * Removes the specified mixin node type from this node. Also removes mixinName from this node's jcr:mixinTypes
-     * property. <b>The mixin node type removal takes effect on save</b>.
+     * Removes the specified mixin node type from this node. Also removes mixinName from this node's
+     * jcr:mixinTypes property. <b>The mixin node type removal takes effect on save</b>.
      * @param type , mixin type to be removed
      * @throws RepositoryException if an error occurs
      */
     void removeMixin(String type) throws RepositoryException;
 
     /**
-     * Returns an array of NodeType objects representing the mixin node types assigned to this node. This includes only
-     * those mixin types explicitly assigned to this node, and therefore listed in the property jcr:mixinTypes. It does
-     * not include mixin types inherited through the additon of supertypes to the primary type hierarchy.
+     * Returns an array of NodeType objects representing the mixin node types assigned to this node.
+     * This includes only those mixin types explicitly assigned to this node, and therefore listed
+     * in the property jcr:mixinTypes. It does not include mixin types inherited through the additon
+     * of supertypes to the primary type hierarchy.
      * @return an array of mixin NodeType objects.
      * @throws RepositoryException if an error occurs
      */
@@ -601,13 +638,13 @@ public interface Content extends Cloneable {
 
     /**
      * places a lock on this object
-     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it applies only to
-     * this node.
-     * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
-     * or automatically unlocked for some other reason.
+     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it
+     * applies only to this node.
+     * @param isSessionScoped if true, this lock expires with the current session; if false it
+     * expires when explicitly or automatically unlocked for some other reason.
      * @return A Lock object containing a lock token.
-     * @throws LockException if this node is already locked or <code>isDeep</code> is true and a descendant node of
-     * this node already holds a lock.
+     * @throws LockException if this node is already locked or <code>isDeep</code> is true and a
+     * descendant node of this node already holds a lock.
      * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#lock(boolean,boolean)
      */
@@ -615,48 +652,49 @@ public interface Content extends Cloneable {
 
     /**
      * places a lock on this object
-     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it applies only to
-     * this node.
-     * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
-     * or automatically unlocked for some other reason.
+     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it
+     * applies only to this node.
+     * @param isSessionScoped if true, this lock expires with the current session; if false it
+     * expires when explicitly or automatically unlocked for some other reason.
      * @param yieldFor number of milliseconds for which this method will try to get a lock
      * @return A Lock object containing a lock token.
-     * @throws LockException if this node is already locked or <code>isDeep</code> is true and a descendant node of
-     * this node already holds a lock.
+     * @throws LockException if this node is already locked or <code>isDeep</code> is true and a
+     * descendant node of this node already holds a lock.
      * @throws RepositoryException if an error occurs
      * @see javax.jcr.Node#lock(boolean,boolean)
      */
     Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException;
 
     /**
-     * Returns the Lock object that applies to this node. This may be either a lock on this node itself or a deep lock
-     * on a node above this node.
+     * Returns the Lock object that applies to this node. This may be either a lock on this node
+     * itself or a deep lock on a node above this node.
      * @throws LockException If no lock applies to this node, a LockException is thrown.
      * @throws RepositoryException if an error occurs
      */
     Lock getLock() throws LockException, RepositoryException;
 
     /**
-     * Removes the lock on this node. Also removes the properties jcr:lockOwner and jcr:lockIsDeep from this node. These
-     * changes are persisted automatically; <b>there is no need to call save</b>.
-     * @throws LockException if either does not currently hold a lock, or holds a lock for which this Session does not
-     * have the correct lock token
+     * Removes the lock on this node. Also removes the properties jcr:lockOwner and jcr:lockIsDeep
+     * from this node. These changes are persisted automatically; <b>there is no need to call
+     * save</b>.
+     * @throws LockException if either does not currently hold a lock, or holds a lock for which
+     * this Session does not have the correct lock token
      * @throws RepositoryException if an error occurs
      */
     void unlock() throws LockException, RepositoryException;
 
     /**
-     * Returns true if this node holds a lock; otherwise returns false. To hold a lock means that this node has actually
-     * had a lock placed on it specifically, as opposed to just having a lock apply to it due to a deep lock held by a
-     * node above.
+     * Returns true if this node holds a lock; otherwise returns false. To hold a lock means that
+     * this node has actually had a lock placed on it specifically, as opposed to just having a lock
+     * apply to it due to a deep lock held by a node above.
      * @return a boolean
      * @throws RepositoryException if an error occurs
      */
     boolean holdsLock() throws RepositoryException;
 
     /**
-     * Returns true if this node is locked either as a result of a lock held by this node or by a deep lock on a node
-     * above this node; otherwise returns false.
+     * Returns true if this node is locked either as a result of a lock held by this node or by a
+     * deep lock on a node above this node; otherwise returns false.
      * @return a boolean
      * @throws RepositoryException if an error occurs
      */

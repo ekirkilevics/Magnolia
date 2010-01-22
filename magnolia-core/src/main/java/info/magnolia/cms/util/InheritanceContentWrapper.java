@@ -74,16 +74,6 @@ public class InheritanceContentWrapper extends ContentWrapper {
         this(node, false);
     }
 
-    public boolean hasContent(String name) {
-        try {
-            getContent(name);
-        }
-        catch (RepositoryException e) {
-            return false;
-        }
-        return true;
-    }
-
     public Content getContent(String name) throws RepositoryException {
         Content found = findContentByInheritance(name);
         if(found != null){
@@ -94,14 +84,6 @@ public class InheritanceContentWrapper extends ContentWrapper {
         throw new PathNotFoundException("Can't inherit a node [" + name + "] on node [" + getWrappedContent().getHandle() + "]");
     }
 
-
-    public Collection<Content> getChildren() {
-        return getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER);
-    }
-
-    public Collection<Content> getChildren(ContentFilter filter) {
-        return getChildren(filter, null);
-    }
 
     public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
         List children = new ArrayList();
@@ -185,10 +167,6 @@ public class InheritanceContentWrapper extends ContentWrapper {
             return this;
         }
         return ((InheritanceContentWrapper)getParent()).findAnchor();
-    }
-
-    public boolean hasNodeData(String name) throws RepositoryException {
-        return getNodeData(name).isExist();
     }
 
     public NodeData getNodeData(String name) {

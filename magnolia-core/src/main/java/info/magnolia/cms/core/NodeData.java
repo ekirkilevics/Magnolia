@@ -44,8 +44,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.io.InputStream;
 
+
 /**
- *
+ * Represents a {@linkplain Content content} value object. If the node data does not have any value
+ * {@link #isExist()} returns false. As soon a value is set - null is not considered a value - the
+ * node data starts to exist. The various value read methods ({@link #getString()},
+ * {@link #getBoolean()}, ..) will always return a value (default or null)
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -211,6 +215,11 @@ public interface NodeData extends Cloneable {
     void setValue(Calendar value) throws RepositoryException, AccessDeniedException;
 
     /**
+     * Sets a reference value
+     */
+    void setValue(Content value) throws RepositoryException, AccessDeniedException;
+    
+    /**
      * set value of type <code>Value</code>
      * @param value
      * @throws javax.jcr.RepositoryException
@@ -306,11 +315,6 @@ public interface NodeData extends Cloneable {
 
     /**
      * returns Parent node
-     * @return
-     * @throws RepositoryException
-     * @throws javax.jcr.AccessDeniedException
-     * @throws ItemNotFoundException
-     * @throws AccessDeniedException
      */
     Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException;
 

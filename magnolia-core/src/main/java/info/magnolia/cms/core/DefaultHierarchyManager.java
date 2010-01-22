@@ -280,8 +280,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         }
         final String nodePath = StringUtils.substringBeforeLast(path, "/");
         final String nodeDataName = StringUtils.substringAfterLast(path, "/");
-        final Content node = getContent(nodePath);
-        return new DefaultNodeData(node.getJCRNode(), nodeDataName, this, node);
+        return getContent(nodePath).getNodeData(nodeDataName);
     }
 
     /**

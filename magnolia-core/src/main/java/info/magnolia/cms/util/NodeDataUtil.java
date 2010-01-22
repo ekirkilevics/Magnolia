@@ -34,8 +34,8 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -109,7 +109,7 @@ public class NodeDataUtil {
             }
             return nodeData.getHandle() + "/" + fullName;
         }
-        else if (nodeData.isMultiValue() == DefaultNodeData.MULTIVALUE_TRUE){
+        else if (nodeData.isMultiValue() == AbstractPrimitiveNodeData.MULTIVALUE_TRUE){
             return StringUtils.join(getValuesStringList(nodeData.getValues()), ",");
         } else {
             return getValueString(nodeData.getValue(), dateFormat);
@@ -232,6 +232,44 @@ public class NodeDataUtil {
         }
         return null;
     }
+    
+    /**
+     * Calls the correct setValue method based on object type. If the value is null an empty string is set.
+     */
+    public static NodeData setValue(NodeData nodeData, Object valueObj) throws AccessDeniedException, RepositoryException{
+        if(valueObj == null){
+            nodeData.setValue(StringUtils.EMPTY);
+        }
+        else{
+            switch (getJCRPropertyType(valueObj)) {
+                case PropertyType.STRING:
+                    nodeData.setValue((String)valueObj);
+                    break;
+                case PropertyType.BOOLEAN:
+                    nodeData.setValue(((Boolean)valueObj).booleanValue());
+                    break;
+                case PropertyType.DATE:
+                    nodeData.setValue((Calendar)valueObj);
+                    break;
+                case PropertyType.LONG:
+                    nodeData.setValue(((Long)valueObj).longValue());
+                    break;
+                case PropertyType.DOUBLE:
+                    nodeData.setValue(((Double)valueObj).doubleValue());
+                    break;
+                case PropertyType.BINARY:
+                    nodeData.setValue((InputStream)valueObj);
+                    break;
+                case PropertyType.REFERENCE:
+                    nodeData.setValue((Content)valueObj);
+                    break;
+                default:
+                    nodeData.setValue(valueObj.toString());
+            }
+        }
+        return nodeData;
+    }
+    
 
     /**
      * String representation of the jcr property type

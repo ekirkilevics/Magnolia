@@ -33,23 +33,24 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.core.AbstractPrimitiveNodeData;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import java.io.InputStream;
 import java.util.Calendar;
 
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 
 /**
  * @author philipp
  * @version $Id$
  */
-public class MockNodeData extends DefaultNodeData {
+public class MockNodeData extends AbstractPrimitiveNodeData {
 
     private final String name;
     private final int type;
@@ -58,12 +59,14 @@ public class MockNodeData extends DefaultNodeData {
     private Content parent;
 
     public MockNodeData(String name, Object value) {
+        super(null, name);
         this.name = name;
         this.value = value;
         this.type = NodeDataUtil.getJCRPropertyType(value);
     }
 
     public MockNodeData(String name, int type) {
+        super(null, name);
         this.name = name;
         this.type = type;
     }
@@ -78,10 +81,6 @@ public class MockNodeData extends DefaultNodeData {
 
     public int getType() {
         return type;
-    }
-
-    public HierarchyManager getHierarchyManager() {
-        return ((MockContent) getParent()).getHierarchyManager();
     }
 
     public Content getParent() {
@@ -182,13 +181,46 @@ public class MockNodeData extends DefaultNodeData {
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }
+    
+    public void setValue(Content value) throws RepositoryException, AccessDeniedException {
+        this.value = value;
+    }
 
     public void save() throws RepositoryException {
         // nothing to do
     }
 
-    public String toString() {
-        return this.getHandle() + ": " + this.getString();
+    public void delete() throws RepositoryException {
+    }
+
+    public long getContentLength() {
+        return getString().length();
+    }
+
+    public Property getJCRProperty() {
+        return new MockJCRProperty(this);
+    }
+
+    public Value getValue() {
+        return new MockJCRValue(this);
+    }
+
+    public Value[] getValues() {
+        Value[] values = new Value[1];
+        values[0] = getValue();
+        return values;
+    }
+
+    public void refresh(boolean keepChanges) throws RepositoryException {
+        // nothing to do
+    }
+
+    public void setValue(Value value) throws RepositoryException, AccessDeniedException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
 }

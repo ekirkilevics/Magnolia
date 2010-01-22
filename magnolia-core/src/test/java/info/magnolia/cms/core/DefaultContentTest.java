@@ -33,71 +33,249 @@
  */
 package info.magnolia.cms.core;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.File;
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.RepositoryTestCase;
-import info.magnolia.test.mock.MockHierarchyManager;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.Node;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Property;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.easymock.IAnswer;
+import org.easymock.classextension.EasyMock;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class DefaultContentTest extends RepositoryTestCase {
+    
+    
+    public interface ExceptionThrowingCallback {
+        void call() throws Exception;
+    }
+
+    public void testReadingANodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        NodeData nodeData = content.getNodeData("nd1");
+        assertEquals("hello", nodeData.getString());
+        assertEquals(true, nodeData.isExist());
+        
+    }
+
+    public void testThatReadingANonExistingNodeDataDoesNotFail() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this should not fail
+        NodeData nodeData = content.getNodeData("nd2");
+        assertEquals(false, nodeData.isExist());
+    }
+    
+    public void testSettingAnExistingNodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this should not fail
+        Value value = createValue("test");
+        NodeData nodeData = content.setNodeData("nd1", value);
+        assertEquals("test", nodeData.getString());
+    }
+
+    
+    public void testSettingANonExistingNodeDataCreatesANewNodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        Value value = createValue("test");
+        // does not exist yet
+        NodeData nodeData = content.setNodeData("nd2", value);
+        assertEquals("test", nodeData.getString());
+
+    }
+
+    // This would probably make more sense
+    /*
+     public void testSettingANonExistingNodeDataFails() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this should not fail
+        try {
+            content.setNodeData("nd2", "test");
+        }
+        catch (PathNotFoundException e) {
+            return;
+        }
+        fail("Should throw an exception!");
+    }
+     */
+
+    public void testCreatingAnEmptyNodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this should not fail
+        NodeData nodeData = content.createNodeData("nd2");
+        assertEquals("", nodeData.getString());
+        assertEquals(true, nodeData.isExist());
+    }
+
+    // FIXME? in older versions we created an empty string property
+    
+//    public void testCreatingAnEmptyNodeDataIgnoresTheType() throws IOException, RepositoryException{
+//        Content content = getTestContent();
+//        NodeData nodeData = content.createNodeData("nd2", PropertyType.BOOLEAN);
+//        // fact is that the type is ignored
+//        assertEquals(PropertyType.STRING, nodeData.getType());
+//    }
+
+    public void testCreatingAnEmptyNodeDataSetsADefaultValueIfPossible() throws IOException, RepositoryException {
+        Content content = getTestContent();
+        NodeData nodeData = content.createNodeData("nd2", PropertyType.BOOLEAN);
+        assertEquals(true, nodeData.isExist());
+        assertEquals(PropertyType.BOOLEAN, nodeData.getType());
+    }
+
+    public void testCreatingAndSettingANodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this should not fail
+        NodeData nodeData = content.createNodeData("nd2", "test");
+        assertEquals("test", nodeData.getString());
+    }
+
+    public void testCreatingAndSettingABooleanNodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this actually creates a string property having an empty string value 
+        NodeData nodeData = content.createNodeData("nd2");
+        // now setting a boolean value
+        nodeData.setValue(true);
+        assertEquals(true, nodeData.getBoolean());
+        
+        nodeData = content.createNodeData("nd3", true);
+        assertEquals(true, nodeData.getBoolean());
+    }
+
+    public void testCreatingAnExistingNodeDataDoesNotFail() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        NodeData nodeData = content.createNodeData("nd1", "other");
+        assertEquals("other", nodeData.getString());
+    }
+    
+    public void testCreatingAndReadingABinaryNodeData() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        String binaryContent = "the content";
+        NodeData nodeData = content.createNodeData("nd2", PropertyType.BINARY);
+        nodeData.setValue(IOUtils.toInputStream(binaryContent));
+//        nodeData.setAttribute(FileProperties.PROPERTY_FILENAME, "filename");
+        nodeData.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, "text/plain");
+        nodeData.setAttribute(FileProperties.PROPERTY_LASTMODIFIED, Calendar.getInstance());
+        
+        
+        content.save();
+        nodeData = content.getNodeData("nd2");
+        assertEquals(binaryContent, IOUtils.toString(nodeData.getStream()));
+        //assertEquals("filename", nodeData.getAttribute(FileProperties.PROPERTY_FILENAME));
+    }
+    
+    // This would probably make more sense
+    /*
+    public void testCreatingAnExistingNodeDataFails() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        // this should not fail
+        try {
+            NodeData nodeData = content.createNodeData("nd1", "test");
+        }
+        catch (PathNotFoundException e) {
+            return;
+        }
+        fail("Should throw an exception!");
+    }
+    */
+
+    
+    private Content getTestContent() throws IOException, RepositoryException {
+        String contentProperties = 
+            "/mycontent.@type=mgnl:content\n" +
+            "/mycontent.nd1=hello";
+        
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
+        hm.save();
+        Content content = hm.getContent("/mycontent");
+        return content;
+    }
 
     public void testPermissionCheckedOnDeleteNodeData() throws Exception {
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-        AccessManager am = createStrictMock(AccessManager.class);
+        // create the content while we have full permissions
+        final Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
+        node.createNodeData("bar").setValue("test");
+
+        AccessManager am = new AccessManagerImpl();
+        setPermission(am, "/*", Permission.READ);
         ((DefaultHierarchyManager) hm).setAccessManager(am);
-        
-        // create foo
-        expect(am.isGranted("/foo", 11)).andReturn(true);
-        expect(am.isGranted("/foo", 2)).andReturn(true);
-        expect(am.isGranted("/foo/MetaData", 11)).andReturn(true).anyTimes();
-        // create bar
-        expect(am.isGranted("/foo/bar", 11)).andReturn(true);
-        // get foo
-        expect(am.isGranted("/foo", 8)).andReturn(true);
 
-        // delete("bar")
-        expect(am.isGranted("/foo/bar", 4)).andReturn(true);
-        expect(am.isGranted("/foo/bar", 8)).andReturn(true).times(2);
-        expect(am.isGranted("/foo/bar", 4)).andReturn(true);
-        expect(am.isGranted("/foo/bar", 8)).andReturn(true);
-
-        // create bar again
-        expect(am.isGranted("/foo/bar", 11)).andReturn(true);
-
-        // deleteNodeData("bar");
-        expect(am.isGranted("/foo/bar", 4)).andReturn(true);
-        expect(am.isGranted("/foo/bar", 8)).andReturn(true);
-        
-
-        Object[] objs = new Object[] {am};
-        replay(objs);
-        Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
-        node.createNodeData("bar");
-        node = hm.getContent("/foo");
+        // test that we can read
         assertTrue(node.hasNodeData("bar"));
+        assertEquals("test", node.getNodeData("bar").getString());
         
-        node.delete("bar");
-        assertFalse(node.hasNodeData("bar"));
+        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
+            public void call() throws Exception {
+                node.setNodeData("bar", "other");
+            }
+
+        }, "should not be allowed to set a value");
+
+        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
+            public void call() throws Exception {
+                node.delete("bar");
+            }
+
+        }, "should not be allowed to delete a nodedata");
+
+        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
+            public void call() throws Exception {
+                node.deleteNodeData("bar");
+            }
+
+        }, "should not be allowed to delete a nodedata");
+    }
+
+    private void mustFailWithAccessDeniedException(ExceptionThrowingCallback callback, String msg) throws Exception {
+        try{
+            callback.call();
+        }
+        catch (AccessDeniedException e) {
+            // this expected
+            return;
+        }
+        fail(msg);
+
+    }
+
+    private void setPermission(AccessManager am, String path, long permissionValue) {
+        ArrayList<Permission> permissions = (ArrayList<Permission>) am.getPermissionList();
+        if(permissions == null){
+            permissions = new ArrayList<Permission>();
+        }
         
-        node.createNodeData("bar");
-        assertTrue(node.hasNodeData("bar"));
-        
-        node.deleteNodeData("bar");
-        assertFalse(node.hasNodeData("bar"));
-        verify(objs);
+        PermissionImpl permission = new PermissionImpl();
+        permission.setPattern(new SimpleUrlPattern(path));
+        permission.setPermissions(permissionValue);
+        permissions.add(permission);
+        am.setPermissionList(permissions);
     }
 
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
@@ -156,7 +334,9 @@ public class DefaultContentTest extends RepositoryTestCase {
         verify(node, nodeTypeProp);
     }
 
-//    public void testIsNodeForThisNodeAlsoWorks()throws RepositoryException {
-//        fail();
-//    }
+    private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {
+        ValueFactory valueFactory = MgnlContext.getHierarchyManager("website").getWorkspace().getSession().getValueFactory();
+        return NodeDataUtil.createValue(valueObj, valueFactory);
+    }
+
 }

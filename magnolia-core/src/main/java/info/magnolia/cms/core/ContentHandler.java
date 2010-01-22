@@ -36,18 +36,13 @@ package info.magnolia.cms.core;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.util.DeprecationUtil;
 
 /**
  * @author Sameer Charles
  * @version $Revision $ ($Author $) $Id$
  */
 public abstract class ContentHandler implements Cloneable {
-
-    /**
-     * AccessManager instance.
-     * @deprecated since 4.0 - use hierarchyManager instead.
-     */
-    protected AccessManager accessManager;
 
     /**
      * HierarchyManager instance.
@@ -66,7 +61,7 @@ public abstract class ContentHandler implements Cloneable {
      * @deprecated use setHierarchyManager instead
      */
     public void setAccessManager(AccessManager manager) {
-        this.accessManager = manager;
+        DeprecationUtil.isDeprecated("The AccessManager is defined by the HierarchyManager");
     }
 
     /**
@@ -75,7 +70,11 @@ public abstract class ContentHandler implements Cloneable {
      * @deprecated since 4.0 - use getHierarchyManager instead
      */
     public AccessManager getAccessManager() {
-        return this.accessManager;
+        HierarchyManager hm = getHierarchyManager();
+        if(hm != null){
+            return hm.getAccessManager();
+        }
+        return null;
     }
 
     /**

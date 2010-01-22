@@ -35,14 +35,12 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -59,8 +57,6 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Value;
-import javax.jcr.ValueFactory;
 import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
@@ -79,7 +75,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
  */
-public class DefaultContent extends ContentHandler implements Content {
+public class DefaultContent extends AbstractContent {
     private static final Logger log = LoggerFactory.getLogger(DefaultContent.class);
 
     /**
@@ -120,7 +116,6 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
         this.setPath(path);
         this.setRootNode(rootNode);
@@ -137,7 +132,6 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
         this.setNode((Node) elem);
         this.setPath(this.getHandle());
@@ -160,7 +154,6 @@ public class DefaultContent extends ContentHandler implements Content {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        this.setAccessManager(hierarchyManager.getAccessManager());
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
         this.setRootNode(rootNode);
@@ -197,33 +190,51 @@ public class DefaultContent extends ContentHandler implements Content {
         return (new DefaultContent(this.node, name, this.hierarchyManager));
     }
 
-    public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.createContent(name, ItemType.CONTENT);
-    }
-
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Content content = (new DefaultContent(this.node, name, contentType, this.hierarchyManager));
+        Content content = new DefaultContent(this.node, name, contentType, this.hierarchyManager);
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
     }
 
-    public Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        Content content = (new DefaultContent(this.node, name, contentType.getSystemName(), this.hierarchyManager));
-        MetaData metaData = content.getMetaData();
-        metaData.setCreationDate();
-        return content;
+    public NodeData getNodeData(String name, int type) throws AccessDeniedException, RepositoryException {
+        try {
+            Access.isGranted(getAccessManager(), Path.getAbsolutePath(getHandle(), name), Permission.READ);
+        }
+        // FIXME: should be thrown but return a dummy node data
+        catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
+        if(type == PropertyType.UNDEFINED){
+            type = determineNodeDataType(name);
+        }
+        if(type == PropertyType.BINARY){
+            return new BinaryNodeData(this, name);
+        }
+        else{
+            return new DefaultNodeData(this, name);
+        }
     }
 
-    public String getTemplate() {
-        return this.getMetaData().getTemplate();
+    protected int determineNodeDataType(String name) {
+        // FIXME: maybe delegate to NodeDataImplementations?
+        try {
+            if (this.node.hasProperty(name)) {
+                return this.node.getProperty(name).getType();
+            }
+            else { // check for mgnl:resource node
+                if (this.node.hasNode(name) && this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE)) {
+                    return PropertyType.BINARY;
+                }
+            }
+        }
+        catch (RepositoryException e) {
+            throw new IllegalStateException("Can't determine property type of [" + getHandle() + "/" + name + "]", e);
+        }
+        return PropertyType.UNDEFINED;
     }
-
-    public String getTitle() {
-        return I18nContentSupportFactory.getI18nSupport().getNodeData(this, "title").getString();
-    }
+    
 
     public MetaData getMetaData() {
         if (this.metaData == null) {
@@ -232,6 +243,8 @@ public class DefaultContent extends ContentHandler implements Content {
         return this.metaData;
     }
 
+    
+    /*
     public NodeData getNodeData(String name) {
         NodeData nodeData = null;
         try {
@@ -273,7 +286,8 @@ public class DefaultContent extends ContentHandler implements Content {
         }
         return nodeData;
     }
-
+*/
+    
     public String getName() {
         try {
             return this.node.getName();
@@ -282,102 +296,6 @@ public class DefaultContent extends ContentHandler implements Content {
             log.error(e.getMessage(), e);
         }
         return StringUtils.EMPTY;
-    }
-
-    public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, PropertyType.STRING, true, this.hierarchyManager, this));
-    }
-
-    public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, type, true, this.hierarchyManager, this));
-    }
-
-    public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, value, this.hierarchyManager, this));
-    }
-
-    public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, value, this.hierarchyManager, this));
-    }
-
-    public NodeData createNodeData(String name, Object obj) throws RepositoryException {
-        final ValueFactory valueFactory = node.getSession().getValueFactory();
-        final Value value;
-        if (obj instanceof String) {
-            value = valueFactory.createValue((String) obj);
-        } else if (obj instanceof Boolean) {
-            value = valueFactory.createValue(((Boolean) obj).booleanValue());
-        } else if (obj instanceof Long) {
-            value = valueFactory.createValue(((Long) obj).longValue());
-        } else if (obj instanceof Integer) {
-            value = valueFactory.createValue(((Integer) obj).longValue());
-        } else if (obj instanceof Double) {
-            value = valueFactory.createValue(((Double) obj).doubleValue());
-        } else if (obj instanceof Calendar) {
-            value = valueFactory.createValue((Calendar) obj);
-        } else if (obj instanceof InputStream) {
-            value = valueFactory.createValue((InputStream) obj);
-        } else if (obj instanceof Content) {
-            value = valueFactory.createValue(((Content) obj).getJCRNode());
-        } else {
-            value = valueFactory.createValue(obj.toString());
-        }
-
-        return createNodeData(name, value);
-    }
-
-    public NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        NodeData nodeData;
-        try {
-            nodeData = new DefaultNodeData(this.node, name, this.hierarchyManager, this);
-            nodeData.setValue(value);
-        }
-        catch (PathNotFoundException e) {
-            nodeData = new DefaultNodeData(this.node, name, value, this.hierarchyManager, this);
-        }
-        return nodeData;
-    }
-
-    public NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        NodeData nodeData;
-        try {
-            nodeData = new DefaultNodeData(this.node, name, this.hierarchyManager, this);
-            nodeData.setValue(value);
-        }
-        catch (PathNotFoundException e) {
-            nodeData = new DefaultNodeData(this.node, name, value, this.hierarchyManager, this);
-        }
-        return nodeData;
-    }
-
-    public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        String nodePath = Path.getAbsolutePath(this.node.getPath(), name);
-        Access.isGranted(this.hierarchyManager.getAccessManager(), nodePath, Permission.REMOVE);
-        if (this.node.hasNode(name)) {
-            this.node.getNode(name).remove();
-        }
-        else {
-            this.node.getProperty(name).remove();
-        }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), (ItemType) null, nodePath );
-
-    }
-
-    public void updateMetaData() throws RepositoryException, AccessDeniedException {
-        MetaData md = this.getMetaData();
-        md.setModificationDate();
-        md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),this.getItemType(), Path.getAbsolutePath(node.getPath()));
-    }
-
-    public Collection<Content> getChildren(ContentFilter filter) {
-        return getChildren(filter, null);
     }
 
     public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
@@ -413,73 +331,36 @@ public class DefaultContent extends ContentHandler implements Content {
 
         return children;
     }
-
-    public Collection<Content> getChildren() {
-        String type = null;
-
+    
+    public Collection<NodeData> getNodeDataCollection() {
+        final ArrayList<NodeData> all = new ArrayList<NodeData>();
         try {
-            type = this.getNodeTypeName();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            log.debug(re.getMessage(), re);
-        }
-        // fix all getChildren calls from the root node
-        if ("rep:root".equalsIgnoreCase(type)) { //$NON-NLS-1$
-            type = ItemType.CONTENT.getSystemName();
-        }
-        // --------------------------------------------------
-        return this.getChildren(type);
-    }
-
-    public Collection<Content> getChildren(String contentType) {
-        return this.getChildren(contentType, "*"); //$NON-NLS-1$
-    }
-
-    public Collection<Content> getChildren(ItemType contentType) {
-        return this.getChildren(contentType != null ? contentType.getSystemName() : (String) null);
-    }
-
-    public Collection<Content> getChildren(String contentType, String namePattern) {
-        Collection<Content> children = null;
-        try {
-            children = this.getChildContent(contentType, namePattern);
+            all.addAll(getPrimitiveNodeDatas());
+            all.addAll(getBinaryNodeDatas());
         }
         catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-            children = new ArrayList<Content>();
+            throw new IllegalStateException("Can't read node datas of " + toString(), e);
         }
-        return children;
+        return all;
+    }
+    
+    protected Collection<NodeData> getBinaryNodeDatas() throws RepositoryException {
+        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
+        Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE);
+        for (Content binaryNode : binaryNodes) {
+            nodeDatas.add(getNodeData(binaryNode.getName()));
+        }
+        return nodeDatas;
     }
 
-    public Content getChildByName(String namePattern) {
-        Collection<Content> children = null;
-        try {
-            children = getChildContent(null, namePattern);
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-        }
-        if (!children.isEmpty()) {
-            return children.iterator().next();
-        }
-        return null;
-    }
-
-    /**
-     * @param contentType JCR node type as configured, <code>null</code> means no filter
-     * @param namePattern, <code>null</code> means no filter
-     * @return Collection of <code>Content</code> objects or empty collection when no children are found.
-     * @throws RepositoryException if an error occurs
-     */
-    private Collection<Content> getChildContent(String contentType, String namePattern) throws RepositoryException {
-        Collection<Content> children = new ArrayList<Content>();
-        NodeIterator nodeIterator = namePattern != null ? this.node.getNodes(namePattern) : this.node.getNodes();
-        while (nodeIterator.hasNext()) {
-            Node subNode = (Node) nodeIterator.next();
+    protected Collection<NodeData> getPrimitiveNodeDatas() throws RepositoryException {
+        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
+        PropertyIterator propertyIterator = this.node.getProperties();
+        while (propertyIterator.hasNext()) {
+            Property property = (Property) propertyIterator.next();
             try {
-                if (contentType == null || this.isNodeType(subNode, contentType)) {
-                    children.add(new DefaultContent(subNode, this.hierarchyManager));
+                if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    nodeDatas.add(getNodeData(property.getName()));
                 }
             }
             catch (PathNotFoundException e) {
@@ -489,111 +370,12 @@ public class DefaultContent extends ContentHandler implements Content {
                 // ignore, simply wont add content in a list
             }
         }
-        return children;
-    }
-
-    public Collection<NodeData> getNodeDataCollection() {
-        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
-        try {
-            PropertyIterator propertyIterator = this.node.getProperties();
-            while (propertyIterator.hasNext()) {
-                Property property = (Property) propertyIterator.next();
-                try {
-                    if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) { //$NON-NLS-1$ //$NON-NLS-2$
-                        nodeDatas.add(new DefaultNodeData(property, this.hierarchyManager, this));
-                    }
-                }
-                catch (PathNotFoundException e) {
-                    log.error("Exception caught", e);
-                }
-                catch (AccessDeniedException e) {
-                    // ignore, simply wont add content in a list
-                }
-            }
-            // add nt:resource nodes
-            nodeDatas.addAll(this.getBinaryProperties("*"));
-        }
-        catch (RepositoryException re) {
-            log.error("Exception caught", re);
-        }
         return nodeDatas;
     }
 
-    public Collection<NodeData> getNodeDataCollection(String namePattern) {
-        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
-        try {
-            PropertyIterator propertyIterator = this.node.getProperties(namePattern);
-            if (propertyIterator == null) {
-                return nodeDatas;
-            }
-            while (propertyIterator.hasNext()) {
-                Property property = (Property) propertyIterator.next();
-                try {
-                    nodeDatas.add(new DefaultNodeData(property, this.hierarchyManager, this));
-                }
-                catch (PathNotFoundException e) {
-                    log.error("Exception caught", e);
-                }
-                catch (AccessDeniedException e) {
-                    // ignore, simply wont add content in a list
-                }
-            }
-            // add nt:resource nodes
-            nodeDatas.addAll(this.getBinaryProperties(namePattern));
-        }
-        catch (RepositoryException re) {
-            log.error("Exception caught", re);
-        }
-        return nodeDatas;
-    }
-
-    /**
-     * @param namePattern
-     * @return nodeData collection
-     * @throws RepositoryException if an error occurs
-     */
-    private Collection<NodeData> getBinaryProperties(String namePattern) throws RepositoryException {
-        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
-        NodeIterator nodeIterator = this.node.getNodes(namePattern);
-        while (nodeIterator.hasNext()) {
-            Node subNode = (Node) nodeIterator.next();
-            try {
-                if (this.isNodeType(subNode, ItemType.NT_RESOURCE)) {
-                    nodeDatas.add(new DefaultNodeData(subNode, this.hierarchyManager, this));
-                }
-            }
-            catch (PathNotFoundException e) {
-                log.error(e.getMessage(), e);
-            }
-            catch (AccessDeniedException e) {
-                // ignore, simply wont add content in a list
-            }
-        }
-        return nodeDatas;
-    }
-
-    public boolean hasChildren() {
-        return (this.getChildren().size() > 0);
-    }
-
-    public boolean hasChildren(String contentType) {
-        return (this.getChildren(contentType).size() > 0);
-    }
 
     public boolean hasContent(String name) throws RepositoryException {
         return this.node.hasNode(name);
-    }
-
-    public boolean hasNodeData(String name) throws RepositoryException {
-        if (this.node.hasProperty(name)) {
-            return true;
-        }
-        else { // check for mgnl:resource node
-            if (getNodeData(name).getType() == PropertyType.BINARY) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public String getHandle() {
@@ -774,16 +556,6 @@ public class DefaultContent extends ContentHandler implements Content {
         this.node.save();
     }
 
-    public boolean isGranted(long permissions) {
-        try {
-            return hierarchyManager.getAccessManager().isGranted(Path.getAbsolutePath(node.getPath()), permissions);
-        }
-        catch (RepositoryException re) {
-            log.error("Could not get node path: " + re, re);
-            return false;
-        }
-    }
-
     public void delete() throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath());
@@ -792,41 +564,6 @@ public class DefaultContent extends ContentHandler implements Content {
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodeType, nodePath);
     }
 
-    public void delete(String path) throws RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
-        String nodePath = Path.getAbsolutePath(this.node.getPath(), path);
-        ItemType nodeType = null;
-        if (this.isNodeData(path)) {
-            this.getNodeData(path).delete();
-        }
-        else {
-            Node aNode = this.node.getNode(path);
-            if (aNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
-                nodeType = new ItemType(aNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString());
-            }
-            nodeType = new ItemType(aNode.getProperty(ItemType.JCR_PRIMARY_TYPE).getString());
-            aNode.remove();
-        }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodeType, nodePath);
-    }
-
-    public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath(), path), Permission.READ);
-        boolean result = false;
-        try {
-            result = this.node.hasProperty(path);
-            if (!result) {
-                // check if its a nt:resource
-                result = this.node.hasProperty(path + "/" + ItemType.JCR_DATA);
-            }
-        }
-        catch (RepositoryException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("isNodeData(): " + e.getMessage()); //$NON-NLS-1$
-            }
-        }
-        return result;
-    }
 
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.node.refresh(keepChanges);
@@ -899,10 +636,6 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public boolean isLocked() throws RepositoryException {
         return this.node.isLocked();
-    }
-
-    public Workspace getWorkspace() throws RepositoryException {
-        return this.node.getSession().getWorkspace();
     }
 
     public boolean hasMetaData() {
