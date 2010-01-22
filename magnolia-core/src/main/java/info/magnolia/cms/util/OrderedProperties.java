@@ -39,12 +39,16 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * Subclass of java.util.Properties which keeps the order in which properties were loaded.
+ * Subclass of java.util.Properties which keeps the order in which properties were loaded,
+ * by delegating to a LinkedHashMap.
  *
  * <strong>Warning:</strong> only the java.util.Map interface methods have been
  * overloaded, so be weary when using java.util.Properties specific methods. (load, save,
- * getProperty and setProperty are working.) (getProperty had to be explicitely overloaded
+ * getProperty and setProperty are working.) (getProperty had to be explicitly overloaded
  * too)
+ *
+ * The equals() method respects the Map.equals() contract, since the entrySet() method is
+ * delegating to the LinkedHashMap.
  *
  * @author philipp
  * @version $Id:  $
