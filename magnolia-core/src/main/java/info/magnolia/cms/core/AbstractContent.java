@@ -354,5 +354,24 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     public Workspace getWorkspace() throws RepositoryException {
         return getHierarchyManager().getWorkspace();
     }
+    
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(getHierarchyManager() == null ? "null" : getHierarchyManager().getName());
+        buffer.append(":" + getHandle());
+        String type = "";
+        try {
+            type = getItemType().getSystemName();
+        }
+        catch (RepositoryException e) {
+            // ignore
+        }
+        buffer.append("[");
+        buffer.append(type);
+        buffer.append("]");
+
+        return buffer.toString();
+    }
+
 
 }
