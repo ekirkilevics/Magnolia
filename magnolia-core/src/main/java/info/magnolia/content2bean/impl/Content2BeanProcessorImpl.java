@@ -35,6 +35,7 @@ package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ExtendingContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanProcessor;
@@ -65,7 +66,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     private boolean forceCreation = true;
 
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
-       return toBean(node, recursive, transformer, transformer.newState());
+       return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState());
     }
 
     protected Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException{
@@ -131,6 +132,9 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     }
 
     public Object setProperties(final Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
+        // enable extending feature
+        node = new ExtendingContentWrapper(node);
+        
         TransformationState state = transformer.newState();
         state.pushBean(bean);
         state.pushContent(node);

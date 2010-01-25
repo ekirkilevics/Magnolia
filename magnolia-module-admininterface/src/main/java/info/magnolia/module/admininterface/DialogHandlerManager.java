@@ -39,6 +39,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.cms.util.ExtendingContentWrapper;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
@@ -88,7 +89,7 @@ public class DialogHandlerManager extends ObservedManager {
         }
 
         for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
-            Content dialogNode = new SystemContentWrapper( iter.next());
+            Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper( iter.next()));
             try {
                 if(dialogNode.getItemType().equals(ItemType.CONTENT)){
                     log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
