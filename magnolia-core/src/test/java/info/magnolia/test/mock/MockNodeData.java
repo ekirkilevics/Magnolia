@@ -41,6 +41,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import java.io.InputStream;
 import java.util.Calendar;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -55,8 +56,6 @@ public class MockNodeData extends AbstractNodeData {
     private final String name;
     private final int type;
     private Object value;
-
-    private Content parent;
 
     public MockNodeData(String name, Object value) {
         super(null, name);
@@ -81,14 +80,6 @@ public class MockNodeData extends AbstractNodeData {
 
     public int getType() {
         return type;
-    }
-
-    public Content getParent() {
-        return this.parent;
-    }
-
-    public void setParent(Content parent) {
-        this.parent = parent;
     }
 
     public boolean getBoolean() {
@@ -139,15 +130,13 @@ public class MockNodeData extends AbstractNodeData {
         }
     }
 
-    public Content getReferencedContent() throws RepositoryException {
-        if (value instanceof Content) {
-            return (Content) value;
-        }
-        throw new RepositoryException("Value is not Content, a real NodeData/javax.jcr.Property will not allow this either");
-    }
-
     public String getHandle() {
-        return this.getParent().getHandle() + "/" + this.getName();
+        try {
+            return getParent().getHandle() + "/" + this.getName();
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException("Can't build handle", e);
+        }
     }
 
     public boolean isExist() {
