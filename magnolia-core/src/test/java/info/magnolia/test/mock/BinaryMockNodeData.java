@@ -47,6 +47,8 @@ import java.util.TimeZone;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,10 +62,18 @@ import org.slf4j.LoggerFactory;
 public class BinaryMockNodeData extends MockNodeData {
     private static final Logger log = LoggerFactory.getLogger(BinaryMockNodeData.class);
 
+    // BinaryMockNodeData are instantiated either with an InputStream and specific properties
     private Map<String, String> attributes = new HashMap<String, String>();
+    // or by wrapping a Content instance (used i.e when creating mock content via properties)
+    private MockContent wrappedContent;
 
     public BinaryMockNodeData(String name) {
         super(name, PropertyType.BINARY);
+    }
+
+    public BinaryMockNodeData(String name, MockContent wrappedContent) {
+        this(name);
+        this.wrappedContent = wrappedContent;
     }
 
     public BinaryMockNodeData(String name, InputStream stream) {
@@ -92,18 +102,34 @@ public class BinaryMockNodeData extends MockNodeData {
     }
 
     public String getAttribute(String name) {
+        if (wrappedContent != null) {
+            return wrappedContent.getNodeData(name).getString();
+        }
         return attributes.get(name);
     }
 
     public Collection<String> getAttributeNames() throws RepositoryException {
+        if (wrappedContent != null) {
+            return CollectionUtils.transformedCollection(wrappedContent.getNodeDataCollection(), new Transformer() {
+                public Object transform(Object input) {
+                    return ((MockNodeData) input).getName();
+                }
+            });
+        }
         return attributes.keySet();
     }
 
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
+        if (wrappedContent != null) {
+            throw new UnsupportedOperationException();
+        }
         setAttribute(name, value.toString());
     }
 
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
+        if (wrappedContent != null) {
+            throw new UnsupportedOperationException();
+        }
         attributes.put(name, value);
     }
 }

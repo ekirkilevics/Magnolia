@@ -41,6 +41,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
@@ -295,6 +296,16 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     abstract public Collection<NodeData> getNodeDataCollection(String namePattern);
+
+    protected Collection<NodeData> getBinaryNodeDatas(String namePattern) throws RepositoryException {
+        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
+        Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
+        for (Content binaryNode : binaryNodes) {
+            nodeDatas.add(getNodeData(binaryNode.getName(), PropertyType.BINARY));
+        }
+        return nodeDatas;
+    }
+
 
     public boolean hasChildren() {
         return (this.getChildren().size() > 0);

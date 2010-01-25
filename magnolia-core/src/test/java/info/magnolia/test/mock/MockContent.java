@@ -220,6 +220,13 @@ public class MockContent extends AbstractContent {
             }
         }
 
+        // adding binaries too:
+        try {
+            onlyExistingNodeDatas.addAll(getBinaryNodeDatas(namePattern));
+        } catch (RepositoryException e) {
+            throw new IllegalStateException("Can't read node datas of " + toString(), e);
+        }
+
         return onlyExistingNodeDatas;
     }
 
@@ -348,8 +355,13 @@ public class MockContent extends AbstractContent {
         }
         else{
             MockNodeData nodeData;
+            // TODO if(type == PropertyType.UNDEFINED){
+            //    if (hasContent(name) && getContent(name).isNodeType(ItemType.NT_RESOURCE)) {
+            //        type = PropertyType.BINARY;
+            //    } - else ?
+
             if(type == PropertyType.BINARY){
-                nodeData = new BinaryMockNodeData(name);
+                nodeData = new BinaryMockNodeData(name, (MockContent) getContent(name));
             }
             else{
                 nodeData = new MockNodeData(name, type);

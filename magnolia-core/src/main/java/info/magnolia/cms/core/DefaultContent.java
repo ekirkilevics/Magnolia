@@ -303,15 +303,6 @@ public class DefaultContent extends AbstractContent {
         }
         return all;
     }
-    
-    protected Collection<NodeData> getBinaryNodeDatas(String namePattern) throws RepositoryException {
-        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
-        Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
-        for (Content binaryNode : binaryNodes) {
-            nodeDatas.add(getNodeData(binaryNode.getName()));
-        }
-        return nodeDatas;
-    }
 
     protected Collection<NodeData> getPrimitiveNodeDatas(String namePattern) throws RepositoryException {
         final Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
