@@ -156,19 +156,26 @@ public class MockContent extends AbstractContent {
         children.put(child.getName(), child);
     }
 
-    public Content getContent(String name) throws RepositoryException {
+    public Content getContent(String path) throws RepositoryException {
         Content c;
-        if (name.contains("/")) {
-            c = getContent(StringUtils.substringBefore(name, "/"));
-            if (c != null) {
-                return c.getContent(StringUtils.substringAfter(name, "/"));
+        if (path.contains("/")) {
+            String[] names = StringUtils.split(path, "/");
+            Content current = this;
+            for (String name : names) {
+                if(name.equals("..")){
+                    current = current.getParent();
+                }
+                else{
+                    current = current.getContent(name);
+                }
             }
+            return current;
         }
         else {
-            c = (Content) children.get(name);
+            c = (Content) children.get(path);
         }
         if (c == null) {
-            throw new PathNotFoundException(name);
+            throw new PathNotFoundException(path);
         }
         return c;
     }
@@ -314,10 +321,6 @@ public class MockContent extends AbstractContent {
             //we mimick the default behaviour here, so lets create an empty metadata node
         }
         return new MockMetaData(new MockContent(MetaData.DEFAULT_META_NODE));
-    }
-
-    public String toString() {
-        return super.toString();
     }
 
     public int getIndex() {
