@@ -121,7 +121,7 @@ public class PropertiesImportExport {
                 if(StringUtils.isEmpty(properties.getProperty(orgKey))) {
                     // make this the type property if not defined otherwise
                     if(!properties.containsKey(orgKey + "@type")){
-                        cleaned.put(path + ".@type", "nt:base");
+                        cleaned.put(path + ".@type", ItemType.CONTENTNODE.getSystemName());
                     }
                     continue;
                 }
