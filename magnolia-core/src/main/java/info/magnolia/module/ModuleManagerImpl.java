@@ -58,6 +58,7 @@ import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerWebUI;
 import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import org.apache.commons.beanutils.BeanUtils;
@@ -202,14 +203,12 @@ public class ModuleManagerImpl implements ModuleManager {
         try {
             final Class<ModuleVersionHandler> versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
-                return versionHandlerClass.newInstance();
+                return Classes.getClassFactory().newInstance(versionHandlerClass);
             } else {
                 return new DefaultModuleVersionHandler();
             }
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e); // TODO
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e); // TODO
+        } catch (MgnlInstantiationException e) {
+            throw e; // TODO
         }
     }
 
