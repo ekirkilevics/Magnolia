@@ -42,7 +42,6 @@ import java.util.Calendar;
 import java.util.Collection;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
@@ -50,14 +49,14 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
 /**
- * A node data hiding the fact that node datas of type BINARY are stored as nodes of type {@link ItemType#NT_RESOURCE}
+ * A node data hiding the fact that node datas of type BINARY are stored as nodes of type {@link ItemType#NT_RESOURCE}.
  * @author pbaerfuss
  * @version $Id$
  */
 public class BinaryNodeData extends AbstractNodeData {
 
     /**
-     * The node containing the binary and attributes
+     * The node containing the binary and attributes.
      */
     private Node binaryNode;
     
@@ -218,11 +217,11 @@ public class BinaryNodeData extends AbstractNodeData {
         }
     }
 
-    public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException {
+    public Content getReferencedContent() throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
+    public Content getReferencedContent(String repositoryId) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
@@ -254,39 +253,39 @@ public class BinaryNodeData extends AbstractNodeData {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(String value) throws RepositoryException, AccessDeniedException {
+    public void setValue(String value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(int value) throws RepositoryException, AccessDeniedException {
+    public void setValue(int value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(long value) throws RepositoryException, AccessDeniedException {
+    public void setValue(long value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(double value) throws RepositoryException, AccessDeniedException {
+    public void setValue(double value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
+    public void setValue(boolean value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
+    public void setValue(Calendar value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(Content value) throws RepositoryException, AccessDeniedException {
+    public void setValue(Content value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(Value value) throws RepositoryException, AccessDeniedException {
+    public void setValue(Value value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 
-    public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
+    public void setValue(Value[] value) throws RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 }

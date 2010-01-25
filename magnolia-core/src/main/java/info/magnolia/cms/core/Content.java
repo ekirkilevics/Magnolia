@@ -59,7 +59,7 @@ import java.util.Comparator;
 
 
 /**
- * Represents a peace of content (node) which has nodedatas (properties) containing the values and
+ * Represents a piece of content (node) which has nodedatas (properties) containing the values and
  * which can have sub contents. This is is very similar to the JCR {@link Node} interface.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -67,7 +67,7 @@ import java.util.Comparator;
 public interface Content extends Cloneable {
 
     /**
-     * Gets the Content node of the current node with the specified name
+     * Gets the Content node of the current node with the specified name.
      * @param name of the node acting as <code>Content</code>
      * @return <node>Content </node>
      * @throws PathNotFoundException
@@ -90,7 +90,7 @@ public interface Content extends Cloneable {
     Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Creates a Content node under the current node with the specified name
+     * Creates a Content node under the current node with the specified name.
      * @param name of the node to be created as <code>Content</code>
      * @param contentType JCR node type as configured
      * @return newly created <node>Content </node>
@@ -124,7 +124,7 @@ public interface Content extends Cloneable {
     String getTitle();
 
     /**
-     * Returns the meta data of the current node
+     * Returns the meta data of the current node.
      * @return MetaData meta information of the content <code>Node</code>
      */
     MetaData getMetaData();
@@ -139,7 +139,7 @@ public interface Content extends Cloneable {
     NodeData getNodeData(String name);
 
     /**
-     * get node name
+     * get node name.
      * @return String name of the current <code>Node</code>
      */
     String getName();
@@ -201,25 +201,25 @@ public interface Content extends Cloneable {
 
     /**
      * Sets the node data. If the node data does not yet exist the node data is created. Setting
-     * null is not allowed
+     * null is not allowed.
      */
     NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
      * Sets the node data. If the node data does not yet exist the node data is created. Setting
-     * null is not allowed
+     * null is not allowed.
      */
     NodeData setNodeData(String name, String value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
      * Sets the node data. If the node data does not yet exist the node data is created. Setting
-     * null is not allowed
+     * null is not allowed.
      */
     NodeData setNodeData(String name, long value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
      * Sets the node data. If the node data does not yet exist the node data is created. Setting
-     * null is not allowed
+     * null is not allowed.
      */
     NodeData setNodeData(String name, InputStream value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
@@ -255,7 +255,7 @@ public interface Content extends Cloneable {
     NodeData setNodeData(String name, Object value) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Delete NodeData with the specified name
+     * Delete NodeData with the specified name.
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      */
@@ -263,7 +263,7 @@ public interface Content extends Cloneable {
 
     /**
      * You could call this method anytime to update working page properties - Modification date &
-     * Author ID
+     * Author ID.
      * @throws AccessDeniedException if the current session does not have sufficient access rights
      * to complete the operation
      * @throws RepositoryException if an error occurs
@@ -277,7 +277,7 @@ public interface Content extends Cloneable {
     Collection<Content> getChildren();
 
     /**
-     * Get a collection containing child nodes which satisfies the given filter
+     * Get a collection containing child nodes which satisfies the given filter.
      * @param filter
      * @return Collection of content objects or empty collection when no children are found.
      */
@@ -294,14 +294,14 @@ public interface Content extends Cloneable {
     Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria);
 
     /**
-     * Get collection of specified content type and its subtypes
+     * Get collection of specified content type and its subtypes.
      * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
     Collection<Content> getChildren(String contentType);
 
     /**
-     * Get collection of specified content type
+     * Get collection of specified content type.
      * @param contentType ItemType
      * @return Collection of content nodes
      */
@@ -324,12 +324,12 @@ public interface Content extends Cloneable {
     Content getChildByName(String namePattern);
 
     /**
-     * Gets all properties bind in NodeData object excluding JCR system properties
+     * Gets all properties bind in NodeData object excluding JCR system properties.
      */
     Collection<NodeData> getNodeDataCollection();
 
     /**
-     * Gets all properties bind in NodeData object which qualify the given namePattern
+     * Gets all properties bind in NodeData object which qualify the given namePattern.
      * @param namePattern
      */
     Collection<NodeData> getNodeDataCollection(String namePattern);
@@ -358,13 +358,13 @@ public interface Content extends Cloneable {
     boolean hasNodeData(String name) throws RepositoryException;
 
     /**
-     * get a handle representing path relative to the content repository
+     * get a handle representing path relative to the content repository.
      * @return String representing path (handle) of the content
      */
     String getHandle();
 
     /**
-     * get parent content object
+     * get parent content object.
      * @return Content representing parent node
      * @throws PathNotFoundException
      * @throws AccessDeniedException if the current session does not have sufficient access rights
@@ -374,24 +374,24 @@ public interface Content extends Cloneable {
     Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * get absolute parent object starting from the root node
-     * @param digree level at which the requested node exist, relative to the ROOT node
+     * get absolute parent object starting from the root node.
+     * @param level level at which the requested node exist, relative to the ROOT node
      * @return Content representing parent node
      * @throws AccessDeniedException if the current session does not have sufficient access rights
      * to complete the operation
      * @throws RepositoryException if an error occurs
      */
-    Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+    Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
-     * Convenience method for taglib
+     * Convenience method for taglib.
      * @return Content representing node on level 0
      * @throws RepositoryException if an error occurs
      */
     Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException;
 
     /**
-     * get node level from the ROOT node
+     * get node level from the ROOT node.
      * @return level at which current node exist, relative to the ROOT node
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
@@ -399,7 +399,7 @@ public interface Content extends Cloneable {
     int getLevel() throws PathNotFoundException, RepositoryException;
 
     /**
-     * move current node to the specified location above the named <code>beforename</code>
+     * move current node to the specified location above the named <code>beforename</code>.
      * @param srcName where current node has to be moved
      * @param beforeName name of the node before the current node has to be placed
      * @throws RepositoryException if an error occurs
@@ -418,25 +418,25 @@ public interface Content extends Cloneable {
     int getIndex() throws RepositoryException;
 
     /**
-     * utility method to get Node object used to create current content object
+     * utility method to get Node object used to create current content object.
      * @return Node
      */
     Node getJCRNode();
 
     /**
-     * evaluate primary node type of the associated Node of this object
+     * evaluate primary node type of the associated Node of this object.
      * @param type
      */
     boolean isNodeType(String type);
 
     /**
-     * returns primary node type definition of the associated Node of this object
+     * returns primary node type definition of the associated Node of this object.
      * @throws RepositoryException if an error occurs
      */
     NodeType getNodeType() throws RepositoryException;
 
     /**
-     * returns primary node type name of the associated Node of this object
+     * returns primary node type name of the associated Node of this object.
      * @throws RepositoryException if an error occurs
      */
     String getNodeTypeName() throws RepositoryException;
@@ -490,14 +490,14 @@ public interface Content extends Cloneable {
     void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
-     * add version leaving the node checked out
+     * add version leaving the node checked out.
      * @throws UnsupportedRepositoryOperationException
      * @throws RepositoryException if an error occurs
      */
     Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
-     * add version leaving the node checked out
+     * add version leaving the node checked out.
      * @param rule to be used to collect content
      * @throws UnsupportedRepositoryOperationException
      * @throws RepositoryException if an error occurs
@@ -540,7 +540,7 @@ public interface Content extends Cloneable {
     ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
-     * get content view over the jcr version object
+     * get content view over the jcr version object.
      * @param version
      * @return version object wrapped in ContentVersion
      * @see info.magnolia.cms.core.version.ContentVersion
@@ -548,7 +548,7 @@ public interface Content extends Cloneable {
     ContentVersion getVersionedContent(Version version) throws RepositoryException;
 
     /**
-     * get content view over the jcr version object
+     * get content view over the jcr version object.
      * @param versionName
      * @return version object wrapped in ContentVersion
      * @see info.magnolia.cms.core.version.ContentVersion
@@ -556,20 +556,20 @@ public interface Content extends Cloneable {
     ContentVersion getVersionedContent(String versionName) throws RepositoryException;
 
     /**
-     * removes all versions of this node and associated version graph
+     * removes all versions of this node and associated version graph.
      * @throws AccessDeniedException If not allowed to do write operations on this node
      * @throws RepositoryException if unable to remove versions from version store
      */
     void removeVersionHistory() throws AccessDeniedException, RepositoryException;
 
     /**
-     * Persists all changes to the repository if validation succeds
+     * Persists all changes to the repository if validation succeeds.
      * @throws RepositoryException if an error occurs
      */
     void save() throws RepositoryException;
 
     /**
-     * checks for the allowed access rights
+     * checks for the allowed access rights.
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
@@ -582,13 +582,13 @@ public interface Content extends Cloneable {
     void delete() throws RepositoryException;
 
     /**
-     * Remove specified path
+     * Remove specified path.
      * @throws RepositoryException if an error occurs
      */
     void delete(String path) throws RepositoryException;
 
     /**
-     * checks if the requested resource is an NodeData (Property)
+     * checks if the requested resource is an NodeData (Property).
      * @param path of the requested NodeData
      * @return boolean true is the requested content is an NodeData
      * @throws AccessDeniedException
@@ -606,13 +606,13 @@ public interface Content extends Cloneable {
     void refresh(boolean keepChanges) throws RepositoryException;
 
     /**
-     * UUID of the node refrenced by this object
+     * UUID of the node referenced by this object.
      * @return uuid
      */
     String getUUID();
 
     /**
-     * add specified mixin type if allowed
+     * add specified mixin type if allowed.
      * @param type mixin type to be added
      * @throws RepositoryException if an error occurs
      */
@@ -620,7 +620,7 @@ public interface Content extends Cloneable {
 
     /**
      * Removes the specified mixin node type from this node. Also removes mixinName from this node's
-     * jcr:mixinTypes property. <b>The mixin node type removal takes effect on save</b>.
+     * jcr:mixinTypes property. <strong>The mixin node type removal takes effect on save</strong>.
      * @param type , mixin type to be removed
      * @throws RepositoryException if an error occurs
      */
@@ -629,7 +629,7 @@ public interface Content extends Cloneable {
     /**
      * Returns an array of NodeType objects representing the mixin node types assigned to this node.
      * This includes only those mixin types explicitly assigned to this node, and therefore listed
-     * in the property jcr:mixinTypes. It does not include mixin types inherited through the additon
+     * in the property jcr:mixinTypes. It does not include mixin types inherited through the addition
      * of supertypes to the primary type hierarchy.
      * @return an array of mixin NodeType objects.
      * @throws RepositoryException if an error occurs
@@ -637,7 +637,7 @@ public interface Content extends Cloneable {
     NodeType[] getMixinNodeTypes() throws RepositoryException;
 
     /**
-     * places a lock on this object
+     * places a lock on this object.
      * @param isDeep if true this lock will apply to this node and all its descendants; if false, it
      * applies only to this node.
      * @param isSessionScoped if true, this lock expires with the current session; if false it
@@ -651,7 +651,7 @@ public interface Content extends Cloneable {
     Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException;
 
     /**
-     * places a lock on this object
+     * places a lock on this object.
      * @param isDeep if true this lock will apply to this node and all its descendants; if false, it
      * applies only to this node.
      * @param isSessionScoped if true, this lock expires with the current session; if false it
@@ -701,7 +701,7 @@ public interface Content extends Cloneable {
     boolean isLocked() throws RepositoryException;
 
     /**
-     * get workspace to which this node attached to
+     * get workspace to which this node attached to.
      * @throws RepositoryException if unable to get this node session
      */
     Workspace getWorkspace() throws RepositoryException;
@@ -715,13 +715,13 @@ public interface Content extends Cloneable {
     HierarchyManager getHierarchyManager();
 
     /**
-     * checks if this node has a sub node with name MetaData
+     * checks if this node has a sub node with name MetaData.
      * @return true if MetaData exists
      */
     boolean hasMetaData();
 
     /**
-     * Implement this interface to be used as node filter by getChildren()
+     * Implement this interface to be used as node filter by getChildren().
      */
     public interface ContentFilter {
 

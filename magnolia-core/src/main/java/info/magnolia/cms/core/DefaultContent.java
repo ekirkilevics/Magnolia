@@ -37,12 +37,10 @@ import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -57,7 +55,6 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -72,6 +69,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Default, JCR-based, implementation of {@link Content}.
+ * 
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
  */
@@ -358,11 +357,11 @@ public class DefaultContent extends AbstractContent {
         return (new DefaultContent(this.node.getParent(), this.hierarchyManager));
     }
 
-    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (digree > this.getLevel()) {
+    public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        if (level > this.getLevel()) {
             throw new PathNotFoundException();
         }
-        return (new DefaultContent(this.node.getAncestor(digree), this.hierarchyManager));
+        return (new DefaultContent(this.node.getAncestor(level), this.hierarchyManager));
     }
 
     public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
@@ -400,7 +399,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     /**
-     * private Helper method to evaluate primary node type of the given node
+     * private Helper method to evaluate primary node type of the given node.
      * @param node
      * @param type
      */
@@ -439,26 +438,22 @@ public class DefaultContent extends AbstractContent {
         return new ItemType(getNodeTypeName());
     }
 
-    public void restore(String versionName, boolean removeExisting) throws VersionException,
-        UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), this.getHandle(), Permission.WRITE);
         Version version = this.getVersionHistory().getVersion(versionName);
         this.restore(version, removeExisting);
     }
 
-    public void restore(Version version, boolean removeExisting) throws VersionException,
-        UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), this.getHandle(), Permission.WRITE);
         VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
-    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException,
-        UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         throw new UnsupportedRepositoryOperationException("Not implemented in 3.0 Beta");
     }
 
-    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException,
-        UnsupportedRepositoryOperationException, RepositoryException {
+    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         this.node.restoreByLabel(versionLabel, removeExisting);
         throw new UnsupportedRepositoryOperationException("Not implemented in 3.0 Beta");
     }

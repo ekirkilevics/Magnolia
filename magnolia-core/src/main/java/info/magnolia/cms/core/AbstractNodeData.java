@@ -186,7 +186,7 @@ public abstract class AbstractNodeData implements NodeData{
 
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
-        buffer.append(getHierarchyManager().getName() + ":");
+        buffer.append(getHierarchyManager().getName()).append(":");
         buffer.append(getHandle());
         buffer.append("[");
         buffer.append(NodeDataUtil.getTypeName(this));

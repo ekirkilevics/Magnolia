@@ -74,7 +74,7 @@ public interface NodeData extends Cloneable {
     Value getValue();
 
     /**
-     * For multi-value properties
+     * For multi-value properties.
      * @return Value[]
      */
     Value[] getValues();
@@ -94,19 +94,19 @@ public interface NodeData extends Cloneable {
     String getString();
 
     /**
-     * Returns the <code>long</code> representation of the value:
+     * Returns the <code>long</code> representation of the value.
      * @return long
      */
     long getLong();
 
     /**
-     * Returns the <code>double</code> representation of the value:
+     * Returns the <code>double</code> representation of the value.
      * @return double
      */
     double getDouble();
 
     /**
-     * Returns the <code>Calendar</code> representation of the value:
+     * Returns the <code>Calendar</code> representation of the value.
      * @return Calendar
      */
     Calendar getDate();
@@ -118,7 +118,7 @@ public interface NodeData extends Cloneable {
     boolean getBoolean();
 
     /**
-     * Returns the <code>InputStream</code> representation of the value:
+     * Returns the <code>InputStream</code> representation of the value.
      * @return boolean
      */
     InputStream getStream();
@@ -132,7 +132,7 @@ public interface NodeData extends Cloneable {
     Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException;
 
     /**
-     * Same as {@link #getReferencedContent()} but achieves the referenced node from a different workspace
+     * Same as {@link #getReferencedContent()} but achieves the referenced node from a different workspace.
      */
     Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException;
 
@@ -157,7 +157,7 @@ public interface NodeData extends Cloneable {
     String getName();
 
     /**
-     * returns size in bytes
+     * returns size in bytes.
      * @return content length
      */
     long getContentLength();
@@ -169,75 +169,75 @@ public interface NodeData extends Cloneable {
     Property getJCRProperty();
 
     /**
-     * set value of type <code>String</code>
+     * set value of type <code>String</code>.
      * @param value , string to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(String value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>int</code>
+     * set value of type <code>int</code>.
      * @param value , int value to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(int value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>long</code>
+     * set value of type <code>long</code>.
      * @param value , long value to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(long value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>InputStream</code>
+     * set value of type <code>InputStream</code>.
      * @param value , InputStream to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(InputStream value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>double</code>
+     * set value of type <code>double</code>.
      * @param value , double value to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(double value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>boolean</code>
+     * set value of type <code>boolean</code>.
      * @param value , boolean value to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(boolean value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>Calendar</code>
+     * set value of type <code>Calendar</code>.
      * @param value , Calendar value to be set
      * @throws javax.jcr.RepositoryException
      */
     void setValue(Calendar value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * Sets a reference value
+     * Sets a reference value.
      */
     void setValue(Content value) throws RepositoryException, AccessDeniedException;
     
     /**
-     * set value of type <code>Value</code>
+     * set value of type <code>Value</code>.
      * @param value
      * @throws javax.jcr.RepositoryException
      */
     void setValue(Value value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>Value[]</code>
+     * set value of type <code>Value[]</code>.
      * @param value
      * @throws javax.jcr.RepositoryException
      */
     void setValue(Value[] value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set attribute, available only if NodeData is of type <code>Binary</code>
+     * set attribute, available only if NodeData is of type <code>Binary</code>.
      * @param name
      * @param value
      * @throws javax.jcr.RepositoryException
@@ -248,7 +248,7 @@ public interface NodeData extends Cloneable {
         UnsupportedOperationException;
 
     /**
-     * set attribute, available only if NodeData is of type <code>Binary</code>
+     * set attribute, available only if NodeData is of type <code>Binary</code>.
      * @param name
      * @param value
      * @throws javax.jcr.RepositoryException
@@ -259,65 +259,65 @@ public interface NodeData extends Cloneable {
         UnsupportedOperationException;
 
     /**
-     * get attribute, available only if NodeData is of type <code>Binary</code>
+     * get attribute, available only if NodeData is of type <code>Binary</code>.
      * @param name
      * @return string value
      */
     String getAttribute(String name);
 
     /**
-     * get all attribute names
+     * get all attribute names.
      * @return collection of attribute names
      * @throws javax.jcr.RepositoryException
      */
     Collection<String> getAttributeNames() throws RepositoryException;
 
     /**
-     * checks if the atom exists in the repository
+     * checks if the atom exists in the repository.
      * @return boolean
      */
     boolean isExist();
 
     /**
-     * get a handle representing path relative to the content repository
+     * get a handle representing path relative to the content repository.
      * @return String representing path (handle) of the content
      */
     String getHandle();
 
     /**
-     * Persists all changes to the repository if validation succeeds
+     * Persists all changes to the repository if validation succeeds.
      * @throws javax.jcr.RepositoryException
      */
     void save() throws RepositoryException;
 
     /**
-     * checks for the allowed access rights
+     * checks for the allowed access rights.
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
     boolean isGranted(long permissions);
 
     /**
-     * Remove this path
+     * Remove this path.
      * @throws javax.jcr.RepositoryException
      */
     void delete() throws RepositoryException;
 
     /**
-     * Refreshes current node keeping all changes
+     * Refreshes current node keeping all changes.
      * @throws javax.jcr.RepositoryException
      * @see javax.jcr.Node#refresh(boolean)
      */
     void refresh(boolean keepChanges) throws RepositoryException;
 
     /**
-     * for multi-value controls
+     * for multi-value controls.
      * @return
      */
     int isMultiValue();
 
     /**
-     * returns Parent node
+     * returns Parent node.
      */
     Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException;
 

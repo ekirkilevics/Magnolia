@@ -166,8 +166,8 @@ public abstract class ContentWrapper extends AbstractContent {
         return this.getWrappedContent().getAllVersions();
     }
 
-    public Content getAncestor(int digree) throws RepositoryException {
-        return wrap(this.getWrappedContent().getAncestor(digree));
+    public Content getAncestor(int level) throws RepositoryException {
+        return wrap(this.getWrappedContent().getAncestor(level));
     }
 
     public Collection<Content> getAncestors() throws RepositoryException {

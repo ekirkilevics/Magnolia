@@ -57,8 +57,7 @@ import org.slf4j.LoggerFactory;
  * @version 2.0 $Id$
  */
 public class DefaultNodeData extends AbstractNodeData {
-
-    static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
 
     protected DefaultNodeData(Content parent, String name) {
         super(parent, name);
@@ -92,7 +91,7 @@ public class DefaultNodeData extends AbstractNodeData {
             }
         }
         else{
-            return (Value[]) null;
+            return null;
         }
     }
 

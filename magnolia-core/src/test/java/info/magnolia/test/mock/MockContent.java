@@ -298,12 +298,12 @@ public class MockContent extends AbstractContent {
         this.parent = parent;
     }
 
-    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        if (digree > this.getLevel()) {
+    public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        if (level > this.getLevel()) {
             throw new PathNotFoundException();
         }
         Content ancestor = this;
-        for (int i=getLevel();i==digree;i--){
+        for (int i=getLevel();i==level;i--){
             ancestor=ancestor.getParent();
         }
         return ancestor;

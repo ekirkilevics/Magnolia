@@ -41,11 +41,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.regex.Pattern;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -54,19 +52,19 @@ import javax.jcr.Value;
 import javax.jcr.Workspace;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hdgf.streams.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * A base class by implementing some default behavior. A subclass must carefully implement {@link #getNodeData(String, int)} and {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)}.
+ * A base class by implementing some default behavior.
+ * A subclass must carefully implement {@link #getNodeData(String, int)},
+ * {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)} and
+ * {@link #getNodeDataCollection(String)}.
+ *
  * @author pbaerfuss
  * @version $Id$
  *
  */
 public abstract class AbstractContent extends ContentHandler implements Content {
-    
-    private static Logger log = LoggerFactory.getLogger(AbstractContent.class);
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractContent.class);
 
     public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return createContent(name, ItemType.CONTENT);
@@ -76,29 +74,23 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         return createContent(name, contentType.getSystemName());
     }
 
-    /**
-     * @deprecated {@inheritDoc}
-     */
     public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, "");
     }
 
-    /**
-     * @deprecated {@inheritDoc}
-     */
     public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, value);
     }
 
     /**
-     * @deprecated {@inheritDoc}
+     * @deprecated
      */
     public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, value);
     }
 
     /**
-     * @deprecated {@inheritDoc}
+     * @deprecated 
      */
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // set some default values to create the property
@@ -119,7 +111,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     }
     
     /**
-     * @deprecated {@inheritDoc}
+     * @deprecated
      */
     public NodeData createNodeData(String name, Object valueObj) throws RepositoryException {
         NodeData nodeData = getNodeData(name, NodeDataUtil.getJCRPropertyType(valueObj));
@@ -147,7 +139,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     abstract public NodeData getNodeData(String name, int type) throws AccessDeniedException, RepositoryException;
 
     /**
-     * Delegates to {@link NodeData#isExist()}
+     * Delegates to {@link NodeData#isExist()}.
      */
     public boolean hasNodeData(String name) throws RepositoryException {
         return getNodeData(name).isExist();
@@ -211,7 +203,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     }
     
     /**
-     * Uses the {@link NodeDataUtil} to create and set the node data based on the object type
+     * Uses the {@link NodeDataUtil} to create and set the node data based on the object type.
      */
     public NodeData setNodeData(String name, Object value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = getNodeData(name, NodeDataUtil.getJCRPropertyType(value));
@@ -225,7 +217,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(ItemType)} passing the node's type
+     * Delegates to {@link #getChildren(ItemType)} passing the current node's type.
      */
     public Collection<Content> getChildren() {
         String type = null;
@@ -247,7 +239,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
      */    
     public Collection<Content> getChildren(ContentFilter filter) {
         return getChildren(filter, null);
@@ -255,18 +247,18 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
      */    
     public Collection<Content> getChildren(ItemType itemType) {
-        return getChildren(new NodeTypeFilter(itemType));
+        return getChildren(new NodeTypeFilter(itemType), null);
     }
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
      */
     public Collection<Content> getChildren(String contentType) {
-        return getChildren(new ItemType(contentType));
+        return getChildren(new NodeTypeFilter(contentType), null);
     }
 
     /**
@@ -287,7 +279,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     abstract public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria);
 
     /**
-     * @deprecated {@inheritDoc}
+     * @deprecated
      */
     public Content getChildByName(String namePattern) {
         Collection<Content> children = getChildren("nt:base", namePattern);;

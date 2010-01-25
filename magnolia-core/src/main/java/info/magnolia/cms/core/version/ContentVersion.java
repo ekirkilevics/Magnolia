@@ -401,14 +401,14 @@ public class ContentVersion extends DefaultContent {
 
     /**
      * get absolute parent object starting from the root node
-     * @param digree level at which the requested node exist, relative to the ROOT node
+     * @param level level at which the requested node exist, relative to the ROOT node
      * @return Content representing parent node
      * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
      * rights to complete the operation
      * @throws javax.jcr.RepositoryException if an error occurs
      */
-    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.base.getAncestor(digree);
+    public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return this.base.getAncestor(level);
     }
 
     /**
