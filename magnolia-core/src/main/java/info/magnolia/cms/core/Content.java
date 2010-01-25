@@ -135,7 +135,6 @@ public interface Content extends Cloneable {
      * false.
      * @return NodeData requested <code>NodeData</code> object
      */
-
     NodeData getNodeData(String name);
 
     /**
