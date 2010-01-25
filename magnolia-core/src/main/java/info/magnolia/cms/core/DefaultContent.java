@@ -243,51 +243,6 @@ public class DefaultContent extends AbstractContent {
         return this.metaData;
     }
 
-    
-    /*
-    public NodeData getNodeData(String name) {
-        NodeData nodeData = null;
-        try {
-            nodeData = new DefaultNodeData(this.node, name, this.hierarchyManager, this);
-        }
-        catch (PathNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                try {
-                    log.debug("Path not found for property [{}] in node {}", name, this.node.getPath()); //$NON-NLS-1$
-                } catch (RepositoryException e1) {
-                    // ignore, debug only
-                }
-            }
-        }
-        catch (AccessDeniedException e) {
-            if (log.isDebugEnabled()) {
-                try {
-                    log.debug("Access denied while trying to read property [{}] in node {}", name, this.node.getPath()); //$NON-NLS-1$
-                } catch (RepositoryException e1) {
-                    // ignore, debug only
-                }
-            }
-        }
-        catch (RepositoryException re) {
-            try {
-                log.warn("Repository exception while trying to read property [" + name + "] for node " + this.node.getPath(), re); //$NON-NLS-1$ //$NON-NLS-2$
-            } catch (RepositoryException e1) {
-                // ignore, debug only
-            }
-        }
-
-        if (nodeData == null) {
-            // the node data could not be constructed properly since the property it is supposed to represent can't be accessed. Return "empty" (i.e. without property and it's value) node data.
-            final DefaultNodeData defNodeData = new DefaultNodeData();
-            defNodeData.setParent(this);
-            this.setHierarchyManager(hierarchyManager);
-            this.setAccessManager(hierarchyManager.getAccessManager());
-            return defNodeData;
-        }
-        return nodeData;
-    }
-*/
-    
     public String getName() {
         try {
             return this.node.getName();
@@ -646,27 +601,6 @@ public class DefaultContent extends AbstractContent {
             log.debug(re.getMessage(), re);
         }
         return false;
-    }
-
-    public String toString() {
-        if (this.node ==  null) {
-            return super.toString();
-        }
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(getHierarchyManager() == null ? "null" : getHierarchyManager().getName());
-        buffer.append(":" + getHandle());
-        String type = "";
-        try {
-            type = getItemType().getSystemName();
-        }
-        catch (RepositoryException e) {
-            // ignore
-        }
-        buffer.append("[");
-        buffer.append(type);
-        buffer.append("]");
-
-        return buffer.toString();
     }
 
 }
