@@ -294,9 +294,6 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         return getNodeDataCollection(null);
     }
 
-    @Override
-    abstract public Collection<NodeData> getNodeDataCollection(String namePattern);
-
     protected Collection<NodeData> getBinaryNodeDatas(String namePattern) throws RepositoryException {
         Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
         Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
