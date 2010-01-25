@@ -293,6 +293,8 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         return getNodeDataCollection(null);
     }
 
+    abstract public Collection<NodeData> getNodeDataCollection(String namePattern);
+
     public boolean hasChildren() {
         return (this.getChildren().size() > 0);
     }
