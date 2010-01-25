@@ -329,8 +329,8 @@ public interface Content extends Cloneable {
     Collection<NodeData> getNodeDataCollection();
 
     /**
-     * Gets all properties bind in NodeData object which qualify the given namePattern.
-     * @param namePattern
+     * Gets all node datas matching the given pattern. If no pattern is given (null),
+     * gets all node datas.
      */
     Collection<NodeData> getNodeDataCollection(String namePattern);
 

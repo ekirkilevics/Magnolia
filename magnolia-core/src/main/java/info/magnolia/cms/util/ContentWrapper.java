@@ -60,11 +60,12 @@ import javax.jcr.version.VersionIterator;
  * <p>
  * The following methods you might want to override:
  * <ul>
- * <li>{@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, Comparator)} 
- * <li>{@link #getContent(String)}
- * <li>{@link #getNodeData(String)}
- * <li>{@link #wrap(Content)}
- * <li>{@link #wrap(NodeData)}
+ * <li>{@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}</li>
+ * <li>{@link #getContent(String)}</li>
+ * <li>{@link #getNodeData(String)}</li>
+ * <li>{@link #getNodeDataCollection(String)}</li>
+ * <li>{@link #wrap(Content)}</li>
+ * <li>{@link #wrap(NodeData)}</li>
  * </ul>
  * 
  * @author pbaerfuss
