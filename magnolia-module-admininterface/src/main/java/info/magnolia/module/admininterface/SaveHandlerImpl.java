@@ -75,11 +75,12 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.devlib.schmidt.imageinfo.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -297,13 +298,13 @@ public class SaveHandlerImpl implements SaveHandler {
         String customSaveHandler = this.getForm().getParameter(name + "_saveHandler");
         if (!StringUtils.isEmpty(customSaveHandler)) {
             try {
-                Class cshClazz = Class.forName(customSaveHandler);
+                Class cshClazz = Classes.getClassFactory().forName(customSaveHandler);
                 if (!FieldSaveHandler.class.isAssignableFrom(cshClazz)) {
                     log.error("Class {} must implement the FieldSaveHandler interface", cshClazz);
                     throw new ClassCastException("Class " + cshClazz + " must implement the FieldSaveHandler interface");
                 }
                 else {
-                    FieldSaveHandler csh = (FieldSaveHandler) cshClazz.newInstance();
+                    FieldSaveHandler csh = (FieldSaveHandler) Classes.getClassFactory().newInstance(cshClazz);
                     HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
                     String configPath = this.getForm().getParameter(name + "_configNode");
@@ -327,11 +328,8 @@ public class SaveHandlerImpl implements SaveHandler {
             catch (ClassNotFoundException e) {
                 log.error("Error loading class " + customSaveHandler, e);
             }
-            catch (InstantiationException e) {
+            catch (MgnlInstantiationException e) {
                 log.error("Error creating instance of class " + customSaveHandler, e);
-            }
-            catch (IllegalAccessException e) {
-                log.error("Illegal access to class " + customSaveHandler, e);
             }
         }
         else
@@ -697,7 +695,7 @@ public class SaveHandlerImpl implements SaveHandler {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
         }
         catch (RepositoryException e) {
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
         return valueFactory.createValue(l);
     }
@@ -717,7 +715,7 @@ public class SaveHandlerImpl implements SaveHandler {
             valueFactory = hm.getWorkspace().getSession().getValueFactory();
         }
         catch (RepositoryException e) {
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
 
         Value value = null;
