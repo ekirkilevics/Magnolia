@@ -68,6 +68,7 @@ import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,29 +207,38 @@ public class MockContent extends AbstractContent {
         return getParent().getLevel() + 1;
     }
 
-    public Collection<NodeData> getNodeDataCollection() {
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
         // FIXME try to find a better solution than filtering now
         // problem is that getNodeData(name, type) will have to add the node data
         // as setValue() might be called later on an the node data starts to exist
         ArrayList<NodeData> onlyExistingNodeDatas = new ArrayList<NodeData>();
         for (NodeData nodeData : nodeDatas.values()) {
             if(nodeData.isExist()){
-                onlyExistingNodeDatas.add(nodeData);
+                if (namePattern == null || matchesNamePattern(nodeData, namePattern)) {
+                    onlyExistingNodeDatas.add(nodeData);
+                }
             }
         }
+
         return onlyExistingNodeDatas;
     }
 
-    public Collection<Content> getChildren(final ContentFilter filter, Comparator<Content> orderCriteria) {
+    public Collection<Content> getChildren(final ContentFilter filter, final String namePattern, Comparator<Content> orderCriteria) {
         // copy
-        List<Content> children = new ArrayList<Content>(this.children.values());
+        final List<Content> children = new ArrayList<Content>(this.children.values());
 
-        CollectionUtils.filter(children, new Predicate() {
-
+        final Predicate filterPredicate = new Predicate() {
             public boolean evaluate(Object object) {
                 return filter.accept((Content) object);
             }
-        });
+        };
+
+        CollectionUtils.filter(children, filterPredicate);
+
+        if (namePattern != null) {
+            CollectionUtils.filter(children, new NamePatternFilter(namePattern));
+        }
+
 
         return children;
     }
@@ -464,5 +474,34 @@ public class MockContent extends AbstractContent {
     }
 
     public void updateMetaData() throws RepositoryException, AccessDeniedException {
+    }
+
+
+    /**
+     * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
+     * in the Property and Node interfaces.
+     */
+    private static class NamePatternFilter implements Predicate {
+        private final String namePattern;
+
+        public NamePatternFilter(String namePattern) {
+            this.namePattern = namePattern;
+        }
+
+        public boolean evaluate(Object object) {
+            return matchesNamePattern(object, namePattern);
+        }
+    }
+
+    private static boolean matchesNamePattern(Object object, String namePattern) {
+        final String name;
+        if (object instanceof NodeData) {
+            name = ((NodeData) object).getName();
+        } else if (object instanceof Content) {
+            name = ((Content) object).getName();
+        } else {
+            throw new IllegalStateException("Unsupported object type: " + object.getClass());
+        }
+        return ChildrenCollectorFilter.matches(name, namePattern);
     }
 }

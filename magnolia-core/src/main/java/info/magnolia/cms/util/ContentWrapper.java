@@ -35,14 +35,11 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -140,7 +137,7 @@ public abstract class ContentWrapper extends AbstractContent {
         return buffer.toString();
     }
 
-    // ---- below are only generated delegate methods
+    // wrapping methods below - methods returning Content wrap it using #wrap(), methods returning Collection<Content> wrap it with #wrapContentNodes()
     public void addMixin(String type) throws RepositoryException {
         this.getWrappedContent().addMixin(type);
     }
@@ -185,8 +182,8 @@ public abstract class ContentWrapper extends AbstractContent {
         return wrap(this.getWrappedContent().getChildByName(namePattern));
     }
 
-    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
-        return wrapContentNodes(this.getWrappedContent().getChildren(filter, orderCriteria));
+    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
+        return wrapContentNodes(((AbstractContent) getWrappedContent()).getChildren(filter, namePattern, orderCriteria));
     }
 
     public Content getContent(String name) throws RepositoryException {
@@ -234,8 +231,8 @@ public abstract class ContentWrapper extends AbstractContent {
         return wrap(((AbstractContent)getWrappedContent()).getNodeData(name, type));
     }
 
-    public Collection<NodeData> getNodeDataCollection() {
-        return wrapNodeDatas(this.getWrappedContent().getNodeDataCollection());
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
+        return wrapNodeDatas(this.getWrappedContent().getNodeDataCollection(namePattern));
     }
 
     public NodeType getNodeType() throws RepositoryException {

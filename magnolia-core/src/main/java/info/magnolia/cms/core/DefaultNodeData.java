@@ -207,6 +207,10 @@ public class DefaultNodeData extends AbstractNodeData {
         return parent.getJCRNode();
     }
 
+    protected Content getContentFromJCRReference() throws RepositoryException {
+        return getHierarchyManager().getContent(getJCRProperty().getNode().getPath());
+    }
+
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         getJCRNode().setProperty(name, value);

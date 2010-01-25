@@ -43,6 +43,7 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.ItemVisitor;
 import javax.jcr.Node;
 import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.ReferentialIntegrityException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -197,7 +198,10 @@ public class MockJCRProperty implements Property {
     }
 
     public Node getNode() throws ValueFormatException, RepositoryException {
-        return this.mockNodeData.getParent().getJCRNode();
+        if (getType() != PropertyType.REFERENCE) {
+            throw new ValueFormatException("Not a reference");
+        }
+        throw new UnsupportedOperationException();
     }
 
     public long getLong() throws ValueFormatException, RepositoryException {

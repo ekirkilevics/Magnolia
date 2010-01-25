@@ -225,7 +225,11 @@ public class BinaryNodeData extends AbstractNodeData {
     public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
-    
+
+    protected Content getContentFromJCRReference() throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
     public String getString() {
         throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }

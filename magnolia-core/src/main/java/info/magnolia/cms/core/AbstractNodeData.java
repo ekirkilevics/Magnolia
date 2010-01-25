@@ -114,19 +114,17 @@ public abstract class AbstractNodeData implements NodeData{
         int type = getType();
 
         if (type == PropertyType.REFERENCE) {
-            String uuid = getString();
-            return hm.getContentByUUID(uuid);
+            refNode = getContentFromJCRReference();
         }
 
         else if (type == PropertyType.PATH || type == PropertyType.STRING) {
-            String pathOrUUID = this.getString();
-            String path = pathOrUUID;
+            final String pathOrUUID = this.getString();
             // is this relative path?
-            if (!path.startsWith("/")) {
-                refNode = node.getContent(path);
+            if (!pathOrUUID.startsWith("/")) {
+                refNode = node.getContent(pathOrUUID);
             }
-            else if (hm.isExist(path)){
-                refNode = hm.getContent(path);
+            else if (hm.isExist(pathOrUUID)){
+                refNode = hm.getContent(pathOrUUID);
             }
 
             // we support uuids as strings
@@ -146,6 +144,11 @@ public abstract class AbstractNodeData implements NodeData{
 
         return refNode;
     }
+
+    /**
+     * Specific implementation for retrieving the referenced node when using a property of type REFERENCE.
+     */
+    protected abstract Content getContentFromJCRReference() throws RepositoryException;
 
     public int isMultiValue() {
         if(multiValue == MULTIVALUE_UNDEFINED) {

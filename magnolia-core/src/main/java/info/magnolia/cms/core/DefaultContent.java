@@ -253,7 +253,7 @@ public class DefaultContent extends AbstractContent {
         return StringUtils.EMPTY;
     }
 
-    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
+    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
         Collection<Content> children;
         if (orderCriteria == null) {
             children = new ArrayList<Content>();
@@ -263,7 +263,13 @@ public class DefaultContent extends AbstractContent {
         }
 
         try {
-            NodeIterator nodeIterator = this.node.getNodes();
+            final NodeIterator nodeIterator;
+            if (namePattern == null) {
+                nodeIterator = this.node.getNodes();
+            } else {
+                nodeIterator = this.node.getNodes(namePattern);
+            }
+
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
                 try {
@@ -287,11 +293,11 @@ public class DefaultContent extends AbstractContent {
         return children;
     }
     
-    public Collection<NodeData> getNodeDataCollection() {
+    public Collection<NodeData> getNodeDataCollection(String namePattern) {
         final ArrayList<NodeData> all = new ArrayList<NodeData>();
         try {
-            all.addAll(getPrimitiveNodeDatas());
-            all.addAll(getBinaryNodeDatas());
+            all.addAll(getPrimitiveNodeDatas(namePattern));
+            all.addAll(getBinaryNodeDatas(namePattern));
         }
         catch (RepositoryException e) {
             throw new IllegalStateException("Can't read node datas of " + toString(), e);
@@ -299,18 +305,23 @@ public class DefaultContent extends AbstractContent {
         return all;
     }
     
-    protected Collection<NodeData> getBinaryNodeDatas() throws RepositoryException {
+    protected Collection<NodeData> getBinaryNodeDatas(String namePattern) throws RepositoryException {
         Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
-        Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE);
+        Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
         for (Content binaryNode : binaryNodes) {
             nodeDatas.add(getNodeData(binaryNode.getName()));
         }
         return nodeDatas;
     }
 
-    protected Collection<NodeData> getPrimitiveNodeDatas() throws RepositoryException {
-        Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
-        PropertyIterator propertyIterator = this.node.getProperties();
+    protected Collection<NodeData> getPrimitiveNodeDatas(String namePattern) throws RepositoryException {
+        final Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
+        final PropertyIterator propertyIterator;
+        if (namePattern == null) {
+            propertyIterator = this.node.getProperties();
+        } else {
+            propertyIterator = this.node.getProperties(namePattern);
+        }
         while (propertyIterator.hasNext()) {
             Property property = (Property) propertyIterator.next();
             try {

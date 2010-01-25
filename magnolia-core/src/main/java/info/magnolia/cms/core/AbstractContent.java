@@ -35,7 +35,6 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.context.MgnlContext;
@@ -45,6 +44,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import javax.jcr.PathNotFoundException;
@@ -264,26 +264,27 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)
-     */    
-    public Collection<Content> getChildren(final String contentType, final String namePattern) {
-        Content.ContentFilter contentFilter = new Content.ContentFilter(){
-            Content.ContentFilter nodeTypeFilter = new NodeTypeFilter(contentType);
-            Pattern pattern = Pattern.compile(namePattern.replace("*", ".*"));
-            
-            public boolean accept(Content content) {
-                return nodeTypeFilter.accept(content) && pattern.matcher(content.getName()).matches();
-            }
-        };
-        return getChildren(contentFilter);
+     */
+    public Collection<Content> getChildren(String contentType) {
+        return getChildren(new ItemType(contentType));
     }
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator)
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}
      */    
-    public Collection<Content> getChildren(String contentType) {
-        return getChildren(new ItemType(contentType));
+    public Collection<Content> getChildren(final String contentType, final String namePattern) {
+        return getChildren(new NodeTypeFilter(contentType), namePattern, null);
     }
+
+    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
+        return getChildren(filter, null, orderCriteria);
+    }
+
+    /**
+     * @param namePattern ignored if null.
+     */
+    abstract public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria);
 
     /**
      * @deprecated {@inheritDoc}
@@ -296,20 +297,14 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         return null;
     }
 
-    /**
-     * Uses {@link #getNodeDataCollection()} and filters the returned collection. This makes it easier to extend this wrapper class.
-     */
-    public Collection<NodeData> getNodeDataCollection(String namePattern) {
-        Pattern pattern = Pattern.compile(namePattern.replace("*", ".*"));
-        Collection<NodeData> nodeDatas = getNodeDataCollection();
-        Collection<NodeData> filtered = new ArrayList<NodeData>();
-        for (NodeData nodeData : nodeDatas) {
-            if(pattern.matcher(nodeData.getName()).matches()){
-                filtered.add(nodeData);
-            }
-        }
-        return filtered;
+    public Collection<NodeData> getNodeDataCollection() {
+        return getNodeDataCollection(null);
     }
+
+    /**
+     * @param namePattern ignored if null.
+     */
+    abstract public Collection<NodeData> getNodeDataCollection(String namePattern);
 
     public boolean hasChildren() {
         return (this.getChildren().size() > 0);

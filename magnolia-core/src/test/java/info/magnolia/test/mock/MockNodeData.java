@@ -45,6 +45,7 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 
 
 /**
@@ -137,6 +138,13 @@ public class MockNodeData extends AbstractNodeData {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't build handle", e);
         }
+    }
+
+    protected Content getContentFromJCRReference() throws RepositoryException {
+        if (value instanceof Content) {
+            return (Content) value;
+        }
+        throw new ValueFormatException("Not a reference");
     }
 
     public boolean isExist() {
