@@ -324,6 +324,10 @@ public class FreemarkerHelperTest extends TestCase {
         final MockContent bar = new MockContent("bar");
         foo.addNodeData(new MockNodeData("some-ref", bar));
         bar.addNodeData(new MockNodeData("baz", "gazonk"));
+        final MockHierarchyManager hm = new MockHierarchyManager();
+        hm.getRoot().addContent(foo);
+        hm.getRoot().addContent(bar);
+
         tplLoader.putTemplate("test.ftl", "${foo['some-ref']} ${foo['some-ref'].baz}");
         assertRendereredContent("bar gazonk", createSingleValueMap("foo", foo), "test.ftl");
     }
