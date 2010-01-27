@@ -39,7 +39,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 
 /**
- * Simple utility methods which can be useful in tests
+ * Simple utility methods which can be useful in tests.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
