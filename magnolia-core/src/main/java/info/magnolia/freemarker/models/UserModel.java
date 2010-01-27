@@ -49,6 +49,8 @@ import info.magnolia.cms.security.User;
  * @version $Revision: $ ($Author: $)
  */
 class UserModel extends BeanModel {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserModel.class);
+
     static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
         public Class factoryFor() {
             return User.class;
@@ -72,7 +74,12 @@ class UserModel extends BeanModel {
         if (result != null) {
             return result;
         }
-        return new SimpleScalar(user.getProperty(key));
+        try {
+            return new SimpleScalar(user.getProperty(key));
+        } catch (UnsupportedOperationException e) {
+            log.debug("getProperty({}) threw an UnsupportedOperationException: {}", key, e.getMessage());
+            return null;
+        }
     }
 
     public User asUser() {

@@ -574,6 +574,19 @@ public class FreemarkerHelperTest extends TestCase {
         verify(user);
     }
 
+    public void testUserUnsupportedExceptionFallback() throws Exception {
+        tplLoader.putTemplate("test.ftl", "${user.name} is my name, fullName: ${user.fullName!user.name}, testProp: ${user.testProp!'default'} !");
+        final User user = createStrictMock(User.class);
+        expect(user.getName()).andReturn("myName");
+        expect(user.getProperty("fullName")).andThrow(new UnsupportedOperationException("getProperty:fullName"));
+        expect(user.getName()).andReturn("myName");
+        expect(user.getProperty("testProp")).andThrow(new UnsupportedOperationException("getProperty:testValue"));
+
+        replay(user);
+        assertRendereredContent("myName is my name, fullName: myName, testProp: default !", createSingleValueMap("user", user), "test.ftl");
+        verify(user);
+    }
+
     public void testNodeNameCanBeRenderedImplicitely() throws Exception {
         tplLoader.putTemplate("test.ftl", "This should output the node's name: ${content}");
         final Map root = createSingleValueMap("content", new MockContent("myNode"));
