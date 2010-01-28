@@ -46,19 +46,19 @@ import info.magnolia.cms.core.NodeData;
 /**
  * This wrapper allows extending other nodes (mainly useful to extend configurations). A content node can define
  * a nodedata with the name 'extends'. Its value is either an absolute or relative path. The merge is then performed as follows:
- * 
+ *
  * <ul>
  * <li>node datas are merged and values are overwritten
  * <li>sub content nodes are merged, the original order is guaranteed, new nodes are added at the
  * end of the list
  * </ul>
- * 
+ *
  * The mechanism supports multiple inheritances as such:
  * <ul>
  * <li>the node the current node inherits from can again extend a node
  * <li>nodes laying deeper in the hierarchy can extend an other node
  * </ul>
- * 
+ *
  * @author pbaerfuss
  * @version $Id$
  * @see InheritanceContentWrapper a class supporting content inheritance.
