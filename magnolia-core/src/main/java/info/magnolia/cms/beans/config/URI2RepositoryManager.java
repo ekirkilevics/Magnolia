@@ -65,12 +65,15 @@ public class URI2RepositoryManager {
     private Collection<URI2RepositoryMapping> mappings;
 
     public URI2RepositoryManager() {
-        mappings = new TreeSet<URI2RepositoryMapping>(new Comparator<URI2RepositoryMapping>() {
+        mappings = new TreeSet<URI2RepositoryMapping>(getMappingComparator());
+    }
+
+    protected Comparator<URI2RepositoryMapping> getMappingComparator() {
+        return new Comparator<URI2RepositoryMapping>() {
             public int compare(URI2RepositoryMapping m0, URI2RepositoryMapping m1) {
                 return m1.getURIPrefix().compareTo(m0.getURIPrefix());
             }
-        });
-
+        };
     }
 
     /**
