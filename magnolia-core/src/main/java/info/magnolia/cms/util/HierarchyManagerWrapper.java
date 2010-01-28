@@ -77,6 +77,34 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
         return buffer.toString();
     }
 
+
+    /**
+     * Override this method to have hierarchy manager wrap every piece of content it returns
+     * @param content unwrapped content
+     * @return wrapped content (or content passed in if not overriden)
+     */
+    protected Content wrap(Content content) {
+        return content;
+    }
+
+    /**
+     * Override this method to have hierarchy manager wrap every piece of node data it returns
+     * @param nodeData unwrapped node data
+     * @return wrapped node data (or node data passed in if not overriden)
+     */
+    protected NodeData wrap(NodeData nodeData) {
+        return nodeData;
+    }
+
+    /**
+     * Override this method to alter all paths passed into the various hierarchy manager methods.
+     * @param path unaltered path
+     * @return wrapped path (or the one passed in if not overriden)
+     */
+    protected String wrap(String path) {
+        return path;
+    }
+
     // ---- below are only generated wrappedHM methods
     public AccessManager getAccessManager() {
         return getWrappedHierarchyManager().getAccessManager();
@@ -106,6 +134,10 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
         return wrap(getWrappedHierarchyManager().getNodeData(path));
     }
 
+    /**
+     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
+      */
+     @Deprecated
     public Content getPage(String path, String templateName) throws RepositoryException {
         path = wrap(path);
         return wrap(getWrappedHierarchyManager().getPage(path, templateName));
@@ -120,6 +152,10 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
         return wrap(getWrappedHierarchyManager().getRoot());
     }
 
+    /**
+     * @deprecated since 4.0 - use getContent().isNodeType() instead.
+      */
+     @Deprecated
     public boolean isPage(String path) throws AccessDeniedException {
         path = wrap(path);
         return getWrappedHierarchyManager().isPage(path);
@@ -130,11 +166,19 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
         return getWrappedHierarchyManager().isExist(path);
     }
 
+    /**
+     * @deprecated since 4.0 - use getContent().isNodeType() instead.
+      */
+     @Deprecated
     public boolean isNodeType(String path, String type) {
         path = wrap(path);
         return getWrappedHierarchyManager().isNodeType(path, type);
     }
 
+    /**
+    * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
+     */
+    @Deprecated
     public boolean isNodeType(String path, ItemType type) {
         path = wrap(path);
         return getWrappedHierarchyManager().isNodeType(path, type);
@@ -179,17 +223,5 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
 
     public String getName() {
         return getWrappedHierarchyManager().getName();
-    }
-
-    protected Content wrap(Content content) {
-        return content;
-    }
-
-    protected NodeData wrap(NodeData content) {
-        return content;
-    }
-
-    protected String wrap(String path) {
-        return path;
     }
 }
