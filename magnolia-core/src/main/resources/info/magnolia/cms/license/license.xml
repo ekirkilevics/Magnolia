@@ -20,7 +20,7 @@
     <Meta>
         <VersionNumber>${magnoliaNiceVersion}</VersionNumber>
         <Edition>${magnoliaEdition}</Edition>
-        <BuildNumber>${magnoliaReleaseDate}</BuildNumber>
+        <BuildNumber>${magnoliaReleaseDate} (rev. ${buildScmRevisionNumber})</BuildNumber>
         <Provider>${pom.organization.name}</Provider>
         <ProviderAddress>
             <![CDATA[
