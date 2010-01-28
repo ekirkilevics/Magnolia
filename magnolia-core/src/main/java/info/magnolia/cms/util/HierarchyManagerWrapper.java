@@ -51,111 +51,145 @@ import javax.jcr.Workspace;
  */
 public abstract class HierarchyManagerWrapper implements HierarchyManager {
 
-    private final HierarchyManager delegate;
+    private final HierarchyManager wrappedHM;
 
-    protected HierarchyManagerWrapper(HierarchyManager delegate) {
-        this.delegate = delegate;
+    protected HierarchyManagerWrapper(HierarchyManager wrappedHM) {
+        this.wrappedHM = wrappedHM;
     }
 
+    public HierarchyManager getWrappedHierarchyManager() {
+        return wrappedHM;
+    }
+
+    /**
+     * @deprecated since 4.3 use getWrappedHierarchyManager() instead
+     */
+    @Deprecated
     public HierarchyManager getDelegate() {
-        return delegate;
+        return wrappedHM;
     }
 
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getClass().getSimpleName());
         buffer.append(" for ");
-        buffer.append(getDelegate().toString());
+        buffer.append(getWrappedHierarchyManager().toString());
         return buffer.toString();
     }
 
-    // ---- below are only generated delegate methods
+    // ---- below are only generated wrappedHM methods
     public AccessManager getAccessManager() {
-        return getDelegate().getAccessManager();
+        return getWrappedHierarchyManager().getAccessManager();
     }
 
     public QueryManager getQueryManager() {
-        return getDelegate().getQueryManager();
+        return getWrappedHierarchyManager().getQueryManager();
     }
 
     public Content createContent(String path, String label, String contentType) throws RepositoryException {
-        return getDelegate().createContent(path, label, contentType);
+        path = wrap(path);
+        return wrap(getWrappedHierarchyManager().createContent(path, label, contentType));
     }
 
     public Content getContent(String path) throws RepositoryException {
-        return getDelegate().getContent(path);
+        path = wrap(path);
+        return wrap(getWrappedHierarchyManager().getContent(path));
     }
 
     public Content getContent(String path, boolean create, ItemType type) throws RepositoryException {
-        return getDelegate().getContent(path, create, type);
+        path = wrap(path);
+        return wrap(getWrappedHierarchyManager().getContent(path, create, type));
     }
 
     public NodeData getNodeData(String path) throws RepositoryException {
-        return getDelegate().getNodeData(path);
+        path = wrap(path);
+        return wrap(getWrappedHierarchyManager().getNodeData(path));
     }
 
     public Content getPage(String path, String templateName) throws RepositoryException {
-        return getDelegate().getPage(path, templateName);
+        path = wrap(path);
+        return wrap(getWrappedHierarchyManager().getPage(path, templateName));
     }
 
     public void delete(String path) throws RepositoryException {
-        getDelegate().delete(path);
+        path = wrap(path);
+        getWrappedHierarchyManager().delete(path);
     }
 
     public Content getRoot() throws RepositoryException {
-        return getDelegate().getRoot();
+        return wrap(getWrappedHierarchyManager().getRoot());
     }
 
     public boolean isPage(String path) throws AccessDeniedException {
-        return getDelegate().isPage(path);
+        path = wrap(path);
+        return getWrappedHierarchyManager().isPage(path);
     }
 
     public boolean isExist(String path) {
-        return getDelegate().isExist(path);
+        path = wrap(path);
+        return getWrappedHierarchyManager().isExist(path);
     }
 
     public boolean isNodeType(String path, String type) {
-        return getDelegate().isNodeType(path, type);
+        path = wrap(path);
+        return getWrappedHierarchyManager().isNodeType(path, type);
     }
 
     public boolean isNodeType(String path, ItemType type) {
-        return getDelegate().isNodeType(path, type);
+        path = wrap(path);
+        return getWrappedHierarchyManager().isNodeType(path, type);
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException {
-        return getDelegate().isNodeData(path);
+        path = wrap(path);
+        return getWrappedHierarchyManager().isNodeData(path);
     }
 
     public Content getContentByUUID(String uuid) throws RepositoryException {
-        return getDelegate().getContentByUUID(uuid);
+        return getWrappedHierarchyManager().getContentByUUID(uuid);
     }
 
     public Workspace getWorkspace() {
-        return getDelegate().getWorkspace();
+        return getWrappedHierarchyManager().getWorkspace();
     }
 
     public void moveTo(String source, String destination) throws RepositoryException {
-        getDelegate().moveTo(source, destination);
+        source = wrap(source);
+        destination = wrap(destination);
+        getWrappedHierarchyManager().moveTo(source, destination);
     }
 
     public void copyTo(String source, String destination) throws RepositoryException {
-        getDelegate().copyTo(source, destination);
+        source = wrap(source);
+        destination = wrap(destination);
+        getWrappedHierarchyManager().copyTo(source, destination);
     }
 
     public void save() throws RepositoryException {
-        getDelegate().save();
+        getWrappedHierarchyManager().save();
     }
 
     public boolean hasPendingChanges() throws RepositoryException {
-        return getDelegate().hasPendingChanges();
+        return getWrappedHierarchyManager().hasPendingChanges();
     }
 
     public void refresh(boolean keepChanges) throws RepositoryException {
-        getDelegate().refresh(keepChanges);
+        getWrappedHierarchyManager().refresh(keepChanges);
     }
 
     public String getName() {
-        return getDelegate().getName();
+        return getWrappedHierarchyManager().getName();
     }
 
+    protected Content wrap(Content content) {
+        return content;
+    }
+
+    protected NodeData wrap(NodeData content) {
+        return content;
+    }
+
+    protected String wrap(String path) {
+        return path;
+    }
 }

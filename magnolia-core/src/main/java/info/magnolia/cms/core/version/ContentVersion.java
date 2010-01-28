@@ -123,7 +123,7 @@ public class ContentVersion extends DefaultContent {
 
             {
                 // child nodes (and metaData if nothing else) depends on this to have access when root access is restricted for given user
-                List<Permission> permissions = new ArrayList<Permission>(getDelegate().getAccessManager().getPermissionList());
+                List<Permission> permissions = new ArrayList<Permission>(getWrappedHierarchyManager().getAccessManager().getPermissionList());
                 PermissionImpl p = new PermissionImpl();
                 p.setPattern(new SimpleUrlPattern("/jcr:system/jcr:versionStorage/*"));
                 // read only
