@@ -62,13 +62,11 @@ public class URI2RepositoryManager {
     /**
      * The mappings
      */
-    private Collection mappings;
+    private Collection<URI2RepositoryMapping> mappings;
 
     public URI2RepositoryManager() {
-        mappings = new TreeSet(new Comparator() {
-            public int compare(Object arg0, Object arg1) {
-                URI2RepositoryMapping m0 = (URI2RepositoryMapping) arg0;
-                URI2RepositoryMapping m1 = (URI2RepositoryMapping) arg1;
+        mappings = new TreeSet<URI2RepositoryMapping>(new Comparator<URI2RepositoryMapping>() {
+            public int compare(URI2RepositoryMapping m0, URI2RepositoryMapping m1) {
                 return m1.getURIPrefix().compareTo(m0.getURIPrefix());
             }
         });
@@ -79,8 +77,7 @@ public class URI2RepositoryManager {
      * The mapping to use for this uri
      */
     public URI2RepositoryMapping getMapping(String uri) {
-        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
-            URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
+        for (URI2RepositoryMapping mapping : mappings) {
             if (mapping.matches(uri)) {
                 return mapping;
             }
@@ -124,8 +121,7 @@ public class URI2RepositoryManager {
     }
 
     public String getURI(Link uuidLink) {
-        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
-            URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
+        for (URI2RepositoryMapping mapping : mappings) {
             if (StringUtils.equals(mapping.getRepository(), uuidLink.getRepository()) && uuidLink.getHandle().startsWith(mapping.getHandlePrefix())) {
                 return mapping.getURI(uuidLink);
             }
@@ -144,7 +140,7 @@ public class URI2RepositoryManager {
     /**
      * @return the mappings
      */
-    public Collection getMappings() {
+    public Collection<URI2RepositoryMapping> getMappings() {
         return this.mappings;
     }
 
