@@ -79,28 +79,26 @@ public class ConfigUtil {
      */
     public static final class MapDTDEntityResolver implements EntityResolver {
 
-        private final Map dtds;
+        private final Map<String, String> dtds;
 
-        public MapDTDEntityResolver(Map dtds) {
+        public MapDTDEntityResolver(Map<String, String> dtds) {
             this.dtds = dtds;
         }
 
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             String key = StringUtils.substringAfterLast(systemId, "/");
             if (dtds.containsKey(key)) {
-                Class clazz = getClass();
-                InputStream in = clazz.getResourceAsStream((String)dtds.get(key));
+                Class<? extends MapDTDEntityResolver> clazz = getClass();
+                InputStream in = clazz.getResourceAsStream(dtds.get(key));
                 if (in == null) {
                     log.error("Could not find [" + systemId + "]. Used ["
                         + clazz.getClassLoader()
                         + "] class loader in the search.");
                     return null;
-                }
-                else {
+                } else {
                     return new InputSource(in);
                 }
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -223,7 +221,7 @@ public class ConfigUtil {
      * @throws SAXException
      * @throws IOException
      */
-    public static Document string2DOM(String xml, final Map dtds) throws ParserConfigurationException, SAXException, IOException {
+    public static Document string2DOM(String xml, final Map<String, String> dtds) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setValidating(true);
         DocumentBuilder builder;
