@@ -189,6 +189,13 @@ for Java Content Repositories (JCR).
                           <uri>${taglib.uri}</uri>
                           <displayname>${project.name}</displayname>
                           <description>${project.description}</description>
+                          <!--
+                              looks like that specifying a destdir different from the default here helps
+                              avoiding a duplicate generation of taglibs and creating a valid classpath for
+                              eclipse (without this the eclipse plugin adds a "generated-resources" dir nested
+                              into /target/classes/
+                           -->
+                          <destdir>${project.build.directory}/generated-resources/taglibs</destdir>
                         </params>
                       </component>
                     </components>
