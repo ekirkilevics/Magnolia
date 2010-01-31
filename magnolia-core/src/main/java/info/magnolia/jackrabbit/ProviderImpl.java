@@ -73,6 +73,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -333,17 +334,44 @@ public class ProviderImpl implements Provider {
                 }
 
                 try {
-                    ntReg.getNodeTypeDef(ntname);
-                }
-                catch (NoSuchNodeTypeException nsne) {
-                    log.info("Registering nodetype {}", ntname); //$NON-NLS-1$
 
-                    try {
-                        // reflection for jackrabbit 1+2 compatibility
-                        getMethod(NodeTypeRegistry.class, "registerNodeType").invoke(ntReg, new Object[]{def});
-                    }
-                    catch (Exception e) {
-                        throw new RepositoryException(e.getMessage(), e);
+                    // return value has changed in jackrabbit 2, we still have to use reflection here
+                    // ntReg.getNodeTypeDef(ntname);
+
+                    Method method = ntReg.getClass().getMethod("getNodeTypeDef", Name.class);
+                    method.invoke(ntReg, ntname);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
+                catch (IllegalAccessException e)
+                {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
+                catch (SecurityException e)
+                {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
+                catch (NoSuchMethodException e)
+                {
+                    throw new RepositoryException(e.getMessage(), e);
+                }
+                catch (InvocationTargetException ite)
+                {
+                    if (ite.getTargetException() instanceof NoSuchNodeTypeException)
+                    {
+                        log.info("Registering nodetype {}", ntname); //$NON-NLS-1$
+
+                        try
+                        {
+                            // reflection for jackrabbit 1+2 compatibility
+                            getMethod(NodeTypeRegistry.class, "registerNodeType").invoke(ntReg, new Object[]{def });
+                        }
+                        catch (Exception e)
+                        {
+                            throw new RepositoryException(e.getMessage(), e);
+                        }
                     }
                 }
             }
