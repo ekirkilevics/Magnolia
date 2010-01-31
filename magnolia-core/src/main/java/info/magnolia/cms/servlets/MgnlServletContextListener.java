@@ -39,15 +39,18 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -75,6 +78,19 @@ import java.net.UnknownHostException;
  *      WEB-INF/config/default/magnolia.properties,
  *      WEB-INF/config/magnolia.properties
  *   &lt;/param-value>
+ * &lt;/context-param>
+ * </pre>
+ * <p>
+ * The ${servername} variable will be resolved to the full name obtained by using
+ * InetAddress.getLocalHost().getHostName(), which may also contain the server domain, depending on your server
+ * configuration/operating system. You can set the optional context parameter "magnolia.unqualified.server.name" to true
+ * if you prefer using the unqualified name (the server "server.domain.com" will be simply resolved as "server")
+ * </p>
+ *
+ * <pre>
+ * &lt;context-param>
+ *   &lt;param-name>magnolia.unqualified.server.name&lt;/param-name>
+ *   &lt;param-value>true&lt;/param-value>
  * &lt;/context-param>
  * </pre>
  *
@@ -128,6 +144,12 @@ public class MgnlServletContextListener implements ServletContextListener {
      */
     public static final String MAGNOLIA_INITIALIZATION_FILE = "magnolia.initialization.file"; //$NON-NLS-1$
 
+    /**
+     * Context parameter name. If set to true in web.xml the server name resolved by magnolia will never contain the
+     * domain (the server "server.domain.com" will be simply resolved as "server").
+     */
+    public static final String MAGNOLIA_UNQUALIFIED_SERVER_NAME = "magnolia.unqualified.server.name"; //$NON-NLS-1$
+
     private ConfigLoader loader;
 
     public void contextDestroyed(final ServletContextEvent sce) {
@@ -154,7 +176,10 @@ public class MgnlServletContextListener implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
 
-        String servername = initServername();
+        boolean unqualifiedServerName = BooleanUtils.toBoolean(context
+            .getInitParameter(MAGNOLIA_UNQUALIFIED_SERVER_NAME));
+
+        String servername = initServername(unqualifiedServerName);
 
         String rootPath = initRootPath(context);
 
@@ -228,11 +253,16 @@ public class MgnlServletContextListener implements ServletContextListener {
         return realPath;
     }
 
-    protected String initServername() {
+    protected String initServername(boolean unqualified) {
         String servername = null;
 
         try {
             servername = StringUtils.lowerCase(InetAddress.getLocalHost().getHostName());
+
+            if (unqualified && StringUtils.contains(servername, ".")) {
+                servername = StringUtils.substringBefore(servername, ".");
+            }
+
             SystemProperty.setProperty(SystemProperty.MAGNOLIA_SERVERNAME, servername);
         }
         catch (UnknownHostException e) {
