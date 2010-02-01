@@ -67,7 +67,7 @@ import javax.jcr.version.VersionIterator;
  * <li>{@link #wrap(Content)}</li>
  * <li>{@link #wrap(NodeData)}</li>
  * </ul>
- * 
+ *
  * @author pbaerfuss
  * @version $Id$
  *
@@ -129,7 +129,7 @@ public abstract class ContentWrapper extends AbstractContent {
         }
         return wrapped;
     }
-    
+
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getClass().getSimpleName());
@@ -158,7 +158,7 @@ public abstract class ContentWrapper extends AbstractContent {
     public void delete() throws RepositoryException {
         this.getWrappedContent().delete();
     }
-    
+
     public void deleteNodeData(String name) throws RepositoryException {
         this.getWrappedContent().deleteNodeData(name);
     }
@@ -179,6 +179,9 @@ public abstract class ContentWrapper extends AbstractContent {
         return this.getWrappedContent().getBaseVersion();
     }
 
+    /**
+     * @deprecated since 4.3, either use {@link #getContent(String)} or {@link #getChildren(String)}
+     */
     public Content getChildByName(String namePattern) {
         return wrap(this.getWrappedContent().getChildByName(namePattern));
     }
@@ -226,7 +229,7 @@ public abstract class ContentWrapper extends AbstractContent {
     public String getName() {
         return this.getWrappedContent().getName();
     }
-    
+
     @Override
     public NodeData getNodeData(String name, int type) throws RepositoryException {
         return wrap(((AbstractContent)getWrappedContent()).getNodeData(name, type));
