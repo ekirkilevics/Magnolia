@@ -34,7 +34,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.MgnlTestCase;
@@ -93,7 +93,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
 
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 

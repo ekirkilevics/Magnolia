@@ -35,7 +35,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTagTestCase;
 import static org.easymock.classextension.EasyMock.*;
 
@@ -61,7 +61,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_EMAIL)).andReturn("info@magnolia-cms.com");
         replay(licenseExtractor);
 
-        FactoryUtil.setInstance(LicenseFileExtractor.class, licenseExtractor);
+        ComponentsTestUtil.setInstance(LicenseFileExtractor.class, licenseExtractor);
     }
 
     public void testShouldBeUseableWithoutAnyAttribute() throws Exception {

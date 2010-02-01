@@ -34,7 +34,7 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.context.MgnlContext;
 import junit.framework.TestCase;
@@ -53,7 +53,7 @@ public class MgnlGroupTest extends TestCase {
         super.setUp();
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
-        FactoryUtil.setInstance(SecuritySupport.class, sec);
+        ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
         MockUtil.createAndSetHierarchyManager(ContentRepository.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));

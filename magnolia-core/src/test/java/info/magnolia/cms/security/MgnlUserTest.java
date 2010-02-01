@@ -35,7 +35,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.mock.MockContext;
@@ -57,7 +57,7 @@ public class MgnlUserTest extends TestCase {
         super.setUp();
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
-        FactoryUtil.setInstance(SecuritySupport.class, sec);
+        ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
         MockUtil.createAndSetHierarchyManager(ContentRepository.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
@@ -80,7 +80,7 @@ public class MgnlUserTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 

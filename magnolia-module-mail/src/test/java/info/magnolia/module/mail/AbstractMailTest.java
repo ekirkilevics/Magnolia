@@ -39,7 +39,7 @@ import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.module.mail.MailConstants;
 import info.magnolia.module.mail.MailModule;
@@ -91,8 +91,8 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        FactoryUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
-        FactoryUtil.setImplementation(SecuritySupport.class, SecuritySupportImpl.class);
+        ComponentsTestUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
+        ComponentsTestUtil.setImplementation(SecuritySupport.class, SecuritySupportImpl.class);
 
         bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml");
         bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml");

@@ -40,7 +40,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.MgnlTagTestCase;
 import static org.easymock.EasyMock.*;
@@ -66,7 +66,7 @@ public class EditBarTest extends MgnlTagTestCase {
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setAdmin(true);
-        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
 
         mainContent = createMock(Content.class);
         currentContent = createMock(Content.class);

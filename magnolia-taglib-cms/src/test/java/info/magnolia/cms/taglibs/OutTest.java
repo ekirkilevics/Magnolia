@@ -35,7 +35,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.link.LinkTransformerManager;
@@ -63,8 +63,8 @@ public class OutTest extends MgnlTagTestCase {
         webContext.setAggregationState(agState);
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultExtension("html");
-        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
-        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        ComponentsTestUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
     }
 
     // UUID - related output tests

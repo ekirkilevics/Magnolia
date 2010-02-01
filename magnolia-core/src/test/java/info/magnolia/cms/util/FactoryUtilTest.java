@@ -33,11 +33,15 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
 
+/**
+ * TODO - --- move to ComponentsTestUtilTest! 
+ */
 public class FactoryUtilTest extends MgnlTestCase {
 
     public static interface TestInterface {
@@ -61,14 +65,14 @@ public class FactoryUtilTest extends MgnlTestCase {
     }
 
     public void testConfiguredImplementation() {
-        FactoryUtil.setDefaultImplementation(TestInterface.class, TestImplementation.class);
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, TestImplementation.class);
         Object obj = FactoryUtil.getSingleton(TestInterface.class);
         assertTrue(obj instanceof TestImplementation);
     }
 
     public void testDontRedefineTheDefaultImplementation() {
-        FactoryUtil.setDefaultImplementation(TestInterface.class, TestImplementation.class);
-        FactoryUtil.setDefaultImplementation(TestInterface.class, "a.wrong.class.not.set");
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, TestImplementation.class);
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, "a.wrong.class.not.set");
         Object obj = FactoryUtil.getSingleton(TestInterface.class);
         assertTrue(obj instanceof TestImplementation);
     }
@@ -88,7 +92,7 @@ public class FactoryUtilTest extends MgnlTestCase {
 
     public void testSetSingletonInstance() {
         TestImplementation instance = new TestImplementation();
-        FactoryUtil.setInstance(TestInterface.class, instance);
+        ComponentsTestUtil.setInstance(TestInterface.class, instance);
         assertSame(instance, FactoryUtil.getSingleton(TestInterface.class));
     }
 
@@ -99,7 +103,7 @@ public class FactoryUtilTest extends MgnlTestCase {
     }
 
     public void testSingletonDefinedInRepository() throws RepositoryException, IOException {
-        FactoryUtil.setDefaultImplementation(TestInterface.class, "/test");
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, "/test");
         initMockConfigRepository(
                 "test.class=" + TestImplementation.class.getName()
         );
@@ -109,7 +113,7 @@ public class FactoryUtilTest extends MgnlTestCase {
     }
 
     public void testSingletonDefinedInRepositoryUsingRepositoryPrefix() throws RepositoryException, IOException {
-        FactoryUtil.setDefaultImplementation(TestInterface.class, "config:/test");
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, "config:/test");
         initMockConfigRepository(
                 "test.class=" + TestImplementation.class.getName()
         );
@@ -119,7 +123,7 @@ public class FactoryUtilTest extends MgnlTestCase {
     }
 
     public void testProxiesReturnedByObserverComponentFactoryCanBeCastToTheirSubclass() throws Exception {
-        FactoryUtil.setDefaultImplementation(TestInterface.class, "config:/test");
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, "config:/test");
         initMockConfigRepository(
                 "test.class=" + TestOtherImplementation.class.getName()
         );
@@ -132,7 +136,7 @@ public class FactoryUtilTest extends MgnlTestCase {
     }
 
     public void testUseInstanceFactoryAsProperty() throws RepositoryException, IOException {
-        FactoryUtil.setDefaultImplementation(TestInterface.class, TestInstanceFactory.class.getName());
+        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, TestInstanceFactory.class.getName());
         Object obj = FactoryUtil.getSingleton(TestInterface.class);
         assertNotNull(obj);
         assertTrue(obj instanceof TestImplementation);

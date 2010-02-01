@@ -49,7 +49,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.EmptyMessages;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerHelper;
@@ -77,16 +77,16 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         tplLoader = new StringTemplateLoader();
         final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
         fmTemplateLoader.addTemplateLoader(tplLoader);
-        FactoryUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
+        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
 
         final FreemarkerHelper freemarkerHelper = new FreemarkerHelper();
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
-        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
-        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
-        FactoryUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        ComponentsTestUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
+        ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
 
         final WebContext context = createNiceMock(WebContext.class);
         AggregationState state = new AggregationState();

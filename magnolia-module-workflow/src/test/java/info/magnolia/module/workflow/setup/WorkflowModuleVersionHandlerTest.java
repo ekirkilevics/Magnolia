@@ -43,7 +43,7 @@ import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
@@ -82,7 +82,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         role.addPermission("config", "/modules/workflow/config/flows/*", Permission.READ);
         securitySupport.setRoleManager(roleManager);
         replay(roleManager, role);
-        FactoryUtil.setInstance(SecuritySupport.class, securitySupport);
+        ComponentsTestUtil.setInstance(SecuritySupport.class, securitySupport);
         
         // the update tries 
         bootstrapSingleResource("/mgnl-bootstrap/workflow/userroles.workflow-base.xml");

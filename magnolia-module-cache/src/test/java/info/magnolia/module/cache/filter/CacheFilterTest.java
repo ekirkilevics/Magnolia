@@ -34,7 +34,8 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.ModuleRegistry;
@@ -74,7 +75,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,7 +100,7 @@ public class CacheFilterTest extends TestCase {
 
     public void testFilterUsesGivenConfigAndCacheName() throws Exception {
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
-        FactoryUtil.setInstance(ModuleRegistry.class, moduleRegistry);
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
 
         final CacheModule cacheModule = new CacheModule();
         final CacheConfiguration c1 = new CacheConfiguration();
@@ -664,7 +664,7 @@ public class CacheFilterTest extends TestCase {
 
     private void executeFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
         // let's first assert the Filter did not forget to register itself
-        final ModuleRegistry mr = (ModuleRegistry) FactoryUtil.getSingleton(ModuleRegistry.class);
+        final ModuleRegistry mr = Components.getSingleton(ModuleRegistry.class);
         final CacheModule module = (CacheModule) mr.getModuleInstance("cache");
         final Field field = module.getClass().getDeclaredField("listeners");
         field.setAccessible(true);
@@ -700,7 +700,7 @@ public class CacheFilterTest extends TestCase {
 
         final CacheModule cacheModule = new CacheModule();
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
-        FactoryUtil.setInstance(ModuleRegistry.class, moduleRegistry);
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         moduleRegistry.registerModuleInstance("cache", cacheModule);
         final CacheConfiguration cfg = new CacheConfiguration();
         cfg.setName("my-config");
@@ -709,7 +709,7 @@ public class CacheFilterTest extends TestCase {
         cfg.addExecutor(CachePolicyResult.bypass.getName(), new Bypass());
         cfg.addExecutor(CachePolicyResult.useCache.getName(), new UseCache());
         final Store store = new Store();
-        FactoryUtil.setInstance(Voting.class, new DefaultVoting());
+        ComponentsTestUtil.setInstance(Voting.class, new DefaultVoting());
         final java.util.Map compressibleTypes = new java.util.HashMap();
         compressibleTypes.put("1", "text/html");
         cfg.addExecutor(CachePolicyResult.store.getName(), store);

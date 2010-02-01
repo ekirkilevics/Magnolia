@@ -36,7 +36,7 @@ package info.magnolia.cms.i18n;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 import static org.easymock.classextension.EasyMock.createMock;
@@ -61,8 +61,8 @@ public class MessagesManagerTest extends TestCase {
         MgnlContext.setInstance(ctx);
 
         sysCtx = createStrictMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, sysCtx);
-        FactoryUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
+        ComponentsTestUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
         // Replace the default bundle (adminterface) by a fake one - see MAGNOLIA-2528
         final DefaultMessagesManager mm = (DefaultMessagesManager) MessagesManager.getInstance();
@@ -74,7 +74,7 @@ public class MessagesManagerTest extends TestCase {
     protected void tearDown() throws Exception {
         verify(ctx, sysCtx);
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 

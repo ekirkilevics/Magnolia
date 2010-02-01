@@ -45,7 +45,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -86,15 +86,15 @@ public class FreemarkerHelperTest extends TestCase {
         fmHelper = new FreemarkerHelper();
         final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
         fmTemplateLoader.addTemplateLoader(tplLoader);
-        FactoryUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
+        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         //fmHelper.getConfiguration().setTemplateLoader(tplLoader);
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
-        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
-        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
-        FactoryUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        ComponentsTestUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
+        ComponentsTestUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);
@@ -103,7 +103,7 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
@@ -134,7 +134,7 @@ public class FreemarkerHelperTest extends TestCase {
     private void assertRendereredContentWithSpecifiedLocale(String expectedOutput, Locale l, Object o, String templateName) throws TemplateException, IOException {
         // FreemarkerHelper currently doesn't use the SystemContext locale. Only the current context's locale, and falls back to Locale.getDefault()
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysMockCtx);
 
         final Context context = createStrictMock(Context.class);
         expect(context.getLocale()).andReturn(new Locale("es")).anyTimes();
@@ -539,12 +539,12 @@ public class FreemarkerHelperTest extends TestCase {
             final MockHierarchyManager hm = prepareHM(new MockContent("baz"));
             expect(sysMockCtx.getHierarchyManager("website")).andReturn(hm);
         }
-        FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysMockCtx);
         replay(sysMockCtx);
 
-        FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
+        ComponentsTestUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
         final I18nContentSupport i18NSupportMock = createStrictMock(I18nContentSupport.class);
-        FactoryUtil.setInstance(I18nContentSupport.class, i18NSupportMock);
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, i18NSupportMock);
 
         expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html").times(1, 2);
 

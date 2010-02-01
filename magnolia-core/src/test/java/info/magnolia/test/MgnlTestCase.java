@@ -36,7 +36,6 @@ package info.magnolia.test;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -64,7 +63,7 @@ public abstract class MgnlTestCase extends TestCase {
         // ignore mapping warnings
         org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(Level.ERROR);
 
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         initDefaultImplementations();
         setMagnoliaProperties();
         initContext();
@@ -75,7 +74,7 @@ public abstract class MgnlTestCase extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         SystemProperty.getProperties().clear();        
         MgnlContext.setInstance(null);
         super.tearDown();

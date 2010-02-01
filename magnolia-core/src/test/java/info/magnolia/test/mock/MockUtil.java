@@ -35,7 +35,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
@@ -75,7 +75,7 @@ public class MockUtil {
     public static MockContext initMockContext() {
         final MockContext ctx = new MockWebContext();
         MgnlContext.setInstance(ctx);
-        FactoryUtil.setImplementation(SystemContext.class, MockContext.class);
+        ComponentsTestUtil.setImplementation(SystemContext.class, MockContext.class);
         return ctx;
     }
 

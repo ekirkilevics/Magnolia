@@ -34,7 +34,7 @@
 package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.TransformationState;
@@ -106,16 +106,16 @@ public class UpdateI18nConfigurationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        FactoryUtil.setDefaultImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
-        FactoryUtil.setDefaultImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
-        FactoryUtil.setDefaultImplementation(TransformationState.class, TransformationStateImpl.class);
-        FactoryUtil.setDefaultImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setDefaultImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
+        ComponentsTestUtil.setDefaultImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
+        ComponentsTestUtil.setDefaultImplementation(TransformationState.class, TransformationStateImpl.class);
+        ComponentsTestUtil.setDefaultImplementation(TypeMapping.class, TypeMappingImpl.class);
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
     }
 
     public void testUpdatesProperlyWhenAlreadyExisting() throws Exception {

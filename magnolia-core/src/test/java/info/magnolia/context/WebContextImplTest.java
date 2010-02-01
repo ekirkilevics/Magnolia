@@ -41,7 +41,7 @@ import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -71,7 +71,7 @@ public class WebContextImplTest extends TestCase {
         ServletContext servletContext = createMock(ServletContext.class);
         User user = createMock(User.class); 
         SecuritySupport securitySupport = createMock(SecuritySupport.class);
-        FactoryUtil.setInstance(SecuritySupport.class, securitySupport);
+        ComponentsTestUtil.setInstance(SecuritySupport.class, securitySupport);
         UserManager userManager = createMock(UserManager.class);
         User anonymousUser = createMock(User.class);        
         expect(user.getLanguage()).andReturn("en");

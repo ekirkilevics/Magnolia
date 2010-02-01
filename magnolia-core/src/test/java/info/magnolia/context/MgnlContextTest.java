@@ -34,7 +34,7 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
 import junit.framework.TestCase;
 
@@ -48,13 +48,13 @@ import javax.jcr.RepositoryException;
 public class MgnlContextTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
-        FactoryUtil.setInstance(SystemContext.class, new MockContext());
+        ComponentsTestUtil.setInstance(SystemContext.class, new MockContext());
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
     }
 
     public void testCanDeclareCheckExceptionToBeThrownByDoInSystemContext() {

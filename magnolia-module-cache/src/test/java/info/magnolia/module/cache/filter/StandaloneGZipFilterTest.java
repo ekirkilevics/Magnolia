@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.cache.filter;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
@@ -70,7 +70,7 @@ public class StandaloneGZipFilterTest extends TestCase {
         final TrueVoter voter = new TrueVoter();
         voter.setNot(!voterReturns);
         final Voting voting = new DefaultVoting();
-        FactoryUtil.setInstance(Voting.class, voting);
+        ComponentsTestUtil.setInstance(Voting.class, voting);
         final StandaloneGZipFilter filter = new StandaloneGZipFilter();
         filter.addBypass(voter);
 

@@ -38,7 +38,7 @@ import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingManager;
@@ -71,7 +71,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // this should disable observation for audit logging (mgnl-beans.properties registers a path for this componenent)
-        FactoryUtil.setInstance(AuditLoggingManager.class, new AuditLoggingManager());
+        ComponentsTestUtil.setInstance(AuditLoggingManager.class, new AuditLoggingManager());
     }
 
     protected void initDefaultImplementations() throws IOException {

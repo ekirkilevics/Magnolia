@@ -35,7 +35,7 @@ package info.magnolia.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.delta.AbstractTask;
@@ -65,8 +65,8 @@ import java.util.Map;
 public class ModuleManagerImplTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
-        FactoryUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
-        FactoryUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        ComponentsTestUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
 
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
@@ -74,7 +74,7 @@ public class ModuleManagerImplTest extends TestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 

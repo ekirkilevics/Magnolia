@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.CacheConfiguration;
@@ -66,7 +66,7 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        FactoryUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
+        ComponentsTestUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
         bootstrapSingleResource("/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml");
         Content content = ContentUtil.getContent("config", "/modules/cache/config/configurations/default");
 

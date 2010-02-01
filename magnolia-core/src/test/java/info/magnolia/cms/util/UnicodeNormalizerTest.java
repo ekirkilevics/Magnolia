@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 import java.io.UnsupportedEncodingException;
@@ -65,13 +66,13 @@ public class UnicodeNormalizerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.getProperties().clear();
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         SystemProperty.setProperty("info.magnolia.cms.util.UnicodeNormalizer$Normalizer", "info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer");
     }
 
     protected void tearDown() throws Exception {
         SystemProperty.getProperties().clear();
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 

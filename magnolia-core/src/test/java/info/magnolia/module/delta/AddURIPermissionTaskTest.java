@@ -36,7 +36,7 @@ package info.magnolia.module.delta;
 import info.magnolia.cms.security.MgnlRoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
@@ -79,7 +79,7 @@ public class AddURIPermissionTaskTest extends MgnlTestCase {
         
         SecuritySupportImpl securitySupport = new SecuritySupportImpl();
         securitySupport.setRoleManager(new MgnlRoleManager());
-        FactoryUtil.setInstance(SecuritySupport.class, securitySupport);
+        ComponentsTestUtil.setInstance(SecuritySupport.class, securitySupport);
 
         final InstallContext installCtx = createMock(InstallContext.class);
         

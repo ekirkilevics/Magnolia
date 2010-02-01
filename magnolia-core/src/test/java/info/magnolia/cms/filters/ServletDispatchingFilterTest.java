@@ -34,7 +34,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockAggregationState;
@@ -59,7 +59,7 @@ import java.lang.reflect.Field;
  */
 public class ServletDispatchingFilterTest extends TestCase {
     protected void tearDown() throws Exception {
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null); // not needed for this test - kept for consistency with other tests tearDown()
         super.tearDown();
     }
@@ -148,7 +148,7 @@ public class ServletDispatchingFilterTest extends TestCase {
     }
 
     private void doTestBypassAndPathInfo(final boolean shouldBypass, final String expectedPathInfo, final String expectedServletPath, final String requestPath, String mapping, boolean shouldCheckPathInfoAndServletPath) throws Exception {
-        FactoryUtil.setInstance(Voting.class, new DefaultVoting());
+        ComponentsTestUtil.setInstance(Voting.class, new DefaultVoting());
         WebContext ctx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(ctx);
         final AggregationState state = new MockAggregationState();

@@ -38,7 +38,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -68,7 +68,7 @@ public class DialogPasswordTest extends TestCase {
         MgnlContext.release();
         // reset manually since we used system context.
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 
@@ -81,7 +81,7 @@ public class DialogPasswordTest extends TestCase {
         NodeData pswd = createStrictMock(NodeData.class);
 
         SystemContext ctx = createStrictMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, ctx);
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
@@ -111,7 +111,7 @@ public class DialogPasswordTest extends TestCase {
         NodeData pswd = createStrictMock(NodeData.class);
 
         SystemContext ctx = createStrictMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, ctx);
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
@@ -141,7 +141,7 @@ public class DialogPasswordTest extends TestCase {
         NodeData pswd = createStrictMock(NodeData.class);
 
         SystemContext ctx = createStrictMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, ctx);
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
@@ -172,8 +172,8 @@ public class DialogPasswordTest extends TestCase {
         NodeData pswd = createStrictMock(NodeData.class);
         // use nice mock due to issues with MessageManager and its static init block
         SystemContext ctx = createNiceMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, ctx);
-        FactoryUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         MgnlContext.setInstance(ctx);
 
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);
@@ -217,8 +217,8 @@ public class DialogPasswordTest extends TestCase {
         NodeData pswd = createStrictMock(NodeData.class);
         // use nice mock due to issues with MessageManager and its static init block
         SystemContext ctx = createNiceMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, ctx);
-        FactoryUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         MgnlContext.setInstance(ctx);
 
         expect(configNode.getNodeDataCollection()).andReturn(CollectionUtils.EMPTY_COLLECTION);

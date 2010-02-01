@@ -36,7 +36,8 @@ package info.magnolia.link;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
@@ -127,8 +128,8 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals(htmlAbsoluteWithDollar, res);
     }
 
-    public LinkUtil getLinkUtil(){
-        return (LinkUtil) FactoryUtil.getSingleton(info.magnolia.link.LinkUtil.class);
+    private LinkUtil getLinkUtil(){
+        return Components.getSingleton(LinkUtil.class);
     }
 
     public void testMakeUUIDFromAbsolutePath() throws IOException, RepositoryException, LinkException {
@@ -207,7 +208,7 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testMakeCompleteURL() throws LinkException {
-        ServerConfiguration serverConfiguration = (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
+        ServerConfiguration serverConfiguration = Components.getSingleton(ServerConfiguration.class);
         String base = serverConfiguration.getDefaultBaseUrl();
         serverConfiguration.setDefaultBaseUrl("http://some.site/yay/");
         String url = null;

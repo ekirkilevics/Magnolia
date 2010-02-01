@@ -87,56 +87,49 @@ public class FactoryUtil {
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, Class)}
-     *             todo - this is only used in tests
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, Class)}
      */
     public static void setDefaultImplementation(Class interf, Class impl) {
         ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, String)}
-     *             todo - this is only used in tests
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see  {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, String)}
      */
     public static void setDefaultImplementation(Class interf, String impl) {
         ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, Class)}
-     *             todo - this is only used in tests
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, Class)}
      */
     public static void setImplementation(Class interf, Class impl) {
         ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, String)}
-     *             todo - this is not used
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, String)}
      */
     public static void setImplementation(Class interf, String impl) {
         ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstance(Class, Object)}
-     *             todo - this is only used in tests
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstance(Class, Object)}
      */
     public static void setInstance(Class interf, Object instance) {
         ((DefaultComponentProvider) Components.getComponentProvider()).setInstance(interf, instance);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstanceFactory(Class, info.magnolia.objectfactory.ComponentFactory)}
-     *             todo - this is only used in tests
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstanceFactory(Class, info.magnolia.objectfactory.ComponentFactory)}
      */
     public static void setInstanceFactory(Class interf, InstanceFactory factory) {
         ((DefaultComponentProvider) Components.getComponentProvider()).setInstanceFactory(interf, factory);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#clear()}
-     *             todo - this is only used in tests
+     * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#clear()}
      */
     public static void clear() {
         ((DefaultComponentProvider) Components.getComponentProvider()).clear();

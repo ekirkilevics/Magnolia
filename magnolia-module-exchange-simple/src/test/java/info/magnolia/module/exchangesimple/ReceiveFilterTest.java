@@ -38,7 +38,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -412,7 +412,7 @@ public class ReceiveFilterTest extends TestCase {
         form.getDocuments().put("blah.xml", new StreamOnlyDocument(xmlStream));
         form.getDocuments().put("node-to-activate.xml.gz", new StreamOnlyDocument(nodeStream));
 
-        FactoryUtil.setInstance(SystemContext.class, sysCtx);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
         MgnlContext.setInstance(ctx);
 
         // checking headers

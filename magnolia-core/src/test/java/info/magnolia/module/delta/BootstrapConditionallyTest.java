@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockHierarchyManager;
@@ -61,7 +61,7 @@ public class BootstrapConditionallyTest extends TestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 

@@ -55,7 +55,7 @@ import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -82,11 +82,11 @@ public class SimpleSyndicatorTest extends TestCase {
 
     public void setUp() {
         actMan = createStrictMock(ActivationManager.class);
-        FactoryUtil.setInstance(ActivationManager.class, actMan);
+        ComponentsTestUtil.setInstance(ActivationManager.class, actMan);
         ctx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(ctx);
         sysctx = createStrictMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, sysctx);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
         syndicator = new SimpleSyndicator();
         user = createStrictMock(User.class);
         syndicator.user = user;
@@ -106,8 +106,8 @@ public class SimpleSyndicatorTest extends TestCase {
 
     public void tearDown() {
         MgnlContext.setInstance(null);
-        FactoryUtil.setInstance(ActivationManager.class, null);
-        FactoryUtil.setInstance(SystemContext.class, null);
+        ComponentsTestUtil.setInstance(ActivationManager.class, null);
+        ComponentsTestUtil.setInstance(SystemContext.class, null);
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_APP_ROOTDIR);
         SystemProperty.getProperties().remove(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
     }

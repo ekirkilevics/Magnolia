@@ -33,7 +33,7 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.*;
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  */
 public class RequestAttributeStrategyTest extends TestCase {
     protected void tearDown() throws Exception {
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
@@ -101,7 +101,7 @@ public class RequestAttributeStrategyTest extends TestCase {
     public void testApplicationAttributes() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         SystemContext context = createMock(SystemContext.class);
-        FactoryUtil.setInstance(SystemContext.class, context);
+        ComponentsTestUtil.setInstance(SystemContext.class, context);
         WebContext ctx = createMock(WebContext.class);
         RequestAttributeStrategy strategy = new RequestAttributeStrategy(ctx);
         context.setAttribute("attr1", "value1", Context.APPLICATION_SCOPE);

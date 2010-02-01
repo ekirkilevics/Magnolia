@@ -37,12 +37,13 @@ import static org.easymock.EasyMock.*;
 
 import javax.jcr.PropertyType;
 
+import info.magnolia.objectfactory.Components;
 import junit.framework.TestCase;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -57,7 +58,7 @@ public class URI2RepositoryMappingTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 
@@ -66,11 +67,11 @@ public class URI2RepositoryMappingTest extends TestCase {
         super.setUp();
         // some tests do not cleanup properly so we need to cleanup here before starting to be sure.
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
     }
 
     public void testGetUri() throws Exception {
-        FactoryUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
         ServerConfiguration.getInstance().setDefaultExtension("bla");
         URI2RepositoryMapping mapping = new URI2RepositoryMapping();
         mapping.setRepository("dummy-repo");
@@ -116,12 +117,12 @@ public class URI2RepositoryMappingTest extends TestCase {
         WebContext context = createNiceMock(WebContext.class);
         HierarchyManager hm = createNiceMock(HierarchyManager.class);
         MgnlContext.setInstance(context);
-        MockRepositoryAcquiringStrategy strategy = (MockRepositoryAcquiringStrategy) FactoryUtil.getSingleton(MockRepositoryAcquiringStrategy.class);
+        MockRepositoryAcquiringStrategy strategy = (MockRepositoryAcquiringStrategy) Components.getSingleton(MockRepositoryAcquiringStrategy.class);
         strategy.addHierarchyManager("config", hm);
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
-        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ServerConfiguration.getInstance().setDefaultExtension("ext");
-        FactoryUtil.setInstance(URI2RepositoryManager.class, new URI2RepositoryManager());
+        ComponentsTestUtil.setInstance(URI2RepositoryManager.class, new URI2RepositoryManager());
         Object[] objs = new Object[] {context, hm};
         replay(objs);
         String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");

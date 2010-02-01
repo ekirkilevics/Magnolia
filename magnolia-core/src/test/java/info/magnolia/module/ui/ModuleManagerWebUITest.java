@@ -34,7 +34,7 @@
 package info.magnolia.module.ui;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.InstallContext;
@@ -65,9 +65,9 @@ public class ModuleManagerWebUITest extends TestCase {
         
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
-        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
 
-        FactoryUtil.setInstance(FreemarkerConfig.class, new FreemarkerConfig());
+        ComponentsTestUtil.setInstance(FreemarkerConfig.class, new FreemarkerConfig());
     }
 
     protected void tearDown() throws Exception {

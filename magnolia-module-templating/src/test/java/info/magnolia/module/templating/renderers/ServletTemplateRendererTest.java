@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.TemplateRenderer;
@@ -49,7 +49,7 @@ import java.io.StringWriter;
 public class ServletTemplateRendererTest extends TestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 

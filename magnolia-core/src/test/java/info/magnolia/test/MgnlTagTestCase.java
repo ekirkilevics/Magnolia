@@ -35,7 +35,6 @@ package info.magnolia.test;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
@@ -80,12 +79,12 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
         sysContext = createMock(SystemContext.class);
         expect(sysContext.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
         replay(sysContext);
-        FactoryUtil.setInstance(SystemContext.class, sysContext);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysContext);
 
         // set up necessary items not configured in the repository
-        FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
-        FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        FactoryUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
+        ComponentsTestUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
 
         setupPageContext();
     }
@@ -98,7 +97,7 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
     protected void tearDown() throws Exception {
         verify(sysContext);
         MgnlContext.setInstance(null);
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 

@@ -35,7 +35,6 @@ package info.magnolia.test;
 
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.mock.MockContext;
@@ -100,14 +99,14 @@ public class SelfTest extends TestCase {
     public void testCommandIsSetCorrectlyFromPrototype() throws Exception {
         MockContext ctx = new MockContext();
         ctx.setLocale(Locale.ENGLISH);
-        FactoryUtil.setDefaultImplementation(SystemContext.class, MockContext.class);
-        FactoryUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setDefaultImplementation(SystemContext.class, MockContext.class);
+        ComponentsTestUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
         MgnlContext.setInstance(ctx);
         new TestCommand().execute((org.apache.commons.chain.Context)ctx);
     }
     
     protected void tearDown() throws Exception {
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }

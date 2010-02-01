@@ -43,7 +43,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -79,7 +79,7 @@ public class ActivationCommandTest extends TestCase {
         command.setSyndicator(syndicator);
         final Messages messages = createNiceMock(Messages.class);
 
-        FactoryUtil.setInstance(SystemContext.class, sysCtx);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
         MgnlContext.setInstance(ctx);
 
         expect(ctx.getHierarchyManager("some-repo")).andReturn(hm);

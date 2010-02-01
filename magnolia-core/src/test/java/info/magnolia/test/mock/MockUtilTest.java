@@ -38,7 +38,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -55,7 +55,7 @@ import junit.framework.TestCase;
 public class MockUtilTest extends TestCase {
 
     protected void tearDown() throws Exception {
-        FactoryUtil.clear();
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
