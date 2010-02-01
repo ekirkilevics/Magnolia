@@ -34,6 +34,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -65,8 +66,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         final MockWebContext ctx = new MockWebContext();
         MgnlContext.setInstance(ctx);
         // and system context as well
-        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory() {
-
+        ComponentsTestUtil.setInstanceFactory(SystemContext.class, new ComponentFactory() {
             public Object newInstance() {
                 return ctx;
             }
