@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 
 /**
@@ -146,6 +147,11 @@ public class FileProperties {
 
     public String getProperty(String property) {
         String value = StringUtils.EMPTY;
+
+        if (this.getContent() == null) {
+            return null;
+        }
+
         NodeData props = this.getContent().getNodeData(this.nodeDataName);
         String filename = props.getAttribute(PROPERTY_FILENAME);
         String ext = props.getAttribute(PROPERTY_EXTENSION);
@@ -159,10 +165,10 @@ public class FileProperties {
             value = ext;
         }
         else if (property.equals(EXTENSION_LOWER_CASE)) {
-            value = ext.toLowerCase();
+            value = StringUtils.lowerCase(ext);
         }
         else if (property.equals(EXTENSION_UPPER_CASE)) {
-            value = ext.toUpperCase();
+            value = StringUtils.upperCase(ext);
         }
         else if (property.equals(NAME_WITHOUT_EXTENSION)) {
             value = filename;
@@ -182,14 +188,18 @@ public class FileProperties {
         else if (property.equals(PATH_WITHOUT_NAME)) {
             value = this.getContent().getHandle() + "/" + this.getNodeDataName() + fullExt; //$NON-NLS-1$
         }
-        else if (property.equals(ICON)) {
+        else if (property.equals(ICON) && ext != null) {
             value = MIMEMapping.getMIMETypeIcon(ext);
         }
         else if (property.equals(SIZE_BYTES)) {
             value = props.getAttribute(PROPERTY_SIZE);
         }
         else if (property.equals(SIZE_KB)) {
-            double size = Long.parseLong(props.getAttribute(PROPERTY_SIZE));
+            String sizestring = props.getAttribute(PROPERTY_SIZE);
+            if (!NumberUtils.isNumber(sizestring)) {
+                return null;
+            }
+            double size = Long.parseLong(sizestring);
             String sizeStr;
             size = size / 1024;
             sizeStr = Double.toString(size);
@@ -197,7 +207,11 @@ public class FileProperties {
             value = sizeStr;
         }
         else if (property.equals(SIZE_MB)) {
-            double size = Long.parseLong(props.getAttribute(PROPERTY_SIZE));
+            String sizestring = props.getAttribute(PROPERTY_SIZE);
+            if (!NumberUtils.isNumber(sizestring)) {
+                return null;
+            }
+            double size = Long.parseLong(sizestring);
             String sizeStr;
             size = size / (1024 * 1024);
             sizeStr = Double.toString(size);
@@ -205,7 +219,11 @@ public class FileProperties {
             value = sizeStr;
         }
         else if (property.equals(SIZE)) {
-            double size = Long.parseLong(props.getAttribute(PROPERTY_SIZE));
+            String sizestring = props.getAttribute(PROPERTY_SIZE);
+            if (!NumberUtils.isNumber(sizestring)) {
+                return null;
+            }
+            double size = Long.parseLong(sizestring);
             String unit = "bytes";
             String sizeStr;
             if (size >= 1000) {
