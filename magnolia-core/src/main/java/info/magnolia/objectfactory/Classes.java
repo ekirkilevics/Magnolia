@@ -83,6 +83,13 @@ public class Classes {
     // this field should be final but isn't, for tests' sake
     private static ClassFactoryProvider cfp = new ClassFactoryProvider(new DefaultClassFactory());
 
+    /**
+     * ClassFactoryProvider is used to hide the "swapability" of ClassFactory.
+     * This current implementation checks the current instance versus the configured property
+     * on every call.
+     * TODO : This could possibly be optimized or "blocked" as soon as we can now this property has indeed been configured.
+     * I don't think the above would be interesting until we can do some refactoring of the ConfigLoader, PropertiesInitializer and SystemProperty classes.
+     */
     protected static class ClassFactoryProvider {
         private ClassFactory initial;
         private ClassFactory current;
@@ -99,18 +106,18 @@ public class Classes {
         }
 
         private void check() {
-            final String classFactoryClassName = getCurrentlyConfiguredClassName();
-            final String currentClassName = current.getClass().getName();
-            if (StringUtils.isNotEmpty(classFactoryClassName) && !currentClassName.equals(classFactoryClassName) && !swapping) {
-                // need change
+            final String configuredCFClassName = getCurrentlyConfiguredClassName();
+            final String currentCFClassName = current.getClass().getName();
+            if (StringUtils.isNotEmpty(configuredCFClassName) && !currentCFClassName.equals(configuredCFClassName) && !swapping) {
+                // we need to swap this instance, but other calls should not try to do it until we're done
                 swapping = true;
 
                 // whichever ClassFactory is registered will be instantiated with the initial ClassFactory.
                 try {
-                    final Class<ClassFactory> c = initial.forName(classFactoryClassName);
+                    final Class<ClassFactory> c = initial.forName(configuredCFClassName);
                     current = initial.newInstance(c);
                 } catch (ClassNotFoundException e) {
-                    log.error("Could not find {}, will keep on using {} for now", classFactoryClassName, current.getClass().getSimpleName());
+                    log.error("Could not find {}, will keep on using {} for now", configuredCFClassName, current.getClass().getSimpleName());
                 }
                 swapping = false;
             }
