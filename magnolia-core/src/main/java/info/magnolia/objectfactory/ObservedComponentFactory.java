@@ -114,7 +114,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected void startObservation(String handle) {
-        ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, handle, this, DEFAULT_DELAY, DEFAULT_MAX_DELAY);
+        ObservationUtil.registerDeferredChangeListener(repository, handle, this, DEFAULT_DELAY, DEFAULT_MAX_DELAY);
     }
 
     public void onEvent(EventIterator events) {
