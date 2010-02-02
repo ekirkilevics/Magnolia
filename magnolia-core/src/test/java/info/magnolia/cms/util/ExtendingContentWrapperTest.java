@@ -35,12 +35,14 @@ package info.magnolia.cms.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
@@ -114,23 +116,41 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
     }
     
     public void testDeepMerge() throws IOException, RepositoryException{        
+        String [][] expected = new String[][]{
+            {"nodeData1","org1"}, // inherited
+            {"nodeData2","org2.2"}, // overwritten
+            {"nodeData3","org3"}, // added
+        };
         HierarchyManager hm = MockUtil.createHierarchyManager(
             "/base/node/subnode/nodeData1=org1\n" +
+            "/base/node/subnode/nodeData2=org2.1\n" +
             "/impl/node/extends=../../base/node\n" +
-            "/impl/node/subnode/nodeData2=org2");
+            "/impl/node/subnode/nodeData2=org2.2\n" +
+            "/impl/node/subnode/nodeData3=org3");
+
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
         
         Content subnode = extendedContent.getContent("subnode");
-        assertTrue(subnode.hasNodeData("nodeData1"));
-        assertTrue(subnode.hasNodeData("nodeData2"));
- 
-        assertEquals("org1", subnode.getNodeData("nodeData1").getString());
-        assertEquals("org2", subnode.getNodeData("nodeData2").getString());
         
-        assertEquals(2, subnode.getNodeDataCollection().size());
-    }
+        for (String[] pair : expected) {
+            String name = pair[0];
+            String value = pair[1];
+            assertTrue(subnode.hasNodeData(name));
+            assertEquals(value, subnode.getNodeData(name).getString());
+        }
+        
+        Collection<NodeData> nodeDataCollection = subnode.getNodeDataCollection();
+        assertEquals(3, nodeDataCollection.size());
 
+        // test content of the collection
+        int pos = 0;
+        for (NodeData nodeData : nodeDataCollection) {
+            assertEquals(expected[pos][1], nodeData.getString());
+            pos ++;
+        }
+    }
+    
     public void testThatOrderIsKeptWhileMergingSubNodes() throws IOException, RepositoryException{        
         HierarchyManager hm = MockUtil.createHierarchyManager(
             "/base/node/subnode1@uuid=1\n" +

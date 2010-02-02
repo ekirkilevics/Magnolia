@@ -36,6 +36,8 @@ package info.magnolia.cms.util;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 
@@ -166,12 +168,12 @@ public class ExtendingContentWrapper extends ContentWrapper {
         Collection<NodeData> directChildren = getWrappedContent().getNodeDataCollection();
         if (extending) {
             Collection<NodeData> inheritedChildren = extendedContent.getNodeDataCollection();
-            // keep order, add new elements at the end of the collection
-            LinkedHashMap<String, NodeData> merged = new LinkedHashMap<String, NodeData>();
-            for (NodeData nodeData : directChildren) {
+            // sort by name
+            SortedMap<String, NodeData> merged = new TreeMap<String, NodeData>();
+            for (NodeData nodeData : inheritedChildren) {
                 merged.put(nodeData.getName(), nodeData);
             }
-            for (NodeData nodeData : inheritedChildren) {
+            for (NodeData nodeData : directChildren) {
                 merged.put(nodeData.getName(), nodeData);
             }
             return wrapNodeDatas(merged.values());
