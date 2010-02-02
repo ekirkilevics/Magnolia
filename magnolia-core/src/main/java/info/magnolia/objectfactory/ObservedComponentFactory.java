@@ -33,7 +33,6 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
