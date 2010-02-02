@@ -80,7 +80,7 @@ public class Classes {
         return cfp.current();
     }
 
-    // this is not final...only for tests' sake...
+    // this field should be final but isn't, for tests' sake
     private static ClassFactoryProvider cfp = new ClassFactoryProvider(new DefaultClassFactory());
 
     protected static class ClassFactoryProvider {
