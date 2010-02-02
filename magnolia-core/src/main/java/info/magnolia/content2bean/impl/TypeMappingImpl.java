@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
@@ -174,21 +175,25 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setMap(Map.class.isAssignableFrom(beanClass));
         dscr.setCollection(beanClass.isArray() || Collection.class.isAssignableFrom(beanClass));
         types.put(beanClass, dscr);
-        try {
-            Class<?> transformerClass = Classes.getClassFactory().forName(beanClass.getName() + "Transformer");
 
-            if(Content2BeanTransformer.class.isAssignableFrom(transformerClass)){
-                try {
-                    Content2BeanTransformer transformer = (Content2BeanTransformer) transformerClass.newInstance();
-                    dscr.setTransformer(transformer);
-                    log.debug("Found a custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]");
-                } catch (Exception e) {
-                    log.error("Can't instantiate custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]", e);
+        if (!beanClass.isArray() && !beanClass.isPrimitive()) { // don't bother looking for a transformer if the property is an array or a primitive type
+            try {
+                final ClassFactory classFactory = Classes.getClassFactory();
+                final Class<Content2BeanTransformer> transformerClass = classFactory.forName(beanClass.getName() + "Transformer");
+
+                if(Content2BeanTransformer.class.isAssignableFrom(transformerClass)){
+                    try {
+                        final Content2BeanTransformer transformer = classFactory.newInstance(transformerClass);
+                        dscr.setTransformer(transformer);
+                        log.debug("Found a custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]");
+                    } catch (Exception e) {
+                        log.error("Can't instantiate custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]", e);
+                    }
                 }
+            } catch (Exception e) {
+                // this is fine because having a transformer class is optional
+                log.debug("No custom transformer class {}Transformer class found", beanClass.getName());
             }
-        } catch (Exception e) {
-            // this is fine because having a transformer class is optional
-            log.debug("No custom transformer class {}Transformer class found", beanClass.getName());
         }
 
         return dscr;
