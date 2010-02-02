@@ -60,22 +60,10 @@ public class ComponentsTestUtilTest extends TestCase {
     }
 
     public void testConfiguredImplementation() {
-        ComponentsTestUtil.setDefaultImplementation(DefaultComponentProviderTest.TestInterface.class, DefaultComponentProviderTest.TestImplementation.class);
+        ComponentsTestUtil.setImplementation(DefaultComponentProviderTest.TestInterface.class, DefaultComponentProviderTest.TestImplementation.class);
         Object obj = Components.getSingleton(DefaultComponentProviderTest.TestInterface.class);
         assertTrue(obj instanceof DefaultComponentProviderTest.TestImplementation);
     }
-
-
-    public void testDoNotRedefineTheDefaultImplementation() {
-        ComponentsTestUtil.setDefaultImplementation(DefaultComponentProviderTest.TestInterface.class, DefaultComponentProviderTest.TestImplementation.class);
-        ComponentsTestUtil.setDefaultImplementation(DefaultComponentProviderTest.TestInterface.class, "dummy");
-        Object obj = Components.getSingleton(DefaultComponentProviderTest.TestInterface.class);
-        assertTrue(obj instanceof DefaultComponentProviderTest.TestImplementation);
-        ComponentsTestUtil.setDefaultImplementation(DefaultComponentProviderTest.TestInterface.class, DefaultComponentProviderTest.TestOtherImplementation.class);
-        Object obj2 = Components.getSingleton(DefaultComponentProviderTest.TestInterface.class);
-        assertTrue(obj2 instanceof DefaultComponentProviderTest.TestImplementation);
-    }
-
 
     public void testSetSingletonInstance() {
         DefaultComponentProviderTest.TestImplementation instance = new DefaultComponentProviderTest.TestImplementation();

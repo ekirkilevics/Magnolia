@@ -157,14 +157,14 @@ public class DefaultComponentProviderTest extends TestCase {
 
     private void setDefaultImplementationsAndInitMockRepository(String componentPropertyValue, String expectedRepoName, String repoContent) throws RepositoryException, IOException {
         // configuration value for the interface, i.e the value set in magnolia.properties, for instance
-        ComponentsTestUtil.setDefaultImplementation(TestInterface.class, componentPropertyValue);
+        ComponentsTestUtil.setImplementation(TestInterface.class, componentPropertyValue);
 
         // default impl's for content2bean TODO - refactor PropertiesInitializer
-        ComponentsTestUtil.setDefaultImplementation(Content2BeanProcessor.class, "info.magnolia.content2bean.impl.Content2BeanProcessorImpl");
-        ComponentsTestUtil.setDefaultImplementation(Content2BeanTransformer.class, "info.magnolia.content2bean.impl.Content2BeanTransformerImpl");
-        ComponentsTestUtil.setDefaultImplementation(Bean2ContentProcessor.class, "info.magnolia.content2bean.Bean2ContentProcessorImpl");
-        ComponentsTestUtil.setDefaultImplementation(TransformationState.class, "info.magnolia.content2bean.impl.TransformationStateImpl");
-        ComponentsTestUtil.setDefaultImplementation(TypeMapping.class, "info.magnolia.content2bean.impl.PropertiesBasedTypeMapping");
+        ComponentsTestUtil.setImplementation(Content2BeanProcessor.class, "info.magnolia.content2bean.impl.Content2BeanProcessorImpl");
+        ComponentsTestUtil.setImplementation(Content2BeanTransformer.class, "info.magnolia.content2bean.impl.Content2BeanTransformerImpl");
+        ComponentsTestUtil.setImplementation(Bean2ContentProcessor.class, "info.magnolia.content2bean.Bean2ContentProcessorImpl");
+        ComponentsTestUtil.setImplementation(TransformationState.class, "info.magnolia.content2bean.impl.TransformationStateImpl");
+        ComponentsTestUtil.setImplementation(TypeMapping.class, "info.magnolia.content2bean.impl.PropertiesBasedTypeMapping");
 
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager(expectedRepoName, repoContent);

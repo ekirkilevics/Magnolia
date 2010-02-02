@@ -62,7 +62,7 @@ public class MessagesManagerTest extends TestCase {
 
         sysCtx = createStrictMock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
-        ComponentsTestUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
         // Replace the default bundle (adminterface) by a fake one - see MAGNOLIA-2528
         final DefaultMessagesManager mm = (DefaultMessagesManager) MessagesManager.getInstance();

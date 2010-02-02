@@ -106,10 +106,10 @@ public class UpdateI18nConfigurationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        ComponentsTestUtil.setDefaultImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
-        ComponentsTestUtil.setDefaultImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
-        ComponentsTestUtil.setDefaultImplementation(TransformationState.class, TransformationStateImpl.class);
-        ComponentsTestUtil.setDefaultImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
+        ComponentsTestUtil.setImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
+        ComponentsTestUtil.setImplementation(TransformationState.class, TransformationStateImpl.class);
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
     }
 
     protected void tearDown() throws Exception {

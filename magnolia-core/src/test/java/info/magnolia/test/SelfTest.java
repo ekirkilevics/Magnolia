@@ -99,8 +99,8 @@ public class SelfTest extends TestCase {
     public void testCommandIsSetCorrectlyFromPrototype() throws Exception {
         MockContext ctx = new MockContext();
         ctx.setLocale(Locale.ENGLISH);
-        ComponentsTestUtil.setDefaultImplementation(SystemContext.class, MockContext.class);
-        ComponentsTestUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setImplementation(SystemContext.class, MockContext.class);
+        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
         MgnlContext.setInstance(ctx);
         new TestCommand().execute((org.apache.commons.chain.Context)ctx);
     }

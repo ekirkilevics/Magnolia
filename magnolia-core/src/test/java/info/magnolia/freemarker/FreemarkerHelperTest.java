@@ -94,7 +94,7 @@ public class FreemarkerHelperTest extends TestCase {
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ComponentsTestUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
-        ComponentsTestUtil.setDefaultImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);

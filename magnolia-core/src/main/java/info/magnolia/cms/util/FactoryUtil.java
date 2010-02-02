@@ -90,21 +90,21 @@ public class FactoryUtil {
      * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, Class)}
      */
     public static void setDefaultImplementation(Class interf, Class impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl.getName());
     }
 
     /**
      * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see  {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, String)}
      */
     public static void setDefaultImplementation(Class interf, String impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
     }
 
     /**
      * @deprecated since 4.3 - For tests, use {@link info.magnolia.test.ComponentsTestUtil}, otherwise see {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, Class)}
      */
     public static void setImplementation(Class interf, Class impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
+        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl.getName());
     }
 
     /**

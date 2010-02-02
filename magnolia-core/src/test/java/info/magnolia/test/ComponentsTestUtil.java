@@ -38,64 +38,40 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
 
 /**
+ * A utility to be used in tests which allows to set default implementations or instances.
+ * This implementation assumes that we're using a {@link DefaultComponentProvider}, and
+ * delegates to its set* methods.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
 public class ComponentsTestUtil {
 
-    /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, Class)}
-     *             todo - this is only used in tests
-     */
-    public static void setDefaultImplementation(Class interf, Class impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
+    public static <T> void setImplementation(Class<T> interf, Class<? extends T> impl) {
+        setImplementation(interf, impl.getName());
+    }
+
+    public static <T> void setImplementation(Class<T> interf, String impl) {
+        getComponentProvider().setImplementation(interf, impl);
+    }
+
+    public static <T> void setInstance(Class<T> interf, T instance) {
+        getComponentProvider().setInstance(interf, instance);
+    }
+
+    public static <T> void setInstanceFactory(Class<T> interf, ComponentFactory<T> factory) {
+        getComponentProvider().setInstanceFactory(interf, factory);
     }
 
     /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setDefaultImplementation(Class, String)}
-     *             todo - this is only used in tests
-     */
-    public static void setDefaultImplementation(Class interf, String impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setDefaultImplementation(interf, impl);
-    }
-
-    /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, Class)}
-     *             todo - this is only used in tests
-     */
-    public static void setImplementation(Class interf, Class impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
-    }
-
-    /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setImplementation(Class, String)}
-     *             todo - this is not used
-     */
-    public static void setImplementation(Class interf, String impl) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setImplementation(interf, impl);
-    }
-
-    /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstance(Class, Object)}
-     *             todo - this is only used in tests
-     */
-    public static void setInstance(Class interf, Object instance) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setInstance(interf, instance);
-    }
-
-    /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#setInstanceFactory(Class, info.magnolia.objectfactory.ComponentFactory)}
-     *             todo - this is only used in tests
-     */
-    public static void setInstanceFactory(Class interf, ComponentFactory factory) {
-        ((DefaultComponentProvider) Components.getComponentProvider()).setInstanceFactory(interf, factory);
-    }
-
-    /**
-     * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.DefaultComponentProvider#clear()}
-     *             todo - this is only used in tests
+     * <strong>Warning:</strong> this does NOT clear the *mappings*. With the current/default implementation,
+     * this means tests also have to call SystemProperty.clearr()
      */
     public static void clear() {
-        ((DefaultComponentProvider) Components.getComponentProvider()).clear();
-    }}
+        getComponentProvider().clear();
+    }
+
+    private static DefaultComponentProvider getComponentProvider() {
+        return ((DefaultComponentProvider) Components.getComponentProvider());
+    }
+}

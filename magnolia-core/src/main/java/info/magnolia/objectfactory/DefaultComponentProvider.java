@@ -157,53 +157,34 @@ public class DefaultComponentProvider implements ComponentProvider {
     }
 
     /**
-     * todo - this is only used in tests
-     */
-    public void setDefaultImplementation(Class<?> type, Class<?> impl) {
-        setDefaultImplementation(type, impl.getName());
-    }
-
-    /**
-     * todo - this is only used in tests
-     */
-    public void setDefaultImplementation(Class<?> type, String impl) {
-        if (!mappings.containsKey(type.getName())) {
-            setImplementation(type, impl);
-        }
-    }
-
-    /**
-     * todo - this is only used in tests
-     */
-    public void setImplementation(Class<?> type, Class<?> impl) {
-        setImplementation(type, impl.getName());
-    }
-
-    /**
-     * todo - this is only used internally
+     * Used only in tests.
+     * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
     public void setImplementation(Class<?> type, String impl) {
         mappings.setProperty(type.getName(), impl);
     }
 
     /**
-     * Register an instance which will be returned by getSingleton().
-     * todo - this is only used in tests
+     * Used only in tests.
+     * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
     public void setInstance(Class<?> type, Object instance) {
         instances.put(type, instance);
     }
 
     /**
-     * newInstance will use this prototype for cloning a new object.
-     * todo - this is only used in tests
+     * Used only in tests.
+     * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
     public void setInstanceFactory(Class<?> type, ComponentFactory<?> factory) {
         factories.put(type, factory);
     }
 
     /**
-     * todo - this is only used in tests
+     * Used only in tests.
+     * <strong>Warning:</strong> this does NOT clear the *mappings*. With the current/default implementation,
+     * this means tests also have to call SystemProperty.clearr()
+     * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
     public void clear() {
         factories.clear();
