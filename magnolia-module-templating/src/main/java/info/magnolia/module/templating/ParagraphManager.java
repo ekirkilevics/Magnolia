@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Manages the paragraphs on the system. Modules can register the nodes where the paragraph are defined.
+ * Manages the paragraphs on the system. Modules can register the nodes where the paragraphs are defined.
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
