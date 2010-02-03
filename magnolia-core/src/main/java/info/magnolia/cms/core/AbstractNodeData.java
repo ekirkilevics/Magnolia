@@ -1,19 +1,19 @@
 /**
  * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
- * 
- * 
+ *
+ *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
- * 
+ *
  * This file is distributed in the hope that it will be
  * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
  * Redistribution, except as permitted by whichever of the GPL
  * or MNA you select, is prohibited.
- * 
+ *
  * 1. For the GPL license (GPL), you can redistribute and/or
  * modify this file under the terms of the GNU General
  * Public License, Version 3, as published by the Free Software
@@ -21,15 +21,15 @@
  * General Public License, Version 3 along with this program;
  * if not, write to the Free Software Foundation, Inc., 51
  * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
  * is available at http://www.magnolia.info/mna.html
- * 
+ *
  * Any modifications to this file must keep this entire header
  * intact.
- * 
+ *
  */
 package info.magnolia.cms.core;
 
@@ -63,7 +63,7 @@ public abstract class AbstractNodeData implements NodeData{
         this.parent = parent;
         this.name = name;
     }
-    
+
     public HierarchyManager getHierarchyManager() {
         return parent.getHierarchyManager();
     }
@@ -79,7 +79,7 @@ public abstract class AbstractNodeData implements NodeData{
     public boolean isGranted(long permissions) {
         return getHierarchyManager().getAccessManager().isGranted(getHandle(), permissions);
     }
-    
+
     public String getString(String lineBreak) {
         return getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
     }
@@ -87,7 +87,7 @@ public abstract class AbstractNodeData implements NodeData{
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return this.parent;
     }
-    
+
     public void setParent(Content parent) {
         this.parent = parent;
     }
@@ -120,7 +120,7 @@ public abstract class AbstractNodeData implements NodeData{
         else if (type == PropertyType.PATH || type == PropertyType.STRING) {
             final String pathOrUUID = this.getString();
             // is this relative path?
-            if (!pathOrUUID.startsWith("/")) {
+            if (!pathOrUUID.startsWith("/") && node.hasContent(pathOrUUID)) {
                 refNode = node.getContent(pathOrUUID);
             }
             else if (hm.isExist(pathOrUUID)){
