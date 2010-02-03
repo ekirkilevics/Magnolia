@@ -259,11 +259,4 @@ public class Button extends ControlImpl {
         return this.buttonType;
     }
 
-    /**
-     * @deprecated do nothing
-     * @param i ignored
-     */
-    public void setLabelNbspPadding(int i) {
-        // do nothing
-    }
 }
