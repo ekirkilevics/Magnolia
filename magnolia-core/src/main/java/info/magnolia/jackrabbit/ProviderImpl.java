@@ -361,7 +361,7 @@ public class ProviderImpl implements Provider {
                 {
                     if (ite.getTargetException() instanceof NoSuchNodeTypeException)
                     {
-                        log.info("Registering nodetype {}", ntname); //$NON-NLS-1$
+                        log.info("Registering nodetype {} on repository {}", ntname, repositoryMapping.getName()); //$NON-NLS-1$
 
                         try
                         {
