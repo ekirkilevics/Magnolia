@@ -92,15 +92,14 @@ public class InheritanceContentWrapper extends ContentWrapper {
         this(node, false);
     }
     
+    @Override
+    public boolean hasContent(String name) throws RepositoryException {
+        return getContentSafely(name) != null;
+    }
+    
+    @Override
     public Content getContent(String name) throws RepositoryException {
-        if(getWrappedContent().hasContent(name)){
-            return super.getContent(name);
-        }
-        
-        String innerPath = resolveInnerPath() + "/" + name;
-        innerPath = StringUtils.removeStart(innerPath,"/");
-        
-        Content inherited = getContentSafely(findNextAnchor(), innerPath);
+        Content inherited = getContentSafely(name);
         if(inherited == null){
             throw new PathNotFoundException("Can't inherit a node [" + name + "] on node [" + getWrappedContent().getHandle() + "]");
         }
@@ -148,14 +147,29 @@ public class InheritanceContentWrapper extends ContentWrapper {
     /**
      * This method returns null if no content has been found.
      */
-    protected Content getContentSafely(InheritanceContentWrapper content, String path) throws RepositoryException{
-        if(content ==null){
+    protected Content getContentSafely(String name) throws RepositoryException {
+        if(getWrappedContent().hasContent(name)){
+            return super.getContent(name);
+        }
+        
+        String innerPath = resolveInnerPath() + "/" + name;
+        innerPath = StringUtils.removeStart(innerPath,"/");
+        
+        Content inherited = getContentSafely(findNextAnchor(), innerPath);
+        return inherited;
+    }
+
+    /**
+     * This method returns null if no content has been found.
+     */
+    protected Content getContentSafely(InheritanceContentWrapper anchor, String path) throws RepositoryException{
+        if(anchor == null){
             return null;
         }
         if(StringUtils.isEmpty(path)){
-            return content;
+            return anchor;
         }
-        return content.getContent(path);        
+        return anchor.getContentSafely(path);        
     }
 
     /**

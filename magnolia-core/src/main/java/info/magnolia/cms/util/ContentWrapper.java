@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
@@ -62,11 +61,18 @@ import javax.jcr.version.VersionIterator;
  * The following methods you might want to override:
  * <ul>
  * <li>{@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}</li>
+ * <li>{@link #hasContent(String)}</li>
  * <li>{@link #getContent(String)}</li>
  * <li>{@link #getNodeData(String)}</li>
  * <li>{@link #getNodeDataCollection(String)}</li>
  * <li>{@link #wrap(Content)}</li>
  * <li>{@link #wrap(NodeData)}</li>
+ * </ul>
+ * 
+ * This default implementation assumes that the wrapped content is of type {@link AbstractContent}. If not you have to override the following methods: 
+ * <ul>
+ * <li>{@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}</li>
+ * <li>{@link #newNodeDataInstance(String, int, boolean)}</li>
  * </ul>
  *
  * @author pbaerfuss
@@ -88,6 +94,9 @@ public abstract class ContentWrapper extends AbstractContent {
         return this.wrappedContent;
     }
 
+    /**
+     * @deprecated since 4.3, will get removed soon
+     */
     public void setWrappedContent(Content wrappedContent) {
         this.wrappedContent = wrappedContent;
     }
@@ -138,8 +147,30 @@ public abstract class ContentWrapper extends AbstractContent {
         buffer.append(super.toString());
         return buffer.toString();
     }
+    
+    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
+        Content content = getWrappedContent();
+        if(content instanceof AbstractContent){
+            return wrapContentNodes(((AbstractContent) content).getChildren(filter, namePattern, orderCriteria));
+        }
+        throw new IllegalStateException("This wrapper supports only wrapping AbstractContent objects by default. Please override this method.");
+    }
+    
+    @Override
+    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
+        Content content = getWrappedContent();
+        if(content instanceof AbstractContent){
+            return wrap(((AbstractContent)content).newNodeDataInstance(name, type, createIfNotExisting));
+        }
+        throw new IllegalStateException("This wrapper supports only wrapping AbstractContent objects by default. Please override this method.");
+    }
 
     // wrapping methods below - methods returning Content wrap it using #wrap(), methods returning Collection<Content> wrap it with #wrapContentNodes()
+
+    public boolean hasContent(String name) throws RepositoryException {
+        return getWrappedContent().hasContent(name);
+    }
+
     public void addMixin(String type) throws RepositoryException {
         this.getWrappedContent().addMixin(type);
     }
@@ -187,10 +218,6 @@ public abstract class ContentWrapper extends AbstractContent {
         return wrap(this.getWrappedContent().getChildByName(namePattern));
     }
 
-    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
-        return wrapContentNodes(((AbstractContent) getWrappedContent()).getChildren(filter, namePattern, orderCriteria));
-    }
-
     public Content getContent(String name) throws RepositoryException {
         return wrap(this.getWrappedContent().getContent(name));
     }
@@ -229,11 +256,6 @@ public abstract class ContentWrapper extends AbstractContent {
 
     public String getName() {
         return this.getWrappedContent().getName();
-    }
-
-    @Override
-    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
-        return wrap(((AbstractContent)getWrappedContent()).newNodeDataInstance(name, type, createIfNotExisting));
     }
 
     public Collection<NodeData> getNodeDataCollection(String namePattern) {
@@ -280,28 +302,8 @@ public abstract class ContentWrapper extends AbstractContent {
         return this.getWrappedContent().getWorkspace();
     }
 
-    /**
-     * Uses {@link #getContent(String)} and caches {@link PathNotFoundException} to make it easier to extend this class.
-     */
-    public boolean hasContent(String name) throws RepositoryException {
-        try{
-            getContent(name);
-        }
-        catch(PathNotFoundException e){
-            return false;
-        }
-        return true;
-    }
-
     public boolean hasMetaData() {
         return this.getWrappedContent().hasMetaData();
-    }
-
-    /**
-     * Uses {@link #getNodeData(String)} and {@link NodeData#isExist()} to make it easier to extend this class.
-     */
-    public boolean hasNodeData(String name) throws RepositoryException {
-        return getNodeData(name).isExist();
     }
 
     public boolean holdsLock() throws RepositoryException {

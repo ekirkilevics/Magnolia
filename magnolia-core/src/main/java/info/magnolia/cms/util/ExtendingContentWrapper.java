@@ -39,8 +39,10 @@ import java.util.LinkedHashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -110,6 +112,17 @@ public class ExtendingContentWrapper extends ContentWrapper {
     }
 
     @Override
+    public boolean hasContent(String name) throws RepositoryException {
+        if (getWrappedContent().hasContent(name)) {
+            return true;
+        }
+        else if (extending && extendedContent.hasContent(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Content getContent(String name) throws RepositoryException {
         Content content;
         if (getWrappedContent().hasContent(name)) {
@@ -126,10 +139,10 @@ public class ExtendingContentWrapper extends ContentWrapper {
     }
 
     @Override
-    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
-        Collection<Content> directChildren = getWrappedContent().getChildren(filter, orderCriteria);
+    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
+        Collection<Content> directChildren = super.getChildren(filter, namePattern, orderCriteria);
         if (extending) {
-            Collection<Content> inheritedChildren = extendedContent.getChildren(filter, orderCriteria);
+            Collection<Content> inheritedChildren = ((AbstractContent)extendedContent).getChildren(filter, namePattern, orderCriteria);
             // keep order, add new elements at the end of the collection
             LinkedHashMap<String, Content> merged = new LinkedHashMap<String, Content>();
             for (Content content : inheritedChildren) {

@@ -226,7 +226,6 @@ public class DefaultContent extends AbstractContent {
             return new NonExistingNodeData(this, name);
         }
         
-        
         if(type == PropertyType.UNDEFINED){
             type = determineNodeDataType(name);
         }
