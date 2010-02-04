@@ -40,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.security.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -231,8 +232,8 @@ public abstract class ContentWrapper extends AbstractContent {
     }
 
     @Override
-    public NodeData getNodeData(String name, int type) throws RepositoryException {
-        return wrap(((AbstractContent)getWrappedContent()).getNodeData(name, type));
+    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
+        return wrap(((AbstractContent)getWrappedContent()).newNodeDataInstance(name, type, createIfNotExisting));
     }
 
     public Collection<NodeData> getNodeDataCollection(String namePattern) {

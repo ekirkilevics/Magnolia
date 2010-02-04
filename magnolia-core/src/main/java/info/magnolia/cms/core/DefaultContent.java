@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.jcr.Item;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -64,6 +65,7 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.derby.impl.sql.compile.HasNodeVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,17 +199,38 @@ public class DefaultContent extends AbstractContent {
         return content;
     }
 
-    public NodeData getNodeData(String name, int type) throws AccessDeniedException, RepositoryException {
+    @Override
+    public boolean hasNodeData(String name) throws RepositoryException {
+        if (this.node.hasProperty(name)) {
+            return true;
+        }
+        else { // check for mgnl:resource node
+            if (this.node.hasNode(name) && this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         try {
             Access.isGranted(getAccessManager(), Path.getAbsolutePath(getHandle(), name), Permission.READ);
         }
         // FIXME: should be thrown but return a dummy node data
         catch (AccessDeniedException e) {
-            throw new RuntimeException(e);
+            return new NonExistingNodeData(this, name);
         }
+
+        // create an empty dummy
+        if(!hasNodeData(name) && !createIfNotExisting){
+            return new NonExistingNodeData(this, name);
+        }
+        
+        
         if(type == PropertyType.UNDEFINED){
             type = determineNodeDataType(name);
         }
+
         if(type == PropertyType.BINARY){
             return new BinaryNodeData(this, name);
         }

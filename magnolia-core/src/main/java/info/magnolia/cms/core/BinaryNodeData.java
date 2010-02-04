@@ -230,7 +230,15 @@ public class BinaryNodeData extends AbstractNodeData {
     }
 
     public String getString() {
-        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+        if(isExist()){
+            try {
+                return getJCRProperty().getString();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
+        }
+        return "";
     }
 
     public Calendar getDate() {

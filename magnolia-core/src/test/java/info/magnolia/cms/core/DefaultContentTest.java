@@ -53,6 +53,7 @@ import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.RepositoryTestCase;
 import static org.easymock.EasyMock.*;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -99,7 +100,6 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals("test", nodeData.getString());
     }
 
-    
     public void testSettingANonExistingNodeDataCreatesANewNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         Value value = createValue("test");
@@ -109,20 +109,6 @@ public class DefaultContentTest extends RepositoryTestCase {
 
     }
 
-    // This would probably make more sense
-    /*
-     public void testSettingANonExistingNodeDataFails() throws IOException, RepositoryException{
-        Content content = getTestContent();
-        // this should not fail
-        try {
-            content.setNodeData("nd2", "test");
-        }
-        catch (PathNotFoundException e) {
-            return;
-        }
-        fail("Should throw an exception!");
-    }
-     */
 
     public void testCreatingAnEmptyNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
@@ -131,15 +117,6 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals("", nodeData.getString());
         assertEquals(true, nodeData.isExist());
     }
-
-    // FIXME? in older versions we created an empty string property
-    
-//    public void testCreatingAnEmptyNodeDataIgnoresTheType() throws IOException, RepositoryException{
-//        Content content = getTestContent();
-//        NodeData nodeData = content.createNodeData("nd2", PropertyType.BOOLEAN);
-//        // fact is that the type is ignored
-//        assertEquals(PropertyType.STRING, nodeData.getType());
-//    }
 
     public void testCreatingAnEmptyNodeDataSetsADefaultValueIfPossible() throws IOException, RepositoryException {
         Content content = getTestContent();
@@ -188,23 +165,30 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals(binaryContent, IOUtils.toString(nodeData.getStream()));
         //assertEquals("filename", nodeData.getAttribute(FileProperties.PROPERTY_FILENAME));
     }
-    
-    // This would probably make more sense
-    /*
-    public void testCreatingAnExistingNodeDataFails() throws IOException, RepositoryException{
+
+    public void testThatReadingANonExistingNodeDataReturnsAnEmptyNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
-        // this should not fail
-        try {
-            NodeData nodeData = content.createNodeData("nd1", "test");
+        NodeData nd = content.getNodeData("nirvana");
+        assertEquals("nirvana", nd.getName());
+        assertEquals("", nd.getString());
+        assertEquals(false, nd.getBoolean());
+        assertEquals(0, nd.getLong());
+        assertEquals("", nd.getAttribute("other"));
+    }
+
+    public void testThatReadingANonExistingNodeDataReturnsAnEmptyNodeDataWhichIsUnmutable() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        NodeData nd = content.getNodeData("nirvana");
+        try{
+            nd.setValue("value");
         }
-        catch (PathNotFoundException e) {
+        catch(ItemNotFoundException e){
             return;
         }
-        fail("Should throw an exception!");
+        fail("should throw an exception");
     }
-    */
 
-    
+  
     private Content getTestContent() throws IOException, RepositoryException {
         String contentProperties = 
             "/mycontent.@type=mgnl:content\n" +

@@ -56,7 +56,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * A base class by implementing some default behavior.
- * A subclass must carefully implement {@link #getNodeData(String, int)},
+ * A subclass must carefully implement {@link #newNodeDataInstance(String, int)},
  * {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)} and
  * {@link #getNodeDataCollection(String)}.
  *
@@ -107,7 +107,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
             case PropertyType.DOUBLE:
                 return setNodeData(name, new Double(0.0));
             default:
-                return getNodeData(name, type);
+                return newNodeDataInstance(name, type, true);
         }
     }
     
@@ -115,18 +115,17 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * @deprecated
      */
     public NodeData createNodeData(String name, Object valueObj) throws RepositoryException {
-        NodeData nodeData = getNodeData(name, NodeDataUtil.getJCRPropertyType(valueObj));
-        NodeDataUtil.setValue(nodeData, valueObj);
-        return nodeData;
+        return setNodeData(name, valueObj);
     }
     
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getNodeData(String, int)} by setting the type to PropertyType.UNDEFINED. A subclass has to handle this by trying to determine the type if the node data exists. The reason for this is that implementations want to instantiate different node data classes per type
+     * Delegates to {@link #newNodeDataInstance(String, int)} by setting the type to PropertyType.UNDEFINED. A subclass has to handle this by trying to determine the type if the node data exists. The reason for this is that implementations want to instantiate different node data classes per type
      */
     public NodeData getNodeData(String name) {
         try {
-            return getNodeData(name, PropertyType.UNDEFINED);
+            // will try to determine the type if the node data exists, otherwise an non-mutable node data will be returned
+            return newNodeDataInstance(name, PropertyType.UNDEFINED, false);
         }
         catch(RepositoryException e){
             throw new IllegalStateException("Can't instantiate node data " + name + " on node " + toString(), e);
@@ -135,9 +134,10 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     
     /**
      * As defined in {@link Content#getNodeData(String)} this method always returns a node data object. If the type is {@link PropertyType#UNDEFINED} the implementation should check if the node data exists and determine the type to use.
-     * {@linkplain}
+     * 
+     * @param createIfNotExisting if false an empty non-mutable node data will be returned if the node data doesn't exist otherwise a mutable nodedata object is returned (depending on the type)
      */
-    abstract public NodeData getNodeData(String name, int type) throws AccessDeniedException, RepositoryException;
+    abstract public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException;
 
     /**
      * Delegates to {@link NodeData#isExist()}.
@@ -147,7 +147,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     }
 
     public NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, value.getType());
+        NodeData nodeData = newNodeDataInstance(name, value.getType(), true);
         nodeData.setValue(value);
         return nodeData;
     }
@@ -156,49 +156,49 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         if(value.length == 0){
             throw new IllegalArgumentException("Value array can't be empty");
         }
-        NodeData nodeData = getNodeData(name, value[0].getType());
+        NodeData nodeData = newNodeDataInstance(name, value[0].getType(), true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, boolean value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.BOOLEAN);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.BOOLEAN, true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, long value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.LONG);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.LONG, true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, double value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.DOUBLE);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.DOUBLE, true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, String value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.STRING);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, InputStream value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.BINARY);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.BINARY, true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, Calendar value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.DATE);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.DATE, true);
         nodeData.setValue(value);
         return nodeData;
     }
     
     public NodeData setNodeData(String name, Content value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, PropertyType.STRING);
+        NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
         nodeData.setValue(value.getUUID());
         return nodeData;
     }
@@ -207,7 +207,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      * Uses the {@link NodeDataUtil} to create and set the node data based on the object type.
      */
     public NodeData setNodeData(String name, Object value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        NodeData nodeData = getNodeData(name, NodeDataUtil.getJCRPropertyType(value));
+        NodeData nodeData = newNodeDataInstance(name, NodeDataUtil.getJCRPropertyType(value), true);
         NodeDataUtil.setValue(nodeData, value);
         return nodeData;
     }
@@ -298,7 +298,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         Collection<NodeData> nodeDatas = new ArrayList<NodeData>();
         Collection<Content> binaryNodes = getChildren(ItemType.NT_RESOURCE, namePattern);
         for (Content binaryNode : binaryNodes) {
-            nodeDatas.add(getNodeData(binaryNode.getName(), PropertyType.BINARY));
+            nodeDatas.add(newNodeDataInstance(binaryNode.getName(), PropertyType.BINARY, false));
         }
         return nodeDatas;
     }

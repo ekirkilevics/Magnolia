@@ -43,6 +43,10 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Collection;
 
@@ -82,6 +86,15 @@ public abstract class AbstractNodeData implements NodeData{
 
     public String getString(String lineBreak) {
         return getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
+    }
+    
+    public InputStream getStream() {
+        try {
+            return new ByteArrayInputStream(getString().getBytes("UTF-8"));
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {

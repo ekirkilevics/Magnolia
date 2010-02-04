@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Rule;
@@ -349,9 +350,12 @@ public class MockContent extends AbstractContent {
     }
 
     @Override
-    public NodeData getNodeData(String name, int type) throws RepositoryException {
+    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         if(nodeDatas.containsKey(name)){
             return nodeDatas.get(name);
+        }
+        else if(!createIfNotExisting){
+            return new NonExistingNodeData(parent, name);
         }
         else{
             MockNodeData nodeData;
