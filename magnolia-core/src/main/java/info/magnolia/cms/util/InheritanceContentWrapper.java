@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -47,12 +46,27 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 
 /**
+ * This wrapper inherits content from the parent hierarchy. The method {@link #isAnchor()} defines
+ * the anchor to which the inheritance is performed relative to. By default the anchor is a page
+ * (mgnl:content).
+ * <p>
+ * The inheritance is then performed as follows:
+ * <ul>
+ * <li>try to get the content directly</li>
+ * <li>find next anchor</li>
+ * <li>try to get the content from the anchor</li>
+ * <li>repeat until no anchor can be found anymore (root)</li>
+ * </ul>
+ * <p>
+ * The {@link #getChildren()} methods merge the direct and inherited children by first adding the
+ * inherited children to the collection and then the direct children.
  * @author pbracher
  * @version $Id$
  */
@@ -70,87 +84,97 @@ public class InheritanceContentWrapper extends ContentWrapper {
         this.inherited = inherited;
     }
 
+    /**
+     * Starts inheritance for 
+     * @param node
+     */
     public InheritanceContentWrapper(Content node) {
         this(node, false);
     }
-
+    
     public Content getContent(String name) throws RepositoryException {
-        Content found = findContentByInheritance(name);
-        if(found != null){
-            boolean inherited = !found.getHandle().startsWith(getWrappedContent().getHandle());
-            return new InheritanceContentWrapper(found, inherited);
+        if(getWrappedContent().hasContent(name)){
+            return super.getContent(name);
         }
-
-        throw new PathNotFoundException("Can't inherit a node [" + name + "] on node [" + getWrappedContent().getHandle() + "]");
+        
+        String innerPath = resolveInnerPath() + "/" + name;
+        innerPath = StringUtils.removeStart(innerPath,"/");
+        
+        Content inherited = getContentSafely(findNextAnchor(), innerPath);
+        if(inherited == null){
+            throw new PathNotFoundException("Can't inherit a node [" + name + "] on node [" + getWrappedContent().getHandle() + "]");
+        }
+        return inherited;
     }
 
-
-    public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
+    @Override
+    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria){
         List children = new ArrayList();
+
         try {
-            collectInheritedChildren(filter, children);
-            for (Iterator iterator = getWrappedContent().getChildren(filter).iterator(); iterator.hasNext();) {
-                Content child = (Content) iterator.next();
-                children.add(wrap(child));
+            Content inherited = getContentSafely(findNextAnchor(), resolveInnerPath());
+            if(inherited != null){
+                children.addAll(((AbstractContent)inherited).getChildren(filter, namePattern, orderCriteria));
             }
         }
         catch (RepositoryException e) {
-            log.error("Can't collect inherited nodes",e);
-            return Collections.EMPTY_LIST;
+            throw new RuntimeException("Can't inherit children from " + getWrappedContent(), e);
         }
+    
+        children.addAll(super.getChildren(filter, namePattern, orderCriteria));
         if(orderCriteria != null){
             Collections.sort(children, orderCriteria);
         }
-        return children;
+        
+        return wrapContentNodes(children);
     }
 
-    protected void collectInheritedChildren(ContentFilter filter, List children) throws RepositoryException {
-        Content found = findContentByInheritance(findNextAnchor(), resolveInnerPath());
-        if(found != null){
-            for (Iterator iterator = found.getChildren(filter).iterator(); iterator.hasNext();) {
-                Content child = (Content) iterator.next();
-                children.add(new InheritanceContentWrapper(child, true));
-            }
-            ((InheritanceContentWrapper)wrap(found)).collectInheritedChildren(filter, children);
-        }
-    }
-
-
-
-    protected Content findContentByInheritance(String name) throws RepositoryException {
-        InheritanceContentWrapper anchor = findAnchor();
-        String path = resolveInnerPath() + "/" + name;
-        path = StringUtils.removeStart(path,"/");
-
-        Content found = findContentByInheritance(anchor, path);
-        return found;
-    }
-
+    /**
+     * Returns the inner path of the this node up to the anchor.
+     */
     protected String resolveInnerPath() throws RepositoryException {
-        String path = StringUtils.substringAfter(this.getHandle(), findAnchor().getHandle());
-        path =  StringUtils.removeStart(path,"/");
-        return path;
+        final String path;
+        InheritanceContentWrapper anchor = findAnchor();
+        // if no anchor left we are relative to the root
+        if(anchor == null){
+            path = this.getHandle();
+        }
+        else{
+            path = StringUtils.substringAfter(this.getHandle(), anchor.getHandle());
+        }
+        return StringUtils.removeStart(path,"/");
     }
 
     /**
      * This method returns null if no content has been found.
      */
-    protected Content findContentByInheritance(InheritanceContentWrapper anchor, String path) throws RepositoryException{
-        if(anchor ==null){
+    protected Content getContentSafely(InheritanceContentWrapper content, String path) throws RepositoryException{
+        if(content ==null){
             return null;
         }
         if(StringUtils.isEmpty(path)){
-            return anchor.getWrappedContent();
+            return content;
         }
-        Content unwrapped = anchor.getWrappedContent();
-        if(unwrapped.hasContent(path)){
-            return unwrapped.getContent(path);
-        }
-        else{
-            return findContentByInheritance(anchor.findNextAnchor(), path);
-        }
+        return content.getContent(path);        
     }
 
+    /**
+     * Find the anchor for this node.
+     */
+    protected InheritanceContentWrapper findAnchor() throws RepositoryException{
+        if(getLevel() ==0){
+            return null;
+        }
+        if(isAnchor()){
+            return this;
+        }
+        // until the current node is the anchor
+        return ((InheritanceContentWrapper)getParent()).findAnchor();
+    }
+    
+    /**
+     * Find next anchor.
+     */
     protected InheritanceContentWrapper findNextAnchor() throws RepositoryException{
         final InheritanceContentWrapper currentAnchor = findAnchor();
         if(currentAnchor != null && getLevel() >0){
@@ -159,37 +183,49 @@ public class InheritanceContentWrapper extends ContentWrapper {
         return null;
     }
 
-    protected InheritanceContentWrapper findAnchor() throws RepositoryException{
-        if(getLevel() ==0){
-            return null;
-        }
-        if(isNodeType(ItemType.CONTENT.getSystemName())){
-            return this;
-        }
-        return ((InheritanceContentWrapper)getParent()).findAnchor();
+    /**
+     * True if this node is an anchor. By default true if this node is of type mgnl:content (page)
+     */
+    protected boolean isAnchor() {
+        return isNodeType(ItemType.CONTENT.getSystemName());
     }
-
+    
     public NodeData getNodeData(String name) {
         try {
             if (getWrappedContent().hasNodeData(name)) {
                 return getWrappedContent().getNodeData(name);
             }
-            else {
-                Content found = findContentByInheritance(findNextAnchor(), resolveInnerPath());
-                if(found != null){
-                    return wrap(found).getNodeData(name);
-                }
+            Content inherited = getContentSafely(findNextAnchor(), resolveInnerPath());
+            if(inherited != null){
+                return inherited.getNodeData(name);
             }
         }
         catch (RepositoryException e) {
-            log.error("Can't inherit nodedata", e);
+            throw new RuntimeException("Can't inherit nodedata " + name + "  for " + getWrappedContent(), e);
+
         }
         // creates a none existing node data in the standard manner
-        return getWrappedContent().getNodeData(name);
+        return super.getNodeData(name);
     }
 
+    /**
+     * Wrap returned nodes. Sets the inherited flag
+     */
     protected Content wrap(Content node) {
-        return new InheritanceContentWrapper(node);
+        // only wrap once
+        if(node instanceof InheritanceContentWrapper){
+            return node;
+        }
+        // set the inherited flag
+        boolean inherited = !isSubNode(node);
+        return new InheritanceContentWrapper(node, inherited);
+    }
+
+    /**
+     * True if the current node is an ancestor of node 
+     */
+    protected boolean isSubNode(Content node) {
+        return node.getHandle().startsWith(getWrappedContent().getHandle());
     }
 
     public boolean isInherited() {

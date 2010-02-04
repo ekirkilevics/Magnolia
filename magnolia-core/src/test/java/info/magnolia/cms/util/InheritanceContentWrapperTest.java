@@ -61,6 +61,13 @@ public class InheritanceContentWrapperTest extends TestCase {
         hm = MockUtil.createHierarchyManager(stream);
     }
 
+    public void testRoot() throws Exception {
+        setUpContent("testPropertyInheritance");
+        Content root = new InheritanceContentWrapper(hm.getRoot());
+        // following will call protected method resolveInnerPath() which in turn calls findAnchor()
+        root.getNodeData("whateverThatIsNotOnTheNodeItself");
+    }
+
     public void testPropertyInheritance() throws Exception {
         setUpContent("testPropertyInheritance");
         Content page11 = getWrapped("/page1/page11");
