@@ -110,6 +110,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria){
         List children = new ArrayList();
 
+        // add inherited children
         try {
             Content inherited = getContentSafely(findNextAnchor(), resolveInnerPath());
             if(inherited != null){
@@ -119,8 +120,9 @@ public class InheritanceContentWrapper extends ContentWrapper {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't inherit children from " + getWrappedContent(), e);
         }
-    
-        children.addAll(super.getChildren(filter, namePattern, orderCriteria));
+        
+        // add direct children
+        children.addAll(((AbstractContent)getWrappedContent()).getChildren(filter, namePattern, orderCriteria));
         if(orderCriteria != null){
             Collections.sort(children, orderCriteria);
         }

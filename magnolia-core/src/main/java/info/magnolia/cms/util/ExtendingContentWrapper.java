@@ -140,7 +140,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
 
     @Override
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
-        Collection<Content> directChildren = super.getChildren(filter, namePattern, orderCriteria);
+        Collection<Content> directChildren = ((AbstractContent)getWrappedContent()).getChildren(filter, namePattern, orderCriteria);
         if (extending) {
             Collection<Content> inheritedChildren = ((AbstractContent)extendedContent).getChildren(filter, namePattern, orderCriteria);
             // keep order, add new elements at the end of the collection
@@ -208,7 +208,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't wrap " + node, e);
         }
-        return wrapIfNeeded(node);
+        return new ExtendingContentWrapper(node);
     }
 
 }
