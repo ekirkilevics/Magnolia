@@ -46,9 +46,16 @@ import javax.jcr.Value;
 
 
 /**
+ * Represents an non-mutable empty node data. This is returned by
+ * {@link Content#getNodeData(String)} in case the node data does not exist. This is the case
+ * because jcr doesn't support empty properties.
+ * 
+ * All reading methods will return a default value which might be null in some cases. All writing
+ * methods will throw an {@link ItemNotFoundException}.
+ * 
  * @author pbaerfuss
  * @version $Id$
- *
+ * 
  */
 public class NonExistingNodeData extends AbstractNodeData {
 
