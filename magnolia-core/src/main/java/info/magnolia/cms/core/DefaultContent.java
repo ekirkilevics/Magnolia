@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.jcr.Item;
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -65,7 +64,6 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.derby.impl.sql.compile.HasNodeVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

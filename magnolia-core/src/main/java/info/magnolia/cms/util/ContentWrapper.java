@@ -83,6 +83,9 @@ public abstract class ContentWrapper extends AbstractContent {
 
     private Content wrappedContent;
 
+    /**
+     * @deprecated since 4.3 - use {@link #ContentWrapper(info.magnolia.cms.core.Content)} instead.
+     */
     public ContentWrapper() {
     }
 
@@ -95,7 +98,7 @@ public abstract class ContentWrapper extends AbstractContent {
     }
 
     /**
-     * @deprecated since 4.3, will get removed soon
+     * @deprecated since 4.3 - use {@link #ContentWrapper(info.magnolia.cms.core.Content)} instead.
      */
     public void setWrappedContent(Content wrappedContent) {
         this.wrappedContent = wrappedContent;
@@ -165,11 +168,9 @@ public abstract class ContentWrapper extends AbstractContent {
         throw new IllegalStateException("This wrapper supports only wrapping AbstractContent objects by default. Please override this method.");
     }
 
-    // wrapping methods below - methods returning Content wrap it using #wrap(), methods returning Collection<Content> wrap it with #wrapContentNodes()
-
-    public boolean hasContent(String name) throws RepositoryException {
-        return getWrappedContent().hasContent(name);
-    }
+    // --- only wrapping methods below
+    // --- - methods returning Content should wrap it using #wrap()
+    // --- - methods returning Collection<Content> should wrap it with #wrapContentNodes()
 
     public void addMixin(String type) throws RepositoryException {
         this.getWrappedContent().addMixin(type);
@@ -300,6 +301,10 @@ public abstract class ContentWrapper extends AbstractContent {
 
     public Workspace getWorkspace() throws RepositoryException {
         return this.getWrappedContent().getWorkspace();
+    }
+
+    public boolean hasContent(String name) throws RepositoryException {
+        return getWrappedContent().hasContent(name);
     }
 
     public boolean hasMetaData() {

@@ -56,7 +56,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * A base class by implementing some default behavior.
- * A subclass must carefully implement {@link #newNodeDataInstance(String, int)},
+ * A subclass must carefully implement {@link #newNodeDataInstance(String, int, boolean)},
  * {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)} and
  * {@link #getNodeDataCollection(String)}.
  *
@@ -120,7 +120,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     
     /**
      * {@inheritDoc}
-     * Delegates to {@link #newNodeDataInstance(String, int)} by setting the type to PropertyType.UNDEFINED. A subclass has to handle this by trying to determine the type if the node data exists. The reason for this is that implementations want to instantiate different node data classes per type
+     * Delegates to {@link #newNodeDataInstance(String, int, boolean)} by setting the type to PropertyType.UNDEFINED. A subclass has to handle this by trying to determine the type if the node data exists. The reason for this is that implementations want to instantiate different node data classes per type
      */
     public NodeData getNodeData(String name) {
         try {
