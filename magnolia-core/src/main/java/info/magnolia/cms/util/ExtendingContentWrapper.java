@@ -208,7 +208,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't wrap " + node, e);
         }
-        return new ExtendingContentWrapper(node);
+        return wrapIfNeeded(node);
     }
 
 }
