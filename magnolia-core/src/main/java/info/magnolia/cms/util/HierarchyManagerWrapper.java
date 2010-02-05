@@ -190,7 +190,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     }
 
     public Content getContentByUUID(String uuid) throws RepositoryException {
-        return getWrappedHierarchyManager().getContentByUUID(uuid);
+        return wrap(getWrappedHierarchyManager().getContentByUUID(uuid));
     }
 
     public Workspace getWorkspace() {
