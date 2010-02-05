@@ -34,6 +34,8 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 
 import java.io.InputStream;
@@ -46,6 +48,7 @@ import java.util.TimeZone;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
@@ -101,6 +104,21 @@ public class BinaryMockNodeData extends MockNodeData {
         return PropertyType.BINARY;
     }
 
+    public InputStream getStream() {
+        if (wrappedContent != null) {
+            return wrappedContent.getNodeData(ItemType.JCR_DATA).getStream();
+        }
+
+        return super.getStream();
+    }
+
+    public String getString() {
+        if (wrappedContent != null) {
+            return wrappedContent.getNodeData(ItemType.JCR_DATA).getString();
+        }
+        return super.getString();
+    }
+
     public String getAttribute(String name) {
         if (wrappedContent != null) {
             return wrappedContent.getNodeData(name).getString();
@@ -131,5 +149,63 @@ public class BinaryMockNodeData extends MockNodeData {
             throw new UnsupportedOperationException();
         }
         attributes.put(name, value);
+    }
+
+    // unsupported operations, copied from BinaryNockData
+
+    public Calendar getDate() {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public boolean getBoolean() {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public double getDouble() {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public long getLong() {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public Value[] getValues() {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(String value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(int value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(long value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(double value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(boolean value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(Calendar value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(Content value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(Value value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
+    }
+
+    public void setValue(Value[] value) throws RepositoryException {
+        throw new UnsupportedOperationException("This operation is not supported on node datas of type BINARY");
     }
 }

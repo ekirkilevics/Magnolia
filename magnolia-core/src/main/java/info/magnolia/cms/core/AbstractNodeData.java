@@ -87,15 +87,6 @@ public abstract class AbstractNodeData implements NodeData{
     public String getString(String lineBreak) {
         return getString().replaceAll("\n", lineBreak); //$NON-NLS-1$
     }
-    
-    public InputStream getStream() {
-        try {
-            return new ByteArrayInputStream(getString().getBytes("UTF-8"));
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return this.parent;

@@ -35,10 +35,14 @@ package info.magnolia.cms.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -47,7 +51,6 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.test.RepositoryTestCase;
@@ -63,16 +66,15 @@ import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.easymock.IAnswer;
-import org.easymock.classextension.EasyMock;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class DefaultContentTest extends RepositoryTestCase {
-    
-    
+
     public interface ExceptionThrowingCallback {
         void call() throws Exception;
     }
@@ -82,7 +84,6 @@ public class DefaultContentTest extends RepositoryTestCase {
         NodeData nodeData = content.getNodeData("nd1");
         assertEquals("hello", nodeData.getString());
         assertEquals(true, nodeData.isExist());
-        
     }
 
     public void testThatReadingANonExistingNodeDataDoesNotFail() throws IOException, RepositoryException{
@@ -91,7 +92,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         NodeData nodeData = content.getNodeData("nd2");
         assertEquals(false, nodeData.isExist());
     }
-    
+
     public void testSettingAnExistingNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         // this should not fail
@@ -106,7 +107,6 @@ public class DefaultContentTest extends RepositoryTestCase {
         // does not exist yet
         NodeData nodeData = content.setNodeData("nd2", value);
         assertEquals("test", nodeData.getString());
-
     }
 
 
@@ -139,7 +139,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         // now setting a boolean value
         nodeData.setValue(true);
         assertEquals(true, nodeData.getBoolean());
-        
+
         nodeData = content.createNodeData("nd3", true);
         assertEquals(true, nodeData.getBoolean());
     }
@@ -149,7 +149,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         NodeData nodeData = content.createNodeData("nd1", "other");
         assertEquals("other", nodeData.getString());
     }
-    
+
     public void testCreatingAndReadingABinaryNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
         String binaryContent = "the content";
@@ -158,8 +158,7 @@ public class DefaultContentTest extends RepositoryTestCase {
 //        nodeData.setAttribute(FileProperties.PROPERTY_FILENAME, "filename");
         nodeData.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, "text/plain");
         nodeData.setAttribute(FileProperties.PROPERTY_LASTMODIFIED, Calendar.getInstance());
-        
-        
+
         content.save();
         nodeData = content.getNodeData("nd2");
         assertEquals(binaryContent, IOUtils.toString(nodeData.getStream()));
@@ -188,9 +187,8 @@ public class DefaultContentTest extends RepositoryTestCase {
         fail("should throw an exception");
     }
 
-  
     private Content getTestContent() throws IOException, RepositoryException {
-        String contentProperties = 
+        String contentProperties =
             "/mycontent.@type=mgnl:content\n" +
             "/mycontent.nd1=hello";
         
@@ -214,7 +212,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         // test that we can read
         assertTrue(node.hasNodeData("bar"));
         assertEquals("test", node.getNodeData("bar").getString());
-        
+
         mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
             public void call() throws Exception {
                 node.setNodeData("bar", "other");
@@ -254,7 +252,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         if(permissions == null){
             permissions = new ArrayList<Permission>();
         }
-        
+
         PermissionImpl permission = new PermissionImpl();
         permission.setPattern(new SimpleUrlPattern(path));
         permission.setPermissions(permissionValue);
@@ -316,6 +314,115 @@ public class DefaultContentTest extends RepositoryTestCase {
         c.setNode(node);
         assertTrue(c.isNodeType(node, ItemType.NT_FROZENNODE));
         verify(node, nodeTypeProp);
+    }
+
+    public void testNameFilteringWorksForBothBinaryAndNonBinaryProperties() throws Exception {
+        String contentProperties = StringUtils.join(Arrays.asList(
+                "/somepage/mypage@type=mgnl:content",
+                "/somepage/mypage/paragraphs@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
+
+                // 2 regular props
+                "/somepage/mypage/paragraphs/0/attention=booyah",
+                "/somepage/mypage/paragraphs/0/imaginary=date:2009-10-14T08:59:01.227-04:00",
+
+                // 3 binaries
+                "/somepage/mypage/paragraphs/0/attachment1@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/attachment1.fileName=hello",
+                "/somepage/mypage/paragraphs/0/attachment1.extension=gif",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:mimeType=image/gif",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=",
+
+                "/somepage/mypage/paragraphs/0/attachment2@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/attachment2.fileName=test",
+                "/somepage/mypage/paragraphs/0/attachment2.extension=jpeg",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:mimeType=image/jpeg",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=",
+
+                "/somepage/mypage/paragraphs/0/image3@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/image3.fileName=third",
+                "/somepage/mypage/paragraphs/0/image3.extension=png",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:mimeType=image/png",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:lastModified=",
+
+                // and more which should not match
+                "/somepage/mypage/paragraphs/0/foo=bar",
+                "/somepage/mypage/paragraphs/0/mybool=boolean:true",
+                "/somepage/mypage/paragraphs/0/rand@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/rand.fileName=randdddd",
+                "/somepage/mypage/paragraphs/0/rand.extension=png",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified="
+        ), "\n");
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
+        hm.save();
+
+        final Content content = hm.getContent("/somepage/mypage/paragraphs/0");
+        final Collection<NodeData> props = content.getNodeDataCollection("att*|ima*");
+        assertEquals(5, props.size());
+
+        // sort by name
+        final TreeSet<NodeData> sorted = new TreeSet<NodeData>(new Comparator<NodeData>() {
+            public int compare(NodeData o1, NodeData o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        sorted.addAll(props);
+        // sanity check - just recheck we still have 5 elements
+        assertEquals(5, sorted.size());
+        final Iterator<NodeData> it = sorted.iterator();
+        final NodeData a = it.next();
+        final NodeData b = it.next();
+        final NodeData c = it.next();
+        final NodeData d = it.next();
+        final NodeData e = it.next();
+        assertEquals("attachment1", a.getName());
+        assertEquals(PropertyType.BINARY, a.getType());
+        assertEquals("attachment2", b.getName());
+        assertEquals(PropertyType.BINARY, b.getType());
+        assertEquals("image3", d.getName());
+        assertEquals(PropertyType.BINARY, d.getType());
+        assertEquals("image3", d.getName());
+        assertEquals(PropertyType.BINARY, d.getType());
+
+        assertEquals("attention", c.getName());
+        assertEquals(PropertyType.STRING, c.getType());
+        assertEquals("booyah", c.getString());
+        assertEquals("imaginary", e.getName());
+        assertEquals(PropertyType.DATE, e.getType());
+        assertEquals(true, e.getDate().before(Calendar.getInstance()));
+    }
+
+    public void testStringPropertiesCanBeRetrievedByStreamAndViceVersa() throws Exception {
+        String contentProperties = StringUtils.join(Arrays.asList(
+                "/hello/foo=bar",
+                // a binary
+                "/hello/bin@type=mgnl:resource",
+                "/hello/bin.fileName=hello",
+                "/hello/bin.extension=gif",
+                "/hello/bin.jcr\\:data=some-data",
+                "/hello/bin.jcr\\:mimeType=image/gif",
+                "/hello/bin.jcr\\:lastModified="), "\n");
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
+        hm.save();
+
+        final Content content = hm.getContent("/hello");
+        final NodeData st = content.getNodeData("foo");
+        assertEquals(PropertyType.STRING, st.getType());
+        assertEquals("bar", st.getString());
+        assertEquals("bar", IOUtils.toString(st.getStream()));
+
+        final NodeData bin = content.getNodeData("bin");
+        assertEquals(PropertyType.BINARY, bin.getType());
+        assertEquals("some-data", IOUtils.toString(bin.getStream()));
+        assertEquals("some-data", bin.getString());
     }
 
     private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {

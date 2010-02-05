@@ -150,6 +150,12 @@ public class MockContent extends AbstractContent {
         MockContent c = new MockContent(name, new ItemType(contentType));
         c.setHierarchyManager(this.getHierarchyManager());
         addContent(c);
+
+        if (c.isNodeType(ItemType.NT_RESOURCE)) {
+            final BinaryMockNodeData binND = new BinaryMockNodeData(name, c);
+            addNodeData(binND);
+        }
+
         return c;
     }
 
@@ -355,6 +361,9 @@ public class MockContent extends AbstractContent {
             return nodeDatas.get(name);
         }
         else if(!createIfNotExisting){
+            //&& type != PropertyType.BINARY){
+            // binaries might have been created via property format or import, so we currently only have them as MockContent instances in the system
+            // todo - better fix and/or remove them from child nodes ?
             return new NonExistingNodeData(parent, name);
         }
         else{

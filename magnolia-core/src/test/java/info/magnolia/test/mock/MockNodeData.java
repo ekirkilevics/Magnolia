@@ -38,10 +38,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -123,11 +124,18 @@ public class MockNodeData extends AbstractNodeData {
     }
 
     public InputStream getStream() {
-        try {
+        if (value instanceof InputStream) {
             return (InputStream) value;
-        } catch (Exception e) {
+        }
+        final String s = getString();
+        if (s == null) {
             // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
             return null;
+        }
+        try {
+            return new ByteArrayInputStream(s.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 

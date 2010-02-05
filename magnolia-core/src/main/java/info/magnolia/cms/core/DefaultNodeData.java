@@ -165,6 +165,20 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
+    public InputStream getStream() {
+        if (isExist()){
+            try {
+                return getJCRProperty().getStream();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't read value of node data" + toString());
+            }
+        }
+        else{
+            return null;
+        }
+    }
+
     public int getType() {
         if (isExist()) {
             try {
@@ -252,6 +266,10 @@ public class DefaultNodeData extends AbstractNodeData {
         getJCRNode().setProperty(name, value.getJCRNode());
     }
 
+    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
+        throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
+    }
+    
     public boolean isExist() {
         try {
             return getJCRNode().hasProperty(name);
@@ -280,11 +298,4 @@ public class DefaultNodeData extends AbstractNodeData {
         }
     }
 
-    public InputStream getStream() {
-        throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
-    }
-
-    public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
-        throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
-    }
 }
