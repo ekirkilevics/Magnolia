@@ -62,14 +62,14 @@ public class DefaultNodeData extends AbstractNodeData {
     protected DefaultNodeData(Content parent, String name) {
         super(parent, name);
     }
-    
+
     public Value getValue() {
         if(isExist()){
             try {
                 return getJCRProperty().getValue();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -87,7 +87,7 @@ public class DefaultNodeData extends AbstractNodeData {
                     return new Value[] { getJCRProperty().getValue() };
                 }
             } catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -101,7 +101,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getString();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -115,7 +115,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getLong();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -129,7 +129,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getDouble();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -143,7 +143,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getDate();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -157,7 +157,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getBoolean();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -171,7 +171,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getStream();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of node data" + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString());
             }
         }
         else{
@@ -195,7 +195,7 @@ public class DefaultNodeData extends AbstractNodeData {
         if(!isExist()){
             return 0;
         }
-        
+
         try {
             return getJCRProperty().getLength();
         }
@@ -269,7 +269,7 @@ public class DefaultNodeData extends AbstractNodeData {
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
         throw new UnsupportedOperationException("This operation is only supported for node datas of type BINARY");
     }
-    
+
     public boolean isExist() {
         try {
             return getJCRNode().hasProperty(name);
