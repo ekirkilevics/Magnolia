@@ -405,8 +405,12 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     public boolean isGranted(String path, long permissions) {
-        final AccessManager manager = getAccessManager();
-        return manager != null && !manager.isGranted(path, permissions);
+        try {
+            Access.isGranted(this.accessManager, path, permissions);
+        } catch (AccessDeniedException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
