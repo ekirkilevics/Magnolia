@@ -101,7 +101,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
      * @param path unaltered path
      * @return wrapped path (or the one passed in if not overridden)
      */
-    protected String wrap(String path) {
+    protected String transformPath(String path) {
         return path;
     }
 
@@ -115,22 +115,22 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     }
 
     public Content createContent(String path, String label, String contentType) throws RepositoryException {
-        path = wrap(path);
+        path = transformPath(path);
         return wrap(getWrappedHierarchyManager().createContent(path, label, contentType));
     }
 
     public Content getContent(String path) throws RepositoryException {
-        path = wrap(path);
+        path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getContent(path));
     }
 
     public Content getContent(String path, boolean create, ItemType type) throws RepositoryException {
-        path = wrap(path);
+        path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getContent(path, create, type));
     }
 
     public NodeData getNodeData(String path) throws RepositoryException {
-        path = wrap(path);
+        path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getNodeData(path));
     }
 
@@ -139,12 +139,12 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
       */
      @Deprecated
     public Content getPage(String path, String templateName) throws RepositoryException {
-        path = wrap(path);
+        path = transformPath(path);
         return wrap(getWrappedHierarchyManager().getPage(path, templateName));
     }
 
     public void delete(String path) throws RepositoryException {
-        path = wrap(path);
+        path = transformPath(path);
         getWrappedHierarchyManager().delete(path);
     }
 
@@ -157,17 +157,17 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
       */
      @Deprecated
     public boolean isPage(String path) throws AccessDeniedException {
-        path = wrap(path);
+        path = transformPath(path);
         return getWrappedHierarchyManager().isPage(path);
     }
 
     public boolean isExist(String path) {
-        path = wrap(path);
+        path = transformPath(path);
         return getWrappedHierarchyManager().isExist(path);
     }
 
     public boolean isGranted(String path, long permissions) {
-        path = wrap(path);
+        path = transformPath(path);
         return getWrappedHierarchyManager().isGranted(path, permissions);
     }
 
@@ -176,7 +176,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
       */
      @Deprecated
     public boolean isNodeType(String path, String type) {
-        path = wrap(path);
+        path = transformPath(path);
         return getWrappedHierarchyManager().isNodeType(path, type);
     }
 
@@ -185,12 +185,12 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
      */
     @Deprecated
     public boolean isNodeType(String path, ItemType type) {
-        path = wrap(path);
+        path = transformPath(path);
         return getWrappedHierarchyManager().isNodeType(path, type);
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException {
-        path = wrap(path);
+        path = transformPath(path);
         return getWrappedHierarchyManager().isNodeData(path);
     }
 
@@ -203,14 +203,14 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     }
 
     public void moveTo(String source, String destination) throws RepositoryException {
-        source = wrap(source);
-        destination = wrap(destination);
+        source = transformPath(source);
+        destination = transformPath(destination);
         getWrappedHierarchyManager().moveTo(source, destination);
     }
 
     public void copyTo(String source, String destination) throws RepositoryException {
-        source = wrap(source);
-        destination = wrap(destination);
+        source = transformPath(source);
+        destination = transformPath(destination);
         getWrappedHierarchyManager().copyTo(source, destination);
     }
 
