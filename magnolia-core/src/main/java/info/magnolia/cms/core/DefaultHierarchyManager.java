@@ -384,25 +384,29 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * check is either the node or property exists with the specified path
+     * check is either the node or property exists with the specified path and user has access to it. If at least READ permission is not
+     * granted or not running in SystemContext, the method will return false even if the node in question exists.
      * @param path
      */
     public boolean isExist(String path) {
         try {
             Access.isGranted(this.accessManager, path, Permission.READ);
-        }
-        catch (AccessDeniedException e) {
+        } catch (AccessDeniedException e) {
             log.error(e.getMessage());
             return false;
         }
-        boolean isExist = false;
         try {
-            isExist = this.getJcrSession().itemExists(path);
+            return this.getJcrSession().itemExists(path);
         }
         catch (RepositoryException re) {
             log.error("Exception caught", re);
+            return false;
         }
-        return isExist;
+    }
+
+    public boolean isGranted(String path, long permissions) {
+        final AccessManager manager = getAccessManager();
+        return manager != null && !manager.isGranted(path, permissions);
     }
 
     /**

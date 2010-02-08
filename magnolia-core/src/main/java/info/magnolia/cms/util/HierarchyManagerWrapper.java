@@ -99,7 +99,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     /**
      * Override this method to alter all paths passed into the various hierarchy manager methods.
      * @param path unaltered path
-     * @return wrapped path (or the one passed in if not overriden)
+     * @return wrapped path (or the one passed in if not overridden)
      */
     protected String wrap(String path) {
         return path;
@@ -164,6 +164,11 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     public boolean isExist(String path) {
         path = wrap(path);
         return getWrappedHierarchyManager().isExist(path);
+    }
+
+    public boolean isGranted(String path, long permissions) {
+        path = wrap(path);
+        return getWrappedHierarchyManager().isGranted(path, permissions);
     }
 
     /**

@@ -75,6 +75,14 @@ public interface HierarchyManager {
     boolean isExist(String path);
 
     /**
+     * Checks for the allowed access rights.
+     * @param permissions permission mask
+     * @param path path to content to be checked
+     * @return true if the current user has access on the provided node path.
+     */
+    boolean isGranted(String path, long permissions);
+
+    /**
      * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
      */
     boolean isNodeType(String path, String type);
