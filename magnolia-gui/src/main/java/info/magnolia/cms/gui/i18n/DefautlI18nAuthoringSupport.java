@@ -36,6 +36,8 @@ package info.magnolia.cms.gui.i18n;
 import info.magnolia.cms.gui.control.Control;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 
 import java.util.List;
 
@@ -50,9 +52,11 @@ import org.apache.commons.lang.StringUtils;
 public class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
 
     private boolean enabled = false;
+    
+    private I18nContentSupport i18nContentSupport = I18nContentSupportFactory.getI18nSupport();
 
     public Control getLanguageChooser() {
-        if (isEnabled()){
+        if (isEnabled() && i18nContentSupport.isEnabled() && i18nContentSupport.getLocales().size()>1){
             return new LanguageChooser();
         }
         return null;
