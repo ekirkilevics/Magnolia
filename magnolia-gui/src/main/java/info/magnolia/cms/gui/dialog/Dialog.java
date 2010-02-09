@@ -201,6 +201,7 @@ public class Dialog extends DialogControlImpl {
         out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlNodeCollection", this.getConfigValue("nodeCollection"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlNode", this.getConfigValue("node"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write(new Hidden("mgnlLanguage", this.getConfigValue("language"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlJsCallback", this.getCallbackJavascript(), false).getHtml()); //$NON-NLS-1$
         out.write(new Hidden("mgnlRichE", this.getConfigValue("richE"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlRichEPaste", this.getConfigValue("richEPaste"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$

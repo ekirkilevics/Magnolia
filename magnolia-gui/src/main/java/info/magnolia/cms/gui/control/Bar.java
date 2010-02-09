@@ -137,13 +137,15 @@ public class Bar extends ControlImpl {
 
             Iterator itRight = this.getButtonsRight().iterator();
             while (itRight.hasNext()) {
-                Button b = (Button) itRight.next();
-                if (this.getSmall()) {
-                    b.setSmall(true);
+                ControlImpl c = (ControlImpl) itRight.next();
+                if(c instanceof Button){
+                    if (this.getSmall()) {
+                        ((Button)c).setSmall(true);
+                    }
+                    c.setCssStyles("background", "transparent"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
-                b.setCssStyles("background", "transparent"); //$NON-NLS-1$ //$NON-NLS-2$
-                b.setSaveInfo(false);
-                html.append(b.getHtml());
+                c.setSaveInfo(false);
+                html.append(c.getHtml());
             }
             html.append("</td>"); //$NON-NLS-1$
         }

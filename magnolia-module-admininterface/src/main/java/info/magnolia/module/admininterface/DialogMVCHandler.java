@@ -119,6 +119,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     protected String richEPaste = StringUtils.EMPTY;
 
     protected String repository = StringUtils.EMPTY;
+    
+    protected String language;
 
     protected HierarchyManager hm;
 
@@ -153,6 +155,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
         richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
         repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
+        language = params.getParameter("mgnlLanguage"); //$NON-NLS-1$
         if (StringUtils.isNotEmpty(repository)) {
             hm = MgnlContext.getHierarchyManager(repository);
         }
@@ -177,7 +180,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         return VIEW_SHOW_DIALOG;
     }
 
-    private void configureDialog(Dialog dialog) {
+    protected void configureDialog(Dialog dialog) {
         dialog.setConfig("dialog", getName()); //$NON-NLS-1$
         dialog.setConfig("path", path); //$NON-NLS-1$
         dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
@@ -185,6 +188,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         dialog.setConfig("richE", richE); //$NON-NLS-1$
         dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
         dialog.setConfig("repository", repository); //$NON-NLS-1$
+        dialog.setConfig("language", language);
     }
 
     /**

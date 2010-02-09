@@ -51,7 +51,7 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
     /**
      * Adds the language prefix to the uri.
      */
-    protected String toI18NURI(String uri, Locale locale) {
+    public String toI18NURI(String uri, Locale locale) {
         // nothing to do for relative links
         if(uri.startsWith("/")){
             return "/" + locale.toString() + uri;
@@ -67,12 +67,16 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
     }
 
     protected Locale onDetermineLocale() {
-        Locale locale;
-        final String i18nURI = MgnlContext.getAggregationState().getCurrentURI();
-        String localeStr = StringUtils.substringBetween(i18nURI, "/", "/");
-        locale = determineLocalFromString(localeStr);
-        return locale;
+        final String localeStr;
+        //FIXME should be in the abstract class
+        if(MgnlContext.hasAttribute("lang")){
+            localeStr = (String) MgnlContext.getAttribute("lang");
+        }
+        else{
+            final String i18nURI = MgnlContext.getAggregationState().getCurrentURI();
+            localeStr = StringUtils.substringBetween(i18nURI, "/", "/");
+        }
+        return determineLocalFromString(localeStr);
     }
-
 
 }

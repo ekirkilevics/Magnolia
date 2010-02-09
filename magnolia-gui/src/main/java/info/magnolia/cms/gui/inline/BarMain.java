@@ -36,7 +36,10 @@ package info.magnolia.cms.gui.inline;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.AggregationState;
@@ -61,6 +64,8 @@ public class BarMain extends Bar {
     private Button buttonProperties = new Button();
 
     private Button buttonSiteAdmin = new Button();
+    
+    private Select languageChooser;
     
     private String dialog;
 
@@ -108,6 +113,7 @@ public class BarMain extends Bar {
         this.setButtonPreview();
         this.setButtonSiteAdmin();
         this.setButtonProperties();
+        this.setLanguageChooser();
     }
 
     /**
@@ -118,6 +124,11 @@ public class BarMain extends Bar {
             this.getButtonsLeft().add(0, this.getButtonSiteAdmin());
         }
         this.getButtonsLeft().add(0, this.getButtonPreview());
+        
+        if(this.languageChooser != null){
+            this.getButtonsRight().add(this.languageChooser);
+        }
+        
         if (this.getDialog() != null) {
             this.getButtonsRight().add(this.getButtonsRight().size(), this.getButtonProperties());
         }
@@ -210,6 +221,21 @@ public class BarMain extends Bar {
         String repository = MgnlContext.getAggregationState().getRepository();
         b.setOnclick("MgnlAdminCentral.showTree('"+repository+"','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
+    }
+
+    protected void setLanguageChooser() {
+        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+        if(i18nSupport.isEnabled()){
+            languageChooser = new LanguageChooser();
+        }
+    }
+    
+    public Select getLanguageChooser() {
+        return this.languageChooser;
+    }
+
+    public void setLanguageChooser(Select languageChooser) {
+        this.languageChooser = languageChooser;
     }
 
     public void setTop(int i) {

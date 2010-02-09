@@ -218,7 +218,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         this.enabled = enabled;
     }
 
-    public Collection getLocales() {
+    public Collection<Locale> getLocales() {
         return this.locales.values();
     }
 

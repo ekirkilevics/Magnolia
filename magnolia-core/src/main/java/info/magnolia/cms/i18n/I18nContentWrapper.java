@@ -33,8 +33,11 @@
  */
 package info.magnolia.cms.i18n;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentWrapper;
 
 
@@ -52,11 +55,17 @@ public class I18nContentWrapper extends ContentWrapper {
         super(node);
     }
 
-    public NodeData getNodeData(String name) {
+    @Override
+    public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
-        return i18nSupport.getNodeData(getWrappedContent(), name);
+        NodeData nodeData = i18nSupport.getNodeData(getWrappedContent(), name);
+        if(nodeData.isExist()){
+            return nodeData;
+        }
+        // nothing we can do
+        return super.newNodeDataInstance(name, type, createIfNotExisting);
     }
-
+    
     protected Content wrap(Content node) {
         return new I18nContentWrapper(node);
     }

@@ -196,7 +196,7 @@ function mgnlOpenWindow(url,width,height)
 /* ###################################
 ### open dialog window
 ################################### */
-function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage,width,height)
+function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage,width,height,language)
     {
 
     //dialog window is resized in  dialog itself (window.resize)
@@ -244,6 +244,9 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
     }
     if(repository){
         url = mgnl.util.URLUtil.addParameter(url,"mgnlRepository", repository);
+    }
+    if(language){
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlLanguage", language);
     }
     url = mgnl.util.URLUtil.addParameter(url,"mgnlRichE", richE);
     url = mgnl.util.URLUtil.addParameter(url,"mgnlRichEPaste", richEPaste);

@@ -106,8 +106,12 @@ public class ButtonEdit extends Button {
             + this.getDialog()
             + "','" //$NON-NLS-1$
             + repository
-            + "'"
-            + (dialogPath != null ? ",'" + dialogPath + "'" : "")
+            + "',"
+            + (dialogPath != null ? "'" + dialogPath + "'" : "null")
+            + ", null" //width
+            + ", null, " //height
+            // FIXME make that a bit more dynamic
+            + "'" + MgnlContext.getAggregationState().getLocale().toString() + "'"
             +");");
     }
 

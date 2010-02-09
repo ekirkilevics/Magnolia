@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.i18n;
 
+import java.util.Collection;
 import java.util.Locale;
 
 import info.magnolia.cms.core.Content;
@@ -86,5 +87,12 @@ public interface I18nContentSupport {
      * Returns the NodeData object based on the current language.
      */
     public NodeData getNodeData(Content node, String name);
+
+    /**
+     * Available locales
+     */
+    public Collection<Locale> getLocales();
+
+    public boolean isEnabled();
 
 }

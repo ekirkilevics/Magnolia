@@ -258,7 +258,15 @@ public abstract class DialogControlImpl implements DialogControl {
      * @return the name
      */
     public String getName() {
-        return this.getConfigValue("name"); //$NON-NLS-1$
+        // FIXME this should be injected as one could want to have other implementations
+        boolean i18n = Boolean.valueOf(this.getConfigValue("i18n", "false"));
+        String name = this.getConfigValue("name");
+        String language = getTopParent().getConfigValue("language");
+        if(i18n && StringUtils.isNotEmpty(language)){
+            // FIXME make that dynamic
+            name += "_" + language;
+        }
+        return name; //$NON-NLS-1$
     }
 
     public void addOption(Object o) {
