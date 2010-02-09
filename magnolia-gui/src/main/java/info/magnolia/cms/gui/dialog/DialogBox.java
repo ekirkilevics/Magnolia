@@ -81,6 +81,9 @@ public class DialogBox extends DialogControlImpl {
             if (this.isRequired()) {
                 out.write("(*)");
             }
+            if(Boolean.valueOf(getConfigValue("i18n", "false"))){
+                out.write(" (" + getTopParent().getConfigValue("language") + ")");
+            }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
                 desc = this.getMessage(desc);

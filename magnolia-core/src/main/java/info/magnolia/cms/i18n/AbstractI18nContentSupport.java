@@ -41,6 +41,7 @@ import info.magnolia.context.MgnlContext;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     /**
      * The active locales.
      */
-    private Map locales = new HashMap();
+    private Map<String, Locale> locales = new LinkedHashMap<String, Locale>();
 
     public Locale getLocale() {
         return MgnlContext.getAggregationState().getLocale();

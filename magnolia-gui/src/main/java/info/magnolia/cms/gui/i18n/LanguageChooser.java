@@ -42,6 +42,8 @@ import info.magnolia.link.LinkUtil;
 
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Uses the {@link I18nContentSupport} to create a dropdown box for switching the language. This implementation will change the browser location onchange.
  * @author pbaerfuss
@@ -66,7 +68,7 @@ public class LanguageChooser extends Select {
                 // this is going to set the local in the aggregation state and hence wont change the i18nSupport object itself
                 i18nSupport.setLocale(locale);
                 String uri = LinkUtil.createAbsoluteLink(currentPage);
-                setOptions(locale.getDisplayLanguage(), uri);
+                setOptions(StringUtils.capitalize(locale.getDisplayLanguage(locale)), uri);
             }
         }
         // make sure that we always reset to the original locale
