@@ -459,10 +459,10 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          // throws an exception in case you don't have the permission
          Access.isGranted(hm.getAccessManager(), parentPath, Permission.WRITE);
 
-         String name = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-         String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
+         final String name = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+         final String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
          // do actual import
-         GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
+         final GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
          log.debug("Importing {} into parent path {}", new Object[] {name, parentPath});
          hm.getWorkspace().getSession().importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
          IOUtils.closeQuietly(inputStream);

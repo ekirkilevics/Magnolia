@@ -52,6 +52,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.exchange.ActivationManager;
+import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.cms.security.User;
@@ -181,7 +182,6 @@ public class SimpleSyndicatorTest extends TestCase {
         allMocks.add(subscription);
         subscribers.add(subscriber);
         // TODO: shouldn't repo be set even tho there is no  subscriber???
-        expect(sysctx.getHierarchyManager(null,null)).andReturn(hm);
         expect(subscriber.isActive()).andReturn(true);
         expect(subscriber.getMatchedSubscription(path, null)).andReturn(subscription);
 
@@ -191,6 +191,8 @@ public class SimpleSyndicatorTest extends TestCase {
         Session session = createStrictMock(Session.class);
         expect(wks.getSession()).andReturn(session);
         expect(content.getUUID()).andReturn("some-real-uuid");
+        // activating non versioned nodes!
+        expect(content.isNodeType("nt:frozenNode")).andReturn(false);
         expect(content.getWorkspace()).andReturn(wks);
         expect(wks.getName()).andReturn("dummy-wks");
         final boolean isFile = false;
@@ -205,24 +207,26 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
 
         //expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
+        // proceed with activation
+        expect(subscription.getToURI()).andReturn("/");
+        expect(subscription.getFromURI()).andReturn("/");
+        expect(subscriber.getName()).andReturn("aSubscriber");
+        expect(subscriber.getURL()).andReturn("prot://dummyURL");
+        expect(subscriber.getAuthenticationMethod()).andReturn("basic").times(2);
+        expect(subscriber.getName()).andReturn("aSubscriber");
+        // and don't update the status ...
 
-        expect(hm.getContent(path)).andReturn(content);
-        expect(content.getMetaData()).andReturn(meta);
-        meta.setActivated();
-        expect(user.getName()).andReturn("Dummy");
-        meta.setActivatorId("Dummy");
-        meta.setLastActivationActionDate();
-        expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
-        content.save();
-        expect(content.getItemType()).andReturn(ItemType.CONTENT);
-        expect(content.getHandle()).andReturn(path);
-        expect(ctx.getUser()).andReturn(user).times(2);
         expect(user.getName()).andReturn("Dummy");
 
         allMocks.addAll(subscribers);
         allMocks.addAll(Arrays.asList(content, actMan, ctx, sysctx, hm, user, wks, session, jcr));
         replay(allMocks.toArray());
-        syndicator.activate("/", content);
+        try {
+            syndicator.activate("/", content);
+        } catch (ExchangeException e) {
+            // and fail because the activation target doesn't exist.
+            assertEquals("info.magnolia.cms.exchange.ExchangeException: 1 error detected: \nIncorrect URL for subscriber EasyMock for interface info.magnolia.cms.exchange.Subscriber[prot://dummyURL/.magnolia/activation] on aSubscriber", e.getMessage());
+        }
         verify(allMocks.toArray());
     }
 

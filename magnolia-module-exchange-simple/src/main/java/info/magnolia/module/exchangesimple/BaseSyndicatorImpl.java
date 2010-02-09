@@ -578,7 +578,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
          GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
-         if (content instanceof ContentVersion || content.getWorkspace().getName().equals(ContentRepository.VERSION_STORE)) {
+         // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
+         if (content.isNodeType("nt:frozenNode") || content.getWorkspace().getName().equals(ContentRepository.VERSION_STORE)) {
              XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
                  .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
              ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
