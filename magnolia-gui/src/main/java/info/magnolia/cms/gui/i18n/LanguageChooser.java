@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.gui.inline;
+package info.magnolia.cms.gui.i18n;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Select;

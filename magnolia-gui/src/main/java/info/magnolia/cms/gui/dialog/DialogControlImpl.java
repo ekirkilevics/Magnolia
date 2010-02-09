@@ -37,8 +37,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -258,15 +258,7 @@ public abstract class DialogControlImpl implements DialogControl {
      * @return the name
      */
     public String getName() {
-        // FIXME this should be injected as one could want to have other implementations
-        boolean i18n = Boolean.valueOf(this.getConfigValue("i18n", "false"));
-        String name = this.getConfigValue("name");
-        String language = getTopParent().getConfigValue("language");
-        if(i18n && StringUtils.isNotEmpty(language)){
-            // FIXME make that dynamic
-            name += "_" + language;
-        }
-        return name; //$NON-NLS-1$
+        return this.getConfigValue("name"); //$NON-NLS-1$
     }
 
     public void addOption(Object o) {

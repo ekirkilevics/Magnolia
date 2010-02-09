@@ -41,6 +41,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.dialog.DialogFactory;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -53,16 +54,18 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -189,6 +192,9 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
         dialog.setConfig("repository", repository); //$NON-NLS-1$
         dialog.setConfig("language", language);
+        
+        I18nAuthoringSupport i18nAuthoringSupport = I18nAuthoringSupport.Factory.getInstance();
+        i18nAuthoringSupport.i18nIze(dialog);
     }
 
     /**

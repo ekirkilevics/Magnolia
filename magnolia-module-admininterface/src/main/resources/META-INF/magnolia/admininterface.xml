@@ -30,6 +30,10 @@
       <value>info.magnolia.module.admininterface.UUIDSaveHandler</value>
     </property>
     <property>
+      <name>info.magnolia.cms.gui.i18n.I18nAuthoringSupport</name>
+      <value>/server/i18n/authoring</value>
+    </property>
+    <property>
       <name>defaultPublicURI</name>
       <value>redirect:/.magnolia/pages/quickstart.html</value>
     </property>

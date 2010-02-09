@@ -1,0 +1,90 @@
+/**
+ * This file Copyright (c) 2010 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * 
+ * 
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License. 
+ * You may elect to use one or the other of these licenses.
+ * 
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
+ * 
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ * 
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia.info/mna.html
+ * 
+ * Any modifications to this file must keep this entire header
+ * intact.
+ * 
+ */
+package info.magnolia.cms.gui.i18n;
+
+import info.magnolia.cms.gui.control.Control;
+import info.magnolia.cms.gui.dialog.Dialog;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
+
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
+
+/**
+ * @author pbaerfuss
+ * @version $Id$
+ * 
+ */
+public class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
+
+    private boolean enabled = false;
+
+    public Control getLanguageChooser() {
+        if (isEnabled()){
+            return new LanguageChooser();
+        }
+        return null;
+    }
+
+    public void i18nIze(Dialog dialog) {
+        // FIXME: should this be set in the aggregation state?
+        String language = dialog.getConfigValue("language");
+
+        if (isEnabled() && StringUtils.isNotEmpty(language)) {
+            List<DialogControlImpl> tabs = dialog.getSubs();
+            for (DialogControlImpl tab : tabs) {
+                List<DialogControlImpl> controls = tab.getSubs();
+                for (DialogControlImpl control : controls) {
+                    // FIXME this should be injected as one could want to have other implementations
+                    boolean i18n = Boolean.valueOf(control.getConfigValue("i18n", "false"));
+
+                    if (i18n) {
+                        String newName = control.getName() + "_" + language;
+                        control.setName(newName);
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+}

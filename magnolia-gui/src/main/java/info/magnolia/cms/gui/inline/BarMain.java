@@ -34,21 +34,22 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.Select;
+import info.magnolia.cms.gui.control.Control;
+import info.magnolia.cms.gui.control.ControlImpl;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+
+import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-import java.io.IOException;
-import java.io.Writer;
 
 
 /**
@@ -65,7 +66,7 @@ public class BarMain extends Bar {
 
     private Button buttonSiteAdmin = new Button();
     
-    private Select languageChooser;
+    private Control languageChooser;
     
     private String dialog;
 
@@ -126,11 +127,16 @@ public class BarMain extends Bar {
         this.getButtonsLeft().add(0, this.getButtonPreview());
         
         if(this.languageChooser != null){
-            this.getButtonsRight().add(this.languageChooser);
+            getButtonsRight().add(this.languageChooser);
+            getButtonsRight().add(new ControlImpl(){
+                public String getHtml() {
+                    return "&nbsp;";
+                }
+            });
         }
         
         if (this.getDialog() != null) {
-            this.getButtonsRight().add(this.getButtonsRight().size(), this.getButtonProperties());
+            this.getButtonsRight().add(this.getButtonProperties());
         }
     }
 
@@ -224,17 +230,17 @@ public class BarMain extends Bar {
     }
 
     protected void setLanguageChooser() {
-        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
-        if(i18nSupport.isEnabled()){
-            languageChooser = new LanguageChooser();
+        I18nAuthoringSupport i18nAuthoringSupport = I18nAuthoringSupport.Factory.getInstance();
+        if(i18nAuthoringSupport.isEnabled()){
+            languageChooser = i18nAuthoringSupport.getLanguageChooser();
         }
     }
     
-    public Select getLanguageChooser() {
+    public Control getLanguageChooser() {
         return this.languageChooser;
     }
 
-    public void setLanguageChooser(Select languageChooser) {
+    public void setLanguageChooser(Control languageChooser) {
         this.languageChooser = languageChooser;
     }
 
