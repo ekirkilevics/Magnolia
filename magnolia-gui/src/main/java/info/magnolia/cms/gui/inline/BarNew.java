@@ -129,7 +129,12 @@ public class BarNew extends Bar {
                 + paragraph
                 + "','"
                 + repository
-                + "','.magnolia/dialogs/" + dialogName + ".html');";
+                + "','.magnolia/dialogs/" + dialogName + ".html'"
+                + ", null" //width
+                + ", null, " //height
+                // FIXME make that a bit more dynamic
+                + "'" + MgnlContext.getAggregationState().getLocale().toString() + "'"
+                +");";
     }
 
     /**
