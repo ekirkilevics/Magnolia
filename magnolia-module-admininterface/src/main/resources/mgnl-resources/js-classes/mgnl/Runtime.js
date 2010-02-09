@@ -67,7 +67,7 @@ MgnlRuntime = mgnl.Runtime = {
 
     /**
      * Creates the package object structure if not yet existing and register the class.
-     * classDef(name, object)
+     * classDef(name, static)
      * classDef(name, constructor, [members], [static])
      * classDef(name, superClass, constructor, [members], [static])
      * @param name the full name (including the class name)
