@@ -53,4 +53,14 @@ public class TestUtil {
     public static Enumeration enumeration(String... strings) {
         return IteratorUtils.asEnumeration(Arrays.asList(strings).iterator());
     }
+    
+    public static String getCurrentTestMethodName() {
+        final StackTraceElement[] stackTrace = new Exception().getStackTrace();
+        for (StackTraceElement ste : stackTrace) {
+            if (ste.getMethodName().startsWith("test")) {
+                return ste.getMethodName();
+            }
+        }
+        throw new IllegalStateException("Either you're not in a test at all, or you're calling this from a non-jUnit3 test.");
+    }
 }
