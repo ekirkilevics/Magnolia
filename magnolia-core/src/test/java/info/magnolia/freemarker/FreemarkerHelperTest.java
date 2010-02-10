@@ -603,10 +603,4 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         return hm;
     }
 
-    // we use this method, since FreemarkerHelper adds objects to our root map (Collections.singletonMap returns an immutable map).
-    private Map createSingleValueMap(Object key, Object value) {
-        final HashMap map = new HashMap();
-        map.put(key, value);
-        return map;
-    }
 }

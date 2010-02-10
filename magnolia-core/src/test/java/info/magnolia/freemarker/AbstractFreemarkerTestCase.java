@@ -48,7 +48,9 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -128,5 +130,12 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
 
         assertEquals(expectedOutput, out.toString());
         verify(sysMockCtx, context);
+    }
+
+    // we use this method, since FreemarkerHelper adds objects to our root map (Collections.singletonMap returns an immutable map).
+    protected Map createSingleValueMap(Object key, Object value) {
+        final HashMap map = new HashMap();
+        map.put(key, value);
+        return map;
     }
 }
