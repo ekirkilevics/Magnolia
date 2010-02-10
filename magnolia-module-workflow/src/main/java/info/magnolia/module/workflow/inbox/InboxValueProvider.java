@@ -69,15 +69,15 @@ public class InboxValueProvider extends DefaultValueProvider {
                 return item.getAttribute(Context.ATTRIBUTE_MESSAGE);
             }
             else if (item.containsAttribute("comment")) {
-                return item.getAttribute("comment");                
+                return item.getAttribute("comment");
             }
             else{
                 return StringUtils.EMPTY;
             }
-        }        
+        }
         else if (name.equalsIgnoreCase("workflow")) {
             return item.getId().getWorkflowDefinitionName();
-        }        
+        }
         else if (name.equalsIgnoreCase("workItemPath")) {
             return WorkflowUtil.getPath(WorkflowUtil.getId(item));
         }
