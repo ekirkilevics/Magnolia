@@ -67,9 +67,10 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
         super.setUp();
         tplLoader = new StringTemplateLoader();
         fmHelper = new FreemarkerHelper();
-        final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
-        fmTemplateLoader.addTemplateLoader(tplLoader);
-        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
+        final FreemarkerConfig fmConfig = new FreemarkerConfig();
+        fmConfig.addTemplateLoader(tplLoader);
+        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmConfig);
+
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         //fmHelper.getConfiguration().setTemplateLoader(tplLoader);
 
