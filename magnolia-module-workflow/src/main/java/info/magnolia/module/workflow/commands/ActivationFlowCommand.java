@@ -73,7 +73,7 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_END_DATE);
         }
         catch (RepositoryException e) {
-            log.error("can't find node for path [" + getPath() + "]", e);
+            log.error("can't find node for path [" + getRepository() + ":" + getPath() + "]", e);
         }
 
     }
