@@ -518,18 +518,34 @@ public class ModuleManagerImpl implements ModuleManager {
     /**
      * Loads a single repository plus its workspaces, register nodetypes and grant permissions to superuser.
      */
-    private void loadRepository(String repositoryName, String nodeTypeFile, String[] workspaces) {
+    private void loadRepository(String repositoryNameFromModuleDescriptor, String nodeTypeFile, String[] workspaces) {
+
+        if (workspaces == null || workspaces.length == 0)
+        {
+            log.error("Trying to register the repository {} without any workspace.", repositoryNameFromModuleDescriptor);
+            return;
+        }
+
+        final String DEFAULT_REPOSITORY_NAME = "magnolia";
+        String repositoryName = repositoryNameFromModuleDescriptor;
+
+        if (workspaces.length > 0) {
+            // get the repository name from the mapping, users may want to manually add it here if needed
+            RepositoryMapping repositoryMapping = ContentRepository.getRepositoryMapping(workspaces[0]);
+            if (repositoryMapping != null) {
+                repositoryName = repositoryMapping.getName();
+            }
+        }
 
         RepositoryMapping rm = ContentRepository.getRepositoryMapping(repositoryName);
 
         if (rm == null) {
 
-            final RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping("magnolia");
+            final RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping(DEFAULT_REPOSITORY_NAME);
             final Map<String, String> defaultParameters = defaultRepositoryMapping.getParameters();
 
             rm = new RepositoryMapping();
             rm.setName(repositoryName);
-            rm.addWorkspace(repositoryName);
             rm.setProvider(defaultRepositoryMapping.getProvider());
             rm.setLoadOnStartup(true);
 
@@ -537,8 +553,8 @@ public class ModuleManagerImpl implements ModuleManager {
             parameters.putAll(defaultParameters);
 
             // override changed parameters
-            final String bindName = repositoryName + StringUtils.replace((String) defaultParameters.get("bindName"), "magnolia", "");
-            final String repositoryHome = StringUtils.substringBeforeLast((String) defaultParameters.get("configFile"), "/")
+            final String bindName = repositoryName + StringUtils.replace(defaultParameters.get("bindName"), "magnolia", "");
+            final String repositoryHome = StringUtils.substringBeforeLast(defaultParameters.get("configFile"), "/")
                 + "/"
                 + repositoryName;
 
