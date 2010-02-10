@@ -65,7 +65,7 @@ public class ComponentsTestUtil {
 
     /**
      * <strong>Warning:</strong> this does NOT clear the *mappings*. With the current/default implementation,
-     * this means tests also have to call SystemProperty.clearr()
+     * this means tests also have to call SystemProperty.clear()
      */
     public static void clear() {
         getComponentProvider().clear();
