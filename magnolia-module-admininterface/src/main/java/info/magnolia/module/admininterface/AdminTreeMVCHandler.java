@@ -270,23 +270,27 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
-        if (this.pathSelected != null) {
-            // pathSelected is null in case of delete operation, it should be the responsibility of the caller
-            // to set the context attributes properly
-            context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
-        }
 
         if (commandName.equals("activate")) {
             context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
-            try {
-                String uuid = info.magnolia.context.MgnlContext.getHierarchyManager(repository).getContent(this.pathSelected).getUUID();
-                // really only the uuid should be used to identify a piece of content and nothing else
-                context.put(Context.ATTRIBUTE_UUID, uuid);
-                final String realPath = info.magnolia.context.MgnlContext.getSystemContext().getHierarchyManager(repository).getContentByUUID(uuid).getHandle();
-                context.put(Context.ATTRIBUTE_PATH, realPath);
-            } catch (RepositoryException e) {
-                e.printStackTrace();
+            if (this.pathSelected != null) {
+                try {
+                    final String uuid = MgnlContext.getHierarchyManager(repository).getContent(this.pathSelected).getUUID();
+                    // really only the uuid should be used to identify a piece of content and nothing else
+                    context.put(Context.ATTRIBUTE_UUID, uuid);
+                    // retrieve content again using uuid and system context to get unaltered path.
+                    final String realPath = MgnlContext.getSystemContext().getHierarchyManager(repository).getContentByUUID(uuid).getHandle();
+                    context.put(Context.ATTRIBUTE_PATH, realPath);
+                } catch (RepositoryException e) {
+                    // this should never happen, user just clicked on the content in admin central
+                    log.error("Failed to retrieve content node [{}:{}].", this.repository, this.pathSelected);
+                }
+            } else if (this.pathSelected != null) {
+                // pathSelected is null in case of delete operation, it should be the responsibility of the caller
+                // to set the context attributes properly
+                context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
             }
+            
         }
 
         return context;
