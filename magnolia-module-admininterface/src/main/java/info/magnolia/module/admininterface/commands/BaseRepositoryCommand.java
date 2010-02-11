@@ -34,9 +34,12 @@
 package info.magnolia.module.admininterface.commands;
 
 import info.magnolia.commands.MgnlCommand;
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 
@@ -52,12 +55,15 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
     private String uuid;
 
     protected Content getNode(Context ctx) throws RepositoryException {
-        final HierarchyManager hm = ctx.getHierarchyManager(getRepository());
+        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(getRepository());
+        final Content node;
         if (StringUtils.isNotEmpty(getUuid())) {
-            return hm.getContentByUUID(getUuid());
+            node = hm.getContentByUUID(getUuid());
         } else {
-            return hm.getContent(getPath());
+            node = hm.getContent(getPath());
         }
+        Access.isGranted(ctx.getAccessManager(getRepository()), node.getHandle(), Permission.READ);
+        return node;
     }
 
     /**
