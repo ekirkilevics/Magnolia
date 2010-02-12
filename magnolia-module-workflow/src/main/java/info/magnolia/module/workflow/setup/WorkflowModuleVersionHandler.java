@@ -56,6 +56,7 @@ import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.RemovePermissionTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
@@ -184,9 +185,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         );
         
         register(DeltaBuilder.update("4.3", "Update workflow-base role.")
-                .addTask(new RemoveNodeTask("Remove workflow-base role", "", "userroles", "/workflow-base"))
-                .addTask(new BootstrapSingleResource("Bootstrap workflow-base role", "", "/mgnl-bootstrap/workflow/userroles.workflow-base.xml")));
-
+                .addTask(new RemovePermissionTask("Update workflow-base role", "", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
