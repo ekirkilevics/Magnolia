@@ -40,6 +40,7 @@ import info.magnolia.module.admininterface.setup.for4_0.UpdatedDefaultPublicURIW
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
@@ -125,6 +126,11 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 // This task is registered on the 4.0.3 version in the 4.0 branch.
                 .addTask(new UpdatedDefaultPublicURIWarning())
         );
+        
+        register(DeltaBuilder.update("4.3", "")
+            .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuratino to /server/i18n", "config.server.i18n.authoring.xml"))
+        );
+        
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
