@@ -54,7 +54,7 @@ public class LanguageChooser extends Select {
 
     public LanguageChooser() {
         I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
-        setName("language");
+        setName("locale");
         setEvent("onchange", "window.location = this.value");
 
         Content currentPage = MgnlContext.getAggregationState().getMainContent();

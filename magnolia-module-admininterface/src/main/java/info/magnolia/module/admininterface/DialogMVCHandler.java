@@ -123,7 +123,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected String repository = StringUtils.EMPTY;
     
-    protected String language;
+    protected String locale;
 
     protected HierarchyManager hm;
 
@@ -158,7 +158,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
         richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
         repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
-        language = params.getParameter("mgnlLanguage"); //$NON-NLS-1$
+        locale = params.getParameter("mgnlLocale"); //$NON-NLS-1$
         if (StringUtils.isNotEmpty(repository)) {
             hm = MgnlContext.getHierarchyManager(repository);
         }
@@ -191,7 +191,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         dialog.setConfig("richE", richE); //$NON-NLS-1$
         dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
         dialog.setConfig("repository", repository); //$NON-NLS-1$
-        dialog.setConfig("language", language);
+        dialog.setConfig("locale", locale);
         
         I18nAuthoringSupport i18nAuthoringSupport = I18nAuthoringSupport.Factory.getInstance();
         i18nAuthoringSupport.i18nIze(dialog);

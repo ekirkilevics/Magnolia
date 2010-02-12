@@ -40,8 +40,9 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 
 import java.util.List;
+import java.util.Locale;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.LocaleUtils;
 
 
 /**
@@ -63,20 +64,23 @@ public class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
     }
 
     public void i18nIze(Dialog dialog) {
-        // FIXME: should this be set in the aggregation state?
-        String language = dialog.getConfigValue("language");
+        // TODO: should this be set in the aggregation state?
+        Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale"));
+        boolean isFallbackLanguage = i18nContentSupport.getFallbackLocale().equals(locale);
 
-        if (isEnabled() && StringUtils.isNotEmpty(language)) {
+        if (isEnabled() && locale != null ) {
             List<DialogControlImpl> tabs = dialog.getSubs();
             for (DialogControlImpl tab : tabs) {
                 List<DialogControlImpl> controls = tab.getSubs();
                 for (DialogControlImpl control : controls) {
-                    // FIXME this should be injected as one could want to have other implementations
                     boolean i18n = Boolean.valueOf(control.getConfigValue("i18n", "false"));
-
                     if (i18n) {
-                        String newName = control.getName() + "_" + language;
-                        control.setName(newName);
+                        if(!isFallbackLanguage){
+                            String newName = control.getName() + "_" + locale.toString();
+                            control.setName(newName);
+                        }
+                        String translatedLabel = control.getMessage(control.getLabel());
+                        control.setLabel(translatedLabel + " (" + locale.toString() + ")");
                     }
                 }
             }
