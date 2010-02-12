@@ -106,9 +106,9 @@ public class MgnlRole implements Role {
             Collection children = aclNode.getChildren();
             for (Iterator iter = children.iterator(); iter.hasNext();) {
                 Content child = (Content) iter.next();
-                if (child.getNodeData("path").getString().equals("path")) {
+                if (child.getNodeData("path").getString().equals(path)) {    
                     if (permission == MgnlRole.PERMISSION_ANY
-                        || child.getNodeData("permissions").getString().equals(String.valueOf(permission))) {
+                        || child.getNodeData("permissions").getLong() == permission) {
                         child.delete();
                     }
                 }
@@ -152,7 +152,7 @@ public class MgnlRole implements Role {
             Content child = (Content) iter.next();
             if (child.getNodeData("path").getString().equals(path)) {
                 if (permission == MgnlRole.PERMISSION_ANY
-                    || child.getNodeData("permission").getString().equals(String.valueOf(permission))) {
+                    || child.getNodeData("permissions").getLong() == permission) {
                     return true;
                 }
             }
