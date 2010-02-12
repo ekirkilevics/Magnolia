@@ -34,6 +34,7 @@
 package info.magnolia.module.cache.cachepolicy;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.link.LinkException;
@@ -42,6 +43,7 @@ import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.FlushPolicy;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.voters.VoterSet;
 
 import org.slf4j.Logger;
@@ -58,6 +60,8 @@ import org.slf4j.LoggerFactory;
 public class Default implements CachePolicy {
 
     private static final Logger log = LoggerFactory.getLogger(Default.class);
+
+    private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
 
     private VoterSet voters;
 
@@ -111,12 +115,15 @@ public class Default implements CachePolicy {
 
     public Object retrieveCacheKey(final AggregationState aggregationState) {
 
-        String uri = aggregationState.getOriginalURI();
+        String key = aggregationState.getOriginalURI();
         if (multiplehosts) {
-            return MgnlContext.getWebContext().getRequest().getServerName() + "." + uri;
+            key = MgnlContext.getWebContext().getRequest().getServerName() + ":" + key;
+        }
+        if(i18nContentSupport.isEnabled()){
+            key += ":" + i18nContentSupport.getLocale().toString();
         }
 
-        return uri;
+        return key;
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
