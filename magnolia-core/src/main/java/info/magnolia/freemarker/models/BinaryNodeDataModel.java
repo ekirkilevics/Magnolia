@@ -33,6 +33,7 @@
  */
 package info.magnolia.freemarker.models;
 
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
@@ -54,7 +55,7 @@ import java.util.Iterator;
  * @author Chris Miner
  * @version $Revision: $ ($Author: $)
  */
-public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarModel {
+public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarModel, AdapterTemplateModel {
     private final NodeData binaryNodeData;
     private final MagnoliaObjectWrapper wrapper;
 
@@ -142,5 +143,9 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
 
     public NodeData asNodeData() {
         return this.binaryNodeData;
+    }
+
+    public Object getAdaptedObject(Class hint) {
+        return asNodeData();
     }
 }

@@ -33,7 +33,7 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.ext.util.ModelFactory;
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
@@ -62,7 +62,7 @@ import java.util.Iterator;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel {
+public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel, AdapterTemplateModel {
     static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
         public Class factoryFor() {
             return Content.class;
@@ -81,7 +81,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         this.wrapper = wrapper;
     }
 
-    public String getAsString() throws TemplateModelException {
+    public String getAsString() {
         return content.getName();
     }
 
@@ -173,5 +173,9 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
 
     public Content asContent() {
         return this.content;
+    }
+
+    public Object getAdaptedObject(Class hint) {
+        return asContent();
     }
 }

@@ -76,6 +76,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
      * Unwraps our custom wrappers, let the default wrapper do the rest.
      */
     public Object unwrap(TemplateModel model, Class hint) throws TemplateModelException {
+        // TODO the 3 ifs below are probably irrelevant now that we implement AdapterTemplateModel - see MAGNOLIA-3077 
         if (model instanceof ContentModel) {
             return ((ContentModel) model).asContent();
         }
