@@ -41,7 +41,6 @@ import info.magnolia.context.MgnlContext;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -55,8 +54,8 @@ import java.util.TreeSet;
 class MgnlSecurityUtil {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MgnlSecurityUtil.class);
 
-    static Set collectPropertyNames(Content rootNode, String subnodeName, String repositoryName, boolean isDeep) {
-        final SortedSet set = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+    static Set<String> collectPropertyNames(Content rootNode, String subnodeName, String repositoryName, boolean isDeep) {
+        final SortedSet<String> set = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         try {
             final Content node = rootNode.getContent(subnodeName);
             collectPropertyNames(node, repositoryName, set, isDeep);
@@ -68,28 +67,22 @@ class MgnlSecurityUtil {
         return set;
     }
 
-    static void collectPropertyNames(Content node, String repositoryName, Collection set, boolean isDeep) throws Throwable {
-        Collection c = node.getNodeDataCollection();
-        Iterator it = c.iterator();
-        NodeData nd = null;
-        while (it.hasNext()) {
-            nd = (NodeData) it.next();
-            String uuid = nd.getString();
+    static void collectPropertyNames(Content node, String repositoryName, Collection<String> set, boolean isDeep) throws Throwable {
+        final Collection<NodeData> c = node.getNodeDataCollection();
+        for (NodeData nd : c) {
+            final String uuid = nd.getString();
             try {
                 final HierarchyManager hierarchyManager = getSystemHierarchyManager(repositoryName);
-                Content targetNode = hierarchyManager.getContentByUUID(uuid);
+                final Content targetNode = hierarchyManager.getContentByUUID(uuid);
                 set.add(targetNode.getName());
                 if (isDeep && targetNode.hasContent("groups")) {
                     collectPropertyNames(targetNode.getContent("groups"), repositoryName, set, true);
                 }
             }
             catch (ItemNotFoundException t) {
-                String path = node.getHandle();
-                if (nd != null) {
-                    path = nd.getHandle();
-                }
+                final String path = nd.getHandle();
                 // todo: why we are using UUIDs here? shouldn't be better to use group names, since uuids can change???
-                log.warn("Can't find {} node by UUID {} referred by node {}", new Object[]{ repositoryName, t.getMessage(), path});
+                log.warn("Can't find {} node by UUID {} referred by node {}", new Object[]{repositoryName, t.getMessage(), path});
                 log.debug("Failed while reading node by UUID", t);
                 // we continue since it can happen that target node is removed
                 // - UUID's are kept as simple strings thus have no referential integrity

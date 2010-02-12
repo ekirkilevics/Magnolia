@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -248,7 +249,7 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
     private void setPermission(AccessManager am, String path, long permissionValue) {
-        ArrayList<Permission> permissions = (ArrayList<Permission>) am.getPermissionList();
+        List<Permission> permissions = am.getPermissionList();
         if(permissions == null){
             permissions = new ArrayList<Permission>();
         }

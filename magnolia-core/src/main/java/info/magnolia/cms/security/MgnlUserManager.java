@@ -112,14 +112,14 @@ public class MgnlUserManager implements UserManager {
             return new DummyUser();
         }
 
-        Set principalSet = subject.getPrincipals(Entity.class);
-        Iterator entityIterator = principalSet.iterator();
+        Set<Entity> principalSet = subject.getPrincipals(Entity.class);
+        Iterator<Entity> entityIterator = principalSet.iterator();
         if (!entityIterator.hasNext()) {
             // happens when JCR authentication module set to optional and user doesn't exist in magnolia
             log.debug("user name not contained in principal set.");
             return new DummyUser();
         }
-        Entity userDetails = (Entity) entityIterator.next();
+        Entity userDetails = entityIterator.next();
         String name = (String) userDetails.getProperty(Entity.NAME);
         try {
             return getFromRepository(name);
@@ -140,9 +140,8 @@ public class MgnlUserManager implements UserManager {
             log.debug("User not found: [{}]", name);
             return null;
         }
-        final MgnlUser user = userInstance(node);
 
-        return user;
+        return userInstance(node);
     }
 
     /**
@@ -161,9 +160,9 @@ public class MgnlUserManager implements UserManager {
 
         QueryManager qm = getHierarchyManager().getQueryManager();
         Query query = qm.createQuery(statement, Query.SQL);
-        Collection users = query.execute().getContent(ItemType.USER.getSystemName());
+        Collection<Content> users = query.execute().getContent(ItemType.USER.getSystemName());
         if (users.size() == 1) {
-            return (Content) users.iterator().next();
+            return users.iterator().next();
         }
         else if (users.size() > 1) {
             log.error("More than one user found with name [{}] in realm [{}]");
@@ -188,12 +187,12 @@ public class MgnlUserManager implements UserManager {
     /**
      * All users
      */
-    public Collection getAllUsers() {
-        Collection users = new ArrayList();
+    public Collection<User> getAllUsers() {
+        Collection<User> users = new ArrayList<User>();
         try {
-            Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
-            for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-                users.add(userInstance((Content) iter.next()));
+            Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
+            for (Content node : nodes) {
+                users.add(userInstance(node));
             }
         }
         catch (Exception e) {

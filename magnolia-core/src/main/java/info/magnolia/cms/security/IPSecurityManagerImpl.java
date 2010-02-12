@@ -57,10 +57,10 @@ import java.util.TreeSet;
  */
 public class IPSecurityManagerImpl implements IPSecurityManager {
     private static final String ALL = "*";
-    private Map rules;
+    private Map<String, Rule> rules;
 
     public IPSecurityManagerImpl() {
-        this.rules = new HashMap();
+        this.rules = new HashMap<String, Rule>();
     }
 
     public boolean isAllowed(HttpServletRequest req) {
@@ -74,17 +74,17 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
 
     protected Rule getRule(String ip) {
         if (rules.containsKey(ip)) {
-            return (Rule) rules.get(ip);
+            return rules.get(ip);
         } else {
-            return (Rule) rules.get(ALL);
+            return rules.get(ALL);
         }
     }
 
-    public Map getRules() {
+    public Map<String, Rule> getRules() {
         return rules;
     }
 
-    public void setRules(Map rules) {
+    public void setRules(Map<String, Rule> rules) {
         this.rules = rules;
     }
 
@@ -133,10 +133,10 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
     public static final class Rule {
         private String name;
         private String ip;
-        private Set methods;
+        private Set<String> methods;
 
         public Rule() {
-            this.methods = Collections.EMPTY_SET;
+            this.methods = Collections.emptySet();
         }
 
         public String getName() {
@@ -164,7 +164,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         }
 
         public void setMethods(String methods) {
-            this.methods = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+            this.methods = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
             this.methods.addAll(Arrays.asList(methods.split(",")));
         }
     }

@@ -47,7 +47,7 @@ public class AccessManagerImpl implements AccessManager, Serializable {
 
     private static final long serialVersionUID = 222L;
 
-    private List userPermissions;
+    private List<Permission> userPermissions;
 
     /**
      * Check if the given path has specified permissions
@@ -70,14 +70,14 @@ public class AccessManagerImpl implements AccessManager, Serializable {
      * Set list of permissions for this access manager
      * @param permissions list of values assigned to this access manager
      */
-    public void setPermissionList(List permissions) {
+    public void setPermissionList(List<Permission> permissions) {
         this.userPermissions = permissions;
     }
 
     /**
-     * Get permision list assigned to this access manager
+     * Get permission list assigned to this access manager
      */
-    public List getPermissionList() {
+    public List<Permission> getPermissionList() {
         return this.userPermissions;
     }
 
@@ -93,14 +93,12 @@ public class AccessManagerImpl implements AccessManager, Serializable {
         }
         long permission = 0;
         int patternLength = 0;
-        for (int i = 0; i < userPermissions.size(); i++) {
-            Permission p = (Permission) userPermissions.get(i);
+        for (Permission p : userPermissions) {
             if (p.match(path)) {
                 int l = p.getPattern().getLength();
                 if (patternLength == l && (permission < p.getPermissions())) {
                     permission = p.getPermissions();
-                }
-                else if (patternLength < l) {
+                } else if (patternLength < l) {
                     patternLength = l;
                     permission = p.getPermissions();
                 }

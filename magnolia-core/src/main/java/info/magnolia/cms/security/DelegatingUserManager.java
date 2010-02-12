@@ -35,7 +35,6 @@ package info.magnolia.cms.security;
 
 import javax.security.auth.Subject;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -44,22 +43,22 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class DelegatingUserManager implements UserManager {
-    private final Map delegates;
+    private final Map<String, UserManager> delegates;
 
     /**
      * @param delegates <String realm, UserManager delegate>
      */
-    public DelegatingUserManager(Map delegates) {
+    public DelegatingUserManager(Map<String, UserManager> delegates) {
         this.delegates = delegates;
     }
 
     public User createUser(final String name, final String pw) throws UnsupportedOperationException {
-        final Op op = new Op() {
-            public Object delegate(UserManager um) {
+        final Op<User> op = new Op<User>() {
+            public User delegate(UserManager um) {
                 return um.createUser(name, pw);
             }
         };
-        return (User) delegateUntilSupported(op);
+        return delegateUntilSupported(op);
     }
 
     public void changePassword(User user, String newPassword) throws UnsupportedOperationException {
@@ -67,32 +66,32 @@ public class DelegatingUserManager implements UserManager {
     }
 
     public User getAnonymousUser() {
-        return (User) delegateUntilSupported(new Op() {
-            public Object delegate(UserManager um) {
+        return delegateUntilSupported(new Op<User>() {
+            public User delegate(UserManager um) {
                 return um.getAnonymousUser();
             }
         });
     }
 
     public User getSystemUser() {
-        return (User) delegateUntilSupported(new Op() {
-            public Object delegate(UserManager um) {
+        return delegateUntilSupported(new Op<User>() {
+            public User delegate(UserManager um) {
                 return um.getSystemUser();
             }
         });
     }
 
     public User getUser(final String name) throws UnsupportedOperationException {
-        return (User) delegateUntilNotNull(new Op() {
-            public Object delegate(UserManager um) {
+        return delegateUntilNotNull(new Op<User>() {
+            public User delegate(UserManager um) {
                 return um.getUser(name);
             }
         });
     }
 
     public User getUser(final Subject subject) throws UnsupportedOperationException {
-        return (User) delegateUntilNotNull(new Op() {
-            public Object delegate(UserManager um) {
+        return delegateUntilNotNull(new Op<User>() {
+            public User delegate(UserManager um) {
                 return um.getUser(subject);
             }
         });
@@ -100,19 +99,17 @@ public class DelegatingUserManager implements UserManager {
 
     // TODO : this should maybe aggregate results, but ExternalUserManager throws an UnsupportedOperationException
     // TODO : also not that this is seemingly never used (or maybe through reflection or other ide-search unfriendly mechanisms)
-    public Collection getAllUsers() throws UnsupportedOperationException {
-        return (Collection) delegateUntilSupported(new Op() {
-            public Object delegate(UserManager um) {
+    public Collection<User> getAllUsers() throws UnsupportedOperationException {
+        return delegateUntilSupported(new Op<Collection<User>>() {
+            public Collection<User> delegate(UserManager um) {
                 return um.getAllUsers();
             }
         });
     }
 
-    private Object delegateUntilSupported(Op op) {
-        final Iterator it = delegates.keySet().iterator();
-        while (it.hasNext()) {
-            final String realmName = (String) it.next();
-            final UserManager um = (UserManager) delegates.get(realmName);
+    private <RT> RT delegateUntilSupported(Op<RT> op) {
+        for (String realmName : delegates.keySet()) {
+            final UserManager um = delegates.get(realmName);
             try {
                 return op.delegate(um);
             } catch (UnsupportedOperationException e) {
@@ -122,12 +119,10 @@ public class DelegatingUserManager implements UserManager {
         throw new UnsupportedOperationException("None of the delegate UserManager supports this operation.");
     }
 
-    private Object delegateUntilNotNull(Op op) {
-        final Iterator it = delegates.keySet().iterator();
-        while (it.hasNext()) {
-            final String realmName = (String) it.next();
-            final UserManager um = (UserManager) delegates.get(realmName);
-            final Object result = op.delegate(um);
+    private <RT> RT delegateUntilNotNull(Op<RT> op) {
+        for (String realmName : delegates.keySet()) {
+            final UserManager um = delegates.get(realmName);
+            final RT result = op.delegate(um);
             if (result != null) {
                 return result;
             }
@@ -135,7 +130,7 @@ public class DelegatingUserManager implements UserManager {
         return null;
     }
 
-    private interface Op {
-        Object delegate(UserManager um);
+    private interface Op<RT> {
+        RT delegate(UserManager um);
     }
 }

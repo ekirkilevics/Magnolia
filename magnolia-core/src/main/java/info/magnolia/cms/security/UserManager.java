@@ -91,7 +91,7 @@ public interface UserManager {
      * @return collection of User objects
      * @throws UnsupportedOperationException
      */
-    public Collection getAllUsers() throws UnsupportedOperationException;
+    public Collection<User> getAllUsers() throws UnsupportedOperationException;
 
     /**
      * Creates a user without security restrictions

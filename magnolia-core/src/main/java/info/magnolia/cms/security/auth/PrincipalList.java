@@ -65,7 +65,7 @@ public interface PrincipalList extends Principal, Serializable {
     /**
      * Gets list of groups/roles as strings.
      */
-    Collection getList();
+    Collection<String> getList();
 
     /**
      * Checks if the name exist in this list

@@ -42,7 +42,7 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class SecuritySupportImpl extends SecuritySupportBase {
-    private final Map userManagers = new LinkedHashMap();
+    private final Map<String, UserManager> userManagers = new LinkedHashMap<String, UserManager>();
     private GroupManager groupManager;
     private RoleManager roleManager;
 
@@ -58,10 +58,10 @@ public class SecuritySupportImpl extends SecuritySupportBase {
         if(Realm.REALM_ALL.equals(realmName)){
             return getUserManager();
         }
-        return (UserManager) userManagers.get(realmName);
+        return userManagers.get(realmName);
     }
 
-    public Map getUserManagers() {
+    public Map<String, UserManager> getUserManagers() {
         return userManagers;
     }
 

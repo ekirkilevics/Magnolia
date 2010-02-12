@@ -100,16 +100,16 @@ public interface Group extends Serializable {
     /**
      * get groups that are directly assigned to group
      */
-    public Collection getGroups();
+    public Collection<String> getGroups();
 
     /**
      * get all groups assigned to this group, collected recursively from subgroups
      * */
-    public Collection getAllGroups();
+    public Collection<String> getAllGroups();
 
     /**
      * get roles that are directly assigned to group
      */
-    public Collection getRoles();
+    public Collection<String> getRoles();
 
 }

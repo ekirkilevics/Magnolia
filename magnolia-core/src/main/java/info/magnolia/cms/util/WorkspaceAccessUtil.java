@@ -36,6 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.core.search.QueryManager;
@@ -140,11 +141,11 @@ public class WorkspaceAccessUtil {
      * @return newly created accessmanager
      * */
     public AccessManager createAccessManager(Subject subject, String repositoryName, String workspaceName) {
-        List permissionList = new ArrayList();
+        List<Permission> permissionList = new ArrayList<Permission>();
         if (subject != null) {
-            Set principalSet = subject.getPrincipals(PrincipalCollection.class);
-            Iterator it = principalSet.iterator();
-            PrincipalCollection principals = (PrincipalCollection) it.next();
+            Set<PrincipalCollection> principalSet = subject.getPrincipals(PrincipalCollection.class);
+            Iterator<PrincipalCollection> it = principalSet.iterator();
+            PrincipalCollection principals = it.next();
             ACL acl = (ACL) principals.get(repositoryName + "_" + workspaceName);
             if (acl != null) {
                 permissionList = acl.getList();
@@ -157,7 +158,7 @@ public class WorkspaceAccessUtil {
      * Create access manager for the given permission list
      * @param permissions
      * */
-    public AccessManager createAccessManager(List permissions, String repositoryName, String workspaceName) {
+    public AccessManager createAccessManager(List<Permission> permissions, String repositoryName, String workspaceName) {
         AccessManager accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(permissions);
         return accessManager;

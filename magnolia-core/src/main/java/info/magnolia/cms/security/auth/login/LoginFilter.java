@@ -40,7 +40,6 @@ import info.magnolia.logging.AuditLoggingUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -58,16 +57,13 @@ public class LoginFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(LoginFilter.class);
 
-    private Collection loginHandlers = new ArrayList();
+    private Collection<LoginHandler> loginHandlers = new ArrayList<LoginHandler>();
 
     /**
      * todo - temporary fix
      * */
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        Iterator handlers = this.getLoginHandlers().iterator();
-        while (handlers.hasNext()) {
-            LoginHandler handler = (LoginHandler) handlers.next();
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        for (LoginHandler handler : this.getLoginHandlers()) {
             LoginResult loginResult = handler.handle(request, response);
             LoginResult.setCurrentLoginResult(loginResult);
             if (loginResult.getStatus() == LoginResult.STATUS_IN_PROCESS) {
@@ -77,18 +73,18 @@ public class LoginFilter extends AbstractMgnlFilter {
             } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
                 MgnlContext.login(loginResult.getUser());
             }
-            AuditLoggingUtil.log(loginResult, request );
+            AuditLoggingUtil.log(loginResult, request);
 
         }
         // continue even if all login handlers failed
         chain.doFilter(request, response);
     }
 
-    public Collection getLoginHandlers() {
+    public Collection<LoginHandler> getLoginHandlers() {
         return loginHandlers;
     }
 
-    public void setLoginHandlers(Collection loginHandlers) {
+    public void setLoginHandlers(Collection<LoginHandler> loginHandlers) {
         this.loginHandlers = loginHandlers;
     }
 

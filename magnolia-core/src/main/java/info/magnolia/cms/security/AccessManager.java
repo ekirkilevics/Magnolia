@@ -56,12 +56,12 @@ public interface AccessManager extends Serializable {
      * structure of this list.
      * @param permissions
      */
-    void setPermissionList(List permissions);
+    void setPermissionList(List<Permission> permissions);
 
     /**
-     * Get permision list assigned to this access manager
+     * Get permission list assigned to this access manager
      */
-    List getPermissionList();
+    List<Permission> getPermissionList();
 
     /**
      * Get permissions assigned to the given path.

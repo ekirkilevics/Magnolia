@@ -168,8 +168,7 @@ public class MgnlUser extends AbstractUser implements Serializable {
             }
 
             Content node = this.getUserNode().getContent(nodeName);
-            for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-                NodeData nodeData = (NodeData) iter.next();
+            for (NodeData nodeData : node.getNodeDataCollection()) {
                 // check for the existence of this ID
                 try {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
@@ -177,14 +176,10 @@ public class MgnlUser extends AbstractUser implements Serializable {
                     }
                 }
                 catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
-                    }
+                    log.debug("Role [{}] does not exist in the ROLES repository", name);
                 }
                 catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(nodeData.getHandle() + " has invalid value");
-                    }
+                    log.debug("{} has invalid value", nodeData.getHandle());
                 }
             }
         }
@@ -210,8 +205,7 @@ public class MgnlUser extends AbstractUser implements Serializable {
             }
             Content node = this.getUserNode().getContent(nodeName);
 
-            for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-                NodeData nodeData = (NodeData) iter.next();
+            for (NodeData nodeData : node.getNodeDataCollection()) {
                 // check for the existence of this ID
                 try {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
@@ -219,14 +213,10 @@ public class MgnlUser extends AbstractUser implements Serializable {
                     }
                 }
                 catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
-                    }
+                    log.debug("Role [{}] does not exist in the ROLES repository", name);
                 }
                 catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(nodeData.getHandle() + " has invalid value");
-                    }
+                    log.debug("{} has invalid value", nodeData.getHandle());
                 }
             }
             this.getUserNode().save();
@@ -316,22 +306,20 @@ public class MgnlUser extends AbstractUser implements Serializable {
         }
     }
 
-    public Collection getGroups() {
+    public Collection<String> getGroups() {
         return MgnlSecurityUtil.collectPropertyNames(getUserNode(), "groups", ContentRepository.USER_GROUPS, false);
     }
 
-    public Collection getAllGroups() {
-        final Set allGroups = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+    public Collection<String> getAllGroups() {
+        final Set<String> allGroups = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         try {
             // add the user's direct groups
-            final Collection groups = getGroups();
+            final Collection<String> groups = getGroups();
             allGroups.addAll(groups);
 
             // add all groups from direct groups
             final GroupManager gm = SecuritySupport.Factory.getInstance().getGroupManager();
-            final Iterator it = groups.iterator();
-            while (it.hasNext()) {
-                final String groupName = (String) it.next();
+            for (String groupName : groups) {
                 final Group g = gm.getGroup(groupName);
                 allGroups.addAll(g.getAllGroups());
             }
@@ -342,22 +330,20 @@ public class MgnlUser extends AbstractUser implements Serializable {
         }
     }
 
-    public Collection getRoles() {
+    public Collection<String> getRoles() {
         return MgnlSecurityUtil.collectPropertyNames(getUserNode(), "roles", ContentRepository.USER_ROLES, false);
     }
 
-    public Collection getAllRoles() {
-        final Set allRoles = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+    public Collection<String> getAllRoles() {
+        final Set<String> allRoles = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         try {
             // add the user's direct roles
             allRoles.addAll(getRoles());
 
             // add roles from all groups
             final GroupManager gm = SecuritySupport.Factory.getInstance().getGroupManager();
-            final Collection allGroups = getAllGroups();
-            final Iterator it = allGroups.iterator();
-            while (it.hasNext()) {
-                final String groupName = (String) it.next();
+            final Collection<String> allGroups = getAllGroups();
+            for (String groupName : allGroups) {
                 final Group g = gm.getGroup(groupName);
                 allRoles.addAll(g.getRoles());
             }

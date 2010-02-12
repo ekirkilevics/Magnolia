@@ -40,7 +40,6 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -103,9 +102,8 @@ public class MgnlRole implements Role {
     public void removePermission(String repository, String path, long permission) {
         try {
             Content aclNode = getAclNode(repository);
-            Collection children = aclNode.getChildren();
-            for (Iterator iter = children.iterator(); iter.hasNext();) {
-                Content child = (Content) iter.next();
+            Collection<Content> children = aclNode.getChildren();
+            for (Content child : children) {
                 if (child.getNodeData("path").getString().equals(path)) {    
                     if (permission == MgnlRole.PERMISSION_ANY
                         || child.getNodeData("permissions").getLong() == permission) {
@@ -147,9 +145,8 @@ public class MgnlRole implements Role {
      * @param permission
      */
     private boolean existsPermission(Content aclNode, String path, long permission) {
-        Collection children = aclNode.getChildren();
-        for (Iterator iter = children.iterator(); iter.hasNext();) {
-            Content child = (Content) iter.next();
+        Collection<Content> children = aclNode.getChildren();
+        for (Content child : children) {
             if (child.getNodeData("path").getString().equals(path)) {
                 if (permission == MgnlRole.PERMISSION_ANY
                     || child.getNodeData("permissions").getLong() == permission) {

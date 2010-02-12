@@ -64,7 +64,7 @@ public class ExternalUserManager implements UserManager {
         return new ExternalUser(subject);
     }
 
-    public Collection getAllUsers() throws UnsupportedOperationException {
+    public Collection<User> getAllUsers() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
 

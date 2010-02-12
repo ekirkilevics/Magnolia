@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.security.auth;
 
+import info.magnolia.cms.security.Permission;
+
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.List;
@@ -88,11 +90,11 @@ public interface ACL extends Principal, Serializable {
      * Initialize access control list with provided permissions it will overwrite any existing permissions set before.
      * @param list
      */
-    public void setList(List list);
+    public void setList(List<Permission> list);
 
     /**
      * Returns list of permissions for this principal
      */
-    public List getList();
+    public List<Permission> getList();
 
 }

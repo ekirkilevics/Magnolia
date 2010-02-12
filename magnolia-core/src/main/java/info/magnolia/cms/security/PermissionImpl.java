@@ -50,7 +50,7 @@ public class PermissionImpl implements Permission, Serializable {
      */
     private static final long serialVersionUID = 222L;
 
-    private static Map nameStrings = new Hashtable();
+    private static Map<Long, String> nameStrings = new Hashtable<Long, String>();
 
     static {
         nameStrings.put(new Long(0), "none");
@@ -93,7 +93,7 @@ public class PermissionImpl implements Permission, Serializable {
     }
 
     public static String getPermissionAsName(long permission) {
-        final String name = (String) nameStrings.get(new Long(permission));
+        final String name = nameStrings.get(new Long(permission));
         if (name == null) {
             return "[unknown permission]";
         }

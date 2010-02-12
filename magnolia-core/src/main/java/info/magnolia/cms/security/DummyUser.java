@@ -156,22 +156,22 @@ public class DummyUser extends AbstractUser {
     /**
      * @see info.magnolia.cms.security.User#getGroups()
      */
-    public Collection getGroups() {
-        return Collections.EMPTY_LIST;
+    public Collection<String> getGroups() {
+        return Collections.emptyList();
     }
 
-    public Collection getAllGroups() {
-        return new ArrayList();
+    public Collection<String> getAllGroups() {
+        return new ArrayList<String>();
     }
 
     /**
      * @see info.magnolia.cms.security.User#getRoles()
      */
-    public Collection getRoles() {
-        return Collections.EMPTY_LIST;
+    public Collection<String> getRoles() {
+        return Collections.emptyList();
     }
 
-    public Collection getAllRoles() {
-        return new ArrayList();
+    public Collection<String> getAllRoles() {
+        return new ArrayList<String>();
     }
 }

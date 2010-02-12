@@ -81,7 +81,7 @@ public interface User extends Serializable {
     void addGroup(String groupName) throws UnsupportedOperationException;
 
     /**
-     * Returns false if the user was explicitely disabled. Implementations should return
+     * Returns false if the user was explicitly disabled. Implementations should return
      * true by default if the status is unknown.
      */
     boolean isEnabled();
@@ -120,22 +120,22 @@ public interface User extends Serializable {
     /**
      * get groups that user is in
      */
-    Collection getGroups();
+    Collection<String> getGroups();
 
     /**
      * get all groups to which this user belongs to, collected recursively including
      * */
-    Collection getAllGroups();
+    Collection<String> getAllGroups();
 
     /**
      * get roles that are directly assigned to user
      */
-    Collection getRoles();
+    Collection<String> getRoles();
 
     /**
      * get all roles assigned to this user, collected recursively including groups/subgroups
      * */
-    Collection getAllRoles();
+    Collection<String> getAllRoles();
 
     /**
      * Returns the jaas subject if available.

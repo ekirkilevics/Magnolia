@@ -90,10 +90,10 @@ public class FormClientCallback extends AbstractHttpClientCallback {
      * override this to pass more objects to the freemarker template.
      * @return an empty map
      */
-    protected Map getMessages() {
+    protected Map<String, String> getMessages() {
         LoginResult loginResult = LoginResult.getCurrentLoginResult();
         LoginException exception = loginResult.getLoginException();
-        Map messages = new HashMap();
+        Map<String, String> messages = new HashMap<String, String>();
         if (null != exception) {
             final String exName = ClassUtils.getShortClassName(exception, null);
             final Messages mm = MessagesManager.getMessages();

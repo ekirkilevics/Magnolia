@@ -61,6 +61,6 @@ public interface GroupManager {
     /**
      * Get all groups defined in the system
      */
-    public Collection getAllGroups() throws UnsupportedOperationException;
+    public Collection<Group> getAllGroups() throws UnsupportedOperationException;
 
 }

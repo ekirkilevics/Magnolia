@@ -48,7 +48,6 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import java.util.Collection;
-import java.util.Iterator;
 
 
 /**
@@ -147,15 +146,15 @@ public class MgnlGroup implements Group {
         }
     }
 
-    public Collection getRoles() {
+    public Collection<String> getRoles() {
         return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "roles", ContentRepository.USER_ROLES, false);
     }
 
-    public Collection getGroups() {
+    public Collection<String> getGroups() {
         return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "groups", ContentRepository.USER_GROUPS, false);
     }
 
-    public Collection getAllGroups() {
+    public Collection<String> getAllGroups() {
         return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "groups", ContentRepository.USER_GROUPS, true);
     }
 
@@ -175,8 +174,7 @@ public class MgnlGroup implements Group {
             }
 
             Content node = getGroupNode().getContent(nodeName);
-            for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-                NodeData nodeData = (NodeData) iter.next();
+            for (NodeData nodeData : node.getNodeDataCollection()) {
                 // check for the existence of this ID
                 try {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
@@ -217,8 +215,7 @@ public class MgnlGroup implements Group {
             }
             Content node = getGroupNode().getContent(nodeName);
 
-            for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-                NodeData nodeData = (NodeData) iter.next();
+            for (NodeData nodeData: node.getNodeDataCollection()) {
                 // check for the existence of this ID
                 try {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {

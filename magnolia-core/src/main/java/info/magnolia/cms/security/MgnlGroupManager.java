@@ -35,7 +35,6 @@ package info.magnolia.cms.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
@@ -99,12 +98,12 @@ public class MgnlGroupManager implements GroupManager {
     /**
      * All groups
      */
-    public Collection getAllGroups() {
-        Collection groups = new ArrayList();
+    public Collection<Group> getAllGroups() {
+        Collection<Group> groups = new ArrayList<Group>();
         try {
-            Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.GROUP);
-            for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-                groups.add(new MgnlGroup((Content) iter.next()));
+            Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.GROUP);
+            for (Content node : nodes) {
+                groups.add(new MgnlGroup(node));
             }
         }
         catch (Exception e) {

@@ -77,17 +77,17 @@ public class ExternalUser extends AbstractUser implements Serializable {
      * @param subject as created by login module
      */
     protected ExternalUser(Subject subject) {
-        final Set principalDetails = subject.getPrincipals(Entity.class);
-        final Iterator entityIterator = principalDetails.iterator();
-        this.userDetails = (Entity) entityIterator.next();
+        final Set<Entity> principalDetails = subject.getPrincipals(Entity.class);
+        final Iterator<Entity> entityIterator = principalDetails.iterator();
+        this.userDetails = entityIterator.next();
 
-        final Set principalRoles = subject.getPrincipals(RoleList.class);
-        final Iterator roleListIterator = principalRoles.iterator();
-        this.roleList = (RoleList) roleListIterator.next();
+        final Set<RoleList> principalRoles = subject.getPrincipals(RoleList.class);
+        final Iterator<RoleList> roleListIterator = principalRoles.iterator();
+        this.roleList = roleListIterator.next();
 
-        final Set principalGroups = subject.getPrincipals(GroupList.class);
-        final Iterator groupListIterator = principalGroups.iterator();
-        this.groupList = (GroupList) groupListIterator.next();
+        final Set<GroupList> principalGroups = subject.getPrincipals(GroupList.class);
+        final Iterator<GroupList> groupListIterator = principalGroups.iterator();
+        this.groupList = groupListIterator.next();
     }
 
     public boolean hasRole(String roleName) {
@@ -159,19 +159,19 @@ public class ExternalUser extends AbstractUser implements Serializable {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
-    public Collection getGroups() {
+    public Collection<String> getGroups() {
         return this.groupList.getList();
     }
 
-    public Collection getAllGroups() {
+    public Collection<String> getAllGroups() {
         return this.getGroups();
     }
 
-    public Collection getRoles() {
+    public Collection<String> getRoles() {
         return this.roleList.getList();
     }
 
-    public Collection getAllRoles() {
+    public Collection<String> getAllRoles() {
         return this.getRoles();
     }
 }
