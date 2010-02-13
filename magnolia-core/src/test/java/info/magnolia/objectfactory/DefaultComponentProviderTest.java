@@ -63,19 +63,30 @@ public class DefaultComponentProviderTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        super.tearDown();
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
         SystemProperty.getProperties().clear();
+        super.tearDown();
     }
 
-    public void testReturnsDefaultImplementationIfNoneConfigured() {
+    public void testReturnsGivenConcreteClassIfNoneConfigured() {
         final DefaultComponentProvider componentProvider = new DefaultComponentProvider(new Properties());
         Object obj = componentProvider.getSingleton(TestImplementation.class);
         assertTrue(obj instanceof TestImplementation);
     }
 
-    public void testConfiguredImplementation() {
+    public void testBlowsIfGivenInterfaceAndNoImplementationIsConfigured() {
+        final DefaultComponentProvider componentProvider = new DefaultComponentProvider(new Properties());
+        try {
+            componentProvider.getSingleton(TestInterface.class);
+            fail("should have thrown a MgnlInstantiationException");
+        } catch (MgnlInstantiationException e) {
+            assertTrue("expecting a MgnlInstantiationException with a specific message", e instanceof MgnlInstantiationException);
+            assertEquals("No concrete implementation defined for interface info.magnolia.objectfactory.DefaultComponentProviderTest$TestInterface", e.getMessage());
+        }
+    }
+
+    public void testReturnsConfiguredImplementation() {
         final Properties p = new Properties();
         p.setProperty("info.magnolia.objectfactory.DefaultComponentProviderTest$TestInterface", "info.magnolia.objectfactory.DefaultComponentProviderTest$TestImplementation");
         final DefaultComponentProvider componentProvider = new DefaultComponentProvider(p);
@@ -109,7 +120,7 @@ public class DefaultComponentProviderTest extends TestCase {
 
 
     /**
-     * TODO - these tests uses ComponentsTestUtil and {@link Components.getSingleton()}: since
+     * TODO - these tests uses ComponentsTestUtil and {@link Components#getSingleton(Class)}: since
      * C2B and ObserverComponentFactory both use {@link Components} to retrieve their ... components.
      * (sort of a cyclic-dependency there)
      */
@@ -125,11 +136,12 @@ public class DefaultComponentProviderTest extends TestCase {
 
 
     /**
-     * TODO - these tests uses ComponentsTestUtil and {@link Components.getSingleton()}: since
+     * TODO - these tests uses ComponentsTestUtil and {@link Components#getSingleton(Class)}: since
      * C2B and ObserverComponentFactory both use {@link Components} to retrieve their ... components.
      * (sort of a cyclic-dependency there)
      */
     public void testSingletonDefinedInRepositoryUsesGivenRepoName() throws RepositoryException, IOException {
+        Components.getSingleton(String.class);
         setDefaultImplementationsAndInitMockRepository("dummy:/test", "dummy",
                 "test.class=" + TestImplementation.class.getName()
         );
@@ -139,21 +151,20 @@ public class DefaultComponentProviderTest extends TestCase {
     }
 
     /**
-     * TODO - these tests uses ComponentsTestUtil and {@link Components.getSingleton()}: since
+     * TODO - these tests uses ComponentsTestUtil and {@link Components#getSingleton(Class)}: since
      * C2B and ObserverComponentFactory both use {@link Components} to retrieve their ... components.
      * (sort of a cyclic-dependency there)
      */
     public void testProxiesReturnedByObserverComponentFactoryCanBeCastToTheirSubclass() throws Exception {
-        setDefaultImplementationsAndInitMockRepository( "config:/test", "config",
+        setDefaultImplementationsAndInitMockRepository("config:/test", "config",
                 "test.class=" + TestOtherImplementation.class.getName()
         );
         TestInterface obj = Components.getSingleton(TestInterface.class);
         assertNotNull(obj);
         // so, I know my project is configured to use a subclass of TestInterface, I can cast away if i want (typically, a module replacing a default implementation)
         assertTrue(obj instanceof TestOtherImplementation);
-        assertEquals("bar", ((TestOtherImplementation)obj).getFoo());
+        assertEquals("bar", ((TestOtherImplementation) obj).getFoo());
     }
-    
 
     private void setDefaultImplementationsAndInitMockRepository(String componentPropertyValue, String expectedRepoName, String repoContent) throws RepositoryException, IOException {
         // configuration value for the interface, i.e the value set in magnolia.properties, for instance

@@ -39,6 +39,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -123,6 +124,9 @@ public class DefaultComponentProvider implements ComponentProvider {
                 return newInstance(type);
             } else {
                 final Class<?> clazz = Classes.getClassFactory().forName(className);
+                if (!isConcrete(clazz)) {
+                    throw new MgnlInstantiationException("No concrete implementation defined for " + clazz); 
+                }
                 final Object instance = Classes.getClassFactory().newInstance(clazz);
 
                 if (instance instanceof ComponentFactory) {
@@ -133,8 +137,15 @@ public class DefaultComponentProvider implements ComponentProvider {
                 return (T) instance;
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Can't instantiate an implementation of this class [" + type.getName() + "]: " + ExceptionUtils.getMessage(e), e);
+            if (e instanceof MgnlInstantiationException) {
+                throw (MgnlInstantiationException) e;
+            }
+            throw new MgnlInstantiationException("Can't instantiate an implementation of this class [" + type.getName() + "]: " + ExceptionUtils.getMessage(e), e);
         }
+    }
+
+    protected boolean isConcrete(Class<?> clazz) {
+        return !Modifier.isAbstract(clazz.getModifiers());
     }
 
     // TODO - is this needed / correct ?

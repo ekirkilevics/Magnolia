@@ -38,6 +38,10 @@ package info.magnolia.objectfactory;
  * @version $Revision: $ ($Author: $)
  */
 public class MgnlInstantiationException extends RuntimeException {
+    public MgnlInstantiationException(String message) {
+        super(message);
+    }
+
     public MgnlInstantiationException(String message, Throwable cause) {
         super(message, cause);
     }
