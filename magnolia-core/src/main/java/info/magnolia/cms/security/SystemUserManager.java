@@ -75,7 +75,7 @@ public class SystemUserManager extends MgnlUserManager {
 
             public void onEvent(EventIterator events) {
                 anonymousUser = null;
-                log.info("Anonymous user reloaded");
+                log.debug("Anonymous user reloaded");
             }
 
         };
