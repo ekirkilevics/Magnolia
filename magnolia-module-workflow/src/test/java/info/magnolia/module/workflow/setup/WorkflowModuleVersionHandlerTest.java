@@ -62,6 +62,9 @@ import static org.easymock.classextension.EasyMock.*;
  * @author had
  */
 public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
+    private RoleManager roleManager;
+    private Role role;
+
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/workflow.xml";
     }
@@ -74,8 +77,8 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         super.setUp();
         // setup security
         SecuritySupportImpl securitySupport = new SecuritySupportImpl();
-        RoleManager roleManager = createStrictMock(RoleManager.class);
-        Role role = createStrictMock(Role.class);
+        roleManager = createStrictMock(RoleManager.class);
+        role = createStrictMock(Role.class);
         
         expect(roleManager.getRole("workflow-base")).andReturn(role).anyTimes();
         role.addPermission("config", "/modules/workflow/config/flows", Permission.READ);
@@ -83,6 +86,7 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
 
         // 4.3
         role.removePermission("userroles", "/workflow-base", Permission.READ);
+        role.removePermission("userroles", "/workflow-base/*", Permission.READ);
 
         securitySupport.setRoleManager(roleManager);
         replay(roleManager, role);
@@ -92,7 +96,13 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         bootstrapSingleResource("/mgnl-bootstrap/workflow/userroles.workflow-base.xml");
         MgnlContext.getHierarchyManager("userroles").save();
     }
-    
+
+    @Override
+    protected void tearDown() throws Exception {
+        verify(roleManager, role);
+        super.tearDown();
+    }
+
     /**
      * Workflow have been overwriting versioning command of DMS when introducing wkf support to DMS. The task to rememdy the situation have been introduced now
      *
