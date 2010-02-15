@@ -66,13 +66,13 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        fmHelper = new FreemarkerHelper();
         final FreemarkerConfig fmConfig = new FreemarkerConfig();
         fmConfig.addTemplateLoader(tplLoader);
-        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmConfig);
+
+//        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmConfig);
+        fmHelper = new FreemarkerHelper(fmConfig);
 
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        //fmHelper.getConfiguration().setTemplateLoader(tplLoader);
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");

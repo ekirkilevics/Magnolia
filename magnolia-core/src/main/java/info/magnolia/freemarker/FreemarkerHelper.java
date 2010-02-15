@@ -33,7 +33,6 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.FreemarkerServlet;
@@ -44,10 +43,11 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 import info.magnolia.objectfactory.Components;
 
 import javax.servlet.GenericServlet;
@@ -82,12 +82,16 @@ public class FreemarkerHelper {
     private ServletContextHashModel servletContextHashModel;
 
     public FreemarkerHelper() {
-        cfg = new Configuration();
-        resetObjectWrapper();
+        this(Components.getSingleton(FreemarkerConfig.class));
+    }
 
-        // template loaders will be set later on - to make sure changes to the configuration are picked up immediately
-        // default template loader until FreemarkerConfig is ready:
-        cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtil.class, "/"));
+    public FreemarkerHelper(FreemarkerConfig freemarkerConfig) {
+        this.cfg = new Configuration();
+
+        // delegators to FreemarkerConfig
+        cfg.setTemplateLoader(new ConfigDelegatingTemplateLoader(freemarkerConfig));
+        cfg.setObjectWrapper(new ConfigDelegatingObjectWrapper(freemarkerConfig));
+
 
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         cfg.setDefaultEncoding("UTF8");
@@ -97,14 +101,10 @@ public class FreemarkerHelper {
     }
 
     /**
-     * Called by constructor, and by FreemarkerConfig on config changes.
+     * @deprecated not needed anymore since 4.3
      */
     public void resetObjectWrapper() {
-        cfg.setObjectWrapper(newObjectWrapper());
-    }
-
-    protected ObjectWrapper newObjectWrapper() {
-        return Components.getComponentProvider().newInstance(MagnoliaObjectWrapper.class);
+        // getConfiguration().setObjectWrapper(newObjectWrapper());
     }
 
     /**
@@ -172,20 +172,6 @@ public class FreemarkerHelper {
             final Map<String, Object> data = (Map<String, Object>) root;
             addDefaultData(data, checkedLocale, i18nBasename);
         }
-
-        // TODO - we could have a LazyMultiTemplateLoader, much like our other Lazy*TemplateImplementations
-        // set all currently known loaders
-        final FreemarkerConfig loaderManager = FreemarkerConfig.getInstance();
-        if (loaderManager != null) {
-            final TemplateLoader tl = loaderManager.getMultiTemplateLoader();
-            if (tl != cfg.getTemplateLoader()) {
-                // update only if loader instance changed in between
-                cfg.setTemplateLoader(tl);
-            }
-        } else {
-            // TODO - this should not be necessary - see MAGNOLIA-2533
-            log.debug("FreemarkerConfig is not ready yet.");
-        }
     }
 
     protected void addDefaultData(Map<String, Object> data, Locale locale, String i18nBasename) {
@@ -245,5 +231,41 @@ public class FreemarkerHelper {
 
     protected Configuration getConfiguration() {
         return cfg;
+    }
+
+    private class ConfigDelegatingTemplateLoader implements TemplateLoader {
+        private final FreemarkerConfig freemarkerConfig;
+
+        public ConfigDelegatingTemplateLoader(FreemarkerConfig freemarkerConfig) {
+            this.freemarkerConfig = freemarkerConfig;
+        }
+
+        public Object findTemplateSource(String name) throws IOException {
+            return freemarkerConfig.getTemplateLoader().findTemplateSource(name);
+        }
+
+        public long getLastModified(Object templateSource) {
+            return freemarkerConfig.getTemplateLoader().getLastModified(templateSource);
+        }
+
+        public Reader getReader(Object templateSource, String encoding) throws IOException {
+            return freemarkerConfig.getTemplateLoader().getReader(templateSource, encoding);
+        }
+
+        public void closeTemplateSource(Object templateSource) throws IOException {
+            freemarkerConfig.getTemplateLoader().closeTemplateSource(templateSource);
+        }
+    }
+
+    private class ConfigDelegatingObjectWrapper implements ObjectWrapper {
+        private final FreemarkerConfig freemarkerConfig;
+
+        public ConfigDelegatingObjectWrapper(FreemarkerConfig freemarkerConfig) {
+            this.freemarkerConfig = freemarkerConfig;
+        }
+
+        public TemplateModel wrap(Object obj) throws TemplateModelException {
+            return freemarkerConfig.getObjectWrapper().wrap(obj);
+        }
     }
 }

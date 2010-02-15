@@ -36,7 +36,9 @@ package info.magnolia.freemarker;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
+import freemarker.template.ObjectWrapper;
 import info.magnolia.freemarker.models.MagnoliaModelFactory;
+import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
@@ -47,12 +49,16 @@ import java.util.List;
  * Freemarker's own {@link freemarker.template.Configuration}. This only exposes the few
  * properties that Magnolia allows to configure and is able to handle properly.
  * It also provides a few additional methods used internally.
- * 
+ *
  * @see info.magnolia.freemarker.FreemarkerHelper
  * @see info.magnolia.freemarker.models.MagnoliaObjectWrapper
  * @see info.magnolia.freemarker.models.MagnoliaModelFactory
  */
 public class FreemarkerConfig {
+
+    /**
+     * @deprecated should not be needed - components using this can keep their instance
+     */
     public static FreemarkerConfig getInstance() {
         return Components.getSingleton(FreemarkerConfig.class);
     }
@@ -60,29 +66,28 @@ public class FreemarkerConfig {
     /**
      * The MagnoliaModelFactory implementations explicitly registered by modules.
      */
-    private List<MagnoliaModelFactory> registeredModelFactories;
+    private final List<MagnoliaModelFactory> registeredModelFactories;
 
-    private List<TemplateLoader> templateLoaders;
-    private MultiTemplateLoader multiTL;
+    private final List<TemplateLoader> templateLoaders;
+
+    private MagnoliaObjectWrapper objectWrapper;
+    private TemplateLoader multiTL;
 
     public FreemarkerConfig() {
         this.registeredModelFactories = new ArrayList<MagnoliaModelFactory>();
         this.templateLoaders = new ArrayList<TemplateLoader>();
-
-        // There is a bit of a messy dependency here: 
-        // Ultimately, FreemarkerHelper and FreemarkerConfig could be merged,
-        // but since FreemarkerHelper could be kept around, we'll first need
-        // to implement DefaultComponentProvider so that the observed components are wrapped
-        // by a proxy.
-        FreemarkerHelper.getInstance().resetObjectWrapper();
     }
 
-    // public init() { would be called by content2bean if needed. }
+    public ObjectWrapper getObjectWrapper() {
+        if (objectWrapper == null) {
+            objectWrapper = Components.getComponentProvider().newInstance(MagnoliaObjectWrapper.class);
+        }
+        return objectWrapper;
+    }
 
-    protected TemplateLoader getMultiTemplateLoader() {
-        //TODO - resetState on multiTL on reload ?
+    public TemplateLoader getTemplateLoader() {
         if (multiTL == null) {
-            // ! using getTemplateLoaders() instead of the variable to make sure we go to the proxied object!?
+            // using getTemplateLoaders() instead of the variable to make sure we go to the proxied object!?
             final List<TemplateLoader> loaders = getTemplateLoaders();
             final int s = loaders.size();
             // add a ClassTemplateLoader as our last loader
@@ -91,10 +96,6 @@ public class FreemarkerConfig {
             multiTL = new MultiTemplateLoader(tl);
         }
         return multiTL;
-    }
-
-    public void setModelFactories(List<MagnoliaModelFactory> registeredModelFactories) {
-        this.registeredModelFactories = registeredModelFactories;
     }
 
     public List<MagnoliaModelFactory> getModelFactories() {
@@ -107,10 +108,6 @@ public class FreemarkerConfig {
 
     public List<TemplateLoader> getTemplateLoaders() {
         return templateLoaders;
-    }
-
-    public void setTemplateLoaders(List<TemplateLoader> templateLoaders) {
-        this.templateLoaders = templateLoaders;
     }
 
     public void addTemplateLoader(TemplateLoader templateLoader) {
