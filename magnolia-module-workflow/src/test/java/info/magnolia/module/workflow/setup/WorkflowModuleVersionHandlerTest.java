@@ -77,9 +77,13 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         RoleManager roleManager = createStrictMock(RoleManager.class);
         Role role = createStrictMock(Role.class);
         
-        expect(roleManager.getRole("workflow-base")).andReturn(role);
+        expect(roleManager.getRole("workflow-base")).andReturn(role).anyTimes();
         role.addPermission("config", "/modules/workflow/config/flows", Permission.READ);
         role.addPermission("config", "/modules/workflow/config/flows/*", Permission.READ);
+
+        // 4.3
+        role.removePermission("userroles", "/workflow-base", Permission.READ);
+
         securitySupport.setRoleManager(roleManager);
         replay(roleManager, role);
         ComponentsTestUtil.setInstance(SecuritySupport.class, securitySupport);

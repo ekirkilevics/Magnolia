@@ -179,13 +179,13 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 }))
         );
 
-        register(DeltaBuilder.update("4.2.3", "Add read permission to the base role so that users can launch workflows.")
+        register(DeltaBuilder.update("4.2.3", "")
             // MAGNOLIA-2971
             .addTask(new AddPermissionTask("Update base role", "Adds permission to read the workflow definitions.", "workflow-base", "config", "/modules/workflow/config/flows", Permission.READ, true))
         );
         
-        register(DeltaBuilder.update("4.3", "Update workflow-base role.")
-                .addTask(new RemovePermissionTask("Update workflow-base role", "", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
+        register(DeltaBuilder.update("4.3", "")
+                .addTask(new RemovePermissionTask("Update workflow-base role", "Updates the workflow-base role, removing unnecessary permission to self.", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
