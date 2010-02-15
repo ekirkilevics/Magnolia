@@ -33,18 +33,12 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.MgnlRole;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
-import java.util.Collection;
 
 /**
  * @author zdenekskodik
@@ -73,15 +67,7 @@ public class RemovePermissionTask extends AbstractRepositoryTask {
             final Role role = roleManager.getRole(roleName);
 
             if (role != null) {
-                final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
-                final Content roleNode = hm.getContent(roleName);
-                final Content aclNode = roleNode.getContent("acl_" + workspaceName);
-                
-                /* in case the permission is granted for the node itself as well*/
-                if (existsPermission(aclNode, pathToRemove, permission)) {
-                    role.removePermission(workspaceName, pathToRemove, permission);
-                }
-                /* the permission is granted for its subnodes anyway */
+                role.removePermission(workspaceName, pathToRemove, permission);
                 role.removePermission(workspaceName, pathToRemove + "/*", permission);
             } else {
                 ctx.warn("Role \"" + roleName + "\" not found, can't remove its ACL permission.");
@@ -89,17 +75,5 @@ public class RemovePermissionTask extends AbstractRepositoryTask {
         } catch (UnsupportedOperationException e1) {
             ctx.warn("Can't update role \"" + roleName + "\" due to an unsupported operation exception. This is most likely the case if the roles are managed externally.");
         }
-    }
-
-    private boolean existsPermission(Content aclNode, String path, long permission) {
-        final Collection<Content> children = aclNode.getChildren();
-        for (Content child : children) {
-            if (child.getNodeData("path").getString().equals(path)) {
-                if (permission == MgnlRole.PERMISSION_ANY || child.getNodeData("permissions").getLong() == permission) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }
