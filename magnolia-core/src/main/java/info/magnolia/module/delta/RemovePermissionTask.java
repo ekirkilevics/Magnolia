@@ -76,10 +76,13 @@ public class RemovePermissionTask extends AbstractRepositoryTask {
                 final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
                 final Content roleNode = hm.getContent(roleName);
                 final Content aclNode = roleNode.getContent("acl_" + workspaceName);
-                role.removePermission(workspaceName, pathToRemove, permission);
-                if (existsPermission(aclNode, pathToRemove + "/*", permission)) {
-                    role.removePermission(workspaceName, pathToRemove + "/*", permission);
+                
+                /* in case the permission is granted for the node itself as well*/
+                if (existsPermission(aclNode, pathToRemove, permission)) {
+                    role.removePermission(workspaceName, pathToRemove, permission);
                 }
+                /* the permission is granted for its subnodes anyway */
+                role.removePermission(workspaceName, pathToRemove + "/*", permission);
             } else {
                 ctx.warn("Role \"" + roleName + "\" not found, can't remove its ACL permission.");
             }
