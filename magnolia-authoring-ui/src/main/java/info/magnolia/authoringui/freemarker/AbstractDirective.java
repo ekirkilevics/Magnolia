@@ -1,0 +1,124 @@
+/**
+ * This file Copyright (c) 2010 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ *
+ *
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License.
+ * You may elect to use one or the other of these licenses.
+ *
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
+ *
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia-cms.com/mna.html
+ *
+ * Any modifications to this file must keep this entire header
+ * intact.
+ *
+ */
+package info.magnolia.authoringui.freemarker;
+
+import freemarker.core.Environment;
+import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
+import info.magnolia.authoringui.AuthoringUiComponent;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.freemarker.models.ContentModel;
+
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $) 
+ */
+public abstract class AbstractDirective implements TemplateDirectiveModel {
+
+    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
+        final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        final AuthoringUiComponent uiComp = doExecute(serverConfiguration, aggregationState, env, params, loopVars, body);
+
+        uiComp.render(env.getOut());
+    }
+
+    protected abstract AuthoringUiComponent doExecute(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
+
+    protected String mandatoryString(Map params, String key) throws TemplateModelException {
+        return _param(params, key, TemplateScalarModel.class, true).getAsString();
+    }
+
+    protected String string(Map<String, TemplateModel> params, String key, String defaultValue) throws TemplateModelException {
+        final TemplateScalarModel m = _param(params, key, TemplateScalarModel.class, false);
+        if (m == null) { // we've already checked if the param is mandatory already
+            return defaultValue;
+        }
+        return m.getAsString();
+    }
+
+    protected boolean mandatoryBool(Map<String, TemplateModel> params, String key) throws TemplateModelException {
+        return _param(params, key, TemplateBooleanModel.class, true).getAsBoolean();
+    }
+
+    protected boolean bool(Map<String, TemplateModel> params, String key, boolean defaultValue) throws TemplateModelException {
+        final TemplateBooleanModel m = _param(params, key, TemplateBooleanModel.class, false);
+        if (m == null) {
+            return defaultValue;
+        }
+        return m.getAsBoolean();
+    }
+
+    protected Content mandatoryContent(Map<String, TemplateModel> params, String key) throws TemplateModelException {
+        return _param(params, key, ContentModel.class, true).asContent();
+    }
+
+    protected Content content(Map<String, TemplateModel> params, String key, Content defaultValue) throws TemplateModelException {
+        final ContentModel m = _param(params, key, ContentModel.class, false);
+        if (m == null) {
+            return defaultValue;
+        }
+        return m.asContent();
+    }
+
+    protected <MT extends TemplateModel> MT _param(Map<String, TemplateModel> params, String key, Class<MT> type, boolean isMandatory) throws TemplateModelException {
+        if (isMandatory && !params.containsKey(key)) {
+            throw new TemplateModelException("The '" + key + "' parameter is mandatory.");
+
+        }
+        final TemplateModel m = params.get(key);
+        if (m != null && !type.isAssignableFrom(m.getClass())) {
+            throw new TemplateModelException("The '" + key + "' parameter must be a " + type.getSimpleName() + " and is a " + m.getClass().getSimpleName() + ".");
+        }
+//        if (m == null && isMandatory) {
+        if (m == null && params.containsKey(key)) {
+            // parameter is passed but null value ... (happens with content.nonExistingSubNode apparently)
+            throw new TemplateModelException("The '" + key + "' parameter was passed but not or wrongly specified.");
+        }
+
+        return (MT) m;
+    }
+}
