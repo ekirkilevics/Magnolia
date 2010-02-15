@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -98,10 +99,11 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     public T newInstance() {
         if (getObservedObject() == null) {
             // TODO - replace this by a default implementation or some form of null proxy
-            log.debug("An instance of {} couldn't be loaded from {}:{} yet, returning null.", new Object[]{interf, repository, path});
+            // this only happens if load() did not set observedObject
+            log.warn("An instance of {} couldn't be loaded from {}:{} yet, returning null.", new Object[]{interf, repository, path});
             return null;
         }
-        
+
         return (T) new CglibProxyFactory().createDelegatorProxy(new ObjectProvider() {
             public Object getObject() {
                 return getObservedObject();
@@ -134,8 +136,23 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
                 log.error("Can't read configuration for " + interf + " from [" + repository + ":" + path + "], will return null.", e);
             }
         } else {
-            log.warn("Configuration for " + interf + " does not exist at [" + repository + ":" + path + "], will return null.");
+            log.debug("{} does not exist, will return a default implementation for {}.", path, interf);
+            instantiateDefault();
         }
+    }
+
+    protected void instantiateDefault() {
+        if (isConcrete(interf)) {
+            log.info("{} does not exist, will return a new instance of {}.", path, interf);
+            final ClassFactory classFactory = Classes.getClassFactory();
+            this.observedObject = classFactory.newInstance(interf);
+        } else {
+            log.warn("{} does not exist, default implementation for {} is unknown, will return null.", path, interf);
+        }
+    }
+
+    protected boolean isConcrete(Class<?> clazz) {
+        return !Modifier.isAbstract(clazz.getModifiers());
     }
 
     protected void onRegister(Content node) {
