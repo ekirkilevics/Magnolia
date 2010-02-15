@@ -82,7 +82,7 @@ public abstract class AbstractDelegatingTemplateLoader implements TemplateLoader
     }
 
     /**
-     * Implementations should return null if it is to early to instanciate the delegate.
+     * Implementations should return null if it is too early to instantiate the delegate.
      */
     protected abstract TemplateLoader newDelegate();
 
