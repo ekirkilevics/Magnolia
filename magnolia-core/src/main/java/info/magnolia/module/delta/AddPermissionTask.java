@@ -75,7 +75,7 @@ public class AddPermissionTask extends AbstractTask {
                 }
             }
             catch (UnsupportedOperationException e) {
-                ctx.warn("Can't update role \"" + roleName + "\" due to an unsupported operation exception. This is most likely the case if the roles are managed externaly.");
+                ctx.warn("Can't update role \"" + roleName + "\" due to an unsupported operation exception. This is most likely the case if the roles are managed externally.");
             }
         }
     }

@@ -67,7 +67,7 @@ public class AddRoleToGroupTask extends AbstractRepositoryTask {
                 group.addRole(roleName);
             }
             catch (UnsupportedOperationException e) {
-                ctx.warn("Can't add the role \"" + roleName + "\" to the \"" + groupName + "\" group due to an unsupported operation exception. This is most likely the case if the groups are managed externaly.");
+                ctx.warn("Can't add the role \"" + roleName + "\" to the \"" + groupName + "\" group due to an unsupported operation exception. This is most likely the case if the groups are managed externally.");
             }
         }
     }
