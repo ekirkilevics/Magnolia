@@ -607,6 +607,13 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("shared: overridden value - something from the context: chalala", ctx, "test.ftl");
     }
 
+    public void testCanAccessStaticMethodsOfSharedVariables() throws Exception {
+        // we still have to instantiate the class, but if it's registered as a sharedVariable, it has been instantiated by c2b anyhow
+        fmConfig.addSharedVariable("foo", new FooBar());
+        tplLoader.putTemplate("test.ftl", "Coco: ${foo.say('hello')}");
+        assertRendereredContentWithoutCheckingContext("Coco: FooBar says hello", new HashMap(), "test.ftl");
+    }
+
     private MockHierarchyManager prepareHM(MockContent page) {
         final MockContent root = new MockContent("foo");
         final MockContent bar = new MockContent("bar");
@@ -616,6 +623,12 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final MockHierarchyManager hm = new MockHierarchyManager();
         hm.getRoot().addContent(root);
         return hm;
+    }
+
+    public static class FooBar {
+        public static String say(String s) {
+            return FooBar.class.getSimpleName() + " says " + s;
+        }
     }
 
 }
