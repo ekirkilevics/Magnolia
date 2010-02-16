@@ -60,8 +60,9 @@ import org.slf4j.LoggerFactory;
 public class Default implements CachePolicy {
 
     private static final Logger log = LoggerFactory.getLogger(Default.class);
-
-    private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
+    
+//  MAGNOLIA-3074: commented out as the i18n filter currently resists behind the cache    
+//  private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
 
     private VoterSet voters;
 
@@ -119,9 +120,10 @@ public class Default implements CachePolicy {
         if (multiplehosts) {
             key = MgnlContext.getWebContext().getRequest().getServerName() + ":" + key;
         }
-        if(i18nContentSupport.isEnabled()){
-            key += ":" + i18nContentSupport.getLocale().toString();
-        }
+//        MAGNOLIA-3074: commented out as the i18n filter currently resists behind the cache        
+//        if(i18nContentSupport!= null && i18nContentSupport.isEnabled()){
+//            key += ":" + i18nContentSupport.getLocale().toString();
+//        }
 
         return key;
     }
