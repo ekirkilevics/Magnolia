@@ -103,6 +103,13 @@ public class TypeDescriptor {
     }
 
     /**
+     * @return true if this descriptor represents an map or collection, without a concrete type thereof.
+     */
+    public boolean needsDefaultMapping() {
+        return (isMap() || isCollection()) && (getType().isInterface() || getType().isArray());
+    }
+
+    /**
      * This method is not synchronized to avoid thread blocking, but the method guarantees that the returned map is not mutated afterward.
      */
     public Map<String, PropertyTypeDescriptor> getPropertyDescriptors() {

@@ -156,7 +156,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             }
         }
 
-        if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
+        if (typeDscr == null || typeDscr.needsDefaultMapping()) {
             if (typeDscr == null) {
                 log.debug("was not able to resolve type for node [{}] will use a map", node);
             }

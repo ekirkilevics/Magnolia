@@ -34,10 +34,17 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -309,5 +316,91 @@ public class Content2BeanTest extends MgnlTestCase {
         assertTrue(result.getSample() instanceof SampleEnum);
         assertEquals(SampleEnum.two, result.getSample());
 
+    }
+
+    public void testCanSpecifySpecificMapImplementation() throws Exception {
+        final Content node = makeNode("/foo/bar",
+                "/foo/bar.class=" + BeanWithMap.class.getName(),
+                "/foo/bar/beans.class=" + MyMap.class.getName(),
+                "/foo/bar/beans/a.class=" + SimpleBean.class.getName(),
+                "/foo/bar/beans/a.prop1=hello",
+                "/foo/bar/beans/b.class=" + SimpleBean.class.getName(),
+                "/foo/bar/beans/b.prop1=world");
+
+        final BeanWithMap res = (BeanWithMap) Content2BeanUtil.toBean(node, true);
+        // sanity checks:
+        assertNotNull(res);
+        final Map map = res.getBeans();
+        assertNotNull(map);
+        assertEquals("hello", ((SimpleBean) map.get("a")).getProp1());
+        assertEquals("world", ((SimpleBean) map.get("b")).getProp1());
+
+        // actual test:
+        assertTrue("we wanted a custom map impl!", map instanceof MyMap);
+    }
+
+    public void testCanSpecifySpecificCollectionImplementation() throws Exception {
+        final Content node = makeNode("/foo/bar",
+                "/foo/bar.class=" + BeanWithCollection.class.getName(),
+                // TODO MAGNOLIA-3088 "/foo/bar/beans.class=" + Vector.class.getName(),
+                "/foo/bar/beans/a.class=" + SimpleBean.class.getName(),
+                "/foo/bar/beans/a.prop1=hello",
+                "/foo/bar/beans/b.class=" + SimpleBean.class.getName(),
+                "/foo/bar/beans/b.prop1=world");
+
+        final BeanWithCollection res = (BeanWithCollection) Content2BeanUtil.toBean(node, true);
+        // sanity checks:
+        assertNotNull(res);
+        final Collection coll = res.getBeans();
+        assertNotNull(coll);
+        assertEquals(2, coll.size());
+        final Iterator it = coll.iterator();
+        final SimpleBean a = (SimpleBean) it.next();
+        final SimpleBean b = (SimpleBean) it.next();
+        assertNotSame(a, b);
+        assertFalse(a.getProp1().equals(b.getProp1()));
+        assertTrue("hello".equals(a.getProp1()) || "hello".equals(b.getProp1()));
+        assertTrue("world".equals(a.getProp1()) || "world".equals(b.getProp1()));
+
+        // actual test:
+        // TODO - MAGNOLIA-3088 assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
+    }
+
+    public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
+        final Content node = makeNode("/bar",
+                "/bar.class=" + BeanWithMap.class.getName(),
+                "/bar/beans.class=" + StupidMap.class.getName(),
+                "/bar/beans/a.class=" + SimpleBean.class.getName(),
+                "/bar/beans/a.prop1=hello",
+                "/bar/beans/b.class=" + SimpleBean.class.getName(),
+                "/bar/beans/b.prop1=world");
+
+        // TODO - forceCreation true by default - so we can't test via Content2BeanUtil.toBean() here
+        final Content2BeanProcessorImpl proc = (Content2BeanProcessorImpl) Content2BeanUtil.getContent2BeanProcessor();
+        proc.setForceCreation(false);
+        final Content2BeanTransformer trans = Content2BeanUtil.getContent2BeanTransformer();
+
+        try {
+            proc.toBean(node, true, trans);
+            fail("should have failed");
+        } catch (Content2BeanException t) {
+            assertEquals("Can't instantiate bean for /bar/beans", t.getMessage());
+            final String causeMsg = t.getCause().getMessage();
+            assertTrue(causeMsg.contains("StupidMap"));
+            assertTrue(causeMsg.contains("No concrete implementation defined"));
+        }
+    }
+
+    public static class MyMap extends HashMap {
+    }
+
+    public abstract static class StupidMap extends AbstractMap {}
+
+    private Content makeNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
+        return MockUtil.createHierarchyManager(propsStr(propertiesFormat)).getContent(returnFromPath);
+    }
+
+    private String propsStr(String... s) {
+        return StringUtils.join(Arrays.asList(s), "\n");
     }
 }
