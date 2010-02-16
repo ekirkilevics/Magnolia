@@ -35,11 +35,19 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
 import junit.framework.TestCase;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.collection.TransformedCollection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -169,6 +177,57 @@ public class MockContentTest extends TestCase {
         assertEquals(PropertyType.BINARY, bin.getType());
         assertEquals("some-data", IOUtils.toString(bin.getStream()));
         assertEquals("some-data", bin.getString());
+    }
+    
+    public void testOrderBefore() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" + 
+            "/node/c\n");
+        Content node = hm.getContent("/node");
+        node.orderBefore("c", "b");
+        Collection result = node.getChildren();
+        // transform to collection of names
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(Arrays.asList(new String[]{"a", "c","b"}), result);
+    }
+
+    public void testOrderBefore2() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" + 
+            "/node/c\n");
+        Content node = hm.getContent("/node");
+        node.orderBefore("a", "c");
+        Collection result = node.getChildren();
+        // transform to collection of names
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(Arrays.asList(new String[]{"b", "a","c"}), result);
+    }
+
+    public void testOrderBeforeFirstNode() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" + 
+            "/node/c\n");
+        Content node = hm.getContent("/node");
+        node.orderBefore("c", "a");
+        Collection result = node.getChildren();
+        // transform to collection of names
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(Arrays.asList(new String[]{"c", "a","b"}), result);
     }
 
 }

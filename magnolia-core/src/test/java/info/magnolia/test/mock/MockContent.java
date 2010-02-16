@@ -259,11 +259,23 @@ public class MockContent extends AbstractContent {
 
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         MockContent movedNode = children.get(srcName);
-        List<MockContent> tmp = new ArrayList<MockContent>(children.values());
-        tmp.remove(movedNode);
-        tmp.add(tmp.indexOf(children.get(beforeName)), movedNode);
+        List<MockContent> newOrder = new ArrayList<MockContent>();
+        
+        for (MockContent child : children.values()) {
+            if(child.getName().equals(srcName)){
+                // will be added before the beforeName
+            }
+            else if(child.getName().equals(beforeName)){
+                newOrder.add(movedNode);
+                newOrder.add(child);
+            }
+            else{
+                newOrder.add(child);
+            }
+        }
+        
         children.clear();
-        for (MockContent child : tmp) {
+        for (MockContent child : newOrder) {
             children.put(child.getName(), child);
         }
     }
