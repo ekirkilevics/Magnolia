@@ -33,6 +33,8 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.Version;
 import info.magnolia.setup.CoreModule;
 import junit.framework.TestCase;
 
@@ -85,5 +87,41 @@ public class ModuleRegistryImplTest extends TestCase {
         final CoreModule foo = (CoreModule) reg.getModuleInstance("foo");
         final CoreModule bar = (CoreModule) reg.getModuleInstance("bar");
         assertNotSame(foo, bar);
+    }
+
+    public void testThrowsExceptionForUnregisteredModuleName() {
+        final ModuleRegistryImpl reg = new ModuleRegistryImpl();
+        reg.registerModuleInstance("foo", new CoreModule());
+        reg.registerModuleInstance("bar", new CoreModule());
+        reg.registerModuleVersionHandler("bar", new DefaultModuleVersionHandler());
+        reg.registerModuleDefinition("bar", new ModuleDefinition("bar", Version.parseVersion("1.0"), "foo.bar", DefaultModuleVersionHandler.class));
+
+        try {
+            reg.getModuleInstance("chalala");
+            fail("should have thrown an exception, no module registered for this name");
+        } catch (IllegalArgumentException e) {
+            assertEquals("No module registered with name \"chalala\".", e.getMessage());
+        }
+        try {
+            reg.getDefinition("chalala");
+            fail("should have thrown an exception, no module registered for this name");
+        } catch (IllegalArgumentException e) {
+            assertEquals("No module registered with name \"chalala\".", e.getMessage());
+        }
+        try {
+            reg.getVersionHandler("chalala");
+            fail("should have thrown an exception, no module registered for this name");
+        } catch (IllegalArgumentException e) {
+            assertEquals("No module registered with name \"chalala\".", e.getMessage());
+        }
+    }
+
+    public void testCanCheckIfAModuleExists() {
+        final ModuleRegistryImpl reg = new ModuleRegistryImpl();
+        reg.registerModuleInstance("foo", new CoreModule());
+        reg.registerModuleInstance("bar", new CoreModule());
+
+        assertTrue(reg.isModuleRegistered("bar"));
+        assertFalse(reg.isModuleRegistered("chalala"));
     }
 }

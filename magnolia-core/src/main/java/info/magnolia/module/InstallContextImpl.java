@@ -127,7 +127,7 @@ public class InstallContextImpl implements InstallContext {
     }
 
     public boolean isModuleRegistered(String moduleName) {
-        return ModuleRegistry.Factory.getInstance().getDefinition(moduleName) != null;
+        return ModuleRegistry.Factory.getInstance().isModuleRegistered(moduleName);
     }
 
     public HierarchyManager getHierarchyManager(String workspace) {

@@ -52,10 +52,13 @@ public interface ModuleRegistry {
 
     void registerModuleVersionHandler(String name, ModuleVersionHandler moduleVersionHandler);
 
+    boolean isModuleRegistered(String name);
+
     /**
      * Returns the module's instance. This is useful for modules which use a common class (i.e content or theme modules, which
      * can typically co-exist in a system and have the same module class).
      * @see #getModuleInstance(Class) for a type-safer method to get module instances
+     * @throws IllegalArgumentException if no such module is registered.
      */
     Object getModuleInstance(String name);
 
@@ -65,8 +68,14 @@ public interface ModuleRegistry {
      */
     <T> T getModuleInstance(Class<T> moduleClass);
 
+    /**
+     * @throws IllegalArgumentException if no such module is registered.
+     */
     ModuleVersionHandler getVersionHandler(String name);
 
+    /**
+     * @throws IllegalArgumentException if no such module is registered.
+     */
     ModuleDefinition getDefinition(String name);
 
     /**

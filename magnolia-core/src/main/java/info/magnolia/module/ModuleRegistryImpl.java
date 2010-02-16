@@ -34,7 +34,6 @@
 package info.magnolia.module;
 
 import info.magnolia.module.model.ModuleDefinition;
-import org.apache.commons.collections.MapUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,31 +51,31 @@ public class ModuleRegistryImpl implements ModuleRegistry {
     private final Map<String, ModuleEntry> entries;
 
     public ModuleRegistryImpl() {
-        entries = MapUtils.lazyMap(new HashMap<String, ModuleEntry>(), new org.apache.commons.collections.Factory() {
-            public Object create() {
-                return new ModuleEntry();
-            }
-        });
+        entries = new HashMap<String, ModuleEntry>();
     }
 
     public void registerModuleDefinition(String name, ModuleDefinition moduleDefinition) {
-        entries.get(name).moduleDefinition = moduleDefinition;
+        getOrCreateModuleEntry(name).moduleDefinition = moduleDefinition;
     }
 
     public void registerModuleInstance(String name, Object moduleInstance) {
-        entries.get(name).moduleInstance = moduleInstance;
+        getOrCreateModuleEntry(name).moduleInstance = moduleInstance;
     }
 
     public void registerModuleVersionHandler(String name, ModuleVersionHandler moduleVersionHandler) {
-        entries.get(name).moduleVersionHandler = moduleVersionHandler;
+        getOrCreateModuleEntry(name).moduleVersionHandler = moduleVersionHandler;
+    }
+
+    public boolean isModuleRegistered(String name) {
+        return entries.containsKey(name);
     }
 
     public ModuleDefinition getDefinition(String name) {
-        return entries.get(name).moduleDefinition;
+        return safeGetModuleEntry(name).moduleDefinition;
     }
 
     public Object getModuleInstance(String name) {
-        return entries.get(name).moduleInstance;
+        return safeGetModuleEntry(name).moduleInstance;
     }
 
     public <T> T getModuleInstance(final Class<T> moduleClass) {
@@ -96,12 +95,34 @@ public class ModuleRegistryImpl implements ModuleRegistry {
     }
 
     public ModuleVersionHandler getVersionHandler(String name) {
-        return entries.get(name).moduleVersionHandler;
+        return safeGetModuleEntry(name).moduleVersionHandler;
     }
 
     public Set<String> getModuleNames() {
         return Collections.unmodifiableSet(entries.keySet());
     }
+
+    private ModuleEntry getOrCreateModuleEntry(String name) {
+        synchronized (entries) {
+            ModuleEntry moduleEntry = entries.get(name);
+            if (moduleEntry == null) {
+                moduleEntry = new ModuleEntry();
+                entries.put(name, moduleEntry);
+            }
+            return moduleEntry;
+        }
+    }
+
+    private ModuleEntry safeGetModuleEntry(String name) {
+        synchronized (entries) {
+            final ModuleEntry moduleEntry = entries.get(name);
+            if (moduleEntry == null) {
+                throw new IllegalArgumentException("No module registered with name \"" + name + "\".");
+            }
+            return moduleEntry;
+        }
+    }
+
 
     private static final class ModuleEntry {
 
