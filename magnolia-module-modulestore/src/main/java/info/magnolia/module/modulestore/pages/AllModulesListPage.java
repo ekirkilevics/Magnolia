@@ -95,7 +95,9 @@ public class AllModulesListPage extends TemplatedMVCHandler {
      */
     @Override
     public String show() {
-        remoteUrl = ModuleStoreModule.getInstance().getAllmoduleslisturl();
+        ModuleStoreModule moduleStore = (ModuleStoreModule) ModuleRegistry.Factory.getInstance().getModuleInstance(
+            "modulestore");
+        remoteUrl = moduleStore.getAllmoduleslisturl();
         JSONArray installedModules = new JSONArray();
         ModuleRegistry registry = ModuleRegistry.Factory.getInstance();
         List<String> moduleNames = new ArrayList<String>(registry.getModuleNames());

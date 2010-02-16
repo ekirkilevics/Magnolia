@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.modulestore;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,28 +40,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author dschivo
  */
-public class ModuleStoreModule implements ModuleLifecycle {
+public class ModuleStoreModule {
 
     private static final Logger log = LoggerFactory.getLogger(ModuleStoreModule.class);
 
-    private static ModuleStoreModule instance;
-
     private String allmoduleslisturl;
-
-    /**
-     * 
-     */
-    public ModuleStoreModule() {
-        instance = this;
-    }
-
-    /**
-     * Returns the instance.
-     * @return the instance
-     */
-    public static ModuleStoreModule getInstance() {
-        return instance;
-    }
 
     /**
      * Returns the allmoduleslisturl.
@@ -80,14 +60,6 @@ public class ModuleStoreModule implements ModuleLifecycle {
      */
     public void setAllmoduleslisturl(String allmoduleslisturl) {
         this.allmoduleslisturl = allmoduleslisturl;
-    }
-
-    public void start(ModuleLifecycleContext ctx) {
-        log.info("Starting module modulestore");
-    }
-
-    public void stop(ModuleLifecycleContext ctx) {
-        log.info("Stopping module modulestore");
     }
 
 }
