@@ -275,7 +275,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             }
             catch (Exception e) {
                 // do it better
-                log.error("can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "] due to {}", e.toString());
+                log.error("Can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "] for node " + state.getCurrentContent().getHandle() + " due to {}", e.toString());
+                log.debug("stacktrace", e);
             }
         }
 
@@ -291,7 +292,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
         } catch (Exception e) {
             // do it better
-            log.error("can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "] due to {}", e.toString());
+            log.error("Can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "] for node " + state.getCurrentContent().getHandle() + " due to {}", e.toString());
             log.debug("stacktrace", e);
         }
 
