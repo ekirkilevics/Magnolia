@@ -51,7 +51,7 @@ public class ModuleDefinition {
     private String displayName;
     private String description;
     private String className;
-    private Class<ModuleVersionHandler> versionHandler;
+    private Class<? extends ModuleVersionHandler> versionHandler;
     private Version version;
     private Collection<DependencyDefinition> dependencies = new ArrayList<DependencyDefinition>();
     private Collection<ServletDefinition> servlets = new ArrayList<ServletDefinition>();
@@ -61,7 +61,7 @@ public class ModuleDefinition {
     public ModuleDefinition() {
     }
 
-    public ModuleDefinition(String name, Version version, String className, Class<ModuleVersionHandler> versionHandler) {
+    public ModuleDefinition(String name, Version version, String className, Class<? extends ModuleVersionHandler> versionHandler) {
         this.name = name;
         this.version = version;
         this.className = className;
@@ -107,11 +107,11 @@ public class ModuleDefinition {
         this.className = className;
     }
 
-    public Class<ModuleVersionHandler> getVersionHandler() {
+    public Class<? extends ModuleVersionHandler> getVersionHandler() {
         return versionHandler;
     }
 
-    public void setVersionHandler(Class<ModuleVersionHandler> versionHandler) {
+    public void setVersionHandler(Class<? extends ModuleVersionHandler> versionHandler) {
         this.versionHandler = versionHandler;
     }
 

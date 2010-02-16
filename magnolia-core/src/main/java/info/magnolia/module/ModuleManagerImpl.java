@@ -201,7 +201,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
     protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
         try {
-            final Class<ModuleVersionHandler> versionHandlerClass = module.getVersionHandler();
+            final Class<? extends ModuleVersionHandler> versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
                 return Classes.getClassFactory().newInstance(versionHandlerClass);
             } else {
