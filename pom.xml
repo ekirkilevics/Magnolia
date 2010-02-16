@@ -638,17 +638,17 @@ for Java Content Repositories (JCR).
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
+    <module>magnolia-module-modulestore</module>
     <module>magnolia-module-exchange-simple</module>
-    <module>magnolia-module-mail</module>
+    <module>magnolia-module-fckeditor</module>
     <module>magnolia-module-admininterface</module>
-    <module>magnolia-module-templating</module>
-    <module>magnolia-module-workflow</module>
     <module>magnolia-module-cache</module>
-    <module>magnolia-authoring-ui</module>
+    <module>magnolia-templating-ui-components</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
-    <module>magnolia-module-fckeditor</module>
-    <module>magnolia-module-modulestore</module>
+    <module>magnolia-module-templating</module>
+    <module>magnolia-module-mail</module>
+    <module>magnolia-module-workflow</module>
     <module>magnolia-module-samples</module>
     <module>magnolia-empty-webapp</module>
   </modules>

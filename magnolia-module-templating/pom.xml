@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-authoring-ui</artifactId>
+      <artifactId>magnolia-templating-ui-components</artifactId>
       <version>4.3-SNAPSHOT</version>
     </dependency>
     <dependency>
