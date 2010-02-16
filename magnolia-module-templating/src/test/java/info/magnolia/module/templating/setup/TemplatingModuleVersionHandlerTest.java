@@ -61,8 +61,9 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
 
     // fixed by 4.0.3 or 4.1.1
     public void testPre4_0TemplatesAreFixedProperly() throws Exception {
-        // fake pre-install (old RenderingFilter fqn)
-        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter");
+        // fake pre-install
+        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
+        setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
 
         // setup a template, with pre-4.0 properties
         final String tplPath = "/modules/test/templates/myTemplate";
@@ -88,8 +89,9 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
 
     // fixed by 4.0.3 or 4.1.1
     public void testMisfixedTemplatesFrom402AreFixed() throws Exception {
-        // fake pre-install (old RenderingFilter fqn)
-        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter");
+        // fake pre-install
+        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
+        setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
 
         // setup a template, with pre-4.0 properties
         final String tplPath = "/modules/test/templates/myTemplate";
@@ -115,8 +117,9 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
     }
 
     public void testSilentIfUserFixedTemplatesHimself() throws Exception {
-        // fake pre-install (old RenderingFilter fqn)
-        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter");
+        // fake pre-install
+        setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
+        setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
 
         // setup a template, with pre-4.0 properties
         final String tplPath = "/modules/test/templates/myTemplate";

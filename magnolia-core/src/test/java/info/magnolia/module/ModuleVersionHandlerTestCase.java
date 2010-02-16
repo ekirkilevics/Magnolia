@@ -90,7 +90,9 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     protected void setupProperty(final String workspace, String path, String propertyName, String value) throws RepositoryException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(workspace);
         final Content content = ContentUtil.createPath(hm, path);
-        NodeDataUtil.getOrCreateAndSet(content, propertyName, value);
+        if (propertyName != null) {
+            NodeDataUtil.getOrCreateAndSet(content, propertyName, value);
+        }
         hm.save();
     }
 
@@ -100,6 +102,22 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
      */
     protected void setupConfigProperty(String path, String propertyName, String value) throws RepositoryException {
         setupProperty(ContentRepository.CONFIG, path, propertyName, value);
+    }
+
+    /**
+     * Helper to set a property in the config workspace.
+     * @see #setupProperty(String, String, String, String)
+     */
+    protected void setupNode(String workspace, String path) throws RepositoryException {
+        setupProperty(workspace, path, null, null);
+    }
+    
+    /**
+     * Helper to create an empty node.
+     * @see #setupProperty(String, String, String, String)
+     */
+    protected void setupConfigNode(String path) throws RepositoryException {
+        setupNode(ContentRepository.CONFIG, path);
     }
 
     /**
@@ -155,7 +173,13 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         replay(readerMock);
 
         final ModuleVersionHandler versionHandlerUnderTest = newModuleVersionHandlerForTests();
-        final InstallContextImpl ctx = new InstallContextImpl();
+        final InstallContextImpl ctx = new InstallContextImpl() {
+            @Override
+            public void error(String message, Throwable th) {
+                // let's fail the test if we encounter a logged error, because ModuleManagerImpl.applyDeltas() swallows TaskExecutionException and RuntimeException and logs errors instead
+                fail(message);
+            }
+        };
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
         final DependencyChecker depCheck = new NullDependencyChecker();
         final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry, depCheck) {
