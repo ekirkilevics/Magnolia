@@ -289,7 +289,7 @@ public class ModuleManagerImpl implements ModuleManager {
         for (ModuleDefinition moduleDefinition : orderedModuleDescriptors) {
             final String moduleClassName = moduleDefinition.getClassName();
             final String moduleName = moduleDefinition.getName();
-            log.debug("Initializing module {}", moduleName);
+            log.info("Initializing module {}", moduleName);
 
             try {
                 // TODO : why would this return anything else than null ?
