@@ -149,6 +149,7 @@ public class PropertiesInitializer {
             loadModuleProperties(moduleDefinitions);
         }
         catch (ModuleManagementException e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e); // TODO
         }
     }
