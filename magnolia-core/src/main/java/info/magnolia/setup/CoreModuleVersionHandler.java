@@ -34,6 +34,7 @@
 package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AddMimeMappingTask;
@@ -41,6 +42,7 @@ import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.Condition;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
@@ -74,6 +76,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // TODO : why is this a BootstrapConditionally and not a BootstrapSingleResource ?
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
+    private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
+            ContentRepository.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
 
     public CoreModuleVersionHandler() {
         super();
@@ -152,6 +156,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(fixMimetype("png", "image/png;", "image/png"))
                 .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
         );
+
+        register(DeltaBuilder.update("4.3", "")
+                .addTask(addFreemarkerSharedVariables)
+        );
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
@@ -172,6 +180,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(new CheckNodesForMixVersionable());
         l.add(auditTrailManagerTask);
         l.add(bootstrapFreemarker);
+        l.add(addFreemarkerSharedVariables);
         return l;
     }
 
