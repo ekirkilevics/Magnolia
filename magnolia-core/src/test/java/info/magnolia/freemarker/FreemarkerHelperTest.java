@@ -234,10 +234,10 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testNumberProperties() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
-        foo.addNodeData(new MockNodeData("along", new Long(1234567890123456789l)));
-        foo.addNodeData(new MockNodeData("adouble", new Double(12345678.901234567890d)));
+        foo.addNodeData(new MockNodeData("aLong", new Long(1234567890123456789l)));
+        foo.addNodeData(new MockNodeData("aDouble", new Double(12345678.901234567890d)));
         c.addContent(foo);
-        tplLoader.putTemplate("test.ftl", "${foo['along']} , ${foo.adouble}");
+        tplLoader.putTemplate("test.ftl", "${foo['aLong']} , ${foo.aDouble}");
         // ! TODO ! this is locale dependent
         assertRendereredContent("1,234,567,890,123,456,789 , 12,345,678.901", c, "test.ftl");
     }
@@ -367,7 +367,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my title"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
         assertRendereredContent("evaluated result: This is my title", m, "test.ftl");
@@ -381,7 +381,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my ${content.other} title"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
         assertRendereredContent("evaluated result: This is my other-value title", m, "test.ftl");
@@ -395,7 +395,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my ${content.other}"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
         assertRendereredContent("evaluated result: This is my other-value", m, "test.ftl");
@@ -408,7 +408,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my plain title"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("content", c);
 
         assertRendereredContent("evaluated title: This is my plain title", m, "test.ftl");
@@ -510,13 +510,13 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         verify(user);
     }
 
-    public void testNodeNameCanBeRenderedImplicitely() throws Exception {
+    public void testNodeNameCanBeRenderedImplicitly() throws Exception {
         tplLoader.putTemplate("test.ftl", "This should output the node's name: ${content}");
         final Map root = createSingleValueMap("content", new MockContent("myNode"));
         assertRendereredContent("This should output the node's name: myNode", root, "test.ftl");
     }
 
-    public void testNodeNameCanBeRenderedExplicitely() throws Exception {
+    public void testNodeNameCanBeRenderedExplicitly() throws Exception {
         tplLoader.putTemplate("test.ftl", "This should also output the node's name: ${content.@name}");
         final Map root = createSingleValueMap("content", new MockContent("myOtherNode"));
         assertRendereredContent("This should also output the node's name: myOtherNode", root, "test.ftl");
