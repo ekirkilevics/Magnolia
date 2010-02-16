@@ -127,7 +127,7 @@ public abstract class AbstractNodeData implements NodeData{
             if (!pathOrUUID.startsWith("/") && node.hasContent(pathOrUUID)) {
                 refNode = node.getContent(pathOrUUID);
             }
-            else if (hm.isExist(pathOrUUID)){
+            else if (pathOrUUID.startsWith("/") && hm.isExist(pathOrUUID)){
                 refNode = hm.getContent(pathOrUUID);
             }
 
