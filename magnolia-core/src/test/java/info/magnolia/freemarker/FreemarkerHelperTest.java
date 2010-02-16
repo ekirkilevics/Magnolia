@@ -614,6 +614,23 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("Coco: FooBar says hello", new HashMap(), "test.ftl");
     }
 
+    public void testEnums() throws Exception {
+        fmConfig.addSharedVariable("chalala", Chalala.class);
+        // TODO : not really
+        // tplLoader.putTemplate("test.ftl", "3: ${chalala.three}");
+        // TODO, but:
+        tplLoader.putTemplate("test.ftl", "list enum values: [#list chalala.enumConstants as val]${val} [/#list]");
+
+        assertRendereredContentWithoutCheckingContext("list enum values: one two three ", new HashMap(), "test.ftl");
+    }
+
+    public void testCanAccessEnumPropertiesOfVariables() throws Exception {
+        fmConfig.addSharedVariable("shared", new EnumContainer(Chalala.two));
+        final Map ctx = createSingleValueMap("fromContext", new EnumContainer(Chalala.one));
+        tplLoader.putTemplate("test.ftl", "shared: ${shared.chalala} - from context: ${fromContext.chalala}");
+        assertRendereredContentWithoutCheckingContext("shared: two - from context: one", ctx, "test.ftl");
+    }
+
     private MockHierarchyManager prepareHM(MockContent page) {
         final MockContent root = new MockContent("foo");
         final MockContent bar = new MockContent("bar");
@@ -628,6 +645,22 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public static class FooBar {
         public static String say(String s) {
             return FooBar.class.getSimpleName() + " says " + s;
+        }
+    }
+
+    public enum Chalala {
+        one, two, three
+    }
+
+    public static class EnumContainer {
+        private final Chalala c;
+
+        public EnumContainer(Chalala c) {
+            this.c = c;
+        }
+
+        public Chalala getChalala() {
+            return c;
         }
     }
 
