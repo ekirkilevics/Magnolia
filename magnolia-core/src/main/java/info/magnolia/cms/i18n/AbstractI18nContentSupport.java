@@ -120,11 +120,18 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
         locale = onDetermineLocale();
 
+        // depending on the implementation the returned local can be null (not definded)
         if(locale == null){
             locale = getDefaultLocale();
         }
+        // if we have a local but it is not supported we try to get the closest local
         if(!isLocaleSupported(locale)){
             locale = getNextLocale(locale);
+        }
+        // instead of returning the content fallback language
+        // we are going to return the default locale which might differ
+        if(locale.equals(getFallbackLocale())){
+            locale = getDefaultLocale();
         }
         return locale;
     }
