@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>Installed modules</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+body#mgnl {
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+table td {
+  font-family: Verdana,sans-serif;
+  font-size: 11px;
+  height: 20px;
+  padding: 0 8px;
+  border-left: 1px solid #D8EFB6;
+}
+
+table tr.odd td {
+  background-color: #EDF3EE;
+}
+
+table thead td {
+  font-weight: bold;
+  border-left: 1px solid #ADBC61;
+  background: transparent url('${this.request.contextPath}/.resources/controls/list/headerBackgroundGreen.gif') repeat-x scroll left top;
+}
+
+table td.icon {
+  border-left: 0;
+  width: 16px;
+}
+    </style>
+  </head>
+  <body id="mgnl">
+    <table>
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Display name</td>
+          <td>Description</td>
+          <td>Version</td>
+        </tr>
+      </thead>
+      [#list this.installedModules as def]
+        <tr>
+          <td>${def.name!''}</td>
+          <td>${def.displayName!''}</td>
+          <td>${def.description!''}</td>
+          <td>${def.version!''}</td>
+        </tr>
+      [/#list]
+    </table>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>All modules</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+body#mgnl {
+  margin: 0;
+  padding: 0;
+}
+    </style>
+    <script type="text/javascript">
+function loadModules(){
+  document.getElementById('loadModulesForm').submit();
+}
+    </script>
+  </head>
+  <body id="mgnl" onload="setTimeout(loadModules, 1000);">
+    <form id="loadModulesForm" action="${this.remoteUrl}" method="post">
+      <div>
+        <input type="hidden" name="postdata" value="${this.postdata}" />
+      </div>
+    </form>
+    <div style="display: block; width: 400px; background-color: #999; margin: 50px auto; text-align: center;">
+      <h2>Contacting server...</h2>
+      <img src="${this.request.contextPath}/.resources/admin-images/loading.gif" alt="Loading..." />
+    </div>
+  </body>
+</html>

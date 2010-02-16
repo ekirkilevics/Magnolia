@@ -648,6 +648,7 @@ for Java Content Repositories (JCR).
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
     <module>magnolia-module-fckeditor</module>
+    <module>magnolia-module-modulestore</module>
     <module>magnolia-module-samples</module>
     <module>magnolia-empty-webapp</module>
   </modules>
