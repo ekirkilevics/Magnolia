@@ -38,6 +38,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
@@ -57,7 +58,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new CoreModuleVersionHandler() {
             // cheat - one of the conditions needs web.xml. Can't be bothered to fake that here
-            protected List getInstallConditions() {
+            protected List<Condition> getInstallConditions() {
                 return Collections.emptyList();
             }
         };

@@ -70,7 +70,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        // this should disable observation for audit logging (mgnl-beans.properties registers a path for this componenent)
+        // this should disable observation for audit logging (mgnl-beans.properties registers a path for this component)
         ComponentsTestUtil.setInstance(AuditLoggingManager.class, new AuditLoggingManager());
     }
 
@@ -117,9 +117,9 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
      * Asserts that the install context contains one single message, with the expected contents and priority.
      */
     protected void assertSingleMessage(InstallContext installContext, String expectedMessage, InstallContext.MessagePriority expectedPriority) {
-        final Map messages = installContext.getMessages();
+        final Map<String, List<InstallContext.Message>> messages = installContext.getMessages();
         assertEquals(1, messages.size());
-        final List<InstallContext.Message> messagesForModule = (List<InstallContext.Message>) messages.values().iterator().next();
+        final List<InstallContext.Message> messagesForModule = messages.values().iterator().next();
         assertEquals(1, messagesForModule.size());
         final InstallContext.Message msg = messagesForModule.get(0);
         assertEquals(expectedMessage, msg.getMessage());
@@ -167,7 +167,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
                         return currentlyInstalledVersion;
                     }
 
-                    public List getDeltas(InstallContext installContext, Version from) {
+                    public List<Delta> getDeltas(InstallContext installContext, Version from) {
                         return versionHandlerUnderTest.getDeltas(installContext, from);
                     }
 
@@ -178,9 +178,9 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
             }
         };
 
-        final List<ModuleDefinition> defs = mm.loadDefinitions();
-        assertEquals(1, defs.size());
-        assertEquals(moduleDefinition, defs.get(0));
+        final List<ModuleDefinition> definitions = mm.loadDefinitions();
+        assertEquals(1, definitions.size());
+        assertEquals(moduleDefinition, definitions.get(0));
 
         mm.checkForInstallOrUpdates();
         assertTrue(mm.getStatus().needsUpdateOrInstall());
@@ -222,11 +222,11 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
     private static class NullDependencyChecker implements DependencyChecker {
         public void checkDependencies(Map<String, ModuleDefinition> moduleDefinitions) throws ModuleDependencyException {
-            return;
+            // do nothing
         }
 
         public List<ModuleDefinition> sortByDependencyLevel(Map<String, ModuleDefinition> moduleDefinitions) {
-            return new ArrayList(moduleDefinitions.values());
+            return new ArrayList<ModuleDefinition>(moduleDefinitions.values());
         }
     }
 }
