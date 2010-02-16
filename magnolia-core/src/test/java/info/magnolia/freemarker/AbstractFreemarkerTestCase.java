@@ -62,11 +62,13 @@ import static org.easymock.EasyMock.*;
 public abstract class AbstractFreemarkerTestCase extends TestCase {
     protected StringTemplateLoader tplLoader;
     protected FreemarkerHelper fmHelper;
+    protected FreemarkerConfig fmConfig;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        final FreemarkerConfig fmConfig = new FreemarkerConfig();
+        fmConfig = new FreemarkerConfig();
+        fmConfig.getTemplateLoaders().clear();
         fmConfig.addTemplateLoader(tplLoader);
 
 //        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmConfig);

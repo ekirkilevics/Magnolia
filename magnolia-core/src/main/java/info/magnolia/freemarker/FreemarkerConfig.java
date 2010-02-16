@@ -37,12 +37,16 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.freemarker.models.MagnoliaModelFactory;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Observed bean holding Freemarker configuration. Not to be confused with
@@ -67,8 +71,8 @@ public class FreemarkerConfig {
      * The MagnoliaModelFactory implementations explicitly registered by modules.
      */
     private final List<MagnoliaModelFactory> registeredModelFactories;
-
     private final List<TemplateLoader> templateLoaders;
+    private final Map<String, TemplateModel> sharedVariables;
 
     private MagnoliaObjectWrapper objectWrapper;
     private TemplateLoader multiTL;
@@ -76,6 +80,7 @@ public class FreemarkerConfig {
     public FreemarkerConfig() {
         this.registeredModelFactories = new ArrayList<MagnoliaModelFactory>();
         this.templateLoaders = new ArrayList<TemplateLoader>();
+        this.sharedVariables = new HashMap<String, TemplateModel>();
     }
 
     public ObjectWrapper getObjectWrapper() {
@@ -114,4 +119,15 @@ public class FreemarkerConfig {
         this.templateLoaders.add(templateLoader);
     }
 
+    public Map<String, TemplateModel> getSharedVariables() {
+        return sharedVariables;
+    }
+
+    public void addSharedVariable(String name, Object value) throws TemplateModelException {
+        addSharedVariable(name, getObjectWrapper().wrap(value));
+    }
+
+    public void addSharedVariable(String name, TemplateModel value) {
+        sharedVariables.put(name, value);
+    }
 }

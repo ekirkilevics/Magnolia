@@ -592,6 +592,21 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithSpecifiedLocale("result: bling:one, bling:two, bling:three", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
+    public void testCanUseSharedVariables() throws Exception {
+        fmConfig.addSharedVariable("mySharedVar", "default value");
+        tplLoader.putTemplate("test.ftl", "shared: ${mySharedVar} - something from the context: ${foobar}");
+        final Map ctx = createSingleValueMap("foobar", "chalala");
+        assertRendereredContentWithoutCheckingContext("shared: default value - something from the context: chalala", ctx, "test.ftl");
+    }
+
+    public void testContextVariablesOverloadSharedVariables() throws Exception {
+        fmConfig.addSharedVariable("mySharedVar", "default value");
+        tplLoader.putTemplate("test.ftl", "shared: ${mySharedVar} - something from the context: ${foobar}");
+        final Map ctx = createSingleValueMap("foobar", "chalala");
+        ctx.put("mySharedVar", "overridden value");
+        assertRendereredContentWithoutCheckingContext("shared: overridden value - something from the context: chalala", ctx, "test.ftl");
+    }
+
     private MockHierarchyManager prepareHM(MockContent page) {
         final MockContent root = new MockContent("foo");
         final MockContent bar = new MockContent("bar");

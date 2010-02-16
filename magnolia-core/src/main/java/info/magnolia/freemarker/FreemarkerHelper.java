@@ -58,6 +58,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A generic helper to render Content instances with Freemarker templates.
@@ -85,8 +86,24 @@ public class FreemarkerHelper {
         this(Components.getSingleton(FreemarkerConfig.class));
     }
 
-    public FreemarkerHelper(FreemarkerConfig freemarkerConfig) {
-        this.cfg = new Configuration();
+    public FreemarkerHelper(final FreemarkerConfig freemarkerConfig) {
+        this.cfg = new Configuration() {
+            @Override
+            public Set getSharedVariableNames() {
+                final Set names = super.getSharedVariableNames();
+                names.addAll(freemarkerConfig.getSharedVariables().keySet());
+                return names;
+            }
+
+            @Override
+            public TemplateModel getSharedVariable(String name) {
+                final TemplateModel value = super.getSharedVariable(name);
+                if (value==null) {
+                    return freemarkerConfig.getSharedVariables().get(name);
+                }
+                return value;
+            }
+        };
 
         // delegators to FreemarkerConfig
         cfg.setTemplateLoader(new ConfigDelegatingTemplateLoader(freemarkerConfig));
