@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.freemarker;
+package info.magnolia.templatinguicomponents.freemarker;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -39,8 +39,8 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
-import info.magnolia.authoringui.AuthoringUiComponent;
-import info.magnolia.authoringui.components.NewParagraphBar;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.NewParagraphBar;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;

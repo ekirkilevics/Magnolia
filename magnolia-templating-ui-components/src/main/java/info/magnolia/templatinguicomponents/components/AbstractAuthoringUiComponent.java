@@ -31,9 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.components;
+package info.magnolia.templatinguicomponents.components;
 
-import info.magnolia.authoringui.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;

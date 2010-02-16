@@ -31,19 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.jsp;
+package info.magnolia.templatinguicomponents.components;
 
-import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+
+import java.io.IOException;
 
 /**
+ * This describes a simple "edit" button which will open a given dialog for a given content node.
+ * The dialog name is not deduced.
+ * TODO - except maybe for page info? although in that case we're looking at the main bar.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarTagTest extends AbstractJspTest {
+public class OpenDialogButton extends AbstractAuthoringUiComponent {
+    private String dialogName;
 
-    @Override
-    void check(WebResponse response) throws Exception {
-        final String result = response.getText();
-        // TODO assertEquals("not testing yet", "...", result);
+    public OpenDialogButton(ServerConfiguration server, AggregationState aggregationState) {
+        super(server, aggregationState);
+    }
+
+    public void setDialogName(String dialogName) {
+        this.dialogName = dialogName;
+    }
+
+    public void doRender(Appendable out) throws IOException {
+        out.append("This is a").append(getClass().getSimpleName()).append(" for dialog ").append(dialogName).append(" for node ").append(String.valueOf(getTarget()));
     }
 }

@@ -31,20 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.authoringui;
-
-import java.io.IOException;
+package info.magnolia.templatinguicomponents.freemarker;
 
 /**
- * ---
- * TODO doc - Implementations should be immutable. (cacheable instances - per use?)
- * Or not necessarily - short-lived - the freemarker directives can be long lived.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public interface AuthoringUiComponent {
+public class EditParagraphBarDirectiveTest extends AbstractDirectiveTest {
 
-    void render(Appendable out) throws IOException;
+    public void testRenderSimpleBar() throws Exception {
+        final String result = renderForTest("[@ui.edit label='hello' description='hello woooorld'/]");
+
+        // TODO assertEquals("..not testing yet..", result);
+    }
 
 }

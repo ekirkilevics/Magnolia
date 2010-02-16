@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.freemarker;
+package info.magnolia.templatinguicomponents.freemarker;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;

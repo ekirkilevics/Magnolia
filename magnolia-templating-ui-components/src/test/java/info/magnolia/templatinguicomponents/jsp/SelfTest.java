@@ -31,52 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.jsp;
+package info.magnolia.templatinguicomponents.jsp;
 
-import info.magnolia.authoringui.components.EditParagraphBar;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-import java.io.IOException;
+import com.meterware.httpunit.WebResponse;
 
 /**
- *
- * @jsp.tag name="editBar" body-content="empty"
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public class EditParagraphBarTag extends SimpleTagSupport {
-    private String label;
-    private String description;
+public class SelfTest extends AbstractJspTest {
 
-    /**
-     * @jsp.attribute required="true" rtexprvalue="true"
-     */
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    /**
-     * @jsp.attribute required="true" rtexprvalue="true"
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public void doTag() throws JspException, IOException {
-        final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final EditParagraphBar bar = new EditParagraphBar(serverConfiguration, aggregationState);
-//        bar.setLabel(label);
-//        bar.setDescription(description);
-//        if (target != null) {
-//            bar.setTarget(target);
-//        }
-        bar.render(getJspContext().getOut());
+    public void check(WebResponse response) throws Exception {
+        final String txt = response.getText();
+        assertTrue(txt.contains("Hello world!"));
     }
 }

@@ -31,19 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.freemarker;
+package info.magnolia.templatinguicomponents.jsp;
+
+import com.meterware.httpunit.WebResponse;
 
 /**
- *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarDirectiveTest extends AbstractDirectiveTest {
+public class EditParagraphBarTagTest extends AbstractJspTest {
 
-    public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.edit label='hello' description='hello woooorld'/]");
-
-        // TODO assertEquals("..not testing yet..", result);
+    @Override
+    void check(WebResponse response) throws Exception {
+        final String result = response.getText();
+        // TODO assertEquals("not testing yet", "...", result);
     }
-
 }

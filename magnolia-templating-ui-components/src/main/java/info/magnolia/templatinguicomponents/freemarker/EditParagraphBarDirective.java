@@ -31,14 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.freemarker;
+package info.magnolia.templatinguicomponents.freemarker;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.authoringui.AuthoringUiComponent;
-import info.magnolia.authoringui.components.EditParagraphBar;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.EditParagraphBar;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;

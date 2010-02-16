@@ -31,14 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.jsp;
+package info.magnolia.templatinguicomponents.jsp;
 
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
-import info.magnolia.authoringui.jsp.test4web.TestServletOptions;
+import info.magnolia.templatinguicomponents.jsp.test4web.TestServletOptions;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.AccessManager;
@@ -63,7 +63,7 @@ import static org.easymock.EasyMock.*;
 
 /**
  * Subclass this and create a corresponding .jsp
- * (i.e for info.magnolia.authoringui.jsp.FooBarTest.java, create a info/magnolia/authoringui/jsp/FooBarTest.jsp)
+ * (i.e for info.magnolia.templatinguicomponents.jsp.FooBarTest.java, create a info/magnolia/templatinguicomponents/jsp/FooBarTest.jsp)
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 

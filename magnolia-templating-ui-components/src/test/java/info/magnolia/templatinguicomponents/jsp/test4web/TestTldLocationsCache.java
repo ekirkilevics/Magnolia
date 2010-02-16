@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.jsp.test4web;
+package info.magnolia.templatinguicomponents.jsp.test4web;
 /**
  *
  * Openutils web test utils (http://www.openmindlab.com/lab/products/testing4web.html)

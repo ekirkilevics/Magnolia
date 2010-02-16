@@ -31,33 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.authoringui.components;
-
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
+package info.magnolia.templatinguicomponents;
 
 import java.io.IOException;
 
 /**
- * This describes a simple "edit" button which will open a given dialog for a given content node.
- * The dialog name is not deduced.
- * TODO - except maybe for page info? although in that case we're looking at the main bar.
+ * ---
+ * TODO doc - Implementations should be immutable. (cacheable instances - per use?)
+ * Or not necessarily - short-lived - the freemarker directives can be long lived.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision: $ ($Author: $) 
  */
-public class OpenDialogButton extends AbstractAuthoringUiComponent {
-    private String dialogName;
+public interface AuthoringUiComponent {
 
-    public OpenDialogButton(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
-    }
+    void render(Appendable out) throws IOException;
 
-    public void setDialogName(String dialogName) {
-        this.dialogName = dialogName;
-    }
-
-    public void doRender(Appendable out) throws IOException {
-        out.append("This is a").append(getClass().getSimpleName()).append(" for dialog ").append(dialogName).append(" for node ").append(String.valueOf(getTarget()));
-    }
 }
