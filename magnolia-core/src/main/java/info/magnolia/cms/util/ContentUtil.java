@@ -316,6 +316,35 @@ public class ContentUtil {
         return nodes;
     }
 
+    /**
+     * Convenient method to order a node before a target node.
+     */
+    public static void orderBefore(Content nodeToMove, String targetNodeName) throws RepositoryException{
+        nodeToMove.getParent().orderBefore(nodeToMove.getName(), targetNodeName);
+    }
+
+    /**
+     * Convenient method for ordering a node after a specific target node. This is not that simple as jcr only supports ordering before a node.
+     */
+    public static void orderAfter(Content nodeToMove, String targetNodeName) throws RepositoryException{
+        Content parent = nodeToMove.getParent();
+        
+        Collection<Content> children = new ArrayList(ContentUtil.getAllChildren(parent));
+        // move all nodes before nodeToMove until the target node has been moved to
+        // this will keep the original order
+        for (Content child : children) {
+            // don't reorder the node we are moving. we are moving the other nodes infront of it
+            if(child.getName().equals(nodeToMove.getName())){
+                continue;
+            }
+            // order the current child in front of the target node --> 
+            parent.orderBefore(child.getName(), nodeToMove.getName());
+            if(child.getName().equals(targetNodeName)){
+                break;
+            }
+        }
+    }
+    
     public static void orderNodes(Content node, String[] nodes) throws RepositoryException{
         for (int i = nodes.length - 1; i > 0; i--) {
             node.orderBefore(nodes[i-1], nodes[i]);

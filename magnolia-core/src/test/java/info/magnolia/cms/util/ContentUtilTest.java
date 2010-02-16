@@ -39,13 +39,19 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.ArrayUtils;
+
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -136,6 +142,40 @@ public class ContentUtilTest extends RepositoryTestCase {
         ContentUtil.copyInSession(src, "/gugu");
         assertTrue(hm.isExist("/gugu"));
         assertTrue(hm.isExist("/gugu/subnode"));
+    }
+    
+    public void testOrderAfter() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" + 
+            "/node/c\n");
+        Content node = hm.getContent("/node");
+        Content a = node.getContent("a");
+        ContentUtil.orderAfter(a, "b");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(Arrays.asList(new String[]{"b", "a","c"}), result);
+    }
+
+    public void testOrderAfterLastNode() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" + 
+            "/node/c\n");
+        Content node = hm.getContent("/node");
+        Content a = node.getContent("a");
+        ContentUtil.orderAfter(a, "c");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(Arrays.asList(new String[]{"b", "c","a"}), result);
     }
 
     private final static class ContentTypeRejector implements Content.ContentFilter {
