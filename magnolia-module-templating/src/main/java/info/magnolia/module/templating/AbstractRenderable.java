@@ -79,7 +79,7 @@ public class AbstractRenderable implements RenderableDefinition {
      */
     public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         try {
-            final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), MODEL_CONSTRUCTOR_TYPES, content, definition, parentModel);
+            final RenderingModel model = Classes.getClassFactory().newInstance(getModelClass(), new Class[]{Content.class, definition.getClass(), RenderingModel.class}, content, definition, parentModel);
             final Map<String, String> params = MgnlContext.getParameters();
             if (params != null) {
                 BeanUtils.populate(model, params);

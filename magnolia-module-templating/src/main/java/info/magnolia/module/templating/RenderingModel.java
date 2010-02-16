@@ -44,7 +44,7 @@ import info.magnolia.cms.core.Content;
  * @author pbracher
  * @version $Id$
  */
-public interface RenderingModel {
+public interface RenderingModel <RD extends RenderableDefinition> {
 
     /**
      * The model of the parent paragraph or template.
@@ -59,7 +59,7 @@ public interface RenderingModel {
     /**
      * The renderable (paragraph/template) tied to this model.
      */
-    public RenderableDefinition getDefinition();
+    public RD getDefinition();
 
     /**
      * Called after all properties were set. Can return a string which is passed

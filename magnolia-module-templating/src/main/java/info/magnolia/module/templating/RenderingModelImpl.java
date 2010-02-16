@@ -41,12 +41,12 @@ import info.magnolia.cms.core.Content;
  * @version $Id$
  *
  */
-public class RenderingModelImpl implements RenderingModel {
+public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel {
     protected final RenderingModel parentModel;
     protected final Content content;
-    protected final RenderableDefinition definition;
+    protected final RD definition;
 
-    public RenderingModelImpl(Content content, RenderableDefinition definition, RenderingModel parent) {
+    public RenderingModelImpl(Content content, RD definition, RenderingModel parent) {
         this.content = content;
         this.definition = definition;
         this.parentModel = parent;
@@ -71,11 +71,11 @@ public class RenderingModelImpl implements RenderingModel {
     /**
      * Shortname for templates: model.def
      */
-    public RenderableDefinition getDef() {
+    public RD getDef() {
         return getDefinition();
     }
 
-    public RenderableDefinition getDefinition() {
+    public RD getDefinition() {
         return this.definition;
     }
 
