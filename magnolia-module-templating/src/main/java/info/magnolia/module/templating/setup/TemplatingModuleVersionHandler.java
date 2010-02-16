@@ -42,15 +42,20 @@ import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.module.templating.setup.for4_0.FixTemplatePathTask;
 import info.magnolia.module.templating.setup.for4_0.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
+import info.magnolia.nodebuilder.task.ErrorHandling;
+import info.magnolia.nodebuilder.task.NodeBuilderTask;
+import info.magnolia.templatinguicomponents.freemarker.Directives;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import static info.magnolia.nodebuilder.Ops.*;
 
 
 /**
@@ -60,6 +65,14 @@ import java.util.List;
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
     private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatiblity filter", "", ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
+    private final NodeBuilderTask installTemplatingUiComponents = new NodeBuilderTask("New templating UI components", "Registers new UI components for templating.", ErrorHandling.strict,
+            ContentRepository.CONFIG, "/server/rendering/freemarker",
+            getNode("sharedVariables").then(
+                    addNode("ui", ItemType.CONTENTNODE).then(
+                            addProperty("class", Directives.class.getName())
+                    )
+            )
+    );
 
     public TemplatingModuleVersionHandler() {
         register(DeltaBuilder.update("3.5", "")
@@ -107,11 +120,16 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
         );
 
+        register(DeltaBuilder.update("4.3", "")
+                .addTask(installTemplatingUiComponents)
+        );
+
     }
 
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        final ArrayList tasks = new ArrayList();
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(orderBackwardCompatibilityFilter);
+        tasks.add(installTemplatingUiComponents);
         // TODO : make sure the RenderingFilter is the last one ?
         return tasks;
     }

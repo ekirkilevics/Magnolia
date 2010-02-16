@@ -126,6 +126,6 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
 
     protected Map contextWithDirectives() {
         // this is the only thing we expect rendering engines to do: added the directives to the rendering context
-        return createSingleValueMap("ui", new Directives().newDirectives());
+        return createSingleValueMap("ui", new Directives());
     }
 }

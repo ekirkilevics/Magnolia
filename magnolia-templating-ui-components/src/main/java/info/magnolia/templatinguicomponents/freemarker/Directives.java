@@ -36,18 +36,15 @@ package info.magnolia.templatinguicomponents.freemarker;
 import freemarker.template.TemplateDirectiveModel;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
- *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
-public class Directives {
-    public Map<String, TemplateDirectiveModel> newDirectives() {
-        return new HashMap<String, TemplateDirectiveModel>() {{
-            put("edit", new EditParagraphBarDirective());
-            put("new", new NewParagraphBarDirective());
-        }};
+public class Directives extends HashMap<String, TemplateDirectiveModel> {
+    public Directives() {
+        super();
+        put("edit", new EditParagraphBarDirective());
+        put("new", new NewParagraphBarDirective());
     }
 }
