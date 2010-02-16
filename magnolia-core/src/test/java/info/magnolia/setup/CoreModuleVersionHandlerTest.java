@@ -73,7 +73,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom35x() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -90,7 +90,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom35xWithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a 3pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -107,7 +107,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom364() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -132,7 +132,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testPngSwfMimeTypesOnUpdateFrom364WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -150,8 +150,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom401() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -176,8 +177,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom401WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -196,8 +198,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -222,8 +225,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom410WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
-        setupConfigProperty("server/rendering/linkResolver", "foo", "bar");
+        setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
