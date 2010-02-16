@@ -79,6 +79,22 @@ public class ModuleRegistryImpl implements ModuleRegistry {
         return entries.get(name).moduleInstance;
     }
 
+    public <T> T getModuleInstance(final Class<T> moduleClass) {
+        T module = null;
+        for (ModuleEntry m : entries.values()) {
+            if (m.moduleInstance != null && moduleClass.isAssignableFrom(m.moduleInstance.getClass())) {
+                if (module != null) {
+                    throw new IllegalArgumentException("Multiple modules registered with " + moduleClass.toString() + ".");
+                }
+                module = (T) m.moduleInstance;
+            }
+        }
+        if (module != null) {
+            return module;
+        }
+        throw new IllegalArgumentException("No module registered with " + moduleClass.toString() + ".");
+    }
+
     public ModuleVersionHandler getVersionHandler(String name) {
         return entries.get(name).moduleVersionHandler;
     }
