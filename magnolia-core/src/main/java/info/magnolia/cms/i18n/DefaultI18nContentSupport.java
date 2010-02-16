@@ -53,7 +53,7 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
      */
     protected String toI18NURI(String uri, Locale locale) {
         // don't extend the uri for the default fallback language
-        if(locale.equals(getFallbackLocale())){
+        if(locale.equals(getDefaultLocale())){
             return uri;
         }
         

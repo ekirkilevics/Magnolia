@@ -39,7 +39,6 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -62,9 +61,14 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     private static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
 
     /**
-     * English is the default fallback language.
+     * The content is served for this locale if the the content is not available for the current locale
      */
     private Locale fallbackLocale = new Locale("en");
+
+    /**
+     * If no locale can be determined the default locale will be set. If no default locale is defined the fallback locale is used. 
+     */
+    protected Locale defaultLocale;
 
     private boolean enabled = false;
 
@@ -117,7 +121,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         locale = onDetermineLocale();
 
         if(locale == null){
-            locale = getFallbackLocale();
+            locale = getDefaultLocale();
         }
         if(!isLocaleSupported(locale)){
             locale = getNextLocale(locale);
@@ -242,5 +246,16 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
             return StringUtils.isEmpty(NodeDataUtil.getValueString(nd));
         }
         return true;
+    }
+
+    public Locale getDefaultLocale() {
+        if(this.defaultLocale == null){
+            return getFallbackLocale();
+        }
+        return this.defaultLocale;
+    }
+
+    public void setDefaultLocale(Locale defaultLocale) {
+        this.defaultLocale = defaultLocale;
     }
 }

@@ -191,7 +191,9 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         dialog.setConfig("richE", richE); //$NON-NLS-1$
         dialog.setConfig("richEPaste", richEPaste); //$NON-NLS-1$
         dialog.setConfig("repository", repository); //$NON-NLS-1$
-        dialog.setConfig("locale", locale);
+        if (StringUtils.isNotEmpty(locale)) {
+            dialog.setConfig("locale", locale);
+        }
         
         I18nAuthoringSupport i18nAuthoringSupport = I18nAuthoringSupport.Factory.getInstance();
         i18nAuthoringSupport.i18nIze(dialog);

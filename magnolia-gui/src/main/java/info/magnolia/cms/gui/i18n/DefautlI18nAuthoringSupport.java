@@ -65,7 +65,7 @@ public class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
 
     public void i18nIze(Dialog dialog) {
         // TODO: should this be set in the aggregation state?
-        Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale"));
+        Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale", null));
         boolean isFallbackLanguage = i18nContentSupport.getFallbackLocale().equals(locale);
 
         if (isEnabled() && locale != null ) {
