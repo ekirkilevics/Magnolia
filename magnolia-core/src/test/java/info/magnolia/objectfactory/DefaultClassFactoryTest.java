@@ -76,22 +76,45 @@ public class DefaultClassFactoryTest extends TestCase {
         assertEquals("null7", classFactory.newInstance(FooBar.class, arr(String.class, Object.class), null, Long.valueOf(7)).getValue());
     }
 
-    public void testWillFailIfSignatureWrongSpecifiedEvenIfArgumentsCouldFit() {
+    //    MAGNOLIA-3082: use best match
+    public void testCanInstantiateWithBestMatchingConstructorWhenTheSignatureIsMorePrecise() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
+
+        try {
+            assertEquals("bingo7", classFactory.newInstance(FooBar.class, arr(String.class, Long.class), "bingo", Long.valueOf(7)).getValue());
+        }
+        catch (MgnlInstantiationException e) {
+            fail("It should have used the more generic constructor <init>(String, Object)");
+        }
+        
+        // it does not work if the types are less precise 
         try {
             assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(Object.class), "bingo").getValue());
             fail("should have failed");
-        } catch (MgnlInstantiationException e) {
+        }
+        catch (MgnlInstantiationException e) {
             // this is what we want
         }
 
-        try {
-            assertEquals("null7", classFactory.newInstance(FooBar.class, arr(String.class, Long.class), null, Long.valueOf(7)).getValue());
-            fail("should have failed");
-        } catch (MgnlInstantiationException e) {
-            // this is what we want
-        }
     }
+
+//    MAGNOLIA-3082: replaced by the test above    
+//    public void testWillFailIfSignatureWrongSpecifiedEvenIfArgumentsCouldFit() {
+//        final DefaultClassFactory classFactory = new DefaultClassFactory();
+//        try {
+//            assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(Object.class), "bingo").getValue());
+//            fail("should have failed");
+//        } catch (MgnlInstantiationException e) {
+//            // this is what we want
+//        }
+//
+//        try {
+//            assertEquals("null7", classFactory.newInstance(FooBar.class, arr(String.class, Long.class), null, Long.valueOf(7)).getValue());
+//            fail("should have failed");
+//        } catch (MgnlInstantiationException e) {
+//            // this is what we want
+//        }
+//    }
 
     public void testCanInstantiateWithSingleArgConstructorAndNullParamWhenSignatureIspecified() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();

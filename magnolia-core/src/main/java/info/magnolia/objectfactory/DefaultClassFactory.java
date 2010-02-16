@@ -64,7 +64,7 @@ public class DefaultClassFactory implements ClassFactory {
 
         return newInstance(c, params, new Invoker<T>() {
             public T invoke() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-                return (T) ConstructorUtils.invokeExactConstructor(c, params, argTypes);
+                return (T) ConstructorUtils.invokeConstructor(c, params, argTypes);
             }
         });
     }
