@@ -35,6 +35,11 @@ package info.magnolia.templatinguicomponents.freemarker;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.gui.i18n.DefautlI18nAuthoringSupport;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
+import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -62,6 +67,7 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
     private WebContext ctx;
     private AccessManager accessManager;
     protected MockHierarchyManager hm;
+    private HttpServletRequest req;
 
     @Override
     public void setUp() throws Exception {
@@ -99,14 +105,23 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
         expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
         expect(ctx.getContextPath()).andReturn("/lol").anyTimes();
         expect(ctx.getServletContext()).andStubReturn(createMock(ServletContext.class));
-        expect(ctx.getRequest()).andStubReturn(createMock(HttpServletRequest.class));
+        req = createMock(HttpServletRequest.class);
+        expect(ctx.getRequest()).andReturn(req).anyTimes();
+        expect(req.getAttribute(Sources.REQUEST_LINKS_DRAWN)).andReturn(Boolean.FALSE).times(0, 1);
+        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+        expectLastCall().times(0, 1);
+        expect(req.getContextPath()).andReturn("/ctx-path-from-req").anyTimes();
+
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefautlI18nAuthoringSupport());
+
         MgnlContext.setInstance(ctx);
-        replay(ctx, accessManager);
+        replay(accessManager, ctx, req);
     }
 
     @Override
     public void tearDown() throws Exception {
-        verify(ctx, accessManager);
+        verify(accessManager, ctx, req);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();

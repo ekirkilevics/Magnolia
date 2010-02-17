@@ -31,23 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.templatinguicomponents.jsp;
-
-import com.meterware.httpunit.WebResponse;
+package info.magnolia.templatinguicomponents.freemarker;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarTagTest extends AbstractJspTest {
-
-    @Override
-    void check(WebResponse response) throws Exception {
-        final String result = response.getText();
-
-        // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
-        assertFalse(result.contains("<ui:"));
-
-        // TODO assertEquals("not testing yet", "...", result);
+public class EditPageBarDirectiveTest extends AbstractDirectiveTest {
+    public void testBasicRendering() throws Exception {
+        final String s = renderForTest("[@ui.main dialog='myDialog' /]");
+        // TODO assertEquals("... not testing yet... ", s);
     }
 }

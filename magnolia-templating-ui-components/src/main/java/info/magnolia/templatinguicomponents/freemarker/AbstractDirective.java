@@ -41,32 +41,42 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
-import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.models.ContentModel;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 
 import java.io.IOException;
 import java.util.Map;
 
 /**
- *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractDirective implements TemplateDirectiveModel {
 
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final AuthoringUiComponent uiComp = doExecute(serverConfiguration, aggregationState, env, params, loopVars, body);
+        final AuthoringUiComponent uiComp = prepareUIComponent(serverConfiguration, aggregationState, env, params, loopVars, body);
+
+        // prepareUIComponent should have removed the parameters it knows about.
+        if (!params.isEmpty()) {
+            throw new TemplateModelException("Unsupported parameter(s): " + params);
+        }
 
         uiComp.render(env.getOut());
     }
 
-    protected abstract AuthoringUiComponent doExecute(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
+    /**
+     * Implementations of this method should return a AuthoringUiComponent, prepared with the known parameters.
+     * If parameters have been grabbed using the methods provided by this class, they should be removed from
+     * the map, thus leaving an empty map once the method returns. {@link #execute(freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)}
+     * will throw a TemplateModelException if there are leftover parameters.
+     */
+    protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
 
     protected String mandatoryString(Map params, String key) throws TemplateModelException {
         return _param(params, key, TemplateScalarModel.class, true).getAsString();
@@ -105,18 +115,22 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
     }
 
     protected <MT extends TemplateModel> MT _param(Map<String, TemplateModel> params, String key, Class<MT> type, boolean isMandatory) throws TemplateModelException {
-        if (isMandatory && !params.containsKey(key)) {
+        final boolean containsKey = params.containsKey(key);
+        if (isMandatory && !containsKey) {
             throw new TemplateModelException("The '" + key + "' parameter is mandatory.");
 
         }
+        // can't remove here: in case of parameter-less directive call, FreeMarker passes a read-only Map.
         final TemplateModel m = params.get(key);
         if (m != null && !type.isAssignableFrom(m.getClass())) {
             throw new TemplateModelException("The '" + key + "' parameter must be a " + type.getSimpleName() + " and is a " + m.getClass().getSimpleName() + ".");
         }
-//        if (m == null && isMandatory) {
-        if (m == null && params.containsKey(key)) {
+        if (m == null && containsKey) {
             // parameter is passed but null value ... (happens with content.nonExistingSubNode apparently)
             throw new TemplateModelException("The '" + key + "' parameter was passed but not or wrongly specified.");
+        }
+        if (containsKey) {
+            params.remove(key);
         }
 
         return (MT) m;

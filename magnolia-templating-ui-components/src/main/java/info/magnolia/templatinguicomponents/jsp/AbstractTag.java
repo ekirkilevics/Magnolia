@@ -33,21 +33,32 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
-import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+import java.io.IOException;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarTagTest extends AbstractJspTest {
+public abstract class AbstractTag extends SimpleTagSupport {
 
-    @Override
-    void check(WebResponse response) throws Exception {
-        final String result = response.getText();
+    public void doTag() throws JspException, IOException {
+        final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        final AuthoringUiComponent uiComp = prepareUIComponent(serverConfiguration, aggregationState);
 
-        // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
-        assertFalse(result.contains("<ui:"));
-
-        // TODO assertEquals("not testing yet", "...", result);
+        uiComp.render(getJspContext().getOut());
     }
+
+    /**
+     * Validate parameters and return a ready-to-output instance of an AuthoringUiComponent.
+     */
+    protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException;
+
 }

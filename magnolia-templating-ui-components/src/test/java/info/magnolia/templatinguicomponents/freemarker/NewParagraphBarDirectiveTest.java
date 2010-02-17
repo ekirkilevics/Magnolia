@@ -33,6 +33,8 @@
  */
 package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.template.TemplateModelException;
+
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -46,6 +48,14 @@ public class NewParagraphBarDirectiveTest extends AbstractDirectiveTest {
     public void testCanPassASingleParagraphName() throws Exception {
         final String s = renderForTest("[@ui.new target=content paragraphs='foo' /]");
         // TODO assertEquals("..not testing yet..", s);
+    }
 
+    public void testParagraphsParamIsCurrentlyMandatory() throws Exception {
+        try {
+            renderForTest("[@ui.new target=content /]");
+            fail("should have failed");
+        } catch (TemplateModelException e) {
+            assertEquals("The 'paragraphs' parameter is mandatory.", e.getMessage());
+        }
     }
 }

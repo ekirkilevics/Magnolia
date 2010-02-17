@@ -39,11 +39,11 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
-import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.NewParagraphBar;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.NewParagraphBar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,45 +52,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class NewParagraphBarDirective extends AbstractDirective {
 
     @Override
-    protected AuthoringUiComponent doExecute(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-//        final String label = string(params, "label", null);
-//        final String description = string(params, "description", null);
-
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         final String newButtonLabel = string(params, "newLabel", null);
         final Content target = mandatoryContent(params, "target");
         final List<String> allowedParagraphs;
-        final TemplateModel model = params.get("paragraphs");
-        if (model == null) {
-            throw new TemplateModelException("The 'paragraphs' parameter is mandatory.");
-        }
-        if (model instanceof TemplateScalarModel) {
-            final String p = ((TemplateScalarModel) model).getAsString();
-            // TODO we could still support the string list here too ... 
-            allowedParagraphs = Collections.singletonList(p);
-        } else if (model instanceof TemplateSequenceModel) {
-            // TODO - also support TemplateCollectionModel with new CollectionAndSequence(model)
-
-            allowedParagraphs = new ArrayList<String>();
-
-            final TemplateSequenceModel seqModel = (TemplateSequenceModel) model;
-            for (int i = 0; i < seqModel.size(); i++) {
-                final TemplateModel tm = seqModel.get(i);
-                if (!(tm instanceof TemplateScalarModel)) {
-                    throw new TemplateModelException("The 'paragraphs' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
-                } else {
-                    allowedParagraphs.add(((TemplateScalarModel)tm).getAsString());
-                }
-            }
-        } else {
-            throw new TemplateModelException("paragraphs must be a String, a Collection of Strings. Found " + model.getClass().getSimpleName() + ".");
-        }
+        allowedParagraphs = stringList(params, "paragraphs");
 
         final NewParagraphBar bar = new NewParagraphBar(serverCfg, aggState);
 //        bar.setLabel(label);
@@ -106,5 +78,34 @@ public class NewParagraphBarDirective extends AbstractDirective {
         bar.setAllowedParagraphs(allowedParagraphs);
 
         return bar;
+    }
+
+    protected List<String> stringList(Map<String, TemplateModel> params, String key) throws TemplateModelException {
+        final TemplateModel model = _param(params, key, TemplateModel.class, true);
+//        if (model == null) {
+//            throw new TemplateModelException("The '" + key + "' parameter is mandatory.");
+//        }
+        if (model instanceof TemplateScalarModel) {
+            final String p = ((TemplateScalarModel) model).getAsString();
+            // TODO we could still support the string list here too ...
+            return Collections.singletonList(p);
+        } else if (model instanceof TemplateSequenceModel) {
+            // TODO - also support TemplateCollectionModel with new CollectionAndSequence(model)
+
+            final List<String> list = new ArrayList<String>();
+
+            final TemplateSequenceModel seqModel = (TemplateSequenceModel) model;
+            for (int i = 0; i < seqModel.size(); i++) {
+                final TemplateModel tm = seqModel.get(i);
+                if (!(tm instanceof TemplateScalarModel)) {
+                    throw new TemplateModelException("The '" + key + "' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
+                } else {
+                    list.add(((TemplateScalarModel) tm).getAsString());
+                }
+            }
+            return list;
+        } else {
+            throw new TemplateModelException(key + " must be a String, a Collection of Strings. Found " + model.getClass().getSimpleName() + ".");
+        }
     }
 }

@@ -31,33 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.templatinguicomponents.components;
+package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.EditPageBar;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
- * This describes a simple "edit" button which will open a given dialog for a given content node.
- * The dialog name is not deduced.
- * TODO - except maybe for page info? although in that case we're looking at the main bar.
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class OpenDialogButton extends AbstractAuthoringUiComponent {
-    private String dialogName;
+public class EditPageBarDirective extends AbstractDirective {
+    @Override
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        final String editButtonLabel = string(params, "editLabel", null);
+        final String dialogName = mandatoryString(params, "dialog");
 
-    public OpenDialogButton(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
-    }
+        final EditPageBar bar = new EditPageBar(serverCfg, aggState);
+        if (editButtonLabel != null) {
+            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
+            bar.setEditButtonLabel(editButtonLabel);
+        }
+        bar.setDialogName(dialogName);
 
-    public void setDialogName(String dialogName) {
-        this.dialogName = dialogName;
-    }
-
-    public void doRender(Appendable out) throws IOException {
-        out.append("This is a").append(getClass().getSimpleName()).append(" for dialog ").append(dialogName).append(" for node ").append(String.valueOf(getTarget()));
+        return bar;
     }
 }

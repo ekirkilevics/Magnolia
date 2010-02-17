@@ -33,50 +33,81 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
-import info.magnolia.templatinguicomponents.components.EditParagraphBar;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.core.Content;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.EditParagraphBar;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 
 /**
+ * TODO - parameter type conversions !?
  *
- * @jsp.tag name="editBar" body-content="empty"
+ * @jsp.tag name="edit" body-content="empty"
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public class EditParagraphBarTag extends SimpleTagSupport {
-    private String label;
-    private String description;
+public class EditParagraphBarTag extends AbstractTag {
+    private String editButtonLabel;
+    private boolean enableMoveButton = true;
+    private boolean enableDeleteButton = true;
+    private String specificDialogName;
+    private Content target;
 
     /**
-     * @jsp.attribute required="true" rtexprvalue="true"
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
-    public void setLabel(String label) {
-        this.label = label;
+    public void setEditLabel(String editLabel) {
+        this.editButtonLabel = editLabel;
     }
 
     /**
-     * @jsp.attribute required="true" rtexprvalue="true"
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
-    public void setDescription(String description) {
-        this.description = description;
+    public void setMove(boolean move) {
+        this.enableMoveButton = move;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setDelete(boolean delete) {
+        this.enableDeleteButton = delete;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setDialog(String dialog) {
+        this.specificDialogName = dialog;
+    }
+
+    public void setTarget(Content target) {
+        this.target = target;
     }
 
     @Override
-    public void doTag() throws JspException, IOException {
-        final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final EditParagraphBar bar = new EditParagraphBar(serverConfiguration, aggregationState);
-//        bar.setLabel(label);
-//        bar.setDescription(description);
-//        if (target != null) {
-//            bar.setTarget(target);
-//        }
-        bar.render(getJspContext().getOut());
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
+        // TODO - this is copied from EditParagraphBarDirective; can't we do better ?
+        final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
+        if (target != null) {
+            bar.setTarget(target);
+        }
+
+        if (specificDialogName != null) {
+            bar.setSpecificDialogName(specificDialogName);
+        }
+
+        if (editButtonLabel != null) {
+            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
+            bar.setEditButtonLabel(editButtonLabel);
+        }
+        bar.setEnableMoveButton(enableMoveButton);
+        bar.setEnableDeleteButton(enableDeleteButton);
+
+        return bar;
     }
 }

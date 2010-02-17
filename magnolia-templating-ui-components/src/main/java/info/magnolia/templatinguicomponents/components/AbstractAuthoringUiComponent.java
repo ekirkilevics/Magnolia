@@ -33,11 +33,11 @@
  */
 package info.magnolia.templatinguicomponents.components;
 
-import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 
 import java.io.IOException;
 
@@ -46,13 +46,16 @@ import java.io.IOException;
  * Implementions should expose setter for their specific parameters. No getters needed.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractAuthoringUiComponent implements AuthoringUiComponent {
     private final ServerConfiguration server;
     private final AggregationState aggregationState;
-//    private String label;
-//    private String description;
+
+    /** Currently no need for generic label/description
+     private String label;
+     private String description;
+     */
     private Content target;
 
     protected AbstractAuthoringUiComponent(final ServerConfiguration server, final AggregationState aggregationState) {
@@ -61,21 +64,23 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         this.target = defaultTarget();
     }
 
-//    protected String getLabel() {
-//        return label;
-//    }
-//
-//    public void setLabel(String label) {
-//        this.label = label;
-//    }
-//
-//    protected String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
+    /** Currently no need for generic label/description
+     protected String getLabel() {
+     return label;
+     }
+
+     public void setLabel(String label) {
+     this.label = label;
+     }
+
+     protected String getDescription() {
+     return description;
+     }
+
+     public void setDescription(String description) {
+     this.description = description;
+     }
+     */
 
     protected Content getTarget() {
         return target;

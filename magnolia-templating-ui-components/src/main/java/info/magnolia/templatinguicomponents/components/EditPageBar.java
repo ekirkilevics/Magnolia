@@ -35,8 +35,10 @@ package info.magnolia.templatinguicomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.gui.inline.BarMain;
 
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * This describes the "main bar" for pages. This typically renders a bar to be placed on top of pages, with a
@@ -44,16 +46,38 @@ import java.io.IOException;
  * enabled), and a "back to AdminCentral" button if relevant.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class EditPageBar extends AbstractAuthoringUiComponent {
+    private String dialogName;
+    private String editButtonLabel = "buttons.properties";
+
     public EditPageBar(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
     }
 
+    public void setDialogName(String dialogName) {
+        this.dialogName = dialogName;
+    }
+
+    public void setEditButtonLabel(String editButtonLabel) {
+        this.editButtonLabel = editButtonLabel;
+    }
+
     protected void doRender(Appendable out) throws IOException {
-        
-        throw new IllegalStateException("not implemented yet ");
+
+        final BarMain bar = new BarMain();
+        bar.setPath(getTarget().getHandle());
+
+        // TODO - deduce dialog from context...?
+        bar.setDialog(dialogName);
+
+        bar.setAdminButtonVisible(true);
+        bar.setDefaultButtons();
+        bar.getButtonProperties().setLabel(editButtonLabel);
+
+        bar.placeDefaultButtons();
+        bar.drawHtml((Writer) out);
     }
 
 }

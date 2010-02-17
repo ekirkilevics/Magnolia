@@ -66,39 +66,28 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
     @Override
     protected void doRender(Appendable out) throws IOException {
         final BarNew bar = new BarNew();
-        bar.setPath(getTarget().getHandle());
 
         bar.setParagraph(allowedParagraphsAsString());
 //        if (StringUtils.isBlank(bar.getParagraph())) {
 //            log.warn("No paragraph selected for new bar in {}", pageContext.getPage());
+        // don't set new button's label if there's no selectable paragraph
 //        }
 
-//        bar.setNodeCollectionName(this.contentNodeCollectionName);
-//        bar.setNodeName(contentNodeName); //$NON-NLS-1$
+        final String targetPath = getTarget().getHandle();
+        final String lastPortionPath = targetPath.substring(targetPath.lastIndexOf('/') + 1);
+        bar.setPath(targetPath);
+//        bar.setNodeCollectionName(lastPortionPath);
+        bar.setNodeName("mgnlNew"); // one of the quirks we'll have to get rid of.
 
         bar.setDefaultButtons();
 
-//        if (this.getNewLabel() != null) {
-//            if (StringUtils.isEmpty(this.getNewLabel())) {
-//                bar.setButtonNew(null);
-//            } else if (StringUtils.isNotBlank(paragraph)) {
-                 // don't set new button's label if there's no selectable paragraph
-//                bar.getButtonNew().setLabel(this.getNewLabel());
-//            }
-//        }
-//
-//        if (buttonRight != null) {
-//            bar.getButtonsRight().addAll(buttonRight);
-//        }
-//        if (buttonLeft != null) {
-//            bar.getButtonsLeft().addAll(buttonLeft);
-//        }
+        bar.getButtonNew().setLabel(newButtonLabel);
 
         bar.placeDefaultButtons();
         bar.drawHtml((Writer) out);
     }
 
     private String allowedParagraphsAsString() {
-        return StringUtils.join(allowedParagraphs,',');
+        return StringUtils.join(allowedParagraphs, ',');
     }
 }

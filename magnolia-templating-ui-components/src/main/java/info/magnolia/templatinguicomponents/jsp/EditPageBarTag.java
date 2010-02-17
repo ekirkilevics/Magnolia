@@ -33,21 +33,22 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
-import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+
+import javax.servlet.jsp.JspException;
+import java.io.IOException;
 
 /**
+ * @jsp.tag name="main" body-content="empty"
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarTagTest extends AbstractJspTest {
-
+public class EditPageBarTag extends AbstractTag {
     @Override
-    void check(WebResponse response) throws Exception {
-        final String result = response.getText();
-
-        // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
-        assertFalse(result.contains("<ui:"));
-
-        // TODO assertEquals("not testing yet", "...", result);
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
+        throw new IllegalStateException("not implemented yet !");
     }
 }

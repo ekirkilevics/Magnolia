@@ -84,9 +84,17 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
             bar.setParagraph(paragraphTemplateName);
         }
 
-//        TODO ? bar.setNodeCollectionName(this.nodeCollectionName);
-//        TODO ? bar.setNodeName(this.nodeName);
-        bar.setPath(getTarget().getHandle());
+        final String targetPath = getTarget().getHandle();
+
+        bar.setPath(targetPath);
+
+        // needed for delete and/or move ? - todo : delete still doesn't work - might need to fix the path variable too
+        final int lastSlash = targetPath.lastIndexOf('/');
+        final int secondLastSlash = targetPath.lastIndexOf('/', lastSlash - 1);
+        final String lastPortionPath = targetPath.substring(lastSlash + 1);
+        final String secondLastPortionPath = targetPath.substring(secondLastSlash + 1, lastSlash);
+        bar.setNodeCollectionName(secondLastPortionPath);
+        bar.setNodeName(lastPortionPath);
 
         bar.setDefaultButtons();
 
@@ -101,6 +109,8 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
         if (!enableDeleteButton) {
             bar.setButtonDelete(null);
         }
+
+        // TODO : display useful paragraph info (if we had the ParagraphDefinition instance, maybe ?)
 
         bar.placeDefaultButtons();
 

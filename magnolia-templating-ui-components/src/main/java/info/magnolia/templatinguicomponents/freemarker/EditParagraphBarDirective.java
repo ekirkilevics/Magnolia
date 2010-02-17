@@ -37,11 +37,11 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.EditParagraphBar;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.EditParagraphBar;
 
 import java.io.IOException;
 import java.util.Map;
@@ -54,25 +54,23 @@ import java.util.Map;
 public class EditParagraphBarDirective extends AbstractDirective {
 
     @Override
-    protected AuthoringUiComponent doExecute(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 //        final String label = string(params, "label", null);
 //        final String description = string(params, "description", null);
 
         final String editButtonLabel = string(params, "editLabel", null);
         final boolean enableMoveButton = bool(params, "move", true);
         final boolean enableDeleteButton = bool(params, "delete", true);
+        final String specificDialogName = string(params, "dialog", null);
         final Content target = content(params, "target", null);
 
-        // TODO - dialog param
-
-        // TODO - check for unsupported parameters ?
-
-        // TODO - get agg state from env ?
         final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
-//        bar.setLabel(label);
-//        bar.setDescription(description);
         if (target != null) {
             bar.setTarget(target);
+        }
+
+        if (specificDialogName != null) {
+            bar.setSpecificDialogName(specificDialogName);
         }
 
         if (editButtonLabel != null) {
