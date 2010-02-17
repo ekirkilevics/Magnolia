@@ -280,12 +280,12 @@ public class MailTemplate {
         props.put("mail.smtp.host", MailUtil.getParameter(getParameters(), MailConstants.SMTP_SERVER, (String)smtp.get(MailConstants.SMTP_SERVER)));
         props.put("mail.smtp.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
 
-        final String starttls = MailUtil.getParameter(smtp, MailConstants.SMTP_TLS, (String) smtp.get(MailConstants.SMTP_TLS));
+        final String starttls = MailUtil.getParameter(getParameters(), MailConstants.SMTP_TLS, (String) smtp.get(MailConstants.SMTP_TLS));
         if ("true".equals(starttls)) {
             //MAGNOLIA-2420
             props.put("mail.smtp.starttls.enable", starttls);
         }
-        final String ssl = MailUtil.getParameter(smtp, MailConstants.SMTP_SSL, (String) smtp.get(MailConstants.SMTP_SSL));
+        final String ssl = MailUtil.getParameter(getParameters(), MailConstants.SMTP_SSL, (String) smtp.get(MailConstants.SMTP_SSL));
         if ("true".equals(ssl)) {
             //MAGNOLIA-2420
             props.put("mail.smtp.socketFactory.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
