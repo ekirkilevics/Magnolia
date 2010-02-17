@@ -82,7 +82,7 @@ public class ServerConfiguration {
         return Components.getSingleton(ServerConfiguration.class);
     }
 
-    public static final class InstanceFactory<T> extends ObservedComponentFactory<ServerConfiguration> {
+    public static final class InstanceFactory extends ObservedComponentFactory<ServerConfiguration> {
         public InstanceFactory() {
             super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
         }

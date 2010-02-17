@@ -45,7 +45,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -92,7 +91,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         rules.put(name, rule);
     }
 
-    public static final class InstanceFactory<T> extends ObservedComponentFactory<IPSecurityManager> {
+    public static final class InstanceFactory extends ObservedComponentFactory<IPSecurityManager> {
         public InstanceFactory() {
             super(ContentRepository.CONFIG, "/server/IPConfig", IPSecurityManager.class);
         }
@@ -104,13 +103,11 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
 
     public static final class IPSecurityManagerTransformer extends Content2BeanTransformerImpl {
 
-        public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+        public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
             final Object currentBean = state.getCurrentBean();
             if (currentBean instanceof IPSecurityManagerImpl) {
                 final IPSecurityManagerImpl ipSecMan = (IPSecurityManagerImpl) currentBean;
-                final Iterator it = values.values().iterator();
-                while (it.hasNext()) {
-                    final Object o = it.next();
+                for (Object o : values.values()) {
                     if (o instanceof Rule) {
                         final Rule rule = (Rule) o;
                         ipSecMan.addRule(rule.getIP(), rule);
