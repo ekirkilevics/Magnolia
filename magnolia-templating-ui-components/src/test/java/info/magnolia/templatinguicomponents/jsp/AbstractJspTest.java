@@ -40,6 +40,13 @@ import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.gui.i18n.DefautlI18nAuthoringSupport;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -138,7 +145,14 @@ public abstract class AbstractJspTest extends TestCase {
 
         // let's make sure we render stuff on an author instance
         aggState.setPreviewMode(false);
-        ServerConfiguration.getInstance().setAdmin(true);
+
+        final ServerConfiguration serverCfg = new ServerConfiguration();
+        serverCfg.setAdmin(true);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+        // register some default components used internally
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefautlI18nAuthoringSupport());
 
         ctx = createMock(WebContext.class);
         expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
@@ -155,6 +169,7 @@ public abstract class AbstractJspTest extends TestCase {
         verify(ctx, accessManager);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
+        SystemProperty.getProperties().clear();
 
         runner.shutDown();
         runner = null;

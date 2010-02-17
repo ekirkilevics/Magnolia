@@ -48,6 +48,8 @@ public class EditParagraphBarTagTest extends AbstractJspTest {
         // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
         assertFalse(result.contains("<ui:"));
 
+        System.out.println(result);
+
         // TODO assertEquals("not testing yet", "...", result);
     }
 }

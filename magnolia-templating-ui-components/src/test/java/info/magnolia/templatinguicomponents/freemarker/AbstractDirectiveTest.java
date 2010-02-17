@@ -35,11 +35,14 @@ package info.magnolia.templatinguicomponents.freemarker;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.i18n.DefautlI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -98,7 +101,13 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
 
         // let's make sure we render stuff on an author instance
         aggState.setPreviewMode(false);
-        ServerConfiguration.getInstance().setAdmin(true);
+        final ServerConfiguration serverCfg = new ServerConfiguration();
+        serverCfg.setAdmin(true);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+        // register some default components used internally
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefautlI18nAuthoringSupport());
 
         ctx = createMock(WebContext.class);
         expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
@@ -112,9 +121,6 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
         expectLastCall().times(0, 1);
         expect(req.getContextPath()).andReturn("/ctx-path-from-req").anyTimes();
 
-        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefautlI18nAuthoringSupport());
-
         MgnlContext.setInstance(ctx);
         replay(accessManager, ctx, req);
     }
@@ -124,6 +130,7 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
         verify(accessManager, ctx, req);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
+        SystemProperty.getProperties().clear();
         super.tearDown();
     }
 

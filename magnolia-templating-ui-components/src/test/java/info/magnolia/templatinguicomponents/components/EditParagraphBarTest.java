@@ -35,7 +35,12 @@ package info.magnolia.templatinguicomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.gui.i18n.DefautlI18nAuthoringSupport;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
@@ -73,13 +78,24 @@ public class EditParagraphBarTest extends TestCase {
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+        // register some default components used internally
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefautlI18nAuthoringSupport());
 
         final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggregationState);
         final StringWriter out = new StringWriter();
         bar.doRender(out);
 
         // TODO assertTrue(out.contains(....))
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        SystemProperty.getProperties().clear();
+        super.tearDown();
     }
 }
