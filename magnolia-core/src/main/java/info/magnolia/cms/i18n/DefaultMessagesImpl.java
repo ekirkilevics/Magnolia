@@ -122,7 +122,10 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
      * Iterate over the keys.
      */
     public Iterator keys() {
-        return IteratorUtils.asIterator(this.getBundle().getKeys());
+        ResourceBundle bundle = this.getBundle();
+        if(bundle != null) {
+            return IteratorUtils.asIterator(bundle.getKeys());
+        }
+        return IteratorUtils.EMPTY_ITERATOR;
     }
-
 }
