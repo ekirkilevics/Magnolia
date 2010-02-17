@@ -54,13 +54,13 @@ public class MultipartForm {
 
     private final Map<String, String[]> parameters;
 
-    private final Map documents;
+    private final Map<String, Document> documents;
 
     private final Map parameterList;
 
     public MultipartForm() {
         this.parameters = new Hashtable<String, String[]>();
-        this.documents = new Hashtable();
+        this.documents = new Hashtable<String, Document>();
         this.parameterList = new Hashtable();
     }
 
@@ -141,17 +141,17 @@ public class MultipartForm {
     }
 
     public Document getDocument(String name) {
-        return (Document) this.documents.get(name);
+        return this.documents.get(name);
     }
 
-    public Map getDocuments() {
+    public Map<String, Document> getDocuments() {
         return this.documents;
     }
 
     /**
      * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
      */
-    public Enumeration getParameterNames() {
-        return ((Hashtable) this.parameters).keys();
+    public Enumeration<String> getParameterNames() {
+        return ((Hashtable<String, String[]>) this.parameters).keys();
     }
 }
