@@ -42,6 +42,8 @@ import info.magnolia.importexport.PropertiesImportExport;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
 import static org.easymock.EasyMock.*;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +55,7 @@ import javax.jcr.observation.ObservationManager;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 
@@ -168,6 +171,19 @@ public class MockUtil {
     }
 
     /**
+     * Utility method similar to other create* methods; takes a vararg string argument to avoid concatening long strings and \n's.
+     * Creates a HierarchyManager based on the given properties, and the first argument is the path to the node which
+     * we want to get from this HierarchyManager.
+     */
+    public static Content createNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
+        return createHierarchyManager(propsStr(propertiesFormat)).getContent(returnFromPath);
+    }
+
+    private static String propsStr(String... s) {
+        return StringUtils.join(Arrays.asList(s), "\n");
+    }
+
+    /**
      * @deprecated use PropertiesImportExport.toProperties(hm);
      */
     public static Properties toProperties(HierarchyManager hm) throws Exception {
@@ -185,6 +201,5 @@ public class MockUtil {
         hm.setWorkspace(ws);
         replay(ws, om);
     }
-
 
 }

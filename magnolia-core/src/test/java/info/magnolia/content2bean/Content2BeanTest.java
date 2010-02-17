@@ -37,11 +37,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -319,7 +317,7 @@ public class Content2BeanTest extends MgnlTestCase {
     }
 
     public void testCanSpecifySpecificMapImplementation() throws Exception {
-        final Content node = makeNode("/foo/bar",
+        final Content node = MockUtil.createNode("/foo/bar",
                 "/foo/bar.class=" + BeanWithMap.class.getName(),
                 "/foo/bar/beans.class=" + MyMap.class.getName(),
                 "/foo/bar/beans/a.class=" + SimpleBean.class.getName(),
@@ -340,7 +338,7 @@ public class Content2BeanTest extends MgnlTestCase {
     }
 
     public void testCanSpecifySpecificCollectionImplementation() throws Exception {
-        final Content node = makeNode("/foo/bar",
+        final Content node = MockUtil.createNode("/foo/bar",
                 "/foo/bar.class=" + BeanWithCollection.class.getName(),
                 // TODO MAGNOLIA-3088 "/foo/bar/beans.class=" + Vector.class.getName(),
                 "/foo/bar/beans/a.class=" + SimpleBean.class.getName(),
@@ -367,7 +365,7 @@ public class Content2BeanTest extends MgnlTestCase {
     }
 
     public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
-        final Content node = makeNode("/bar",
+        final Content node = MockUtil.createNode("/bar",
                 "/bar.class=" + BeanWithMap.class.getName(),
                 "/bar/beans.class=" + StupidMap.class.getName(),
                 "/bar/beans/a.class=" + SimpleBean.class.getName(),
@@ -395,12 +393,4 @@ public class Content2BeanTest extends MgnlTestCase {
     }
 
     public abstract static class StupidMap extends AbstractMap {}
-
-    private Content makeNode(String returnFromPath, String... propertiesFormat) throws RepositoryException, IOException {
-        return MockUtil.createHierarchyManager(propsStr(propertiesFormat)).getContent(returnFromPath);
-    }
-
-    private String propsStr(String... s) {
-        return StringUtils.join(Arrays.asList(s), "\n");
-    }
 }
