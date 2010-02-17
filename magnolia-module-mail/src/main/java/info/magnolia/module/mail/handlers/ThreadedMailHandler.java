@@ -53,7 +53,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
 
     Logger log = LoggerFactory.getLogger(ThreadedMailHandler.class);
 
-    ArrayList emails = new ArrayList();
+    ArrayList<MgnlEmail> emails = new ArrayList<MgnlEmail>();
 
     MailThread thread; // can be replaced with a pool of thread someday
 
@@ -116,7 +116,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
                     MgnlEmail email = null;
                     synchronized (this) {
                         if (ThreadedMailHandler.this.emails.size() > 0) {
-                            email = (MgnlEmail) ThreadedMailHandler.this.emails.remove(0);
+                            email = ThreadedMailHandler.this.emails.remove(0);
                         }
                     }
                     if (email != null) {

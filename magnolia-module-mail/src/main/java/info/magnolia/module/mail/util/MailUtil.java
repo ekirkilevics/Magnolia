@@ -73,8 +73,8 @@ public class MailUtil {
     /**
      * Transforms a string name=value\r\nname=value.. into a hashmap
      */
-    public static Map convertToMap(String parameters) throws IOException {
-        Map map = new HashMap();
+    public static Map<String, String> convertToMap(String parameters) throws IOException {
+        Map<String, String> map = new HashMap<String, String>();
         ByteArrayInputStream string = new ByteArrayInputStream(parameters.getBytes());
         Properties props = new Properties();
         props.load(string);
@@ -82,7 +82,7 @@ public class MailUtil {
         Iterator iter = props.keySet().iterator();
         while (iter.hasNext()) {
             String key = (String) iter.next();
-            map.put(key, props.get(key));
+            map.put(key, (String) props.get(key));
         }
 
         return map;
@@ -92,22 +92,19 @@ public class MailUtil {
      * Creates a list with the documents uploaded in the form
      * @return
      */
-    public static List createAttachmentList() {
-        List attachments = new ArrayList();
+    public static List<MailAttachment> createAttachmentList() {
+        List<MailAttachment> attachments = new ArrayList<MailAttachment>();
          try {
              // get any possible attachment
              if(MgnlContext.getPostedForm() != null) {
-                 MultipartForm form = (MultipartForm) MgnlContext.getPostedForm();
-                 Map docs = form.getDocuments();
+                 MultipartForm form = MgnlContext.getPostedForm();
+                 Map<String, Document> docs = form.getDocuments();
 
-                 Iterator i = (Iterator) docs.entrySet().iterator();
-
-                 while (i.hasNext()) {
-                     Entry pairs = (Entry) i.next();
-                     Document doc = (Document) pairs.getValue();
+                 for (Entry<String, Document> entry : docs.entrySet()) {
+                     Document doc = entry.getValue();
 
                      if (doc != null) {
-                         attachments.add(new MailAttachment(doc.getFile().toURL(), (String) pairs.getKey()));
+                         attachments.add(new MailAttachment(doc.getFile().toURL(), entry.getKey()));
                      }
                  }
              }
@@ -118,11 +115,10 @@ public class MailUtil {
          return attachments;
      }
 
-    public static List createAttachmentList(Map parameters) {
-        List attachments = new ArrayList();
-        Iterator iterator = null;
+    public static List<MailAttachment> createAttachmentList(Map parameters) {
+        List<MailAttachment> attachments = new ArrayList<MailAttachment>();
         if(parameters.containsKey("attachments")) {
-            iterator = ((List)parameters.get("attachments")).iterator();
+            Iterator iterator = ((List)parameters.get("attachments")).iterator();
             while(iterator.hasNext()) {
                 String name = (String)iterator.next();
                 try {
@@ -216,9 +212,9 @@ public class MailUtil {
      * @return
      * @throws RepositoryException
      */
-    protected static Collection getAllUserNodes() throws RepositoryException {
+    protected static Collection<Content> getAllUserNodes() throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
-        Collection users = hm.getContent(Realm.REALM_ADMIN).getChildren(ItemType.USER);
+        Collection<Content> users = hm.getContent(Realm.REALM_ADMIN).getChildren(ItemType.USER);
         users.addAll(hm.getContent(Realm.REALM_SYSTEM).getChildren(ItemType.USER));
         return users;
     }
@@ -227,17 +223,17 @@ public class MailUtil {
         return user.getProperty("email");
     }
 
-    public static String getParameter(Map param, String name, String defaultValue) {
+    public static String getParameter(Map<String, String> param, String name, String defaultValue) {
 
         if(param != null && param.containsKey(name)) {
-          return (String) param.get(name);
+          return param.get(name);
         } else {
             return defaultValue;
         }
     }
 
     public static void logMail(Map params, String loggerName) {
-        Iterator i = (Iterator) params.entrySet().iterator();
+        Iterator i = params.entrySet().iterator();
         StringBuffer buf = new StringBuffer();
         while (i.hasNext()) {
             Entry pairs = (Entry) i.next();

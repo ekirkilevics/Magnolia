@@ -34,15 +34,10 @@
 package info.magnolia.module.mail;
 
 
-import info.magnolia.module.mail.MailConstants;
-import info.magnolia.module.mail.MailTemplate;
 import info.magnolia.module.mail.templates.MgnlEmail;
-
 import org.subethamail.wiser.WiserMessage;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  *

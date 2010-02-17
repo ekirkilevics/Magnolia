@@ -35,25 +35,20 @@ package info.magnolia.module.mail;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.module.mail.MailConstants;
-import info.magnolia.module.mail.MailModule;
-import info.magnolia.module.mail.MgnlMailFactory;
 import info.magnolia.module.mail.handlers.MgnlMailHandler;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
+import org.subethamail.wiser.Wiser;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.subethamail.wiser.Wiser;
 
 
 /**

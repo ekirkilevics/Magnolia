@@ -33,16 +33,13 @@
  */
 package info.magnolia.module.mail;
 
-import info.magnolia.module.mail.MailConstants;
-import info.magnolia.module.mail.MailTemplate;
 import info.magnolia.module.mail.templates.MailAttachment;
 import info.magnolia.module.mail.templates.MgnlEmail;
+import org.subethamail.wiser.WiserMessage;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.subethamail.wiser.WiserMessage;
 
 
 /**

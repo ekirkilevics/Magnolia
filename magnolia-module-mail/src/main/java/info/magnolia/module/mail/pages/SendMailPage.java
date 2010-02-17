@@ -42,6 +42,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.mail.MailModule;
+import info.magnolia.module.mail.MailTemplate;
 import info.magnolia.module.mail.commands.MailCommand;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,12 +73,12 @@ public class SendMailPage extends TemplatedMVCHandler {
         return VIEW_SHOW;
     }
 
-    public Iterator getTemplates() {
-        return (Iterator) MailModule.getInstance().getTemplatesConfiguration().iterator();
+    public Iterator<MailTemplate> getTemplates() {
+        return MailModule.getInstance().getTemplatesConfiguration().iterator();
     }
 
-    public Iterator getTypes() {
-        return (Iterator) MailModule.getInstance().getFactory().getRenderers().keySet().iterator();
+    public Iterator<String> getTypes() {
+        return MailModule.getInstance().getFactory().getRenderers().keySet().iterator();
     }
 
     public Messages getMessages() {

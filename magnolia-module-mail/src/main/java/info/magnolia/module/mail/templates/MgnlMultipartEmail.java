@@ -92,8 +92,8 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
 
             // Fetch the image and associate to part
             DataSource fds = url.getProtocol().startsWith("file:")
-                ? (DataSource) new FileDataSource(url.getFile())
-                : (DataSource) new URLDataSource(url);
+                ? new FileDataSource(url.getFile())
+                : new URLDataSource(url);
             // DataSource fd = new FileDataSource(file);
             messageBodyPart.setDataHandler(new DataHandler(fds));
             // Add a header to connect to the HTML
@@ -147,9 +147,9 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
         this.setContent(body, getContentType());
 
         // process the attachments
-        if (super.getTemplate().getAttachments() != null) {
-                setAttachments((List) super.getTemplate().getAttachments());
-
+        final List<MailAttachment> attachments = super.getTemplate().getAttachments();
+        if (attachments != null) {
+            setAttachments(attachments);
         }
     }
 

@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.mail.setup;
 
-import java.util.Iterator;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -82,11 +80,8 @@ public class MoveNodeContentTask extends AbstractRepositoryTask {
         Content newNode = hm.getContent(dest, true, type);
         hm.save();
 
-        Iterator iterator = hm.getContent(src).getChildren().iterator();
-
-        while (iterator.hasNext()) {
-            Content contentNode = (Content) iterator.next();
-            if(contentNode.hasNodeData("body")) {
+        for (Content contentNode : hm.getContent(src).getChildren()) {
+            if (contentNode.hasNodeData("body")) {
                 contentNode.createNodeData("templateFile", contentNode.getNodeData("body").getValue().getString());
                 contentNode.deleteNodeData("body");
                 hm.save();

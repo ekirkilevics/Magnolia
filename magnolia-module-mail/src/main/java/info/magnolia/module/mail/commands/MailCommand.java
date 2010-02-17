@@ -38,6 +38,7 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.mail.MailModule;
 import info.magnolia.module.mail.MailTemplate;
 import info.magnolia.module.mail.MgnlMailFactory;
+import info.magnolia.module.mail.templates.MailAttachment;
 import info.magnolia.module.mail.templates.MgnlEmail;
 import info.magnolia.module.mail.util.MailUtil;
 
@@ -75,12 +76,12 @@ public class MailCommand implements Command {
             String template = (String) ctx.get("mailTemplate");
             //get parameters from mail page parameter text area
             if(ctx.containsKey(MailTemplate.MAIL_PARAMETERS)) {
-                Map temp = MailUtil.convertToMap((String)ctx.get(MailTemplate.MAIL_PARAMETERS));
+                Map<String, String> temp = MailUtil.convertToMap((String)ctx.get(MailTemplate.MAIL_PARAMETERS));
                 ctx.putAll(temp);
             }
 
             //find attachments in parameters or form if we are using one
-            List attachments = null;
+            List<MailAttachment> attachments = null;
 
             if(ctx instanceof WebContext) {
                 attachments = MailUtil.createAttachmentList(((WebContext)ctx).getParameters());

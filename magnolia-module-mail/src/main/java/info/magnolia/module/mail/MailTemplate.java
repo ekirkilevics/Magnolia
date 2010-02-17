@@ -80,7 +80,7 @@ public class MailTemplate {
     private static final String MAIL_BCC = "bcc";
 
 
-    private Map parameters = new HashMap();
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     private List<MailAttachment> attachments = new ArrayList<MailAttachment>();
 
@@ -110,11 +110,11 @@ public class MailTemplate {
 
     }
 
-    public Map getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
     }
 
@@ -196,49 +196,49 @@ public class MailTemplate {
         this.cc = cc;
     }
 
-    public void setValues(Map params, List<MailAttachment> attachments) {
+    public void setValues(Map<String, String> params, List<MailAttachment> attachments) {
 
         if(params.containsKey(MAIL_TEMPLATE_FILE)) {
-            this.templateFile = (String) params.get(MAIL_TEMPLATE_FILE);
+            this.templateFile = params.get(MAIL_TEMPLATE_FILE);
         }
 
         if(params.containsKey(MAIL_CONTENT_TYPE)) {
-            this.contentType = (String) params.get(MAIL_CONTENT_TYPE);
+            this.contentType = params.get(MAIL_CONTENT_TYPE);
         }
 
         if(params.containsKey(MAIL_FROM)) {
-            this.from = (String) params.get(MAIL_FROM);
+            this.from = params.get(MAIL_FROM);
         }
 
         if(params.containsKey(MAIL_SUBJECT)) {
-            this.subject = (String) params.get(MAIL_SUBJECT);
+            this.subject = params.get(MAIL_SUBJECT);
         }
 
         if(params.containsKey(MAIL_TO)) {
-            this.to = (String) params.get(MAIL_TO);
+            this.to = params.get(MAIL_TO);
         }
         if(params.containsKey(MailTemplate.MAIL_TO_WORKFLOW)) {
-            this.to = (String)params.get(MailTemplate.MAIL_TO_WORKFLOW);
+            this.to = params.get(MailTemplate.MAIL_TO_WORKFLOW);
         }
 
         if(params.containsKey(MAIL_CC)) {
-            this.cc = (String) params.get(MAIL_CC);
+            this.cc = params.get(MAIL_CC);
         }
 
         if(params.containsKey(MAIL_TYPE)) {
-            this.type = (String) params.get(MAIL_TYPE);
+            this.type = params.get(MAIL_TYPE);
         }
 
         if(params.containsKey(MAIL_BODY)) {
-            this.text = (String) params.get(MAIL_BODY);
+            this.text = params.get(MAIL_BODY);
         }
 
         if(params.containsKey(MAIL_REPLY_TO)) {
-            this.replyTo = (String) params.get(MAIL_REPLY_TO);
+            this.replyTo = params.get(MAIL_REPLY_TO);
         }
 
         if(params.containsKey(MAIL_BCC)) {
-            this.bcc = (String) params.get(MAIL_BCC);
+            this.bcc = params.get(MAIL_BCC);
         }
 
         this.parameters.putAll(params);
@@ -274,28 +274,28 @@ public class MailTemplate {
 
     public Session initSession() {
 
-        Map smtp = MailModule.getInstance().getSmtp();
+        Map<String, String> smtp = MailModule.getInstance().getSmtp();
         Properties props = new Properties(); // System.getProperties(); should I try to use the system properties ?
 
-        props.put("mail.smtp.host", MailUtil.getParameter(getParameters(), MailConstants.SMTP_SERVER, (String)smtp.get(MailConstants.SMTP_SERVER)));
-        props.put("mail.smtp.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
+        props.put("mail.smtp.host", MailUtil.getParameter(getParameters(), MailConstants.SMTP_SERVER, smtp.get(MailConstants.SMTP_SERVER)));
+        props.put("mail.smtp.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, smtp.get(MailConstants.SMTP_PORT)));
 
-        final String starttls = MailUtil.getParameter(getParameters(), MailConstants.SMTP_TLS, (String) smtp.get(MailConstants.SMTP_TLS));
+        final String starttls = MailUtil.getParameter(getParameters(), MailConstants.SMTP_TLS, smtp.get(MailConstants.SMTP_TLS));
         if ("true".equals(starttls)) {
             //MAGNOLIA-2420
             props.put("mail.smtp.starttls.enable", starttls);
         }
-        final String ssl = MailUtil.getParameter(getParameters(), MailConstants.SMTP_SSL, (String) smtp.get(MailConstants.SMTP_SSL));
+        final String ssl = MailUtil.getParameter(getParameters(), MailConstants.SMTP_SSL, smtp.get(MailConstants.SMTP_SSL));
         if ("true".equals(ssl)) {
             //MAGNOLIA-2420
-            props.put("mail.smtp.socketFactory.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
+            props.put("mail.smtp.socketFactory.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, smtp.get(MailConstants.SMTP_PORT)));
             props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             props.put("mail.smtp.socketFactory.fallback", "false");
         }
 
         Authenticator auth = null;
-        final String smtpUser = MailUtil.getParameter(getParameters(), MailConstants.SMTP_USER, (String) smtp.get(MailConstants.SMTP_USER));
-        final String smtpPassword = MailUtil.getParameter(getParameters(), MailConstants.SMTP_PASSWORD, (String) smtp.get(MailConstants.SMTP_PASSWORD));
+        final String smtpUser = MailUtil.getParameter(getParameters(), MailConstants.SMTP_USER, smtp.get(MailConstants.SMTP_USER));
+        final String smtpPassword = MailUtil.getParameter(getParameters(), MailConstants.SMTP_PASSWORD, smtp.get(MailConstants.SMTP_PASSWORD));
         if (StringUtils.isNotBlank(smtpUser)) {
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.user", smtpUser);
@@ -305,7 +305,7 @@ public class MailTemplate {
                 }
             };
         }
-        props.put("mail.smtp.sendpartial", StringUtils.defaultString((String) smtp.get(MailConstants.SMTP_SEND_PARTIAL)));
+        props.put("mail.smtp.sendpartial", StringUtils.defaultString(smtp.get(MailConstants.SMTP_SEND_PARTIAL)));
         return Session.getInstance(props, auth);
     }
 

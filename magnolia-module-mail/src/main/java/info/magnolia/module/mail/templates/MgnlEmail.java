@@ -169,27 +169,27 @@ public abstract class MgnlEmail extends MimeMessage {
         if (adresses == null || adresses.equals(StringUtils.EMPTY)) {
             return new Address[0];
         }
-        String[] toObj = adresses.split("\n");
-        List atos = new ArrayList();
-        for (int i = 0; i < toObj.length; i++) {
+        String[] addressesArr = adresses.split("\n");
+        List<InternetAddress> atos = new ArrayList<InternetAddress>();
+        for (String address : addressesArr) {
             try {
-                atos.add(new InternetAddress(toObj[i]));
+                atos.add(new InternetAddress(address));
             } catch (AddressException e) {
                 log.warn("Error while parsing address.", e);
             }
         }
-        return (Address[]) atos.toArray(new Address[atos.size()]);
+        return atos.toArray(new Address[atos.size()]);
     }
 
-    public void setAttachments(List list) throws MailException {
+    public void setAttachments(List<MailAttachment> list) throws MailException {
         if (list == null) {
             return;
         }
         if (log.isDebugEnabled()) {
             log.debug("Set attachments [" + list.size() + "] for mail: [" + this.getClass().getName() + "]");
         }
-        for (int i = 0; i < list.size(); i++) {
-            addAttachment((MailAttachment) list.get(i));
+        for (MailAttachment attachment : list) {
+            addAttachment(attachment);
         }
     }
 

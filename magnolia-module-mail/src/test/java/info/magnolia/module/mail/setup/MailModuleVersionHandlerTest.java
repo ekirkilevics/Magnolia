@@ -36,13 +36,15 @@ package info.magnolia.module.mail.setup;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.mail.commands.MailCommand;
-import static info.magnolia.module.mail.setup.MailModuleVersionHandler.COMMAND_IN_ADMININTERFACEMODULE_PATH;
-import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMMAND_CLASS_PRIOR_TO_4_0;
 import info.magnolia.module.model.Version;
 
 import java.util.Collections;
 import java.util.List;
+
+import static info.magnolia.module.mail.setup.MailModuleVersionHandler.COMMAND_IN_ADMININTERFACEMODULE_PATH;
+import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMMAND_CLASS_PRIOR_TO_4_0;
 
 /**
  *
@@ -59,7 +61,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         return new MailModuleVersionHandler() {
             // cheat - the conditions needs web.xml. Can't be bothered to fake that here
             @Override
-            protected List mailServletIsWrappedSince_3_5() {
+            protected List<Condition> mailServletIsWrappedSince_3_5() {
                 return Collections.emptyList();
             }
         };

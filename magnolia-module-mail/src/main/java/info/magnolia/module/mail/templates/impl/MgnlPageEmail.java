@@ -273,7 +273,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
 
     private String processUrls(String responseBodyAsString, String cssPath) throws MalformedURLException, Exception {
         String tmp = "";
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
 
         int urlIndex = 0;
         int closeIndex = 0;
@@ -292,7 +292,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
                 map.put(url, url);
 
             } else if (map.containsKey(url)) {
-                url = (String) map.get(url);
+                url = map.get(url);
 
             }
             tmp += StringUtils.substring(responseBodyAsString, begin, urlIndex) + url;

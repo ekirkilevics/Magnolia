@@ -36,6 +36,7 @@ package info.magnolia.module.mail.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.mail.commands.MailCommand;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
@@ -115,8 +116,8 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         );
     }
 
-    protected List mailServletIsWrappedSince_3_5() {
-        final ArrayList conditions = new ArrayList();
+    protected List<Condition> mailServletIsWrappedSince_3_5() {
+        final ArrayList<Condition> conditions = new ArrayList<Condition>();
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("Mail");
         return conditions;

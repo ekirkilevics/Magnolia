@@ -59,7 +59,7 @@ public class MailModule implements ModuleLifecycle {
 
     private MgnlMailFactory factory;
 
-    private Map smtp = new HashMap();
+    private Map<String, String> smtp = new HashMap<String, String>();
 
     private List<MailTemplate> templatesConfiguration = new ArrayList<MailTemplate>();
 
@@ -73,11 +73,11 @@ public class MailModule implements ModuleLifecycle {
     }
 
 
-    public Map getSmtp() {
+    public Map<String, String> getSmtp() {
         return smtp;
     }
 
-    public void setSmtp(Map smtp) {
+    public void setSmtp(Map<String, String> smtp) {
         this.smtp = smtp;
     }
 
