@@ -37,6 +37,7 @@ import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
@@ -117,6 +118,35 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         tplLoader.putTemplate("test.ftl", "yo, ${foo.bar.baz['prop']} ?");
         assertRendereredContent("yo, wassup ?", c, "test.ftl");
     }
+
+    public void testCanReachParentWithBuiltIn() throws Exception {
+        final Content c = MockUtil.createNode("/foo/bar",
+                "/foo.myProp=this is foo",
+                "/foo/bar.myProp=this is bar");
+
+        tplLoader.putTemplate("test.ftl", "${content.myProp} and ${content?parent.myProp}");
+        assertRendereredContent("this is bar and this is foo", createSingleValueMap("content", c), "test.ftl");
+    }
+
+    /** not supported:
+    public void testCanReachParentWithProperty() throws Exception {
+        final Content c = MockUtil.createNode("/foo/bar",
+                "/foo.myProp=this is foo",
+                "/foo/bar.myProp=this is bar");
+
+        tplLoader.putTemplate("test.ftl", "${content.myProp} and ${content.parent.myProp}");
+        assertRendereredContent("this is bar and this is foo", createSingleValueMap("content", c), "test.ftl");
+    }*/
+
+    /** not supported:
+    public void testCanReachParentWithMethod() throws Exception {
+        final Content c = MockUtil.createNode("/foo/bar",
+                "/foo.myProp=this is foo",
+                "/foo/bar.myProp=this is bar");
+
+        tplLoader.putTemplate("test.ftl", "${content.myProp} and ${content.getParent().myProp}");
+        assertRendereredContent("this is bar and this is foo", createSingleValueMap("content", c), "test.ftl");
+    }*/
 
     public void testCanLoopThroughNodes() throws TemplateException, IOException {
         final MockContent foo = new MockContent("foo");
