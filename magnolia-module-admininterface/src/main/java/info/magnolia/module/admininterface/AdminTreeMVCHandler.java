@@ -271,7 +271,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
 
-        if (commandName.equals("activate")) {
+        if ("activate".equals(commandName)) {
             context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
             if (this.pathSelected != null) {
                 try {
@@ -285,12 +285,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                     // this should never happen, user just clicked on the content in admin central
                     log.error("Failed to retrieve content node [{}:{}].", this.repository, this.pathSelected);
                 }
-            } else if (this.pathSelected != null) {
-                // pathSelected is null in case of delete operation, it should be the responsibility of the caller
-                // to set the context attributes properly
-                context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
             }
-            
+        } else if (this.pathSelected != null) {
+            // pathSelected is null in case of delete operation, it should be the responsibility of the caller
+            // to set the context attributes properly
+            context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
         }
 
         return context;
