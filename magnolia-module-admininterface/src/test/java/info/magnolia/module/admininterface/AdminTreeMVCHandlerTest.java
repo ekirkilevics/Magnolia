@@ -40,7 +40,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
@@ -178,7 +177,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
             }
         };
 
-        List children = new ArrayList();
+        List<Content> children = new ArrayList<Content>();
         children.add(child);
         // sanity check
         assertFalse(unactivated[0]);
