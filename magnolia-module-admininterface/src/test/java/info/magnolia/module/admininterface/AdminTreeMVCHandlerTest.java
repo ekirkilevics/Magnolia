@@ -40,8 +40,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.admininterface.commands.BaseActivationCommand;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockMetaData;
 
@@ -63,6 +67,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
     private HttpServletRequest req;
     private HttpServletResponse res;
     private WebContext ctx;
+    private SystemContext sysctx;
     private HierarchyManager hm;
     private Content cnt;
     private AdminTreeMVCHandler handler;
@@ -72,13 +77,15 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         req = createStrictMock(HttpServletRequest.class);
         res = createStrictMock(HttpServletResponse.class);
         ctx = createStrictMock(WebContext.class);
+        sysctx = createStrictMock(SystemContext.class);
         hm = createStrictMock(HierarchyManager.class);
         cnt = createStrictMock(Content.class);
         handler = new AdminTreeMVCHandler("test", req, res);
         handler.setRepository("repo-name");
         MgnlContext.setInstance(ctx);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
     }
-    
+
     public void testMove() throws Exception {
         expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);
         expect(hm.isExist("/bar/foo")).andReturn(false);
@@ -91,6 +98,43 @@ public class AdminTreeMVCHandlerTest extends TestCase {
         objs = new Object[] {req, res, ctx, hm, cnt};
         replay(objs);
         handler.moveNode("/test/foo", "/bar/foo");
+        verify(objs);
+    }
+
+    /**
+     * Make sure that the uuid is retrieved for activation and path is translated using SC
+     * @throws Exception
+     */
+    public void testGetActivateCommandContext() throws Exception {
+        handler.pathSelected = "/some/selected/path";
+        expect(ctx.put("repository", "repo-name")).andReturn(null);
+        expect(ctx.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, null)).andReturn(null);
+        expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);
+        expect(hm.getContent("/some/selected/path")).andReturn(cnt);
+        expect(cnt.getUUID()).andReturn("uu-blah-id");
+        expect(ctx.put("uuid", "uu-blah-id")).andReturn(null);
+        expect(sysctx.getHierarchyManager("repo-name")).andReturn(hm);
+        expect(hm.getContentByUUID("uu-blah-id")).andReturn(cnt);
+        expect(cnt.getHandle()).andReturn("/some/selected/path");
+        expect(ctx.put("path", "/some/selected/path")).andReturn(null);
+
+        objs = new Object[] {req, res, ctx, hm, cnt, sysctx};
+        replay(objs);
+        handler.getCommandContext("activate");
+        verify(objs);
+    }
+
+    /**
+     * Make sure path is set for <b>every</b> command.
+     * @throws Exception
+     */
+    public void testGetSomeCommandContext() throws Exception {
+        handler.pathSelected = "/some/selected/path";
+        expect(ctx.put("repository", "repo-name")).andReturn(null);
+        expect(ctx.put("path", "/some/selected/path")).andReturn(null);
+        objs = new Object[] {req, res, ctx, hm, cnt};
+        replay(objs);
+        handler.getCommandContext("something");
         verify(objs);
     }
 
@@ -133,7 +177,7 @@ public class AdminTreeMVCHandlerTest extends TestCase {
                 unactivated[0] = true;
             }
         };
-        
+
         List children = new ArrayList();
         children.add(child);
         // sanity check
