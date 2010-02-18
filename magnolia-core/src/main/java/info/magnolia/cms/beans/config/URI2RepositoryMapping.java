@@ -151,7 +151,7 @@ public class URI2RepositoryMapping {
 
         uri += (StringUtils.isNotEmpty(nodeDataName)? "/" + nodeDataName : "") +
                 (StringUtils.isNotEmpty(fileName)? "/" + fileName : "") +
-                (StringUtils.isNotEmpty(extension)? "." + extension : "");
+                (StringUtils.isNotEmpty(fileName) && StringUtils.isNotEmpty(extension)? "." + extension : "");
 
         return cleanHandle(uri);
     }
