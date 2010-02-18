@@ -78,7 +78,7 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
      */
     protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
 
-    protected String mandatoryString(Map params, String key) throws TemplateModelException {
+    protected String mandatoryString(Map<String, TemplateModel> params, String key) throws TemplateModelException {
         return _param(params, key, TemplateScalarModel.class, true).getAsString();
     }
 
