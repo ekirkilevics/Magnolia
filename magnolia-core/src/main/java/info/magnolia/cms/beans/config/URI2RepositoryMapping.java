@@ -149,9 +149,15 @@ public class URI2RepositoryMapping {
         String fileName = uuidLink.getFileName();
         String extension = uuidLink.getExtension();
 
-        uri += (StringUtils.isNotEmpty(nodeDataName)? "/" + nodeDataName : "") +
-                (StringUtils.isNotEmpty(fileName)? "/" + fileName : "") +
-                (StringUtils.isNotEmpty(extension)? "." + extension : "");
+        if(StringUtils.isNotEmpty(nodeDataName)){
+            uri += "/" + nodeDataName;
+        }
+        if(StringUtils.isNotEmpty(fileName)){
+            uri += "/" + fileName;
+        }
+        if(StringUtils.isNotEmpty(uri) && StringUtils.isNotEmpty(extension)){
+            uri += "." + extension ;
+        }
 
         return cleanHandle(uri);
     }
