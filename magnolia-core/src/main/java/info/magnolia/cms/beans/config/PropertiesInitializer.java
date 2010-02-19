@@ -57,7 +57,6 @@ import javax.servlet.ServletContext;
 import info.magnolia.objectfactory.Components;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +67,7 @@ import org.slf4j.LoggerFactory;
  * @author fgiust
  */
 public class PropertiesInitializer {
+    private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
 
     /**
      * The properties file containing the bean default implementations
@@ -99,8 +99,6 @@ public class PropertiesInitializer {
     public static PropertiesInitializer getInstance() {
         return Components.getSingleton(PropertiesInitializer.class);
     }
-
-    private static Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
 
     /**
      * Default value for the MAGNOLIA_INITIALIZATION_FILE parameter.
@@ -135,7 +133,7 @@ public class PropertiesInitializer {
         for (Iterator it = sysProps.keySet().iterator(); it.hasNext();) {
             String key = (String) it.next();
             String oldValue = (String) sysProps.get(key);
-            String value = parseStringValue(oldValue, new HashSet());
+            String value = parseStringValue(oldValue, new HashSet<String>());
             SystemProperty.getProperties().put(key, value);
         }
 
@@ -145,7 +143,7 @@ public class PropertiesInitializer {
         // complete or override with modules' properties
         final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
         try {
-            final List moduleDefinitions = moduleManager.loadDefinitions();
+            final List<ModuleDefinition> moduleDefinitions = moduleManager.loadDefinitions();
             loadModuleProperties(moduleDefinitions);
         }
         catch (ModuleManagementException e) {
@@ -158,13 +156,9 @@ public class PropertiesInitializer {
      * Load the properties defined in the module descriptors. They can get overridden later in the properties files in
      * WEB-INF
      */
-    protected void loadModuleProperties(List moduleDefinitions) {
-        final Iterator it = moduleDefinitions.iterator();
-        while (it.hasNext()) {
-            final ModuleDefinition module = (ModuleDefinition) it.next();
-            final Iterator propsIt = module.getProperties().iterator();
-            while (propsIt.hasNext()) {
-                final PropertyDefinition property = (PropertyDefinition) propsIt.next();
+    protected void loadModuleProperties(List<ModuleDefinition> moduleDefinitions) {
+        for (ModuleDefinition module : moduleDefinitions) {
+            for (PropertyDefinition property : module.getProperties()) {
                 SystemProperty.setProperty(property.getName(), property.getValue());
             }
         }
@@ -186,9 +180,7 @@ public class PropertiesInitializer {
         }
 
         if (!found) {
-            String msg = MessageFormat
-                .format(
-                    "No configuration found using location list {0}. Base path is [{1}]", new Object[]{ArrayUtils.toString(propertiesLocation), rootPath}); //$NON-NLS-1$
+            final String msg = MessageFormat.format("No configuration found using location list {0}. Base path is [{1}]", ArrayUtils.toString(propertiesLocation), rootPath); //$NON-NLS-1$
             log.error(msg);
             throw new ConfigurationException(msg);
         }
@@ -216,10 +208,7 @@ public class PropertiesInitializer {
 
         }
         else {
-            log
-                .warn(
-                    "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
-                    MGNL_BEANS_PROPERTIES);
+            log.warn("{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.", MGNL_BEANS_PROPERTIES);
         }
     }
 
@@ -267,7 +256,7 @@ public class PropertiesInitializer {
     }
 
     /**
-     * Overload the properties with set system properties
+     * Overload the properties with set system properties.
      */
     public void overloadWithSystemProperties() {
         Iterator it = SystemProperty.getProperties().keySet().iterator();
@@ -301,36 +290,32 @@ public class PropertiesInitializer {
         propertiesFilesString = StringUtils.replace(propertiesFilesString, "${webapp}", webapp); //$NON-NLS-1$
 
         // Replacing servlet context attributes (${contextAttribute/something})
-        final String contextAttributePlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_ATTRIBUTE_PLACEHOLDER_PREFIX;
-        String[] contextAttributes = StringUtils.stripAll(StringUtils.substringsBetween(
-            propertiesFilesString,
-            contextAttributePlaceHolder,
-            PLACEHOLDER_SUFFIX));
-        if (!ArrayUtils.isEmpty(contextAttributes)) {
-            for (String contextAttribute : contextAttributes) {
-                if (contextAttribute != null) {
+        String[] contextAttributeNames = getNamesBetweenPlaceholders(propertiesFilesString, CONTEXT_ATTRIBUTE_PLACEHOLDER_PREFIX);
+        if (contextAttributeNames != null) {
+            for (String ctxAttrName : contextAttributeNames) {
+                if (ctxAttrName != null) {
                     // Some implementation may not accept a null as attribute key, but all should accept an empty
                     // string.
-                    String originalPlaceHolder = contextAttributePlaceHolder + contextAttribute + PLACEHOLDER_SUFFIX;
-                    propertiesFilesString = StringUtils.replace(propertiesFilesString, originalPlaceHolder, ObjectUtils
-                        .toString(context.getAttribute(contextAttribute), originalPlaceHolder));
+                    final String originalPlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_ATTRIBUTE_PLACEHOLDER_PREFIX + ctxAttrName + PLACEHOLDER_SUFFIX;
+                    final Object attrValue = context.getAttribute(ctxAttrName);
+                    if (attrValue != null) {
+                        propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, attrValue.toString());
+                    }
                 }
             }
         }
 
         // Replacing servlet context parameters (${contextParam/something})
-        final String contextParamPlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_PARAM_PLACEHOLDER_PREFIX;
-        String[] contextParams = StringUtils.stripAll(StringUtils.substringsBetween(
-            propertiesFilesString,
-            contextParamPlaceHolder,
-            PLACEHOLDER_SUFFIX));
-        if (!ArrayUtils.isEmpty(contextParams)) {
-            for (String contextParam : contextParams) {
-                if (contextParam != null) {
+        String[] contextParamNames = getNamesBetweenPlaceholders(propertiesFilesString, CONTEXT_PARAM_PLACEHOLDER_PREFIX);
+        if (contextParamNames != null) {
+            for (String ctxParamName : contextParamNames) {
+                if (ctxParamName != null) {
                     // Some implementation may not accept a null as param key, but an empty string? TODO Check.
-                    String originalPlaceHolder = contextParamPlaceHolder + contextParam + PLACEHOLDER_SUFFIX;
-                    propertiesFilesString = StringUtils.replace(propertiesFilesString, originalPlaceHolder, StringUtils
-                        .defaultString(context.getInitParameter(contextParam), originalPlaceHolder));
+                    final String originalPlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_PARAM_PLACEHOLDER_PREFIX + ctxParamName + PLACEHOLDER_SUFFIX;
+                    final String paramValue = context.getInitParameter(ctxParamName);
+                    if (paramValue != null) {
+                        propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
+                    }
                 }
             }
         }
@@ -338,11 +323,19 @@ public class PropertiesInitializer {
         return propertiesFilesString;
     }
 
+    private static String[] getNamesBetweenPlaceholders(String propertiesFilesString, String contextNamePlaceHolder) {
+        final String[] names = StringUtils.substringsBetween(
+                propertiesFilesString,
+                PLACEHOLDER_PREFIX + contextNamePlaceHolder,
+                PLACEHOLDER_SUFFIX);
+        return StringUtils.stripAll(names);
+    }
+
     /**
      * Parse the given String value recursively, to be able to resolve nested placeholders. Partly borrowed from
      * org.springframework.beans.factory.config.PropertyPlaceholderConfigurer (original author: Juergen Hoeller)
      */
-    protected String parseStringValue(String strVal, Set visitedPlaceholders) {
+    protected String parseStringValue(String strVal, Set<String> visitedPlaceholders) {
 
         StringBuffer buf = new StringBuffer(strVal);
 
