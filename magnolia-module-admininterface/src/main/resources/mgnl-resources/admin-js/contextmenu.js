@@ -58,18 +58,14 @@ mgnlContextMenu.prototype.show = function(event){
                 item.div.onclick="";
                 // change image path to disabled
                 if (img && img.tagName && img.tagName.toUpperCase () == 'IMG') {
-                    if (img.src.substr (img.src.length - '_inactive.gif'.length) != '_inactive.gif') {
-                        img.src = img.src.substr (0, img.src.length - '.gif'.length) + '_inactive.gif';
-                    }
+                    img.src = img.src.replace(/(_inactive)?\.(\w+)$/, '_inactive.$2');
                 }
             }
             else {
                 item.div.onclick=item.onclick;
                 // change image path to enabled
                 if (img && img.tagName && img.tagName.toUpperCase () == 'IMG') {
-                    if (img.src.substr (img.src.length - '_inactive.gif'.length) == '_inactive.gif') {
-                        img.src = img.src.substr (0, img.src.length - '_inactive.gif'.length) + '.gif';
-                    }
+                    img.src = img.src.replace(/_inactive\.(\w+)$/, '.$1');
                 }
             }
         }
