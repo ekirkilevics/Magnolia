@@ -50,7 +50,8 @@ import org.apache.commons.lang.LocaleUtils;
  * @version $Id$
  *
  */
-public class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
+//TODO: typo in class name: should be DefauLT and not DefauTL
+ class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
 
     private boolean enabled = false;
 
