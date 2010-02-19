@@ -51,6 +51,7 @@ import org.apache.commons.lang.LocaleUtils;
  *
  */
 //TODO: typo in class name: should be DefauLT and not DefauTL
+//and I guess it should be made public too... 
  class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
 
     private boolean enabled = false;
