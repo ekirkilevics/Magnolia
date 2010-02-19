@@ -42,6 +42,7 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import java.util.List;
 import java.util.Locale;
 
+import info.magnolia.cms.util.BooleanUtil;
 import org.apache.commons.lang.LocaleUtils;
 
 
@@ -74,7 +75,7 @@ public class DefautlI18nAuthoringSupport implements I18nAuthoringSupport {
             for (DialogControlImpl tab : tabs) {
                 List<DialogControlImpl> controls = tab.getSubs();
                 for (DialogControlImpl control : controls) {
-                    boolean i18n = Boolean.valueOf(control.getConfigValue("i18n", "false"));
+                    boolean i18n = BooleanUtil.toBoolean(control.getConfigValue("i18n"), false);
                     if (i18n) {
                         if(!isFallbackLanguage){
                             String newName = control.getName() + "_" + locale.toString();
