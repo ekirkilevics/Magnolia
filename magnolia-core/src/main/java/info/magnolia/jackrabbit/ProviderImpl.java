@@ -35,6 +35,7 @@ package info.magnolia.jackrabbit;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
@@ -86,6 +87,17 @@ import java.util.Map;
  * @version $Id$
  */
 public class ProviderImpl implements Provider {
+
+    /**
+     * Magnolia property (entry in magnolia.properties) with the cluster id, which will be passed to jackrabbit.
+     */
+    private static final String MAGNOLIA_CLUSTERID_PROPERTY = "magnolia.clusterid";
+
+    /**
+     * Jackrabbit system property for cluster node id.
+     */
+    private static final String JACKRABBIT_CLUSTER_ID_PROPERTY = "org.apache.jackrabbit.core.cluster.node_id";
+
     private static final Logger log = LoggerFactory.getLogger(ProviderImpl.class);
 
     private static final String CONFIG_FILENAME_KEY = "configFile"; //$NON-NLS-1$
@@ -173,7 +185,18 @@ public class ProviderImpl implements Provider {
             // should never happen and it's not a problem at this point, just pass it to jackrabbit and see
         }
 
-        log.info("Loading repository at {} (config file: {})", repositoryHome, configFile); //$NON-NLS-1$
+        String clusterid = SystemProperty.getProperty(MAGNOLIA_CLUSTERID_PROPERTY);
+        if (StringUtils.isNotBlank(clusterid)) {
+            System.setProperty(JACKRABBIT_CLUSTER_ID_PROPERTY, clusterid);
+        }
+
+        // get it back from system properties, if it has been set elsewhere
+        clusterid = System.getProperty(JACKRABBIT_CLUSTER_ID_PROPERTY);
+
+        log.info("Loading repository at {} (config file: {}) - cluster id: \"{}\"", new Object[]{
+            repositoryHome,
+            configFile,
+            StringUtils.defaultString(clusterid, "<unset>")});
 
         bindName = (String) params.get(BIND_NAME_KEY);
         jndiEnv = new Hashtable<String, Object>();
