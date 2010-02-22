@@ -34,24 +34,20 @@
 package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.objectfactory.Components;
 
 
 /**
  * @author Sameer Charles
  */
 
-public final class SearchFactory {
+public abstract class SearchFactory {
 
-    /**
-     * don't instantiate.
-     */
-    private SearchFactory() {
-        // unused
+    public static SearchFactory getInstance() {
+        return Components.getSingleton(SearchFactory.class);
     }
 
-    public static QueryManager getAccessControllableQueryManager(javax.jcr.query.QueryManager queryManager,
-            HierarchyManager hm) {
-        return (new QueryManagerImpl(queryManager, hm));
-    }
+    public abstract QueryManager getQueryManager(javax.jcr.query.QueryManager queryManager, HierarchyManager hm);
 
 }

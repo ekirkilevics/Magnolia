@@ -35,39 +35,14 @@ package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.core.HierarchyManager;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.query.InvalidQueryException;
-
 
 /**
- * Date: Mar 29, 2005 Time: 2:54:21 PM
- * @author Sameer Charles
+ * Default search factory implementation.
+ * @author fgiust
  */
+public class DefaultSearchFactory extends SearchFactory {
 
-public class QueryManagerImpl implements QueryManager {
-
-    protected javax.jcr.query.QueryManager queryManager;
-
-    protected HierarchyManager hm;
-
-    protected QueryManagerImpl(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
-        this.queryManager = queryManager;
-        this.hm = hm;
+    public QueryManager getQueryManager(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
+        return (new QueryManagerImpl(queryManager, hm));
     }
-
-    public Query createQuery(String s, String s1) throws InvalidQueryException, RepositoryException {
-        javax.jcr.query.Query query = this.queryManager.createQuery(s, s1);
-        return (new QueryImpl(query, this.hm));
-    }
-
-    public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
-        javax.jcr.query.Query query = this.queryManager.getQuery(node);
-        return (new QueryImpl(query, this.hm));
-    }
-
-    public String[] getSupportedQueryLanguages() throws RepositoryException {
-        return this.queryManager.getSupportedQueryLanguages();
-    }
-
- }
+}

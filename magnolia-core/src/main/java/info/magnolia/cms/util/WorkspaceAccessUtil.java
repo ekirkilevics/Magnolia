@@ -172,7 +172,7 @@ public class WorkspaceAccessUtil {
     public QueryManager createQueryManager(Session jcrSession, HierarchyManager hm)
             throws RepositoryException {
         javax.jcr.query.QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
-        return SearchFactory.getAccessControllableQueryManager(jcrQueryManager, hm);
+        return SearchFactory.getInstance().getQueryManager(jcrQueryManager, hm);
     }
 
     /**

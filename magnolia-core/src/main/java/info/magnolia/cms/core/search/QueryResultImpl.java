@@ -69,21 +69,21 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Unfiltered result object
      */
-    private javax.jcr.query.QueryResult result;
+    protected javax.jcr.query.QueryResult result;
 
     /**
      * caches all previously queried objects
      */
-    private Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
+    protected Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
 
     /**
      * @deprecated
      */
     private AccessManager accessManager;
 
-    private HierarchyManager hm;
+    protected HierarchyManager hm;
 
-    private Map<String, String> dirtyHandles = new Hashtable<String, String>();
+    protected Map<String, String> dirtyHandles = new Hashtable<String, String>();
 
     protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm) {
         this.result = result;
@@ -106,7 +106,7 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Build required result objects
      */
-    private void build(String nodeType, Collection<Content> collection) throws RepositoryException {
+    protected void build(String nodeType, Collection<Content> collection) throws RepositoryException {
         this.objectStore.put(nodeType, collection);
         NodeIterator nodeIterator = this.result.getNodes();
         while (nodeIterator.hasNext()) {
@@ -128,7 +128,7 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Build required result objects
      */
-    private void build(Node node, String nodeType, Collection<Content> collection) throws RepositoryException {
+    protected void build(Node node, String nodeType, Collection<Content> collection) throws RepositoryException {
         /**
          * All custom node types
          */

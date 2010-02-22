@@ -53,9 +53,9 @@ import javax.jcr.version.VersionException;
 
 public class QueryImpl implements Query {
 
-    private javax.jcr.query.Query query;
+    protected javax.jcr.query.Query query;
 
-    private HierarchyManager hm;
+    protected HierarchyManager hm;
 
     protected QueryImpl(javax.jcr.query.Query query, HierarchyManager hm) {
         this.query = query;
