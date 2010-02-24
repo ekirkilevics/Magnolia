@@ -35,6 +35,7 @@ package info.magnolia.templatinguicomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarNew;
 import org.apache.commons.lang.StringUtils;
 
@@ -48,11 +49,42 @@ import java.util.List;
  * @version $Revision: $ ($Author: $) 
  */
 public class NewParagraphBar extends AbstractAuthoringUiComponent {
+
+    /**
+     *
+     * @param serverCfg
+     * @param aggState
+     * @param specificTarget override for {@link #defaultTarget()}.
+     * @param containerNodeName the name of the node into which new paragraphs will be added; this is a child node of {@link #target}.
+     * @param allowedParagraphs
+     * @param newButtonLabel
+     * @return
+     */
+    public static NewParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content specificTarget, String containerNodeName, List<String> allowedParagraphs, String newButtonLabel) {
+        final NewParagraphBar bar = new NewParagraphBar(serverCfg, aggState);
+        if (specificTarget != null) {
+            bar.setTarget(specificTarget);
+        }
+        bar.setContainerNodeName(containerNodeName);
+
+        if (newButtonLabel != null) {
+            bar.setNewButtonLabel(newButtonLabel);
+        }
+
+        bar.setAllowedParagraphs(allowedParagraphs);
+        return bar;
+    }
+
+    private String containerNodeName;
     private String newButtonLabel = "buttons.new";
     private List<String> allowedParagraphs;
 
     public NewParagraphBar(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
+    }
+
+    public void setContainerNodeName(String containerNodeName) {
+        this.containerNodeName = containerNodeName;
     }
 
     public void setNewButtonLabel(String newButtonLabel) {
@@ -68,15 +100,17 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
         final BarNew bar = new BarNew();
 
         bar.setParagraph(allowedParagraphsAsString());
-//        if (StringUtils.isBlank(bar.getParagraph())) {
+//   TODO     if (StringUtils.isBlank(bar.getParagraph())) {
 //            log.warn("No paragraph selected for new bar in {}", pageContext.getPage());
         // don't set new button's label if there's no selectable paragraph
 //        }
 
         final String targetPath = getTarget().getHandle();
-        final String lastPortionPath = targetPath.substring(targetPath.lastIndexOf('/') + 1);
         bar.setPath(targetPath);
-//        bar.setNodeCollectionName(lastPortionPath);
+
+        // TODO - test combinations of containerNodeName and target 
+
+        bar.setNodeCollectionName(containerNodeName);
         bar.setNodeName("mgnlNew"); // one of the quirks we'll have to get rid of.
 
         bar.setDefaultButtons();
@@ -90,4 +124,5 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
     private String allowedParagraphsAsString() {
         return StringUtils.join(allowedParagraphs, ',');
     }
+
 }

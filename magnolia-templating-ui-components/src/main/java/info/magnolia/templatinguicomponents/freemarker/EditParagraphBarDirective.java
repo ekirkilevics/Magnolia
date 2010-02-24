@@ -55,31 +55,12 @@ public class EditParagraphBarDirective extends AbstractDirective {
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-//        final String label = string(params, "label", null);
-//        final String description = string(params, "description", null);
-
         final String editButtonLabel = string(params, "editLabel", null);
         final boolean enableMoveButton = bool(params, "move", true);
         final boolean enableDeleteButton = bool(params, "delete", true);
         final String specificDialogName = string(params, "dialog", null);
         final Content target = content(params, "target", null);
 
-        final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
-        if (target != null) {
-            bar.setTarget(target);
-        }
-
-        if (specificDialogName != null) {
-            bar.setSpecificDialogName(specificDialogName);
-        }
-
-        if (editButtonLabel != null) {
-            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
-            bar.setEditButtonLabel(editButtonLabel);
-        }
-        bar.setEnableMoveButton(enableMoveButton);
-        bar.setEnableDeleteButton(enableDeleteButton);
-
-        return bar;
+        return EditParagraphBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }
 }

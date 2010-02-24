@@ -56,23 +56,15 @@ public class NewParagraphBarDirective extends AbstractDirective {
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         final String newButtonLabel = string(params, "newLabel", null);
-        final Content target = mandatoryContent(params, "target");
+        final Content target = content(params, "target", null);
+        final String containerNodeName = string(params, "container", null);
+        if (target == null && containerNodeName == null) {
+            // TODO check
+            throw new TemplateModelException("At least target or container must be specified.");
+        }
         final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
 
-        final NewParagraphBar bar = new NewParagraphBar(serverCfg, aggState);
-//        bar.setLabel(label);
-//        bar.setDescription(description);
-        if (target != null) {
-            bar.setTarget(target);
-        }
-
-        if (newButtonLabel != null) {
-            bar.setNewButtonLabel(newButtonLabel);
-        }
-
-        bar.setAllowedParagraphs(allowedParagraphs);
-
-        return bar;
+        return NewParagraphBar.make(serverCfg, aggState, target, containerNodeName, allowedParagraphs, newButtonLabel);
     }
 
 }

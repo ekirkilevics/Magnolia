@@ -31,31 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.templatinguicomponents.freemarker;
+package info.magnolia.templatinguicomponents.jsp;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.EditPageBar;
-
-import java.io.IOException;
-import java.util.Map;
+import com.meterware.httpunit.WebResponse;
 
 /**
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditPageBarDirective extends AbstractDirective {
+public class NewParagraphBarTagTest extends AbstractJspTest {
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        final String editButtonLabel = string(params, "editLabel", null);
-        final String dialogName = string(params, "dialog", null);
+    void check(WebResponse response) throws Exception {
 
-        return EditPageBar.make(serverCfg, aggState, editButtonLabel, dialogName);
+        // TODO assertEquals("hello world", response.getText());
+
     }
 
 }

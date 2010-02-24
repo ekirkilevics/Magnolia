@@ -35,8 +35,11 @@ package info.magnolia.templatinguicomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
+import info.magnolia.cms.gui.inline.ButtonEdit;
 
+import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -48,6 +51,27 @@ import java.io.Writer;
  * @version $Revision: $ ($Author: $) 
  */
 public class EditParagraphBar extends AbstractAuthoringUiComponent {
+
+    public static EditParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content target, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
+        final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
+        if (target != null) {
+            bar.setTarget(target);
+        }
+
+        if (specificDialogName != null) {
+            bar.setSpecificDialogName(specificDialogName);
+        }
+
+        if (editButtonLabel != null) {
+            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
+            bar.setEditButtonLabel(editButtonLabel);
+        }
+        bar.setEnableMoveButton(enableMoveButton);
+        bar.setEnableDeleteButton(enableDeleteButton);
+
+        return bar;
+    }
+
     private String specificDialogName;
     private String editButtonLabel = "buttons.edit";
     private boolean enableMoveButton = true;
@@ -74,7 +98,7 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
     }
 
     @Override
-    protected void doRender(Appendable out) throws IOException {
+    protected void doRender(Appendable out) throws IOException, RepositoryException {
         final BarEdit bar = new BarEdit();
         final String paragraphTemplateName = getTarget().getMetaData().getTemplate();
         // it's called "setParagraph", but have a look further, once you reach ButtonEdit, this is called "dialog".
@@ -84,31 +108,39 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
             bar.setParagraph(paragraphTemplateName);
         }
 
-        final String targetPath = getTarget().getHandle();
+//        final String targetPath = getTarget().getHandle();
 
-        bar.setPath(targetPath);
+        final Content target = getTarget();
+        final Content targetParent = target.getParent();
+        final Content parentParent = targetParent.getParent();
 
-        // needed for delete and/or move ? - todo : delete still doesn't work - might need to fix the path variable too
-        final int lastSlash = targetPath.lastIndexOf('/');
-        final int secondLastSlash = targetPath.lastIndexOf('/', lastSlash - 1);
-        final String lastPortionPath = targetPath.substring(lastSlash + 1);
-        final String secondLastPortionPath = targetPath.substring(secondLastSlash + 1, lastSlash);
-        bar.setNodeCollectionName(secondLastPortionPath);
-        bar.setNodeName(lastPortionPath);
+        bar.setNodeCollectionName(targetParent.getName());
+        bar.setNodeName(target.getName());
+        String path = parentParent.getHandle();
+        /*if (path.startsWith("/")) {
+              // don't ask... paths are concatenated in inline.js#mgnlDeleteNode
+            path=path.substring(1);
+        }*/
+        bar.setPath(path);
 
-        bar.setDefaultButtons();
+        // bar.setDefaultButtons();
+        if (enableMoveButton) {
+            bar.setButtonMove(); //targetParent.getName(), target.getName());
+        }
+        if (enableDeleteButton) {
+            bar.setButtonDelete(); // parentParent.getHandle(), targetParent.getName(), target.getName());
+        }
 
+        bar.setButtonEdit();
         //bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
-        bar.getButtonEdit().setDialogPath(".magnolia/dialogs/editParagraph.html");
-        bar.getButtonEdit().setLabel(editButtonLabel);
+        final ButtonEdit edit = bar.getButtonEdit();
+        edit.setDialogPath(".magnolia/dialogs/editParagraph.html");
+        // TODO - yes this is a bit ugly - 1) we should in fact open the correct dialog immediately instead of faking the paragraph parameter - 2) the gui elements should not have defaults nor know anything about urls and onclick functions
+        // TODO - test with specific dialog
+        //  if (this.dialog == null) {
+        edit.setDefaultOnclick(); // re-set the onclick after having set the dialog path.
+        edit.setLabel(editButtonLabel);
 
-        if (!enableMoveButton) {
-            bar.setButtonMove(null);
-        }
-
-        if (!enableDeleteButton) {
-            bar.setButtonDelete(null);
-        }
 
         // TODO : display useful paragraph info (if we had the ParagraphDefinition instance, maybe ?)
 

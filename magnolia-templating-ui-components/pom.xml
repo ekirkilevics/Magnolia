@@ -12,7 +12,7 @@
 
   <properties>
     <taglib.shortname>ui</taglib.shortname>
-    <taglib.uri>http://magnolia-cms.com/taglib/authoringui</taglib.uri>
+    <taglib.uri>http://magnolia-cms.com/taglib/templating-ui-components</taglib.uri>
   </properties>
   <build>
     <plugins>

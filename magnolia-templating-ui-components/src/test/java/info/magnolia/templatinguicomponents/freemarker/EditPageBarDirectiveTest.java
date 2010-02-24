@@ -42,4 +42,19 @@ public class EditPageBarDirectiveTest extends AbstractDirectiveTest {
         final String s = renderForTest("[@ui.main dialog='myDialog' /]");
         // TODO assertEquals("... not testing yet... ", s);
     }
+
+    public void testCustomLabel() throws Exception {
+        final String s = renderForTest("[@ui.main dialog='myDialog' editLabel='Edit this!' /]");
+        assertEquals(true, s.contains("Edit this!"));
+        assertEquals(false, s.contains("buttons.properties")); // the default button label
+        assertEquals(false, s.contains("Properties")); // the i18n'd default button label
+        // TODO assertEquals("... not testing yet... ", s);
+    }
+
+    public void testNoDialogButton() throws Exception {
+        // usecase: [@ui.main dialog=def.dialog! /] - if you want to support templates which might not have a dialog defined.
+        final String s = renderForTest("[@ui.main dialog=someVar! editLabel='should not appear' /]");
+        assertEquals(false, s.contains("should not appear"));
+        // TODO assertEquals("... not testing yet... ", s);
+    }
 }

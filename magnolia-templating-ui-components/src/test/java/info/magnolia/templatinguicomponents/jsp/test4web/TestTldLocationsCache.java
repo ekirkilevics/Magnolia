@@ -50,6 +50,16 @@ package info.magnolia.templatinguicomponents.jsp.test4web;
  *  limitations under the License.
  */
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.jasper.JasperException;
+import org.apache.jasper.compiler.TldLocationsCache;
+import org.apache.jasper.xmlparser.ParserUtils;
+import org.apache.jasper.xmlparser.TreeNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,24 +73,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.jasper.JasperException;
-import org.apache.jasper.compiler.TldLocationsCache;
-import org.apache.jasper.xmlparser.ParserUtils;
-import org.apache.jasper.xmlparser.TreeNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author fgiust
  * @version $Id$
  */
-public class TestTldLocationsCache extends TldLocationsCache
-{
+public class TestTldLocationsCache extends TldLocationsCache {
 
     private boolean initialized;
 
@@ -96,8 +94,7 @@ public class TestTldLocationsCache extends TldLocationsCache
     /**
      * @param ctxt
      */
-    public TestTldLocationsCache(ServletContext ctxt)
-    {
+    public TestTldLocationsCache(ServletContext ctxt) {
         super(ctxt);
         ctxt2 = ctxt;
     }
@@ -106,23 +103,19 @@ public class TestTldLocationsCache extends TldLocationsCache
      * @param ctxt
      * @param redeployMode
      */
-    public TestTldLocationsCache(ServletContext ctxt, boolean redeployMode)
-    {
+    public TestTldLocationsCache(ServletContext ctxt, boolean redeployMode) {
         super(ctxt, redeployMode);
         ctxt2 = ctxt;
     }
 
-    public String[] getLocation(String uri) throws JasperException
-    {
-        if (!initialized)
-        {
+    public String[] getLocation(String uri) throws JasperException {
+        if (!initialized) {
             initFilesInClasspath();
         }
 
         String[] location = super.getLocation(uri);
 
-        if (location != null)
-        {
+        if (location != null) {
             return location;
         }
 
@@ -133,26 +126,20 @@ public class TestTldLocationsCache extends TldLocationsCache
     /**
      *
      */
-    private void initFilesInClasspath()
-    {
+    private void initFilesInClasspath() {
         filemappings = new HashMap<String, String[]>();
 
         ClassLoader webappLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader loader = webappLoader;
 
-        while (loader != null)
-        {
-            if (loader instanceof URLClassLoader)
-            {
+        while (loader != null) {
+            if (loader instanceof URLClassLoader) {
                 URL[] urls = ((URLClassLoader) loader).getURLs();
-                for (int i = 0; i < urls.length; i++)
-                {
+                for (int i = 0; i < urls.length; i++) {
                     URL url = urls[i];
-                    if (!StringUtils.endsWithIgnoreCase(url.getFile(), ".jar"))
-                    {
+                    if (!StringUtils.endsWithIgnoreCase(url.getFile(), ".jar")) {
                         File file = new File(url.getFile());
-                        if (file.isDirectory())
-                        {
+                        if (file.isDirectory()) {
                             log.debug("Processing {}", url.getFile());
                             findTld(file);
                         }
@@ -165,65 +152,51 @@ public class TestTldLocationsCache extends TldLocationsCache
 
     }
 
-    private void findTld(File f)
-    {
+    private void findTld(File f) {
         File[] list = f.listFiles();
-        for (File file : list)
-        {
-            if (file.isDirectory())
-            {
+        for (File file : list) {
+            if (file.isDirectory()) {
                 findTld(file);
-            }
-            else if (StringUtils.endsWithIgnoreCase(file.getName(), ".tld"))
-            {
+            } else if (StringUtils.endsWithIgnoreCase(file.getName(), ".tld")) {
 
                 String uri = getUriFromTld(file);
-                if (uri != null && filemappings.get(uri) == null)
-                {
+                if (uri != null && filemappings.get(uri) == null) {
                     String base = ctxt2.getRealPath("/");
 
                     String filepath = getRelativePath(new File(base), file);
 
                     log.debug("Adding {} to cache with url {}", uri, filepath);
-                    filemappings.put(uri, new String[]{filepath, null });
+                    filemappings.put(uri, new String[]{filepath, null});
                 }
             }
         }
     }
 
-    private String getUriFromTld(File file)
-    {
+    private String getUriFromTld(File file) {
         String resourcePath = file.getAbsolutePath();
         InputStream in;
-        try
-        {
+        try {
             in = new BufferedInputStream(new FileInputStream(file));
         }
-        catch (FileNotFoundException e)
-        {
+        catch (FileNotFoundException e) {
             log.warn("File {} not found", file.getAbsolutePath());
             return null;
         }
-        try
-        {
+        try {
             TreeNode tld = new ParserUtils().parseXMLDocument(resourcePath, in);
             TreeNode uri = tld.findChild("uri");
-            if (uri != null)
-            {
+            if (uri != null) {
                 String body = uri.getBody();
-                if (body != null)
-                {
+                if (body != null) {
                     return body;
                 }
             }
         }
-        catch (JasperException e)
-        {
+        catch (JasperException e) {
             log.error("Error processing " + file.getAbsolutePath(), e);
             return null;
         }
-        finally
-        {
+        finally {
             IOUtils.closeQuietly(in);
         }
 
@@ -236,21 +209,17 @@ public class TestTldLocationsCache extends TldLocationsCache
      * @param f input file
      * @return a List collection with the individual elements of the path in reverse order
      */
-    private static List getPathList(File f)
-    {
+    private static List getPathList(File f) {
         List l = new ArrayList();
         File r;
-        try
-        {
+        try {
             r = f.getCanonicalFile();
-            while (r != null)
-            {
+            while (r != null) {
                 l.add(r.getName());
                 r = r.getParentFile();
             }
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             l = null;
         }
         return l;
@@ -261,8 +230,7 @@ public class TestTldLocationsCache extends TldLocationsCache
      * @param r home path
      * @param f path of file
      */
-    private static String matchPathLists(List r, List f)
-    {
+    private static String matchPathLists(List r, List f) {
         int i;
         int j;
         String s;
@@ -273,21 +241,18 @@ public class TestTldLocationsCache extends TldLocationsCache
         j = f.size() - 1;
 
         // first eliminate common root
-        while ((i >= 0) && (j >= 0) && (r.get(i).equals(f.get(j))))
-        {
+        while ((i >= 0) && (j >= 0) && (r.get(i).equals(f.get(j)))) {
             i--;
             j--;
         }
 
         // for each remaining level in the home path, add a ..
-        for (; i >= 0; i--)
-        {
+        for (; i >= 0; i--) {
             s += ".." + File.separator;
         }
 
         // for each level in the file path, add the path
-        for (; j >= 1; j--)
-        {
+        for (; j >= 1; j--) {
             s += f.get(j) + File.separator;
         }
 
@@ -303,8 +268,7 @@ public class TestTldLocationsCache extends TldLocationsCache
      * @param f file to generate path for
      * @return path from home to f as a string
      */
-    public static String getRelativePath(File home, File f)
-    {
+    public static String getRelativePath(File home, File f) {
         File r;
         List homelist;
         List filelist;

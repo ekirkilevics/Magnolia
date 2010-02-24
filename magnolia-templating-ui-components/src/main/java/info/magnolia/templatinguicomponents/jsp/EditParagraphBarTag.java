@@ -85,29 +85,15 @@ public class EditParagraphBarTag extends AbstractTag {
         this.specificDialogName = dialog;
     }
 
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setTarget(Content target) {
         this.target = target;
     }
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
-        // TODO - this is copied from EditParagraphBarDirective; can't we do better ?
-        final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
-        if (target != null) {
-            bar.setTarget(target);
-        }
-
-        if (specificDialogName != null) {
-            bar.setSpecificDialogName(specificDialogName);
-        }
-
-        if (editButtonLabel != null) {
-            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
-            bar.setEditButtonLabel(editButtonLabel);
-        }
-        bar.setEnableMoveButton(enableMoveButton);
-        bar.setEnableDeleteButton(enableDeleteButton);
-
-        return bar;
+        return EditParagraphBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }
 }

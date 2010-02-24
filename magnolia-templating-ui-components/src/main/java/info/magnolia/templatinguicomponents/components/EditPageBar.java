@@ -36,6 +36,7 @@ package info.magnolia.templatinguicomponents.components;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.inline.BarMain;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -49,6 +50,21 @@ import java.io.Writer;
  * @version $Revision: $ ($Author: $)
  */
 public class EditPageBar extends AbstractAuthoringUiComponent {
+
+    public static AuthoringUiComponent make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
+        final EditPageBar bar = new EditPageBar(serverCfg, aggState);
+        if (editButtonLabel != null) {
+            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
+            bar.setEditButtonLabel(editButtonLabel);
+        }
+
+        if (dialogName != null && dialogName.length() > 0) {
+            bar.setDialogName(dialogName);
+        }
+
+        return bar;
+    }
+
     private String dialogName;
     private String editButtonLabel = "buttons.properties";
 

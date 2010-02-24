@@ -39,11 +39,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 
+import javax.jcr.RepositoryException;
 import java.io.IOException;
 
 /**
  * If no target node is set explicitly, it is deduced using {@link #defaultTarget()}.
- * Implementions should expose setter for their specific parameters. No getters needed.
+ * Implementations should expose setter for their specific parameters. No getters needed.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -52,10 +53,6 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     private final ServerConfiguration server;
     private final AggregationState aggregationState;
 
-    /** Currently no need for generic label/description
-     private String label;
-     private String description;
-     */
     private Content target;
 
     protected AbstractAuthoringUiComponent(final ServerConfiguration server, final AggregationState aggregationState) {
@@ -64,23 +61,13 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         this.target = defaultTarget();
     }
 
-    /** Currently no need for generic label/description
-     protected String getLabel() {
-     return label;
-     }
+    protected ServerConfiguration getServer() {
+        return server;
+    }
 
-     public void setLabel(String label) {
-     this.label = label;
-     }
-
-     protected String getDescription() {
-     return description;
-     }
-
-     public void setDescription(String description) {
-     this.description = description;
-     }
-     */
+    protected AggregationState getAggregationState() {
+        return aggregationState;
+    }
 
     protected Content getTarget() {
         return target;
@@ -94,10 +81,14 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         if (!shouldRender()) {
             return;
         }
-        doRender(out);
+        try {
+            doRender(out);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    protected abstract void doRender(Appendable out) throws IOException;
+    protected abstract void doRender(Appendable out) throws IOException, RepositoryException;
 
     /**
      * Returns the "current content" from the aggregation state.

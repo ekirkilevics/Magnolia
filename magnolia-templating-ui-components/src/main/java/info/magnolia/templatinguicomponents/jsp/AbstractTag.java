@@ -37,10 +37,17 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import org.apache.commons.collections.EnumerationUtils;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author gjoseph
@@ -61,4 +68,25 @@ public abstract class AbstractTag extends SimpleTagSupport {
      */
     protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException;
 
+    // ---- utility methods to convert parameters ----
+
+    protected List<String> toStringList(Object allowedParagraphs, String attributeName) throws JspException {
+        if (allowedParagraphs instanceof String) {
+            return split((String) allowedParagraphs);
+        } else if (allowedParagraphs instanceof Collection) {
+            return new ArrayList<String>((Collection) allowedParagraphs);
+        } else if (allowedParagraphs instanceof String[]) {
+            return Arrays.asList((String[]) allowedParagraphs);
+        }
+
+        throw new JspException(attributeName + " must a comma-separated String or a Collection<String> instance.");
+    }
+
+    protected List<String> split(String s) {
+        if (s == null) {
+            return Collections.emptyList();
+        }
+        final StringTokenizer st = new StringTokenizer(s, ",");
+        return EnumerationUtils.toList(st);
+    }
 }

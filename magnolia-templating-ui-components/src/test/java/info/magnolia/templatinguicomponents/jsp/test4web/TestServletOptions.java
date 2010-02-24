@@ -51,10 +51,10 @@ package info.magnolia.templatinguicomponents.jsp.test4web;
  */
 
 import org.apache.jasper.EmbeddedServletOptions;
-    import org.apache.jasper.Options;
-    import org.apache.jasper.compiler.JspConfig;
-    import org.apache.jasper.compiler.TagPluginManager;
-    import org.apache.jasper.compiler.TldLocationsCache;
+import org.apache.jasper.Options;
+import org.apache.jasper.compiler.JspConfig;
+import org.apache.jasper.compiler.TagPluginManager;
+import org.apache.jasper.compiler.TldLocationsCache;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -74,8 +74,7 @@ public class TestServletOptions implements Options {
      * @param config
      * @param context
      */
-    public TestServletOptions(ServletConfig config, ServletContext context)
-    {
+    public TestServletOptions(ServletConfig config, ServletContext context) {
         options = new EmbeddedServletOptions(config, context);
         options.setTldLocationsCache(new TestTldLocationsCache(context));
     }
@@ -84,8 +83,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see java.lang.Object#hashCode()
      */
-    public int hashCode()
-    {
+    public int hashCode() {
         return options.hashCode();
     }
 
@@ -94,8 +92,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         return options.equals(obj);
     }
 
@@ -104,8 +101,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getProperty(java.lang.String)
      */
-    public String getProperty(String name)
-    {
+    public String getProperty(String name) {
         return options.getProperty(name);
     }
 
@@ -114,8 +110,7 @@ public class TestServletOptions implements Options {
      * @param value
      * @see org.apache.jasper.EmbeddedServletOptions#setProperty(java.lang.String, java.lang.String)
      */
-    public void setProperty(String name, String value)
-    {
+    public void setProperty(String name, String value) {
         options.setProperty(name, value);
     }
 
@@ -123,8 +118,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getKeepGenerated()
      */
-    public boolean getKeepGenerated()
-    {
+    public boolean getKeepGenerated() {
         return options.getKeepGenerated();
     }
 
@@ -132,8 +126,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getTrimSpaces()
      */
-    public boolean getTrimSpaces()
-    {
+    public boolean getTrimSpaces() {
         return options.getTrimSpaces();
     }
 
@@ -141,8 +134,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#isPoolingEnabled()
      */
-    public boolean isPoolingEnabled()
-    {
+    public boolean isPoolingEnabled() {
         return options.isPoolingEnabled();
     }
 
@@ -150,8 +142,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getMappedFile()
      */
-    public boolean getMappedFile()
-    {
+    public boolean getMappedFile() {
         return options.getMappedFile();
     }
 
@@ -159,8 +150,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getSendErrorToClient()
      */
-    public boolean getSendErrorToClient()
-    {
+    public boolean getSendErrorToClient() {
         return options.getSendErrorToClient();
     }
 
@@ -168,8 +158,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getClassDebugInfo()
      */
-    public boolean getClassDebugInfo()
-    {
+    public boolean getClassDebugInfo() {
         return options.getClassDebugInfo();
     }
 
@@ -177,8 +166,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getCheckInterval()
      */
-    public int getCheckInterval()
-    {
+    public int getCheckInterval() {
         return options.getCheckInterval();
     }
 
@@ -186,8 +174,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getModificationTestInterval()
      */
-    public int getModificationTestInterval()
-    {
+    public int getModificationTestInterval() {
         return options.getModificationTestInterval();
     }
 
@@ -195,8 +182,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getDevelopment()
      */
-    public boolean getDevelopment()
-    {
+    public boolean getDevelopment() {
         return options.getDevelopment();
     }
 
@@ -204,8 +190,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#isSmapSuppressed()
      */
-    public boolean isSmapSuppressed()
-    {
+    public boolean isSmapSuppressed() {
         return options.isSmapSuppressed();
     }
 
@@ -213,8 +198,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#isSmapDumped()
      */
-    public boolean isSmapDumped()
-    {
+    public boolean isSmapDumped() {
         return options.isSmapDumped();
     }
 
@@ -222,8 +206,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#genStringAsCharArray()
      */
-    public boolean genStringAsCharArray()
-    {
+    public boolean genStringAsCharArray() {
         return options.genStringAsCharArray();
     }
 
@@ -231,8 +214,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getIeClassId()
      */
-    public String getIeClassId()
-    {
+    public String getIeClassId() {
         return options.getIeClassId();
     }
 
@@ -240,8 +222,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getScratchDir()
      */
-    public File getScratchDir()
-    {
+    public File getScratchDir() {
         return options.getScratchDir();
     }
 
@@ -249,8 +230,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getClassPath()
      */
-    public String getClassPath()
-    {
+    public String getClassPath() {
         return options.getClassPath();
     }
 
@@ -258,8 +238,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#isXpoweredBy()
      */
-    public boolean isXpoweredBy()
-    {
+    public boolean isXpoweredBy() {
         return options.isXpoweredBy();
     }
 
@@ -267,8 +246,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getCompiler()
      */
-    public String getCompiler()
-    {
+    public String getCompiler() {
         return options.getCompiler();
     }
 
@@ -276,8 +254,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getCompilerTargetVM()
      */
-    public String getCompilerTargetVM()
-    {
+    public String getCompilerTargetVM() {
         return options.getCompilerTargetVM();
     }
 
@@ -285,8 +262,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getCompilerSourceVM()
      */
-    public String getCompilerSourceVM()
-    {
+    public String getCompilerSourceVM() {
         return options.getCompilerSourceVM();
     }
 
@@ -294,8 +270,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getErrorOnUseBeanInvalidClassAttribute()
      */
-    public boolean getErrorOnUseBeanInvalidClassAttribute()
-    {
+    public boolean getErrorOnUseBeanInvalidClassAttribute() {
         return options.getErrorOnUseBeanInvalidClassAttribute();
     }
 
@@ -303,8 +278,7 @@ public class TestServletOptions implements Options {
      * @param b
      * @see org.apache.jasper.EmbeddedServletOptions#setErrorOnUseBeanInvalidClassAttribute(boolean)
      */
-    public void setErrorOnUseBeanInvalidClassAttribute(boolean b)
-    {
+    public void setErrorOnUseBeanInvalidClassAttribute(boolean b) {
         options.setErrorOnUseBeanInvalidClassAttribute(b);
     }
 
@@ -312,8 +286,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getTldLocationsCache()
      */
-    public TldLocationsCache getTldLocationsCache()
-    {
+    public TldLocationsCache getTldLocationsCache() {
         return options.getTldLocationsCache();
     }
 
@@ -321,8 +294,7 @@ public class TestServletOptions implements Options {
      * @param tldC
      * @see org.apache.jasper.EmbeddedServletOptions#setTldLocationsCache(org.apache.jasper.compiler.TldLocationsCache)
      */
-    public void setTldLocationsCache(TldLocationsCache tldC)
-    {
+    public void setTldLocationsCache(TldLocationsCache tldC) {
         options.setTldLocationsCache(tldC);
     }
 
@@ -330,8 +302,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getJavaEncoding()
      */
-    public String getJavaEncoding()
-    {
+    public String getJavaEncoding() {
         return options.getJavaEncoding();
     }
 
@@ -339,8 +310,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getFork()
      */
-    public boolean getFork()
-    {
+    public boolean getFork() {
         return options.getFork();
     }
 
@@ -348,8 +318,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getJspConfig()
      */
-    public JspConfig getJspConfig()
-    {
+    public JspConfig getJspConfig() {
         return options.getJspConfig();
     }
 
@@ -357,8 +326,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getTagPluginManager()
      */
-    public TagPluginManager getTagPluginManager()
-    {
+    public TagPluginManager getTagPluginManager() {
         return options.getTagPluginManager();
     }
 
@@ -366,8 +334,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#isCaching()
      */
-    public boolean isCaching()
-    {
+    public boolean isCaching() {
         return options.isCaching();
     }
 
@@ -375,8 +342,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see org.apache.jasper.EmbeddedServletOptions#getCache()
      */
-    public Map getCache()
-    {
+    public Map getCache() {
         return options.getCache();
     }
 
@@ -384,8 +350,7 @@ public class TestServletOptions implements Options {
      * @return
      * @see java.lang.Object#toString()
      */
-    public String toString()
-    {
+    public String toString() {
         return options.toString();
     }
 }
