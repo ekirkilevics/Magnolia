@@ -109,10 +109,14 @@ public class QueryResultImpl implements QueryResult {
     protected void build(String nodeType, Collection<Content> collection) throws RepositoryException {
         this.objectStore.put(nodeType, collection);
         NodeIterator nodeIterator = this.result.getNodes();
+
+        // whitespace separated list (can't hurt since a single nodetype name can't contain a space)
+        String[] nodeTypes = StringUtils.split(nodeType);
+
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.nextNode();
             try {
-                build(node, nodeType, collection);
+                build(node, nodeTypes, collection);
             }
             catch (RepositoryException re) {
                 log.error("{} caught while iterating on query results: {}", re.getClass().getName(), re.getMessage());
@@ -128,11 +132,11 @@ public class QueryResultImpl implements QueryResult {
     /**
      * Build required result objects
      */
-    protected void build(Node node, String nodeType, Collection<Content> collection) throws RepositoryException {
+    protected void build(Node node, String[] nodeType, Collection<Content> collection) throws RepositoryException {
         /**
          * All custom node types
          */
-        if ((node.isNodeType(nodeType) || StringUtils.isEmpty(nodeType)) && !node.isNodeType(ItemType.NT_RESOURCE)) {
+        if ((nodeType== null || nodeType.length == 0) || isNodeType(node, nodeType) && !node.isNodeType(ItemType.NT_RESOURCE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 boolean isAllowed = this.hm.getAccessManager().isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
@@ -172,4 +176,13 @@ public class QueryResultImpl implements QueryResult {
         return resultSet;
     }
 
+    private boolean isNodeType(Node node, String[] nodeType) throws RepositoryException {
+
+        for (String nt : nodeType) {
+            if (node.isNodeType(nt)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
