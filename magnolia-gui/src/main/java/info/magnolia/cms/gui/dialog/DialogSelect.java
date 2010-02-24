@@ -35,6 +35,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
@@ -46,6 +47,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -136,12 +138,24 @@ public class DialogSelect extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
-        Select control = new Select(this.getName(), this.getValue());
+        Select control;
+        if (this.getConfigValue("valueType").equals("multiple")) { //$NON-NLS-1$ //$NON-NLS-2$
+            List values = this.getValues();
+            if ((values == null || values.isEmpty()) && getValue() != null) {
+                values = Collections.singletonList(getValue());
+            }
+            control = new Select(this.getName(), values);
+            control.setValueType(ControlImpl.VALUETYPE_MULTIPLE);
+        }
+        else {
+            control = new Select(this.getName(), this.getValue());
+        }
         control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
         control.setCssClass(CssConstants.CSSCLASS_SELECT);
+        control.setMultiple(this.getConfigValue("multiple", "false")); //$NON-NLS-1$ //$NON-NLS-2$
         control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         // translate (not possible in init since not a sub of the tab then)

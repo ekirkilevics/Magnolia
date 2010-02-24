@@ -50,11 +50,17 @@ public class Select extends ControlImpl {
 
     private List options = new ArrayList();
 
+    private String multiple = "false"; //$NON-NLS-1$
+
     public Select() {
     }
 
     public Select(String name, String value) {
         super(name, value);
+    }
+
+    public Select(String name, List values) {
+        super(name, values);
     }
 
     public Select(String name, Content websiteNode) {
@@ -77,11 +83,30 @@ public class Select extends ControlImpl {
         return this.options;
     }
 
+    /**
+     * Sets the multiple.
+     * @param multiple the multiple to set
+     */
+    public void setMultiple(String multiple) {
+        this.multiple = multiple;
+    }
+
+    /**
+     * Returns the multiple.
+     * @return the multiple
+     */
+    public String getMultiple() {
+        return multiple;
+    }
+
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append("<select"); //$NON-NLS-1$
         html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        if ("true".equalsIgnoreCase(this.getMultiple())) {
+            html.append(" multiple=\"multiple\""); //$NON-NLS-1$
+        }
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         html.append(this.getHtmlEvents());
@@ -89,12 +114,24 @@ public class Select extends ControlImpl {
         Iterator it = this.getOptions().iterator();
         while (it.hasNext()) {
             SelectOption o = (SelectOption) it.next();
-            if (StringUtils.isNotEmpty(this.getValue())) {
-                if (this.getValue().equals(o.getValue())) {
-                    o.setSelected(true);
+            if (this.getValueType() == ControlImpl.VALUETYPE_MULTIPLE) {
+                if (this.getValues().size() != 0) {
+                    if (this.getValues().contains(o.getValue())) {
+                        o.setSelected(true);
+                    }
+                    else {
+                        o.setSelected(false);
+                    }
                 }
-                else {
-                    o.setSelected(false);
+            }
+            else {
+                if (StringUtils.isNotEmpty(this.getValue())) {
+                    if (this.getValue().equals(o.getValue())) {
+                        o.setSelected(true);
+                    }
+                    else {
+                        o.setSelected(false);
+                    }
                 }
             }
             html.append(o.getHtml());
