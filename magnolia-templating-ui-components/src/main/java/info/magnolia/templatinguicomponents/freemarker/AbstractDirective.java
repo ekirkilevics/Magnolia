@@ -41,6 +41,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateSequenceModel;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -49,6 +50,9 @@ import info.magnolia.freemarker.models.ContentModel;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,6 +61,7 @@ import java.util.Map;
  */
 public abstract class AbstractDirective implements TemplateDirectiveModel {
 
+    @SuppressWarnings("unchecked")
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         final ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
         final AggregationState aggregationState = MgnlContext.getAggregationState();
@@ -75,6 +80,12 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
      * If parameters have been grabbed using the methods provided by this class, they should be removed from
      * the map, thus leaving an empty map once the method returns. {@link #execute(freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)}
      * will throw a TemplateModelException if there are leftover parameters.
+     *
+     * <strong>note:</strong> The current FreeMarker implementation passes a "new" Map which we can safely manipulate.
+     * is thrown away after the execution of the directive. When no parameters are passed, the Map is readonly, but it
+     * is otherwise a regular HashMap which has been instantiated shortly before the execution of the directive. However, since
+     * this behavior is not mandated by their API, nor documented (at the time of writing, with FreeMarker 2.3.16), we
+     * should exert caution. Unit tests hopefully cover this, so we'll be safe when updating to newer FreeMarker versions. 
      */
     protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
 
@@ -112,6 +123,32 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
             return defaultValue;
         }
         return m.asContent();
+    }
+    
+    protected List<String> mandatoryStringList(Map<String, TemplateModel> params, String key) throws TemplateModelException {
+        final TemplateModel model = _param(params, key, TemplateModel.class, true);
+        if (model instanceof TemplateScalarModel) {
+            final String s = ((TemplateScalarModel) model).getAsString();
+            // TODO we could still support the string list here too ... (somehow we do, because the dialog splits the string again ..)
+            return Collections.singletonList(s);
+        } else if (model instanceof TemplateSequenceModel) {
+            // TODO - also support TemplateCollectionModel with new CollectionAndSequence(model) ?
+
+            final List<String> list = new ArrayList<String>();
+
+            final TemplateSequenceModel seqModel = (TemplateSequenceModel) model;
+            for (int i = 0; i < seqModel.size(); i++) {
+                final TemplateModel tm = seqModel.get(i);
+                if (!(tm instanceof TemplateScalarModel)) {
+                    throw new TemplateModelException("The '" + key + "' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
+                } else {
+                    list.add(((TemplateScalarModel) tm).getAsString());
+                }
+            }
+            return list;
+        } else {
+            throw new TemplateModelException(key + " must be a String, a Collection of Strings. Found " + model.getClass().getSimpleName() + ".");
+        }
     }
 
     protected <MT extends TemplateModel> MT _param(Map<String, TemplateModel> params, String key, Class<MT> type, boolean isMandatory) throws TemplateModelException {
