@@ -116,11 +116,12 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
         bar.setNodeCollectionName(targetParent.getName());
         bar.setNodeName(target.getName());
         bar.setPath(parentParent.getHandle());
-        // bar.setPath(target.getHandle()); would work for edit but not for move
+        // bar.setPath(target.getHandle()); // would work for edit but not for move
 
         // bar.setDefaultButtons();
         if (enableMoveButton) {
-            bar.setButtonMove(); //targetParent.getName(), target.getName());
+            // doing the below instead of setButtonMove() for clarity, but see comment above for the bar.setPath method
+            bar.setButtonMove(targetParent.getName(), target.getName());
         }
         if (enableDeleteButton) {
             // simplified delete function -
