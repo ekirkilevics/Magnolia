@@ -39,7 +39,9 @@ function mgnlDeleteNode(path,paragraphName,nodeName)
         href=mgnlAddParameter(href,"mgnlIntercept","NODE_DELETE");
 
         href=mgnlRemoveParameter(href,"mgnlPath");
-        if (paragraphName == "") {
+        if (typeof paragraphName == 'undefined'&& typeof nodeName == 'undefined') {
+            href=mgnlAddParameter(href,"mgnlPath",path);
+        } else if (paragraphName == "") {
             href=mgnlAddParameter(href,"mgnlPath",path+"/"+nodeName);
         } else {
             href=mgnlAddParameter(href,"mgnlPath",path+"/"+paragraphName+"/"+nodeName);

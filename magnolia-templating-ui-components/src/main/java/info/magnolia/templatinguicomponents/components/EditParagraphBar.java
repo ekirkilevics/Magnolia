@@ -108,27 +108,25 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
             bar.setParagraph(paragraphTemplateName);
         }
 
-//        final String targetPath = getTarget().getHandle();
-
+        // needed for move ...
         final Content target = getTarget();
         final Content targetParent = target.getParent();
         final Content parentParent = targetParent.getParent();
 
         bar.setNodeCollectionName(targetParent.getName());
         bar.setNodeName(target.getName());
-        String path = parentParent.getHandle();
-        /*if (path.startsWith("/")) {
-              // don't ask... paths are concatenated in inline.js#mgnlDeleteNode
-            path=path.substring(1);
-        }*/
-        bar.setPath(path);
+        bar.setPath(parentParent.getHandle());
+        // bar.setPath(target.getHandle()); would work for edit but not for move
 
         // bar.setDefaultButtons();
         if (enableMoveButton) {
             bar.setButtonMove(); //targetParent.getName(), target.getName());
         }
         if (enableDeleteButton) {
-            bar.setButtonDelete(); // parentParent.getHandle(), targetParent.getName(), target.getName());
+            // simplified delete function -
+            bar.setButtonDelete(target.getHandle());
+            // these paths would otherwise get concatenated in inline.js#mgnlDeleteNode:
+            // parentParent.getHandle(), targetParent.getName(), target.getName());
         }
 
         bar.setButtonEdit();

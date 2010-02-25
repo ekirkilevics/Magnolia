@@ -157,6 +157,9 @@ public class BarEdit extends Bar {
         this.buttonDelete = b;
     }
 
+    /**
+     * @deprecated use {@link #setButtonDelete(String)}
+     */
     public void setButtonDelete() {
         this.setButtonDelete(this.getPath(), this.getNodeCollectionName(), this.getNodeName());
     }
@@ -167,11 +170,20 @@ public class BarEdit extends Bar {
      * @param path , path of the current page
      * @param nodeCollectionName , i.e. 'MainColumnParagraphs'
      * @param nodeName , i.e. '01'
+     *
+     * @deprecated use {@link #setButtonDelete(String)}
      */
     public void setButtonDelete(String path, String nodeCollectionName, String nodeName) {
         Button b = new Button();
         b.setLabel(MessagesManager.get("buttons.delete")); //$NON-NLS-1$
         b.setOnclick("mgnlDeleteNode('" + path + "','" + nodeCollectionName + "','" + nodeName + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        this.setButtonDelete(b);
+    }
+
+    public void setButtonDelete(String pathToDelete) {
+        Button b = new Button();
+        b.setLabel(MessagesManager.get("buttons.delete"));
+        b.setOnclick("mgnlDeleteNode('" + pathToDelete + "');");
         this.setButtonDelete(b);
     }
 

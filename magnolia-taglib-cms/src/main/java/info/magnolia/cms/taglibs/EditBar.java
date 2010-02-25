@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.gui.control.Button;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -269,7 +270,7 @@ public class EditBar extends TagSupport {
 
                 if (this.deleteLabel != null) {
                     if (StringUtils.isEmpty(this.deleteLabel)) {
-                        bar.setButtonDelete(null);
+                        bar.setButtonDelete((Button)null);
                     }
                     else {
                         bar.getButtonDelete().setLabel(this.deleteLabel);
