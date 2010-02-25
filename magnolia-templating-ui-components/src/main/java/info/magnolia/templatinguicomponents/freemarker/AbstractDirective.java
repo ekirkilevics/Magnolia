@@ -124,7 +124,7 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
         }
         return m.asContent();
     }
-    
+
     protected List<String> mandatoryStringList(Map<String, TemplateModel> params, String key) throws TemplateModelException {
         final TemplateModel model = _param(params, key, TemplateModel.class, true);
         if (model instanceof TemplateScalarModel) {
