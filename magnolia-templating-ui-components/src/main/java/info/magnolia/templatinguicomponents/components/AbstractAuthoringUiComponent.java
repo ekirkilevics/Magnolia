@@ -38,9 +38,11 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * If no target node is set explicitly, it is deduced using {@link #defaultTarget()}.
@@ -106,8 +108,15 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      * Override this method if the component needs to be rendered under different conditions.
      */
     protected boolean shouldRender() {
-
 //   TODO     if ((!adminOnly || ? with jsp tag EditBar, you can do adminOnly="false" and get the button/bar on public instance !?
         return (server.isAdmin() && aggregationState.getMainContent().isGranted(Permission.SET));
     }
+
+    /**
+     * Utility method - our current gui components (magnolia-gui) expect comma separated strings.
+     */
+    protected String asString(List<String> strings) {
+        return StringUtils.join(strings, ',');
+    }
+
 }

@@ -70,7 +70,10 @@ public abstract class AbstractTag extends SimpleTagSupport {
 
     // ---- utility methods to convert parameters ----
 
-    protected List<String> toStringList(Object allowedParagraphs, String attributeName) throws JspException {
+    /**
+     * Converts (split) a single comma-separated string, or returns a copy of the given collection or String array.
+     */
+    protected List<String> mandatoryStringList(Object allowedParagraphs, String attributeName) throws JspException {
         if (allowedParagraphs instanceof String) {
             return split((String) allowedParagraphs);
         } else if (allowedParagraphs instanceof Collection) {

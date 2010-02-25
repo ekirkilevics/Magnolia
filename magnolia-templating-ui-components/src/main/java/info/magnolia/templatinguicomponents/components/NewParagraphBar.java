@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarNew;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -99,7 +98,7 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
     protected void doRender(Appendable out) throws IOException {
         final BarNew bar = new BarNew();
 
-        bar.setParagraph(allowedParagraphsAsString());
+        bar.setParagraph(asString(allowedParagraphs));
 //   TODO     if (StringUtils.isBlank(bar.getParagraph())) {
 //            log.warn("No paragraph selected for new bar in {}", pageContext.getPage());
         // don't set new button's label if there's no selectable paragraph
@@ -119,10 +118,6 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
 
         bar.placeDefaultButtons();
         bar.drawHtml((Writer) out);
-    }
-
-    private String allowedParagraphsAsString() {
-        return StringUtils.join(allowedParagraphs, ',');
     }
 
 }

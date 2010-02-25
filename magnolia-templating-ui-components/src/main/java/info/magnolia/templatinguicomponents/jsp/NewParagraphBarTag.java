@@ -96,7 +96,7 @@ public class NewParagraphBarTag extends AbstractTag {
             throw new JspException("paragraphs must be set");
         }
 
-        final List<String> paraList = toStringList(allowedParagraphs, "paragraphs");
+        final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
 
         return NewParagraphBar.make(serverCfg, aggState, target, containerNodeName, paraList, newButtonLabel);
     }
