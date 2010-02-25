@@ -36,7 +36,7 @@ package info.magnolia.templatinguicomponents.freemarker;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.gui.i18n.DefautlI18nAuthoringSupport;
+import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
@@ -107,7 +107,7 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
         // register some default components used internally
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefautlI18nAuthoringSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
         ctx = createMock(WebContext.class);
         expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
