@@ -44,12 +44,12 @@
       <artifactId>magnolia-gui</artifactId>
       <version>4.3-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <!-- TODO needed for ParagraphSelectDialog - but currently circular, so see -->
+    <!-- dependency
+      TODO needed for ParagraphSelectDialog - but currently circular, so see note in info.magnolia.templatinguicomponents.components.EditParagraphBar
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>4.3-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
