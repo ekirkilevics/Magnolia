@@ -55,7 +55,6 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
-import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePermissionTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -188,8 +187,8 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new RemovePermissionTask("Update workflow-base role", "Updates the workflow-base role, removing unnecessary permission to self.", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
     }
 
-    protected List getExtraInstallTasks(InstallContext ctx) {
-        final List tasks = new ArrayList();
+    protected List<Task> getExtraInstallTasks(InstallContext ctx) {
+        final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new ModuleDependencyBootstrapTask("dms"));
         tasks.add(new ModuleDependencyBootstrapTask("data"));
         tasks.add(inboxMenu);
