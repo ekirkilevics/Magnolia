@@ -70,14 +70,4 @@ public class SingletonParagraphBarDirective extends AbstractDirective {
 
     }
 
-    @Override
-    protected void doBody(Environment env, TemplateDirectiveBody body) throws TemplateException, IOException {
-        if (body != null) {
-            //env.setLocalVariable("myVar", new SimpleScalar("local!"));
-            env.setVariable("myVar", new SimpleScalar("regular!"));
-            env.setGlobalVariable("myVar", new SimpleScalar("global!"));
-            body.render(env.getOut());
-        }
-
-    }
 }
