@@ -119,23 +119,27 @@ public abstract class AbstractNodeData implements NodeData{
 
         if (type == PropertyType.REFERENCE) {
             refNode = getContentFromJCRReference();
-        } else if (type == PropertyType.PATH || type == PropertyType.STRING) {
-            final String pathOrUUID = this.getString();
-            if (StringUtils.isNotBlank(pathOrUUID)) {
+        } else if (type != PropertyType.PATH && type != PropertyType.STRING) {
+            throw new ItemNotFoundException("can't find referenced node for value " + PropertyType.nameFromValue(type) + "[" + getString() + "]. This type is not supported.");
+        }
+
+        final String pathOrUUID = this.getString();
+        if (StringUtils.isNotBlank(pathOrUUID)) {
+            // we support uuids as strings
+            if (!StringUtils.contains(pathOrUUID, "/")) {
+                try {
+                    refNode = hm.getContentByUUID(pathOrUUID);
+                } catch (ItemNotFoundException e) {
+                    // this is not an uuid
+                }
+            }
+            // not found by uuid, check the path then
+            if (refNode == null) {
                 // is this relative path?
                 if (!pathOrUUID.startsWith("/") && node.hasContent(pathOrUUID)) {
                     refNode = node.getContent(pathOrUUID);
                 } else if (pathOrUUID.startsWith("/") && hm.isExist(pathOrUUID)){
                     refNode = hm.getContent(pathOrUUID);
-                }
-
-                // we support uuids as strings
-                if (refNode == null && type == PropertyType.STRING && !StringUtils.contains(pathOrUUID, "/")) {
-                    try {
-                        refNode = hm.getContentByUUID(pathOrUUID);
-                    } catch (ItemNotFoundException e) {
-                        // this is not an uuid
-                    }
                 }
             }
         }
