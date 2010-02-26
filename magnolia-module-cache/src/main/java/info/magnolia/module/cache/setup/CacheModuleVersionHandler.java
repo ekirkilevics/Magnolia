@@ -46,6 +46,7 @@ import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
@@ -60,7 +61,6 @@ import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
@@ -74,7 +74,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public CacheModuleVersionHandler() {
         super();
-        final List conditions = new ArrayList();
+        final List<Condition> conditions = new ArrayList<Condition>();
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
@@ -129,7 +129,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("3.6.4", "Update gzip and cache compression configuration.").addTasks(getTasksFor364()));
 
         register(DeltaBuilder.update("4.1", "New flush policy configuration.").addTask(
-                new ArrayDelegateTask("", "", new Task[] {
+                new ArrayDelegateTask("New flush policy configuration", "Sets up the new flush policy configuration.",
                         // move existing policy to temp
                         new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy","/modules/cache/config/configurations/default/tmp", false),
                         // create new policy configuration
@@ -138,13 +138,13 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         new CreateNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy", "policies", ItemType.CONTENTNODE.getSystemName()),
                         // move original config under the new one
                         new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/tmp","/modules/cache/config/configurations/default/flushPolicy/policies/flushAll", false)
-                })));
+                )));
 
 
     }
 
-    private List getTasksFor364() {
-        List list = new ArrayList();
+    private List<Task> getTasksFor364() {
+        List<Task> list = new ArrayList<Task>();
         // Add new compression types and user agents configuration
         list.add(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
             protected String[] getResourcesToBootstrap(final InstallContext installContext) {
@@ -169,8 +169,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
             protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
                 final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
                 Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
-                content.createNodeData("class","info.magnolia.voting.voters.VoterSet");
-                content.createNodeData("delegatePath","/modules/cache/config/compression/voters");
+                content.setNodeData("class","info.magnolia.voting.voters.VoterSet");
+                content.setNodeData("delegatePath","/modules/cache/config/compression/voters");
             }
         });
 
@@ -182,8 +182,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                     return;
                 }
                 Content cnt = hm.getContent(reposPath);
-                for (Iterator iter = cnt.getChildren().iterator(); iter.hasNext();) {
-                    Content c = (Content) iter.next();
+                for (Content c : cnt.getChildren()) {
                     if (c.hasNodeData("name")) {
                         new RegisterWorkspaceForCacheFlushingTask(c.getName()).execute(installContext);
                     }
@@ -193,8 +192,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         return list;
     }
 
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        final List tasks = new ArrayList();
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"}));
         tasks.add(new FilterOrderingTask("cache", new String[]{"gzip"}));
         return tasks;
