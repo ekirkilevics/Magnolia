@@ -43,7 +43,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.AbstractRenderable;
 
 /**
  * @author Sameer Charles
