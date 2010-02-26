@@ -152,7 +152,12 @@ public abstract class AbstractContext implements Context, Serializable {
      */
     public Locale getLocale() {
         if (locale == null) {
-            locale = MgnlContext.getSystemContext().getLocale();
+            final SystemContext sysctx = MgnlContext.getSystemContext();
+            if (this == sysctx) {
+                // do not fall in the endless loop
+                return null;
+            }
+            locale = sysctx.getLocale();
         }
         return locale;
     }

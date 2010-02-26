@@ -66,7 +66,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     private Locale fallbackLocale = new Locale("en");
 
     /**
-     * If no locale can be determined the default locale will be set. If no default locale is defined the fallback locale is used. 
+     * If no locale can be determined the default locale will be set. If no default locale is defined the fallback locale is used.
      */
     protected Locale defaultLocale;
 
@@ -78,7 +78,12 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     private Map<String, Locale> locales = new LinkedHashMap<String, Locale>();
 
     public Locale getLocale() {
-        return MgnlContext.getAggregationState().getLocale();
+        final Locale locale = MgnlContext.getAggregationState().getLocale();
+        if (locale == null) {
+            return fallbackLocale;
+        } else {
+            return locale;
+        }
     }
 
     public void setLocale(Locale locale) {
@@ -101,12 +106,13 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
             if(isLocaleSupported(langOnlyLocale)){
                 return langOnlyLocale;
             }
-            // try to find a locale with the same language (ignore the country)
-            for (Iterator iter = getLocales().iterator(); iter.hasNext();) {
-                Locale otherCountryLocale = (Locale) iter.next();
-                if(locale.getLanguage().equals(otherCountryLocale.getLanguage())){
-                    return otherCountryLocale;
-                }
+        }
+        // try to find a locale with the same language (ignore the country)
+        for (Iterator iter = getLocales().iterator(); iter.hasNext();) {
+            Locale otherCountryLocale = (Locale) iter.next();
+            // same lang, but not the same country as well or we end up in the loop
+            if(locale.getLanguage().equals(otherCountryLocale.getLanguage()) && !locale.equals(otherCountryLocale)){
+                return otherCountryLocale;
             }
         }
         return getFallbackLocale();
@@ -120,11 +126,11 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
         locale = onDetermineLocale();
 
-        // depending on the implementation the returned local can be null (not definded)
+        // depending on the implementation the returned local can be null (not defined)
         if(locale == null){
             locale = getDefaultLocale();
         }
-        // if we have a local but it is not supported we try to get the closest local
+        // if we have a locale but it is not supported we try to get the closest locale
         if(!isLocaleSupported(locale)){
             locale = getNextLocale(locale);
         }

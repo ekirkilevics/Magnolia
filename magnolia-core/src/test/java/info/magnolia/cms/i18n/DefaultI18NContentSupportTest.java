@@ -37,9 +37,12 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockHierarchyManager;
 
 import java.util.Locale;
 
@@ -55,21 +58,21 @@ import org.slf4j.LoggerFactory;
 public class DefaultI18NContentSupportTest extends MgnlTestCase {
 
     /**
-     * 
+     *
      */
     private static final Locale DEFAULT_LOCALE = new Locale("en");
     /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(DefaultI18NContentSupportTest.class);
-    
+
     public void testDetermineLocale(){
         DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
         defSupport.addLocale(new LocaleDefinition("de", null, true));
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
         defSupport.addLocale(new LocaleDefinition("it", null, false));
-        
+
         // no language
         setCurrentURI("/home.html");
         Locale  locale = defSupport.determineLocale();
@@ -78,7 +81,7 @@ public class DefaultI18NContentSupportTest extends MgnlTestCase {
         setCurrentURI("/de/home.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de"), locale);
-        
+
         setCurrentURI("/de_ch/home.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de", "ch"), locale);
@@ -88,10 +91,94 @@ public class DefaultI18NContentSupportTest extends MgnlTestCase {
         locale = defSupport.determineLocale();
         assertEquals(DEFAULT_LOCALE, locale);
 
-        // desabled language
+        // disabled language
         setCurrentURI("/it/home.html");
         locale = defSupport.determineLocale();
         assertEquals(DEFAULT_LOCALE, locale);
+    }
+
+    public void testDetermineLocaleEndlessLoop () {
+        DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
+        defSupport.setFallbackLocale(DEFAULT_LOCALE);
+        defSupport.addLocale(new LocaleDefinition("de", "CH", true));
+        defSupport.addLocale(new LocaleDefinition("it", null, true));
+
+        // no language
+        setCurrentURI("/home.html");
+        Locale  locale = defSupport.determineLocale();
+        assertEquals(DEFAULT_LOCALE, locale);
+
+        // exact match on the lang/country
+        setCurrentURI("/de_ch/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de", "ch"), locale);
+
+        // supported lang, but not country - should default to the same lang but with diff country
+        setCurrentURI("/de_at/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de", "ch"), locale);
+
+        // supported lang, but not w/o country code - should default to the same lang but with different country code
+        setCurrentURI("/de/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de", "ch"), locale);
+
+        // not supported language
+        setCurrentURI("/fr/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(DEFAULT_LOCALE, locale);
+
+        setCurrentURI("/it/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("it"), locale);
+
+    }
+
+    public void testGetNodeDataEndlessLoop() throws Exception {
+        DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
+        defSupport.setEnabled(true);
+        defSupport.setFallbackLocale(DEFAULT_LOCALE);
+        defSupport.addLocale(new LocaleDefinition("de", "CH", true));
+        defSupport.addLocale(new LocaleDefinition("it", null, false));
+        MockContent content = new MockContent("boo");
+        content.setHierarchyManager(new MockHierarchyManager());
+
+        // no language
+        NodeData defaultblah = content.setNodeData("blah", "val_blah");
+        NodeData localized = defSupport.getNodeData(content, "blah");
+        assertEquals(defaultblah, localized);
+
+        // exact match doesn't exist, country_lang match doesn't exist, locale is country only
+        NodeData defaultFoo = content.setNodeData("foo", "val_foo");
+        defSupport.setLocale(new Locale("de"));
+        localized = defSupport.getNodeData(content, "foo");
+        assertEquals(defaultFoo, localized);
+
+        // exact match on the lang/country
+        NodeData swissBlah = content.setNodeData("blah_de_CH", "val_de_ch_blah");
+        defSupport.setLocale(new Locale("de", "CH"));
+        localized = defSupport.getNodeData(content, "blah");
+        assertEquals(swissBlah, localized);
+
+        // supported lang, but not country - should default to the same lang but with diff country
+        defSupport.setLocale(new Locale("de", "AT"));
+        localized = defSupport.getNodeData(content, "blah");
+        assertEquals(swissBlah, localized);
+
+        // supported lang, but not w/o country code - should default to the same lang but with different country code
+        defSupport.setLocale(new Locale("de"));
+        localized = defSupport.getNodeData(content, "blah");
+        assertEquals(swissBlah, localized);
+
+        // not supported language
+        defSupport.setLocale(new Locale("fr"));
+        localized = defSupport.getNodeData(content, "blah");
+        assertEquals(defaultblah, localized);
+
+        // disabled language
+        defSupport.setLocale(new Locale("it"));
+        localized = defSupport.getNodeData(content, "blah");
+        assertEquals(defaultblah, localized);
 
     }
 
