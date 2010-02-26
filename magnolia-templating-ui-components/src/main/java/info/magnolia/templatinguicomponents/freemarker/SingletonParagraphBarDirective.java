@@ -31,69 +31,53 @@
  * intact.
  *
  */
-package info.magnolia.templatinguicomponents.jsp;
+package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.core.Environment;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.NewParagraphBar;
+import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
 
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
- * @jsp.tag name="new" body-content="empty"
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewParagraphBarTag extends AbstractTag {
+public class SingletonParagraphBarDirective extends AbstractDirective {
+    @Override
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        final String enableButtonLabel = string(params, "enableLabel", null);
+        final Content target = content(params, "target", null);
+        final String containerNodeName = string(params, "container", null);
+        if (target == null && containerNodeName == null) {
+            // TODO check
+            throw new TemplateModelException("At least target or container must be specified.");
+        }
+        final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
 
-    private String newButtonLabel;
-    private Content target;
-    private String containerNodeName;
-    private Object allowedParagraphs;
+        return SingletonParagraphBar.make(serverCfg, aggState, containerNodeName, allowedParagraphs, enableButtonLabel);
 
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setNewLabel(String newButtonLabel) {
-        this.newButtonLabel = newButtonLabel;
-    }
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
-     */
-    public void setTarget(Content target) {
-        this.target = target;
-    }
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setContainer(String containerNodeName) {
-        this.containerNodeName = containerNodeName;
-    }
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Object"
-     */
-    public void setParagraphs(Object allowedParagraphs) {
-        this.allowedParagraphs = allowedParagraphs;
     }
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
-        if (target == null && containerNodeName == null) {
-            // TODO check
-            throw new JspException("At least target or container must be specified.");
+    protected void doBody(Environment env, TemplateDirectiveBody body) throws TemplateException, IOException {
+        if (body != null) {
+            //env.setLocalVariable("myVar", new SimpleScalar("local!"));
+            env.setVariable("myVar", new SimpleScalar("regular!"));
+            env.setGlobalVariable("myVar", new SimpleScalar("global!"));
+            body.render(env.getOut());
         }
 
-        final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
-
-        return NewParagraphBar.make(serverCfg, aggState, target, containerNodeName, paraList, newButtonLabel);
     }
-
 }

@@ -64,14 +64,14 @@ public class EditParagraphBarTag extends AbstractTag {
     }
 
     /**
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setMove(boolean move) {
         this.enableMoveButton = move;
     }
 
     /**
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setDelete(boolean delete) {
         this.enableDeleteButton = delete;
@@ -85,7 +85,7 @@ public class EditParagraphBarTag extends AbstractTag {
     }
 
     /**
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
     public void setTarget(Content target) {
         this.target = target;

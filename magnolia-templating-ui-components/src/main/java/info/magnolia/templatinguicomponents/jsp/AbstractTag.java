@@ -40,6 +40,7 @@ import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import org.apache.commons.collections.EnumerationUtils;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,6 +62,15 @@ public abstract class AbstractTag extends SimpleTagSupport {
         final AuthoringUiComponent uiComp = prepareUIComponent(serverConfiguration, aggregationState);
 
         uiComp.render(getJspContext().getOut());
+
+        doBody();
+    }
+
+    protected void doBody() throws JspException, IOException {
+        final JspFragment body = getJspBody();
+        if (body != null) {
+            body.invoke(null);
+        }
     }
 
     /**

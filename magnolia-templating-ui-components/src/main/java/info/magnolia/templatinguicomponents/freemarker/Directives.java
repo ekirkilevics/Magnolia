@@ -47,5 +47,6 @@ public class Directives extends HashMap<String, TemplateDirectiveModel> {
         put("main", new EditPageBarDirective());
         put("new", new NewParagraphBarDirective());
         put("edit", new EditParagraphBarDirective());
+        put("singleton", new SingletonParagraphBarDirective());
     }
 }

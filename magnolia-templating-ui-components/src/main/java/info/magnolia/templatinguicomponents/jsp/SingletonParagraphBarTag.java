@@ -35,39 +35,60 @@ package info.magnolia.templatinguicomponents.jsp;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.EditPageBar;
+import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
 
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import java.util.List;
 
 /**
- * @jsp.tag name="main" body-content="empty"
+ * @jsp.tag name="singleton" body-content="scriptless"
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditPageBarTag extends AbstractTag {
-    private String editButtonLabel;
-    private String dialogName;
+public class SingletonParagraphBarTag extends AbstractTag {
+
+    private Content target;
+    private String containerNodeName;
+    private Object allowedParagraphs;
+    private String enableButtonLabel;
 
     /**
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
-    public void setEditLabel(String editButtonLabel) {
-        this.editButtonLabel = editButtonLabel;
+    public void setTarget(Content target) {
+        this.target = target;
     }
 
     /**
      * @jsp.attribute required="false" rtexprvalue="true"
      */
-    public void setDialog(String dialogName) {
-        this.dialogName = dialogName;
+    public void setContainer(String containerNodeName) {
+        this.containerNodeName = containerNodeName;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Object"
+     */
+    public void setParagraphs(Object allowedParagraphs) {
+        this.allowedParagraphs = allowedParagraphs;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setEnableLabel(String enableButtonLabel) {
+        this.enableButtonLabel = enableButtonLabel;
     }
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
+        final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
 
-        return EditPageBar.make(serverCfg, aggState, editButtonLabel, dialogName);
+        return SingletonParagraphBar.make(serverCfg, aggState, containerNodeName, paraList, enableButtonLabel);
     }
+
 }

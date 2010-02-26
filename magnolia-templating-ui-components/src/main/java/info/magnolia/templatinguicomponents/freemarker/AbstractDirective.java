@@ -75,6 +75,8 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
         }
 
         uiComp.render(env.getOut());
+
+        doBody(env, body);
     }
 
     /**
@@ -90,6 +92,12 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
      * should exert caution. Unit tests hopefully cover this, so we'll be safe when updating to newer FreeMarker versions. 
      */
     protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
+
+    protected void doBody(Environment env, TemplateDirectiveBody body) throws TemplateException, IOException {
+        if (body != null) {
+            body.render(env.getOut());
+        }
+    }
 
     protected String mandatoryString(Map<String, TemplateModel> params, String key) throws TemplateModelException {
         return _param(params, key, TemplateScalarModel.class, true).getAsString();
