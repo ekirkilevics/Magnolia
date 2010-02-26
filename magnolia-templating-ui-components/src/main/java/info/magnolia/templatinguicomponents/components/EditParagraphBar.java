@@ -38,6 +38,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.gui.inline.ButtonEdit;
+import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
@@ -52,6 +53,15 @@ import java.io.Writer;
  */
 public class EditParagraphBar extends AbstractAuthoringUiComponent {
 
+    /**
+     * @param serverCfg
+     * @param aggState
+     * @param target if null, will deduce a default
+     * @param specificDialogName if null, deduced from paragraph definition of current node
+     * @param editButtonLabel if null, will use default
+     * @param enableMoveButton true should be the default
+     * @param enableDeleteButton true should be the default
+     */
     public static EditParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content target, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
         final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
         if (target != null) {
@@ -63,7 +73,6 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
         }
 
         if (editButtonLabel != null) {
-            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
             bar.setEditButtonLabel(editButtonLabel);
         }
         bar.setEnableMoveButton(enableMoveButton);
@@ -131,9 +140,8 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
         }
 
         bar.setButtonEdit();
-        //bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
         final ButtonEdit edit = bar.getButtonEdit();
-        edit.setDialogPath(".magnolia/dialogs/editParagraph.html");
+        edit.setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
         // TODO - yes this is a bit ugly - 1) we should in fact open the correct dialog immediately instead of faking the paragraph parameter - 2) the gui elements should not have defaults nor know anything about urls and onclick functions
         // TODO - test with specific dialog
         //  if (this.dialog == null) {

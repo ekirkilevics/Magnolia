@@ -51,10 +51,15 @@ import java.io.Writer;
  */
 public class EditPageBar extends AbstractAuthoringUiComponent {
 
+    /**
+     * @param serverCfg
+     * @param aggState
+     * @param editButtonLabel pass null for the default
+     * @param dialogName
+     */
     public static AuthoringUiComponent make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
         final EditPageBar bar = new EditPageBar(serverCfg, aggState);
         if (editButtonLabel != null) {
-            // TODO - where to keep default values? jsp-tag, directives, uzw ? Or the component.. but then wrappers have to invent stuff to work around that
             bar.setEditButtonLabel(editButtonLabel);
         }
 
@@ -85,7 +90,7 @@ public class EditPageBar extends AbstractAuthoringUiComponent {
         final BarMain bar = new BarMain();
         bar.setPath(getTarget().getHandle());
 
-        // TODO - deduce dialog from context...?
+        // TODO - deduce dialog from target node ?
         bar.setDialog(dialogName);
 
         bar.setAdminButtonVisible(true);

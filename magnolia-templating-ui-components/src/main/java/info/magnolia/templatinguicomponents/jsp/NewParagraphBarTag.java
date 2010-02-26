@@ -91,11 +91,6 @@ public class NewParagraphBarTag extends AbstractTag {
             throw new JspException("At least target or container must be specified.");
         }
 
-        // manual check (not mandatory in TLD, we accept two setters) // TODO check this really works
-        if (allowedParagraphs == null) {
-            throw new JspException("paragraphs must be set");
-        }
-
         final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
 
         return NewParagraphBar.make(serverCfg, aggState, target, containerNodeName, paraList, newButtonLabel);

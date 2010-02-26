@@ -44,11 +44,12 @@
       <artifactId>magnolia-gui</artifactId>
       <version>4.3-SNAPSHOT</version>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>info.magnolia</groupId>-->
-      <!--<artifactId>magnolia-module-admininterface</artifactId>-->
-      <!--<version>4.3-SNAPSHOT</version>-->
-    <!--</dependency>-->
+    <dependency>
+      <!-- needed for ParagraphSelectDialog -->
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-admininterface</artifactId>
+      <version>4.3-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>

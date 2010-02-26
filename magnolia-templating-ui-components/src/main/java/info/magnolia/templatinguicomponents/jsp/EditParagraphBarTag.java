@@ -43,7 +43,6 @@ import javax.servlet.jsp.JspException;
 import java.io.IOException;
 
 /**
- * TODO - parameter type conversions !?
  *
  * @jsp.tag name="edit" body-content="empty"
  *

@@ -33,8 +33,10 @@
  */
 package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;
 import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
@@ -129,26 +131,29 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
         final TemplateModel model = _param(params, key, TemplateModel.class, true);
         if (model instanceof TemplateScalarModel) {
             final String s = ((TemplateScalarModel) model).getAsString();
-            // TODO we could still support the string list here too ... (somehow we do, because the dialog splits the string again ..)
             return Collections.singletonList(s);
         } else if (model instanceof TemplateSequenceModel) {
-            // TODO - also support TemplateCollectionModel with new CollectionAndSequence(model) ?
-
-            final List<String> list = new ArrayList<String>();
-
-            final TemplateSequenceModel seqModel = (TemplateSequenceModel) model;
-            for (int i = 0; i < seqModel.size(); i++) {
-                final TemplateModel tm = seqModel.get(i);
-                if (!(tm instanceof TemplateScalarModel)) {
-                    throw new TemplateModelException("The '" + key + "' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
-                } else {
-                    list.add(((TemplateScalarModel) tm).getAsString());
-                }
-            }
-            return list;
+            final CollectionAndSequence coll = new CollectionAndSequence((TemplateSequenceModel) model);
+            return unwrapStringList(coll, key);
+        } else if (model instanceof TemplateCollectionModel) {
+            final CollectionAndSequence coll = new CollectionAndSequence((TemplateCollectionModel) model);
+            return unwrapStringList(coll, key);
         } else {
             throw new TemplateModelException(key + " must be a String, a Collection of Strings. Found " + model.getClass().getSimpleName() + ".");
         }
+    }
+
+    private List<String> unwrapStringList(CollectionAndSequence collAndSeq, String key) throws TemplateModelException {
+        final List<String> list = new ArrayList<String>();
+        for (int i = 0; i < collAndSeq.size(); i++) {
+            final TemplateModel tm = collAndSeq.get(i);
+            if (!(tm instanceof TemplateScalarModel)) {
+                throw new TemplateModelException("The '" + key + "' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
+            } else {
+                list.add(((TemplateScalarModel) tm).getAsString());
+            }
+        }
+        return list;
     }
 
     protected <MT extends TemplateModel> MT _param(Map<String, TemplateModel> params, String key, Class<MT> type, boolean isMandatory) throws TemplateModelException {

@@ -36,9 +36,8 @@ package info.magnolia.templatinguicomponents;
 import java.io.IOException;
 
 /**
- * ---
- * TODO doc - Implementations should be immutable. (cacheable instances - per use?)
- * Or not necessarily - short-lived - the freemarker directives can be long lived.
+ * Implementations of AuthoringUiComponent render specific "components" in templates.
+ * They're usually exposed to templating engines via a specific wrapper; see the freemarker and jsp subpackages for examples.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 

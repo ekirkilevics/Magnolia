@@ -73,16 +73,19 @@ public abstract class AbstractTag extends SimpleTagSupport {
     /**
      * Converts (split) a single comma-separated string, or returns a copy of the given collection or String array.
      */
-    protected List<String> mandatoryStringList(Object allowedParagraphs, String attributeName) throws JspException {
-        if (allowedParagraphs instanceof String) {
-            return split((String) allowedParagraphs);
-        } else if (allowedParagraphs instanceof Collection) {
-            return new ArrayList<String>((Collection) allowedParagraphs);
-        } else if (allowedParagraphs instanceof String[]) {
-            return Arrays.asList((String[]) allowedParagraphs);
+    protected List<String> mandatoryStringList(Object attrValue, String attributeName) throws JspException {
+        if (attrValue == null) {
+            throw new JspException(attributeName + " is mandatory and must a comma-separated String or a Collection<String> instance. No value passed, or passed value was null.");
+        }
+        if (attrValue instanceof String) {
+            return split((String) attrValue);
+        } else if (attrValue instanceof Collection) {
+            return new ArrayList<String>((Collection) attrValue);
+        } else if (attrValue instanceof String[]) {
+            return Arrays.asList((String[]) attrValue);
         }
 
-        throw new JspException(attributeName + " must a comma-separated String or a Collection<String> instance.");
+        throw new JspException(attributeName + " must a comma-separated String or a Collection<String> instance. Passed value was a " + attrValue.getClass().getSimpleName() + ".");
     }
 
     protected List<String> split(String s) {

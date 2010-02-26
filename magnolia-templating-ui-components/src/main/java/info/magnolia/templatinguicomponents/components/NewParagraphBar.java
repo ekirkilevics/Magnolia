@@ -50,14 +50,12 @@ import java.util.List;
 public class NewParagraphBar extends AbstractAuthoringUiComponent {
 
     /**
-     *
      * @param serverCfg
      * @param aggState
      * @param specificTarget override for {@link #defaultTarget()}.
      * @param containerNodeName the name of the node into which new paragraphs will be added; this is a child node of {@link #target}.
-     * @param allowedParagraphs
-     * @param newButtonLabel
-     * @return
+     * @param allowedParagraphs the list of paragraph definitions (their names) that are allow to be added by this component
+     * @param newButtonLabel if null, default will be used
      */
     public static NewParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content specificTarget, String containerNodeName, List<String> allowedParagraphs, String newButtonLabel) {
         final NewParagraphBar bar = new NewParagraphBar(serverCfg, aggState);

@@ -45,8 +45,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Common subclass for ui components, provides utility methods and defaults.
+ * Implementations should expose setter methods for their specific parameters (so that template-specific wrappers
+ * can set parameters). (no need to clutter things up with getters). Implementation might also expose static factory
+ * methods, which can take care of default values, i.e for labels.
+ *
  * If no target node is set explicitly, it is deduced using {@link #defaultTarget()}.
- * Implementations should expose setter for their specific parameters. No getters needed.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -108,7 +112,6 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      * Override this method if the component needs to be rendered under different conditions.
      */
     protected boolean shouldRender() {
-//   TODO     if ((!adminOnly || ? with jsp tag EditBar, you can do adminOnly="false" and get the button/bar on public instance !?
         return (server.isAdmin() && aggregationState.getMainContent().isGranted(Permission.SET));
     }
 
