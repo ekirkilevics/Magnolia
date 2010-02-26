@@ -55,7 +55,7 @@ public class Template extends AbstractRenderable {
 
     private boolean visible = true;
 
-    private Map subTemplates = new HashMap();
+    private Map<String, Template> subTemplates = new HashMap<String, Template>();
 
     /**
      * Used internally for SubTemplates.
@@ -94,18 +94,18 @@ public class Template extends AbstractRenderable {
     }
 
     public Template getSubTemplate(String extension) {
-        return (Template) this.subTemplates.get(extension);
+        return this.subTemplates.get(extension);
     }
 
     public void addSubTemplate(String extension, Template subTemplate) {
         this.subTemplates.put(extension, subTemplate);
     }
 
-    public Map getSubTemplates() {
+    public Map<String, Template> getSubTemplates() {
         return this.subTemplates;
     }
 
-    public void setSubTemplates(Map subTemplates) {
+    public void setSubTemplates(Map<String, Template> subTemplates) {
         this.subTemplates = subTemplates;
     }
 
