@@ -38,7 +38,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.gui.inline.ButtonEdit;
-import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
@@ -141,7 +140,9 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
 
         bar.setButtonEdit();
         final ButtonEdit edit = bar.getButtonEdit();
-        edit.setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
+        // TODO - fix circular dependency edit.setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
+        edit.setDialogPath(".magnolia/dialogs/editParagraph.html");
+
         // TODO - yes this is a bit ugly - 1) we should in fact open the correct dialog immediately instead of faking the paragraph parameter - 2) the gui elements should not have defaults nor know anything about urls and onclick functions
         // TODO - test with specific dialog
         //  if (this.dialog == null) {

@@ -45,7 +45,7 @@
       <version>4.3-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <!-- needed for ParagraphSelectDialog -->
+      <!-- TODO needed for ParagraphSelectDialog - but currently circular, so see -->
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>4.3-SNAPSHOT</version>
