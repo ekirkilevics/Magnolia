@@ -52,6 +52,7 @@ import java.util.Map;
 public class EditPageBarDirective extends AbstractDirective {
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        checkBody(body, false);
         final String editButtonLabel = string(params, "editLabel", null);
         final String dialogName = string(params, "dialog", null);
 

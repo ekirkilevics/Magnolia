@@ -33,6 +33,11 @@
  */
 package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -47,6 +52,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.AbstractFreemarkerTestCase;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -54,7 +60,9 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
@@ -62,11 +70,12 @@ import java.util.Map;
 import static org.easymock.EasyMock.*;
 
 /**
+ * Provides setup/teardown for testing Directives AND tests for AbstractDirective's utility methods, too.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
+public class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
     private WebContext ctx;
     private AccessManager accessManager;
     protected MockHierarchyManager hm;
@@ -149,5 +158,38 @@ public abstract class AbstractDirectiveTest extends AbstractFreemarkerTestCase {
     protected Map contextWithDirectives() {
         // this is the only thing we expect rendering engines to do: added the directives to the rendering context
         return createSingleValueMap("ui", new Directives());
+    }
+
+    public void testBodyCheck() throws TemplateModelException {
+        final TemplateDirectiveBody dummyDirBody = new TemplateDirectiveBody() {
+            public void render(Writer out) throws TemplateException, IOException {
+            }
+        };
+
+        final AbstractDirective dir = new TestAbstractDirective();
+        // no exceptions
+        dir.checkBody(null, false);
+        dir.checkBody(dummyDirBody, true);
+
+        try {
+            dir.checkBody(null, true);
+            fail("should have failed");
+        } catch (TemplateModelException e) {
+            assertEquals("This directive needs a body", e.getMessage());
+        }
+
+        try {
+            dir.checkBody(dummyDirBody, false);
+            fail("should have failed");
+        } catch (TemplateModelException e) {
+            assertEquals("This directive does not support a body", e.getMessage());
+        }
+    }
+
+    private static class TestAbstractDirective extends AbstractDirective {
+        @Override
+        protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+            return null;
+        }
     }
 }

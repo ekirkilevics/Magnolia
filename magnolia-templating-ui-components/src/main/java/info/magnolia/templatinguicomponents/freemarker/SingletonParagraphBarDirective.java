@@ -34,9 +34,7 @@
 package info.magnolia.templatinguicomponents.freemarker;
 
 import freemarker.core.Environment;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -57,6 +55,7 @@ import java.util.Map;
 public class SingletonParagraphBarDirective extends AbstractDirective {
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        checkBody(body, true);
         final String enableButtonLabel = string(params, "enableLabel", null);
         final Content target = content(params, "target", null);
         final String containerNodeName = string(params, "container", null);

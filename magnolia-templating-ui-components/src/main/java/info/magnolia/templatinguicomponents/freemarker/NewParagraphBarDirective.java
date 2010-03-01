@@ -55,6 +55,7 @@ public class NewParagraphBarDirective extends AbstractDirective {
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        checkBody(body, false);
         final String newButtonLabel = string(params, "newLabel", null);
         final Content target = content(params, "target", null);
         final String containerNodeName = string(params, "container", null);

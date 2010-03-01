@@ -76,7 +76,11 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
 
         uiComp.render(env.getOut());
 
-        doBody(env, body);
+        try {
+            doBody(env, body);
+        } finally {
+            uiComp.postRender();
+        }
     }
 
     /**
@@ -96,6 +100,16 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
     protected void doBody(Environment env, TemplateDirectiveBody body) throws TemplateException, IOException {
         if (body != null) {
             body.render(env.getOut());
+        }
+    }
+
+    /**
+     * Utility method for directives who need to ensure they're used with or without a body.
+     * If the body is *optional*, this method shouldn't be used.
+     */
+    protected void checkBody(TemplateDirectiveBody body, boolean needsBody) throws TemplateModelException {
+        if ((body == null) == needsBody) {
+            throw new TemplateModelException("This directive " + (needsBody ? "needs a body" : "does not support a body"));
         }
     }
 
