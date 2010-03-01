@@ -57,7 +57,7 @@ public class EditPageBar extends AbstractAuthoringUiComponent {
      * @param editButtonLabel pass null for the default
      * @param dialogName
      */
-    public static AuthoringUiComponent make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
+    public static EditPageBar make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
         final EditPageBar bar = new EditPageBar(serverCfg, aggState);
         if (editButtonLabel != null) {
             bar.setEditButtonLabel(editButtonLabel);
