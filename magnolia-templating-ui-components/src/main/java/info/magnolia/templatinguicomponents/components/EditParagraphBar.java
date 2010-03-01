@@ -36,6 +36,7 @@ package info.magnolia.templatinguicomponents.components;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 
@@ -130,12 +131,18 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
         if (enableMoveButton) {
             // doing the below instead of setButtonMove() for clarity, but see comment above for the bar.setPath method
             bar.setButtonMove(targetParent.getName(), target.getName());
+        } else {
+            // buttonMove is initially set to new Button, so if we don't do this, we end up with a label-less, action-less, button
+            bar.setButtonMove(null);
         }
         if (enableDeleteButton) {
             // simplified delete function -
             bar.setButtonDelete(target.getHandle());
             // these paths would otherwise get concatenated in inline.js#mgnlDeleteNode:
             // parentParent.getHandle(), targetParent.getName(), target.getName());
+        } else {
+            // buttonDelete is initially set to new Button, so if we don't do this, we end up with a label-less, action-less, button
+            bar.setButtonDelete((Button) null);
         }
 
         bar.setButtonEdit();
