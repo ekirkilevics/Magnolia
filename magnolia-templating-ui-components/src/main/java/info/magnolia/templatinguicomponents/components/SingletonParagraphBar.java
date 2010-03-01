@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarNew;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
@@ -50,6 +51,12 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
+    /**
+     * Utility method for other components to determine if they are being rendered inside a SingletonParagraphBar.
+     */
+    public static boolean isInSingleton() {
+        return MgnlContext.hasAttribute(SingletonParagraphBar.class.getName());
+    }
 
     /**
      * @param serverCfg
@@ -67,7 +74,6 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
         }
         return bar;
     }
-
 
     private String containerNodeName;
     private List<String> allowedParagraphs;
@@ -97,6 +103,8 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
 
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
+        setupSingleton();
+
         final Content target = getTarget();
 
         if (target.hasContent(containerNodeName)) {
@@ -120,7 +128,13 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
 
         bar.placeDefaultButtons();
         bar.drawHtml((Writer) out);
+    }
 
+    private static void setupSingleton() {
+        MgnlContext.setAttribute(SingletonParagraphBar.class.getName(), Boolean.TRUE);
+    }
 
+    public void postRender() {
+        MgnlContext.removeAttribute(SingletonParagraphBar.class.getName());
     }
 }

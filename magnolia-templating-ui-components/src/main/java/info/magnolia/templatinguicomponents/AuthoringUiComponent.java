@@ -46,4 +46,11 @@ public interface AuthoringUiComponent {
 
     void render(Appendable out) throws IOException;
 
+    /**
+     * This method should be called by templating-engine wrappers after rendering the component AND its body.
+     * Certain components (SingletonParagraphBar for instance) will need to let the wrapper render their body,
+     * and call this afterwards.
+     * Can be used, for instance, as a "cleanup" mechanism, if the component modified the context.
+     */
+    void postRender();
 }

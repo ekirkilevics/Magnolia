@@ -63,6 +63,9 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
      * @param enableDeleteButton true should be the default
      */
     public static EditParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content target, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
+        // TODO - it would be nicer if this was available from some RenderingContext
+        final boolean isInSingleton = SingletonParagraphBar.isInSingleton();
+
         final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
         if (target != null) {
             bar.setTarget(target);
@@ -75,7 +78,14 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
         if (editButtonLabel != null) {
             bar.setEditButtonLabel(editButtonLabel);
         }
-        bar.setEnableMoveButton(enableMoveButton);
+
+        if (!isInSingleton) {
+            bar.setEnableMoveButton(enableMoveButton);
+        } else {
+            // force move to false for singletons
+            bar.setEnableMoveButton(false);
+        }
+        
         bar.setEnableDeleteButton(enableDeleteButton);
 
         return bar;

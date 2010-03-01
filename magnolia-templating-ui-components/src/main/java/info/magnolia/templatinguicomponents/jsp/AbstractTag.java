@@ -63,7 +63,11 @@ public abstract class AbstractTag extends SimpleTagSupport {
 
         uiComp.render(getJspContext().getOut());
 
-        doBody();
+        try {
+            doBody();
+        } finally {
+            uiComp.postRender();
+        }
     }
 
     protected void doBody() throws JspException, IOException {

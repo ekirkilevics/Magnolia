@@ -34,12 +34,20 @@
 package info.magnolia.templatinguicomponents.freemarker;
 
 import freemarker.template.TemplateModelException;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.WebContext;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewParagraphBarDirectiveTest extends AbstractDirectiveTest {
+public class NewParagraphBarDirectiveTest extends DirectiveAbstractTestCase {
+    @Override
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+    }
+
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@ui.new target=content.paragraphs paragraphs=['foo', 'bar']/]");
         // TODO assertEquals("..not testing yet..", result);

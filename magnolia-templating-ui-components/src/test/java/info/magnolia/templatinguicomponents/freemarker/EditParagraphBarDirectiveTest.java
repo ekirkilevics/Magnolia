@@ -34,12 +34,23 @@
 package info.magnolia.templatinguicomponents.freemarker;
 
 import freemarker.template.TemplateModelException;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.Context;
+import info.magnolia.context.WebContext;
+import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
+
+import javax.servlet.http.HttpServletRequest;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarDirectiveTest extends AbstractDirectiveTest {
+public class EditParagraphBarDirectiveTest extends DirectiveAbstractTestCase {
+    @Override
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).once();
+    }
 
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@ui.edit /]");

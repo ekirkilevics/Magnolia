@@ -34,12 +34,21 @@
 package info.magnolia.templatinguicomponents.jsp;
 
 import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.Context;
+import info.magnolia.context.WebContext;
+import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class EditParagraphBarTagTest extends AbstractJspTest {
+    @Override
+    protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
+        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).once();
+    }
 
     @Override
     void check(WebResponse response) throws Exception {
@@ -48,7 +57,7 @@ public class EditParagraphBarTagTest extends AbstractJspTest {
         // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
         assertFalse(result.contains("<ui:"));
 
-        System.out.println(result);
+        // System.out.println(result);
 
         // TODO assertEquals("not testing yet", "...", result);
     }

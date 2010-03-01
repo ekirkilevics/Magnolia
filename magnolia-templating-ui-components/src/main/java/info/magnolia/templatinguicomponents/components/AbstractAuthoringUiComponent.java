@@ -97,6 +97,12 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     protected abstract void doRender(Appendable out) throws IOException, RepositoryException;
 
     /**
+     * Override this method if you need to "do something" once the component is rendered, i.e cleanup the context.
+     */
+    public void postRender() {
+    }
+
+    /**
      * Returns the "current content" from the aggregation state.
      * Override this method if your component needs a different target node.
      */

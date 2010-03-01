@@ -34,6 +34,8 @@
 package info.magnolia.templatinguicomponents.jsp;
 
 import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.WebContext;
 
 /**
  *
@@ -41,6 +43,9 @@ import com.meterware.httpunit.WebResponse;
  * @version $Revision: $ ($Author: $) 
  */
 public class SelfTest extends AbstractJspTest {
+    @Override
+    protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
+    }
 
     public void check(WebResponse response) throws Exception {
         final String txt = response.getText();
