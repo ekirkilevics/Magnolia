@@ -113,7 +113,12 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
         final NodeBuilder nodeBuilder = new NodeBuilder(commands,
-                addNode("activate").then(addNode("version").then(addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand"))));
+                addNode("activate").then(
+                        addNode("version").then(
+                                addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand")
+                        )
+                )
+        );
         nodeBuilder.exec();
         hm.save();
         
