@@ -50,10 +50,12 @@ import java.util.Iterator;
  *
  */
 public class TemplateColumn extends TreeColumn {
+    private final TemplateManager templateManager;
     Select templateSelect;
 
     public TemplateColumn(String javascriptTree, HttpServletRequest request) {
         super(javascriptTree, request);
+        this.templateManager = TemplateManager.getInstance();
 
         templateSelect = new Select();
         templateSelect.setName(javascriptTree + TreeColumn.EDIT_NAMEADDITION);
@@ -73,13 +75,13 @@ public class TemplateColumn extends TreeColumn {
     public String getHtml() {
         Content content = this.getWebsiteNode();
         String templateName = content.getMetaData().getTemplate();
-        Template template = TemplateManager.getInstance().getTemplateDefinition(templateName);
+        Template template = templateManager.getTemplateDefinition(templateName);
         return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
 
     }
 
     public String getHtmlEdit() {
-        Iterator<Template> templates = TemplateManager.getInstance().getAvailableTemplates(this.getWebsiteNode());
+        Iterator<Template> templates = templateManager.getAvailableTemplates(this.getWebsiteNode());
 
         templateSelect.getOptions().clear();
 
