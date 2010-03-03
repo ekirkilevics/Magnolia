@@ -400,6 +400,11 @@ for Java Content Repositories (JCR).
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>servlets.com</groupId>
+        <artifactId>cos</artifactId>
+        <version>05Nov2002</version>
+      </dependency>
+      <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
         <version>1.2.1</version>
@@ -590,29 +595,6 @@ for Java Content Repositories (JCR).
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>tomcat</groupId>
-        <artifactId>jasper-compiler</artifactId>
-        <version>5.5.9</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>tomcat</groupId>
-        <artifactId>jasper-runtime</artifactId>
-        <version>5.5.9</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>commons-el</groupId>
-        <artifactId>commons-el</artifactId>
-        <version>1.0</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>servlets.com</groupId>
-        <artifactId>cos</artifactId>
-        <version>05Nov2002</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
