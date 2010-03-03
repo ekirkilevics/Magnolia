@@ -7,13 +7,13 @@
     <sv:value>349bab23-d565-4690-8fce-fd434fb0b470</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/.resources/icons/24/todo.gif</sv:value>
+    <sv:value>/.resources/icons/24/magnoliastore.png</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
-    <sv:value>Module store</sv:value>
+    <sv:value>Magnolia store</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/allModulesList.html');</sv:value>
@@ -58,7 +58,7 @@
       <sv:value>5e775bb6-5e9b-423d-bff3-3a9a86f0e646</sv:value>
     </sv:property>
     <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/.resources/icons/16/dot.gif</sv:value>
+      <sv:value>/.resources/icons/16/package.gif</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>

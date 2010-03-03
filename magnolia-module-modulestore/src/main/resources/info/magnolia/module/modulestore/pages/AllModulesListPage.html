@@ -16,13 +16,13 @@ function loadModules(){
 }
     </script>
   </head>
-  <body id="mgnl" onload="setTimeout(loadModules, 1000);">
+  <body id="mgnl" onload="setTimeout(loadModules, 1000);" style="background-color:#fff">
     <form id="loadModulesForm" action="${this.remoteUrl}" method="post">
       <div>
         <input type="hidden" name="postdata" value="${this.postdata}" />
       </div>
     </form>
-    <div style="display: block; width: 400px; background-color: #999; margin: 50px auto; text-align: center;">
+    <div style="display: block; width: 400px; margin: 50px auto; text-align: center;">
       <h2>Contacting server...</h2>
       <img src="${this.request.contextPath}/.resources/admin-images/loading.gif" alt="Loading..." />
     </div>
