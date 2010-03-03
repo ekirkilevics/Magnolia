@@ -93,6 +93,9 @@ public class LoginResult {
         return this.user;
     }
 
+    /**
+     * @return an instance of {@link LoginException}. Warning: it can be null. 
+     */
     public LoginException getLoginException() {
         return this.loginException;
     }
