@@ -33,6 +33,7 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.WebResponse;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
@@ -47,7 +48,7 @@ public class SelfTest extends AbstractJspTest {
     protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
     }
 
-    public void check(WebResponse response) throws Exception {
+    public void check(WebResponse response, HtmlPage page) throws Exception {
         final String txt = response.getText();
         assertTrue(txt.contains("Hello world!"));
     }

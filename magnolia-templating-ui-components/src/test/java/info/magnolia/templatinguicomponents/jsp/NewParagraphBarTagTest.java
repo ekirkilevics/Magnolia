@@ -33,6 +33,7 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.WebResponse;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
@@ -48,7 +49,7 @@ public class NewParagraphBarTagTest extends AbstractJspTest {
     }
 
     @Override
-    void check(WebResponse response) throws Exception {
+    void check(WebResponse response, HtmlPage page) throws Exception {
 
         // TODO assertEquals("hello world", response.getText());
 

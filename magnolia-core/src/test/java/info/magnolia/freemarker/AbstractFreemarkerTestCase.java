@@ -136,8 +136,8 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
     }
 
     // we use this method, since FreemarkerHelper adds objects to our root map (Collections.singletonMap returns an immutable map).
-    protected Map createSingleValueMap(Object key, Object value) {
-        final HashMap map = new HashMap();
+    protected Map<String, Object> createSingleValueMap(String key, Object value) {
+        final HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(key, value);
         return map;
     }

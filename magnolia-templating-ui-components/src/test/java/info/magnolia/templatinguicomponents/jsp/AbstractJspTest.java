@@ -33,6 +33,11 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.StringWebResponse;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HTMLParser;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.WebRequest;
@@ -48,20 +53,21 @@ import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
-import info.magnolia.templatinguicomponents.jsp.test4web.TestServletOptions;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
+import net.sourceforge.openutils.testing4web.TestServletOptions;
 import org.apache.commons.lang.StringUtils;
+import org.w3c.tidy.Tidy;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Arrays;
@@ -84,7 +90,11 @@ public abstract class AbstractJspTest extends TestCase {
     private AccessManager accessManager;
     protected MockHierarchyManager hm;
 
-    abstract void check(WebResponse response) throws Exception;
+    /**
+     * Test implementations can check both the response object from httpunit and the page parsed via htmlunit.
+     * Fancy, I know.
+     */
+    abstract void check(WebResponse response, HtmlPage page) throws Exception;
 
     public void testDo() throws Exception {
         // servletunit/httpunit unfortunately wraps and hides the original exceptions, so we can't really nicely check if the test jsp is present 
@@ -96,8 +106,18 @@ public abstract class AbstractJspTest extends TestCase {
         // our patched version of ServletUnitClient does not wrap and hide the ServletExceptions (throws them wrapped in a RuntimeException instead)
         final WebResponse response = runner.getResponse(request);
 
-        //System.out.println("RESPONSE: " + response.getText());
-        check(response);
+        final String responseStr = response.getText();
+        // preliminary sanity check
+        assertFalse(responseStr.contains("<ui:"));
+        assertFalse(responseStr.contains("<cms:"));
+        assertFalse(responseStr.contains("<cmsu:"));
+
+        // now switch to HtmlUnit
+        final StringWebResponse res = new StringWebResponse(responseStr, new URL(jspUrl));
+        final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
+        final HtmlPage page = HTMLParser.parseHtml(res, webClient.getCurrentWindow());
+
+        check(response, page);
     }
 
     public void setUp() throws Exception {
@@ -117,6 +137,9 @@ public abstract class AbstractJspTest extends TestCase {
         // start servletRunner
         final Hashtable<String, String> params = new Hashtable<String, String>();
         params.put("javaEncoding", "utf-8");
+        params.put("development", "true");
+        params.put("keepgenerated", "false");
+        params.put("modificationTestInterval", "1000");
         params.put("engineOptionsClass", TestServletOptions.class.getName());
         runner = new ServletRunner(new File(path), CONTEXT);
         runner.registerServlet("*.jsp", "org.apache.jasper.servlet.JspServlet", params);
@@ -125,14 +148,20 @@ public abstract class AbstractJspTest extends TestCase {
         hm = MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
                 "/foo/bar@type=mgnl:content",
                 "/foo/bar/MetaData@type=mgnl:metadata",
-                "/foo/bar/MetaData/template=testPageTemplate",
+                "/foo/bar/MetaData/mgnl\\:template=testPageTemplate",
                 "/foo/bar/paragraphs@type=mgnl:contentNode",
                 "/foo/bar/paragraphs/0@type=mgnl:contentNode",
                 "/foo/bar/paragraphs/0/text=hello 0",
+                "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
+                "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
                 "/foo/bar/paragraphs/1@type=mgnl:contentNode",
                 "/foo/bar/paragraphs/1/text=hello 1",
+                "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
+                "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
                 "/foo/bar/paragraphs/2@type=mgnl:contentNode",
                 "/foo/bar/paragraphs/2/text=hello 2",
+                "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
+                "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
                 ""
         ), "\n"));
         accessManager = createMock(AccessManager.class);
@@ -170,6 +199,23 @@ public abstract class AbstractJspTest extends TestCase {
     }
 
     protected abstract void setupExpectations(WebContext ctx, AccessManager accessManager);
+
+    protected void prettyPrint(WebResponse response, OutputStream out) throws IOException {
+        final Tidy tidy = new Tidy();
+        tidy.setXHTML(false);
+        tidy.setDropEmptyParas(false);
+        tidy.setDropFontTags(false);
+        tidy.setWrapAttVals(false);
+        tidy.setWraplen(0);
+        tidy.setSmartIndent(false);
+        tidy.setIndentAttributes(false);
+        tidy.setIndentContent(true);
+        tidy.setSpaces(2);
+        tidy.setTabsize(8);
+        // tidy.setQuiet(!printWarnings);
+
+        tidy.parse(response.getInputStream(), out);
+    }
 
     @Override
     public void tearDown() throws Exception {
