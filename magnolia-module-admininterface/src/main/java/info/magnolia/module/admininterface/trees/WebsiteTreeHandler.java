@@ -33,12 +33,11 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,12 +52,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public class WebsiteTreeHandler extends AdminTreeMVCHandler {
+    private static final Logger log = LoggerFactory.getLogger(WebsiteTreeHandler.class);
+
+    private final TemplateManager templateManager;
 
     public WebsiteTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+        templateManager = TemplateManager.getInstance();
     }
-
-    private static Logger log = LoggerFactory.getLogger(WebsiteTreeHandler.class);
 
     public String createNode() {
         String view = super.createNode();
@@ -81,12 +82,12 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
     }
 
     protected Template getDefaultTemplate(Content node) {
-        return TemplateManager.getInstance().getDefaultTemplate(node);
+        return templateManager.getDefaultTemplate(node);
     }
 
     public String show() {
         //show start page if no templates present yet
-        if(!TemplateManager.getInstance().getAvailableTemplates().hasNext()) {
+        if (!templateManager.getAvailableTemplates().hasNext()) {
             try {
                 request.getRequestDispatcher("/.magnolia/pages/quickstart.html").forward(request, response);
                 return "";
