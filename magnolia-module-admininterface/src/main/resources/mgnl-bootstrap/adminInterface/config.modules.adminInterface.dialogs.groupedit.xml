@@ -5,7 +5,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
   xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:content</sv:value>
+    <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>d4d4c39c-d81a-4288-9ec9-15dbb535a6f5</sv:value>
