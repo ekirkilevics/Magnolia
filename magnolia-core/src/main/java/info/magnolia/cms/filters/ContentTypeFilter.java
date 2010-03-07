@@ -70,7 +70,6 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
         String query = request.getQueryString();
         if (!StringUtils.isEmpty(query))
         {
-            log.info(query);
             url.append("?").append(query);
         }
 
