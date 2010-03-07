@@ -20,8 +20,12 @@ table td {
   font-family: Verdana,sans-serif;
   font-size: 11px;
   height: 20px;
-  padding: 0 8px;
+  padding-left: 0 8px;
   border-left: 1px solid #D8EFB6;
+  border-bottom: 1px solid #D8EFB6;
+}
+table tbody td {
+  padding: 4px 8px;
 }
 
 table tr.odd td {
@@ -50,6 +54,7 @@ table td.icon {
           <td>Version</td>
         </tr>
       </thead>
+      <tbody>
       [#list this.installedModules as def]
         <tr>
           <td>${def.name!''}</td>
@@ -58,6 +63,7 @@ table td.icon {
           <td>${def.version!''}</td>
         </tr>
       [/#list]
+      </tbody>
     </table>
   </body>
 </html>
