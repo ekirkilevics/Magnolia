@@ -50,6 +50,8 @@ public class AggregationState {
     private String characterEncoding;
     private String originalURI;
     private String originalURL;
+    private String originalBrowserURI;
+    private String originalBrowserURL;
     private String currentURI;
     private String extension;
     private File file;
@@ -68,6 +70,14 @@ public class AggregationState {
             throw new IllegalStateException("Original URI can only be set once ! Existing value is \"" + this.originalURI + "\", tried to replace it with \"" + strippedURI + "\"");
         }
         this.originalURI = strippedURI;
+    }
+    
+    public void setOriginalBrowserURI(String originalBrowserURI) {
+        final String strippedURI = stripContextPathIfExists(originalBrowserURI);
+        if (this.originalBrowserURI != null && !this.originalBrowserURI.equals(strippedURI)) {
+            throw new IllegalStateException("Original URI can only be set once ! Existing value is \"" + this.originalURI + "\", tried to replace it with \"" + strippedURI + "\"");
+        }
+        this.originalBrowserURI= strippedURI;
     }
 
     public void setCurrentURI(String currentURI) {
@@ -108,6 +118,18 @@ public class AggregationState {
 
     public void setOriginalURL(String originalURL) {
         this.originalURL = originalURL;
+    }
+    
+    public String getOriginalBrowserURI() {
+        return originalBrowserURI;
+    }
+
+    public String getOriginalBrowserURL() {
+        return originalBrowserURL;
+    }
+
+    public void setOriginalBrowserURL(String originalBrowserURL) {
+        this.originalBrowserURL = originalBrowserURL;
     }
 
     public void setCharacterEncoding(String characterEncoding) {

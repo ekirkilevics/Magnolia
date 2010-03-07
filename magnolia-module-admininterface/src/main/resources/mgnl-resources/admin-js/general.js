@@ -253,7 +253,7 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 
     url = mgnl.util.URLUtil.addParameter(url,"mgnlCK", mgnlGetCacheKiller());
 
-    var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
+    var w=window.open(mgnlEncodeURL(url),"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
     if (w) w.focus();
 }
 
@@ -270,7 +270,7 @@ function mgnlOpenTreeBrowser(pathSelected, pathOpen, repository, width, height, 
     if (pathSelected) src+="&pathSelected="+pathSelected;
     if (pathOpen) src+="&pathOpen="+pathOpen;
     if (repository) src+="&repository="+repository;
-    var w=window.open(src,"mgnlTreeBrowser","width="+width+",height="+height+",resizable=yes,status=yes,scrollbars=no");
+    var w=window.open(mgnlEncodeURL(src),"mgnlTreeBrowser","width="+width+",height="+height+",resizable=yes,status=yes,scrollbars=no");
 
     mgnlDebug("register call back function", "dialog");
     // we can't set this on the opened window since this is lost in safari
@@ -320,7 +320,7 @@ function mgnlOpenAdminCentral(path,repository)
     src+="${pageContext.request.contextPath}/.magnolia/adminCentral.html?mgnlCK="+mgnlGetCacheKiller();
     src+="&pathSelected="+path;
     if (repository) src+="&repository="+repository;
-    var w=window.open(src,"mgnlAdminCentral","");
+    var w=window.open(mgnlEncodeURL(src),"mgnlAdminCentral","");
     if (w) w.focus();
     }
 
@@ -381,3 +381,16 @@ function eventHandlerOnResize(e)
     mgnlTreeResize();
     }
 
+function mgnlEncodeURL(url)
+    {
+	// encode only url parameters 
+	var urlParts = url.split('?');
+	if (urlParts.length > 1)
+	{
+		return urlParts[0] + "?" + encodeURI(urlParts[1]);
+	}
+	else
+    {
+		return url;
+    }
+	}

@@ -33,6 +33,8 @@
  */
 package info.magnolia.importexport.filters;
 
+import info.magnolia.cms.util.UnicodeNormalizer;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -117,6 +119,7 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
         // filter if it is the version store
         if ("sv:node".equals(qName)) { //$NON-NLS-1$
             String attName = atts.getValue("sv:name"); //$NON-NLS-1$
+            attName = UnicodeNormalizer.normalizeNFC(attName);
             // remember if there was a root node presend
             if ("jcr:root".equals(attName)) {
                 this.rootNodeFound = true;

@@ -195,32 +195,112 @@ public final class Path {
 
     /**
      * <p>
-     * Replace illegal characters by [_] [0-9], [A-Z], [a-z], [-], [_]
+     * Replace illegal characters based on system property magnolia.ut8.enabled
      * </p>
      * @param label label to validate
      * @return validated label
      */
-    public static String getValidatedLabel(String label) {
+    public static String getValidatedLabel(String label)
+    {
+        String charset = StringUtils.EMPTY;
+        if ((SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)))
+        {
+            charset = "UTF-8";
+        }
+        return getValidatedLabel(label, charset);
+   
+    }
+
+    /**
+     * <p>
+     * if charset eq to UTF-8 replase this characters:
+     * jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 46: [.] 58 [:] 92: [\] 39 :[']
+     * url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
+     *  
+     * else replace illegal characters except [_] [0-9], [A-Z], [a-z], [-], [_]
+     * </p>
+     * @param label label to validate
+     * @return validated label
+     */
+    public static String getValidatedLabel(String label, String charset)
+    {
         StringBuffer s = new StringBuffer(label);
         StringBuffer newLabel = new StringBuffer();
-        for (int i = 0; i < s.length(); i++) {
+
+        for (int i = 0; i < s.length(); i++)
+        {
             int charCode = s.charAt(i);
+            if (isCharValid(charCode, charset))
+            {
+                newLabel.append(s.charAt(i));
+            }
+            else
+            {
+                newLabel.append("-"); //$NON-NLS-1$
+            }
+        }
+        if (newLabel.length() == 0)
+        {
+            newLabel.append(DEFAULT_UNTITLED_NODE_NAME);
+        }
+        return newLabel.toString();
+    }
+
+    /**
+     * @param charCode char code
+     * @param charset charset (ex. UTF-8)
+     * @return true if char can be used as a content name
+     */
+    public static boolean isCharValid(int charCode, String charset)
+    {
+        // http://www.ietf.org/rfc/rfc1738.txt
+        // safe = "$" | "-" | "_" | "." | "+"
+        // extra = "!" | "*" | "'" | "(" | ")" | ","
+        // national = "{" | "}" | "|" | "\" | "^" | "~" | "[" | "]" | "`"
+        // punctuation = "<" | ">" | "#" | "%" | <">
+        // reserved = ";" | "/" | "?" | ":" | "@" | "&" | "="
+
+        if ("UTF-8".equals(charset))
+        {
+            // jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 46: [.] 58 [:] 92: [\] 39 :[']
+            // url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
+            // @todo others:  
+            if (charCode != 32
+                && charCode != 91
+                && charCode != 93
+                && charCode != 42
+                && charCode != 34
+                && charCode != 46
+                && charCode != 58
+                && charCode != 92
+                && charCode != 39
+                && charCode != 59
+                && charCode != 47
+                && charCode != 63
+                && charCode != 43
+                && charCode != 37
+                && charCode != 33
+                && charCode != 35
+                && charCode != 94)
+            {
+                return true;
+            }
+        }
+        else
+        {
             // charCodes: 48-57: [0-9]; 65-90: [A-Z]; 97-122: [a-z]; 45: [-]; 95:[_]
             if (((charCode >= 48) && (charCode <= 57))
                 || ((charCode >= 65) && (charCode <= 90))
                 || ((charCode >= 97) && (charCode <= 122))
                 || charCode == 45
-                || charCode == 95) {
-                newLabel.append(s.charAt(i));
+                || charCode == 95)
+            {
+                return true;
             }
-            else {
-                newLabel.append("-"); //$NON-NLS-1$
-            }
+
         }
-        if (newLabel.length() == 0) {
-            newLabel.append(DEFAULT_UNTITLED_NODE_NAME);
-        }
-        return newLabel.toString();
+        return false;
+
     }
 
     /**

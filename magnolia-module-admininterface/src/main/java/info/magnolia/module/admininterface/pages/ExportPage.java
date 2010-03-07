@@ -35,6 +35,7 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -54,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.Iterator;
 
 
@@ -256,14 +258,16 @@ public class ExportPage extends TemplatedMVCHandler {
             response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
         }
 
-        String pathName = StringUtils.replace(mgnlPath, "/", "."); //$NON-NLS-1$ //$NON-NLS-2$
-        if (".".equals(pathName)) { //$NON-NLS-1$
+        String pathName = StringUtils.replace(mgnlPath, DataTransporter.SLASH, DataTransporter.DOT); //$NON-NLS-1$ //$NON-NLS-2$
+        pathName = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
+        if (DataTransporter.DOT.equals(pathName)) { //$NON-NLS-1$
             // root node
-            pathName = StringUtils.EMPTY;
-        }
+            pathName = StringUtils.EMPTY; 
+        } 
+        
         response.setHeader("content-disposition", "attachment; filename=" + mgnlRepository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream baseOutputStream = response.getOutputStream();
-
+ 
         try {
             DataTransporter.executeExport(
                 baseOutputStream,

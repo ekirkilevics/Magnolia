@@ -46,6 +46,36 @@ import info.magnolia.importexport.filters.MagnoliaV2Filter;
 import info.magnolia.importexport.filters.MetadataUuidFilter;
 import info.magnolia.importexport.filters.RemoveMixversionableFilter;
 import info.magnolia.importexport.filters.VersionFilter;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xml.serialize.OutputFormat;
@@ -58,31 +88,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -109,6 +114,8 @@ public class DataTransporter {
     public static final String DOT = ".";
 
     public static final String SLASH = "/";
+    
+    public static final String UTF8 = "UTF-8";
 
     public static final String JCR_ROOT = "jcr:root";
 
@@ -169,6 +176,9 @@ public class DataTransporter {
             filenameWithoutExt = StringUtils.substringBeforeLast(xmlFile.getName(), DOT);
         }
         String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
+        
+        pathName = decodePath(pathName,  UTF8); 
+        
         String basepath = SLASH + StringUtils.replace(pathName, DOT, SLASH);
 
         if (xmlFile.getName().endsWith(PROPERTIES)) {
@@ -509,5 +519,65 @@ public class DataTransporter {
 
         IOUtils.closeQuietly(inputStream);
     }
+    
+    /**
+     * 
+     * @param path path to encode
+     * @param separator "." (dot) or "/", it will be not encoded if found 
+     * @param enc charset 
+     * @return the path encoded
+     */
+    public static String encodePath(String path, String separator, String enc)
+    {
+        String pathEncoded = StringUtils.EMPTY; 
+        try
+        {
+            if (!StringUtils.contains(path, separator))
+            {
+                return URLEncoder.encode(path, enc);
+            }
+            String[] tokens = StringUtils.split(path, separator);
+            for (int j = 0; j < tokens.length; j++)
+            {
+                if (j == 0 && StringUtils.startsWith(path, separator))
+                {
+                    pathEncoded += separator;
+                }
+                pathEncoded += URLEncoder.encode(tokens[j], enc);
+
+                if ((j == tokens.length - 1 && StringUtils.endsWith(path, separator)) || j < tokens.length - 1)
+                {
+                    pathEncoded += separator;
+                }
+
+            }
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            return path;
+        }
+        return pathEncoded;
+    }
+    
+    /**
+     * decode a path (ex. %D0%9D%D0%B0.%B2%D0%BE%D0%BB%D0%BD)
+     * @param path path to decode
+     * @param enc charset
+     * @return the path decoded
+     */
+    public static String decodePath(String path, String enc)
+    {
+        String pathEncoded = StringUtils.EMPTY;
+        try
+        {
+            pathEncoded = URLDecoder.decode(path, enc);
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            return path;
+        }
+        return pathEncoded;
+    }
+
 
 }

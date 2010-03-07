@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
@@ -55,6 +56,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -552,9 +554,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     private void exportNode(String repository, Session session, Content exported) throws FileNotFoundException,
         IOException {
         String handle = exported.getHandle();
-
         String xmlName = repository + StringUtils.replace(handle, "/", ".") + ".xml";
-
+        xmlName = DataTransporter.encodePath(xmlName, ".", "UTF-8");
         // create necessary parent directories
         File folder = new File(Path.getAbsoluteFileSystemPath(rootdir));
         folder.mkdirs();

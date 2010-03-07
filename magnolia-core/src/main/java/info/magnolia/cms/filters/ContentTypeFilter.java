@@ -39,6 +39,7 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+
 
 /**
  * TODO : rename this filter. What it really does is initialize and setup the basic,
@@ -58,6 +60,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class ContentTypeFilter extends AbstractMgnlFilter {
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContentTypeFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -65,10 +68,11 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
         final String ext = getUriExtension(originalUri);
         StringBuffer url = request.getRequestURL();
         String query = request.getQueryString();
-        if (!StringUtils.isEmpty(query)) {
+        if (!StringUtils.isEmpty(query))
+        {
+            log.info(query);
             url.append("?").append(query);
         }
-
 
         final String characterEncoding = setupContentTypeAndCharacterEncoding(ext, request, response);
 
@@ -77,8 +81,11 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         aggregationState.setCharacterEncoding(characterEncoding);
-        aggregationState.setOriginalURI(originalUri);
-        aggregationState.setOriginalURL(url.toString());
+
+        aggregationState.setOriginalURI(URLDecoder.decode(originalUri, characterEncoding));
+        aggregationState.setOriginalURL(URLDecoder.decode(url.toString(), characterEncoding));
+        aggregationState.setOriginalBrowserURI(originalUri);
+        aggregationState.setOriginalBrowserURL(url.toString());
         aggregationState.setExtension(ext);
 
         chain.doFilter(request, response);

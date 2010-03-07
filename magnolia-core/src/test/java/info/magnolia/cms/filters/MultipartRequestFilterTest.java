@@ -75,7 +75,8 @@ public class MultipartRequestFilterTest extends TestCase {
         super.setUp();
 
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR, System.getProperty("java.io.tmpdir"));
-
+        SystemProperty.setProperty("info.magnolia.cms.util.UnicodeNormalizer$Normalizer", "info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer");
+        SystemProperty.setProperty("magnolia.utf8.enabled", "true");
         testFile = new File("pom.xml");
         assertTrue(testFile.getAbsolutePath() + " can't be found.", testFile.exists());
         req = createMock(HttpServletRequest.class);

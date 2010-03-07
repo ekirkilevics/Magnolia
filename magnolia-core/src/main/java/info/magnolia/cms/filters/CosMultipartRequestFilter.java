@@ -35,6 +35,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -103,20 +104,26 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
             MAX_FILE_SIZE,
             encoding,
             null);
+        
+        // normalization used because the parameters in cos multipart request does not rely on the original request (it parses request.getInputStream()); 
         Enumeration params = multi.getParameterNames();
         while (params.hasMoreElements()) {
             String name = (String) params.nextElement();
             String value = multi.getParameter(name);
-            form.addParameter(name, value);
+            form.addParameter(name, UnicodeNormalizer.normalizeNFC(value));
             String[] s = multi.getParameterValues(name);
             if (s != null) {
+                for(int i = 0; i < s.length; i++)
+                {
+                    s[i] = UnicodeNormalizer.normalizeNFC(s[i]);
+                }
                 form.addparameterValues(name, s);
             }
         }
         Enumeration files = multi.getFileNames();
         while (files.hasMoreElements()) {
             String name = (String) files.nextElement();
-            form.addDocument(name, multi.getFilesystemName(name), multi.getContentType(name), multi.getFile(name));
+            form.addDocument(name, UnicodeNormalizer.normalizeNFC(multi.getFilesystemName(name)), multi.getContentType(name), multi.getFile(name));
         }
         request.setAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, form);
         return form;

@@ -33,10 +33,13 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.Components;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * A wrapper around java.text.Normalizer and com.ibm.icu.text.Normalizer; uses the former if present, or none
@@ -67,7 +70,15 @@ public class UnicodeNormalizer {
      * Normalizes the given String to the NFC form.
      */
     public static String normalizeNFC(String in) {
-        return normalizer.normalizeNFC(in);
+        try {
+            log.debug("not normalized: " + Arrays.toString(in.getBytes("UTF-8")) + " (" + in + ")");
+            String out = normalizer.normalizeNFC(in);
+            log.debug("    normalized: " + Arrays.toString(out.getBytes("UTF-8")) + " (" + out + ")");
+            return out;
+        } catch (UnsupportedEncodingException e) {
+            // do nothing
+        }
+        return in;
     }
 
     public interface Normalizer {
@@ -128,19 +139,23 @@ public class UnicodeNormalizer {
 
         public AutoDetectNormalizer() {
             Normalizer candidate;
-            try {
-                Class.forName(JAVA6_NORMALIZER_CLASS);
-                candidate = new Java6ReflectionNormalizer();
-                log.info("Running on Java 6, using {} for unicode form normalization.", candidate.getClass());
-            } catch (ClassNotFoundException e) {
-                log.warn("Not running on Java 6 ({} not found). Attempting to locate the ICU4J library.", JAVA6_NORMALIZER_CLASS);
+            if (!SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
+                candidate = new NonNormalizer();
+            } else {
                 try {
-                    Class.forName(ICU_NORMALIZER_CLASS);
-                    candidate = new ICUNormalizer();
-                    log.info("ICU4J found, using {} for Unicode form normalization.", candidate.getClass());
-                } catch (ClassNotFoundException e2) {
-                    log.warn("ICU4J not found ({} not found), Unicode will not be 100% supported; no Unicode form normalization available. If Java 6 is not an option, you can get the ICU4J library from http://www.icu-project.org/.", ICU_NORMALIZER_CLASS);
-                    candidate = new NonNormalizer();
+                    Class.forName(JAVA6_NORMALIZER_CLASS);
+                    candidate = new Java6ReflectionNormalizer();
+                    log.info("Running on Java 6, using {} for unicode form normalization.", candidate.getClass());
+                } catch (ClassNotFoundException e) {
+                    log.warn("Not running on Java 6 ({} not found). Attempting to locate the ICU4J library.", JAVA6_NORMALIZER_CLASS);
+                    try {
+                        Class.forName(ICU_NORMALIZER_CLASS);
+                        candidate = new ICUNormalizer();
+                        log.info("ICU4J found, using {} for Unicode form normalization.", candidate.getClass());
+                    } catch (ClassNotFoundException e2) {
+                        log.warn("ICU4J not found ({} not found), Unicode will not be 100% supported; no Unicode form normalization available. If Java 6 is not an option, you can get the ICU4J library from http://www.icu-project.org/.", ICU_NORMALIZER_CLASS);
+                        candidate = new NonNormalizer();
+                    }
                 }
             }
             this.delegate = candidate;
