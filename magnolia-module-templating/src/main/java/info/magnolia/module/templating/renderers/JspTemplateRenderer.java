@@ -75,6 +75,11 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
         catch (Exception e) {
             throw new RenderException("Can't render template " + templatePath, e);
         }
+        finally {
+            // remove the attribute just set, because a custom magnolia managed error-page may have been configured in
+            // web.xml
+            request.removeAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE);
+        }
     }
 
     /**
