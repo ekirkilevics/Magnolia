@@ -38,12 +38,14 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AddMimeMappingTask;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.Task;
@@ -159,6 +161,12 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.3", "")
                 .addTask(addFreemarkerSharedVariables)
+                .addTask(
+                new ArrayDelegateTask("New unicode normalization filter", "Add the new unicode normalization filter.",
+                        new BootstrapSingleResource("Unicode Normalization filter ", "Add new Unicode Normalization filter.", "/mgnl-bootstrap/core/config.server.filters.unicodeNormalization.xml"),
+                        new FilterOrderingTask("multipartRequest", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"contentType"}),
+                        new FilterOrderingTask("unicodeNormalization", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"multipartRequest"})
+                ))
         );
     }
 
