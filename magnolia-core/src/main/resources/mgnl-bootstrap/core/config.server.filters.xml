@@ -149,7 +149,7 @@
       <sv:value>info.magnolia.cms.filters.UnicodeNormalizationFilter</sv:value>
     </sv:property>
     <sv:property sv:name="enabled" sv:type="Boolean">
-      <sv:value>false</sv:value>
+      <sv:value>true</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">

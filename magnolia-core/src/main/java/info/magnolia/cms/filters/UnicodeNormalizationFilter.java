@@ -34,6 +34,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.context.MgnlContext;
 
@@ -95,6 +96,16 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         {
             MgnlContext.pop();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEnabled()
+    {
+        //@todo this filter is enabled only if utf8 support is enabled. remove it when the check of this property is not needed anymore.
+        return super.isEnabled() && SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED);
     }
 
     private static String[] transform(String[] input)
