@@ -661,6 +661,12 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("shared: two - from context: one", ctx, "test.ftl");
     }
 
+    public void testUseCombinationOfPadSubStringAndTrimForSafeSubstring() throws Exception {
+        tplLoader.putTemplate("test.ftl", "[#assign foo='a fairly short string']\n" +
+                "${foo?right_pad(50)?substring(0, 50)?trim}");
+        assertRendereredContent("a fairly short string", null, "test.ftl");
+    }
+
     private MockHierarchyManager prepareHM(MockContent page) {
         final MockContent root = new MockContent("foo");
         final MockContent bar = new MockContent("bar");
