@@ -99,7 +99,7 @@ public class Store extends AbstractExecutor {
             // change the status (if appropriate) before flushing the buffer.
             if (!response.isCommitted() && !ifModifiedSince(request, cacheStorageDate)) {
                 responseWrapper.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-                
+
             }
 
             try {
@@ -122,7 +122,7 @@ public class Store extends AbstractExecutor {
             if ((cachedEntry instanceof CachedPage) && ((CachedPage) cachedEntry).getStatusCode() != HttpServletResponse.SC_OK) {
                 log.warn("Caching response {} for {}", String.valueOf(((CachedPage) cachedEntry).getStatusCode() ), cachePolicy.getCacheKey());
             }
-            
+
 
         } catch (Throwable t) {
             log.error("Failed to process cache request : " + t.getMessage(), t);
@@ -153,14 +153,14 @@ public class Store extends AbstractExecutor {
                 status = HttpServletResponse.SC_OK;
             }
         }
-        
+
         if (cacheResponse.isError()) {
             return new CachedError(cacheResponse.getStatus());
         }
 
         final long modificationDate = cacheResponse.getLastModified();
         final String contentType = cacheResponse.getContentType();
-        
+
         int vote = getCompressionVote(cacheResponse, ResponseContentTypeVoter.class);
         CachedPage page = new CachedPage(aboutToBeCached,
                 contentType,
