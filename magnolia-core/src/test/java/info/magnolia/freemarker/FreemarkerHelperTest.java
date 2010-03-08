@@ -664,6 +664,9 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testUseCombinationOfPadSubStringAndTrimForSafeSubstring() throws Exception {
         tplLoader.putTemplate("test.ftl", "[#assign foo='a fairly short string']\n" +
                 "${foo?right_pad(50)?substring(0, 50)?trim}");
+                // "${foo[0..50]}"); // this syntax is deprecated and doesn't help in this case
+                // if there was a ?max built-in or function we could also do
+                // "${foo?substring(0, foo?length?max(50)}"
         assertRendereredContent("a fairly short string", null, "test.ftl");
     }
 
