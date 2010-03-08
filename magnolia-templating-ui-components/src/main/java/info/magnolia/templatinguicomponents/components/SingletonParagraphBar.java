@@ -45,7 +45,10 @@ import java.io.Writer;
 import java.util.List;
 
 /**
- * TODO An hybrid between a new bar and an edit bar for non-moveable paragraphs: it's either added by the editor, edited, or removed.
+ * An hybrid between a new bar and an edit bar for non-moveable paragraphs: it's either added by the editor, edited, or removed.
+ * This is currently meant to be used in conjunction with the regular edit bar component: if the request content is present,
+ * wrappers should render their content (which should render said paragraph with an edit bar), and if not, this
+ * renders a "new bar".
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -61,21 +64,21 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
     /**
      * @param serverCfg
      * @param aggState
-     * @param containerNodeName the name of the node into which new paragraphs will be added; this is a child node of {@link #target}.
+     * @param contentName the name of the node which contains (or will contain) the singleton paragraph; this is a child node of {@link #currentContent()}.
      * @param allowedParagraphs the list of paragraph definitions (their names) that are allow to be added by this component
      * @param enableButtonLabel if null, default will be used
      */
-    public static SingletonParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, String containerNodeName, List<String> allowedParagraphs, String enableButtonLabel) {
+    public static SingletonParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, String contentName, List<String> allowedParagraphs, String enableButtonLabel) {
         final SingletonParagraphBar bar = new SingletonParagraphBar(serverCfg, aggState);
         bar.setAllowedParagraphs(allowedParagraphs);
-        bar.setContainerNodeName(containerNodeName);
+        bar.setContentName(contentName);
         if (enableButtonLabel != null) {
             bar.setEnableButtonLabel(enableButtonLabel);
         }
         return bar;
     }
 
-    private String containerNodeName;
+    private String contentName;
     private List<String> allowedParagraphs;
 //    private String editButtonLabel = "buttons.edit";
     private String enableButtonLabel = "buttons.enable";
@@ -85,8 +88,8 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
         super(server, aggregationState);
     }
 
-    public void setContainerNodeName(String containerNodeName) {
-        this.containerNodeName = containerNodeName;
+    public void setContentName(String contentName) {
+        this.contentName = contentName;
     }
 
     public void setAllowedParagraphs(List<String> allowedParagraphs) {
@@ -105,9 +108,9 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         setupSingleton();
 
-        final Content target = getTarget();
+        final Content container = currentContent();
 
-        if (target.hasContent(containerNodeName)) {
+        if (container.hasContent(contentName)) {
             // we assume there's an edit bar in the paragraph that will be rendered where this singleton was enabled
             return;
         }
@@ -119,9 +122,9 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
         // don't set new button's label if there's no selectable paragraph
 //        }
 
-        bar.setPath(target.getHandle());
-        //bar.setNodeCollectionName(containerNodeName);
-        bar.setNodeName(containerNodeName); // see difference with NewBar
+        bar.setPath(container.getHandle());
+        //bar.setNodeCollectionName(contentName);
+        bar.setNodeName(contentName); // see difference with NewBar
 
         bar.setDefaultButtons();
         bar.getButtonNew().setLabel(enableButtonLabel);

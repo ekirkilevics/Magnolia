@@ -39,7 +39,6 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
 
@@ -57,15 +56,18 @@ public class SingletonParagraphBarDirective extends AbstractDirective {
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         checkBody(body, true);
         final String enableButtonLabel = string(params, "enableLabel", null);
+        /*
         final Content target = content(params, "target", null);
         final String containerNodeName = string(params, "container", null);
         if (target == null && containerNodeName == null) {
             // TODO check
             throw new TemplateModelException("At least target or container must be specified.");
         }
+        */
+        final String contentName = string(params, "content", null);
         final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
 
-        return SingletonParagraphBar.make(serverCfg, aggState, containerNodeName, allowedParagraphs, enableButtonLabel);
+        return SingletonParagraphBar.make(serverCfg, aggState, contentName, allowedParagraphs, enableButtonLabel);
 
     }
 

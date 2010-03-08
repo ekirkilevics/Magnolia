@@ -35,7 +35,6 @@ package info.magnolia.templatinguicomponents.jsp;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
 
@@ -51,23 +50,15 @@ import java.util.List;
  */
 public class SingletonParagraphBarTag extends AbstractTag {
 
-    private Content target;
-    private String containerNodeName;
+    private String contentName;
     private Object allowedParagraphs;
     private String enableButtonLabel;
 
     /**
-     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
-     */
-    public void setTarget(Content target) {
-        this.target = target;
-    }
-
-    /**
      * @jsp.attribute required="false" rtexprvalue="true"
      */
-    public void setContainer(String containerNodeName) {
-        this.containerNodeName = containerNodeName;
+    public void setContent(String contentName) {
+        this.contentName = contentName;
     }
 
     /**
@@ -88,7 +79,7 @@ public class SingletonParagraphBarTag extends AbstractTag {
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
         final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
 
-        return SingletonParagraphBar.make(serverCfg, aggState, containerNodeName, paraList, enableButtonLabel);
+        return SingletonParagraphBar.make(serverCfg, aggState, contentName, paraList, enableButtonLabel);
     }
 
 }

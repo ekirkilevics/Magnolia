@@ -54,7 +54,7 @@ public class EditBarTag extends AbstractTag {
     private boolean enableMoveButton = true;
     private boolean enableDeleteButton = true;
     private String specificDialogName;
-    private Content target;
+    private Content content;
 
     /**
      * @jsp.attribute required="false" rtexprvalue="true"
@@ -87,12 +87,12 @@ public class EditBarTag extends AbstractTag {
     /**
      * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
-    public void setTarget(Content target) {
-        this.target = target;
+    public void setContent(Content content) {
+        this.content = content;
     }
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
-        return EditBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
+        return EditBar.make(serverCfg, aggState, content, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }
 }

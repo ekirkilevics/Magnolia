@@ -43,6 +43,7 @@ import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
@@ -73,6 +74,7 @@ public class EditBarTest extends TestCase {
         final WebContext ctx = createMock(WebContext.class);
         expect(ctx.getAggregationState()).andReturn(aggregationState).anyTimes();
         expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
+        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).anyTimes();
         MgnlContext.setInstance(ctx);
         replay(accessManager, ctx);
 
@@ -84,7 +86,7 @@ public class EditBarTest extends TestCase {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final EditBar bar = new EditBar(serverCfg, aggregationState);
+        final EditBar bar = EditBar.make(serverCfg, aggregationState, null, null, null, true, true);
         final StringWriter out = new StringWriter();
         bar.doRender(out);
 

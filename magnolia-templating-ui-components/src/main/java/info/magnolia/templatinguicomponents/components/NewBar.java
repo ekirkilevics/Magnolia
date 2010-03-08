@@ -35,7 +35,6 @@ package info.magnolia.templatinguicomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarNew;
 
 import java.io.IOException;
@@ -52,17 +51,18 @@ public class NewBar extends AbstractAuthoringUiComponent {
     /**
      * @param serverCfg
      * @param aggState
-     * @param specificTarget override for {@link #defaultTarget()}.
-     * @param containerNodeName the name of the node into which new paragraphs will be added; this is a child node of {@link #target}.
+     * @param containerName the name of the node into which new paragraphs will be added; this is a child node of {@link #currentContent()}.
      * @param allowedParagraphs the list of paragraph definitions (their names) that are allow to be added by this component
      * @param newButtonLabel if null, default will be used
      */
-    public static NewBar make(ServerConfiguration serverCfg, AggregationState aggState, Content specificTarget, String containerNodeName, List<String> allowedParagraphs, String newButtonLabel) {
+    public static NewBar make(ServerConfiguration serverCfg, AggregationState aggState, String containerName, List<String> allowedParagraphs, String newButtonLabel) {
         final NewBar bar = new NewBar(serverCfg, aggState);
+        /* TODO @param do we want this ? specificTarget override for {@link #currentContent()}.
         if (specificTarget != null) {
-            bar.setTarget(specificTarget);
+            bar.setContent(specificTarget);
         }
-        bar.setContainerNodeName(containerNodeName);
+        */
+        bar.setContainerName(containerName);
 
         if (newButtonLabel != null) {
             bar.setNewButtonLabel(newButtonLabel);
@@ -72,7 +72,7 @@ public class NewBar extends AbstractAuthoringUiComponent {
         return bar;
     }
 
-    private String containerNodeName;
+    private String containerName;
     private String newButtonLabel = "buttons.new";
     private List<String> allowedParagraphs;
 
@@ -80,8 +80,8 @@ public class NewBar extends AbstractAuthoringUiComponent {
         super(server, aggregationState);
     }
 
-    public void setContainerNodeName(String containerNodeName) {
-        this.containerNodeName = containerNodeName;
+    public void setContainerName(String containerName) {
+        this.containerName = containerName;
     }
 
     public void setNewButtonLabel(String newButtonLabel) {
@@ -102,12 +102,12 @@ public class NewBar extends AbstractAuthoringUiComponent {
         // don't set new button's label if there's no selectable paragraph
 //        }
 
-        final String targetPath = getTarget().getHandle();
+        final String targetPath = currentContent().getHandle();
         bar.setPath(targetPath);
 
-        // TODO - test combinations of containerNodeName and target 
+        // TODO - test combinations of containerName and target
 
-        bar.setNodeCollectionName(containerNodeName);
+        bar.setNodeCollectionName(containerName);
         bar.setNodeName("mgnlNew"); // one of the quirks we'll have to get rid of.
 
         bar.setDefaultButtons();

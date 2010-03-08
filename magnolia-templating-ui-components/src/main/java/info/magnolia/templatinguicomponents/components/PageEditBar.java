@@ -87,7 +87,7 @@ public class PageEditBar extends AbstractAuthoringUiComponent {
     protected void doRender(Appendable out) throws IOException {
 
         final BarMain bar = new BarMain();
-        bar.setPath(getTarget().getHandle());
+        bar.setPath(currentContent().getHandle());
 
         // TODO - deduce dialog from target node ?
         bar.setDialog(dialogName);

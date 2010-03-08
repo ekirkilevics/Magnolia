@@ -60,7 +60,7 @@ public class EditBarDirective extends AbstractDirective {
         final boolean enableMoveButton = bool(params, "move", true);
         final boolean enableDeleteButton = bool(params, "delete", true);
         final String specificDialogName = string(params, "dialog", null);
-        final Content target = content(params, "target", null);
+        final Content target = content(params, "content", null);
 
         return EditBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }

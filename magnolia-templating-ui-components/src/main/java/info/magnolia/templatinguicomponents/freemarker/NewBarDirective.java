@@ -39,7 +39,6 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
 import info.magnolia.templatinguicomponents.components.NewBar;
 
@@ -57,15 +56,19 @@ public class NewBarDirective extends AbstractDirective {
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
         checkBody(body, false);
         final String newButtonLabel = string(params, "newLabel", null);
+        /*
         final Content target = content(params, "target", null);
-        final String containerNodeName = string(params, "container", null);
-        if (target == null && containerNodeName == null) {
+        final String containerName = string(params, "container", null);
+        if (target == null && containerName == null) {
             // TODO check
             throw new TemplateModelException("At least target or container must be specified.");
         }
+        */
+
+        final String containerName = mandatoryString(params, "container") ;
         final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
 
-        return NewBar.make(serverCfg, aggState, target, containerNodeName, allowedParagraphs, newButtonLabel);
+        return NewBar.make(serverCfg, aggState, containerName, allowedParagraphs, newButtonLabel);
     }
 
 }

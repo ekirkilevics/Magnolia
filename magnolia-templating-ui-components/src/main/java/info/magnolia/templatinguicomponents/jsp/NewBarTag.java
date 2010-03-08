@@ -50,10 +50,8 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class NewBarTag extends AbstractTag {
-
     private String newButtonLabel;
-    private Content target;
-    private String containerNodeName;
+    private String containerName;
     private Object allowedParagraphs;
 
     /**
@@ -64,17 +62,10 @@ public class NewBarTag extends AbstractTag {
     }
 
     /**
-     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
-    public void setTarget(Content target) {
-        this.target = target;
-    }
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setContainer(String containerNodeName) {
-        this.containerNodeName = containerNodeName;
+    public void setContainer(String containerName) {
+        this.containerName = containerName;
     }
 
     /**
@@ -86,14 +77,14 @@ public class NewBarTag extends AbstractTag {
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
-        if (target == null && containerNodeName == null) {
+        /* if (content == null && containerName == null) {
             // TODO check
-            throw new JspException("At least target or container must be specified.");
-        }
+            throw new JspException("At least content or container must be specified.");
+        }*/
 
         final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
 
-        return NewBar.make(serverCfg, aggState, target, containerNodeName, paraList, newButtonLabel);
+        return NewBar.make(serverCfg, aggState, containerName, paraList, newButtonLabel);
     }
 
 }

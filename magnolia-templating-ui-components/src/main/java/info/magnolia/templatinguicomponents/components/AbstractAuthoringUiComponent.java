@@ -50,7 +50,6 @@ import java.util.List;
  * can set parameters). (no need to clutter things up with getters). Implementation might also expose static factory
  * methods, which can take care of default values, i.e for labels.
  *
- * If no target node is set explicitly, it is deduced using {@link #defaultTarget()}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -59,12 +58,9 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     private final ServerConfiguration server;
     private final AggregationState aggregationState;
 
-    private Content target;
-
     protected AbstractAuthoringUiComponent(final ServerConfiguration server, final AggregationState aggregationState) {
         this.server = server;
         this.aggregationState = aggregationState;
-        this.target = defaultTarget();
     }
 
     protected ServerConfiguration getServer() {
@@ -73,14 +69,6 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
 
     protected AggregationState getAggregationState() {
         return aggregationState;
-    }
-
-    protected Content getTarget() {
-        return target;
-    }
-
-    public void setTarget(Content target) {
-        this.target = target;
     }
 
     public void render(Appendable out) throws IOException {
@@ -106,10 +94,10 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      * Returns the "current content" from the aggregation state.
      * Override this method if your component needs a different target node.
      */
-    protected Content defaultTarget() {
+    protected Content currentContent() {
         final Content currentContent = aggregationState.getCurrentContent();
         if (currentContent == null) {
-            throw new IllegalStateException("Could not determine defaultTarget from AggregationState, currentContent is null");
+            throw new IllegalStateException("Could not determine currentContent from AggregationState, currentContent is null");
         }
         return currentContent;
     }

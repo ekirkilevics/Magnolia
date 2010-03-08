@@ -49,18 +49,18 @@ public class NewBarDirectiveTest extends DirectiveAbstractTestCase {
     }
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.new target=content.paragraphs paragraphs=['foo', 'bar']/]");
+        final String result = renderForTest("[@ui.new container='paragraphs' paragraphs=['foo', 'bar']/]");
         // TODO assertEquals("..not testing yet..", result);
     }
 
     public void testCanPassASingleParagraphName() throws Exception {
-        final String s = renderForTest("[@ui.new target=content paragraphs='foo' /]");
+        final String s = renderForTest("[@ui.new container='paragraphs' paragraphs='foo' /]");
         // TODO assertEquals("..not testing yet..", s);
     }
 
     public void testParagraphsParamIsCurrentlyMandatory() throws Exception {
         try {
-            renderForTest("[@ui.new target=content /]");
+            renderForTest("[@ui.new container='foobar' /]");
             fail("should have failed");
         } catch (TemplateModelException e) {
             assertEquals("The 'paragraphs' parameter is mandatory.", e.getMessage());

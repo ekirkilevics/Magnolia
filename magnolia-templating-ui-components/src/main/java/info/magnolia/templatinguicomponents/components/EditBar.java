@@ -56,19 +56,21 @@ public class EditBar extends AbstractAuthoringUiComponent {
     /**
      * @param serverCfg
      * @param aggState
-     * @param target if null, will deduce a default
+     * @param specificContent if null, will deduce a default
      * @param specificDialogName if null, deduced from paragraph definition of current node
      * @param editButtonLabel if null, will use default
      * @param enableMoveButton true should be the default
      * @param enableDeleteButton true should be the default
      */
-    public static EditBar make(ServerConfiguration serverCfg, AggregationState aggState, Content target, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
+    public static EditBar make(ServerConfiguration serverCfg, AggregationState aggState, Content specificContent, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
         // TODO - it would be nicer if this was available from some RenderingContext
         final boolean isInSingleton = SingletonParagraphBar.isInSingleton();
 
         final EditBar bar = new EditBar(serverCfg, aggState);
-        if (target != null) {
-            bar.setTarget(target);
+        if (specificContent != null) {
+            bar.setContent(specificContent);
+        } else {
+            bar.setContent(bar.currentContent());
         }
 
         if (specificDialogName != null) {
@@ -91,6 +93,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
         return bar;
     }
 
+    private Content content;
     private String specificDialogName;
     private String editButtonLabel = "buttons.edit";
     private boolean enableMoveButton = true;
@@ -98,6 +101,10 @@ public class EditBar extends AbstractAuthoringUiComponent {
 
     public EditBar(ServerConfiguration serverConfiguration, AggregationState aggregationState) {
         super(serverConfiguration, aggregationState);
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
     }
 
     public void setSpecificDialogName(String specificDialogName) {
@@ -119,7 +126,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         final BarEdit bar = new BarEdit();
-        final String paragraphTemplateName = getTarget().getMetaData().getTemplate();
+        final String paragraphTemplateName = content.getMetaData().getTemplate();
         // it's called "setParagraph", but have a look further, once you reach ButtonEdit, this is called "dialog".
         if (specificDialogName != null) {
             bar.setParagraph(specificDialogName);
@@ -128,26 +135,25 @@ public class EditBar extends AbstractAuthoringUiComponent {
         }
 
         // needed for move ...
-        final Content target = getTarget();
-        final Content targetParent = target.getParent();
-        final Content parentParent = targetParent.getParent();
+        final Content parent = content.getParent();
+        final Content parentParent = parent.getParent();
 
-        bar.setNodeCollectionName(targetParent.getName());
-        bar.setNodeName(target.getName());
         bar.setPath(parentParent.getHandle());
+        bar.setNodeCollectionName(parent.getName());
+        bar.setNodeName(content.getName());
         // bar.setPath(target.getHandle()); // would work for edit but not for move
 
         // bar.setDefaultButtons();
         if (enableMoveButton) {
             // doing the below instead of setButtonMove() for clarity, but see comment above for the bar.setPath method
-            bar.setButtonMove(targetParent.getName(), target.getName());
+            bar.setButtonMove(parent.getName(), content.getName());
         } else {
             // buttonMove is initially set to new Button, so if we don't do this, we end up with a label-less, action-less, button
             bar.setButtonMove(null);
         }
         if (enableDeleteButton) {
             // simplified delete function -
-            bar.setButtonDelete(target.getHandle());
+            bar.setButtonDelete(content.getHandle());
             // these paths would otherwise get concatenated in inline.js#mgnlDeleteNode:
             // parentParent.getHandle(), targetParent.getName(), target.getName());
         } else {
