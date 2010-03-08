@@ -21,11 +21,6 @@
       <version>4.3-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-templating-ui-components</artifactId>
-      <version>4.3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
       <groupId>net.sf.json-lib</groupId>
       <artifactId>json-lib</artifactId>
       <!-- <classifier>jdk13</classifier>-->

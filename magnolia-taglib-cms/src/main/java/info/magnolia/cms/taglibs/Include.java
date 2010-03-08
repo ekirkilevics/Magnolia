@@ -162,7 +162,11 @@ public class Include extends BodyTagSupport {
             if (content == null) {
                 // was there a node name passed
                 if (this.contentNodeName != null) {
-                    content = Resource.getCurrentActivePage().getContent(this.contentNodeName);
+                    final Content currentActivePage = Resource.getCurrentActivePage();
+                    if (!currentActivePage.hasContent(this.contentNodeName)) {
+                        return EVAL_PAGE; // ...
+                    }
+                    content = currentActivePage.getContent(this.contentNodeName);
                     if (content != null) {
                         Resource.setLocalContentNode(content);
                         localContentNodeSet = true;
