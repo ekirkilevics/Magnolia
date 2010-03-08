@@ -47,7 +47,7 @@ import java.util.List;
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public class NewParagraphBar extends AbstractAuthoringUiComponent {
+public class NewBar extends AbstractAuthoringUiComponent {
 
     /**
      * @param serverCfg
@@ -57,8 +57,8 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
      * @param allowedParagraphs the list of paragraph definitions (their names) that are allow to be added by this component
      * @param newButtonLabel if null, default will be used
      */
-    public static NewParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content specificTarget, String containerNodeName, List<String> allowedParagraphs, String newButtonLabel) {
-        final NewParagraphBar bar = new NewParagraphBar(serverCfg, aggState);
+    public static NewBar make(ServerConfiguration serverCfg, AggregationState aggState, Content specificTarget, String containerNodeName, List<String> allowedParagraphs, String newButtonLabel) {
+        final NewBar bar = new NewBar(serverCfg, aggState);
         if (specificTarget != null) {
             bar.setTarget(specificTarget);
         }
@@ -76,7 +76,7 @@ public class NewParagraphBar extends AbstractAuthoringUiComponent {
     private String newButtonLabel = "buttons.new";
     private List<String> allowedParagraphs;
 
-    public NewParagraphBar(ServerConfiguration server, AggregationState aggregationState) {
+    public NewBar(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
     }
 

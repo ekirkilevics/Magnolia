@@ -45,7 +45,7 @@ import java.io.Writer;
 import java.util.List;
 
 /**
- * An hybrid between a new bar and an edit bar for non-moveable paragraphs: it's either added by the editor, edited, or removed.
+ * TODO An hybrid between a new bar and an edit bar for non-moveable paragraphs: it's either added by the editor, edited, or removed.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -121,7 +121,7 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
 
         bar.setPath(target.getHandle());
         //bar.setNodeCollectionName(containerNodeName);
-        bar.setNodeName(containerNodeName); // see difference with NewParagraphBar 
+        bar.setNodeName(containerNodeName); // see difference with NewBar
 
         bar.setDefaultButtons();
         bar.getButtonNew().setLabel(enableButtonLabel);

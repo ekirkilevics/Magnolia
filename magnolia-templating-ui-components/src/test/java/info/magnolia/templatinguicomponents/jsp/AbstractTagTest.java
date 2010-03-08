@@ -84,14 +84,14 @@ public class AbstractTagTest extends TestCase {
     }
 
     public void testToStringListFromStringArray() throws JspException {
-        final NewParagraphBarTag tag = new NewParagraphBarTag();
+        final NewBarTag tag = new NewBarTag();
         final List<String> res = tag.mandatoryStringList(new String[]{"hello", "world"}, null);
         assertEquals(2, res.size());
         assertEquals(Arrays.asList("hello", "world"), res);
     }
 
     public void testToStringListFromSet() throws JspException {
-        final NewParagraphBarTag tag = new NewParagraphBarTag();
+        final NewBarTag tag = new NewBarTag();
         final HashSet set = new HashSet();
         set.add("hello");
         set.add("world");
@@ -101,7 +101,7 @@ public class AbstractTagTest extends TestCase {
     }
 
     public void testToStringListFromCommaSeparatedString() throws JspException {
-        final NewParagraphBarTag tag = new NewParagraphBarTag();
+        final NewBarTag tag = new NewBarTag();
         final List<String> res = tag.mandatoryStringList("hello,world", null);
         assertEquals(2, res.size());
         assertEquals(Arrays.asList("hello", "world"), res);

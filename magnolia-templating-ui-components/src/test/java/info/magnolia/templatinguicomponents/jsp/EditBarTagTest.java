@@ -49,7 +49,7 @@ import static org.easymock.EasyMock.expect;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarTagTest extends AbstractJspTest {
+public class EditBarTagTest extends AbstractJspTest {
     @Override
     protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
         expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).times(6);

@@ -48,7 +48,7 @@ import java.io.Writer;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditPageBar extends AbstractAuthoringUiComponent {
+public class PageEditBar extends AbstractAuthoringUiComponent {
 
     /**
      * @param serverCfg
@@ -56,8 +56,8 @@ public class EditPageBar extends AbstractAuthoringUiComponent {
      * @param editButtonLabel pass null for the default
      * @param dialogName
      */
-    public static EditPageBar make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
-        final EditPageBar bar = new EditPageBar(serverCfg, aggState);
+    public static PageEditBar make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
+        final PageEditBar bar = new PageEditBar(serverCfg, aggState);
         if (editButtonLabel != null) {
             bar.setEditButtonLabel(editButtonLabel);
         }
@@ -72,7 +72,7 @@ public class EditPageBar extends AbstractAuthoringUiComponent {
     private String dialogName;
     private String editButtonLabel = "buttons.properties";
 
-    public EditPageBar(ServerConfiguration server, AggregationState aggregationState) {
+    public PageEditBar(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
     }
 

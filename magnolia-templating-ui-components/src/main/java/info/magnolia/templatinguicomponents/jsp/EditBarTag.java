@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.EditParagraphBar;
+import info.magnolia.templatinguicomponents.components.EditBar;
 
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
@@ -49,7 +49,7 @@ import java.io.IOException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public class EditParagraphBarTag extends AbstractTag {
+public class EditBarTag extends AbstractTag {
     private String editButtonLabel;
     private boolean enableMoveButton = true;
     private boolean enableDeleteButton = true;
@@ -93,6 +93,6 @@ public class EditParagraphBarTag extends AbstractTag {
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
-        return EditParagraphBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
+        return EditBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }
 }

@@ -59,7 +59,7 @@ import static org.easymock.EasyMock.*;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditParagraphBarTest extends TestCase {
+public class EditBarTest extends TestCase {
     public void testPathNodeCollectionNameEtc() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
         AccessManager accessManager = createMock(AccessManager.class);
@@ -84,7 +84,7 @@ public class EditParagraphBarTest extends TestCase {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
 
-        final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggregationState);
+        final EditBar bar = new EditBar(serverCfg, aggregationState);
         final StringWriter out = new StringWriter();
         bar.doRender(out);
 

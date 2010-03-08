@@ -44,9 +44,9 @@ import java.util.HashMap;
 public class Directives extends HashMap<String, TemplateDirectiveModel> {
     public Directives() {
         super();
-        put("main", new EditPageBarDirective());
-        put("new", new NewParagraphBarDirective());
-        put("edit", new EditParagraphBarDirective());
+        put("page", new PageEditBarDirective());
+        put("new", new NewBarDirective());
+        put("edit", new EditBarDirective());
         put("singleton", new SingletonParagraphBarDirective());
     }
 }

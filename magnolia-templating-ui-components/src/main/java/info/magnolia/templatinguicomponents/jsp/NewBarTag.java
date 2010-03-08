@@ -31,41 +31,69 @@
  * intact.
  *
  */
-package info.magnolia.templatinguicomponents.freemarker;
+package info.magnolia.templatinguicomponents.jsp;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.NewParagraphBar;
+import info.magnolia.templatinguicomponents.components.NewBar;
 
+import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
+ * @jsp.tag name="new" body-content="empty"
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewParagraphBarDirective extends AbstractDirective {
+public class NewBarTag extends AbstractTag {
+
+    private String newButtonLabel;
+    private Content target;
+    private String containerNodeName;
+    private Object allowedParagraphs;
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setNewLabel(String newButtonLabel) {
+        this.newButtonLabel = newButtonLabel;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
+     */
+    public void setTarget(Content target) {
+        this.target = target;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setContainer(String containerNodeName) {
+        this.containerNodeName = containerNodeName;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Object"
+     */
+    public void setParagraphs(Object allowedParagraphs) {
+        this.allowedParagraphs = allowedParagraphs;
+    }
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, false);
-        final String newButtonLabel = string(params, "newLabel", null);
-        final Content target = content(params, "target", null);
-        final String containerNodeName = string(params, "container", null);
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
         if (target == null && containerNodeName == null) {
             // TODO check
-            throw new TemplateModelException("At least target or container must be specified.");
+            throw new JspException("At least target or container must be specified.");
         }
-        final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
 
-        return NewParagraphBar.make(serverCfg, aggState, target, containerNodeName, allowedParagraphs, newButtonLabel);
+        final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
+
+        return NewBar.make(serverCfg, aggState, target, containerNodeName, paraList, newButtonLabel);
     }
 
 }

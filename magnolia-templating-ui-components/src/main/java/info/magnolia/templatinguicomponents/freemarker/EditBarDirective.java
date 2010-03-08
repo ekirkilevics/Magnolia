@@ -41,7 +41,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.EditParagraphBar;
+import info.magnolia.templatinguicomponents.components.EditBar;
 
 import java.io.IOException;
 import java.util.Map;
@@ -51,7 +51,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public class EditParagraphBarDirective extends AbstractDirective {
+public class EditBarDirective extends AbstractDirective {
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
@@ -62,6 +62,6 @@ public class EditParagraphBarDirective extends AbstractDirective {
         final String specificDialogName = string(params, "dialog", null);
         final Content target = content(params, "target", null);
 
-        return EditParagraphBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
+        return EditBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }
 }

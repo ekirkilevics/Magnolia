@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewParagraphBarDirectiveTest extends DirectiveAbstractTestCase {
+public class NewBarDirectiveTest extends DirectiveAbstractTestCase {
     @Override
     protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
     }

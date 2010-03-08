@@ -33,26 +33,41 @@
  */
 package info.magnolia.templatinguicomponents.jsp;
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.meterware.httpunit.WebResponse;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.context.WebContext;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.templatinguicomponents.AuthoringUiComponent;
+import info.magnolia.templatinguicomponents.components.PageEditBar;
+
+import javax.servlet.jsp.JspException;
+import java.io.IOException;
 
 /**
+ * @jsp.tag name="page" body-content="empty"
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewParagraphBarTagTest extends AbstractJspTest {
-    @Override
-    protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
+public class PageEditBarTag extends AbstractTag {
+    private String editButtonLabel;
+    private String dialogName;
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setEditLabel(String editButtonLabel) {
+        this.editButtonLabel = editButtonLabel;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setDialog(String dialogName) {
+        this.dialogName = dialogName;
     }
 
     @Override
-    void check(WebResponse response, HtmlPage page) throws Exception {
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
 
-        // TODO assertEquals("hello world", response.getText());
-
+        return PageEditBar.make(serverCfg, aggState, editButtonLabel, dialogName);
     }
-
 }

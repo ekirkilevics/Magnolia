@@ -51,7 +51,7 @@ import java.io.Writer;
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
-public class EditParagraphBar extends AbstractAuthoringUiComponent {
+public class EditBar extends AbstractAuthoringUiComponent {
 
     /**
      * @param serverCfg
@@ -62,11 +62,11 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
      * @param enableMoveButton true should be the default
      * @param enableDeleteButton true should be the default
      */
-    public static EditParagraphBar make(ServerConfiguration serverCfg, AggregationState aggState, Content target, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
+    public static EditBar make(ServerConfiguration serverCfg, AggregationState aggState, Content target, String specificDialogName, String editButtonLabel, boolean enableMoveButton, boolean enableDeleteButton) {
         // TODO - it would be nicer if this was available from some RenderingContext
         final boolean isInSingleton = SingletonParagraphBar.isInSingleton();
 
-        final EditParagraphBar bar = new EditParagraphBar(serverCfg, aggState);
+        final EditBar bar = new EditBar(serverCfg, aggState);
         if (target != null) {
             bar.setTarget(target);
         }
@@ -96,7 +96,7 @@ public class EditParagraphBar extends AbstractAuthoringUiComponent {
     private boolean enableMoveButton = true;
     private boolean enableDeleteButton = true;
 
-    public EditParagraphBar(ServerConfiguration serverConfiguration, AggregationState aggregationState) {
+    public EditBar(ServerConfiguration serverConfiguration, AggregationState aggregationState) {
         super(serverConfiguration, aggregationState);
     }
 

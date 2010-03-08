@@ -33,37 +33,53 @@
  */
 package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;
+import info.magnolia.templatinguicomponents.components.SingletonParagraphBar;
 
 import javax.servlet.http.HttpServletRequest;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditPageBarDirectiveTest extends DirectiveAbstractTestCase {
+public class EditBarDirectiveTest extends DirectiveAbstractTestCase {
     @Override
     protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).once();
     }
 
-    public void testBasicRendering() throws Exception {
-        final String s = renderForTest("[@ui.main dialog='myDialog' /]");
-        // TODO assertEquals("... not testing yet... ", s);
+    public void testRenderSimpleBar() throws Exception {
+        final String result = renderForTest("[@ui.edit /]");
+
+        // TODO assertEquals("..not testing yet..", result);
     }
 
-    public void testCustomLabel() throws Exception {
-        final String s = renderForTest("[@ui.main dialog='myDialog' editLabel='Edit this!' /]");
-        assertEquals(true, s.contains("Edit this!"));
-        assertEquals(false, s.contains("buttons.properties")); // the default button label
-        assertEquals(false, s.contains("Properties")); // the i18n'd default button label
-        // TODO assertEquals("... not testing yet... ", s);
+    public void testRenderWithSpecificDialog() throws Exception {
+        final String result = renderForTest("[@ui.edit dialog='myDialog' /]");
+
+        // TODO assertEquals("..not testing yet..", result);
     }
 
-    public void testNoDialogButton() throws Exception {
-        // usecase: [@ui.main dialog=def.dialog! /] - if you want to support templates which might not have a dialog defined.
-        final String s = renderForTest("[@ui.main dialog=someVar! editLabel='should not appear' /]");
-        assertEquals(false, s.contains("should not appear"));
-        // TODO assertEquals("... not testing yet... ", s);
+    public void testRenderWithEditLabelAndNoOtherButtons() throws Exception {
+        final String result = renderForTest("[@ui.edit editLabel='edit my paragraph' move=false delete=false /]");
+
+        // TODO assertEquals("..not testing yet..", result);
+
+        // TODO - also validate error messages such as The 'move' parameter must be a TemplateBooleanModel and is a SimpleScalar.
+        // TODO re:the above - maybe we want to support SimpleScalar as well for booleans (move='false' instead of move=false) .. for ease of use ?
     }
+
+    public void testThrowsExceptionForUnknownParameters() throws Exception {
+        try {
+            renderForTest("[@ui.edit fake='lol' /]");
+            fail("should have failed");
+        } catch (TemplateModelException e) {
+            assertEquals("Unsupported parameter(s): {fake=lol}", e.getMessage());
+        }
+    }
+
 }

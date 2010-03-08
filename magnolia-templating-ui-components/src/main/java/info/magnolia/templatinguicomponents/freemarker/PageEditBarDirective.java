@@ -31,43 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.templatinguicomponents.jsp;
+package info.magnolia.templatinguicomponents.freemarker;
 
+import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.templatinguicomponents.AuthoringUiComponent;
-import info.magnolia.templatinguicomponents.components.EditPageBar;
+import info.magnolia.templatinguicomponents.components.PageEditBar;
 
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import java.util.Map;
 
 /**
- * @jsp.tag name="main" body-content="empty"
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditPageBarTag extends AbstractTag {
-    private String editButtonLabel;
-    private String dialogName;
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setEditLabel(String editButtonLabel) {
-        this.editButtonLabel = editButtonLabel;
-    }
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setDialog(String dialogName) {
-        this.dialogName = dialogName;
-    }
-
+public class PageEditBarDirective extends AbstractDirective {
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        checkBody(body, false);
+        final String editButtonLabel = string(params, "editLabel", null);
+        final String dialogName = string(params, "dialog", null);
 
-        return EditPageBar.make(serverCfg, aggState, editButtonLabel, dialogName);
+        return PageEditBar.make(serverCfg, aggState, editButtonLabel, dialogName);
     }
+
 }
