@@ -7,13 +7,14 @@
     <version>4.3-SNAPSHOT</version>
   </parent>
   <groupId>info.magnolia</groupId>
-  <artifactId>magnolia-templating-ui-components</artifactId>
-  <name>magnolia-templating-ui-components</name>
+  <artifactId>magnolia-module-templating-components</artifactId>
+  <name>magnolia-module-templating-components</name>
 
   <properties>
     <taglib.shortname>ui</taglib.shortname>
-    <taglib.uri>http://magnolia-cms.com/taglib/templating-ui-components</taglib.uri>
+    <taglib.uri>http://magnolia-cms.com/taglib/templating-components</taglib.uri>
   </properties>
+  
   <build>
     <plugins>
       <plugin>

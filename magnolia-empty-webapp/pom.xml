@@ -51,7 +51,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-templating-ui-components</artifactId>
+      <artifactId>magnolia-module-templating-components</artifactId>
       <version>4.3-SNAPSHOT</version>
     </dependency>
     <dependency>
