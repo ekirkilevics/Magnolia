@@ -204,7 +204,7 @@ public class DialogHandlerManager extends ObservedManager {
             return false;
         }
 
-        // if leave
+        // if leaf
         if(ContentUtil.getAllChildren(node).isEmpty()){
             return true;
         }
