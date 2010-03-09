@@ -113,13 +113,6 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
         prepareI18n(out);
 
-        for (int i = 0; i < includes.length; i++) {
-            InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/" + includes[i]);
-            IOUtils.copy(in, out);
-            in.close();
-        }
-
-
         // finding files in classpath is too expensive, just cache the list of paths!
         String[] files = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
             public boolean accept(String name) {
@@ -157,6 +150,12 @@ public class JavascriptIncludePage extends PageMVCHandler {
         for (Iterator iter = classDefinitions.keySet().iterator(); iter.hasNext();) {
             String className = (String) iter.next();
             process(className, out);
+        }
+
+        for (int i = 0; i < includes.length; i++) {
+            InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/" + includes[i]);
+            IOUtils.copy(in, out);
+            in.close();
         }
 
         out.println("MgnlRuntime.loadingOn=true;");
