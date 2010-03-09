@@ -53,8 +53,6 @@ function mgnlDeleteNode(path,paragraphName,nodeName)
     }
 
 
-
-
 /* ###################################
 ### move paragraphs
 ################################### */
@@ -64,11 +62,23 @@ var mgnlMoveNodeCollection; //selected container list name
 
 //divs which will be placed onMouseMove
 //shadow: half transparent and scaled down editBar
-document.write('<div id="mgnlMoveDivShadow"></div>');
-//denied: denied sign
-document.write('<div id="mgnlMoveDivDenied"></div>');
-//allowed: text 'Move above here'
-document.write('<div id="mgnlMoveDivAllowed" style="visibility:hidden">' + mgnlMessages.get('inline.move.aboveThisOne.js') + '</div>');
+function loadMoveDivs() {
+    var div = document.createElement("div");
+    div.id = "mgnlMoveDivShadow";
+    document.body.appendChild(div);
+
+    div = document.createElement("div");
+    div.id = "mgnlMoveDivDenied";
+    document.body.appendChild(div);
+
+    div = document.createElement("div");
+    div.id = "mgnlMoveDivAllowed";
+    div.setAttribute("style", "visibility:hidden");
+    div.innerHTML = mgnlMessages.get('inline.move.aboveThisOne.js');
+    document.body.appendChild(div);
+}
+
+MgnlDHTMLUtil.addOnLoad(loadMoveDivs);
 
 var mgnlMoveDont=false;
 //move will not start as long as mgnlMoveDont is true
