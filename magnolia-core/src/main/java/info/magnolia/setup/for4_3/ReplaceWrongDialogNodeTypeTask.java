@@ -88,12 +88,12 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         List<Content> dialogNodes = new ArrayList<Content>();
         Content srcRoot = hm.getContent("/modules");
         collectDialogNodes(srcRoot, dialogNodes);
-        installContext.info("Found " +dialogNodes.size()+ " dialog(s)");
+        log.info("Found " +dialogNodes.size()+ " dialog(s)");
         
         for(Content srcNode: dialogNodes){
             String dest = srcNode.getHandle();
             try {
-                installContext.info("Checking if "+ dest +" needs to be replaced due to incorrect dialog type...");
+                log.info("Checking if "+ dest +" needs to be replaced due to incorrect dialog type...");
                 replaceInSession(srcNode);
             }
             catch (RepositoryException e) {
