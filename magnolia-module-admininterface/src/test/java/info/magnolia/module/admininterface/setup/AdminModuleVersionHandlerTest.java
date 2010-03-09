@@ -139,11 +139,13 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         //fake a pre-install
         final String path = "/modules/myModule/dialogs/myDialog";
         final String path2 = "/modules/myModule/dialogs/anotherDialog";
-        final String path3 = "/modules/anotherModule/dialogs/aDifferentDialog";
+        final String path3 = "/modules/anotherModule/dialogs/aCorrectDialog";
+        final String path4 = "/modules/anotherModule/foo/leaveMeAlone";
         setupConfigNode(path);
         setupConfigNode(path2);
-        //this one shouldn't be updated
+        //these two shouldn't be updated
         setupProperty("config", path3, null, null, ItemType.CONTENTNODE);
+        setupConfigNode(path4);
         
         HierarchyManager hm = MgnlContext.getHierarchyManager("config");
         
@@ -156,15 +158,18 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         assertTrue(hm.isExist(path));
         //as we're replacing the old node, after updating we expect the same uuid
         assertEquals(pathUUID, hm.getContent(path).getUUID());
-        assertEquals(expectedNodeType, getDialogNodeType(path));
+        assertEquals(expectedNodeType, getNodeType(path));
         
         assertTrue(hm.isExist(path2));
         assertEquals(path2UUID, hm.getContent(path2).getUUID());
-        assertEquals(expectedNodeType, getDialogNodeType(path2));
+        assertEquals(expectedNodeType, getNodeType(path2));
         
         assertTrue(hm.isExist(path3));
         assertEquals(path3UUID, hm.getContent(path3).getUUID());
-        assertEquals(expectedNodeType, getDialogNodeType(path3));
+        assertEquals(expectedNodeType, getNodeType(path3));
+        
+        assertTrue(hm.isExist(path4));
+        assertEquals("mgnl:content", getNodeType(path4));
         
     }
 
@@ -188,7 +193,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         assertConfig(DefaultVirtualURIMapping.class.getName(),"/modules/adminInterface/virtualURIMapping/default/class");
     }
     
-    private String getDialogNodeType(String dialogPath) throws RepositoryException {
-        return MgnlContext.getHierarchyManager("config").getContent(dialogPath).getNodeData("jcr:primaryType").getString();
+    private String getNodeType(String path) throws RepositoryException {
+        return MgnlContext.getHierarchyManager("config").getContent(path).getNodeData("jcr:primaryType").getString();
     }
 }
