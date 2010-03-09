@@ -62,7 +62,6 @@ import javax.jcr.query.Query;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.derby.tools.sysinfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
