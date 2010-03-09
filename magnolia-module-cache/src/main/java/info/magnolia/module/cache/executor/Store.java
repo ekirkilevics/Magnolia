@@ -131,8 +131,10 @@ public class Store extends AbstractExecutor {
             cache.put(cachePolicy.getCacheKey(), cachedEntry);
             if (cachedEntry == null ) {
                 cache.remove(cachePolicy.getCacheKey());
+                //TODO: remove key from uuid-cachekey multimap
             } else {
                 cachePolicy.setCachedEntry(cachedEntry);
+                //TODO: add key to uuid-cachekey multimap
             }
         }
     }

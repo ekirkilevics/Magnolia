@@ -43,12 +43,14 @@ import info.magnolia.module.cache.CacheModuleLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.mbean.MgnlCacheStats;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -64,6 +66,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     private static final String MODULE_NAME = "cache";
     private static final String DEFAULT_CACHE_CONFIG = "default";
 
+    private MgnlCacheStats stats;
     private String cacheConfigurationName;
     private CacheConfiguration cacheConfig;
     private Cache cache;
@@ -78,7 +81,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
 
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
-        getModule().register(this);
+        CacheModule.getInstance().register(this);
         // modules are started *after* filters - so we have to force a call onCacheModuleStart() here
         onCacheModuleStart();
     }
@@ -89,7 +92,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             this.cacheConfigurationName = DEFAULT_CACHE_CONFIG;
         }
 
-        final CacheModule cacheModule = getModule();
+        final CacheModule cacheModule = CacheModule.getInstance();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
         this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
 
@@ -97,9 +100,11 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             log.error("The " + getName() + " CacheFilter is not properly configured, either cacheConfig(" + cacheConfig + ") or cache(" + cache + ") is null. Check if " + cacheConfigurationName + " is a valid cache configuration name. Will disable temporarily.");
             setEnabled(false);
         }
+
+        stats = MgnlCacheStats.getInstance();
     }
 
-    // TODO : maybe this method could be generalized ...
+    @Deprecated
     protected CacheModule getModule() {
         return (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance(MODULE_NAME);
     }
@@ -111,6 +116,8 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         log.debug("Cache policy result: {}", cachePolicyResult);
 
         final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicyResult.getBehaviour();
+        stats.logBehavior(behaviour.getName());
+        stats.logAccess(cachePolicyResult.getCacheKey());
         final CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour);
         if (executor == null) {
             throw new IllegalStateException("Unexpected cache policy result: " + cachePolicyResult);

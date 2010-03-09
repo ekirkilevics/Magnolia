@@ -34,6 +34,7 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
@@ -176,7 +177,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.isCommitted()).andReturn(false);
         expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
-        
+
         // by default unknown content types are not compresible
         expect(response.getContentType()).andReturn("some content type").times(2);
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
@@ -291,7 +292,7 @@ public class CacheFilterTest extends TestCase {
         response.setContentLength(GZipUtil.gzip(dummyContent.getBytes()).length);
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
-        
+
 //        replay(configHm);
         executeFilterAndVerify();
 
@@ -323,7 +324,7 @@ public class CacheFilterTest extends TestCase {
         response.setContentLength(32);
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
-        
+
 //        replay(configHm);
         executeFilterAndVerify();
 
@@ -418,7 +419,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn(null);
-        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the CachedPage 
+        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the CachedPage
         expect(response.isCommitted()).andReturn(true);
 
         response.setStatus(304);
@@ -438,7 +439,7 @@ public class CacheFilterTest extends TestCase {
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
         expect(response.isCommitted()).andReturn(true);
         // we can't change status of the already committed response ... the only option left here is to proceed and send the data
-        
+
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
         response.setStatus(200);
         response.setContentType("text/plain");
@@ -671,7 +672,7 @@ public class CacheFilterTest extends TestCase {
         final Set listeners = (Set) field.get(module);
         assertEquals(1, listeners.size());
         assertEquals(filter, listeners.iterator().next());
-        
+
 
         // and now get down to the real business
         replay(webContext, cache, cachePolicy, request, response, filterChain);
@@ -687,6 +688,7 @@ public class CacheFilterTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
         MockUtil.initMockContext();
         aggregationState = new AggregationState();
 

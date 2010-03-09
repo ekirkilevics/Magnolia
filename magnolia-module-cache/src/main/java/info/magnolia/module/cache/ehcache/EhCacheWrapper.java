@@ -34,6 +34,8 @@
 package info.magnolia.module.cache.ehcache;
 
 import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.CacheModule;
+import info.magnolia.module.cache.mbean.MgnlCacheStats;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
@@ -76,6 +78,7 @@ public class EhCacheWrapper implements Cache {
     }
 
     public void clear() {
+        MgnlCacheStats.getInstance().countFlush(this.name);
         ehcache.removeAll();
     }
 

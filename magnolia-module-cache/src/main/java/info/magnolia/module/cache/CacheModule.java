@@ -35,6 +35,8 @@ package info.magnolia.module.cache;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.cache.mbean.MgnlCacheStats;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,11 +57,13 @@ import org.slf4j.LoggerFactory;
  */
 public class CacheModule implements ModuleLifecycle {
     private static final Logger log = LoggerFactory.getLogger(CacheModule.class);
+    private static final String MODULE_NAME = "cache";
 
     private final Set<CacheModuleLifecycleListener> listeners = new HashSet<CacheModuleLifecycleListener>();
     private CacheFactory cacheFactory;
     private Map<String, CacheConfiguration> configurations = new HashMap<String, CacheConfiguration>();
     private ContentCompression compression;
+    private static final MgnlCacheStats mgnlCacheStats = MgnlCacheStats.getInstance();
 
     public CacheFactory getCacheFactory() {
         return cacheFactory;
@@ -104,6 +108,8 @@ public class CacheModule implements ModuleLifecycle {
         cacheFactory.start();
 //        }
 
+        mgnlCacheStats.countStart();
+
         final Iterator<CacheConfiguration> it = configurations.values().iterator();
         while (it.hasNext()) {
             final CacheConfiguration cfg = it.next();
@@ -111,6 +117,7 @@ public class CacheModule implements ModuleLifecycle {
             final Cache cache = cacheFactory.getCache(name);
             if (cfg.getFlushPolicy() != null) {
                 cfg.getFlushPolicy().start(cache);
+                mgnlCacheStats.addCache(name);
             } else {
                 log.warn("Flush Policy is not configured properly for {} cache configuration.", name);
             }
@@ -121,9 +128,12 @@ public class CacheModule implements ModuleLifecycle {
             final CacheModuleLifecycleListener listener = itL.next();
             listener.onCacheModuleStart();
         }
+
+
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+        mgnlCacheStats.stop();
         final Iterator<CacheConfiguration> it = configurations.values().iterator();
         while (it.hasNext()) {
             final CacheConfiguration cfg = it.next();
@@ -146,5 +156,9 @@ public class CacheModule implements ModuleLifecycle {
 //        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
         cacheFactory.stop();
 //        }
+    }
+
+    public static CacheModule getInstance() {
+        return (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance(MODULE_NAME);
     }
 }

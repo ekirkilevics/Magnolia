@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
+import java.util.Map;
+
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
@@ -42,10 +44,12 @@ import info.magnolia.link.LinkUtil;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.CompositeCacheKey;
 import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.voters.VoterSet;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,9 +64,8 @@ import org.slf4j.LoggerFactory;
 public class Default implements CachePolicy {
 
     private static final Logger log = LoggerFactory.getLogger(Default.class);
-    
-//  MAGNOLIA-3074: commented out as the i18n filter currently resists behind the cache    
-//  private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
+
+    private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
 
     private VoterSet voters;
 
@@ -109,28 +112,55 @@ public class Default implements CachePolicy {
     }
 
     protected boolean shouldBypass(AggregationState aggregationState, Object key) {
-        final String uri = (String) key;
+        final String uri;
+        if (key instanceof CompositeCacheKey) {
+            uri = ((CompositeCacheKey) key).getUri();
+        } else {
+            uri = key.toString();
+        }
         // true if voters vote positively
         return voters.vote(uri) <= 0;
     }
 
     public Object retrieveCacheKey(final AggregationState aggregationState) {
+        final String uuid;
+        // get original uri //TODO: check why original and not current?
+        final String uri = aggregationState.getOriginalURI();
 
-        String key = aggregationState.getOriginalURI();
-        if (multiplehosts) {
-            key = MgnlContext.getWebContext().getRequest().getServerName() + ":" + key;
+        //get serverName and request params and uuid of current content from WebContext/AggregationState
+        // assuming "currentContent" is a page as there is no url to access paragraphs. However once there is, the uuid can easily point to a paragraph
+        final String serverName;
+        final Map<String, String> params;
+        if (MgnlContext.isWebContext()) {
+            if (multiplehosts) {
+                serverName = MgnlContext.getWebContext().getRequest().getServerName();
+            } else {
+                serverName = null;
+            }
+            params = MgnlContext.getWebContext().getParameters();
+            uuid = aggregationState.getCurrentContent() == null ? null : aggregationState.getCurrentContent().getUUID();
+        } else {
+            serverName = null;
+            params = null;
+            uuid = null;
         }
-//        MAGNOLIA-3074: commented out as the i18n filter currently resists behind the cache        
-//        if(i18nContentSupport!= null && i18nContentSupport.isEnabled()){
-//            key += ":" + i18nContentSupport.getLocale().toString();
-//        }
+        // get locale
+        final String locale;
+        if(i18nContentSupport!= null && i18nContentSupport.isEnabled()){
+            locale = i18nContentSupport.getLocale().toString();
+        } else {
+            locale = null;
+        }
 
-        return key;
+        // create composite key so we can easily check each part of it later
+        return new CompositeCacheKey(uuid, uri, serverName, locale, params);
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         try {
             // TODO: retrieve multiple keys when i18n is enabled
+            // TODO: hmm, retrieve cached map of key-uuids to get all the keys ... and that would give all variations of the key, incl all locales
+            // TODO: such a map probably needs to be a multimap - uuid-Col<Keys>
             return new Object[]{LinkUtil.convertUUIDtoURI(uuid, repository)};
         }
         catch (LinkException e) {
