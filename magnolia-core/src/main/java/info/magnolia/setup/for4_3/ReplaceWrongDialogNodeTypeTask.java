@@ -76,12 +76,12 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
     
     private final static Logger log = LoggerFactory.getLogger(ReplaceWrongDialogNodeTypeTask.class);
     
-    private static final Pattern ALL_MODULES_DIALOGS_PATTERN = Pattern.compile("(.+jcr:primaryType.+<sv:value>)(mgnl:content)(</sv:value>)");
+    private static final Pattern DIALOG_NODE_TYPE = Pattern.compile("(.+jcr:primaryType.+<sv:value>)(mgnl:content)(</sv:value>)");
 
     private static final String REPLACEMENT = "$1mgnl:contentNode$3";
     
     public ReplaceWrongDialogNodeTypeTask() {
-        super("Replace incorrect dialog node types", "Checks for each module in the config repository if dialogs are of the incorrect type mgnl:content and attempts to replace them with the correct one mgnl:contentNode");
+        super("Replace incorrect dialog node types", "Checks for each module in the config repository if dialogs are of the incorrect type mgnl:content and replaces them with the correct one mgnl:contentNode");
     }
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
@@ -115,7 +115,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
             outStream.flush();
             final String content = FileUtils.readFileToString(file);
             log.debug("content string is {}", content);
-            final Matcher matcher = ALL_MODULES_DIALOGS_PATTERN.matcher(content);
+            final Matcher matcher = DIALOG_NODE_TYPE.matcher(content);
             String replaced = null;
             if(matcher.find()){
                 replaced = matcher.replaceFirst(REPLACEMENT);
