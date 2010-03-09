@@ -112,7 +112,7 @@ public class NewBar extends AbstractAuthoringUiComponent {
         // don't set new button if there's no selectable paragraph
         if (!allowedParagraphs.isEmpty()) {
             bar.setDefaultButtons();
-            // final String label = allowedParagraphs.isEmpty() ? "buttons.noparagraph" : newButtonLabel;
+            // final String label = allowedParagraphs.isEmpty() ? "buttons.new.noparagraph" : newButtonLabel;
             bar.getButtonNew().setLabel(getMessage(content, newButtonLabel));
 
             bar.placeDefaultButtons();
