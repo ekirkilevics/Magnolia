@@ -62,6 +62,7 @@ import javax.jcr.query.Query;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.derby.tools.sysinfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
     
     private final static Logger log = LoggerFactory.getLogger(ReplaceWrongDialogNodeTypeTask.class);
     
-    private static final Pattern DIALOG_NODE_TYPE = Pattern.compile("(.+jcr:primaryType.+<sv:value>)(mgnl:content)(</sv:value>)");
+    private static final Pattern DIALOG_NODE_TYPE = Pattern.compile("(<sv:property\\s+sv:name=\"jcr:primaryType\"\\s+sv:type=\"Name\"><sv:value>)(mgnl:content)(</sv:value>)");
 
     private static final String REPLACEMENT = "$1mgnl:contentNode$3";
     
@@ -124,6 +125,8 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
             final Matcher matcher = DIALOG_NODE_TYPE.matcher(content);
             String replaced = null;
             
+            log.debug("about to start find&replace...");
+            long start = System.currentTimeMillis();
             if(matcher.find()) {
                 log.debug("{} will be replaced", src.getHandle());
                 replaced = matcher.replaceFirst(REPLACEMENT);
@@ -132,6 +135,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
                 log.debug("{} won't be replaced", src.getHandle());
                 return;
             }
+            log.debug("find&replace operations took {}ms" + (System.currentTimeMillis() - start) / 1000);
             
             FileUtils.writeStringToFile(file, replaced);
             inStream = new FileInputStream(file);
