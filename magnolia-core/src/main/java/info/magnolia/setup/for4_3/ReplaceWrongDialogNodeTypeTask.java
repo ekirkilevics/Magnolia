@@ -63,7 +63,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
  * Check for each module in the config repository if dialogs are of the incorrect type <em>mgnl:content</em> 
  * and attempts to replace them with the correct one <em>mgnl:contentNode<em>.<br>
@@ -90,6 +89,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         Content srcRoot = hm.getContent("/modules");
         collectDialogNodes(srcRoot, dialogNodes);
         installContext.info("Found " +dialogNodes.size()+ " dialog(s)");
+        
         for(Content srcNode: dialogNodes){
             String dest = srcNode.getHandle();
             try {
@@ -108,7 +108,8 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         FileOutputStream outStream = null;
         FileInputStream inStream = null;
         File file = null;
-        try{
+        
+        try {
             file = File.createTempFile("mgnl", null, Path.getTempDirectory());
             outStream = new FileOutputStream(file);
             session.exportSystemView(src.getHandle(), outStream, false, false);
@@ -117,24 +118,26 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
             log.debug("content string is {}", content);
             final Matcher matcher = DIALOG_NODE_TYPE.matcher(content);
             String replaced = null;
-            if(matcher.find()){
-                replaced = matcher.replaceFirst(REPLACEMENT);
+            
+            if(matcher.find()) {
                 log.info("{} will be replaced", src.getHandle());
+                replaced = matcher.replaceFirst(REPLACEMENT);
                 log.debug("replaced string is {}", replaced);
             } else {
                 log.info("{} won't be replaced", src.getHandle());
                 return;
             }
+            
             FileUtils.writeStringToFile(file, replaced);
             inStream = new FileInputStream(file);
             session.importXML(
                 destParentPath,
                 inStream,
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
-        }
-        catch (IOException e) {
+            
+        } catch (IOException e) {
             throw new RepositoryException("Can't replace node " + src.getHandle(), e);
-        }finally {
+        } finally {
             IOUtils.closeQuietly(outStream);
             IOUtils.closeQuietly(inStream);
             FileUtils.deleteQuietly(file);
