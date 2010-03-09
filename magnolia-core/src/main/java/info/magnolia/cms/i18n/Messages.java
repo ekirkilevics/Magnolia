@@ -63,7 +63,7 @@ public interface Messages {
 
     /**
      * Replace the {n} parameters in the string.
-     * @see java.text.MessageFormat#format(String, Object[])
+     * @see java.text.MessageFormat#format(String, Object...)
      */
     public String get(String key, Object[] args);
 
