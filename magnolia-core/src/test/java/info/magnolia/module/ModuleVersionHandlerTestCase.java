@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -86,10 +87,11 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     /**
      * A helper method to quickly set up a few properties to simulate a given environment.
      * Could be advantageously replaced by a dsl-like api, see MAGNOLIA-2828.
+     * @param itemType an instance of {@link ItemType}. If <code>null</code>, defaults to {@link ItemType#CONTENT}
      */
-    protected void setupProperty(final String workspace, String path, String propertyName, String value) throws RepositoryException {
+    protected void setupProperty(final String workspace, String path, String propertyName, String value, ItemType itemType) throws RepositoryException {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(workspace);
-        final Content content = ContentUtil.createPath(hm, path);
+        final Content content = ContentUtil.createPath(hm, path, itemType != null ? itemType : ItemType.CONTENT);
         if (propertyName != null) {
             NodeDataUtil.getOrCreateAndSet(content, propertyName, value);
         }
@@ -98,23 +100,23 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
     /**
      * Helper to set a property in the config workspace.
-     * @see #setupProperty(String, String, String, String)
+     * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupConfigProperty(String path, String propertyName, String value) throws RepositoryException {
-        setupProperty(ContentRepository.CONFIG, path, propertyName, value);
+        setupProperty(ContentRepository.CONFIG, path, propertyName, value, null);
     }
 
     /**
      * Helper to set a property in the config workspace.
-     * @see #setupProperty(String, String, String, String)
+     * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupNode(String workspace, String path) throws RepositoryException {
-        setupProperty(workspace, path, null, null);
+        setupProperty(workspace, path, null, null, null);
     }
     
     /**
      * Helper to create an empty node.
-     * @see #setupProperty(String, String, String, String)
+     * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupConfigNode(String path) throws RepositoryException {
         setupNode(ContentRepository.CONFIG, path);

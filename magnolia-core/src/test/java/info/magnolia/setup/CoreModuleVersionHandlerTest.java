@@ -34,6 +34,8 @@
 package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
@@ -42,11 +44,11 @@ import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.model.Version;
 
+import javax.jcr.RepositoryException;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import javax.jcr.RepositoryException;
 
 /**
  *
@@ -54,6 +56,7 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
+    
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/core.xml";
     }
@@ -78,7 +81,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -96,7 +99,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a 3pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -114,7 +117,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -140,7 +143,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -161,7 +164,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -189,7 +192,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -211,7 +214,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -239,7 +242,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
-        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*");
+        setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
@@ -254,6 +257,42 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
         assertEquals("custom-type-for-png", getMimeTypePropertyValue("png"));
         assertEquals("custom-type-for-swf", getMimeTypePropertyValue("swf"));
+    }
+    
+    public void testReplaceWrongNodeTypeForDialogsOnUpdateFrom410() throws Exception {
+        final String expectedNodeType = "mgnl:contentNode";
+        //fake a pre-install
+        setupConfigNode("/server/rendering/freemarker");
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        final String path = "/modules/myModule/dialogs/myDialog";
+        final String path2 = "/modules/myModule/dialogs/anotherDialog";
+        final String path3 = "/modules/anotherModule/dialogs/aDifferentDialog";
+        setupConfigNode(path);
+        setupConfigNode(path2);
+        //this one shouldn't be updated
+        setupProperty("config", path3, null, null, ItemType.CONTENTNODE);
+        
+        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        
+        final String pathUUID = hm.getContent(path).getUUID();
+        final String path2UUID = hm.getContent(path2).getUUID();
+        final String path3UUID = hm.getContent(path3).getUUID();
+        
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
+        
+        assertTrue(hm.isExist(path));
+        //as we're replacing the old node, after updating we expect the same uuid
+        assertEquals(pathUUID, hm.getContent(path).getUUID());
+        assertEquals(expectedNodeType, getDialogNodeType(path));
+        
+        assertTrue(hm.isExist(path2));
+        assertEquals(path2UUID, hm.getContent(path2).getUUID());
+        assertEquals(expectedNodeType, getDialogNodeType(path2));
+        
+        assertTrue(hm.isExist(path3));
+        assertEquals(path3UUID, hm.getContent(path3).getUUID());
+        assertEquals(expectedNodeType, getDialogNodeType(path3));
+        
     }
 
     /**
@@ -279,5 +318,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private String getMimeTypePropertyValue(String typeName) throws RepositoryException {
         return MgnlContext.getHierarchyManager("config").getContent("/server/MIMEMapping/" + typeName).getNodeData("mime-type").getString();
     }
-
+    
+    private String getDialogNodeType(String dialogPath) throws RepositoryException {
+        return MgnlContext.getHierarchyManager("config").getContent(dialogPath).getNodeData("jcr:primaryType").getString();
+    }
 }
