@@ -49,7 +49,6 @@ import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.voters.VoterSet;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,7 +122,6 @@ public class Default implements CachePolicy {
     }
 
     public Object retrieveCacheKey(final AggregationState aggregationState) {
-        final String uuid;
         // get original uri //TODO: check why original and not current?
         final String uri = aggregationState.getOriginalURI();
 
@@ -138,11 +136,9 @@ public class Default implements CachePolicy {
                 serverName = null;
             }
             params = MgnlContext.getWebContext().getParameters();
-            uuid = aggregationState.getCurrentContent() == null ? null : aggregationState.getCurrentContent().getUUID();
         } else {
             serverName = null;
             params = null;
-            uuid = null;
         }
         // get locale
         final String locale;
@@ -153,7 +149,7 @@ public class Default implements CachePolicy {
         }
 
         // create composite key so we can easily check each part of it later
-        return new CompositeCacheKey(uuid, uri, serverName, locale, params);
+        return new CompositeCacheKey(uri, serverName, locale, params);
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {

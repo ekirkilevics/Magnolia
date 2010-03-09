@@ -47,7 +47,6 @@ public class CompositeCacheKey implements Serializable {
     // Keep the svuid fixed to prevent deserialization errors. Keep in mind that when adding new properties they will be deserialized to null!
     private static final long serialVersionUID = 2699497852929596651L;
 
-    private String uuid;
     private String uri;
     private String serverName;
     private String locale;
@@ -58,8 +57,7 @@ public class CompositeCacheKey implements Serializable {
      * @param serverName
      * @param locale
      */
-    public CompositeCacheKey(String uuid, String uri, String serverName, String locale, Map<String, String> params) {
-        this.uuid = uuid;
+    public CompositeCacheKey(String uri, String serverName, String locale, Map<String, String> params) {
         this.uri = uri;
         this.serverName = serverName;
         this.locale = locale;
@@ -68,17 +66,10 @@ public class CompositeCacheKey implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = (uuid == null ? 11 : uuid.hashCode())
-            + (uri == null ? 13 : uri.hashCode())
+        return (uri == null ? 13 : uri.hashCode())
             + (serverName == null ? 17 : serverName.hashCode())
-            + (locale == null ? 23 : locale.hashCode());
-        if (params != null) {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                hash += entry.getKey().hashCode()
-                    + (entry.getValue() == null ? 3 : entry.getValue().hashCode());
-            }
-        }
-        return hash;
+            + (locale == null ? 23 : locale.hashCode())
+            + (params != null ? 27 :  params.hashCode());
     }
 
     @Override
@@ -90,11 +81,10 @@ public class CompositeCacheKey implements Serializable {
             return false;
         }
         CompositeCacheKey that = (CompositeCacheKey) obj;
-        return (this.uuid == null ? that.uuid == null : this.uuid.equals(that.uuid))
-            && (this.uri == null) ? that.uri == null : this.uri.equals(that.uri)
+        return (this.uri == null) ? that.uri == null : this.uri.equals(that.uri)
             && (this.serverName == null ? that.serverName == null : this.serverName.equals(that.serverName))
             && (this.locale == null ? that.locale == null : this.locale.equals(that.locale))
-            && (this.params == null ? that.params == null : this.params.entrySet().containsAll(that.params.entrySet()));
+            && (this.params == null ? that.params == null : this.params.equals(that.params));
     }
 
     public String getUri() {
@@ -103,10 +93,6 @@ public class CompositeCacheKey implements Serializable {
 
     public String getDomain() {
         return this.serverName;
-    }
-
-    public String getUuid() {
-        return this.uuid;
     }
 
     @Override

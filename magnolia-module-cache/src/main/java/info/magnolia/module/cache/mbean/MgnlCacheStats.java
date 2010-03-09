@@ -54,7 +54,6 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     private Map<String, Integer> calls = new HashMap<String, Integer>();
     private Map<String, Integer> caches = new HashMap<String, Integer>();
     private Map<String, Integer> domains = new HashMap<String, Integer>();
-    private int uuided;
 
 
     public MgnlCacheStats() {
@@ -95,10 +94,6 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
         CompositeCacheKey key = (CompositeCacheKey) cacheKey;
         Integer count = this.domains.get(key.getDomain());
         this.domains.put(key.getDomain(), count == null ? 1 : ++count);
-
-        if (key.getUuid() !=null) {
-            this.uuided++;
-        }
     }
 
     // mbean exposed methods
@@ -140,9 +135,5 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
 
     public Map<String, Integer> getDomainAccesses() {
         return domains;
-    }
-
-    public int getUuided() {
-        return uuided;
     }
 }

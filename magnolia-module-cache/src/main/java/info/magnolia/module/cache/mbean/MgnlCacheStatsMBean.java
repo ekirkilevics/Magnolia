@@ -57,7 +57,5 @@ public interface MgnlCacheStatsMBean {
 
     public Map<String, Integer> getDomainAccesses();
 
-    public int getUuided();
-
     public void flush();
 }
