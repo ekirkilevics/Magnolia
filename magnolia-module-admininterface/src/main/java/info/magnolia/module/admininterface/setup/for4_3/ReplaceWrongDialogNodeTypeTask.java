@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for4_3;
+package info.magnolia.module.admininterface.setup.for4_3;
 
 import java.io.File;
 import java.io.FileInputStream;

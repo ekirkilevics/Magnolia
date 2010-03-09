@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.for4_0.UpdatedDefaultPublicURIWarning;
+import info.magnolia.module.admininterface.setup.for4_3.ReplaceWrongDialogNodeTypeTask;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
@@ -129,6 +130,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         
         register(DeltaBuilder.update("4.3", "")
             .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuratino to /server/i18n", "config.server.i18n.authoring.xml"))
+            .addTask(new ReplaceWrongDialogNodeTypeTask())
         );
         
     }

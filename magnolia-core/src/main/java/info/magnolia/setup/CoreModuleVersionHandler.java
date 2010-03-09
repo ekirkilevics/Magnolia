@@ -58,7 +58,6 @@ import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
-import info.magnolia.setup.for4_3.ReplaceWrongDialogNodeTypeTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +161,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.3", "")
                 .addTask(addFreemarkerSharedVariables)
-                .addTask(new ReplaceWrongDialogNodeTypeTask())
                 .addTask(
                 new ArrayDelegateTask("New unicode normalization filter", "Add the new unicode normalization filter.",
                         new BootstrapSingleResource("Unicode Normalization filter ", "Add new Unicode Normalization filter.", "/mgnl-bootstrap/core/config.server.filters.unicodeNormalization.xml"),
