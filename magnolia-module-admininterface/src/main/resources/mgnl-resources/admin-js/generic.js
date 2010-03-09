@@ -7,7 +7,7 @@
  * Simple shortcut for document.getElementById()
  */
 if (typeof $ != 'function') {
-    function $(element)
+    $ = function(element)
     {
         return document.getElementById(element);
     }
