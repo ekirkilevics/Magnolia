@@ -35,8 +35,12 @@ package info.magnolia.module.templatingcomponents.jsp;
 
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -45,7 +49,11 @@ import info.magnolia.context.WebContext;
  */
 public class SelfTest extends AbstractJspTest {
     @Override
-    protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
+    protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
+    }
+
+    @Override
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
     }
 
     public void check(WebResponse response, HtmlPage page) throws Exception {

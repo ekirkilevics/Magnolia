@@ -35,6 +35,7 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarMain;
 
 import java.io.IOException;
@@ -49,12 +50,13 @@ import java.io.Writer;
  * @version $Revision: $ ($Author: $)
  */
 public class PageEditBar extends AbstractAuthoringUiComponent {
+    private static final String DEFAULT_EDIT_LABEL = "buttons.properties";
 
     /**
      * @param serverCfg
      * @param aggState
      * @param editButtonLabel pass null for the default
-     * @param dialogName
+     * @param dialogName if null or empty, no dialog button will be rendered
      */
     public static PageEditBar make(ServerConfiguration serverCfg, AggregationState aggState, String editButtonLabel, String dialogName) {
         final PageEditBar bar = new PageEditBar(serverCfg, aggState);
@@ -62,6 +64,7 @@ public class PageEditBar extends AbstractAuthoringUiComponent {
             bar.setEditButtonLabel(editButtonLabel);
         }
 
+        //
         if (dialogName != null && dialogName.length() > 0) {
             bar.setDialogName(dialogName);
         }
@@ -70,7 +73,7 @@ public class PageEditBar extends AbstractAuthoringUiComponent {
     }
 
     private String dialogName;
-    private String editButtonLabel = "buttons.properties";
+    private String editButtonLabel = DEFAULT_EDIT_LABEL;
 
     public PageEditBar(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -85,16 +88,20 @@ public class PageEditBar extends AbstractAuthoringUiComponent {
     }
 
     protected void doRender(Appendable out) throws IOException {
+        final Content content = currentContent();
 
         final BarMain bar = new BarMain();
-        bar.setPath(currentContent().getHandle());
+        bar.setPath(content.getHandle());
 
-        // TODO - deduce dialog from target node ?
+        // TODO - we could deduce the dialog if AggregationState/RenderingContext would hold the "currentRenderableDefinition"
         bar.setDialog(dialogName);
 
         bar.setAdminButtonVisible(true);
         bar.setDefaultButtons();
-        bar.getButtonProperties().setLabel(editButtonLabel);
+        bar.getButtonPreview().setLabel(getMessage(content, "buttons.preview"));
+        bar.getButtonEditView().setLabel(getMessage(content, "buttons.preview.hidden"));
+        bar.getButtonSiteAdmin().setLabel(getMessage(content, "buttons.admincentral"));
+        bar.getButtonProperties().setLabel(getMessage(content, editButtonLabel));
 
         bar.placeDefaultButtons();
         bar.drawHtml((Writer) out);

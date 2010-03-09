@@ -52,6 +52,9 @@ import java.io.Writer;
  * @version $Revision: $ ($Author: $) 
  */
 public class EditBar extends AbstractAuthoringUiComponent {
+    private static final String DEFAULT_MOVE_LABEL = "buttons.move";
+    private static final String DEFAULT_DELETE_LABEL = "buttons.delete";
+    private static final String DEFAULT_EDIT_LABEL = "buttons.edit";
 
     /**
      * @param serverCfg
@@ -95,7 +98,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
 
     private Content content;
     private String specificDialogName;
-    private String editButtonLabel = "buttons.edit";
+    private String editButtonLabel = DEFAULT_EDIT_LABEL;
     private boolean enableMoveButton = true;
     private boolean enableDeleteButton = true;
 
@@ -147,6 +150,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
         if (enableMoveButton) {
             // doing the below instead of setButtonMove() for clarity, but see comment above for the bar.setPath method
             bar.setButtonMove(parent.getName(), content.getName());
+            bar.getButtonMove().setLabel(getMessage(content, DEFAULT_MOVE_LABEL));
         } else {
             // buttonMove is initially set to new Button, so if we don't do this, we end up with a label-less, action-less, button
             bar.setButtonMove(null);
@@ -156,6 +160,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
             bar.setButtonDelete(content.getHandle());
             // these paths would otherwise get concatenated in inline.js#mgnlDeleteNode:
             // parentParent.getHandle(), targetParent.getName(), target.getName());
+            bar.getButtonDelete().setLabel(getMessage(content, DEFAULT_DELETE_LABEL));
         } else {
             // buttonDelete is initially set to new Button, so if we don't do this, we end up with a label-less, action-less, button
             bar.setButtonDelete((Button) null);
@@ -170,7 +175,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
         // TODO - test with specific dialog
         //  if (this.dialog == null) {
         edit.setDefaultOnclick(); // re-set the onclick after having set the dialog path.
-        edit.setLabel(editButtonLabel);
+        edit.setLabel(getMessage(content, editButtonLabel));
 
 
         // TODO : display useful paragraph info (if we had the ParagraphDefinition instance, maybe ?)

@@ -35,6 +35,7 @@ package info.magnolia.module.templatingcomponents.components;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarNew;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ import java.util.List;
  * @version $Revision: $ ($Author: $) 
  */
 public class NewBar extends AbstractAuthoringUiComponent {
+    private static final String DEFAULT_NEW_LABEL = "buttons.new";
 
     /**
      * @param serverCfg
@@ -73,7 +75,7 @@ public class NewBar extends AbstractAuthoringUiComponent {
     }
 
     private String containerName;
-    private String newButtonLabel = "buttons.new";
+    private String newButtonLabel = DEFAULT_NEW_LABEL;
     private List<String> allowedParagraphs;
 
     public NewBar(ServerConfiguration server, AggregationState aggregationState) {
@@ -97,12 +99,9 @@ public class NewBar extends AbstractAuthoringUiComponent {
         final BarNew bar = new BarNew();
 
         bar.setParagraph(asString(allowedParagraphs));
-//   TODO     if (StringUtils.isBlank(bar.getParagraph())) {
-//            log.warn("No paragraph selected for new bar in {}", pageContext.getPage());
-        // don't set new button's label if there's no selectable paragraph
-//        }
 
-        final String targetPath = currentContent().getHandle();
+        final Content content = currentContent();
+        final String targetPath = content.getHandle();
         bar.setPath(targetPath);
 
         // TODO - test combinations of containerName and target
@@ -110,11 +109,14 @@ public class NewBar extends AbstractAuthoringUiComponent {
         bar.setNodeCollectionName(containerName);
         bar.setNodeName("mgnlNew"); // one of the quirks we'll have to get rid of.
 
-        bar.setDefaultButtons();
+        // don't set new button if there's no selectable paragraph
+        if (!allowedParagraphs.isEmpty()) {
+            bar.setDefaultButtons();
+            // final String label = allowedParagraphs.isEmpty() ? "buttons.noparagraph" : newButtonLabel;
+            bar.getButtonNew().setLabel(getMessage(content, newButtonLabel));
 
-        bar.getButtonNew().setLabel(newButtonLabel);
-
-        bar.placeDefaultButtons();
+            bar.placeDefaultButtons();
+        }
         bar.drawHtml((Writer) out);
     }
 

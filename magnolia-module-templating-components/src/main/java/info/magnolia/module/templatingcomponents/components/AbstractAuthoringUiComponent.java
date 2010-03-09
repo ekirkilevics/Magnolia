@@ -36,7 +36,12 @@ package info.magnolia.module.templatingcomponents.components;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.module.templating.ParagraphManager;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
 import org.apache.commons.lang.StringUtils;
 
@@ -55,12 +60,19 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractAuthoringUiComponent implements AuthoringUiComponent {
+    private static final String DEFAULT_I18N_BASENAME = "info.magnolia.module.templatingcomponents.messages";
+
     private final ServerConfiguration server;
     private final AggregationState aggregationState;
+    private final TemplateManager templateManager;
+    private final ParagraphManager paragraphManagerManager;
 
     protected AbstractAuthoringUiComponent(final ServerConfiguration server, final AggregationState aggregationState) {
         this.server = server;
         this.aggregationState = aggregationState;
+
+        this.templateManager = TemplateManager.getInstance();
+        this.paragraphManagerManager = ParagraphManager.getInstance();
     }
 
     protected ServerConfiguration getServer() {
@@ -107,6 +119,39 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      */
     protected boolean shouldRender() {
         return (server.isAdmin() && aggregationState.getMainContent().isGranted(Permission.SET));
+    }
+
+    /**
+     * The given node, if it has a mgnl:template property in it's metadata, will be used in conjunction with
+     * TemplateManager and ParagraphManager to figure out the i18nBasename to use to translate this key.
+     */
+    protected String getMessage(Content context, String key) {
+        final String i18Basename = getI18BasenameFor(context);
+        return getMessage(i18Basename, key);
+    }
+
+    protected String getI18BasenameFor(Content content) {
+        final String templateName = content.getMetaData().getTemplate();
+        final RenderableDefinition renderable;
+        if (content.isNodeType(ItemType.CONTENT.getSystemName())) {
+            renderable = templateManager.getTemplateDefinition(templateName);
+        } else {
+            renderable = paragraphManagerManager.getParagraphDefinition(templateName);
+        }
+        if (renderable != null) {
+            return renderable.getI18nBasename();
+        } else {
+            return DEFAULT_I18N_BASENAME;
+        }
+    }
+
+    protected String getMessage(String basename, String key) {
+        String s = MessagesManager.getMessages(basename).getWithDefault(key, key);
+        if (key.equals(s)) {
+            // fallback to default bundle, and working around DefaultMessagesImpl.get()'s behaviour
+            s = MessagesManager.getMessages(DEFAULT_I18N_BASENAME).getWithDefault(key, key);
+        }
+        return s;
     }
 
     /**

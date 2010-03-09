@@ -54,6 +54,8 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
+    private static final String DEFAULT_ENABLE_LABEL = "buttons.enable";
+
     /**
      * Utility method for other components to determine if they are being rendered inside a SingletonParagraphBar.
      */
@@ -80,9 +82,7 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
 
     private String contentName;
     private List<String> allowedParagraphs;
-//    private String editButtonLabel = "buttons.edit";
-    private String enableButtonLabel = "buttons.enable";
-//    private String removeButtonLabel = "buttons.remove";
+    private String enableButtonLabel = DEFAULT_ENABLE_LABEL;
 
     public SingletonParagraphBar(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -99,10 +99,6 @@ public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
     public void setEnableButtonLabel(String enableButtonLabel) {
         this.enableButtonLabel = enableButtonLabel;
     }
-
-//    public void setRemoveButtonLabel(String removeButtonLabel) {
-//        this.removeButtonLabel = removeButtonLabel;
-//    }
 
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {

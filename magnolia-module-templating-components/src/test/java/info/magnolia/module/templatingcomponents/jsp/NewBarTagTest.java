@@ -33,10 +33,17 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.WebResponse;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -44,14 +51,61 @@ import info.magnolia.context.WebContext;
  * @version $Revision: $ ($Author: $)
  */
 public class NewBarTagTest extends AbstractJspTest {
+    private static final String EXPECTED_ONCLICK_FMT = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','mgnlNew','%s','null','.magnolia/dialogs/selectParagraph.html', null, null, 'en_US');";
+
     @Override
-    protected void setupExpectations(WebContext ctx, AccessManager accessManager) {
+    protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
+        aggState.setMainContent(hm.getContent("/foo/bar"));
+        aggState.setCurrentContent(hm.getContent("/foo/bar"));
+    }
+
+    @Override
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
     }
 
     @Override
     void check(WebResponse response, HtmlPage page) throws Exception {
+        //prettyPrint(response, System.out);
 
-        // TODO assertEquals("hello world", response.getText());
+        {
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='asList']");
+            final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
+            assertEquals(1, spans.size());
+            assertEquals("New", spans.get(0).getTextContent());
+
+            // entities in attribute values are already decoded
+            final String onclick = spans.get(0).getOnClickAttribute();
+            // this is the ugly bit
+            final String expected = String.format(EXPECTED_ONCLICK_FMT, "abc,def");
+            assertEquals(expected, onclick);
+        }
+
+        {
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='customLabel']");
+            final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
+            assertEquals(1, spans.size());
+            assertEquals("My custom new label", spans.get(0).getTextContent());
+
+            // entities in attribute values are already decoded
+            final String onclick = spans.get(0).getOnClickAttribute();
+            // this is the ugly bit
+            final String expected = String.format(EXPECTED_ONCLICK_FMT, "abc,def");
+            assertEquals(expected, onclick);
+        }
+
+        {
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='emptyParagraphList']");
+            final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
+            assertEquals(0, spans.size());
+            /* assertEquals("No paragraph is available ...", spans.get(0).getTextContent());
+
+            // entities in attribute values are already decoded
+            final String onclick = spans.get(0).getOnClickAttribute();
+            // this is the ugly bit
+            final String expected = "mgnlShiftPushButtonClick(this);";
+            assertEquals(expected, onclick);
+            */
+        }
 
     }
 

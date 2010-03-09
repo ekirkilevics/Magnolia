@@ -48,13 +48,18 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
+import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.LocaleDefinition;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.module.templatingcomponents.components.AbstractAuthoringUiComponentTest;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
@@ -63,6 +68,7 @@ import net.sourceforge.openutils.testing4web.TestServletOptions;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.tidy.Tidy;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -89,6 +95,7 @@ public abstract class AbstractJspTest extends TestCase {
     private WebContext ctx;
     private AccessManager accessManager;
     protected MockHierarchyManager hm;
+    private HttpServletRequest req;
 
     /**
      * Test implementations can check both the response object from httpunit and the page parsed via htmlunit.
@@ -97,13 +104,11 @@ public abstract class AbstractJspTest extends TestCase {
     abstract void check(WebResponse response, HtmlPage page) throws Exception;
 
     public void testDo() throws Exception {
-        // servletunit/httpunit unfortunately wraps and hides the original exceptions, so we can't really nicely check if the test jsp is present 
         final String jspPath = getClass().getName().replace('.', '/') + ".jsp";
         final String jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
 
         final WebRequest request = new GetMethodWebRequest(jspUrl);
 
-        // our patched version of ServletUnitClient does not wrap and hide the ServletExceptions (throws them wrapped in a RuntimeException instead)
         final WebResponse response = runner.getResponse(request);
 
         final String responseStr = response.getText();
@@ -170,9 +175,7 @@ public abstract class AbstractJspTest extends TestCase {
         hm.setAccessManager(accessManager);
 
         final AggregationState aggState = new AggregationState();
-        // depending on tests, we'll set the main content and current content to the same or a different node
-        aggState.setMainContent(hm.getContent("/foo/bar"));
-        aggState.setCurrentContent(hm.getContent("/foo/bar/paragraphs/1"));
+        setupAggregationState(aggState);
 
         // let's make sure we render stuff on an author instance
         aggState.setPreviewMode(false);
@@ -180,25 +183,63 @@ public abstract class AbstractJspTest extends TestCase {
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+
         // register some default components used internally
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
-        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+        final DefaultI18nContentSupport i18nContentSupport = new DefaultI18nContentSupport();
+        i18nContentSupport.setEnabled(true);
+        i18nContentSupport.addLocale(new LocaleDefinition("fr", "CH", true));
+        i18nContentSupport.addLocale(new LocaleDefinition("de", "CH", true));
+        i18nContentSupport.addLocale(new LocaleDefinition("de", null, true));
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, i18nContentSupport);
+        final DefaultI18nAuthoringSupport i18nAuthoringSupport = new DefaultI18nAuthoringSupport();
+        i18nAuthoringSupport.setEnabled(true);
+        // TODO - tests with i18AuthoringSupport disabled/enabled
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, i18nAuthoringSupport);
+
+        final Template t1 = new Template();
+        t1.setName("testPageTemplate");
+        t1.setI18nBasename("info.magnolia.module.templatingcomponents.test_messages");
+        final AbstractAuthoringUiComponentTest.TestableTemplateManager tman = new AbstractAuthoringUiComponentTest.TestableTemplateManager();
+        tman.register(t1);
+        ComponentsTestUtil.setInstance(TemplateManager.class, tman);
+
+        req = createMock(HttpServletRequest.class);
+        // cheating - this mock request is NOT the same that's used by htmlunit to do the ACTUAL request
+        expect(req.getAttribute(Sources.REQUEST_LINKS_DRAWN)).andReturn(Boolean.FALSE).anyTimes();//times(0, 1);
+        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+        expectLastCall().anyTimes();//times(0, 1);
 
         ctx = createMock(WebContext.class);
         expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
         expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
         expect(ctx.getContextPath()).andReturn("/lol").anyTimes();
         expect(ctx.getServletContext()).andStubReturn(createMock(ServletContext.class));
-        expect(ctx.getRequest()).andStubReturn(createMock(HttpServletRequest.class));
+        expect(ctx.getRequest()).andStubReturn(req);
         MgnlContext.setInstance(ctx);
 
-        setupExpectations(ctx, accessManager);
+        setupExpectations(ctx, req, accessManager);
 
-        replay(ctx, accessManager);
+        replay(ctx, req, accessManager);
     }
 
-    protected abstract void setupExpectations(WebContext ctx, AccessManager accessManager);
+    // depending on tests, we'll set the main content and current content to the same or a different node
+
+    protected abstract void setupAggregationState(AggregationState aggState) throws RepositoryException;
+
+    protected abstract void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager);
+
+    @Override
+    public void tearDown() throws Exception {
+        verify(ctx, req, accessManager);
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        SystemProperty.getProperties().clear();
+
+        runner.shutDown();
+        runner = null;
+        super.tearDown();
+    }
 
     protected void prettyPrint(WebResponse response, OutputStream out) throws IOException {
         final Tidy tidy = new Tidy();
@@ -215,17 +256,5 @@ public abstract class AbstractJspTest extends TestCase {
         // tidy.setQuiet(!printWarnings);
 
         tidy.parse(response.getInputStream(), out);
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        verify(ctx, accessManager);
-        ComponentsTestUtil.clear();
-        MgnlContext.setInstance(null);
-        SystemProperty.getProperties().clear();
-
-        runner.shutDown();
-        runner = null;
-        super.tearDown();
     }
 }
