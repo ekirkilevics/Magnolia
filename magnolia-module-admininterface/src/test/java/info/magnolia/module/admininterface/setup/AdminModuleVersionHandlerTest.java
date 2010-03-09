@@ -142,6 +142,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         final String path3 = "/modules/anotherModule/dialogs/aCorrectDialog";
         final String path4 = "/modules/anotherModule/foo/leaveMeAlone";
         setupConfigNode(path);
+        setupConfigProperty(path, "class", "do.not.touch.Me");
         setupConfigNode(path2);
         //these two shouldn't be updated
         setupProperty("config", path3, null, null, ItemType.CONTENTNODE);
@@ -159,6 +160,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         //as we're replacing the old node, after updating we expect the same uuid
         assertEquals(pathUUID, hm.getContent(path).getUUID());
         assertEquals(expectedNodeType, getNodeType(path));
+        assertEquals("do.not.touch.Me", hm.getContent(path).getNodeData("class").getString());
         
         assertTrue(hm.isExist(path2));
         assertEquals(path2UUID, hm.getContent(path2).getUUID());
