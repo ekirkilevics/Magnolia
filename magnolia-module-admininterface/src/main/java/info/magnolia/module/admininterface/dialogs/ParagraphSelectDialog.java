@@ -56,6 +56,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 
 
@@ -170,7 +171,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                     }
                     query.append(key);
                     query.append("="); //$NON-NLS-1$
-                    query.append(form.getParameter(key));
+                    query.append(URLEncoder.encode(form.getParameter(key),"UTF-8"));
                 }
 
             }
