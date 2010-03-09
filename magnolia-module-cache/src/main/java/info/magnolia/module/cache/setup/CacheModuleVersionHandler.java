@@ -139,7 +139,12 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         // move original config under the new one
                         new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/tmp","/modules/cache/config/configurations/default/flushPolicy/policies/flushAll", false)
                 )));
-
+        register(DeltaBuilder.update("4.3", "Make cache aware of different sites and locales used to access the content")
+                .addTask(new NodeExistsDelegateTask("Check cache filter", "Reorder i18n filter prior to cache filter to allow cache access to i18n information.",
+                        ContentRepository.CONFIG, "/server/filters/cache", new FilterOrderingTask("cache", new String[]{"i18n"}),
+                                new WarnTask("", "The cache filter was not found. If you removed it on purpose, you should consider disabling it instead."))
+)
+                );
 
     }
 
