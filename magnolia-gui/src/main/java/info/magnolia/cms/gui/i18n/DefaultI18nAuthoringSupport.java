@@ -53,9 +53,12 @@ import org.apache.commons.lang.LocaleUtils;
  */
 public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
 
+    private final I18nContentSupport i18nContentSupport;
     private boolean enabled = false;
 
-    private I18nContentSupport i18nContentSupport = I18nContentSupportFactory.getI18nSupport();
+    public DefaultI18nAuthoringSupport() {
+        this.i18nContentSupport = I18nContentSupportFactory.getI18nSupport();
+    }
 
     public Control getLanguageChooser() {
         if (isEnabled() && i18nContentSupport.isEnabled() && i18nContentSupport.getLocales().size()>1){
