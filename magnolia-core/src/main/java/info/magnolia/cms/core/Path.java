@@ -263,25 +263,26 @@ public final class Path {
         if ("UTF-8".equals(charset))
         {
             // jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 46: [.] 58 [:] 92: [\] 39 :[']
-            // url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
-            // @todo others:  
+            // url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#]
             if (charCode != 32
-                && charCode != 91
-                && charCode != 93
-                && charCode != 42
-                && charCode != 34
-                && charCode != 46
-                && charCode != 58
+                && charCode != '['
+                && charCode != ']'
+                && charCode != '*'
+                && charCode != '"'
+                && charCode != '.'
+                && charCode != ':'
                 && charCode != 92
                 && charCode != 39
-                && charCode != 59
-                && charCode != 47
-                && charCode != 63
-                && charCode != 43
-                && charCode != 37
-                && charCode != 33
-                && charCode != 35
-                && charCode != 94)
+                && charCode != ';'
+                && charCode != '/'
+                && charCode != '?'
+                && charCode != '+'
+                && charCode != '%'
+                && charCode != '!'
+                && charCode != '#'
+                && charCode != '@'
+                && charCode != '&'
+                && charCode != '=')
             {
                 return true;
             }
