@@ -47,6 +47,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
  * @see CacheConfiguration
@@ -64,6 +67,7 @@ public class CacheModule implements ModuleLifecycle {
     private Map<String, CacheConfiguration> configurations = new HashMap<String, CacheConfiguration>();
     private ContentCompression compression;
     private static final MgnlCacheStats mgnlCacheStats = MgnlCacheStats.getInstance();
+    public static final String UUID_KEY_MAP_KEY = "uuid-key-multimap";
 
     public CacheFactory getCacheFactory() {
         return cacheFactory;
@@ -156,6 +160,19 @@ public class CacheModule implements ModuleLifecycle {
 //        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
         cacheFactory.stop();
 //        }
+    }
+
+    /**
+     * Method to safely (without danger of blocking cache) obtain persistent mapping between uuids and cache keys.
+     */
+    public synchronized Multimap<String, CompositeCacheKey> getUUIDKeyMapFromCacheSafely(final Cache cache) {
+        Multimap<String, CompositeCacheKey> multimap;
+        multimap = (Multimap<String, CompositeCacheKey>) cache.get(CacheModule.UUID_KEY_MAP_KEY);
+        if (multimap == null) {
+            multimap = HashMultimap.create();
+            cache.put(CacheModule.UUID_KEY_MAP_KEY, multimap);
+        }
+        return multimap;
     }
 
     public static CacheModule getInstance() {

@@ -33,11 +33,14 @@
  */
 package info.magnolia.module.cache.executor;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.CompositeCacheKey;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
@@ -51,10 +54,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * Wraps the response and stores the content in a cache Entry.
@@ -127,8 +136,29 @@ public class Store extends AbstractExecutor {
         } catch (Throwable t) {
             log.error("Failed to process cache request : " + t.getMessage(), t);
         } finally {
+            final Object key = cachePolicy.getCacheKey();
+            // depends on the policy
+            if (key instanceof CompositeCacheKey) {
+                final CompositeCacheKey compositeKey = (CompositeCacheKey) key;
+                final Content content = MgnlContext.getAggregationState().getCurrentContent();
+                if (content != null) {
+                    final String uuid = content.getUUID();
+                    String repo;
+                    try {
+                        repo = MgnlContext.getAggregationState().getCurrentContent().getWorkspace().getName();
+                    } catch (RepositoryException e) {
+                        log.error("Failed to retrieve repository info for content {} with uuid {}", content.getHandle(), content.getUUID());
+                        repo = StringUtils.EMPTY;
+                    }
+                    final String uuidKey = repo + ":" + uuid;
+                    final Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
+                    // TODO: does putting items in need to be thread safe?
+                    // TODO: something's not right here, we get way too many uuids in ...
+                    multimap.put(uuidKey, compositeKey);
+                }
+            }
             // have to put cache entry no matter what even if it is null to release lock.
-            cache.put(cachePolicy.getCacheKey(), cachedEntry);
+            cache.put(key, cachedEntry);
             if (cachedEntry == null ) {
                 cache.remove(cachePolicy.getCacheKey());
                 //TODO: remove key from uuid-cachekey multimap

@@ -35,12 +35,17 @@ package info.magnolia.module.cache.mbean;
 
 import info.magnolia.cms.util.MBeanUtil;
 import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheFactory;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CompositeCacheKey;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import com.google.common.collect.Multimap;
 
 /**
  * @author had
@@ -54,6 +59,11 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     private Map<String, Integer> calls = new HashMap<String, Integer>();
     private Map<String, Integer> caches = new HashMap<String, Integer>();
     private Map<String, Integer> domains = new HashMap<String, Integer>();
+
+    private CacheFactory getCacheFactory() {
+        CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
+        return factory;
+    }
 
 
     public MgnlCacheStats() {
@@ -96,15 +106,37 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
         this.domains.put(key.getDomain(), count == null ? 1 : ++count);
     }
 
-    // mbean exposed methods
-
+    // mbean exposed operations
     public void flush() {
-        CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
+        CacheFactory factory = getCacheFactory();
         for (String name : caches.keySet()) {
             factory.getCache(name).clear();
         }
     }
 
+    public void flushByUUID(String repository, String uuid) {
+        final String uuidKey = repository + ":" + uuid;
+        final Set<CompositeCacheKey> set = new HashSet<CompositeCacheKey>();
+        final CacheFactory factory = getCacheFactory();
+        final Set<String> cacheNames = caches.keySet();
+
+        // retrieve keys from all caches
+        for (String name : cacheNames) {
+            final Cache cache = factory.getCache(name);
+            final Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
+            set.addAll(multimap.get(uuidKey));
+        }
+
+        // flush each key from all caches
+        for (Object key : set) {
+            for (String name : cacheNames) {
+                final Cache cache = factory.getCache(name);
+                cache.remove(key);
+            }
+        }
+    }
+
+    // mbean exposed attributes
     public Map<String, Integer> getAll() {
         return calls;
     }
@@ -135,5 +167,29 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
 
     public Map<String, Integer> getDomainAccesses() {
         return domains;
+    }
+
+    public int getCachedKeysCount() {
+        // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
+        int count = 0;
+        CacheFactory factory = getCacheFactory();
+        for (String name : caches.keySet()) {
+            Cache cache = factory.getCache(name);
+            Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
+            count += multimap.keys().size();
+        }
+        return count;
+    }
+
+    public int getCachedUUIDsCount() {
+        // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
+        Set set = new HashSet();
+        CacheFactory factory = getCacheFactory();
+        for (String name : caches.keySet()) {
+            Cache cache = factory.getCache(name);
+            Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
+            set.addAll(multimap.keySet());
+        }
+        return set.size();
     }
 }

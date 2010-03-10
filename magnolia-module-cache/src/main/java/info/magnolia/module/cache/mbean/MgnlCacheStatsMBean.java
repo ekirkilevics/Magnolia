@@ -43,19 +43,68 @@ public interface MgnlCacheStatsMBean {
 
     public Map<String, Integer> getAll();
 
+    /**
+     * Gets number of times since the last server restart the cache found and served the entry requested by client.
+     * @return number of cache hits.
+     */
     public int getHits();
 
+    /**
+     * Gets number of times since the last server restart the caching policy decided to bypass cache and serve request out of repository (i.e. for dynamic content).
+     * @return number of cache bypasses.
+     */
     public int getBypasses();
 
+    /**
+     * Gets number of times since the last server restart the cached entry for the request didn't exist and was put in the cache.
+     * @return
+     */
     public int getPuts();
 
+    /**
+     * Gets number of times Cache Module was stopped since the last server restart.
+     * @return number of Cache Module stop() calls.
+     */
     public int getStopCalls();
 
+    /**
+     * Gets number of times Cache Module was started since the last server restart.
+     * @return number of Cache Module start() calls.
+     */
     public int getStartCalls();
 
+    /**
+     * Gets number of times each configured cache have been flushed since the last server restart.
+     * @return names of caches and number of times each of them have been completely flushed.
+     */
     public Map<String, Integer> getFlushes();
 
+    /**
+     * Gets number of times the requests have been served for each configured domain since the last server restart.
+     * If the name of the domain doesn't appear in the list, no request have been served for this domain since the restart, yet.
+     * @return names of the domains and number of times the requests have been server for each of them.
+     */
     public Map<String, Integer> getDomainAccesses();
 
+    /**
+     * Gets number of content uuids that are held in all known caches. There might be multiple entries per uuid in case multi-domain and/or multi-locale configurations are used.
+     * @return number of unique content entries that are held in cache.
+     */
+    public int getCachedUUIDsCount();
+
+    /**
+     * Gets number of entries in all known caches even if those entries have been generated from content with same uuid (e.g. multiple language versions or multiple domain versions).
+     * @return number of entries held by all caches.
+     */
+    public int getCachedKeysCount();
+
+    /**
+     * Will flush all entries from all configured caches.
+     */
     public void flush();
+
+    /**
+     * Will flush all entries with key bound to given uuid from all configured caches. In multi domain and multi locale environments, it will flush all domain and language variations of the  page with given UUID from all caches.
+     */
+    public void flushByUUID(String repository, String uuid);
 }

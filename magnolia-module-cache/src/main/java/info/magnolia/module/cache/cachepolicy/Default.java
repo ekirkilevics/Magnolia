@@ -33,15 +33,19 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.link.LinkException;
-import info.magnolia.link.LinkUtil;
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.CacheConfiguration;
+import info.magnolia.module.cache.CacheFactory;
+import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.CompositeCacheKey;
@@ -51,6 +55,8 @@ import info.magnolia.voting.voters.VoterSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Multimap;
 
 
 /**
@@ -67,8 +73,6 @@ public class Default implements CachePolicy {
     private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
 
     private VoterSet voters;
-
-    private boolean multiplehosts;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState,
         final FlushPolicy flushPolicy) {
@@ -130,11 +134,7 @@ public class Default implements CachePolicy {
         final String serverName;
         final Map<String, String> params;
         if (MgnlContext.isWebContext()) {
-            if (multiplehosts) {
-                serverName = MgnlContext.getWebContext().getRequest().getServerName();
-            } else {
-                serverName = null;
-            }
+            serverName = MgnlContext.getWebContext().getRequest().getServerName();
             params = MgnlContext.getWebContext().getParameters();
         } else {
             serverName = null;
@@ -153,16 +153,15 @@ public class Default implements CachePolicy {
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
-        try {
-            // TODO: retrieve multiple keys when i18n is enabled
-            // TODO: hmm, retrieve cached map of key-uuids to get all the keys ... and that would give all variations of the key, incl all locales
-            // TODO: such a map probably needs to be a multimap - uuid-Col<Keys>
-            return new Object[]{LinkUtil.convertUUIDtoURI(uuid, repository)};
+        final String uuidKey = repository + ":" + uuid;
+        final List<Object> keys = new ArrayList<Object>();
+        final CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
+        for (CacheConfiguration config : CacheModule.getInstance().getConfigurations().values()) {
+            final Cache cache = factory.getCache(config.getName());
+            final Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
+            keys.addAll(multimap.get(uuidKey));
         }
-        catch (LinkException e) {
-            log.debug("Failed to convert " + uuid + " from " + repository + " repository to URI.", e);
-            return new Object[]{};
-        }
+        return keys.toArray();
     }
 
     public VoterSet getVoters() {
@@ -172,21 +171,4 @@ public class Default implements CachePolicy {
     public void setVoters(VoterSet voters) {
         this.voters = voters;
     }
-
-    /**
-     * Returns the multiplehosts.
-     * @return the multiplehosts
-     */
-    public boolean isMultiplehosts() {
-        return multiplehosts;
-    }
-
-    /**
-     * Sets the multiplehosts.
-     * @param multiplehosts the multiplehosts to set
-     */
-    public void setMultiplehosts(boolean multiplehosts) {
-        this.multiplehosts = multiplehosts;
-    }
-
 }

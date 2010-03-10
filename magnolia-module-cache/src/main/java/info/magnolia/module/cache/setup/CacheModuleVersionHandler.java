@@ -53,7 +53,9 @@ import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -62,6 +64,7 @@ import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PropertyResourceBundle;
 
 import javax.jcr.RepositoryException;
 
@@ -139,11 +142,11 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         // move original config under the new one
                         new MoveNodeTask("","", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/tmp","/modules/cache/config/configurations/default/flushPolicy/policies/flushAll", false)
                 )));
-        register(DeltaBuilder.update("4.3", "Make cache aware of different sites and locales used to access the content")
+        register(DeltaBuilder.update("4.3", "Makes cache aware of different sites and locales used to access the content")
                 .addTask(new NodeExistsDelegateTask("Check cache filter", "Reorder i18n filter prior to cache filter to allow cache access to i18n information.",
                         ContentRepository.CONFIG, "/server/filters/cache", new FilterOrderingTask("cache", new String[]{"i18n"}),
-                                new WarnTask("", "The cache filter was not found. If you removed it on purpose, you should consider disabling it instead."))
-)
+                                new WarnTask("", "The cache filter was not found. If you removed it on purpose, you should consider disabling it instead.")))
+                .addTask(new PropertyExistsDelegateTask("Cache policy re-configuration", "Removes no longer used multihost property from default cache policy.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts", new RemovePropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts")))
                 );
 
     }
