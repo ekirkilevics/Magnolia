@@ -31,7 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.module.modulestore;
+package info.magnolia.module.storeclient.pages;
+
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import info.magnolia.module.model.ModuleDefinition;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,26 +51,45 @@ import org.slf4j.LoggerFactory;
 /**
  * @author dschivo
  */
-public class ModuleStoreModule {
-
-    private static final Logger log = LoggerFactory.getLogger(ModuleStoreModule.class);
-
-    private String allmoduleslisturl;
+public class InstalledModulesListPage extends TemplatedMVCHandler {
 
     /**
-     * Returns the allmoduleslisturl.
-     * @return the allmoduleslisturl
+     * Logger.
      */
-    public String getAllmoduleslisturl() {
-        return allmoduleslisturl;
+    private static Logger log = LoggerFactory.getLogger(InstalledModulesListPage.class);
+
+    private List<ModuleDefinition> installedModules = new ArrayList<ModuleDefinition>();
+
+    /**
+     * 
+     */
+    public InstalledModulesListPage(String name, HttpServletRequest request, HttpServletResponse response) {
+
+        super(name, request, response);
     }
 
     /**
-     * Sets the allmoduleslisturl.
-     * @param allmoduleslisturl the allmoduleslisturl to set
+     * Returns the installedModules.
+     * @return the installedModules
      */
-    public void setAllmoduleslisturl(String allmoduleslisturl) {
-        this.allmoduleslisturl = allmoduleslisturl;
+    public List<ModuleDefinition> getInstalledModules() {
+        return installedModules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String show() {
+        ModuleRegistry registry = ModuleRegistry.Factory.getInstance();
+        List<String> moduleNames = new ArrayList<String>(registry.getModuleNames());
+        Collections.sort(moduleNames);
+        for (String name : moduleNames) {
+            ModuleDefinition def = registry.getDefinition(name);
+            if (def != null) {
+                installedModules.add(def);
+            }
+        }
+        return super.show();
+    }
 }

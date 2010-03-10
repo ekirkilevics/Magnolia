@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="moduleStore" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sv:node sv:name="store-client" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -13,7 +13,7 @@
     <sv:value>admin</sv:value>
   </sv:property>
   <sv:property sv:name="label" sv:type="String">
-    <sv:value>Magnolia store</sv:value>
+    <sv:value>Magnolia Store</sv:value>
   </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
     <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/allModulesList.html');</sv:value>

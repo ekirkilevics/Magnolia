@@ -31,12 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.module.modulestore.pages;
+package info.magnolia.module.storeclient.pages;
 
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.module.modulestore.ModuleStoreModule;
+import info.magnolia.module.storeclient.ModuleStoreModule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +96,7 @@ public class AllModulesListPage extends TemplatedMVCHandler {
     @Override
     public String show() {
         ModuleStoreModule moduleStore = (ModuleStoreModule) ModuleRegistry.Factory.getInstance().getModuleInstance(
-            "modulestore");
+            "storeclient");
         remoteUrl = moduleStore.getAllmoduleslisturl();
         JSONArray installedModules = new JSONArray();
         ModuleRegistry registry = ModuleRegistry.Factory.getInstance();

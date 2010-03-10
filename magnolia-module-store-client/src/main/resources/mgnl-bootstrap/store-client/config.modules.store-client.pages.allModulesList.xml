@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="installedModulesList" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sv:node sv:name="allModulesList" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>3637fc26-2609-4d90-bdda-184162efc9b9</sv:value>
+    <sv:value>9540c394-7663-4572-bf38-2c610a17c995</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.modulestore.pages.InstalledModulesListPage</sv:value>
+    <sv:value>info.magnolia.module.storeclient.pages.AllModulesListPage</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -32,7 +32,7 @@
       <sv:value>2006-05-07T10:04:20.253+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2010-02-11T11:42:19.390+01:00</sv:value>
+      <sv:value>2010-02-11T11:41:41.765+01:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
