@@ -50,12 +50,15 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -544,6 +547,82 @@ public class ContentUtil {
         if (placedBefore != null) {
             parent.orderBefore(newName, placedBefore);
             parent.save();
+        }
+    }
+    
+    /**
+     * Utility method to change the <code>jcr:primaryType</code> value of a node. 
+     * @param node - {@link Content} the node whose type has to be changed
+     * @param newType - {@link ItemType} the new node type to be assigned
+     * @param replaceAll - boolean when <code>true</code> replaces all occurrences 
+     * of the old node type. When <code>false</code> replaces only the first occurrence.
+     * @throws RepositoryException
+     */
+    public static void changeNodeType(Content node, ItemType newType, boolean replaceAll) throws RepositoryException{
+        if(node == null){
+            throw new IllegalArgumentException("Content can't be null");
+        }
+        if(newType == null){
+            throw new IllegalArgumentException("ItemType can't be null");
+        }
+        final String oldTypeName = node.getNodeTypeName();
+        final String newTypeName = newType.getSystemName();
+        if(newTypeName.equals(oldTypeName)){
+            log.info("Old node type and new one are the same {}. Nothing to change.", newTypeName);
+            return; 
+        }
+        final Pattern nodeTypePattern = Pattern.compile("(<sv:property\\s+sv:name=\"jcr:primaryType\"\\s+sv:type=\"Name\"><sv:value>)("+oldTypeName+")(</sv:value>)");
+        final String replacement = "$1"+newTypeName+"$3";
+        
+        log.debug("pattern is {}", nodeTypePattern.pattern());
+        log.debug("replacement string is {}", replacement);
+        log.debug("replaceAll? {}", replaceAll);
+        
+        final String destParentPath = StringUtils.defaultIfEmpty(StringUtils.substringBeforeLast(node.getHandle(), "/"), "/");
+        final Session session = node.getWorkspace().getSession();
+        FileOutputStream outStream = null;
+        FileInputStream inStream = null;
+        File file = null;
+        
+        try {
+            file = File.createTempFile("mgnl", null, Path.getTempDirectory());
+            outStream = new FileOutputStream(file);
+            session.exportSystemView(node.getHandle(), outStream, false, false);
+            outStream.flush();
+            final String fileContents = FileUtils.readFileToString(file);
+            log.debug("content string is {}", fileContents);
+            final Matcher matcher = nodeTypePattern.matcher(fileContents);
+            String replaced = null;
+            
+            log.debug("starting find&replace...");
+            long start = System.currentTimeMillis();
+            if(matcher.find()) {
+                log.debug("{} will be replaced", node.getHandle());
+                if(replaceAll){
+                    replaced = matcher.replaceAll(replacement);
+                } else {
+                    replaced = matcher.replaceFirst(replacement);
+                }
+                log.debug("replaced string is {}", replaced);
+            } else {
+                log.debug("{} won't be replaced", node.getHandle());
+                return;
+            }
+            log.debug("find&replace operations took {}ms" + (System.currentTimeMillis() - start) / 1000);
+            
+            FileUtils.writeStringToFile(file, replaced);
+            inStream = new FileInputStream(file);
+            session.importXML(
+                destParentPath,
+                inStream,
+                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
+            
+        } catch (IOException e) {
+            throw new RepositoryException("Can't replace node " + node.getHandle(), e);
+        } finally {
+            IOUtils.closeQuietly(outStream);
+            IOUtils.closeQuietly(inStream);
+            FileUtils.deleteQuietly(file);
         }
     }
 }

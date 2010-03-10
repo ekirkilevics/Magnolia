@@ -178,6 +178,34 @@ public class ContentUtilTest extends RepositoryTestCase {
         assertEquals(Arrays.asList(new String[]{"b", "c","a"}), result);
     }
 
+    public void testChangeNodeTypeReplaceFirstOccurrenceOnly() throws Exception {
+        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        Content src = hm.getRoot().createContent("test");
+        src.createContent("foo");
+        src.createContent("bar");
+        final String oldUUID = src.getUUID();
+        ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, false);
+        assertTrue(hm.isExist("/test"));
+        assertEquals(oldUUID, hm.getContent("/test").getUUID());
+        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
+        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
+        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
+    }
+
+    public void testChangeNodeTypeReplaceAllOccurrences() throws Exception {
+        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        Content src = hm.getRoot().createContent("test");
+        src.createContent("foo");
+        src.createContent("bar");
+        final String oldUUID = src.getUUID();
+        ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, true);
+        assertTrue(hm.isExist("/test"));
+        assertEquals(oldUUID, hm.getContent("/test").getUUID());
+        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
+        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
+        assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
+    }
+
     private final static class ContentTypeRejector implements Content.ContentFilter {
         private final List<String> rejectedTypes;
 
