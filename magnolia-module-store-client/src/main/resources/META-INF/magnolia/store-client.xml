@@ -2,8 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
   <name>store-client</name>
-  <displayName>${project.name}</displayName>
-  <description>${project.description}</description>
+  <displayName>Magnolia Store Client Module</displayName>
   <class>info.magnolia.module.storeclient.MagnoliaStoreModule</class>
   <versionHandler>info.magnolia.module.storeclient.setup.MagnoliaStoreModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
