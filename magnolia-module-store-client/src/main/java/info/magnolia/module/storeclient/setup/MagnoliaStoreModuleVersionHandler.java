@@ -43,12 +43,12 @@ import info.magnolia.module.delta.Task;
 /**
  * @author dschivo
  */
-public class ModuleStoreModuleVersionHandler extends DefaultModuleVersionHandler {
+public class MagnoliaStoreModuleVersionHandler extends DefaultModuleVersionHandler {
 
     /**
      * 
      */
-    public ModuleStoreModuleVersionHandler() {
+    public MagnoliaStoreModuleVersionHandler() {
         register(DeltaBuilder.update("4.3", "").addTask(
             new ArrayDelegateTask("", "", new Task[]{
                 new BootstrapSingleModuleResource(

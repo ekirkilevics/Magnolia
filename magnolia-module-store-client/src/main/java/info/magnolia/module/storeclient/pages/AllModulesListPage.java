@@ -36,7 +36,7 @@ package info.magnolia.module.storeclient.pages;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.module.storeclient.ModuleStoreModule;
+import info.magnolia.module.storeclient.MagnoliaStoreModule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,11 +57,7 @@ import org.slf4j.LoggerFactory;
  * @author dschivo
  */
 public class AllModulesListPage extends TemplatedMVCHandler {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(AllModulesListPage.class);
+    private static final Logger log = LoggerFactory.getLogger(AllModulesListPage.class);
 
     private String remoteUrl;
 
@@ -74,18 +70,10 @@ public class AllModulesListPage extends TemplatedMVCHandler {
         super(name, request, response);
     }
 
-    /**
-     * Returns the remoteUrl.
-     * @return the remoteUrl
-     */
     public String getRemoteUrl() {
         return remoteUrl;
     }
 
-    /**
-     * Returns the postdata.
-     * @return the postdata
-     */
     public String getPostdata() {
         return postdata;
     }
@@ -95,9 +83,8 @@ public class AllModulesListPage extends TemplatedMVCHandler {
      */
     @Override
     public String show() {
-        ModuleStoreModule moduleStore = (ModuleStoreModule) ModuleRegistry.Factory.getInstance().getModuleInstance(
-            "storeclient");
-        remoteUrl = moduleStore.getAllmoduleslisturl();
+        MagnoliaStoreModule magnoliaStore = (MagnoliaStoreModule) ModuleRegistry.Factory.getInstance().getModuleInstance("store-client");
+        remoteUrl = magnoliaStore.getAllModulesListURL();
         JSONArray installedModules = new JSONArray();
         ModuleRegistry registry = ModuleRegistry.Factory.getInstance();
         List<String> moduleNames = new ArrayList<String>(registry.getModuleNames());

@@ -4,8 +4,8 @@
   <name>store-client</name>
   <displayName>${project.name}</displayName>
   <description>${project.description}</description>
-  <class>info.magnolia.module.storeclient.ModuleStoreModule</class>
-  <versionHandler>info.magnolia.module.storeclient.setup.ModuleStoreModuleVersionHandler</versionHandler>
+  <class>info.magnolia.module.storeclient.MagnoliaStoreModule</class>
+  <versionHandler>info.magnolia.module.storeclient.setup.MagnoliaStoreModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
   <dependencies>
     <dependency>

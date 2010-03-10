@@ -40,26 +40,26 @@ import org.slf4j.LoggerFactory;
 /**
  * @author dschivo
  */
-public class ModuleStoreModule {
+public class MagnoliaStoreModule {
 
-    private static final Logger log = LoggerFactory.getLogger(ModuleStoreModule.class);
+    private static final Logger log = LoggerFactory.getLogger(MagnoliaStoreModule.class);
 
-    private String allmoduleslisturl;
+    private String allModulesListURL;
 
     /**
-     * Returns the allmoduleslisturl.
-     * @return the allmoduleslisturl
+     * Returns the allModulesListURL.
+     * @return the allModulesListURL
      */
-    public String getAllmoduleslisturl() {
-        return allmoduleslisturl;
+    public String getAllModulesListURL() {
+        return allModulesListURL;
     }
 
     /**
-     * Sets the allmoduleslisturl.
-     * @param allmoduleslisturl the allmoduleslisturl to set
+     * Sets the allModulesListURL.
+     * @param allModulesListURL the allModulesListURL to set
      */
-    public void setAllmoduleslisturl(String allmoduleslisturl) {
-        this.allmoduleslisturl = allmoduleslisturl;
+    public void setAllModulesListURL(String allModulesListURL) {
+        this.allModulesListURL = allModulesListURL;
     }
 
 }

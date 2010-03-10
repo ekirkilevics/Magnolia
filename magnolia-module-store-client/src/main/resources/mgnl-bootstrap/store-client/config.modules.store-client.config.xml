@@ -9,7 +9,7 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>2f9cf2c9-db50-466c-bdb9-550310c386d2</sv:value>
   </sv:property>
-  <sv:property sv:name="allmoduleslisturl" sv:type="String">
+  <sv:property sv:name="allModulesListURL" sv:type="String">
     <sv:value>http://modulestore.openmindlab.com/module-list.html</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
