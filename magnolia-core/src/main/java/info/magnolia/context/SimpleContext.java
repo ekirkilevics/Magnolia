@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -42,8 +42,8 @@ import info.magnolia.cms.core.HierarchyManager;
 
 
 /**
- * Simple context delegatin methods to the threads locale context. This context should never get used as the threads
- * locale context, but is useable in other contextes like for passing it to a command.
+ * Simple context delegating methods to the thread local context. This context should never get used as the threads
+ * local context, but is usable in other contexts like for passing it to a command.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -55,26 +55,22 @@ public class SimpleContext extends AbstractMapBasedContext {
     private Context ctx;
 
     /**
-     * Using the threads locale context for getting hierarchy managers or similar
+     * Using the threads local context for getting hierarchy managers or similar
      */
     public SimpleContext() {
-        this((Map<String, Object>) MgnlContext.getInstance());
+        this(MgnlContext.getInstance());
     }
 
     /**
-     * Decorate a map
+     * Decorate a map. If passed map is an instance of the context, this context will be used to obtain HM and check access instead of default context.
      */
     public SimpleContext(Map<String, Object> map) {
         super(map);
-        this.ctx = MgnlContext.getInstance();
-    }
-
-
-    /**
-     * Use the passed context to get hierarchy managers or similar form
-     */
-    public SimpleContext(Context ctx) {
-        this.ctx = ctx;
+        if (map instanceof Context) {
+            this.ctx = (Context) map;
+        } else {
+            this.ctx = MgnlContext.getInstance();
+        }
     }
 
     /**
