@@ -107,9 +107,9 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         }
     }
     
-    private void replaceInSession(Content src) throws RepositoryException {
-        final String destParentPath = StringUtils.defaultIfEmpty(StringUtils.substringBeforeLast(src.getHandle(), "/"), "/");
-        final Session session = src.getWorkspace().getSession();
+    private void replaceInSession(Content content) throws RepositoryException {
+        final String destParentPath = StringUtils.defaultIfEmpty(StringUtils.substringBeforeLast(content.getHandle(), "/"), "/");
+        final Session session = content.getWorkspace().getSession();
         FileOutputStream outStream = null;
         FileInputStream inStream = null;
         File file = null;
@@ -117,21 +117,21 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
         try {
             file = File.createTempFile("mgnl", null, Path.getTempDirectory());
             outStream = new FileOutputStream(file);
-            session.exportSystemView(src.getHandle(), outStream, false, false);
+            session.exportSystemView(content.getHandle(), outStream, false, false);
             outStream.flush();
-            final String content = FileUtils.readFileToString(file);
-            log.debug("content string is {}", content);
-            final Matcher matcher = DIALOG_NODE_TYPE.matcher(content);
+            final String fileContents = FileUtils.readFileToString(file);
+            log.debug("content string is {}", fileContents);
+            final Matcher matcher = DIALOG_NODE_TYPE.matcher(fileContents);
             String replaced = null;
             
             log.debug("about to start find&replace...");
             long start = System.currentTimeMillis();
             if(matcher.find()) {
-                log.debug("{} will be replaced", src.getHandle());
+                log.debug("{} will be replaced", content.getHandle());
                 replaced = matcher.replaceFirst(REPLACEMENT);
                 log.debug("replaced string is {}", replaced);
             } else {
-                log.debug("{} won't be replaced", src.getHandle());
+                log.debug("{} won't be replaced", content.getHandle());
                 return;
             }
             log.debug("find&replace operations took {}ms" + (System.currentTimeMillis() - start) / 1000);
@@ -144,7 +144,7 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
             
         } catch (IOException e) {
-            throw new RepositoryException("Can't replace node " + src.getHandle(), e);
+            throw new RepositoryException("Can't replace node " + content.getHandle(), e);
         } finally {
             IOUtils.closeQuietly(outStream);
             IOUtils.closeQuietly(inStream);

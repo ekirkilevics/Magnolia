@@ -135,7 +135,6 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
     
     public void testReplaceWrongNodeTypeForDialogsOnUpdateFrom410() throws Exception {
-        final String expectedNodeType = "mgnl:contentNode";
         //fake a pre-install
         final String path = "/modules/myModule/dialogs/myDialog";
         final String path2 = "/modules/myModule/dialogs/anotherDialog";
@@ -156,6 +155,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
         
+        final String expectedNodeType = "mgnl:contentNode";
         assertTrue(hm.isExist(path));
         //as we're replacing the old node, after updating we expect the same uuid
         assertEquals(pathUUID, hm.getContent(path).getUUID());
