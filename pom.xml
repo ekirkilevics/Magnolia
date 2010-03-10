@@ -618,6 +618,11 @@ for Java Content Repositories (JCR).
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>com.google.collections</groupId>
+        <artifactId>google-collections</artifactId>
+        <version>1.0-rc1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <distributionManagement>
