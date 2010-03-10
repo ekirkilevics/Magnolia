@@ -96,7 +96,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-modulestore</artifactId>
+      <artifactId>magnolia-module-store-client</artifactId>
       <version>4.3-SNAPSHOT</version>
     </dependency>
     <dependency>

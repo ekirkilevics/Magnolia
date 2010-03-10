@@ -647,7 +647,6 @@ for Java Content Repositories (JCR).
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
-    <module>magnolia-module-modulestore</module>
     <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-fckeditor</module>
     <module>magnolia-module-admininterface</module>
@@ -659,6 +658,7 @@ for Java Content Repositories (JCR).
     <module>magnolia-module-mail</module>
     <module>magnolia-module-workflow</module>
     <module>magnolia-module-samples</module>
+    <module>magnolia-module-store-client</module>
     <module>magnolia-empty-webapp</module>
   </modules>
 </project>
