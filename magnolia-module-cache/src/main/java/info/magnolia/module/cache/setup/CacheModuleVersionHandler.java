@@ -147,8 +147,10 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         ContentRepository.CONFIG, "/server/filters/cache", new FilterOrderingTask("cache", new String[]{"i18n"}),
                                 new WarnTask("", "The cache filter was not found. If you removed it on purpose, you should consider disabling it instead.")))
                 .addTask(new PropertyExistsDelegateTask("Cache policy re-configuration", "Removes no longer used multihost property from default cache policy.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts", new RemovePropertyTask("", "", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy", "multiplehosts")))
+                .addTask(new ArrayDelegateTask("Cache Flushing","Adds new commands to flush the cache.",
+                        new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushAll.xml"),
+                        new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushByUUID.xml")))
                 );
-
     }
 
     private List<Task> getTasksFor364() {

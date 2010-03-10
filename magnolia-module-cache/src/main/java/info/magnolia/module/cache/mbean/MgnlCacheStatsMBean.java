@@ -101,10 +101,10 @@ public interface MgnlCacheStatsMBean {
     /**
      * Will flush all entries from all configured caches.
      */
-    public void flush();
+    public void flushAll() throws Exception;
 
     /**
      * Will flush all entries with key bound to given uuid from all configured caches. In multi domain and multi locale environments, it will flush all domain and language variations of the  page with given UUID from all caches.
      */
-    public void flushByUUID(String repository, String uuid);
+    public void flushByUUID(String repository, String uuid) throws Exception;
 }

@@ -33,7 +33,16 @@
  */
 package info.magnolia.module.cache.mbean;
 
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.MBeanUtil;
+import info.magnolia.commands.CommandsManager;
+import info.magnolia.context.AbstractMapBasedContext;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SimpleContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheFactory;
@@ -44,6 +53,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.chain.Command;
 
 import com.google.common.collect.Multimap;
 
@@ -59,15 +70,29 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     private Map<String, Integer> calls = new HashMap<String, Integer>();
     private Map<String, Integer> caches = new HashMap<String, Integer>();
     private Map<String, Integer> domains = new HashMap<String, Integer>();
+    private CommandsManager commandsManager;
+
+    public MgnlCacheStats() {
+        MBeanUtil.registerMBean("MgnlCacheStats", this);
+        commandsManager = CommandsManager.getInstance();
+    }
 
     private CacheFactory getCacheFactory() {
         CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
         return factory;
     }
 
-
-    public MgnlCacheStats() {
-        MBeanUtil.registerMBean("MgnlCacheStats", this);
+    private Command getCommand(String commandName) {
+        Command flush = commandsManager.getCommand("cache", commandName);
+        if (flush == null) {
+            // TODO: why does it happen that commands are not ready?
+            commandsManager.reload();
+            flush = commandsManager.getCommand("cache", commandName);
+        }
+        if (flush == null) {
+            throw new RuntimeException("Failed to invoke cache " + commandName + " command");
+        }
+        return flush;
     }
 
     public static MgnlCacheStats getInstance() {
@@ -107,33 +132,17 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     }
 
     // mbean exposed operations
-    public void flush() {
-        CacheFactory factory = getCacheFactory();
-        for (String name : caches.keySet()) {
-            factory.getCache(name).clear();
-        }
+    public void flushAll() throws Exception {
+        Command flush = getCommand("flushAll");
+        flush.execute(MgnlContext.getSystemContext());
     }
 
-    public void flushByUUID(String repository, String uuid) {
-        final String uuidKey = repository + ":" + uuid;
-        final Set<CompositeCacheKey> set = new HashSet<CompositeCacheKey>();
-        final CacheFactory factory = getCacheFactory();
-        final Set<String> cacheNames = caches.keySet();
-
-        // retrieve keys from all caches
-        for (String name : cacheNames) {
-            final Cache cache = factory.getCache(name);
-            final Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
-            set.addAll(multimap.get(uuidKey));
-        }
-
-        // flush each key from all caches
-        for (Object key : set) {
-            for (String name : cacheNames) {
-                final Cache cache = factory.getCache(name);
-                cache.remove(key);
-            }
-        }
+    public void flushByUUID(String repository, String uuid) throws Exception {
+        Command flush = getCommand("flushByUUID");
+        Context ctx = new SimpleContext(MgnlContext.getSystemContext());
+        ctx.put("repository", repository);
+        ctx.put("uuid", uuid);
+        flush.execute(ctx);
     }
 
     // mbean exposed attributes
@@ -183,7 +192,7 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
 
     public int getCachedUUIDsCount() {
         // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
-        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         CacheFactory factory = getCacheFactory();
         for (String name : caches.keySet()) {
             Cache cache = factory.getCache(name);

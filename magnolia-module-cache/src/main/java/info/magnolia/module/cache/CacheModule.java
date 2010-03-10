@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2009 Magnolia International
+ * This file Copyright (c) 2008-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
@@ -170,6 +171,7 @@ public class CacheModule implements ModuleLifecycle {
         multimap = (Multimap<String, CompositeCacheKey>) cache.get(CacheModule.UUID_KEY_MAP_KEY);
         if (multimap == null) {
             multimap = HashMultimap.create();
+            multimap = Multimaps.synchronizedMultimap(multimap);
             cache.put(CacheModule.UUID_KEY_MAP_KEY, multimap);
         }
         return multimap;
