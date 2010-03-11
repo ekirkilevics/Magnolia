@@ -70,7 +70,9 @@ public class UnicodeNormalizer {
      * Normalizes the given String to the NFC form.
      */
     public static String normalizeNFC(String in) {
-        try {
+        return normalizer.normalizeNFC(in);
+        /* if you're in dire need to debug:
+         try {
             log.debug("not normalized: " + Arrays.toString(in.getBytes("UTF-8")) + " (" + in + ")");
             String out = normalizer.normalizeNFC(in);
             log.debug("    normalized: " + Arrays.toString(out.getBytes("UTF-8")) + " (" + out + ")");
@@ -79,6 +81,7 @@ public class UnicodeNormalizer {
             // do nothing
         }
         return in;
+        */
     }
 
     public interface Normalizer {
