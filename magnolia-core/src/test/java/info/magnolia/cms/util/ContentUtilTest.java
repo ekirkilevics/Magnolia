@@ -59,7 +59,6 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class ContentUtilTest extends RepositoryTestCase {
-
     public void testVisitShouldPassFilterAlong() throws Exception {
         final ItemType foo = new ItemType("foo");
         final ItemType bar = new ItemType("bar");
@@ -178,12 +177,14 @@ public class ContentUtilTest extends RepositoryTestCase {
     }
 
     public void testChangeNodeTypeReplaceFirstOccurrenceOnly() throws Exception {
-        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        Content src = hm.getRoot().createContent("test");
+        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        final String failMessage = "Node before test was expected to have type " + ItemType.CONTENT.getSystemName();
+        final Content src = hm.getRoot().createContent("test");
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
-        assertEquals(ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
+        
+        assertEquals(failMessage, ItemType.CONTENT.getSystemName() , src.getNodeTypeName());
         
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, false);
         
@@ -195,14 +196,15 @@ public class ContentUtilTest extends RepositoryTestCase {
     }
 
     public void testChangeNodeTypeReplaceAllOccurrences() throws Exception {
-        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        Content src = hm.getRoot().createContent("test");
+        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        final String failMessage = "Node before test was expected to have type " + ItemType.CONTENT.getSystemName();
+        final Content src = hm.getRoot().createContent("test");
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
-        assertEquals(ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
-        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
-        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
+        assertEquals(failMessage, ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
+        assertEquals(failMessage, ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
+        assertEquals(failMessage, ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
         
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, true);
         
