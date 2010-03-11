@@ -62,18 +62,12 @@ public class SetPropertyTask extends AbstractRepositoryTask {
 
     private final String newValue;
 
-    /**
-     * @param workspaceName
-     * @param nodePath
-     * @param propertyName
-     * @param newValue
-     */
     public SetPropertyTask(String workspaceName, String nodePath, String propertyName, String newValue) {
-        super("Sets the value for " + nodePath + "/" + propertyName + " value", "Sets the value for "
-            + nodePath
-            + "/"
-            + propertyName
-            + " value");
+        this("Set " + nodePath + "/" + propertyName, workspaceName, nodePath, propertyName, newValue);
+    }
+
+    public SetPropertyTask(String taskName, String workspaceName, String nodePath, String propertyName, String newValue) {
+        super(taskName, "Sets " + nodePath + "/" + propertyName + " to " + newValue + ".");
         this.workspaceName = workspaceName;
         this.nodePath = nodePath;
         this.propertyName = propertyName;
