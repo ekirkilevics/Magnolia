@@ -178,13 +178,12 @@ public class ContentUtilTest extends RepositoryTestCase {
 
     public void testChangeNodeTypeReplaceFirstOccurrenceOnly() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        final String failMessage = "Node before test was expected to have type " + ItemType.CONTENT.getSystemName();
         final Content src = hm.getRoot().createContent("test");
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
         
-        assertEquals(failMessage, ItemType.CONTENT.getSystemName() , src.getNodeTypeName());
+        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName() , src.getNodeTypeName());
         
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, false);
         
@@ -197,14 +196,13 @@ public class ContentUtilTest extends RepositoryTestCase {
 
     public void testChangeNodeTypeReplaceAllOccurrences() throws Exception {
         final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        final String failMessage = "Node before test was expected to have type " + ItemType.CONTENT.getSystemName();
         final Content src = hm.getRoot().createContent("test");
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
-        assertEquals(failMessage, ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
-        assertEquals(failMessage, ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
-        assertEquals(failMessage, ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
+        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
+        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
+        assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
         
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, true);
         
