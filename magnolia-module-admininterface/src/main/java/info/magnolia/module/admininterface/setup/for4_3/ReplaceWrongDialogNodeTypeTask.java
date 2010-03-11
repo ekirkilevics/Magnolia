@@ -83,7 +83,9 @@ public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
             final String handle = srcNode.getHandle();
             try {
                 log.debug("Checking if {} needs to be replaced due to incorrect dialog type...", handle);
-                ContentUtil.changeNodeType(srcNode, ItemType.CONTENTNODE, false);
+                if(!srcNode.isNodeType(ItemType.CONTENTNODE.getSystemName())){
+                    ContentUtil.changeNodeType(srcNode, ItemType.CONTENTNODE, false);
+                }
             }
             catch (RepositoryException e) {
                 installContext.error("Can't replace " + handle, e);
