@@ -129,7 +129,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         );
         
         register(DeltaBuilder.update("4.3", "")
-            .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuratino to /server/i18n", "config.server.i18n.authoring.xml"))
+            .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuration to /server/i18n.", "config.server.i18n.authoring.xml"))
             .addTask(new ReplaceWrongDialogNodeTypeTask())
             .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersAdmin.xml"))
             .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersSystem.xml"))
@@ -140,8 +140,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         
     }
 
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        final List tasks = new ArrayList();
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        final List<Task> tasks = new ArrayList<Task>();
         tasks.add(new AddMainMenuItemTask("security", "menu.security", "info.magnolia.modules.admininterface.messages", "", "/.resources/icons/24/key1.gif", "config"));
         tasks.add(new AddSubMenuItemTask("security", "groups", "menu.groups", "MgnlAdminCentral.showTree('usergroups')", "/.resources/icons/16/group.gif"));
         tasks.add(new AddSubMenuItemTask("security", "roles", "menu.roles", "MgnlAdminCentral.showTree('userroles')", "/.resources/icons/16/hat_white.gif"));
