@@ -33,14 +33,14 @@
  */
 package info.magnolia.importexport;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.cms.util.StringLengthComparator;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,6 +48,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -91,12 +98,23 @@ public class BootstrapUtil {
                 throw new IOException("Can't find resource to bootstrap at " + resourceName);
             }
 
+            // if the node already exists we will keep the order
+            String nameOfNodeAfterTheImportedNode = null;
+            
+            final HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+
             // if the path already exists --> delete it
             try {
-                final HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
 
                 // hm can be null if module is not properly registered and the repository has not been created
                 if (hm != null && hm.isExist(fullPath)) {
+                    // but keep the order
+                    Content node = hm.getContent(fullPath);
+                    SiblingsHelper siblings = SiblingsHelper.of(node);
+                    if(!siblings.isLast()){
+                        nameOfNodeAfterTheImportedNode = siblings.next().getName();
+                    }
+                    
                     hm.delete(fullPath);
                     log.warn("Deleted already existing node for bootstrapping: {}", fullPath);
                 }
@@ -105,8 +123,25 @@ public class BootstrapUtil {
             }
 
             DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
+        
+            if(nameOfNodeAfterTheImportedNode != null){
+                Content newNode = hm.getContent(fullPath);
+                newNode.getParent().orderBefore(nodeName, nameOfNodeAfterTheImportedNode);
+            }
+        
         }
     }
 
+    public static void export(Content content, File directory) throws IOException, RepositoryException{
+        String fileName = content.getHierarchyManager().getName() + content.getHandle().replace("/", ".") + ".xml";
+        File file = new File(directory, fileName);
+        FileOutputStream out = new FileOutputStream(file);
+        try{
+            DataTransporter.executeExport(out,false, true, content.getWorkspace().getSession(), content.getHandle(), content.getHierarchyManager().getName(), DataTransporter.XML);
+        }
+        finally{
+            IOUtils.closeQuietly(out);
+        }
+    }
 
 }
