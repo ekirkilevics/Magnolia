@@ -62,8 +62,8 @@ import java.util.List;
  * @version $Id$
  */
 public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
-    private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
-    private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
+    private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('usersSystem')", "/.resources/icons/16/pawn_glass_red.gif", "groups");
+    private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('usersAdmin')", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
 
     public AdminModuleVersionHandler() {
@@ -131,6 +131,11 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.3", "")
             .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuratino to /server/i18n", "config.server.i18n.authoring.xml"))
             .addTask(new ReplaceWrongDialogNodeTypeTask())
+            .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersAdmin.xml"))
+            .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersSystem.xml"))
+            // use the new trees
+            .addTask(new SetPropertyTask("config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('usersSystem')"))
+            .addTask(new SetPropertyTask("config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('usersAdmin')"))
         );
         
     }
