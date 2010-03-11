@@ -44,8 +44,8 @@ import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -77,10 +77,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom35x() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect
@@ -95,10 +95,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom35xWithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a 3pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect - but values have been customized on this instance
@@ -113,10 +113,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom364() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -139,10 +139,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom364WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -159,11 +159,11 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom401() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -187,11 +187,11 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom401WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -209,11 +209,11 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     public void testPngSwfMimeTypesOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -237,11 +237,11 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      */
     public void testPngSwfMimeTypesOnUpdateFrom410WithUserFixedValues() throws ModuleManagementException, RepositoryException {
         // fake a pre-install:
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         setupConfigProperty("/server/MIMEMapping/flv", "mime-type", "video/x-flv");
@@ -256,28 +256,48 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertEquals("custom-type-for-png", getMimeTypePropertyValue("png"));
         assertEquals("custom-type-for-swf", getMimeTypePropertyValue("swf"));
     }
-    
-    /**
-     * test unicode normalization filter and the new filter ordering (update version to 4.3).
-     */
-    public void testUnicodeNormalizerOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
-        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
-        setupConfigProperty("/server/filters/context", "enable", "true");
-        setupConfigProperty("/server/filters/contentType", "enable", "true");
-        setupConfigProperty("/server/filters/login", "enable", "true");
-        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
-        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
-
-        Collection<Content> children = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren();
-        Content[] orderedList = children.toArray(new Content[children.size()]);
-        assertEquals("context", orderedList[0].getName());
-        assertEquals("contentType", orderedList[1].getName());
-        assertEquals("multipartRequest", orderedList[2].getName());
-        assertEquals("unicodeNormalization", orderedList[3].getName());
-        assertEquals("login", orderedList[4].getName());
-    }
 
     private String getMimeTypePropertyValue(String typeName) throws RepositoryException {
         return MgnlContext.getHierarchyManager("config").getContent("/server/MIMEMapping/" + typeName).getNodeData("mime-type").getString();
     }
+
+    /**
+     * test unicode normalization filter and the new filter ordering (update version to 4.3).
+     */
+    public void testUnicodeNormalizerAndFilterOrderOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
+        setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+
+        setupConfigProperty("/server/filters/context", "enable", "true");
+        setupConfigProperty("/server/filters/contentType", "enable", "true");
+        setupConfigProperty("/server/filters/login", "enable", "true");
+        setupConfigProperty("/server/filters/logout", "enable", "true");
+        setupConfigProperty("/server/filters/uriSecurity", "enable", "true");
+        setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
+        setupConfigProperty("/server/filters/activation", "enable", "true");
+        // let's make sure we've set up this test with filters in their pre-4.3 order
+        final Iterator<Content> filters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
+        assertEquals("context", filters.next().getName());
+        assertEquals("contentType", filters.next().getName());
+        assertEquals("login", filters.next().getName());
+        assertEquals("logout", filters.next().getName());
+        assertEquals("uriSecurity", filters.next().getName());
+        assertEquals("multipartRequest", filters.next().getName());
+        assertEquals("activation", filters.next().getName());
+        assertFalse(filters.hasNext());
+
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
+
+        final Iterator<Content> updatedFilters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
+        assertEquals("context", updatedFilters.next().getName());
+        assertEquals("contentType", updatedFilters.next().getName());
+        assertEquals("multipartRequest", updatedFilters.next().getName());
+        assertEquals("unicodeNormalization", updatedFilters.next().getName());
+        assertEquals("login", updatedFilters.next().getName());
+        assertEquals("logout", updatedFilters.next().getName());
+        assertEquals("uriSecurity", updatedFilters.next().getName());
+        assertEquals("activation", updatedFilters.next().getName());
+        assertFalse(updatedFilters.hasNext());
+    }
+
 }
