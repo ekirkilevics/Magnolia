@@ -47,7 +47,6 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -184,7 +183,10 @@ public class ContentUtilTest extends RepositoryTestCase {
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
+        assertEquals(ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
+        
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, false);
+        
         assertTrue(hm.isExist("/test"));
         assertEquals(oldUUID, hm.getContent("/test").getUUID());
         assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
@@ -198,7 +200,12 @@ public class ContentUtilTest extends RepositoryTestCase {
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
+        assertEquals(ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
+        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
+        assertEquals(ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
+        
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, true);
+        
         assertTrue(hm.isExist("/test"));
         assertEquals(oldUUID, hm.getContent("/test").getUUID());
         assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
