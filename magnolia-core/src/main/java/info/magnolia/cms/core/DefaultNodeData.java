@@ -45,6 +45,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getValue();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -87,7 +88,7 @@ public class DefaultNodeData extends AbstractNodeData {
                     return new Value[] { getJCRProperty().getValue() };
                 }
             } catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -100,8 +101,25 @@ public class DefaultNodeData extends AbstractNodeData {
             try {
                 return getJCRProperty().getString();
             }
+            // multi value
+            catch(ValueFormatException e){
+                final StringBuffer str = new StringBuffer();
+                Value[] values = getValues();
+                for (Value value : values) {
+                    if(str.length()>0){
+                        str.append(", ");
+                    }
+                    try {
+                        str.append(value.getString());
+                    }
+                    catch (RepositoryException e1) {
+                        throw new RuntimeException("Can't read multi value nodedata " + toString(), e);
+                    }
+                }
+                return str.toString();
+            }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -115,7 +133,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getLong();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -129,7 +147,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getDouble();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -143,7 +161,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getDate();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -157,7 +175,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getBoolean();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
@@ -171,7 +189,7 @@ public class DefaultNodeData extends AbstractNodeData {
                 return getJCRProperty().getStream();
             }
             catch (RepositoryException e) {
-                throw new RuntimeException("Can't read value of nodedata " + toString());
+                throw new RuntimeException("Can't read value of nodedata " + toString(), e);
             }
         }
         else{
