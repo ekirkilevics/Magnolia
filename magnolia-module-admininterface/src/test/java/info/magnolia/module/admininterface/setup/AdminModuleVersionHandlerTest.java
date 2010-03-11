@@ -68,7 +68,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
     public void testDefaultURISetOnAuthorInstancesIsSetToAdminCentral() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/", "admin", "true");
-        // fake a pre-install:
+        // fake a core install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
@@ -80,7 +80,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
     public void testDefaultURISetOnPublicInstancesIsSetToQuickStartIfNoTemplatesExist() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/", "admin", "false");
-        // fake a pre-install:
+        // fake a core install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
 
         final InstallContext installContext = executeUpdatesAsIfTheCurrentlyInstalledVersionWas(null);
@@ -93,7 +93,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
-
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
         setupDummyTemplate();
 
         setupExistingDefaultUriMapping("custom-value");
@@ -108,6 +109,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
 
         setupDummyTemplate();
 
@@ -123,6 +126,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
 
         setupDummyTemplate();
 
@@ -135,7 +140,11 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
     
     public void testReplaceWrongNodeTypeForDialogsOnUpdateFrom410() throws Exception {
-        //fake a pre-install
+        // fake a pre-install
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
+
+        // setup some dialogs
         final String path = "/modules/myModule/dialogs/myDialog";
         final String path2 = "/modules/myModule/dialogs/anotherDialog";
         final String path3 = "/modules/anotherModule/dialogs/aCorrectDialog";
