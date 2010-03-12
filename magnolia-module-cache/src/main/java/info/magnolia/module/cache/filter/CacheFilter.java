@@ -43,7 +43,7 @@ import info.magnolia.module.cache.CacheModuleLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
-import info.magnolia.module.cache.mbean.MgnlCacheStats;
+import info.magnolia.module.cache.mbean.CacheMonitor;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -66,7 +66,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     private static final String MODULE_NAME = "cache";
     private static final String DEFAULT_CACHE_CONFIG = "default";
 
-    private MgnlCacheStats stats;
+    private CacheMonitor monitor;
     private String cacheConfigurationName;
     private CacheConfiguration cacheConfig;
     private Cache cache;
@@ -101,7 +101,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             setEnabled(false);
         }
 
-        stats = MgnlCacheStats.getInstance();
+        monitor = CacheMonitor.getInstance();
     }
 
     @Deprecated
@@ -116,8 +116,8 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         log.debug("Cache policy result: {}", cachePolicyResult);
 
         final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicyResult.getBehaviour();
-        stats.logBehavior(behaviour.getName());
-        stats.logAccess(cachePolicyResult.getCacheKey());
+        monitor.logBehavior(behaviour.getName());
+        monitor.logAccess(cachePolicyResult.getCacheKey());
         final CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour);
         if (executor == null) {
             throw new IllegalStateException("Unexpected cache policy result: " + cachePolicyResult);

@@ -36,11 +36,9 @@ package info.magnolia.module.cache.executor;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyResult;
-import info.magnolia.module.cache.CompositeCacheKey;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
@@ -48,22 +46,14 @@ import info.magnolia.module.cache.filter.CachedPage;
 import info.magnolia.module.cache.filter.CachedRedirect;
 import info.magnolia.module.cache.filter.SimpleServletOutputStream;
 import info.magnolia.voting.voters.ResponseContentTypeVoter;
-import info.magnolia.voting.voters.UserAgentVoter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 /**
  * Wraps the response and stores the content in a cache Entry.
@@ -77,7 +67,7 @@ public class Store extends AbstractExecutor {
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
-            CachePolicyResult cachePolicy) throws IOException, ServletException {
+            CachePolicyResult cachePolicyResult) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
         try {
             // will write to both the response stream and an internal byte array for caching
@@ -124,47 +114,32 @@ public class Store extends AbstractExecutor {
             cachedEntry = makeCachedEntry(responseWrapper, cachingStream);
             // cached page should have some body
             if (cachedEntry != null && (cachedEntry instanceof CachedPage) && ((CachedPage) cachedEntry).getDefaultContent().length == 0) {
-                log.warn("Response body for {}:{} is empty.",  String.valueOf(responseWrapper.getStatus()), cachePolicy.getCacheKey());
+                log.warn("Response body for {}:{} is empty.",  String.valueOf(responseWrapper.getStatus()), cachePolicyResult.getCacheKey());
             }
 
             // Cached page should be created only with 200 status and nothing else should go in
             if ((cachedEntry instanceof CachedPage) && ((CachedPage) cachedEntry).getStatusCode() != HttpServletResponse.SC_OK) {
-                log.warn("Caching response {} for {}", String.valueOf(((CachedPage) cachedEntry).getStatusCode() ), cachePolicy.getCacheKey());
+                log.warn("Caching response {} for {}", String.valueOf(((CachedPage) cachedEntry).getStatusCode() ), cachePolicyResult.getCacheKey());
             }
 
 
         } catch (Throwable t) {
             log.error("Failed to process cache request : " + t.getMessage(), t);
         } finally {
-            final Object key = cachePolicy.getCacheKey();
-            // depends on the policy
-            if (key instanceof CompositeCacheKey) {
-                final CompositeCacheKey compositeKey = (CompositeCacheKey) key;
-                final Content content = MgnlContext.getAggregationState().getCurrentContent();
-                if (content != null) {
-                    final String uuid = content.getUUID();
-                    String repo;
-                    try {
-                        repo = MgnlContext.getAggregationState().getCurrentContent().getWorkspace().getName();
-                    } catch (RepositoryException e) {
-                        log.error("Failed to retrieve repository info for content {} with uuid {}", content.getHandle(), content.getUUID());
-                        repo = StringUtils.EMPTY;
-                    }
-                    final String uuidKey = repo + ":" + uuid;
-                    final Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
-                    // TODO: does putting items in need to be thread safe?
-                    // TODO: something's not right here, we get way too many uuids in ...
-                    multimap.put(uuidKey, compositeKey);
-                }
-            }
+            final Object key = cachePolicyResult.getCacheKey();
             // have to put cache entry no matter what even if it is null to release lock.
             cache.put(key, cachedEntry);
             if (cachedEntry == null ) {
-                cache.remove(cachePolicy.getCacheKey());
-                //TODO: remove key from uuid-cachekey multimap
+                cache.remove(cachePolicyResult.getCacheKey());
             } else {
-                cachePolicy.setCachedEntry(cachedEntry);
-                //TODO: add key to uuid-cachekey multimap
+                cachePolicyResult.setCachedEntry(cachedEntry);
+                // let policy know the uuid in case it wants to do something with it
+                final Content content = MgnlContext.getAggregationState().getCurrentContent();
+                if (content != null) {
+                    final String uuid = content.getUUID();
+                    String repo = content.getHierarchyManager().getName();
+                    CacheModule.getInstance().getConfiguration(cache.getName()).getCachePolicy().persistCacheKey(repo, uuid, key);
+                }
             }
         }
     }

@@ -52,4 +52,6 @@ public interface Cache {
     void clear();
 
     String getName();
+
+    int getSize();
 }

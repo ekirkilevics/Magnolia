@@ -150,6 +150,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new ArrayDelegateTask("Cache Flushing","Adds new commands to flush the cache.",
                         new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushAll.xml"),
                         new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushByUUID.xml")))
+                .addTask(new BootstrapSingleResource("Cache Flushing", "Adds cache configuration for uuid-key caching.", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushAll.xml"))
                 );
     }
 

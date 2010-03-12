@@ -40,6 +40,7 @@ import info.magnolia.module.ModuleRegistry;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
+import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -136,8 +137,13 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
     protected void flushByUUID(String uuid, String repository, Cache cache) {
         CacheModule cacheModule = ((CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache"));
 
-            CacheConfiguration config = cacheModule.getConfiguration(cache.getName());
-            Object[] cacheEntryKeys = config.getCachePolicy().retrieveCacheKeys(uuid, repository);
+            final CacheConfiguration config = cacheModule.getConfiguration(cache.getName());
+            final CachePolicy policy = config.getCachePolicy();
+            if (policy == null) {
+                // no cache policy, no cache key, nothing to flush here ...
+                return;
+            }
+            Object[] cacheEntryKeys = config.getCachePolicy().removeCacheKeys(uuid, repository);
             log.debug("Flushing {} due to detected content update.", ToStringBuilder.reflectionToString(cacheEntryKeys));
 
             if (cacheEntryKeys == null || cacheEntryKeys.length == 0) {
@@ -145,11 +151,7 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
                 return;
             }
             for (Object key : cacheEntryKeys) {
-                if (log.isDebugEnabled()) {
-                    // cache.hasElement() is blocking method, so don't call it unless really necessary
-                    log.debug("In cache {} Found key {} :: {}", new Object[] {cache.getName(), key, "" + cache.hasElement(key)});
-                }
-                cache.put(key, null);
+                cache.remove(key);
             }
             // we are done here
     }
@@ -164,10 +166,25 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
         }
 
         public void onEvent(EventIterator events) {
+            List<Event> eventList = new ArrayList<Event>();
+            // do not react on jcr: specific events. Those are sent to every registered workspace when any of the workspaces stores new version of its content
+            while (events.hasNext()) {
+                final Event event = events.nextEvent();
+                try {
+                    if (!event.getPath().startsWith("/jcr:")) {
+                        eventList.add(event);
+                    }
+                } catch (RepositoryException e) {
+                    log.warn("Failed to process an event {}, the observation based cache flushing might not have been fully completed.", event.toString());
+                }
+            }
+            if (eventList.isEmpty()) {
+                return;
+            }
+            // if there are still any events left, continue here
             boolean shouldContinue = preHandleEvents(cache, repository);
             if (shouldContinue) {
-                while (events.hasNext()) {
-                    final Event event = events.nextEvent();
+                for (Event event : eventList) {
                     handleSingleEvent(cache, repository, event);
                 }
                 postHandleEvents(cache, repository);

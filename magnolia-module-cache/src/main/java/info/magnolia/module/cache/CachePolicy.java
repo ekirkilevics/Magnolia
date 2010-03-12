@@ -54,8 +54,6 @@ public interface CachePolicy {
      * Implementations can chose whether to cache or not - but note that the
      * aggregationState might not be completely populated. Every request should be
      * cacheable, not only those processed through Magnolia's RenderingFilter.
-     *
-     * TODO : check how to handle request parameters
      */
     CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy);
 
@@ -77,4 +75,19 @@ public interface CachePolicy {
      * also quite possibly all the content deemed related or partially used to construct any of the returned cache keys.
      */
     Object[] retrieveCacheKeys(final String uuid, final String repository);
+
+    /**
+     * Presists mapping between uuid and cache key in case the given cache policy implementation cares about such details.
+     */
+    void persistCacheKey(String repo, String uuid, Object key);
+
+    /**
+     * Returns cache keys for the given item or null if such keys can't be obtained or policy doesn't want to share it. Since in
+     * this case uuid is used to retrieve the cache key, it is quite possible that multiple different representations of the content
+     * denoted by uuid exist and all such keys should be returned leaving it up to requesting object to deal with such a multiplicity.
+     * Please note that returned keys might not be necessary multiple representations of the content denoted by provided uuid, but
+     * also quite possibly all the content deemed related or partially used to construct any of the returned cache keys.
+     * At the call to this method, cache policy should not only return the keys associated with the uuid, but also remove all returned uuid-cahce key mappings.
+     */
+    Object[] removeCacheKeys(String uuid, String repository);
 }

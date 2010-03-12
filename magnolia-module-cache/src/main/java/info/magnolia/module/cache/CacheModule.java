@@ -36,7 +36,7 @@ package info.magnolia.module.cache;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.cache.mbean.MgnlCacheStats;
+import info.magnolia.module.cache.mbean.CacheMonitor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,10 +46,6 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
@@ -67,8 +63,7 @@ public class CacheModule implements ModuleLifecycle {
     private CacheFactory cacheFactory;
     private Map<String, CacheConfiguration> configurations = new HashMap<String, CacheConfiguration>();
     private ContentCompression compression;
-    private static final MgnlCacheStats mgnlCacheStats = MgnlCacheStats.getInstance();
-    public static final String UUID_KEY_MAP_KEY = "uuid-key-multimap";
+    private static final CacheMonitor cacheMonitor = CacheMonitor.getInstance();
 
     public CacheFactory getCacheFactory() {
         return cacheFactory;
@@ -113,7 +108,7 @@ public class CacheModule implements ModuleLifecycle {
         cacheFactory.start();
 //        }
 
-        mgnlCacheStats.countStart();
+        cacheMonitor.countStart();
 
         final Iterator<CacheConfiguration> it = configurations.values().iterator();
         while (it.hasNext()) {
@@ -122,7 +117,7 @@ public class CacheModule implements ModuleLifecycle {
             final Cache cache = cacheFactory.getCache(name);
             if (cfg.getFlushPolicy() != null) {
                 cfg.getFlushPolicy().start(cache);
-                mgnlCacheStats.addCache(name);
+                cacheMonitor.addCache(name);
             } else {
                 log.warn("Flush Policy is not configured properly for {} cache configuration.", name);
             }
@@ -138,7 +133,7 @@ public class CacheModule implements ModuleLifecycle {
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-        mgnlCacheStats.stop();
+        cacheMonitor.stop();
         final Iterator<CacheConfiguration> it = configurations.values().iterator();
         while (it.hasNext()) {
             final CacheConfiguration cfg = it.next();
@@ -161,20 +156,6 @@ public class CacheModule implements ModuleLifecycle {
 //        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
         cacheFactory.stop();
 //        }
-    }
-
-    /**
-     * Method to safely (without danger of blocking cache) obtain persistent mapping between uuids and cache keys.
-     */
-    public synchronized Multimap<String, CompositeCacheKey> getUUIDKeyMapFromCacheSafely(final Cache cache) {
-        Multimap<String, CompositeCacheKey> multimap;
-        multimap = (Multimap<String, CompositeCacheKey>) cache.get(CacheModule.UUID_KEY_MAP_KEY);
-        if (multimap == null) {
-            multimap = HashMultimap.create();
-            multimap = Multimaps.synchronizedMultimap(multimap);
-            cache.put(CacheModule.UUID_KEY_MAP_KEY, multimap);
-        }
-        return multimap;
     }
 
     public static CacheModule getInstance() {

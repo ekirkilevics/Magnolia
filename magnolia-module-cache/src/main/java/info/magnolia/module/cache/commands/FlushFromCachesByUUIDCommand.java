@@ -33,11 +33,10 @@
  */
 package info.magnolia.module.cache.commands;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Multimap;
 
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
@@ -46,7 +45,7 @@ import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheFactory;
 import info.magnolia.module.cache.CacheModule;
-import info.magnolia.module.cache.CompositeCacheKey;
+import info.magnolia.module.cache.CachePolicy;
 
 /**
  * Command to completely flush all entries related to given uuid from all available caches.
@@ -66,24 +65,24 @@ public class FlushFromCachesByUUIDCommand extends MgnlCommand {
 
     @Override
     public boolean execute(Context ctx) throws Exception {
-        final String uuidKey = ctx.get(REPOSITORY) + ":" + ctx.get(UUID);
-        final Set<CompositeCacheKey> set = new HashSet<CompositeCacheKey>();
-        CacheFactory factory = cacheModule.getCacheFactory();
-        final Collection<CacheConfiguration> cacheConfigs = cacheModule.getConfigurations().values();
-
-        // retrieve keys from all caches
+        final String uuid = (String) ctx.get(UUID);
+        final String repository = (String) ctx.get(REPOSITORY);
+        final Set<Object> keySet = new HashSet<Object>();
+        Collection<CacheConfiguration> cacheConfigs = cacheModule.getConfigurations().values();
         for (CacheConfiguration config : cacheConfigs) {
-            final Cache cache = factory.getCache(config.getName());
-            final Multimap<String, CompositeCacheKey> multimap = cacheModule.getUUIDKeyMapFromCacheSafely(cache);
-            set.addAll(multimap.get(uuidKey));
+            CachePolicy policy = config.getCachePolicy();
+            if (policy == null) {
+                continue;
+            }
+            keySet.addAll(Arrays.asList(policy.removeCacheKeys(uuid, repository)));
         }
 
+        CacheFactory factory = cacheModule.getCacheFactory();
         // flush each key from all caches
-        for (Object key : set) {
+        for (Object key : keySet) {
             for (CacheConfiguration config : cacheConfigs) {
                 final Cache cache = factory.getCache(config.getName());
                 cache.remove(key);
-                cacheModule.getUUIDKeyMapFromCacheSafely(cache).removeAll(key);
             }
         }
         return true;

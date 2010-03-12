@@ -36,13 +36,14 @@ package info.magnolia.module.cache;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @author had
  * @version $Id:$
  */
-public class CompositeCacheKey implements Serializable {
+public class DefaultCacheKey implements Serializable, Comparable<DefaultCacheKey> {
 
     // Keep the svuid fixed to prevent deserialization errors. Keep in mind that when adding new properties they will be deserialized to null!
     private static final long serialVersionUID = 2699497852929596651L;
@@ -57,7 +58,7 @@ public class CompositeCacheKey implements Serializable {
      * @param serverName
      * @param locale
      */
-    public CompositeCacheKey(String uri, String serverName, String locale, Map<String, String> params) {
+    public DefaultCacheKey(String uri, String serverName, String locale, Map<String, String> params) {
         this.uri = uri;
         this.serverName = serverName;
         this.locale = locale;
@@ -77,10 +78,10 @@ public class CompositeCacheKey implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof CompositeCacheKey)) {
+        if (obj == null || !(obj instanceof DefaultCacheKey)) {
             return false;
         }
-        CompositeCacheKey that = (CompositeCacheKey) obj;
+        DefaultCacheKey that = (DefaultCacheKey) obj;
         return (this.uri == null) ? that.uri == null : this.uri.equals(that.uri)
             && (this.serverName == null ? that.serverName == null : this.serverName.equals(that.serverName))
             && (this.locale == null ? that.locale == null : this.locale.equals(that.locale))
@@ -98,5 +99,9 @@ public class CompositeCacheKey implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public int compareTo(DefaultCacheKey o) {
+        return CompareToBuilder.reflectionCompare(this, o);
     }
 }

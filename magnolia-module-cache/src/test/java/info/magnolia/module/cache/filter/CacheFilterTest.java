@@ -197,7 +197,7 @@ public class CacheFilterTest extends TestCase {
             }
         });
 
-        executeFilterAndVerify();
+        executeCacheFilterAndVerify();
     }
 
     public void testStoresCompressedInCacheAndRenders() throws Exception {
@@ -258,7 +258,7 @@ public class CacheFilterTest extends TestCase {
             }
         });
 
-        executeFilterAndVerify();
+        executeCacheFilterAndVerify();
     }
 
     public void testBlindlyObeysCachePolicyAndGetsStuffOutOfCacheWhenAskedToDoSo() throws Exception {
@@ -294,7 +294,7 @@ public class CacheFilterTest extends TestCase {
         response.flushBuffer();
 
 //        replay(configHm);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
 
         assertTrue(Arrays.equals(GZipUtil.gzip(dummyContent.getBytes()), fakedOut.toByteArray()));
     }
@@ -326,7 +326,7 @@ public class CacheFilterTest extends TestCase {
         response.flushBuffer();
 
 //        replay(configHm);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
 
         assertTrue(Arrays.equals(dummyContent.getBytes(), fakedOut.toByteArray()));
     }
@@ -355,7 +355,7 @@ public class CacheFilterTest extends TestCase {
         response.flushBuffer();
 
 //        replay(configHm);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
 
         assertEquals(dummyContent, fakedOut.toString());
     }
@@ -383,7 +383,7 @@ public class CacheFilterTest extends TestCase {
         response.flushBuffer();
 
 //        replay(configHm);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
 
         assertTrue(Arrays.equals(gzipped, fakedOut.toByteArray()));
     }
@@ -392,7 +392,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.bypass, "/test-page", null));
         filterChain.doFilter(same(request), same(response));
 
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
     }
 
     public void testJustSends304WithNoBodyIfRequestHeadersAskForIt() throws Exception {
@@ -407,7 +407,7 @@ public class CacheFilterTest extends TestCase {
         response.setStatus(304);
         // since we don't expect response.getOuputStream(), we actually assert nothing is written to the body
 
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
     }
 
     public void testJustSends304WithNoBodyIfRequestHeadersAskForItEvenOnCommitedResponse() throws Exception {
@@ -425,7 +425,7 @@ public class CacheFilterTest extends TestCase {
         response.setStatus(304);
         // since the status is correct we don't expect response.getOuputStream(), we actually assert nothing is written to the body
 
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
     }
 
     public void testDontJustSends304WithNoBodyIfRequestHeadersAskForItButResponseIsCommitted() throws Exception {
@@ -456,7 +456,7 @@ public class CacheFilterTest extends TestCase {
         response.flushBuffer();
 
 //        replay(configHm);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
     }
 
     public void testPageShouldBeServedIfIfNoneMatchHeaderWasPassed() throws Exception {
@@ -484,7 +484,7 @@ public class CacheFilterTest extends TestCase {
         response.flushBuffer();
 
 //        replay(configHm);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
 
         assertTrue(Arrays.equals(gzipped, fakedOut.toByteArray()));
     }
@@ -521,7 +521,7 @@ public class CacheFilterTest extends TestCase {
             }
         });
 
-        executeFilterAndVerify();
+        executeCacheFilterAndVerify();
         assertEquals("nothing should have been written to the output", 0, fakedOut.size());
     }
 
@@ -531,7 +531,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/some-redirect", cachedRedirect));
         expect(response.isCommitted()).andReturn(false);
         response.sendRedirect(redirectLocation);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
     }
 
     public void testErrorsAreCached() throws Exception {
@@ -563,7 +563,7 @@ public class CacheFilterTest extends TestCase {
             }
         });
 
-        executeFilterAndVerify();
+        executeCacheFilterAndVerify();
         assertEquals("nothing should have been written to the output", 0, fakedOut.size());
     }
 
@@ -572,7 +572,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/non-existing", cachedError));
         expect(response.isCommitted()).andReturn(false);
         response.sendError(404);
-        executeFilterAndVerify();
+        executeNoCacheFilterAndVerify();
     }
 
     public void testLastModifiedHeaderCanBeOverriddenByFurtherFiltersAndIsProperlyStoredAndReturned() throws Exception {
@@ -625,6 +625,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
         cache.put(eq("/dummy"), isA(CachedPage.class));
+
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
@@ -634,7 +635,7 @@ public class CacheFilterTest extends TestCase {
             }
         });
 
-        executeFilterAndVerify();
+        executeCacheFilterAndVerify();
     }
 
     public void test304IsNotCached() throws Exception {
@@ -663,7 +664,25 @@ public class CacheFilterTest extends TestCase {
         cache.remove(eq("/dummy"));
     }
 
-    private void executeFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
+    private void executeCacheFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
+        // let's first assert the Filter did not forget to register itself
+        final ModuleRegistry mr = Components.getSingleton(ModuleRegistry.class);
+        final CacheModule module = (CacheModule) mr.getModuleInstance("cache");
+        final Field field = module.getClass().getDeclaredField("listeners");
+        field.setAccessible(true);
+        final Set listeners = (Set) field.get(module);
+        assertEquals(1, listeners.size());
+        assertEquals(filter, listeners.iterator().next());
+        expect(webContext.getAggregationState()).andReturn(aggregationState);
+
+        // and now get down to the real business
+        replay(webContext, cache, cachePolicy, request, response, filterChain);
+        filter.doFilter(request, response, filterChain);
+
+        verify(cache, cacheFactory, cachePolicy, webContext, request, response, filterChain);
+    }
+
+    private void executeNoCacheFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
         // let's first assert the Filter did not forget to register itself
         final ModuleRegistry mr = Components.getSingleton(ModuleRegistry.class);
         final CacheModule module = (CacheModule) mr.getModuleInstance("cache");

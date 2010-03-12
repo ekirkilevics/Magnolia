@@ -33,13 +33,8 @@
  */
 package info.magnolia.module.cache.mbean;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.MBeanUtil;
 import info.magnolia.commands.CommandsManager;
-import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SimpleContext;
@@ -47,24 +42,21 @@ import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheFactory;
 import info.magnolia.module.cache.CacheModule;
-import info.magnolia.module.cache.CompositeCacheKey;
+import info.magnolia.module.cache.DefaultCacheKey;
+import info.magnolia.module.cache.cachepolicy.Default;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.chain.Command;
-
-import com.google.common.collect.Multimap;
 
 /**
  * @author had
  * @version $Id:$
  */
-public class MgnlCacheStats implements MgnlCacheStatsMBean {
+public class CacheMonitor implements CacheMonitorMBean {
 
-    private static MgnlCacheStats instance = new MgnlCacheStats();
+    private static CacheMonitor instance = new CacheMonitor();
     private int start;
     private int stop;
     private Map<String, Integer> calls = new HashMap<String, Integer>();
@@ -72,8 +64,8 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     private Map<String, Integer> domains = new HashMap<String, Integer>();
     private CommandsManager commandsManager;
 
-    public MgnlCacheStats() {
-        MBeanUtil.registerMBean("MgnlCacheStats", this);
+    public CacheMonitor() {
+        MBeanUtil.registerMBean("CacheMonitor", this);
         commandsManager = CommandsManager.getInstance();
     }
 
@@ -95,7 +87,7 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
         return flush;
     }
 
-    public static MgnlCacheStats getInstance() {
+    public static CacheMonitor getInstance() {
         return instance;
     }
 
@@ -123,10 +115,10 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     }
 
     public void logAccess(Object cacheKey) {
-        if (cacheKey == null || !(cacheKey instanceof CompositeCacheKey)) {
+        if (cacheKey == null || !(cacheKey instanceof DefaultCacheKey)) {
             return;
         }
-        CompositeCacheKey key = (CompositeCacheKey) cacheKey;
+        DefaultCacheKey key = (DefaultCacheKey) cacheKey;
         Integer count = this.domains.get(key.getDomain());
         this.domains.put(key.getDomain(), count == null ? 1 : ++count);
     }
@@ -179,26 +171,23 @@ public class MgnlCacheStats implements MgnlCacheStatsMBean {
     }
 
     public int getCachedKeysCount() {
-        // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
         int count = 0;
+        // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
         CacheFactory factory = getCacheFactory();
         for (String name : caches.keySet()) {
+            // skip the uuid-key cache itself
+            if (Default.UUID_KEY_MAP_KEY.equals(name)) {
+                continue;
+            }
             Cache cache = factory.getCache(name);
-            Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
-            count += multimap.keys().size();
+            count += cache.getSize();
         }
         return count;
     }
 
     public int getCachedUUIDsCount() {
-        // there's most likely gonna be ever just one map in the default cache, but let's not assume that and search all configured caches
-        Set<String> set = new HashSet<String>();
         CacheFactory factory = getCacheFactory();
-        for (String name : caches.keySet()) {
-            Cache cache = factory.getCache(name);
-            Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
-            set.addAll(multimap.keySet());
-        }
-        return set.size();
+        Cache cache = factory.getCache(Default.UUID_KEY_MAP_KEY);
+        return cache.getSize();
     }
 }

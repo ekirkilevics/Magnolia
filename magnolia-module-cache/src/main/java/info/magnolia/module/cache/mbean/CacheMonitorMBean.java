@@ -39,7 +39,7 @@ import java.util.Map;
  * @author had
  * @version $Id:$
  */
-public interface MgnlCacheStatsMBean {
+public interface CacheMonitorMBean {
 
     public Map<String, Integer> getAll();
 

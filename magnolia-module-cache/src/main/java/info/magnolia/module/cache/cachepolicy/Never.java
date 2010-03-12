@@ -60,4 +60,13 @@ public class Never implements CachePolicy {
         // there are no keys since we don't cache
         return null;
     }
+
+    public void persistCacheKey(String repo, String uuid, Object key) {
+        // do nothing
+    }
+
+    public Object[] removeCacheKeys(String uuid, String repository) {
+        // do nothing
+        return null;
+    }
 }

@@ -33,9 +33,9 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -43,12 +43,11 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheFactory;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
-import info.magnolia.module.cache.CompositeCacheKey;
+import info.magnolia.module.cache.DefaultCacheKey;
 import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.voters.VoterSet;
@@ -56,18 +55,17 @@ import info.magnolia.voting.voters.VoterSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Multimap;
-
-
 /**
  * A basic CachePolicy which will drive the usage of the cache based on the fact that the element has already been
- * cached or not. It also supports a simple bypass list and voters. You can set the "multiplehosts" property to true if
- * cache entries must be based on the request hostname+uri rather than just the uri.
+ * cached or not. It also supports a simple bypass list and voters. This policy implementation
+ * uses {@link info.magnolia.module.cache.DefaultDefaultCacheKey} to identify each cached entry.
+ *
  * @author gjoseph
  * @version $Revision: 1821 $ ($Author: fgiust $)
  */
 public class Default implements CachePolicy {
 
+    public static final String UUID_KEY_MAP_KEY = "uuid-key-mapping";
     private static final Logger log = LoggerFactory.getLogger(Default.class);
 
     private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
@@ -116,8 +114,8 @@ public class Default implements CachePolicy {
 
     protected boolean shouldBypass(AggregationState aggregationState, Object key) {
         final String uri;
-        if (key instanceof CompositeCacheKey) {
-            uri = ((CompositeCacheKey) key).getUri();
+        if (key instanceof DefaultCacheKey) {
+            uri = ((DefaultCacheKey) key).getUri();
         } else {
             uri = key.toString();
         }
@@ -129,8 +127,7 @@ public class Default implements CachePolicy {
         // get original uri //TODO: check why original and not current?
         final String uri = aggregationState.getOriginalURI();
 
-        //get serverName and request params and uuid of current content from WebContext/AggregationState
-        // assuming "currentContent" is a page as there is no url to access paragraphs. However once there is, the uuid can easily point to a paragraph
+        // get serverName and request params and from WebContext
         final String serverName;
         final Map<String, String> params;
         if (MgnlContext.isWebContext()) {
@@ -149,19 +146,19 @@ public class Default implements CachePolicy {
         }
 
         // create composite key so we can easily check each part of it later
-        return new CompositeCacheKey(uri, serverName, locale, params);
+        return new DefaultCacheKey(uri, serverName, locale, params);
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         final String uuidKey = repository + ":" + uuid;
-        final List<Object> keys = new ArrayList<Object>();
-        final CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
-        for (CacheConfiguration config : CacheModule.getInstance().getConfigurations().values()) {
-            final Cache cache = factory.getCache(config.getName());
-            final Multimap<String, CompositeCacheKey> multimap = CacheModule.getInstance().getUUIDKeyMapFromCacheSafely(cache);
-            keys.addAll(multimap.get(uuidKey));
-        }
+        final Set<Object> keys = getUUIDKeySetFromCacheSafely(uuidKey);
         return keys.toArray();
+    }
+
+    public void persistCacheKey(final String repo, final String uuid, final Object key) {
+        final String uuidKey = repo + ":" + uuid;
+        final Set<Object> uuidToCacheKeyMapping = getUUIDKeySetFromCacheSafely(uuidKey);
+        uuidToCacheKeyMapping.add(key);
     }
 
     public VoterSet getVoters() {
@@ -170,5 +167,32 @@ public class Default implements CachePolicy {
 
     public void setVoters(VoterSet voters) {
         this.voters = voters;
+    }
+
+    public Object[] removeCacheKeys(final String uuid, final String repository) {
+        final String uuidKey = repository + ":" + uuid;
+        final Set<Object> keys = getUUIDKeySetFromCacheSafely(uuidKey);
+        getUuidKeyCache().remove(uuidKey);
+        return keys.toArray();
+    }
+
+    private Cache getUuidKeyCache() {
+        final CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
+        return factory.getCache(UUID_KEY_MAP_KEY);
+    }
+
+    /**
+     * Method to safely (without danger of blocking cache) obtain persistent mapping between uuids and cache keys.
+     */
+    private synchronized Set<Object> getUUIDKeySetFromCacheSafely(String uuidKey) {
+        final Cache cache = getUuidKeyCache();
+        synchronized (cache) {
+            Set<Object> keys = (Set<Object>) cache.get(uuidKey);
+            if (keys == null) {
+                keys = new ConcurrentSkipListSet<Object>();
+                cache.put(uuidKey, keys);
+            }
+            return keys;
+        }
     }
 }
