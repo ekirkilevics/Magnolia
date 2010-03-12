@@ -79,10 +79,9 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
 
         // set new values for original uri and url
         MgnlContext.getAggregationState().setOriginalURI(
-            MgnlContext.getContextPath()
-                + UnicodeNormalizer.normalizeNFC(MgnlContext.getAggregationState().getOriginalURI()));
+            MgnlContext.getContextPath() + UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURI()));
         MgnlContext.getAggregationState().setOriginalURL(
-            UnicodeNormalizer.normalizeNFC(MgnlContext.getAggregationState().getOriginalURL()));
+            UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURL()));
 
         // check if it is not a multipart form
         if (MgnlContext.getPostedForm() == null)
