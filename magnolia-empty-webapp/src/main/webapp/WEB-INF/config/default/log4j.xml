@@ -169,6 +169,9 @@ Number of occurrences: %o%n
   <category name="httpclient">
     <priority value="WARN" />
   </category>
+  <category name="openwfe.org.log">
+    <priority value="WARN" />
+  </category>
   <category name="openwfe">
     <priority value="WARN" />
   </category>
