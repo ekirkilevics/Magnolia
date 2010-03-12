@@ -61,7 +61,7 @@ import java.util.Map;
 public class FreemarkerConfig {
 
     /**
-     * @deprecated should not be needed - components using this can keep their instance
+     * @deprecated since 4.3 should not be needed - components using this can keep their instance
      */
     public static FreemarkerConfig getInstance() {
         return Components.getSingleton(FreemarkerConfig.class);
