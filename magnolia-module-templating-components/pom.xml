@@ -21,6 +21,10 @@
         <groupId>org.codehaus.xdoclet</groupId>
         <artifactId>maven2-xdoclet2-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
     </plugins>
     <testResources>
       <testResource>
@@ -39,30 +43,36 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>4.3-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
       <version>4.3-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <!-- dependency
       TODO needed for ParagraphSelectDialog - but currently circular, so see note in info.magnolia.module.templatingcomponentsomponents.EditBar
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>4.3-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency-->
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
       <version>4.3-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jsp-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
