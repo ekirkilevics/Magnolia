@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,28 +33,50 @@
  */
 package info.magnolia.freemarker.models;
 
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateModel;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Freemarker does not provide a specific model for Calendar instances. We expose them
- * as SimpleDate.
- *
- * @see info.magnolia.freemarker.models.MagnoliaObjectWrapper#handleCalendar(java.util.Calendar) 
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
- */
-class CalendarModelFactory implements MagnoliaModelFactory {
-    static final CalendarModelFactory INSTANCE = new CalendarModelFactory();
+*
+* @author gjoseph
+* @version $Revision: $ ($Author: $)
+*/
+class CalendarModel implements TemplateDateModel, AdapterTemplateModel {
 
-    public Class factoryFor() {
-        return Calendar.class;
+    static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
+        public Class factoryFor() {
+            return Calendar.class;
+        }
+
+        public TemplateModel create(Object object, ObjectWrapper wrapper) {
+            return new CalendarModel((Calendar) object);
+        }
+    };
+
+    private final Calendar cal;
+
+    public CalendarModel(Calendar cal) {
+        this.cal = cal;
     }
 
-    public TemplateModel create(Object object, ObjectWrapper wrapper) {
-        return ((MagnoliaObjectWrapper)wrapper).handleCalendar((Calendar) object);
+    public Object getAdaptedObject(Class hint) {
+        return cal;
+    }
+
+    public Date getAsDate() {
+        return cal.getTime();
+    }
+
+    public int getDateType() {
+        return TemplateDateModel.DATETIME;
+    }
+
+    public String toString() {
+        return getAsDate().toString();
     }
 }

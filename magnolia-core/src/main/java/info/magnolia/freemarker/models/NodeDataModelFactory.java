@@ -49,7 +49,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 /**
- * A ModelFactory that instanciates an appropriate Freemarker model depending on the type of the property.
+ * A ModelFactory that instantiates an appropriate FreeMarker model depending on the type of the property.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -69,7 +69,7 @@ class NodeDataModelFactory implements MagnoliaModelFactory {
                 return nodeData.getBoolean() ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
 
             case PropertyType.DATE:
-                return ((MagnoliaObjectWrapper)wrapper).handleCalendar(nodeData.getDate());
+                return new CalendarModel(nodeData.getDate());
 
             case PropertyType.DOUBLE:
                 return new SimpleNumber(nodeData.getDouble());

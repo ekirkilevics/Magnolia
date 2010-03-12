@@ -48,7 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A Freemarker ObjectWrapper that knows about Magnolia specific objects.
+ * A FreeMarker ObjectWrapper that knows about Magnolia specific objects.
  *
  * @author Chris Miner
  * @author gjoseph
@@ -57,13 +57,11 @@ import java.util.List;
 public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MagnoliaObjectWrapper.class);
 
-    private static final MagnoliaModelFactory calendarFactory = new CalendarModelFactory();
-
     // List<MagnoliaModelFactory>
     private final static List DEFAULT_MODEL_FACTORIES = new ArrayList() {{
         add(NodeDataModelFactory.INSTANCE);
         add(ContentModel.FACTORY);
-        add(calendarFactory);
+        add(CalendarModel.FACTORY);
         add(UserModel.FACTORY);
         add(ContextModelFactory.INSTANCE);
     }};
@@ -76,16 +74,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
      * Unwraps our custom wrappers, let the default wrapper do the rest.
      */
     public Object unwrap(TemplateModel model, Class hint) throws TemplateModelException {
-        // TODO the 3 ifs below are probably irrelevant now that we implement AdapterTemplateModel - see MAGNOLIA-3077 
-        if (model instanceof ContentModel) {
-            return ((ContentModel) model).asContent();
-        }
-        if (model instanceof BinaryNodeDataModel) {
-            return ((BinaryNodeDataModel) model).asNodeData();
-        }
-        if (model instanceof UserModel) {
-            return ((UserModel) model).asUser();
-        }
+        // all our models implement either AdapterTemplateModel or a already handled by super.unwrap() (boolean, string, ..)
         return super.unwrap(model, hint);
     }
 
@@ -140,6 +129,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     /**
      * Exposes a Calendar as a SimpleDate.
+     * @deprecated since 4.3 use CalendarModel instead.
      */
     protected SimpleDate handleCalendar(Calendar cal) {
         return new SimpleDate(cal.getTime(), TemplateDateModel.DATETIME);

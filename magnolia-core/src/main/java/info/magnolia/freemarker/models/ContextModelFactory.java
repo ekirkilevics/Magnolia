@@ -35,8 +35,8 @@ package info.magnolia.freemarker.models;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
-import freemarker.template.TemplateModel;
 import info.magnolia.context.Context;
 
 import java.util.Map;
@@ -56,7 +56,7 @@ class ContextModelFactory implements MagnoliaModelFactory {
         return Context.class;
     }
 
-    public TemplateModel create(Object object, ObjectWrapper wrapper) {
+    public AdapterTemplateModel create(Object object, ObjectWrapper wrapper) {
         return new MapModel((Map) object, (BeansWrapper) wrapper);
     }
 }

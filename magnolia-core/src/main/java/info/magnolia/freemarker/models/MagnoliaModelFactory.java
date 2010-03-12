@@ -34,6 +34,8 @@
 package info.magnolia.freemarker.models;
 
 import freemarker.ext.util.ModelFactory;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.TemplateModel;
 
 /**
  * A specialization of Freemarker's ModelFactory, which knows which
@@ -51,4 +53,11 @@ public interface MagnoliaModelFactory extends ModelFactory {
      * which ModelFactory to use.
      */
     Class factoryFor();
+
+    /**
+     * If possible, our models should instantiate models which implement AdapterTemplateModel,
+     * so they can be unwrapped easily. (by custom directives, for example)
+     * @see freemarker.template.AdapterTemplateModel
+     */
+    TemplateModel create(Object object, ObjectWrapper wrapper);
 }

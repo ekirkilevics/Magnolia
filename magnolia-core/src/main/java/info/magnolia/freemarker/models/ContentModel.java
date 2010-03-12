@@ -68,7 +68,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
             return Content.class;
         }
 
-        public TemplateModel create(Object object, ObjectWrapper wrapper) {
+        public AdapterTemplateModel create(Object object, ObjectWrapper wrapper) {
             return new ContentModel((Content) object, (MagnoliaObjectWrapper) wrapper);
         }
     };
