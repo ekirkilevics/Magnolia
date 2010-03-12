@@ -60,7 +60,7 @@ import java.util.Properties;
 
 
 /**
- * Util to create mock objects. Use createHierarchyManager() to build mock content based on a property file. property
+ * Util to create mock objects. Use createHierarchyManager() to build mock content based on a property file. Property
  * values can have prefixes like boolean: int: for creating typed nodedatas.
  * @author philipp
  * @version $Id$
@@ -87,12 +87,10 @@ public class MockUtil {
     }
 
     public static MockContext getMockContext(boolean create) {
-        MockContext ctx = (MockContext) MgnlContext.getInstance();
-        if(ctx == null && create){
+        if (!MgnlContext.hasInstance() && create) {
             initMockContext();
-            ctx = getMockContext(false);
         }
-        return ctx;
+        return (MockContext) MgnlContext.getInstance();
     }
 
     public static MockContext getSystemMockContext() {
