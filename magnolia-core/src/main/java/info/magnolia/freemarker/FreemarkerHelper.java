@@ -87,6 +87,7 @@ public class FreemarkerHelper {
     }
 
     public FreemarkerHelper(final FreemarkerConfig freemarkerConfig) {
+        // we subclass freemarker.Configuration to override some methods which must delegate to our observed FreemarkerConfig
         this.cfg = new Configuration() {
             @Override
             public Set getSharedVariableNames() {
@@ -105,7 +106,9 @@ public class FreemarkerHelper {
             }
         };
 
-        // delegators to FreemarkerConfig
+        // ... and here we essentially do the same by instantiate delegator implementations of FreeMarker components, which delegate to our observed FreemarkerConfig
+        // these setters do more than their equivalent getters, so we can't just override the getter instead.
+        // ultimately, we could probably have our own clean subclass of freemarker.Configuration to hide all these details off FreemarkerHelper
         cfg.setTemplateLoader(new ConfigDelegatingTemplateLoader(freemarkerConfig));
         cfg.setObjectWrapper(new ConfigDelegatingObjectWrapper(freemarkerConfig));
 
@@ -226,7 +229,7 @@ public class FreemarkerHelper {
             data.put(FreemarkerServlet.KEY_REQUEST_PRIVATE, new HttpRequestHashModel(webCtx.getRequest(), cfg.getObjectWrapper()));
         } catch (ServletException e) {
             // this should be an IllegalStateException (i.e there's no reason we should end up here) but this constructor isn't available in 1.4
-            throw new RuntimeException("Can't initalize taglib support for Freemarker: ", e);
+            throw new RuntimeException("Can't initialize taglib support for FreeMarker: ", e);
         }
     }
 
@@ -239,7 +242,7 @@ public class FreemarkerHelper {
 
     protected ServletContextHashModel checkServletContextModel(ServletContext servletContext) throws ServletException {
         if (servletContextHashModel == null) {
-            // Freemarker needs an instance of a GenericServlet, but it doesn't have to do anything other than provide references to the ServletContext
+            // FreeMarker needs an instance of a GenericServlet, but it doesn't have to do anything other than provide references to the ServletContext
             final GenericServlet fs = new DoNothingServlet(servletContext);
             servletContextHashModel = new ServletContextHashModel(fs, cfg.getObjectWrapper());
         }
