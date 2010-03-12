@@ -51,11 +51,6 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-templating-components</artifactId>
-      <version>4.3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
       <version>4.3-SNAPSHOT</version>
     </dependency>
