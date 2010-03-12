@@ -102,7 +102,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
 
     private String repository;
 
-    private String flow;
+    private String flow = "<!-- the name of the definition will get used as the upload name-->";
 
     /**
      * Getter for <code>flow</code>.
@@ -231,24 +231,14 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
     public String showFlow() throws FlowDefinitionException {
         String flow;
         flow = fdm.readDefinition(flowName);
-
+        
         // get flow by name
         if (StringUtils.isEmpty(flow)) {
             log.error("can not find flow definition for {}", flowName);
             result = "can not find flow definition for " + flowName;
         }
-        else {
-            // Download the flow as xml
-            response.setContentType("text/xml");
-            try {
-                response.getWriter().print(flow);
-                response.flushBuffer();
-            }
-            catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return null;
+        setFlow(flow);
+        return VIEW_SHOW;
     }
 
     public String doQuery() throws Exception {
@@ -279,7 +269,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
 
         fdm.saveDefinition(flow);
 
-        result = "add flow OK.";
+        result = "Workflow was uploaded successfully.";
         return VIEW_SHOW;
     }
 

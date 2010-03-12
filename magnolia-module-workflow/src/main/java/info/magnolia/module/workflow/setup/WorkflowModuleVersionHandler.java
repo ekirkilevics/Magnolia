@@ -47,6 +47,7 @@ import info.magnolia.module.delta.AddUserToGroupTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.ConditionalDelegateTask;
@@ -184,7 +185,10 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         );
         
         register(DeltaBuilder.update("4.3", "")
-                .addTask(new RemovePermissionTask("Update workflow-base role", "Updates the workflow-base role, removing unnecessary permission to self.", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
+            // TODO use node builder instead of overwritting the dialogs completely
+            .addTask(new BootstrapSingleModuleResource("Publication date","Add new controls to the activation dialog.", "config.modules.workflow.dialogs.startActivationWorkflow.xml"))
+            .addTask(new BootstrapSingleModuleResource("Publication date","Add new controls to the workitem dialog", "config.modules.workflow.dialogs.editActivationWorkItem.xml"))
+            .addTask(new RemovePermissionTask("Update workflow-base role", "Updates the workflow-base role, removing unnecessary permission to self.", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext ctx) {

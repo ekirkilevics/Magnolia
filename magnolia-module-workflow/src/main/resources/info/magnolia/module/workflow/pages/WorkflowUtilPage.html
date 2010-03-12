@@ -23,9 +23,9 @@
     </div>
     <div class="pageframe">
       <h3>Flow upload</h3>
-      <form action="" method="post">
+      <form action="${contextPath}${ctx.aggregationState.originalURI}" method="post">
         <input type="hidden" name="command" value="upload" />
-        <textArea cols="80" rows="10" name="flow"><!-- the name of the definition will get used as the upload name--></textArea>
+        <textArea cols="80" rows="20" name="flow">${this.flow}</textArea>
         <br />
         <input type="submit" value="upload"></input>
       </form>
@@ -53,7 +53,7 @@
     -->
     <div class="pageframe">
       <h3>Launch flow</h3>
-      <form action="" method="get">
+      <form action="${contextPath}${ctx.aggregationState.originalURI}" method="post">
         <input type="hidden" name="command" value="launchFlow" />
         Flow name:
         <select name="flowName">

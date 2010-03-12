@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.workflow.commands;
 
+import info.magnolia.cms.util.DateUtil;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowConstants;
@@ -40,6 +41,10 @@ import info.magnolia.module.workflow.WorkflowUtil;
 import info.magnolia.module.workflow.flows.FlowDefinitionException;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,6 +53,8 @@ import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringMapAttribute;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +94,18 @@ public class FlowCommand extends MgnlCommand {
             Object key = iter.next();
             Object val = map.get(key);
             if (val instanceof Serializable) {
+                // transform dates
+                if(val instanceof String){
+                    try{
+                        Date date = DateUtils.parseDate((String)val, new String[]{DateUtil.YYYY_MM_DD_T_HH_MM_SS, DateUtil.YYYY_MM_DD});
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(date);
+                        val = DateFormatUtils.format(cal, WorkflowConstants.OPENWFE_DATE_FORMAT);
+                    }
+                    catch(ParseException e){
+                        // its not a date string
+                    }
+                }
                 serializableMap.put(key, val);
             }
         }

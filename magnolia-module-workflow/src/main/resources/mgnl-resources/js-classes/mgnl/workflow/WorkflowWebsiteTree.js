@@ -47,15 +47,23 @@ classDef("mgnl.workflow.WorkflowWebsiteTree",
             mgnl.admininterface.Dialog.open('startActivationWorkflow');
         },
 
-        submitActivation: function(comment){
-            var nodeToReload=this.tree.selectedNode.getParent();
+        submitActivation: function(form){
+			var nodeToReload=this.tree.selectedNode.getParent();
 
             var params=new Object();
             params.forceReload=true;
             params.treeAction=this.action;
             params.pathSelected=this.tree.selectedNode.id;
             if (this.recursive) params.recursive=this.recursive;
-            params.comment = comment;
+
+			// iterate over fields of the form
+			for ( var i = 0; i < form.elements.length; i++) {
+				var element = form.elements[i];
+				if(element.type != "hidden"){
+		            params[element.name] = element.value;
+				}
+			}
+
             nodeToReload.expand(params);
         }
 
