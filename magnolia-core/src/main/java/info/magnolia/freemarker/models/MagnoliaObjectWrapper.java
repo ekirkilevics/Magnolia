@@ -44,7 +44,6 @@ import info.magnolia.freemarker.FreemarkerConfig;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,8 +56,7 @@ import java.util.List;
 public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MagnoliaObjectWrapper.class);
 
-    // List<MagnoliaModelFactory>
-    private final static List DEFAULT_MODEL_FACTORIES = new ArrayList() {{
+    private final static List<MagnoliaModelFactory> DEFAULT_MODEL_FACTORIES = new ArrayList<MagnoliaModelFactory>() {{
         add(NodeDataModelFactory.INSTANCE);
         add(ContentModel.FACTORY);
         add(CalendarModel.FACTORY);
@@ -101,7 +99,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
         final FreemarkerConfig freemarkerConfig = FreemarkerConfig.getInstance();
         if (freemarkerConfig != null) {
-            final List registeredModelFactories = freemarkerConfig.getModelFactories();
+            final List<MagnoliaModelFactory> registeredModelFactories = freemarkerConfig.getModelFactories();
             modelFactory = getModelFactory(clazz, registeredModelFactories);
         } else {
             // TODO - this should not be necessary - see MAGNOLIA-2533
@@ -116,10 +114,8 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
         return modelFactory;
     }
 
-    private ModelFactory getModelFactory(Class clazz, List factories) {
-        final Iterator it = factories.iterator();
-        while (it.hasNext()) {
-            final MagnoliaModelFactory factory = (MagnoliaModelFactory) it.next();
+    private ModelFactory getModelFactory(Class clazz, List<MagnoliaModelFactory> factories) {
+        for (MagnoliaModelFactory factory : factories) {
             if (factory.factoryFor().isAssignableFrom(clazz)) {
                 return factory;
             }
