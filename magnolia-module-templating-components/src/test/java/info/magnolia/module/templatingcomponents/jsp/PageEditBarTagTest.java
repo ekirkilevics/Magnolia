@@ -114,7 +114,6 @@ public class PageEditBarTagTest extends AbstractJspTest {
 
         {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='noDialog']");
-            System.out.println("div = " + div.asXml());
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(2, spans.size());
             assertEquals("Preview", spans.get(0).getTextContent());
