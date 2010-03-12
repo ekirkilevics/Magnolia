@@ -72,13 +72,15 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
 
         // restore some values
         MgnlContext.getAggregationState().setCharacterEncoding(aggregationState.getCharacterEncoding());
-        MgnlContext.getAggregationState().setOriginalBrowserURI(aggregationState.getOriginalBrowserURI());
+        MgnlContext.getAggregationState().setOriginalBrowserURI(
+            MgnlContext.getContextPath() + aggregationState.getOriginalBrowserURI());
         MgnlContext.getAggregationState().setOriginalBrowserURL(aggregationState.getOriginalBrowserURL());
         MgnlContext.getAggregationState().setExtension(aggregationState.getExtension());
 
         // set new values for original uri and url
         MgnlContext.getAggregationState().setOriginalURI(
-            UnicodeNormalizer.normalizeNFC(MgnlContext.getAggregationState().getOriginalURI()));
+            MgnlContext.getContextPath()
+                + UnicodeNormalizer.normalizeNFC(MgnlContext.getAggregationState().getOriginalURI()));
         MgnlContext.getAggregationState().setOriginalURL(
             UnicodeNormalizer.normalizeNFC(MgnlContext.getAggregationState().getOriginalURL()));
 
@@ -114,7 +116,8 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
     @Override
     public boolean isEnabled()
     {
-        // @todo this filter is enabled only if utf8 support is enabled. remove it when the check of this property is not needed anymore.
+        // @todo this filter is enabled only if utf8 support is enabled. remove it when the check of this property is
+        // not needed anymore.
         return super.isEnabled() && SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED);
     }
 
