@@ -33,6 +33,7 @@
  */
 package info.magnolia.context;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import info.magnolia.cms.core.search.QueryManager;
@@ -65,7 +66,7 @@ public class SimpleContext extends AbstractMapBasedContext {
      * Decorate a map. If passed map is an instance of the context, this context will be used to obtain HM and check access instead of default context.
      */
     public SimpleContext(Map<String, Object> map) {
-        super(map);
+        super(map instanceof Context ? new HashMap() : map);
         if (map instanceof Context) {
             this.ctx = (Context) map;
         } else {
