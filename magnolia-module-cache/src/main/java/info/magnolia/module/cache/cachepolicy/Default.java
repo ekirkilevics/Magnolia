@@ -33,9 +33,10 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListSet;
+
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -151,13 +152,13 @@ public class Default implements CachePolicy {
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         final String uuidKey = repository + ":" + uuid;
-        final Set<Object> keys = getUUIDKeySetFromCacheSafely(uuidKey);
+        final Set keys = getUUIDKeySetFromCacheSafely(uuidKey);
         return keys.toArray();
     }
 
     public void persistCacheKey(final String repo, final String uuid, final Object key) {
         final String uuidKey = repo + ":" + uuid;
-        final Set<Object> uuidToCacheKeyMapping = getUUIDKeySetFromCacheSafely(uuidKey);
+        final Set uuidToCacheKeyMapping = getUUIDKeySetFromCacheSafely(uuidKey);
         uuidToCacheKeyMapping.add(key);
     }
 
@@ -171,7 +172,7 @@ public class Default implements CachePolicy {
 
     public Object[] removeCacheKeys(final String uuid, final String repository) {
         final String uuidKey = repository + ":" + uuid;
-        final Set<Object> keys = getUUIDKeySetFromCacheSafely(uuidKey);
+        final Set keys = getUUIDKeySetFromCacheSafely(uuidKey);
         getUuidKeyCache().remove(uuidKey);
         return keys.toArray();
     }
@@ -184,12 +185,12 @@ public class Default implements CachePolicy {
     /**
      * Method to safely (without danger of blocking cache) obtain persistent mapping between uuids and cache keys.
      */
-    private synchronized Set<Object> getUUIDKeySetFromCacheSafely(String uuidKey) {
+    private synchronized Set getUUIDKeySetFromCacheSafely(String uuidKey) {
         final Cache cache = getUuidKeyCache();
         synchronized (cache) {
-            Set<Object> keys = (Set<Object>) cache.get(uuidKey);
+            Set keys = (Set) cache.get(uuidKey);
             if (keys == null) {
-                keys = new ConcurrentSkipListSet<Object>();
+                keys = new ConcurrentSkipListSet();
                 cache.put(uuidKey, keys);
             }
             return keys;
