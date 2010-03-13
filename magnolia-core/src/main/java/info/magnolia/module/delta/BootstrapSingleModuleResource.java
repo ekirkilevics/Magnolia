@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2009 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2009-2010 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  * 
  * 
  * This file is dual-licensed under both the Magnolia
