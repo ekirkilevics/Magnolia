@@ -73,7 +73,7 @@ public class LinkTransformerManager {
      * Creates instance of absolute link transformer that will prepend the context path, will use URI2Repository mapping while constructing links and will localize the link if localization is set up. 
      */
     public AbsolutePathTransformer getAbsolute() {
-        return new AbsolutePathTransformer(true, true, true);
+        return getAbsolute(true);
     }
     
     /**
