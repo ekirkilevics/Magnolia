@@ -34,10 +34,12 @@
 package info.magnolia.module.templating;
 
 import freemarker.core.Environment;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentWrapper;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
@@ -169,6 +171,22 @@ public class MagnoliaTemplatingUtilities {
             return new StringBuffer().append(name).append("=\"").append(value).append("\"").toString();
         }
         return StringUtils.EMPTY;
+    }
+    
+    public Content getContent(String path){
+      return getContent(ContentRepository.WEBSITE, path);
+    }
+
+    public Content getContent(String repository, String path){
+        return ContentUtil.getContent(repository, path);
+    }
+
+    public Content getContentByUUID(String uuid){
+        return getContentByUUID(ContentRepository.WEBSITE, uuid);
+    }
+
+    public Content getContentByUUID(String repository, String uuid){
+        return ContentUtil.getContentByUUID(repository, uuid);
     }
 
 }
