@@ -44,7 +44,6 @@ import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;

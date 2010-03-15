@@ -12,7 +12,7 @@
     </div>
     [/#if]
     <div class="pageframe">
-      <h3>Flow list</h3>
+      <h3>Workflows</h3>
       <ul>
         [#list this.flowList as item]
         <li>
@@ -22,12 +22,12 @@
       </ul>
     </div>
     <div class="pageframe">
-      <h3>Flow upload</h3>
+      <h3>Definition</h3>
       <form action="${contextPath}${ctx.aggregationState.originalURI}" method="post">
         <input type="hidden" name="command" value="upload" />
         <textArea cols="80" rows="20" name="flow">${this.flow}</textArea>
         <br />
-        <input type="submit" value="upload"></input>
+        <input type="submit" value="save"></input>
       </form>
     </div>
     <!--
@@ -52,10 +52,10 @@
     </div>
     -->
     <div class="pageframe">
-      <h3>Launch flow</h3>
+      <h3>Launch workflow</h3>
       <form action="${contextPath}${ctx.aggregationState.originalURI}" method="post">
         <input type="hidden" name="command" value="launchFlow" />
-        Flow name:
+        Workflow:
         <select name="flowName">
           [#list this.flowList as item]
           <option>${item}</option>
