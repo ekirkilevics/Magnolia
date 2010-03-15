@@ -48,7 +48,6 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
-import info.magnolia.module.delta.PropertyValueDelegateTaskTest;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
