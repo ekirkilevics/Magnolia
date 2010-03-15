@@ -134,8 +134,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
             .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersAdmin.xml"))
             .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersSystem.xml"))
             // use the new trees
-            .addTask(new SetPropertyTask("config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('usersSystem')"))
-            .addTask(new SetPropertyTask("config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('usersAdmin')"))
+            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change javascript of the system users menu point", "config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)", "MgnlAdminCentral.showTree('usersSystem')"))
+            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change javascript of the users menu point","config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)", "MgnlAdminCentral.showTree('usersAdmin')"))
             .addTask(new CheckAndModifyPropertyValueTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler"))
         );
     }
