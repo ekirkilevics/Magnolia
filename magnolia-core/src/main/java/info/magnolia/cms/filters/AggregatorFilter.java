@@ -119,7 +119,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
         NodeData requestedData = null;
         final String templateName;
 
-        if (hierarchyManager.isPage(handle)) {
+        if (hierarchyManager.isExist(handle) && !hierarchyManager.isNodeData(handle)) {
             requestedPage = hierarchyManager.getContent(handle);
 
             // check if its a request for a versioned page
