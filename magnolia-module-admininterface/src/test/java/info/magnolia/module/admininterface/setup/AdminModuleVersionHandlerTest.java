@@ -113,6 +113,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
 
         // fake old users tree config
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
@@ -131,6 +133,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
+        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
 
         // fake old users tree config
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
@@ -144,11 +148,14 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         checkDefaultUriMapping(QUICKSTART);
         assertSingleMessage(installContext, "Please set the default virtual URI mapping; it was incorrectly reset by a previous update.", InstallContext.MessagePriority.warning);
     }
-    
+
     public void testReplaceWrongNodeTypeForDialogsOnUpdateFrom410() throws Exception {
         // fake a pre-install
         setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
         setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
+
+        // fake old users tree config
+        setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         // setup some dialogs
         final String path = "/modules/myModule/dialogs/myDialog";
@@ -161,33 +168,33 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         //these two shouldn't be updated
         setupProperty("config", path3, null, null, ItemType.CONTENTNODE);
         setupConfigNode(path4);
-        
+
         HierarchyManager hm = MgnlContext.getHierarchyManager("config");
-        
+
         final String pathUUID = hm.getContent(path).getUUID();
         final String path2UUID = hm.getContent(path2).getUUID();
         final String path3UUID = hm.getContent(path3).getUUID();
-        
+
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
-        
+
         final String expectedNodeType = "mgnl:contentNode";
         assertTrue(hm.isExist(path));
         //as we're replacing the old node, after updating we expect the same uuid
         assertEquals(pathUUID, hm.getContent(path).getUUID());
         assertEquals(expectedNodeType, getNodeType(path));
         assertEquals("do.not.touch.Me", hm.getContent(path).getNodeData("class").getString());
-        
+
         assertTrue(hm.isExist(path2));
         assertEquals(path2UUID, hm.getContent(path2).getUUID());
         assertEquals(expectedNodeType, getNodeType(path2));
-        
+
         assertTrue(hm.isExist(path3));
         assertEquals(path3UUID, hm.getContent(path3).getUUID());
         assertEquals(expectedNodeType, getNodeType(path3));
-        
+
         assertTrue(hm.isExist(path4));
         assertEquals("mgnl:content", getNodeType(path4));
-        
+
     }
 
     private void setupDummyTemplate() throws RepositoryException {
@@ -210,4 +217,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         assertConfig(DefaultVirtualURIMapping.class.getName(),"/modules/adminInterface/virtualURIMapping/default/class");
     }
 
+    private String getNodeType(String path) throws RepositoryException {
+        return MgnlContext.getHierarchyManager("config").getContent(path).getNodeData("jcr:primaryType").getString();
+    }
 }
