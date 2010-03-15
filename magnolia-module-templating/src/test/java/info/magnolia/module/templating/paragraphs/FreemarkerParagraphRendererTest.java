@@ -43,9 +43,12 @@ import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.engine.DefaultRenderingEngine;
+import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.EmptyMessages;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -74,6 +77,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        
         tplLoader = new StringTemplateLoader();
         final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
         fmTemplateLoader.addTemplateLoader(tplLoader);
@@ -87,6 +91,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ComponentsTestUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
         ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
+        ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
 
         final WebContext context = createNiceMock(WebContext.class);
         AggregationState state = new AggregationState();

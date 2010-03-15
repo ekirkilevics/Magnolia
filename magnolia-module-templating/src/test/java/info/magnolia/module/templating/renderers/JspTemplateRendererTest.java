@@ -41,7 +41,10 @@ import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.AbstractRenderer;
+import info.magnolia.module.templating.engine.DefaultRenderingEngine;
+import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.module.templating.paragraphs.JspParagraphRenderer;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -57,12 +60,14 @@ public class JspTemplateRendererTest extends TestCase {
 
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 
     public void testExposesNodesAsMaps() throws Exception {
         final WebContext magnoliaCtx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);
+        ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
         // the page node is exposed twice, once as "actpage", once as "content"
         final Content page = createStrictMock(Content.class);
         expect(page.getHandle()).andReturn("/myPage").times(2);

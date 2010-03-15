@@ -43,6 +43,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.engine.DefaultRenderingEngine;
+import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
@@ -70,12 +73,14 @@ public class JspParagraphRendererTest extends TestCase {
 
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
         super.tearDown();
     }
 
     public void testExposesNodesAsMaps() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         final WebContext magnoliaCtx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);
+        ComponentsTestUtil.setImplementation(RenderingEngine.class, DefaultRenderingEngine.class);
 
         final Content page = createStrictMock(Content.class);
         // we have 2 different nodes when rendering a paragraph, but getHandle() is only called on the page node, when using NodeMapWrapper
