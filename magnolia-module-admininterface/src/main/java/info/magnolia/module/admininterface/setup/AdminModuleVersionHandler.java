@@ -106,7 +106,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
                 new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
         );
-        
+
         final String pathToDeploymentUtilsPage = "/modules/adminInterface/pages/deploymentUtils";
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"deployment\" page.", ContentRepository.CONFIG,
@@ -127,7 +127,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 // This task is registered on the 4.0.3 version in the 4.0 branch.
                 .addTask(new UpdatedDefaultPublicURIWarning())
         );
-        
+
         register(DeltaBuilder.update("4.3", "")
             .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuration to /server/i18n.", "config.server.i18n.authoring.xml"))
             .addTask(new ReplaceWrongDialogNodeTypeTask())
@@ -136,8 +136,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
             // use the new trees
             .addTask(new SetPropertyTask("config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('usersSystem')"))
             .addTask(new SetPropertyTask("config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('usersAdmin')"))
+            .addTask(new CheckAndModifyPropertyValueTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler"))
         );
-        
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {

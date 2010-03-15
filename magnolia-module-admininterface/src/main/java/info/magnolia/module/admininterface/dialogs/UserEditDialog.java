@@ -170,34 +170,9 @@ public class UserEditDialog extends ConfiguredDialog {
      * @param node under which ACL for all workspaces needs to be created
      */
     protected void writeACL(Content node) throws RepositoryException {
-        // remove existing
-        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
-        while (repositoryNames.hasNext()) {
-            String repository = (String) repositoryNames.next();
-            try {
-                node.delete("acl_" + repository); //$NON-NLS-1$
-            }
-            catch (RepositoryException re) {
-                // new user
-            }
-        }
-
-        // rewrite
-        Content aclUsers;
-
-        aclUsers = node.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
-
-        node.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
-        node.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
-
-        // give user permission to edit himself
-        Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
-        u3.createNodeData("path").setValue(node.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-        u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
-        // give user permission to read himself
-        Content u4 = aclUsers.createContent("00", ItemType.CONTENTNODE); //$NON-NLS-1$
-        u4.createNodeData("path").setValue(node.getHandle()); //$NON-NLS-1$
-        u4.createNodeData("permissions").setValue(Permission.READ); //$NON-NLS-1$
+        // this silly method was rewriting some basic ACLs for user on every update while removing all others. Completely pointless and unnecessary.
+        // required permissions are now assigned at user creation time by the MgnlUserManager if necessary and are left untouched by this dialog.
+        // still keeping method as a hook for changing permissions directly on user node if ever needed
     }
 
     protected boolean onPostSave(SaveHandler saveControl) {

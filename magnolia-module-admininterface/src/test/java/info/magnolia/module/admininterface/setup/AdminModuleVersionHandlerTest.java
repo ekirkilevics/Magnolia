@@ -95,6 +95,10 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
         setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
         setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
+
+        // fake old users tree config
+        setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+
         setupDummyTemplate();
 
         setupExistingDefaultUriMapping("custom-value");
@@ -109,8 +113,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
-        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
-        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
+
+        // fake old users tree config
+        setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         setupDummyTemplate();
 
@@ -126,8 +131,9 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/server/", "admin", "false");
         // fake a pre-install:
         setupConfigProperty("/server/filters/servlets/", "foo", "bar");
-        setupConfigProperty("/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)");
-        setupConfigProperty("/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)");
+
+        // fake old users tree config
+        setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         setupDummyTemplate();
 
@@ -203,8 +209,5 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         assertConfig("/", "/modules/adminInterface/virtualURIMapping/default/fromURI");
         assertConfig(DefaultVirtualURIMapping.class.getName(),"/modules/adminInterface/virtualURIMapping/default/class");
     }
-    
-    private String getNodeType(String path) throws RepositoryException {
-        return MgnlContext.getHierarchyManager("config").getContent(path).getNodeData("jcr:primaryType").getString();
-    }
+
 }

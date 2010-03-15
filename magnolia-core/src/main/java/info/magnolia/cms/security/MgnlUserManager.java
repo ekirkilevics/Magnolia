@@ -37,6 +37,8 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.auth.Entity;
@@ -66,7 +68,13 @@ public class MgnlUserManager implements UserManager {
 
     private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
-    private static final String PASSWORD_PROPERTY = "pswd";
+    public static final String PROPERTY_EMAIL = "email";
+    public static final String PROPERTY_LANGUAGE = "language";
+    public static final String PROPERTY_LASTACCESS = "lastaccess";
+    public static final String PROPERTY_PASSWORD = "pswd";
+    public static final String PROPERTY_TITLE = "title";
+
+    public static final String NODE_ACLUSERS = "acl_users";
 
     private String realmName;
 
@@ -213,6 +221,22 @@ public class MgnlUserManager implements UserManager {
             node.createNodeData("name").setValue(name);
             setPasswordProperty(node, pw);
             node.createNodeData("language").setValue("en");
+
+            final String handle = node.getHandle();
+            final Content acls = node.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
+            // read only access to the node itself
+            Content acl = acls.createContent(Path.getUniqueLabel(acls.getHierarchyManager(), acls.getHandle(), "0"), ItemType.CONTENTNODE);
+            acl.setNodeData("path", handle);
+            acl.setNodeData("permissions", new Long(Permission.READ));
+            // those who had access to their nodes should get access to their own props
+            addWrite(handle, PROPERTY_EMAIL, acls);
+            addWrite(handle, PROPERTY_LANGUAGE, acls);
+            addWrite(handle, PROPERTY_LASTACCESS, acls);
+            addWrite(handle, PROPERTY_PASSWORD, acls);
+            addWrite(handle, PROPERTY_TITLE, acls);
+            // and of course the meta data
+            addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
+
             getHierarchyManager().save();
             return userInstance(node);
         }
@@ -234,7 +258,7 @@ public class MgnlUserManager implements UserManager {
     }
 
     protected void setPasswordProperty(Content userNode, String clearPassword) throws RepositoryException {
-        userNode.createNodeData(PASSWORD_PROPERTY).setValue(encodePassword(clearPassword));
+        userNode.createNodeData(PROPERTY_PASSWORD).setValue(encodePassword(clearPassword));
     }
 
     protected String encodePassword(String clearPassword) {
@@ -269,4 +293,10 @@ public class MgnlUserManager implements UserManager {
         return new MgnlUser(node);
     }
 
+    private Content addWrite(String parentPath, String property, Content acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Content acl = acls.createContent(Path.getUniqueLabel(acls.getHierarchyManager(), acls.getHandle(), "0"), ItemType.CONTENTNODE);
+        acl.setNodeData("path", parentPath + "/" + property);
+        acl.setNodeData("permissions", new Long(Permission.ALL));
+        return acl;
+    }
 }

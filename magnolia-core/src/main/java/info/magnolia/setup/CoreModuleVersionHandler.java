@@ -48,6 +48,7 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
+import info.magnolia.module.delta.PropertyValueDelegateTaskTest;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
@@ -58,6 +59,7 @@ import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
+import info.magnolia.setup.for4_3.UpdateUserPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,6 +169,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                         new FilterOrderingTask("multipartRequest", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"contentType"}),
                         new FilterOrderingTask("unicodeNormalization", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"multipartRequest"})
                 ))
+                .addTask(new UpdateUserPermissions())
         );
     }
 

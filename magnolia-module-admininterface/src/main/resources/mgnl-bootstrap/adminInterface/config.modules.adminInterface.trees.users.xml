@@ -11,7 +11,7 @@
     <sv:value>2795d902-903e-467a-bda5-d3cfd6d255d2</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.AdminTreeMVCHandler</sv:value>
+    <sv:value>info.magnolia.module.admininterface.trees.UsersTreeHandler</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>users</sv:value>
