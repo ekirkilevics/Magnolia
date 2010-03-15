@@ -43,6 +43,7 @@ import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.link.LinkException;
+import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
@@ -66,6 +67,8 @@ public class MagnoliaTemplatingUtilities {
 
     private static final Logger log = LoggerFactory.getLogger(MagnoliaTemplatingUtilities.class);
 
+    protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
+    
     public static MagnoliaTemplatingUtilities getInstance(){
         return Components.getSingleton(MagnoliaTemplatingUtilities.class);
     }
@@ -82,16 +85,11 @@ public class MagnoliaTemplatingUtilities {
     }
 
     public void renderTemplate(Content content, Writer out) throws RenderException, IOException {
-        renderTemplate(content, out, content.getMetaData().getTemplate());
+        renderingEngine.render(content, out);
     }
 
     public void renderTemplate(Content content, Writer out, String templateName) throws RenderException, IOException {
-        final Content backup = MgnlContext.getAggregationState().getMainContent();
-        MgnlContext.getAggregationState().setMainContent(content);
-        final Template template = TemplateManager.getInstance().getTemplateDefinition(templateName);
-        final TemplateRenderer renderer = TemplateRendererManager.getInstance().getRenderer(template.getType());
-        renderer.renderTemplate(content, template, out);
-        MgnlContext.getAggregationState().setMainContent(backup);
+        renderingEngine.render(content, templateName, out);
     }
 
     public void renderParagraph(Content paragraphNode) throws RenderException, IOException {
@@ -99,15 +97,11 @@ public class MagnoliaTemplatingUtilities {
     }
 
     public void renderParagraph(Content paragraphNode, Writer out) throws RenderException, IOException {
-        renderParagraph(paragraphNode, out, paragraphNode.getMetaData().getTemplate());
+        renderingEngine.render(paragraphNode, out);
     }
 
     public void renderParagraph(Content paragraphNode, Writer out, String paragraphName) throws RenderException, IOException {
-        final Content backup = MgnlContext.getAggregationState().getCurrentContent();
-        MgnlContext.getAggregationState().setCurrentContent(paragraphNode);
-        Paragraph paragraph = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
-        ParagraphRenderingFacade.getInstance().render(paragraphNode, paragraph, out);
-        MgnlContext.getAggregationState().setCurrentContent(backup);
+        renderingEngine.render(paragraphNode, paragraphName, out);
     }
 
     /**
@@ -176,6 +170,5 @@ public class MagnoliaTemplatingUtilities {
         }
         return StringUtils.EMPTY;
     }
-
 
 }

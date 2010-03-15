@@ -33,10 +33,12 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.ParagraphRenderingFacade;
+import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.objectfactory.Components;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +62,8 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 public class Include extends BodyTagSupport {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Include.class);
 
+    protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
+    
     /**
      * File to be included (e.g. /templates/jsp/x.jsp).
      * @deprecated
@@ -199,7 +203,14 @@ public class Include extends BodyTagSupport {
                 log.warn("You are using the deprecated path attribute of the include tag. Your jsp will be included for now, but you might want to update your code to avoid bad surprises in the future.");
                 pageContext.include(this.path);
             } else {
-                ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut(), pageContext);
+                WebContext webContext = MgnlContext.getWebContext();
+                webContext.setPageContext(pageContext);
+                try{
+                    renderingEngine.render(content, pageContext.getOut());
+                }
+                finally{
+                    webContext.setPageContext(null);
+                }
             }
             if(noEditBars){
                 aggregationState.setPreviewMode(orgShowPreview);
@@ -227,7 +238,7 @@ public class Include extends BodyTagSupport {
         this.removeAttributes();
         return EVAL_PAGE;
     }
-
+    
     private void removeAttributes() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if ((attributes != null) && (attributes.size() > 0)) {

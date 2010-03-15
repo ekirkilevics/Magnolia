@@ -34,14 +34,16 @@
 package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.objectfactory.Components;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -69,28 +71,25 @@ import org.slf4j.LoggerFactory;
  */
 public class RenderingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RenderingFilter.class);
+    
+    protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
+
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final String extension = aggregationState.getExtension();
-        final String templateName = aggregationState.getTemplateName();
-        final Template template = TemplateManager.getInstance().getInfo(templateName, extension);
 
-        if (template != null) {
+        String templateName = aggregationState.getTemplateName();
+        if (templateName != null) {
             try {
-                String type = template.getType();
-                TemplateRenderer renderer = TemplateRendererManager.getInstance().getRenderer(type);
-
-                if (renderer == null) {
-                    throw new RuntimeException("No renderer found for type " + type);
-                }
                 // don't reset any existing status code, see MAGNOLIA-2005
                 // response.setStatus(HttpServletResponse.SC_OK);
                 if (response != MgnlContext.getWebContext().getResponse()) {
                     log.warn("Context response not synced. This may lead to discrepancies in rendering.");
                 }
-                final Writer out = response.getWriter();
-                renderer.renderTemplate(aggregationState.getMainContent(), template, out);
+
+                Content content = aggregationState.getMainContent();
+
+                render(content, templateName, response);
 
                 try {
                     response.flushBuffer();
@@ -128,6 +127,11 @@ public class RenderingFilter extends AbstractMgnlFilter {
         //      currently we can't process the chain because there is no content/nop servlet
         // chain.doFilter(request, response);
     }
+
+    protected void render(Content content, String templateName, HttpServletResponse response) throws IOException, RenderException {
+        renderingEngine.render(content, templateName, response.getWriter());
+    }
+
 
     /**
      * Get the requested resource and copy it to the ServletOutputStream, bit by bit.

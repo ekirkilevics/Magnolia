@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
@@ -107,7 +108,10 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         register(DeltaBuilder.update("4.1.1", "")
                 .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
         );
-
+        
+        register(DeltaBuilder.update("4.3", "")
+            .addTask(new BootstrapSingleModuleResource("Rendering Engine", "Add configuration for the new rendering engine", "config.server.rendering.engine.xml"))
+        );
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {

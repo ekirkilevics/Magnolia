@@ -47,6 +47,7 @@ import javax.servlet.jsp.PageContext;
  * The central component to call when rendering paragraphs.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
+ * @deprecated since 4.3, use the RenderingEngine instead
  */
 public class ParagraphRenderingFacade {
 

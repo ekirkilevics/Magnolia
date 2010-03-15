@@ -63,7 +63,7 @@ public class ParagraphRendererManager extends ObservedManager {
         paragraphRenderers = Collections.synchronizedMap(new LinkedHashMap());
     }
 
-    protected ParagraphRenderer getRenderer(String name) {
+    public ParagraphRenderer getRenderer(String name) {
         final ParagraphRenderer renderer = (ParagraphRenderer) paragraphRenderers.get(name);
         if (renderer == null) {
             throw new IllegalArgumentException("No paragraph renderer registered with name " + name);

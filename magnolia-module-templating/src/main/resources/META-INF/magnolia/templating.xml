@@ -8,6 +8,10 @@
   <version>${project.version}</version>
   <properties>
     <property>
+      <name>info.magnolia.module.templating.engine.RenderingEngine</name>
+      <value>/server/rendering/engine</value>
+    </property>
+    <property>
       <name>info.magnolia.module.templating.ParagraphManager</name>
       <value>info.magnolia.module.templating.ParagraphManager</value>
     </property>
