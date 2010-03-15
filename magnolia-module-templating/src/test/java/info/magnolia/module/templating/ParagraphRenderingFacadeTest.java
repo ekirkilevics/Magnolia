@@ -34,8 +34,10 @@
 package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
@@ -61,6 +63,8 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
 
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
+        SystemProperty.getProperties().clear();
         super.tearDown();
     }
 

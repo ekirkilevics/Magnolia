@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.cms.core.AggregationState;
@@ -74,6 +75,7 @@ public class JspParagraphRendererTest extends TestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
+        SystemProperty.getProperties().clear();
         super.tearDown();
     }
 

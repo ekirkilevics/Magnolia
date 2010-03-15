@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.templating.renderers;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -50,6 +51,7 @@ public class ServletTemplateRendererTest extends TestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
+        SystemProperty.getProperties().clear();
         super.tearDown();
     }
 
