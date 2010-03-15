@@ -96,8 +96,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("3.6", "")
                 .addTask(new SetPropertyTask(ContentRepository.CONFIG, "/modules/adminInterface/trees/website", "class", WebsiteTreeHandler.class.getName()))
-                .addTask(new BootstrapSingleResource("Javascript messages", "Adds dynamic virtual url.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.messages.xml"))
-                .addTask(new BootstrapSingleResource("Javascript messages", "Adds page to provide i18n messages in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.xml"))
+                .addTask(new BootstrapSingleResource("JavaScript messages", "Adds dynamic virtual url.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.messages.xml"))
+                .addTask(new BootstrapSingleResource("JavaScript messages", "Adds page to provide i18n messages in JavaScript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.xml"))
         );
 
         register(DeltaBuilder.update("3.6.4", "")
@@ -134,8 +134,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
             .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersAdmin.xml"))
             .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersSystem.xml"))
             // use the new trees
-            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change javascript of the system users menu point", "config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)", "MgnlAdminCentral.showTree('usersSystem')"))
-            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change javascript of the users menu point","config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)", "MgnlAdminCentral.showTree('usersAdmin')"))
+            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change JavaScript of the system users menu point.", "config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)", "MgnlAdminCentral.showTree('usersSystem')"))
+            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change JavaScript of the users menu point.","config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)", "MgnlAdminCentral.showTree('usersAdmin')"))
             .addTask(new CheckAndModifyPropertyValueTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler"))
         );
     }
