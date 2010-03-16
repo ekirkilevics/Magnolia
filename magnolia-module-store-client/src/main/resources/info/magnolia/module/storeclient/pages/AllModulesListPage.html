@@ -5,15 +5,49 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
     <style type="text/css">
-body#mgnl {
-  margin: 0;
-  padding: 0;
-}
+      body#mgnl {
+        margin: 0;
+        padding: 0;
+      }
     </style>
     <script type="text/javascript">
-function loadModules(){
-  document.getElementById('loadModulesForm').submit();
-}
+      function loadModules(){
+          var cookieName = 'mgnlStoreAgreementToConnect'
+          var agree=getCookie(cookieName);
+          if (agree!=null && agree!="") {
+              document.getElementById('loadModulesForm').submit();
+          } else {
+          var answer = confirm('Are you sure blah blah blah?');
+          if (answer) {
+              setCookie(cookieName,'okie',365);
+              document.getElementById('loadModulesForm').submit();
+            } else {
+                //show a message to the user who did not agree to submit to server
+                //and hide loading image
+                elem = document.getElementById('loading');
+                elem.getElementsByTagName('h2')[0].innerHTML = 'As you want, bye.';
+                elem.getElementsByTagName('img')[0].style.display = 'none';
+            }
+          }
+      }
+      function setCookie(cookieName,value,expiredays){
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate()+expiredays);
+        document.cookie=cookieName+ "=" +escape(value)+
+        ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+      }
+      function getCookie(cookieName) {
+        if (document.cookie.length>0) {
+          c_start=document.cookie.indexOf(cookieName + "=");
+          if (c_start!=-1) {
+            c_start=c_start + cookieName+1;
+            c_end=document.cookie.indexOf(";",c_start);
+            if (c_end==-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+            }
+          }
+        return "";
+      }
     </script>
   </head>
   <body id="mgnl" onload="setTimeout(loadModules, 1000);" style="background-color:#fff">
@@ -22,7 +56,7 @@ function loadModules(){
         <input type="hidden" name="postdata" value="${this.postdata}" />
       </div>
     </form>
-    <div style="display: block; width: 400px; margin: 50px auto; text-align: center;">
+    <div id ="loading" style="display: block; width: 400px; margin: 50px auto; text-align: center;">
       <h2>Contacting server...</h2>
       <img src="${this.request.contextPath}/.resources/admin-images/loading.gif" alt="Loading..." />
     </div>
