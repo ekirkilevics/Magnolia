@@ -139,12 +139,23 @@ public abstract class AbstractJspTest extends TestCase {
         HttpUnitOptions.setDefaultCharacterSet("utf-8");
         System.setProperty("file.encoding", "utf-8");
 
+        // check we can write in jasper's scratch directory
+        final File jspScratchDir = new File("target/jsp-test-scratch-dir");
+        final String jspScratchDirAbs = jspScratchDir.getAbsolutePath();
+        if (!jspScratchDir.exists()) {
+            assertTrue("Can't create path " + jspScratchDirAbs + ", aborting test", jspScratchDir.mkdirs());
+        }
+        final File checkFile = new File(jspScratchDir, "empty");
+        assertTrue("Can't write check file: " + checkFile + ", aborting test", checkFile.createNewFile());
+        assertTrue("Can't remove check file:" + checkFile + ", aborting test", checkFile.delete());
+
         // start servletRunner
         final Hashtable<String, String> params = new Hashtable<String, String>();
         params.put("javaEncoding", "utf-8");
         params.put("development", "true");
         params.put("keepgenerated", "false");
         params.put("modificationTestInterval", "1000");
+        params.put("scratchdir", jspScratchDirAbs);
         params.put("engineOptionsClass", TestServletOptions.class.getName());
         runner = new ServletRunner(new File(path), CONTEXT);
         runner.registerServlet("*.jsp", "org.apache.jasper.servlet.JspServlet", params);
