@@ -60,7 +60,7 @@ public class AddRoleToGroupTask extends AbstractRepositoryTask {
         GroupManager groupManager = SecuritySupport.Factory.getInstance().getGroupManager();
         Group group = groupManager.getGroup(groupName);
         if (group == null) {
-            ctx.warn("Group \"" + groupName + "\" not found, can't add \"" + roleName + "\" role.");
+            ctx.warn("Group \"" + groupName + "\" not found, can't add the \"" + roleName + "\" role.");
         } else {
             // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
             try{
