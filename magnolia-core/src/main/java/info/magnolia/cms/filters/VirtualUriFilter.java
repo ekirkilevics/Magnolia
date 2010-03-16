@@ -74,7 +74,7 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
                     try {
                         String redirectUrl = StringUtils.substringAfter(targetUri, "redirect:");
 
-                        if (!redirectUrl.startsWith("http://") && !redirectUrl.startsWith("https://")) {
+                        if (isInternal(redirectUrl)) {
                             redirectUrl = request.getContextPath() + redirectUrl;
                         }
 
@@ -84,6 +84,20 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
                     catch (IOException e) {
                         log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
                     }
+                } else if (targetUri.startsWith("permanent:")) {
+                    String permanentUrl = StringUtils.substringAfter(targetUri, "permanent:");
+
+                    if (isInternal(permanentUrl)) {
+                        permanentUrl = new URL(
+                            request.getScheme(),
+                            request.getServerName(),
+                            request.getServerPort(),
+                            request.getContextPath() + permanentUrl).toExternalForm();
+                    }
+
+                    response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                    response.setHeader("Location", permanentUrl);
+                    return;
                 } else if (targetUri.startsWith("forward:")) {
                     targetUri = StringUtils.substringAfter(targetUri, "forward:");
                     try {
@@ -100,21 +114,6 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
                             ClassUtils.getShortClassName(e.getClass()),
                             e.getMessage()});
                     }
-                } else if (targetUri.startsWith("permanent:")) {
-                    String permanentUrl = StringUtils.substringAfter(targetUri, "permanent:");
-
-                    if (!StringUtils.startsWith(permanentUrl, "http://")
-                        && !StringUtils.startsWith(permanentUrl, "https://")) {
-                        permanentUrl = new URL(
-                            request.getScheme(),
-                            request.getServerName(),
-                            request.getServerPort(),
-                            request.getContextPath() + permanentUrl).toExternalForm();
-                    }
-    
-                    response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                    response.setHeader("Location", permanentUrl);
-                    return;
                 } else {
                     aggregationState.setCurrentURI(targetUri);
                 }
@@ -129,6 +128,10 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+    protected boolean isInternal(String url) {
+        return !url.startsWith("http://") && !url.startsWith("https://");
     }
 
     /**
