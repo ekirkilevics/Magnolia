@@ -39,6 +39,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -99,6 +100,21 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
                             ClassUtils.getShortClassName(e.getClass()),
                             e.getMessage()});
                     }
+                } else if (targetUri.startsWith("permanent:")) {
+                    String permanentUrl = StringUtils.substringAfter(targetUri, "permanent:");
+
+                    if (!StringUtils.startsWith(permanentUrl, "http://")
+                        && !StringUtils.startsWith(permanentUrl, "https://")) {
+                        permanentUrl = new URL(
+                            request.getScheme(),
+                            request.getServerName(),
+                            request.getServerPort(),
+                            request.getContextPath() + permanentUrl).toExternalForm();
+                    }
+    
+                    response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+                    response.setHeader("Location", permanentUrl);
+                    return;
                 } else {
                     aggregationState.setCurrentURI(targetUri);
                 }
