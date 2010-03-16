@@ -57,7 +57,7 @@ public class FlushFromCachesByUUIDCommand extends MgnlCommand {
     public static final String REPOSITORY = "repository";
     public static final String UUID = "uuid";
 
-    private CacheModule cacheModule;
+    private final CacheModule cacheModule;
 
     public FlushFromCachesByUUIDCommand() {
         cacheModule = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class);

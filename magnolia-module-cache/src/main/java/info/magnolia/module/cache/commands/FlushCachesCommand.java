@@ -47,7 +47,7 @@ import info.magnolia.module.cache.CacheModule;
  */
 public class FlushCachesCommand extends MgnlCommand {
 
-    private CacheModule cacheModule;
+    private final CacheModule cacheModule;
 
     public FlushCachesCommand() {
         cacheModule = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class);
