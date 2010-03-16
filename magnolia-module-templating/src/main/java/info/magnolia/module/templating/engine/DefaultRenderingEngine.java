@@ -118,11 +118,13 @@ public class DefaultRenderingEngine implements RenderingEngine {
     }
 
     public void render(Content content, String definitionName, Writer out) throws RenderException {
-        if (content.isNodeType(ItemType.CONTENT.getSystemName())) {
-            render(content, definitionName, RenderingHelper.TEMPLATE, out);
+        // FIXME content can be null in case of a request to a node date having a template attribute set for the binary
+        // this is probably not used anymore and should not be supported
+        if (content != null && content.isNodeType(ItemType.CONTENTNODE.getSystemName())) {
+            render(content, definitionName, RenderingHelper.PARAGRAPH, out);
         }
         else {
-            render(content, definitionName, RenderingHelper.PARAGRAPH, out);
+            render(content, definitionName, RenderingHelper.TEMPLATE, out);
         }
     }
 

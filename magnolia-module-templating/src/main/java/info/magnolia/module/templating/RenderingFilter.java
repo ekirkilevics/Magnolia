@@ -79,7 +79,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
 
         String templateName = aggregationState.getTemplateName();
-        if (templateName != null) {
+        if (StringUtils.isNotEmpty(templateName)) {
             try {
                 // don't reset any existing status code, see MAGNOLIA-2005
                 // response.setStatus(HttpServletResponse.SC_OK);
