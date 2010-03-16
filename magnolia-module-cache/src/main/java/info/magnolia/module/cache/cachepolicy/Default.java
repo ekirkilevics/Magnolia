@@ -57,9 +57,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A basic CachePolicy which will drive the usage of the cache based on the fact that the element has already been
- * cached or not. It also supports a simple bypass list and voters. This policy implementation
- * uses {@link info.magnolia.module.cache.DefaultDefaultCacheKey} to identify each cached entry.
+ * A basic CachePolicy driven by voters. This policy implementation uses
+ * {@link info.magnolia.module.cache.DefaultCacheKey} to identify each cache entry.
  *
  * @author gjoseph
  * @version $Revision: 1821 $ ($Author: fgiust $)
@@ -73,8 +72,7 @@ public class Default implements CachePolicy {
 
     private VoterSet voters;
 
-    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState,
-        final FlushPolicy flushPolicy) {
+    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         final Object key = retrieveCacheKey(aggregationState);
 
         if (shouldBypass(aggregationState, key)) {
@@ -102,8 +100,6 @@ public class Default implements CachePolicy {
 
     /**
      * Checks whether requested content should be served from cache or refreshed instead.
-     * @param aggregationState
-     * @param key
      * @return True if cache entry for the key should be recreated, false otherwise.
      */
     protected boolean shouldRefresh(AggregationState aggregationState, Object key) {
@@ -125,7 +121,7 @@ public class Default implements CachePolicy {
     }
 
     public Object retrieveCacheKey(final AggregationState aggregationState) {
-        // get original uri //TODO: check why original and not current?
+        // get original URI - not using current URI since we want to cache original URIs, not those we forward to (parameters in virtual URIs, i18n, ...)
         final String uri = aggregationState.getOriginalURI();
 
         // get serverName and request params and from WebContext
@@ -183,7 +179,7 @@ public class Default implements CachePolicy {
     }
 
     /**
-     * Method to safely (without danger of blocking cache) obtain persistent mapping between uuids and cache keys.
+     * Method to safely (without danger of blocking cache) obtain persistent mapping between UUIDs and cache keys.
      */
     private synchronized Set getUUIDKeySetFromCacheSafely(String uuidKey) {
         final Cache cache = getUuidKeyCache();
