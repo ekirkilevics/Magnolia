@@ -33,19 +33,17 @@
  */
 package info.magnolia.module.cache;
 
+import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.mbean.CacheMonitor;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
@@ -56,8 +54,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheModule implements ModuleLifecycle {
-    private static final Logger log = LoggerFactory.getLogger(CacheModule.class);
-    private static final String MODULE_NAME = "cache";
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheModule.class);
 
     private final Set<CacheModuleLifecycleListener> listeners = new HashSet<CacheModuleLifecycleListener>();
     private CacheFactory cacheFactory;
@@ -104,18 +101,18 @@ public class CacheModule implements ModuleLifecycle {
     // TODO : i still feel like we should separate module config bean and lifecycle
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
         // TODO : this is implementation dependent - some factories might need or want to be notified also on restart..
-//        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
+        // if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
         cacheFactory.start();
-//        }
+        // }
 
         cacheMonitor.countStart();
 
         for (CacheConfiguration cfg : configurations.values()) {
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
+            cacheMonitor.addCache(name);
             if (cfg.getFlushPolicy() != null) {
                 cfg.getFlushPolicy().start(cache);
-                cacheMonitor.addCache(name);
             } else {
                 log.warn("Flush Policy is not configured properly for {} cache configuration.", name);
             }
@@ -125,7 +122,18 @@ public class CacheModule implements ModuleLifecycle {
             listener.onCacheModuleStart();
         }
 
-
+        // if we're starting up the system, flush caches if we the system has just been installed or updated
+        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
+            final InstallContext installContext = ModuleManager.Factory.getInstance().getInstallContext();
+            // InstallContext.status is set by ModuleManagerImpl.performInstallOrUpdate()
+            if (installContext.getStatus() != null) {
+                log.info("Flushing all caches ...");
+                for (CacheConfiguration config : configurations.values()) {
+                    cacheFactory.getCache(config.getName()).clear();
+                    log.info("  flushed cache: {}", config.getName());
+                }
+            }
+        }
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
@@ -147,9 +155,9 @@ public class CacheModule implements ModuleLifecycle {
 
         // TODO : this is implementation dependent - some factories might need or want to be notified also on restart..
         // TODO : there was a reason for this checking  of the phase, but i can't remember ...
-//        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
+        // if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
         cacheFactory.stop();
-//        }
+        // }
     }
 
     public static CacheModule getInstance() {
