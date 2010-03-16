@@ -63,9 +63,6 @@ public class AllModulesListPage extends TemplatedMVCHandler {
 
     private String postdata;
 
-    /**
-     * 
-     */
     public AllModulesListPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
