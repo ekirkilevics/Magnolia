@@ -106,6 +106,7 @@ public class CacheMonitor implements CacheMonitorMBean {
         Integer count = calls.get(name);
         calls.put(name, count == null ? 1 : ++count);
     }
+
     public void countFlush(String name) {
         caches.put(name, caches.get(name) + 1);
     }
