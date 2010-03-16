@@ -34,7 +34,7 @@
 package info.magnolia.module.cache;
 
 /**
- * An interface who implementations wrap 3rd party or custom cache libraries.
+ * A simple interface around 3rd party or custom cache libraries.
  * It is completely up to client components to decide what they use as keys and values.
  *
  * @author gjoseph
