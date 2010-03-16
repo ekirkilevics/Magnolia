@@ -56,11 +56,11 @@ public class AddUserToRoleTask extends AbstractTask {
         final UserManager userManager = SecuritySupport.Factory.getInstance().getUserManager();
         final User user = userManager.getUser(username);
         if (user == null) {
-            ctx.warn("User \"" + username + "\" not found, can't add him/her to the \"" + rolename + "\" role.");
+            ctx.warn("User \"" + username + "\" not found, can't add the \"" + rolename + "\" role.");
         } else {
             // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
             try{
-                user.addGroup(rolename);
+                user.addRole(rolename);
             }
             catch (UnsupportedOperationException e) {
                 ctx.warn("Can't add the user \"" + username + "\" to the \"" + rolename + "\" role due to an unsupported operation exception. This is most likely the case if the users are managed externaly.");
