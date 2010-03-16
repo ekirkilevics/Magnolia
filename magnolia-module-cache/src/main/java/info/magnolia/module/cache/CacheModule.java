@@ -110,9 +110,7 @@ public class CacheModule implements ModuleLifecycle {
 
         cacheMonitor.countStart();
 
-        final Iterator<CacheConfiguration> it = configurations.values().iterator();
-        while (it.hasNext()) {
-            final CacheConfiguration cfg = it.next();
+        for (CacheConfiguration cfg : configurations.values()) {
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
             if (cfg.getFlushPolicy() != null) {
@@ -123,9 +121,7 @@ public class CacheModule implements ModuleLifecycle {
             }
         }
 
-        final Iterator<CacheModuleLifecycleListener> itL = listeners.iterator();
-        while (itL.hasNext()) {
-            final CacheModuleLifecycleListener listener = itL.next();
+        for (CacheModuleLifecycleListener listener : listeners) {
             listener.onCacheModuleStart();
         }
 
@@ -134,9 +130,7 @@ public class CacheModule implements ModuleLifecycle {
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         cacheMonitor.stop();
-        final Iterator<CacheConfiguration> it = configurations.values().iterator();
-        while (it.hasNext()) {
-            final CacheConfiguration cfg = it.next();
+        for (CacheConfiguration cfg : configurations.values()) {
             final String name = cfg.getName();
             Cache cache = null;
             try {
@@ -159,6 +153,6 @@ public class CacheModule implements ModuleLifecycle {
     }
 
     public static CacheModule getInstance() {
-        return (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance(MODULE_NAME);
+        return ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class);
     }
 }

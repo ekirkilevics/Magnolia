@@ -38,6 +38,7 @@ import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheModule;
+import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
 import info.magnolia.module.cache.filter.CachedEntry;
@@ -65,9 +66,7 @@ public class Store extends AbstractExecutor {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Store.class);
 
-    public void processCacheRequest(HttpServletRequest request,
-            HttpServletResponse response, FilterChain chain, Cache cache,
-            CachePolicyResult cachePolicyResult) throws IOException, ServletException {
+    public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
         try {
             // will write to both the response stream and an internal byte array for caching
@@ -138,7 +137,7 @@ public class Store extends AbstractExecutor {
                 if (content != null) {
                     final String uuid = content.getUUID();
                     String repo = content.getHierarchyManager().getName();
-                    CacheModule.getInstance().getConfiguration(cache.getName()).getCachePolicy().persistCacheKey(repo, uuid, key);
+                    getCachePolicy(cache).persistCacheKey(repo, uuid, key);
                 }
             }
         }
@@ -188,5 +187,13 @@ public class Store extends AbstractExecutor {
      */
     protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
         return makeCachedEntry(cacheResponse, cachingStream);
+    }
+
+    protected CachePolicy getCachePolicy(Cache cache) {
+        return getModule().getConfiguration(cache.getName()).getCachePolicy();
+    }
+
+    protected CacheModule getModule() {
+        return CacheModule.getInstance();
     }
 }

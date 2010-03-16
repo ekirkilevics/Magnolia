@@ -63,7 +63,6 @@ import java.io.IOException;
 public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements CacheModuleLifecycleListener {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheFilter.class);
 
-    private static final String MODULE_NAME = "cache";
     private static final String DEFAULT_CACHE_CONFIG = "default";
 
     private CacheMonitor monitor;
@@ -92,7 +91,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             this.cacheConfigurationName = DEFAULT_CACHE_CONFIG;
         }
 
-        final CacheModule cacheModule = CacheModule.getInstance();
+        final CacheModule cacheModule = getModule();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
         this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
 
@@ -104,9 +103,8 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         monitor = CacheMonitor.getInstance();
     }
 
-    @Deprecated
     protected CacheModule getModule() {
-        return (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance(MODULE_NAME);
+        return CacheModule.getInstance();
     }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
