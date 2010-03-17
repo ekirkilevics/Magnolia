@@ -10,25 +10,32 @@
         padding: 0;
       }
     </style>
+    <script src="${this.request.contextPath}/.magnolia/pages/javascript.js" type="text/javascript"><!-- --></script>
     <script type="text/javascript">
-      function loadModules(){
-          var cookieName = 'mgnlStoreAgreementToConnect'
-          var agree=getCookie(cookieName);
-          if (agree!=null && agree!="") {
-              document.getElementById('loadModulesForm').submit();
+      function checkAgreement(){
+          var cookieName = 'mgnlStoreAgreementToConnect';
+          var agreed = getCookie(cookieName);
+          if(agreed){
+              loadModules();
           } else {
-          var answer = confirm('Are you sure blah blah blah?');
-          if (answer) {
-              setCookie(cookieName,'okie',365);
-              document.getElementById('loadModulesForm').submit();
-            } else {
-                //show a message to the user who did not agree to submit to server
-                //and hide loading image
-                elem = document.getElementById('loading');
-                elem.getElementsByTagName('h2')[0].innerHTML = 'As you want, bye.';
-                elem.getElementsByTagName('img')[0].style.display = 'none';
-            }
+              elem = document.getElementById('infoAgreement');
+              elem.style.display = '';
           }
+      }
+      function setAnswer(answer){
+          var cookieName = 'mgnlStoreAgreementToConnect';
+          if(answer.id=='yes'){
+              setCookie(cookieName,'okie',365);
+              loadModules();
+          } else {
+              window.parent.location.href='${this.request.contextPath}/.magnolia/pages/adminCentral.html';
+          }
+      }
+      function loadModules(){
+          document.getElementById('infoAgreement').style.display='none';
+          document.getElementById('loading').style.display = '';
+          setTimeout('', 1000);
+          document.getElementById('loadModulesForm').submit();
       }
       function setCookie(cookieName,value,expiredays){
         var exdate=new Date();
@@ -50,13 +57,18 @@
       }
     </script>
   </head>
-  <body id="mgnl" onload="setTimeout(loadModules, 1000);" style="background-color:#fff">
+  <body id="mgnl" onload="checkAgreement();" style="background-color:#fff">
     <form id="loadModulesForm" action="${this.remoteUrl}" method="post">
       <div>
         <input type="hidden" name="postdata" value="${this.postdata}" />
       </div>
     </form>
-    <div id ="loading" style="display: block; width: 400px; margin: 50px auto; text-align: center;">
+    <div id ="infoAgreement" style="display: none; width: 400px; margin: 50px auto;">
+      <h3 style="border: none">The Magnolia Store Module needs to submit some information about your installed modules to an external server. If you agree, a cookie will be saved in your browser to store your response. Do you wish to continue? </h3>
+       <input  name="yes" id="yes" type="button" value="Yes, continue" onclick="setAnswer(this); return false;" class="mgnlControlButton"/>
+       <input  name="no" id="no" type="button" value="No, thanks" onclick="setAnswer(this); return false;" class="mgnlControlButton"/>
+    </div>
+    <div id ="loading" style="display: none; width: 400px; margin: 50px auto; text-align: center;">
       <h2>Contacting server...</h2>
       <img src="${this.request.contextPath}/.resources/admin-images/loading.gif" alt="Loading..." />
     </div>
