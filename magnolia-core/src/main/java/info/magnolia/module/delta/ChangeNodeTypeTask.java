@@ -42,18 +42,21 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 
 /**
- * Changes a node type
+ * Changes a node type by delegating to {@link ContentUtil#changeNodeType(Content, ItemType, boolean)} with last parameter set to <code>false</code>
  * @author fgrilli
  * @version $Id$
  */
-//TODO write unit test? The real job is delegated to ContentUtil.changeNodeType(..)
-//which is already tested in ContentUtilTest
 public class ChangeNodeTypeTask extends AbstractRepositoryTask {
 
     private final String nodePath;
     private final String workspace;
     private final ItemType newType;
 
+    /**
+     * @param nodePath - String the path to the node 
+     * @param workspace - String the workspace where the node is stored
+     * @param newType - {@link ItemType} the new type
+     */
     public ChangeNodeTypeTask(String nodePath, String workspace, ItemType newType) {
         super("Change node type for " + nodePath, "Changes nodeType for " + nodePath + " to " + newType.getSystemName());
         this.nodePath = nodePath;
