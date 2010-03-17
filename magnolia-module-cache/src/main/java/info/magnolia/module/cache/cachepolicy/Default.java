@@ -35,6 +35,7 @@ package info.magnolia.module.cache.cachepolicy;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListSet;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -135,15 +136,16 @@ public class Default implements CachePolicy {
             params = null;
         }
         // get locale
-        final String locale;
-        if(i18nContentSupport!= null && i18nContentSupport.isEnabled()){
-            locale = i18nContentSupport.getLocale().toString();
-        } else {
-            locale = null;
-        }
+        final String localeStr;
+        final Locale locale = aggregationState.getLocale();
+        if(locale != null){
+            localeStr = locale.toString();
+         } else {
+            localeStr = null;
+         }
 
         // create composite key so we can easily check each part of it later
-        return new DefaultCacheKey(uri, serverName, locale, params);
+        return new DefaultCacheKey(uri, serverName, localeStr, params);
     }
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
