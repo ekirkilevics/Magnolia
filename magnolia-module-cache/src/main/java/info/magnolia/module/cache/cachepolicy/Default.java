@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Set;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.ModuleRegistry;
@@ -51,7 +50,6 @@ import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.DefaultCacheKey;
 import info.magnolia.module.cache.FlushPolicy;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.voters.VoterSet;
 
 import org.slf4j.Logger;
@@ -68,8 +66,6 @@ public class Default implements CachePolicy {
 
     public static final String UUID_KEY_MAP_KEY = "uuid-key-mapping";
     private static final Logger log = LoggerFactory.getLogger(Default.class);
-
-    private final I18nContentSupport i18nContentSupport = Components.getSingleton(I18nContentSupport.class);
 
     private VoterSet voters;
 
@@ -135,6 +131,7 @@ public class Default implements CachePolicy {
             serverName = null;
             params = null;
         }
+
         // get locale
         final String localeStr;
         final Locale locale = aggregationState.getLocale();
