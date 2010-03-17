@@ -258,7 +258,7 @@ public class MgnlGroup implements Group {
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
-                    final HierarchyManager sysHM = MgnlSecurityUtil.getSystemHierarchyManager(hmName);
+                    final HierarchyManager sysHM = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
                     final String newName = Path.getUniqueLabel(sysHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     groupNode.save();
