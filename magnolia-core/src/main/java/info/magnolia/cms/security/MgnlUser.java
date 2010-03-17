@@ -231,13 +231,14 @@ public class MgnlUser extends AbstractUser implements Serializable {
      */
     private void add(String name, String nodeName) {
         try {
-            HierarchyManager hm;
+            final String hmName;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
+                hmName = ContentRepository.USER_ROLES;
             }
             else {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
+                hmName = ContentRepository.USER_GROUPS;
             }
+            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(hmName);
 
             if (!this.hasAny(name, nodeName)) {
                if (!this.getUserNode().hasContent(nodeName)) {
@@ -254,9 +255,7 @@ public class MgnlUser extends AbstractUser implements Serializable {
                     this.getUserNode().save();
                 }
                 catch (PathNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
-                    }
+                    log.debug("[{}] does not exist in the {} repository", name, hmName);
                 }
             }
         }
