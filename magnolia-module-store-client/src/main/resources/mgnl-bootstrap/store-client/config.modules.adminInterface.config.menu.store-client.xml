@@ -7,7 +7,7 @@
     <sv:value>349bab23-d565-4690-8fce-fd434fb0b470</sv:value>
   </sv:property>
   <sv:property sv:name="icon" sv:type="String">
-    <sv:value>/.resources/icons/24/magnoliastore.png</sv:value>
+    <sv:value>/.resources/icons/24/cabinet.gif</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
