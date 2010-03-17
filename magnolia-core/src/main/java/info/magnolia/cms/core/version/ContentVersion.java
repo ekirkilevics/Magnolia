@@ -44,6 +44,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.cms.util.HierarchyManagerWrapper;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.SimpleUrlPattern;
@@ -74,6 +75,25 @@ import org.slf4j.LoggerFactory;
  * $Id$
  */
 public class ContentVersion extends DefaultContent {
+
+    private final class FixParentContentWrapper extends ContentWrapper {
+        private final Content parent;
+
+        private FixParentContentWrapper(Content wrappedContent, Content parent) {
+            super(wrappedContent);
+            this.parent = parent;
+        }
+
+        @Override
+        public Content getParent() throws RepositoryException {
+            return parent;
+        }
+
+        @Override
+        protected Content wrap(Content node) {
+            return new FixParentContentWrapper(node, this);
+        }
+    }
 
     /**
      * Logger.
@@ -222,6 +242,10 @@ public class ContentVersion extends DefaultContent {
         return this.base.getHandle();
     }
 
+    public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        return new FixParentContentWrapper(super.getContent(name), this);
+    }
+
     /**
      * create Content node under the current node with the specified name
      * @param name of the node to be created as <code>Content</code>
@@ -329,7 +353,7 @@ public class ContentVersion extends DefaultContent {
     public Collection<Content> getChildren() {
         try {
             if (this.rule.isAllowed(this.base.getNodeTypeName())) {
-                return super.getChildren();
+                return wrap(super.getChildren());
             }
         }
         catch (RepositoryException re) {
@@ -345,7 +369,7 @@ public class ContentVersion extends DefaultContent {
      */
     public Collection<Content> getChildren(String contentType) {
         if (this.rule.isAllowed(contentType)) {
-            return super.getChildren(contentType);
+            return wrap(super.getChildren(contentType));
         }
         return this.base.getChildren(contentType);
     }
@@ -367,9 +391,17 @@ public class ContentVersion extends DefaultContent {
      */
     public Collection<Content> getChildren(String contentType, String namePattern) {
         if (this.rule.isAllowed(contentType)) {
-            return super.getChildren(contentType, namePattern);
+            return wrap(super.getChildren(contentType, namePattern));
         }
         return this.base.getChildren(contentType, namePattern);
+    }
+
+    private Collection<Content> wrap(Collection<Content> children) {
+        List<Content> transformed = new ArrayList<Content>();
+        for (Content child : children) {
+            transformed.add(new FixParentContentWrapper(child, this));
+        }
+        return transformed;
     }
 
     /**
