@@ -42,7 +42,7 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 
 /**
- * Changes a node type by delegating to {@link ContentUtil#changeNodeType(Content, ItemType, boolean)} with last parameter set to <code>false</code>
+ * Changes a node type by delegating to {@link ContentUtil#changeNodeType(Content, ItemType, boolean)} with the last parameter set to <code>false</code>
  * @author fgrilli
  * @version $Id$
  */
