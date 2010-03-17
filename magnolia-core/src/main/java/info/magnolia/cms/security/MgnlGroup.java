@@ -165,13 +165,14 @@ public class MgnlGroup implements Group {
      */
     private boolean hasAny(String name, String nodeName) {
         try {
-            HierarchyManager hm;
+            final String hmName;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_ROLES);
+                hmName = ContentRepository.USER_ROLES;
             }
             else {
-                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
+                hmName = ContentRepository.USER_GROUPS;
             }
+            final HierarchyManager hm = MgnlSecurityUtil.getSystemHierarchyManager(hmName);
 
             Content node = getGroupNode().getContent(nodeName);
             for (NodeData nodeData : node.getNodeDataCollection()) {
@@ -182,14 +183,10 @@ public class MgnlGroup implements Group {
                     }
                 }
                 catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
-                    }
+                    log.debug("[{}] does not exist in the {} repository", name, hmName);
                 }
                 catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(nodeData.getHandle() + " has invalid value");
-                    }
+                    log.debug(nodeData.getHandle() + " has invalid value");
                 }
             }
         }
@@ -206,13 +203,14 @@ public class MgnlGroup implements Group {
      */
     private void remove(String name, String nodeName) {
         try {
-            HierarchyManager hm;
+            final String hmName;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
+                hmName = ContentRepository.USER_ROLES;
             }
             else {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
+                hmName = ContentRepository.USER_GROUPS;
             }
+            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(hmName);
             Content node = getGroupNode().getContent(nodeName);
 
             for (NodeData nodeData: node.getNodeDataCollection()) {
@@ -223,20 +221,16 @@ public class MgnlGroup implements Group {
                     }
                 }
                 catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
-                    }
+                    log.debug("[{}] does not exist in the {} repository", name, hmName);
                 }
                 catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(nodeData.getHandle() + " has invalid value");
-                    }
+                    log.debug(nodeData.getHandle() + " has invalid value");
                 }
             }
             getGroupNode().save();
         }
         catch (RepositoryException e) {
-            log.error("failed to remove " + name + " from user [" + this.getName() + "]", e);
+            log.error("failed to remove " + name + " from group [" + this.getName() + "]", e);
         }
     }
 
@@ -246,36 +240,36 @@ public class MgnlGroup implements Group {
     private void add(String name, String nodeName) {
         try {
             final Content groupNode = getGroupNode();
-            final String repoId;
+            final String hmName;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                repoId = ContentRepository.USER_ROLES;
+                hmName = ContentRepository.USER_ROLES;
             } else {
-                repoId = ContentRepository.USER_GROUPS;
+                hmName = ContentRepository.USER_GROUPS;
             }
 
-            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(repoId);
+            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(hmName);
 
             if (!this.hasAny(name, nodeName)) {
-               if (!groupNode.hasContent(nodeName)) {
+                if (!groupNode.hasContent(nodeName)) {
                     groupNode.createContent(nodeName, ItemType.CONTENTNODE);
-               }
+                }
                 Content node = groupNode.getContent(nodeName);
                 // add corresponding ID
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
-                    final HierarchyManager sysHM = MgnlSecurityUtil.getSystemHierarchyManager(repoId);
+                    final HierarchyManager sysHM = MgnlSecurityUtil.getSystemHierarchyManager(hmName);
                     final String newName = Path.getUniqueLabel(sysHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     groupNode.save();
                 }
                 catch (PathNotFoundException e) {
-                    log.debug("[{}] does not exist in the {} repository", name, repoId);
+                    log.debug("[{}] does not exist in the {} repository", name, hmName);
                 }
             }
         }
         catch (RepositoryException e) {
-            log.error("failed to add " + name + " to user [" + this.getName() + "]", e);
+            log.error("failed to add " + name + " to group [" + this.getName() + "]", e);
         }
     }
 
