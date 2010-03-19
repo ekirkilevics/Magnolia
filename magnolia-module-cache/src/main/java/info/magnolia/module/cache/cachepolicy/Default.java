@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentSkipListSet;
-
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -185,7 +185,7 @@ public class Default implements CachePolicy {
         synchronized (cache) {
             Set keys = (Set) cache.get(uuidKey);
             if (keys == null) {
-                keys = new ConcurrentSkipListSet();
+                keys = Collections.synchronizedSet(new HashSet());
                 cache.put(uuidKey, keys);
             }
             return keys;
