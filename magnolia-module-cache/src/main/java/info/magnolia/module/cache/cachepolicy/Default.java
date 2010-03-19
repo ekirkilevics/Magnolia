@@ -147,13 +147,13 @@ public class Default implements CachePolicy {
 
     public Object[] retrieveCacheKeys(final String uuid, final String repository) {
         final String uuidKey = repository + ":" + uuid;
-        final Set keys = getUUIDKeySetFromCacheSafely(uuidKey);
+        final Set<Object> keys = getUUIDKeySetFromCacheSafely(uuidKey);
         return keys.toArray();
     }
 
     public void persistCacheKey(final String repo, final String uuid, final Object key) {
         final String uuidKey = repo + ":" + uuid;
-        final Set uuidToCacheKeyMapping = getUUIDKeySetFromCacheSafely(uuidKey);
+        final Set<Object> uuidToCacheKeyMapping = getUUIDKeySetFromCacheSafely(uuidKey);
         uuidToCacheKeyMapping.add(key);
     }
 
@@ -180,12 +180,12 @@ public class Default implements CachePolicy {
     /**
      * Method to safely (without danger of blocking cache) obtain persistent mapping between UUIDs and cache keys.
      */
-    private synchronized Set getUUIDKeySetFromCacheSafely(String uuidKey) {
+    private synchronized Set<Object> getUUIDKeySetFromCacheSafely(String uuidKey) {
         final Cache cache = getUuidKeyCache();
         synchronized (cache) {
-            Set keys = (Set) cache.get(uuidKey);
+            Set<Object> keys = (Set<Object>) cache.get(uuidKey);
             if (keys == null) {
-                keys = Collections.synchronizedSet(new HashSet());
+                keys = Collections.synchronizedSet(new HashSet<Object>());
                 cache.put(uuidKey, keys);
             }
             return keys;

@@ -36,14 +36,11 @@ package info.magnolia.module.cache;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 /**
  * @author had
  * @version $Id:$
  */
-public class DefaultCacheKey implements Serializable, Comparable<DefaultCacheKey> {
+public class DefaultCacheKey implements Serializable {
 
     // Keep the svuid fixed to prevent deserialization errors. Keep in mind that when adding new properties they will be deserialized to null!
     private static final long serialVersionUID = 2699497852929596651L;
@@ -53,11 +50,6 @@ public class DefaultCacheKey implements Serializable, Comparable<DefaultCacheKey
     private String locale;
     private Map<String, String> params;
 
-    /**
-     * @param key
-     * @param serverName
-     * @param locale
-     */
     public DefaultCacheKey(String uri, String serverName, String locale, Map<String, String> params) {
         this.uri = uri;
         this.serverName = serverName;
@@ -96,12 +88,14 @@ public class DefaultCacheKey implements Serializable, Comparable<DefaultCacheKey
         return this.serverName;
     }
 
-    @Override
+    // generated toString() method
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "DefaultCacheKey{" +
+                "uri='" + uri + '\'' +
+                ", serverName='" + serverName + '\'' +
+                ", locale='" + locale + '\'' +
+                ", params=" + params +
+                '}';
     }
 
-    public int compareTo(DefaultCacheKey o) {
-        return CompareToBuilder.reflectionCompare(this, o);
-    }
 }
