@@ -39,10 +39,12 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jcr.RepositoryException;
 
@@ -98,6 +100,15 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         this.fallbackLocale = fallbackLocale;
     }
 
+    /**
+     * Returns the closest locale for which {@link #isLocaleSupported(Locale)} is true.
+     * <ul> 
+     * <li>If the locale has a country specified (fr_CH) the locale without country (fr) will be returned.</li>
+     * <li>If the locale has no country specified (fr) the first locale with the same language but specific country (fr_CH) will be returned.</li>
+     * <li>If this fails the fall-back locale is returned</li>
+     * </ul>
+     * Warning: if you have configured both (fr and fr_CH) this method will jiter between this two values.
+     */
     protected Locale getNextLocale(Locale locale) {
         // if this locale defines a country
         if(StringUtils.isNotEmpty(locale.getCountry())){
@@ -206,17 +217,16 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
             try {
                 // test for the current language
                 Locale locale = getLocale();
-                nd = getNodeData(node, name, locale);
-                if (!isEmpty(nd)) {
-                    return nd;
-                }
-                // otherwise fall back until we reached the fallback locale
-                while(!locale.equals(getFallbackLocale())){
-                    locale = getNextLocale(locale);
+                Set<Locale> checkedLocales = new HashSet();
+
+                // getNextContentLocale() returns null once the end of the locale chain is reached
+                while(locale != null){
                     nd = getNodeData(node, name, locale);
                     if (!isEmpty(nd)) {
                         return nd;
                     }
+                    checkedLocales.add(locale);
+                    locale = getNextContentLocale(locale, checkedLocales);
                 }
             }
             catch (RepositoryException e) {
@@ -226,6 +236,22 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
         // return the node data
         return node.getNodeData(name);
+    }
+
+    /**
+     * Uses {@link #getNextLocale(Locale)} to find the next locale. If the returned locale is in the
+     * checkedLocales set it falls back to the fall-back locale. If the fall-back locale itself is
+     * passed to the method, the method returns null to signal the end of the chain.
+     */
+    protected Locale getNextContentLocale(Locale locale, Set<Locale> checkedLocales) {
+        if(locale.equals(getFallbackLocale())){
+            return null;
+        }
+        Locale candidate = getNextLocale(locale);
+        if(!checkedLocales.contains(candidate)){
+            return candidate;
+        }
+        return getFallbackLocale();
     }
 
     public boolean isEnabled() {
