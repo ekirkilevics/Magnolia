@@ -68,6 +68,8 @@ public class Default implements CachePolicy {
     private static final Logger log = LoggerFactory.getLogger(Default.class);
 
     private VoterSet voters;
+    
+    private boolean refreshOnNoCacheRequests = false;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         final Object key = retrieveCacheKey(aggregationState);
@@ -100,10 +102,13 @@ public class Default implements CachePolicy {
      * @return True if cache entry for the key should be recreated, false otherwise.
      */
     protected boolean shouldRefresh(AggregationState aggregationState, Object key) {
-        String cacheControl = ((WebContext) MgnlContext.getInstance()).getRequest().getHeader("Cache-Control");
-        // TODO: check for pragma as well?? RFC says "HTTP/1.1 caches SHOULD treat "Pragma:
-        // no-cache" as if the client had sent "Cache-Control: no-cache"
-        return cacheControl != null && cacheControl.equals("no-cache");
+        if(isRefreshOnNoCacheRequests()){
+            String cacheControl = ((WebContext) MgnlContext.getInstance()).getRequest().getHeader("Cache-Control");
+            // TODO: check for pragma as well?? RFC says "HTTP/1.1 caches SHOULD treat "Pragma:
+            // no-cache" as if the client had sent "Cache-Control: no-cache"
+            return cacheControl != null && cacheControl.equals("no-cache");
+        }
+        return false;
     }
 
     protected boolean shouldBypass(AggregationState aggregationState, Object key) {
@@ -190,5 +195,13 @@ public class Default implements CachePolicy {
             }
             return keys;
         }
+    }
+    
+    public boolean isRefreshOnNoCacheRequests() {
+        return this.refreshOnNoCacheRequests;
+    }
+    
+    public void setRefreshOnNoCacheRequests(boolean allowNoCacheHeader) {
+        this.refreshOnNoCacheRequests = allowNoCacheHeader;
     }
 }

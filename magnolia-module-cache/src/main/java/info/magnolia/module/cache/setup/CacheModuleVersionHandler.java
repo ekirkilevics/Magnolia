@@ -152,6 +152,11 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushByUUID.xml")))
                 .addTask(new BootstrapSingleResource("Cache Flushing", "Adds cache configuration for uuid-key caching.", "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.uuid-key-mapping.xml"))
                 );
+
+        register(DeltaBuilder.update("4.3.1", "Disables server side re-caching of requests with no-cache header (shift reload)")
+                .addTask(new NewPropertyTask("Disabling no-cache requests", "Disable server side re-caching of requests with no-cache header (shift reload)", "config", "/modules/cache/config/configurations/default/cachePolicy", "refreshOnNoCacheRequests", "false"))
+                .addTask(new WarnTask("Warning", "Server side re-caching of requests with no-cache header (shift reload) were disabled. This can be changed at /modules/cache/config/configurations/default/cachePolicy/refreshOnNoCacheRequests"))
+                );
     }
 
     private List<Task> getTasksFor364() {
