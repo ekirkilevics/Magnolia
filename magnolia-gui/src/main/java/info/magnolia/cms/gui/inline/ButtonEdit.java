@@ -34,6 +34,8 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.AggregationState;
@@ -54,6 +56,8 @@ public class ButtonEdit extends Button {
     private String label = "buttons.edit"; //$NON-NLS-1$
     private String dialogPath;
     private String dialog;
+    
+    private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     public ButtonEdit() {
     }
@@ -109,9 +113,8 @@ public class ButtonEdit extends Button {
             + "',"
             + (dialogPath != null ? "'" + dialogPath + "'" : "null")
             + ", null" //width
-            + ", null, " //height
-            // FIXME make that a bit more dynamic
-            + "'" + MgnlContext.getAggregationState().getLocale().toString() + "'"
+            + ", null" //height
+            + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
             +");");
     }
 

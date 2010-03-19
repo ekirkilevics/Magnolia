@@ -35,6 +35,8 @@ package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.AggregationState;
@@ -56,6 +58,8 @@ public class BarNew extends Bar {
     private String paragraph;
     
     private Button buttonNew = new Button();
+    
+    private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     /**
      * @deprecated since 4.0 - use the empty constructor.
@@ -131,9 +135,8 @@ public class BarNew extends Bar {
                 + repository
                 + "','.magnolia/dialogs/" + dialogName + ".html'"
                 + ", null" //width
-                + ", null, " //height
-                // FIXME make that a bit more dynamic
-                + "'" + MgnlContext.getAggregationState().getLocale().toString() + "'"
+                + ", null" //height
+                + (i18nSupport.isEnabled()? ", '" + i18nSupport.getLocale().toString() + "'":"")
                 +");";
     }
 

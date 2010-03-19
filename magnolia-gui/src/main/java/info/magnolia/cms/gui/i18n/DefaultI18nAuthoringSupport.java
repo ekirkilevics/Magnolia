@@ -79,7 +79,11 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
             
             for (Locale locale : i18nContentSupport.getLocales()) {
                 String uri = createURI(currentPage, locale);
-                select.setOptions(StringUtils.capitalize(locale.getDisplayLanguage(locale)), uri);
+                String label = StringUtils.capitalize(locale.getDisplayLanguage(locale));
+                if(StringUtils.isNotEmpty(locale.getCountry())){
+                    label += " (" + StringUtils.capitalize(locale.getDisplayCountry()) + ")";
+                }
+                select.setOptions(label, uri);
             }
 
             return select;
@@ -108,7 +112,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale", null));
         boolean isFallbackLanguage = i18nContentSupport.getFallbackLocale().equals(locale);
 
-        if (isEnabled() && locale != null ) {
+        if (isEnabled() && i18nContentSupport.isEnabled() && locale != null ) {
             List<DialogControlImpl> tabs = dialog.getSubs();
             for (DialogControlImpl tab : tabs) {
                 List<DialogControlImpl> controls = tab.getSubs();
