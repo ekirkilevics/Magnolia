@@ -64,13 +64,12 @@ public class MgnlRole implements Role {
     /**
      * the content object
      */
-    private Content roleNode;
+    private final Content roleNode;
 
     /**
      * @param roleNode the Content object representing this role
      */
     protected MgnlRole(Content roleNode) {
-        super();
         this.roleNode = roleNode;
     }
 
@@ -157,5 +156,7 @@ public class MgnlRole implements Role {
         return false;
     }
 
-
+    public Content getRoleNode() {
+        return roleNode;
+    }
 }

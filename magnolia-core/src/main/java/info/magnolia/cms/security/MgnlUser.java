@@ -84,7 +84,7 @@ public class MgnlUser extends AbstractUser implements Serializable {
     private static final Object mutex = new Object();
 
     // serialized
-    private SystemContentWrapper userNode;
+    private final SystemContentWrapper userNode;
 
     /**
      * @param userNode the Content object representing this user

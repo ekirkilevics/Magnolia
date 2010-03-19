@@ -66,12 +66,12 @@ public class MgnlGroup implements Group {
     /**
      * group node
      */
-    private Content groupNode;
+    private final Content groupNode;
 
     /**
      * @param groupNode the Content object representing this group
      */
-    MgnlGroup(Content groupNode) {
+    protected MgnlGroup(Content groupNode) {
         this.groupNode = groupNode;
     }
 
