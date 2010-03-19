@@ -1,5 +1,5 @@
 html {
-    background: #FAFBF4;
+    background: #FFF;
 }
 
 body {
@@ -33,9 +33,8 @@ li {
 }
 
 .page {
-    margin-top: 1px;
-    border: 1px solid #adbc61;
     background: white;
+    padding: 0;
 }
 
 #header {
