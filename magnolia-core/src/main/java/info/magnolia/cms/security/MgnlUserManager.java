@@ -149,7 +149,7 @@ public class MgnlUserManager implements UserManager {
             return null;
         }
 
-        return userInstance(node);
+        return newInstance(node);
     }
 
     /**
@@ -200,7 +200,7 @@ public class MgnlUserManager implements UserManager {
         try {
             Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
             for (Content node : nodes) {
-                users.add(userInstance(node));
+                users.add(newInstance(node));
             }
         }
         catch (Exception e) {
@@ -238,7 +238,7 @@ public class MgnlUserManager implements UserManager {
             addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
 
             getHierarchyManager().save();
-            return userInstance(node);
+            return newInstance(node);
         }
         catch (Exception e) {
             log.info("can't create user [" + name + "]", e);
@@ -284,13 +284,18 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * Creates a {@link MgnlUser} out of a jcr node. Can be overridden in order to provide a different implementation
-     * (which extends MgnlUser)
-     * @param node user node
-     * @return MgnlUser instance
+     * @deprecated since 4.3.1 - use {@link #newInstance(info.magnolia.cms.core.Content)}
      */
     protected MgnlUser userInstance(Content node) {
         return new MgnlUser(node);
+    }
+
+    /**
+     * Creates a {@link MgnlUser} out of a jcr node. Can be overridden in order to provide a different implementation.
+     * @since 4.3.1
+     */
+    protected User newInstance(Content node) {
+        return userInstance(node);
     }
 
     private Content addWrite(String parentPath, String property, Content acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {

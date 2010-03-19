@@ -59,7 +59,7 @@ public class MgnlRoleManager implements RoleManager {
 
     public Role getRole(String name) {
         try {
-            return new MgnlRole(getHierarchyManager().getContent(name));
+            return newInstance(getHierarchyManager().getContent(name));
         }
         catch (Exception e) {
             log.info("can't find role [" + name + "]", e);
@@ -71,12 +71,16 @@ public class MgnlRoleManager implements RoleManager {
         try {
             Content node = getHierarchyManager().createContent("/", name, ItemType.ROLE.getSystemName());
             getHierarchyManager().save();
-            return new MgnlRole(node);
+            return newInstance(node);
         }
         catch (Exception e) {
             log.error("can't create role [" + name + "]", e);
             return null;
         }
+    }
+
+    protected MgnlRole newInstance(Content node) {
+        return new MgnlRole(node);
     }
 
     /**

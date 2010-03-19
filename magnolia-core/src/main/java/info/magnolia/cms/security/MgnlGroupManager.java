@@ -65,7 +65,7 @@ public class MgnlGroupManager implements GroupManager {
         try {
             Content node = getHierarchyManager().createContent("/", name, ItemType.GROUP.getSystemName());
             getHierarchyManager().save();
-            return new MgnlGroup(node);
+            return newInstance(node);
         }
         catch (Exception e) {
             log.error("can't create group [" + name + "]", e);
@@ -82,7 +82,7 @@ public class MgnlGroupManager implements GroupManager {
      */
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
         try {
-            return new MgnlGroup(getHierarchyManager().getContent(name));
+            return newInstance(getHierarchyManager().getContent(name));
         } catch (PathNotFoundException e) {
             // this is not an error, once we have MAGNOLIA-1757 implemented we can change this.
             log.warn("can't find group [" + name + "] in magnolia");
@@ -103,13 +103,17 @@ public class MgnlGroupManager implements GroupManager {
         try {
             Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.GROUP);
             for (Content node : nodes) {
-                groups.add(new MgnlGroup(node));
+                groups.add(newInstance(node));
             }
         }
         catch (Exception e) {
             log.error("can't find user");
         }
         return groups;
+    }
+
+    protected Group newInstance(Content node) {
+        return new MgnlGroup(node);
     }
 
     /**
