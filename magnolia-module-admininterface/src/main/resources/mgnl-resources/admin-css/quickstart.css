@@ -4,11 +4,11 @@ html {
 
 body {
     background: #FAFBF4;
-    color: #000;
+    color: #FFF;
     font-family: Georgia, "Times New Roman", Times, serif;
-    margin: 0 10%;
-    padding: 20px;
+    padding: 0;
     font-size: 9pt;
+    margin: 0;
 }
 
 a {
@@ -33,7 +33,7 @@ li {
 }
 
 .page {
-    margin-top: 15px;
+    margin-top: 1px;
     border: 1px solid #adbc61;
     background: white;
 }
@@ -72,7 +72,7 @@ li {
 }
 
 #content {
-    padding: 20px 20px 20px 20px;
+    padding: 0;
     margin: 0;
     font-weight: normal;
 }
@@ -87,6 +87,7 @@ div.option {
     margin-bottom:20px;
     padding:10px;
     width:390px;
+    height: 200px;
 }
 
 div.option p {
