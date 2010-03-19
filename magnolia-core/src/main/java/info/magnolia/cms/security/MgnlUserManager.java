@@ -149,7 +149,7 @@ public class MgnlUserManager implements UserManager {
             return null;
         }
 
-        return newInstance(node);
+        return newUserInstance(node);
     }
 
     /**
@@ -200,7 +200,7 @@ public class MgnlUserManager implements UserManager {
         try {
             Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
             for (Content node : nodes) {
-                users.add(newInstance(node));
+                users.add(newUserInstance(node));
             }
         }
         catch (Exception e) {
@@ -238,7 +238,7 @@ public class MgnlUserManager implements UserManager {
             addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
 
             getHierarchyManager().save();
-            return newInstance(node);
+            return newUserInstance(node);
         }
         catch (Exception e) {
             log.info("can't create user [" + name + "]", e);
@@ -284,7 +284,7 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * @deprecated since 4.3.1 - use {@link #newInstance(info.magnolia.cms.core.Content)}
+     * @deprecated since 4.3.1 - use {@link #newUserInstance(info.magnolia.cms.core.Content)}
      */
     protected MgnlUser userInstance(Content node) {
         return new MgnlUser(node);
@@ -294,7 +294,7 @@ public class MgnlUserManager implements UserManager {
      * Creates a {@link MgnlUser} out of a jcr node. Can be overridden in order to provide a different implementation.
      * @since 4.3.1
      */
-    protected User newInstance(Content node) {
+    protected User newUserInstance(Content node) {
         return userInstance(node);
     }
 
