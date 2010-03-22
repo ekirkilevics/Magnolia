@@ -68,7 +68,7 @@ public class DefaultClassFactoryTest extends TestCase {
     }
     */
 
-    public void testCanInstantiateWithAppropriateConstructorAndNullParamsWhenSignatureIspecified() {
+    public void testCanInstantiateWithAppropriateConstructorAndNullParamsWhenSignatureIsSpecified() {
         final DefaultClassFactory classFactory = new DefaultClassFactory();
         assertEquals("bingo", classFactory.newInstance(FooBar.class, arr(String.class), "bingo").getValue());
         assertEquals("bingo123", classFactory.newInstance(FooBar.class, arr(String.class, Object.class), "bingo", Long.valueOf(123)).getValue());
