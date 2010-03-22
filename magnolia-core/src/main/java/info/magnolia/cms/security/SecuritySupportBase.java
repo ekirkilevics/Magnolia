@@ -75,24 +75,21 @@ public abstract class SecuritySupportBase implements SecuritySupport {
 
     /**
      * Logs plain LoginException in error level, but subclasses in debug, since they
-     * are specifically thrown when a known error occurs (wrong password, block account,
-     * etc.) This also makes this code Java1.4 compliant, even if the JAAS module
-     * threw a specific LoginException which was introduced in Java5.
+     * are specifically thrown when a known error occurs (wrong password, blocked account,
+     * etc.)
      */
     private void logLoginException(LoginException e) {
         if (e.getClass().equals(LoginException.class)) {
-            log.error("Can't login due to:", e);
+            log.error("Can't login due to: ", e);
         } else {
             // specific subclasses were added in Java5 to identify what the login failure was
-            log.debug("Can't login due to:", e);
+            log.debug("Can't login due to: ", e);
         }
     }
 
     protected static LoginContext createLoginContext(CredentialsCallbackHandler callbackHandler, String customLoginModule) throws LoginException {
-        LoginContext loginContext = new LoginContext(
-            StringUtils.defaultString(customLoginModule, "magnolia"),
-            callbackHandler);
-        return loginContext;
+        final String loginContextName = StringUtils.defaultString(customLoginModule, "magnolia");
+        return new LoginContext(loginContextName, callbackHandler);
     }
 
 }
