@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.jcr.RepositoryException;
 
@@ -337,10 +338,11 @@ public class Content2BeanTest extends MgnlTestCase {
         assertTrue("we wanted a custom map impl!", map instanceof MyMap);
     }
 
+    /* TODO - MAGNOLIA-3160
     public void testCanSpecifySpecificCollectionImplementation() throws Exception {
         final Content node = MockUtil.createNode("/foo/bar",
                 "/foo/bar.class=" + BeanWithCollection.class.getName(),
-                // TODO MAGNOLIA-3088 "/foo/bar/beans.class=" + Vector.class.getName(),
+                "/foo/bar/beans.class=" + Vector.class.getName(),
                 "/foo/bar/beans/a.class=" + SimpleBean.class.getName(),
                 "/foo/bar/beans/a.prop1=hello",
                 "/foo/bar/beans/b.class=" + SimpleBean.class.getName(),
@@ -361,8 +363,9 @@ public class Content2BeanTest extends MgnlTestCase {
         assertTrue("world".equals(a.getProp1()) || "world".equals(b.getProp1()));
 
         // actual test:
-        // TODO - MAGNOLIA-3088 assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
+        assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
     }
+    */
 
     public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
         final Content node = MockUtil.createNode("/bar",
