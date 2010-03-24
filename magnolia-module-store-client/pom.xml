@@ -50,6 +50,10 @@
       <version>4.3.2-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>net.sf.json-lib</groupId>
+      <artifactId>json-lib</artifactId>
+    </dependency>
   </dependencies>
 </project>
