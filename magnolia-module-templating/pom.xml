@@ -62,10 +62,5 @@
       <artifactId>easymockclassextension</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-       <groupId>net.sf.json-lib</groupId>
-       <artifactId>json-lib</artifactId>
-       <scope>compiler</scope>
-    </dependency>
   </dependencies>
 </project>
