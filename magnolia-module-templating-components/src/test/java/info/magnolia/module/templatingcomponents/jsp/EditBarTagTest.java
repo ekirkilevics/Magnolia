@@ -43,6 +43,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templatingcomponents.components.SingletonParagraphBar;
+import info.magnolia.test.mock.MockHierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,12 +57,12 @@ import static org.easymock.EasyMock.expect;
 public class EditBarTagTest extends AbstractJspTest {
     @Override
     protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
-        aggState.setMainContent(hm.getContent("/foo/bar"));
-        aggState.setCurrentContent(hm.getContent("/foo/bar/paragraphs/1"));
+        aggState.setMainContent(websiteHM.getContent("/foo/bar"));
+        aggState.setCurrentContent(websiteHM.getContent("/foo/bar/paragraphs/1"));
     }
 
     @Override
-    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager) {
         expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).times(6);
     }
 

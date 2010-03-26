@@ -41,6 +41,7 @@ import com.meterware.httpunit.WebResponse;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockHierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -55,12 +56,12 @@ public class NewBarTagTest extends AbstractJspTest {
 
     @Override
     protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
-        aggState.setMainContent(hm.getContent("/foo/bar"));
-        aggState.setCurrentContent(hm.getContent("/foo/bar"));
+        aggState.setMainContent(websiteHM.getContent("/foo/bar"));
+        aggState.setCurrentContent(websiteHM.getContent("/foo/bar"));
     }
 
     @Override
-    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager) {
     }
 
     @Override

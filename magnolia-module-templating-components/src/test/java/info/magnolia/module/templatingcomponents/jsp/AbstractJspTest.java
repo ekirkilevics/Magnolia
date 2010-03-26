@@ -59,6 +59,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.module.templating.engine.DefaultRenderingEngine;
+import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.module.templatingcomponents.components.AbstractAuthoringUiComponentTest;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
@@ -94,7 +96,7 @@ public abstract class AbstractJspTest extends TestCase {
     protected ServletRunner runner;
     private WebContext ctx;
     private AccessManager accessManager;
-    protected MockHierarchyManager hm;
+    protected MockHierarchyManager websiteHM;
     private HttpServletRequest req;
 
     /**
@@ -161,7 +163,7 @@ public abstract class AbstractJspTest extends TestCase {
         runner.registerServlet("*.jsp", "org.apache.jasper.servlet.JspServlet", params);
 
         // setup context
-        hm = MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
+        websiteHM = MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
                 "/foo/bar@type=mgnl:content",
                 "/foo/bar/MetaData@type=mgnl:metadata",
                 "/foo/bar/MetaData/mgnl\\:template=testPageTemplate",
@@ -183,7 +185,7 @@ public abstract class AbstractJspTest extends TestCase {
         accessManager = createMock(AccessManager.class);
         // for finer-but-not-too-verbose checks, use the contains() constraint
         expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
-        hm.setAccessManager(accessManager);
+        websiteHM.setAccessManager(accessManager);
 
         final AggregationState aggState = new AggregationState();
         setupAggregationState(aggState);
@@ -214,6 +216,7 @@ public abstract class AbstractJspTest extends TestCase {
         final AbstractAuthoringUiComponentTest.TestableTemplateManager tman = new AbstractAuthoringUiComponentTest.TestableTemplateManager();
         tman.register(t1);
         ComponentsTestUtil.setInstance(TemplateManager.class, tman);
+        ComponentsTestUtil.setInstance(RenderingEngine.class, new DefaultRenderingEngine());
 
         req = createMock(HttpServletRequest.class);
         // cheating - this mock request is NOT the same that's used by htmlunit to do the ACTUAL request
@@ -229,7 +232,7 @@ public abstract class AbstractJspTest extends TestCase {
         expect(ctx.getRequest()).andStubReturn(req);
         MgnlContext.setInstance(ctx);
 
-        setupExpectations(ctx, req, accessManager);
+        setupExpectations(ctx, websiteHM, req, accessManager);
 
         replay(ctx, req, accessManager);
     }
@@ -238,7 +241,7 @@ public abstract class AbstractJspTest extends TestCase {
 
     protected abstract void setupAggregationState(AggregationState aggState) throws RepositoryException;
 
-    protected abstract void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager);
+    protected abstract void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager);
 
     @Override
     public void tearDown() throws Exception {
