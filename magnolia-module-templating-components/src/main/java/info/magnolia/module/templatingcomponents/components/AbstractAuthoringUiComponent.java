@@ -138,7 +138,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         } else {
             renderable = paragraphManagerManager.getParagraphDefinition(templateName);
         }
-        if (renderable != null) {
+        if (renderable != null && renderable.getI18nBasename() != null) {
             return renderable.getI18nBasename();
         } else {
             return DEFAULT_I18N_BASENAME;
@@ -148,7 +148,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
     protected String getMessage(String basename, String key) {
         String s = MessagesManager.getMessages(basename).getWithDefault(key, key);
         if (key.equals(s)) {
-            // fallback to default bundle, and working around DefaultMessagesImpl.get()'s behaviour
+            // fallback to our default bundle if the specific one did not contain the key - and working around DefaultMessagesImpl.get()'s behaviour of adding ??? around unknown keys
             s = MessagesManager.getMessages(DEFAULT_I18N_BASENAME).getWithDefault(key, key);
         }
         return s;

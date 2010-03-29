@@ -180,8 +180,7 @@ public class BarMain extends Bar {
      */
     public void setButtonPreview() {
         Button b = new Button();
-        String str = MessagesManager.get("buttons.preview"); //$NON-NLS-1$
-        b.setLabel("&laquo; " + str); //$NON-NLS-1$
+        b.setLabel(MessagesManager.get("buttons.preview")); //$NON-NLS-1$
         b.setOnclick("mgnlPreview(true);"); //$NON-NLS-1$
         this.setButtonPreview(b);
     }
@@ -199,8 +198,7 @@ public class BarMain extends Bar {
      */
     public void setButtonEditView() {
         Button b = new Button();
-        String str = MessagesManager.get("buttons.preview.hidden");
-        b.setLabel("&raquo;" + str); //$NON-NLS-1$
+        b.setLabel(MessagesManager.get("buttons.preview.hidden")); //$NON-NLS-1$
         b.setOnclick("mgnlPreview(false);"); //$NON-NLS-1$
         this.setButtonEditView(b);
     }
