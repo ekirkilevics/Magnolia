@@ -42,6 +42,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockHierarchyManager;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class PageEditBarTagTest extends AbstractJspTest {
     private static final String EXPECTED_ONCLICK_FMT = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','','','%s','null',null, null, null, 'en_US');";
+    private static final String DEFAULT_PREVIEW_LABEL = StringEscapeUtils.unescapeHtml("&laquo;") + " Preview";
 
     @Override
     protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
@@ -72,7 +74,8 @@ public class PageEditBarTagTest extends AbstractJspTest {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='basic']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(3, spans.size());
-            assertEquals("Preview", spans.get(0).getTextContent());
+
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
             assertEquals("AdminCentral", spans.get(1).getTextContent());
             assertEquals("Properties", spans.get(2).getTextContent());
 
@@ -87,7 +90,7 @@ public class PageEditBarTagTest extends AbstractJspTest {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='customLabel']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(3, spans.size());
-            assertEquals("Preview", spans.get(0).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
             assertEquals("AdminCentral", spans.get(1).getTextContent());
             assertEquals("Incredibly custom Foo label", spans.get(2).getTextContent());
 
@@ -102,7 +105,7 @@ public class PageEditBarTagTest extends AbstractJspTest {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='dialogFromDef']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(3, spans.size());
-            assertEquals("Preview", spans.get(0).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
             assertEquals("AdminCentral", spans.get(1).getTextContent());
             assertEquals("Properties", spans.get(2).getTextContent());
 
@@ -117,14 +120,14 @@ public class PageEditBarTagTest extends AbstractJspTest {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='noDialog']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(2, spans.size());
-            assertEquals("Preview", spans.get(0).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
             assertEquals("AdminCentral", spans.get(1).getTextContent());
         }
         {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='dialogFromIncompleTpl']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(2, spans.size());
-            assertEquals("Preview", spans.get(0).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
             assertEquals("AdminCentral", spans.get(1).getTextContent());
         }
     }
