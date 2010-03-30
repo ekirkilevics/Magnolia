@@ -83,7 +83,7 @@ public class EhCacheFactoryTest extends TestCase {
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
-        // TODO: clear the SystemProperty ... oops, we do not expose remove() and clear() ops
+        SystemProperty.getProperties().clear();
     }
 
     /**
@@ -99,7 +99,7 @@ public class EhCacheFactoryTest extends TestCase {
     /**
      * Simple test of item eviction
      */
-    public void testAddMoreThenSize() throws Exception {
+    public void testAddMoreThanMaxSize() throws Exception {
         // make sure there's only one item allowed
         assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());
 
@@ -156,11 +156,11 @@ public class EhCacheFactoryTest extends TestCase {
 
         log.debug("verify");
         // thread2
-        Object result = task.get(2, TimeUnit.SECONDS);
+        Object result = task.get(5, TimeUnit.SECONDS);
         log.debug("" + result);
 
         // thread3
-        Object result2 = task2.get(2, TimeUnit.SECONDS);
+        Object result2 = task2.get(5, TimeUnit.SECONDS);
         log.debug("" + result2);
 
         assertNotNull(result);
@@ -171,7 +171,7 @@ public class EhCacheFactoryTest extends TestCase {
     /**
      * Ensure cache unblocks and returns proper item to all the threads waiting for the item even if such is soon after evicted from the cache.
      */
-    public void testBlockingMoreThenMaxSize() throws Exception {
+    public void testBlockingAfterAddingMoreThanMaxSize() throws Exception {
         // make sure there's only one item allowed
         assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());
 
@@ -215,11 +215,11 @@ public class EhCacheFactoryTest extends TestCase {
 
         log.debug("verify");
         // thread2
-        Object result = task.get(2, TimeUnit.SECONDS);
+        Object result = task.get(5, TimeUnit.SECONDS);
         log.debug("" + result);
 
         // thread3
-        Object result2 = task2.get(2, TimeUnit.SECONDS);
+        Object result2 = task2.get(5, TimeUnit.SECONDS);
         log.debug("" + result2);
         assertNotNull(result);
         assertNotNull(result2);
