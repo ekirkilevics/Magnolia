@@ -83,6 +83,11 @@ public class Breadcrumb extends TagSupport {
     private boolean excludeCurrent;
 
     /**
+     * Add current page but without links.
+     */
+    private boolean nolinkCurrent;
+
+    /**
      * Output as link. (default: true)
      */
     private boolean link = true;
@@ -108,8 +113,8 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * At which level to start. Often you will want to omit top levels, e.g. if you split your site into multiple
-     * languages.
+     * At which level to start.
+     * Often you will want to omit top levels, e.g. if you split your site into multiple languages.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStartLevel(String startLevel) {
@@ -134,6 +139,14 @@ public class Breadcrumb extends TagSupport {
      */
     public void setExcludeCurrent(boolean excludeCurrent) {
         this.excludeCurrent = excludeCurrent;
+    }
+
+    /**
+     * Add current page but without links. Defaults to false (also current page is linked)
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setNolinkCurrent(boolean nolinkCurrent) {
+        this.nolinkCurrent = nolinkCurrent;
     }
 
     /**
@@ -195,7 +208,7 @@ public class Breadcrumb extends TagSupport {
                     if (addedcount != 0) {
                         out.print(StringUtils.defaultString(this.delimiter, " &gt; ")); //$NON-NLS-1$
                     }
-                    if (this.link) {
+                    if (this.link && !(endLevel == j && nolinkCurrent)) {
                         out.print("<a href=\""); //$NON-NLS-1$
                         out.print(request.getContextPath());
                         out.print(page.getHandle());
@@ -210,7 +223,7 @@ public class Breadcrumb extends TagSupport {
 
                     }
                     out.print(title);
-                    if (this.link) {
+                    if (this.link && !(endLevel == j && nolinkCurrent)) {
                         out.print("</a>"); //$NON-NLS-1$
                     }
                     addedcount++;
@@ -234,6 +247,7 @@ public class Breadcrumb extends TagSupport {
         this.startLevel = 1;
         this.delimiter = null;
         this.excludeCurrent = false;
+        this.nolinkCurrent = false;
         this.link = true;
         this.hideProperty = null;
         this.titleProperty = null;
