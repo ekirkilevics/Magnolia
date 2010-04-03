@@ -54,7 +54,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Outputs "breadcrumbs" with links to parents of the current page.
  * @jsp.tag name="breadcrumb" body-content="empty"
- *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -109,8 +108,8 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * At which level to start.
-     * Often you will want to omit top levels, e.g. if you split your site into multiple languages.
+     * At which level to start. Often you will want to omit top levels, e.g. if you split your site into multiple
+     * languages.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStartLevel(String startLevel) {
@@ -129,8 +128,8 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Exclude the current (active) page from the breadcrumb. Defaults to false.
-     * If true, the current (active) page is not included in breadcrumb.
+     * Exclude the current (active) page from the breadcrumb. Defaults to false. If true, the current (active) page is
+     * not included in breadcrumb.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setExcludeCurrent(boolean excludeCurrent) {
@@ -146,8 +145,7 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Name for a page property which holds the title to display in breadcrumbs.
-     * If empty, the standard title is used.
+     * Name for a page property which holds the title to display in breadcrumbs. If empty, the standard title is used.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTitleProperty(String titleProperty) {
@@ -163,6 +161,7 @@ public class Breadcrumb extends TagSupport {
     }
 
     public int doStartTag() throws JspException {
+
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content actpage = Resource.getCurrentActivePage();
         int endLevel = 0;
@@ -173,6 +172,7 @@ public class Breadcrumb extends TagSupport {
             if (this.excludeCurrent) {
                 endLevel--;
             }
+            int addedcount = 0;
 
             JspWriter out = pageContext.getOut();
             for (int j = this.startLevel; j <= endLevel; j++) {
@@ -191,26 +191,29 @@ public class Breadcrumb extends TagSupport {
                     title = page.getTitle();
                 }
 
-                if (j != this.startLevel) {
-                    out.print(StringUtils.defaultString(this.delimiter, " &gt; ")); //$NON-NLS-1$
-                }
-                if (this.link) {
-                    out.print("<a href=\""); //$NON-NLS-1$
-                    out.print(request.getContextPath());
-                    out.print(page.getHandle());
-                    out.print("."); //$NON-NLS-1$
-                    out.print(ServerConfiguration.getInstance().getDefaultExtension());
-                    if (actpage.getHandle().equals(page.getHandle())) {
-                        out.print("\" class=\""); //$NON-NLS-1$
-                        out.print(activeCss);
+                if (StringUtils.isNotEmpty(title)) {
+                    if (addedcount != 0) {
+                        out.print(StringUtils.defaultString(this.delimiter, " &gt; ")); //$NON-NLS-1$
                     }
+                    if (this.link) {
+                        out.print("<a href=\""); //$NON-NLS-1$
+                        out.print(request.getContextPath());
+                        out.print(page.getHandle());
+                        out.print("."); //$NON-NLS-1$
+                        out.print(ServerConfiguration.getInstance().getDefaultExtension());
+                        if (actpage.getHandle().equals(page.getHandle())) {
+                            out.print("\" class=\""); //$NON-NLS-1$
+                            out.print(activeCss);
+                        }
 
-                    out.print("\">"); //$NON-NLS-1$
+                        out.print("\">"); //$NON-NLS-1$
 
-                }
-                out.print(title);
-                if (this.link) {
-                    out.print("</a>"); //$NON-NLS-1$
+                    }
+                    out.print(title);
+                    if (this.link) {
+                        out.print("</a>"); //$NON-NLS-1$
+                    }
+                    addedcount++;
                 }
             }
         }
