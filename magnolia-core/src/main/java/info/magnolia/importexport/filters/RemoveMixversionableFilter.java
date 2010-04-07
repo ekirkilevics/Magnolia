@@ -47,8 +47,8 @@ import java.util.List;
 /**
  * A filter that removed "mix:versionable" from jcr:mixinTypes while importing
  * xml files. Can be used to automatically adapt version 3.5 xml files to
- * magnolia 3.6 during bootstrap or activation. Not enabled by default, you need
- * to modify DataTransporter in order to use it (see the comments in
+ * magnolia 3.6 during bootstrap or activation. You need
+ * to modify DataTransporter in order to disable it (see the comments in
  * DataTransporter.importXmlStream())
  * @author fgiust
  * @version $Revision$ ($Author$)
