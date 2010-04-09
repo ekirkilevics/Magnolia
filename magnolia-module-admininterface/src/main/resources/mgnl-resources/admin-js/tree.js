@@ -302,11 +302,19 @@
             // for each stylesheet included
             var treeColumnClasses=new Object();
 
-            //to do: define break point!
+            var columnCSSClassFound = false;
             for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
                 mgnlDebug("mgnlTree.resize: styleSheets[elem0].href = " + document.styleSheets[elem0].href, "tree");
+                var styleSheet = document.styleSheets[elem0];
 
-                var rules=document.styleSheets[elem0][rulesKey];
+                try{
+                  var rules=styleSheet[rulesKey];
+                }
+                catch(e){
+                    // in some cases we might not be able to access the style sheets
+                    // this is not problematic as we only want to change the inlined styles
+                  continue;
+                }
                 mgnlDebug("mgnlTree.resize: rules", "tree", rules);
 
                 for (var elem1=0; elem1<rules.length; elem1++){
@@ -315,8 +323,14 @@
                     // in safar 1.3 the selectorText is in lower case
                     if (cssClass && cssClass.toLowerCase().indexOf("." + this.name.toLowerCase() + "cssclasscolumn")!=-1){
                         treeColumnClasses[cssClass.toLowerCase()]=rules[elem1];
+                        columnCSSClassFound = true;
                     }
                 }
+            }
+
+            // this ensures that we don't silently fail but should never happen
+            if(!columnCSSClassFound){
+              throw new Error("Can't find column CSS class!");
             }
 
             mgnlDebug("mgnlTree.resize: treeColumnClasses", "tree", treeColumnClasses);
