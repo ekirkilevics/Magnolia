@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Content.ContentFilter;
 
 import javax.jcr.RepositoryException;
 import java.util.ArrayList;
@@ -50,18 +51,34 @@ import java.util.List;
  */
 public class SiblingsHelper {
     /**
-     * Instanciates a SiblingsHelper representing the siblings of the given node and of the same type.
+     * Instantiates a SiblingsHelper representing the siblings of the given node and of the same type.
      */
     public static SiblingsHelper of(Content node) throws RepositoryException {
         return new SiblingsHelper(node, filterForTypeOf(node));
     }
 
     /**
-     * Instanciates a SiblingsHelper representing the children of the given node,
-     * where the current node is the first children of the same type as its parent.
+     * Instantiates a SiblingsHelper representing the children of the given node,
+     * where the current node is the first child of the same type as its parent.
      */
     public static SiblingsHelper childrenOf(Content parent) throws RepositoryException {
-        final NodeTypeFilter filter = filterForTypeOf(parent);
+        return childrenOf(parent, parent.getItemType());
+    }
+
+    /**
+     * Instantiates a SiblingsHelper representing the children of the given node,
+     * where the current node is the first child of given type.
+     */
+    public static SiblingsHelper childrenOf(Content parent, ItemType childType) throws RepositoryException {
+        final NodeTypeFilter filter = new NodeTypeFilter(childType);
+        return childrenOf(parent, filter);
+    }
+
+    /**
+     * Instantiates a SiblingsHelper representing the children of the given node,
+     * where the current node is the first child from all that pass the filter.
+     */
+    public static SiblingsHelper childrenOf(Content parent, ContentFilter filter) throws RepositoryException {
         final Collection<Content> children = parent.getChildren(filter);
         if (children.size() < 1) {
             throw new IllegalStateException(parent + " has no children for " + filter);
@@ -108,6 +125,18 @@ public class SiblingsHelper {
     public Content prev() {
         // TODO : check if hasPrevious();
         this.currentIndex = currentIndex - 1;
+        this.current = siblings.get(currentIndex);
+        return current;
+    }
+
+    public Content first() {
+        this.currentIndex = 0;
+        this.current = siblings.get(currentIndex);
+        return current;
+    }
+
+    public Content last() {
+        this.currentIndex = siblings.size() - 1;
         this.current = siblings.get(currentIndex);
         return current;
     }
