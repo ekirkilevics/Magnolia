@@ -56,4 +56,24 @@ public class NodeTypeFilter implements ContentFilter {
     public String toString() {
         return "NodeTypeFilter for type " + systemName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || !(obj instanceof NodeTypeFilter)) {
+            return false;
+        }
+
+        NodeTypeFilter that = (NodeTypeFilter) obj;
+        return this.systemName == null ? that.systemName == null : this.systemName.equals(that.systemName);
+    }
+
+    @Override
+    public int hashCode() {
+        // any prime's good default
+        return this.systemName == null ? 23 : this.systemName.hashCode();
+    }
 }
