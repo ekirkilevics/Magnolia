@@ -104,7 +104,7 @@ public class RenderableDefinitionModelTest extends TestCase {
 
     // TODO -- this could be moved elsewhere for reuse, if we let the model factory be a parameter of the test method for instance
     public static void doTestFreemarkerRendering(String expectedResult, String testTemplate, Map root) throws TemplateException, IOException {
-        final MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper() {
+        final MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(null /* not needed in the context of this test*/) {
             protected ModelFactory getModelFactory(Class clazz) {
                 if (RenderableDefinition.class.isAssignableFrom(clazz)) {
                     return new RenderableDefinitionModel.Factory();
