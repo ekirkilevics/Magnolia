@@ -573,12 +573,10 @@ public class ModuleManagerImpl implements ModuleManager {
 
         if (nodeTypeFile != null) {
             // register nodetypes
-            Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
-            try {
-                provider.registerNodeTypes(nodeTypeFile);
-            }
-            catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
+            registerNodeTypeFile(repositoryName, nodeTypeFile);
+            // if this repo is not the default one, register nodetypes on default repo (MAGNOLIA-3189)
+            if (!DEFAULT_REPOSITORY_NAME.equals(repositoryName)) {
+                registerNodeTypeFile(DEFAULT_REPOSITORY_NAME, nodeTypeFile);
             }
         }
 
@@ -598,5 +596,20 @@ public class ModuleManagerImpl implements ModuleManager {
             }
         }
 
+    }
+    
+    /**
+     * Register nodeType file in repository
+     * @param repositoryName repository name
+     * @param nodeTypeFile nodeType file
+     */
+    private void registerNodeTypeFile(String repositoryName, String nodeTypeFile) {
+        Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
+        try {
+            provider.registerNodeTypes(nodeTypeFile);
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }
