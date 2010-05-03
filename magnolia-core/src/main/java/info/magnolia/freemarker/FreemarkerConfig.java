@@ -74,7 +74,7 @@ public class FreemarkerConfig {
     private final List<TemplateLoader> templateLoaders;
     private final Map<String, TemplateModel> sharedVariables;
 
-    private MagnoliaObjectWrapper objectWrapper;
+    private ObjectWrapper objectWrapper;
     private TemplateLoader multiTL;
 
     public FreemarkerConfig() {
@@ -85,9 +85,13 @@ public class FreemarkerConfig {
 
     public ObjectWrapper getObjectWrapper() {
         if (objectWrapper == null) {
-            objectWrapper = Components.getComponentProvider().newInstance(MagnoliaObjectWrapper.class);
+            objectWrapper = newObjectWrapper();
         }
         return objectWrapper;
+    }
+
+    protected ObjectWrapper newObjectWrapper() {
+        return new MagnoliaObjectWrapper(this);
     }
 
     public TemplateLoader getTemplateLoader() {

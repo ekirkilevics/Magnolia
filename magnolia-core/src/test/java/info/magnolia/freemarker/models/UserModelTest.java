@@ -48,7 +48,7 @@ import static org.easymock.EasyMock.createMock;
 public class UserModelTest extends TestCase {
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
         final User u = createMock(User.class);
-        final UserModel model = new UserModel(u, new MagnoliaObjectWrapper());
+        final UserModel model = new UserModel(u, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));
 
         final Object unwrapped = DeepUnwrap.unwrap(model);
         assertTrue(unwrapped instanceof User);

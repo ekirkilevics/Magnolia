@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 public class BinaryNodeDataModelTest extends TestCase {
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
         final NodeData c = new BinaryMockNodeData("test");
-        final BinaryNodeDataModel model = new BinaryNodeDataModel(c, new MagnoliaObjectWrapper());
+        final BinaryNodeDataModel model = new BinaryNodeDataModel(c, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));
 
         final Object unwrapped = DeepUnwrap.unwrap(model);
         assertTrue(unwrapped instanceof NodeData);

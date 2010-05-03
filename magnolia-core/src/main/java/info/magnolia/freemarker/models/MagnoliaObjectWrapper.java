@@ -64,8 +64,11 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
         add(ContextModelFactory.INSTANCE);
     }};
 
-    public MagnoliaObjectWrapper() {
+    private final FreemarkerConfig freemarkerConfig;
+
+    public MagnoliaObjectWrapper(FreemarkerConfig freemarkerConfig) {
         super();
+        this.freemarkerConfig = freemarkerConfig;
     }
 
     /**
@@ -95,16 +98,9 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
      * @see info.magnolia.freemarker.FreemarkerConfig
      */
     protected ModelFactory getModelFactory(Class clazz) {
-        ModelFactory modelFactory = null;
-
-        final FreemarkerConfig freemarkerConfig = FreemarkerConfig.getInstance();
-        if (freemarkerConfig != null) {
-            final List<MagnoliaModelFactory> registeredModelFactories = freemarkerConfig.getModelFactories();
-            modelFactory = getModelFactory(clazz, registeredModelFactories);
-        } else {
-            // TODO - this should not be necessary - see MAGNOLIA-2533
-            log.debug("FreemarkerConfig is not ready yet.");
-        }
+        final List<MagnoliaModelFactory> registeredModelFactories = freemarkerConfig.getModelFactories();
+        ModelFactory modelFactory = getModelFactory(clazz, registeredModelFactories);
+        
         if (modelFactory == null) {
             modelFactory = getModelFactory(clazz, DEFAULT_MODEL_FACTORIES);
         }

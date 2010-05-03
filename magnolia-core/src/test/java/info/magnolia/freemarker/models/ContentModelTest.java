@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 public class ContentModelTest extends TestCase {
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
         final Content c = new MockContent("test");
-        final ContentModel model = new ContentModel(c, new MagnoliaObjectWrapper());
+        final ContentModel model = new ContentModel(c, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));
 
         final Object unwrapped = DeepUnwrap.unwrap(model);
         assertTrue(unwrapped instanceof Content);
