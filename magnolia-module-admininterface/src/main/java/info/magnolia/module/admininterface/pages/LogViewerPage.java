@@ -121,17 +121,24 @@ public class LogViewerPage extends TemplatedMVCHandler {
         return urls;
     }
 
+    public String refresh() {
+        try {
+            setMaxNumLinesPerPage(Integer.parseInt(this.getRequest().getParameter("maxNumLinesPerPage")));
+        } catch (NumberFormatException e) {
+            // ignore
+        }
+        displayFileContent();
+        return VIEW_SHOW;
+    }
+
     public String next() {
+        this.currentPosition = Math.min(this.currentPosition + this.maxNumLinesPerPage, this.fileSizeInLines - 1);
         displayFileContent();
         return VIEW_SHOW;
     }
 
     public String previous() {
-        if (this.currentPosition >= this.maxNumLinesPerPage * 2) {
-            this.currentPosition -= this.maxNumLinesPerPage * 2;
-        } else {
-            this.currentPosition = 0;
-        }
+        this.currentPosition = Math.max(0, this.currentPosition - this.maxNumLinesPerPage);
         displayFileContent();
         return VIEW_SHOW;
     }
@@ -144,8 +151,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
 
     public String end() {
         if (this.fileSizeInLines > this.maxNumLinesPerPage) {
-            this.currentPosition = this.fileSizeInLines
-                    - this.maxNumLinesPerPage;
+            this.currentPosition = this.fileSizeInLines - (this.fileSizeInLines % this.maxNumLinesPerPage);
         } else {
             currentPosition = 0;
         }
@@ -212,7 +218,6 @@ public class LogViewerPage extends TemplatedMVCHandler {
                         numLines++;
                     }
                     if (numLines >= this.maxNumLinesPerPage) {
-                        this.currentPosition = input.getLineNumber() + 1;
                         break;
                     }
                 }
@@ -244,15 +249,14 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
     private void setFieldValues() {
-        this.pageNumber = (this.currentPosition / this.maxNumLinesPerPage) ;
-        this.totalPages = (this.fileSizeInLines / this.maxNumLinesPerPage) ;
-        if(this.pageNumber == 0) {
+        this.pageNumber = (this.currentPosition / this.maxNumLinesPerPage) + 1;
+        this.totalPages = (this.fileSizeInLines / this.maxNumLinesPerPage) + 1;
+        long mod = this.currentPosition % this.maxNumLinesPerPage;
+        if (mod > 0) {
+            // someone switched page size in between the exact multiples of the pages or there is only one page in total
             this.pageNumber++;
-        }
-        if(this.totalPages == 0) {
             this.totalPages++;
         }
-
     }
 
     /* gets the number of lines for pagination */
@@ -315,17 +319,15 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
     public void setCurrentPosition(long currentPosition) {
-        // if number is too high does not work as expected
-        this.currentPosition = currentPosition;
+        // make sure number never exceeds bounds
+        this.currentPosition = Math.max(0, Math.min(currentPosition, this.fileSizeInLines - (this.fileSizeInLines % this.maxNumLinesPerPage)));
     }
 
     public long getFileSizeInLines() {
-        // if number is too high does not work as expected
         return this.fileSizeInLines;
     }
 
     public void setFileSizeInLines(long fileSizeInLines) {
-        // if number is too high does not work as expected
         this.fileSizeInLines = fileSizeInLines;
     }
 
@@ -339,6 +341,10 @@ public class LogViewerPage extends TemplatedMVCHandler {
 
     public long getMaxNumLinesPerPage() {
         return this.maxNumLinesPerPage;
+    }
+
+    public void setMaxNumLinesPerPage(long maxNumLinesPerPage) {
+        this.maxNumLinesPerPage = maxNumLinesPerPage;
     }
 
 }

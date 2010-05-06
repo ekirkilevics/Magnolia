@@ -57,12 +57,17 @@ function sendCommand(formName, commandName) {
           <input type="button" value="&lt;" onclick="sendCommand('pagination','previous');" class="mgnlControlButton" />
           <input type="button" value="&gt;" onclick="sendCommand('pagination','next');" class="mgnlControlButton" />
           <input type="button" value="&gt;&gt;" onclick="sendCommand('pagination','end');" class="mgnlControlButton" />
-
+          <span style="padding-left: 250px">Page size:
+            <select name="maxNumLinesPerPage" onchange="sendCommand('pagination','refresh');">
+              <option value="50" [#if this.maxNumLinesPerPage == 50]selected[/#if] >50</option>
+              <option value="100" [#if this.maxNumLinesPerPage == 100]selected[/#if] >100</option>
+              <option value="500" [#if this.maxNumLinesPerPage == 500]selected[/#if] >500</option>
+            </select>
+          </span>
         </div>
         </form>
         <div class="pageframe">
-
-          ${this.text}
+          <pre>${this.text}</pre>
         </div>
     </td>
     </tr>
