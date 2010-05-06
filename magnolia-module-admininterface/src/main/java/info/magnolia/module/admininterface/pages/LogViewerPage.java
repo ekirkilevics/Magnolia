@@ -62,19 +62,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LogViewerPage extends TemplatedMVCHandler {
-    private static final Logger log = LoggerFactory
-            .getLogger(LogViewerPage.class);
+    private static final Logger log = LoggerFactory.getLogger(LogViewerPage.class);
 
-    private final String LOGS_FOLDER = "magnolia.logs.dir";
+    private final static String LOGS_FOLDER_PROPERTY = "magnolia.logs.dir";
 
-    public LogViewerPage(String name, HttpServletRequest request,
-            HttpServletResponse response) {
+    public LogViewerPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
         // initialize the folder variable
-        String temp = SystemProperty.getProperty(LOGS_FOLDER);
-        if (temp != null)
+        String temp = SystemProperty.getProperty(LOGS_FOLDER_PROPERTY);
+        if (temp != null) {
             logsFolder = Path.getAbsoluteFileSystemPath(temp);
+        }
     }
 
     private String logsFolder = "";
@@ -107,9 +106,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
         File logDir = new File(this.logsFolder);
         Collection files = null;
         if (logDir.exists()) {
-            files = FileUtils.listFiles(logDir, new WildcardFileFilter("*.log*")
-            , new TrueFileFilter() {
-            });
+            files = FileUtils.listFiles(logDir, new WildcardFileFilter("*.log*"), TrueFileFilter.TRUE);
 
             Iterator filesIterator = files.iterator();
             String name = "";
@@ -163,8 +160,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
         // set mime/type
         File file = getFile();
         this.getResponse().setContentType("html/text");
-        this.getResponse().setHeader("Content-Disposition",
-                "attachment; filename=" + fileName);
+        this.getResponse().setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
         FileInputStream is = new FileInputStream(file);
         this.getResponse().setContentLength((int) file.length());
@@ -180,8 +176,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
         return "";
     }
 
-    private void sendUnCompressed(java.io.InputStream is,
-            HttpServletResponse res) throws Exception {
+    private void sendUnCompressed(java.io.InputStream is, HttpServletResponse res) throws Exception {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;
