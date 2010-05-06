@@ -56,6 +56,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,7 +207,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
                 while ((line = input.readLine()) != null) {
 
                     if (input.getLineNumber() >= this.currentPosition) {
-                        writer.write(line);
+                        writer.write(StringEscapeUtils.escapeHtml(line));
                         writer.write("<br/>");
                         numLines++;
                     }
