@@ -72,7 +72,7 @@ public class PageHandlerManager extends ObservedManager {
      * @param name
      * @param request
      * @param response
-     * @returnn an instance of the handlers
+     * @return an instance of the handlers
      */
     public PageMVCHandler getPageHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
