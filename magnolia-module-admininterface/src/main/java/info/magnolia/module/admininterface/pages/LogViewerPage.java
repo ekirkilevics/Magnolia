@@ -119,11 +119,6 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
     public String refresh() {
-        try {
-            setMaxNumLinesPerPage(Integer.parseInt(this.getRequest().getParameter("maxNumLinesPerPage")));
-        } catch (NumberFormatException e) {
-            // ignore
-        }
         displayFileContent();
         return VIEW_SHOW;
     }
