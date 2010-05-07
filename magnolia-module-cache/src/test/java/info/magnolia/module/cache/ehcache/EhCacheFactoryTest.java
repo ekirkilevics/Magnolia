@@ -39,8 +39,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.lf5.LogLevel;
-import org.safehaus.uuid.ext.Log4jLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
