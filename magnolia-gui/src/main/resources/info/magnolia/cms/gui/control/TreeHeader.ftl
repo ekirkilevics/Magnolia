@@ -4,7 +4,7 @@
         .${tree.javascriptTree}CssClassColumn${i}{
             position:absolute;
             left:0px;
-            clip:rect(0 0 100px 0);
+            clip:rect(0, 0, 100px, 0);
             cursor:default;
             padding-left:8px;
         }

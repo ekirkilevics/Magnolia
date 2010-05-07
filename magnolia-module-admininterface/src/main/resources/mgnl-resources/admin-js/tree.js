@@ -347,7 +347,7 @@
                         cssClassObj.style.left=left + 'px';
                     }
                     if (!columnNumber || elem==columnNumber || elem==columnNumber-1){
-                        cssClassObj.style.clip="rect(0 " + (columnWidth-8) + "px 100px 0)";
+                        cssClassObj.style.clip="rect(0, " + (columnWidth-8) + "px, 100px, 0)";
                     }
                     this.columns[elem].width=columnWidth;
 
