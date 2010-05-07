@@ -125,32 +125,34 @@ public class EhCacheFactoryTest extends TestCase {
      * Ensure that cache unblocks all threads waiting for item to be cached.
      */
     public void testBlocking() throws Exception {
+        // block forever, making sure taskX.get() will fail our tests if blockage occurs
+        factory.setBlockingTimeout(0);
         final Cache ehCache = factory.getCache("test3");
-        // 1st call
+        // 1st call - place mutex
         Object entry = ehCache.get("blah");
         log.debug("On first get: {}", entry );
         assertNull(entry);
         Executor ex = Executors.newFixedThreadPool(2);
 
-        // 2nd call
-        FutureTask<Object> task = new FutureTask<Object>(new Callable<Object>() {
+        // 2nd call - wait until mutex is gone and entry is available
+        FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
             public Object call() throws Exception {
                 log.debug("2nd get called");
                 Object res = ehCache.get("blah");
                 log.debug("2nd unblocked");
                 return res;
             }});
-        ex.execute(task);
+        ex.execute(task2);
 
-        // 3rd call
-        FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
+        // 3rd call - wait until mutex is gone and entry is available
+        FutureTask<Object> task3 = new FutureTask<Object>(new Callable<Object>() {
             public Object call() throws Exception {
                 log.debug("3rd get called");
                 Object res = ehCache.get("blah");
                 log.debug("3rd unblocked");
                 return res;
             }});
-        ex.execute(task2);
+        ex.execute(task3);
 
         log.debug("Put");
         // add something in the main thread
@@ -160,11 +162,11 @@ public class EhCacheFactoryTest extends TestCase {
 
         log.debug("verify");
         // thread2
-        Object result = task.get(5, TimeUnit.SECONDS);
+        Object result = task2.get(5, TimeUnit.SECONDS);
         log.debug("2nd get: {]", result);
 
         // thread3
-        Object result2 = task2.get(5, TimeUnit.SECONDS);
+        Object result2 = task3.get(5, TimeUnit.SECONDS);
         log.debug("3rd get: {}", result2);
 
         assertNotNull(result);
@@ -179,7 +181,7 @@ public class EhCacheFactoryTest extends TestCase {
     public void testBlockingAfterAddingMoreThanMaxSize() throws Exception {
         // make sure there's only one item allowed
         assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());
-
+        // set timeout shorter then timeout on taskX.get()
         factory.setBlockingTimeout(1000);
         final Cache ehCache = factory.getCache("test4");
         // 1st call - place mutex
@@ -195,7 +197,7 @@ public class EhCacheFactoryTest extends TestCase {
         // assertEquals("boo", ehCache.get("blah"));
 
         // instead make 2nd call on separate thread - cache entry should exist
-        FutureTask<Object> task = new FutureTask<Object>(new Callable<Object>() {
+        FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
 
             public Object call() throws Exception {
                 log.info("2nd get called");
@@ -203,8 +205,8 @@ public class EhCacheFactoryTest extends TestCase {
                 log.info("2nd not blocked");
                 return res;
             }});
-        ex.execute(task);
-        Object result = task.get(5, TimeUnit.SECONDS);
+        ex.execute(task2);
+        Object result = task2.get(5, TimeUnit.SECONDS);
         log.info("2nd get: {}", result);
         assertEquals("boo", result);
 
@@ -216,22 +218,24 @@ public class EhCacheFactoryTest extends TestCase {
         assertNull(entry);
 
         // 3rd call - after evicted and before cached again == > block forever
-        FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
+        FutureTask<Object> task3 = new FutureTask<Object>(new Callable<Object>() {
 
             public Object call() throws Exception {
                 log.info("3rd get called");
+                Object res = "futureDummyNotModifiedByCacheGetCall";
                 try {
-                    Object res = ehCache.get("blah");
+                    res = ehCache.get("blah");
+                    fail("should not get here. Cache config is wrong!");
                 } catch (LockTimeoutException e) {
                     // expected
                 }
                 log.info("3rd unblocked");
-                return null;
+                return res;
             }});
-        ex.execute(task2);
+        ex.execute(task3);
         // thread3 - since mutex on "blah" is still in place, the call should end with LTE and return null
-        Object result2 = task2.get(5, TimeUnit.SECONDS);
+        Object result2 = task3.get(5, TimeUnit.SECONDS);
         log.info("3rd get: {}", result2);
-        assertNull(result2);
+        assertEquals("futureDummyNotModifiedByCacheGetCall", result2);
     }
 }
