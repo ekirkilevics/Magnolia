@@ -84,23 +84,12 @@ public class EhCacheFactory implements CacheFactory {
         this.diskStorePath = diskStorePath;
     }
 
-    public void start() {
-        final Configuration cfg = ConfigurationFactory.parseConfiguration();
-        cfg.setSource("ehcache defaults");
-        if (defaultCacheConfiguration != null) {
-            cfg.setDefaultCacheConfiguration(defaultCacheConfiguration);
-            cfg.setSource(cfg.getConfigurationSource() + " + Magnolia-based defaultCacheConfiguration");
-        }
-        if (diskStorePath != null) {
-            cfg.getDiskStoreConfiguration().setPath(diskStorePath);
-            cfg.setSource(cfg.getConfigurationSource() + " + Magnolia-based diskStorePath");
-        }
-        cacheManager = new CacheManager(cfg);
+    public int getBlockingTimeout() {
+        return blockingTimeout;
+    }
 
-        // TODO cacheManager.setName(...magnolia instance name ...);
-
-        final MBeanServer mBeanServer = MBeanUtil.getMBeanServer();
-        ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
+    public void setBlockingTimeout(int blockingTimeout) {
+        this.blockingTimeout = blockingTimeout;
     }
 
     public List getCacheNames() {
@@ -128,6 +117,25 @@ public class EhCacheFactory implements CacheFactory {
         }
     }
 
+    public void start() {
+        final Configuration cfg = ConfigurationFactory.parseConfiguration();
+        cfg.setSource("ehcache defaults");
+        if (defaultCacheConfiguration != null) {
+            cfg.setDefaultCacheConfiguration(defaultCacheConfiguration);
+            cfg.setSource(cfg.getConfigurationSource() + " + Magnolia-based defaultCacheConfiguration");
+        }
+        if (diskStorePath != null) {
+            cfg.getDiskStoreConfiguration().setPath(diskStorePath);
+            cfg.setSource(cfg.getConfigurationSource() + " + Magnolia-based diskStorePath");
+        }
+        cacheManager = new CacheManager(cfg);
+
+        // TODO cacheManager.setName(...magnolia instance name ...);
+
+        final MBeanServer mBeanServer = MBeanUtil.getMBeanServer();
+        ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
+    }
+
     public void stop() {
         cacheManager.shutdown();
     }
@@ -135,13 +143,4 @@ public class EhCacheFactory implements CacheFactory {
     public CacheManager getWrappedCacheManager() {
         return cacheManager;
     }
-
-    public int getBlockingTimeout() {
-        return blockingTimeout;
-    }
-
-    public void setBlockingTimeout(int blockingTimeout) {
-        this.blockingTimeout = blockingTimeout;
-    }
-
 }
