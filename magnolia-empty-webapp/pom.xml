@@ -30,6 +30,11 @@
           <artifactId>magnolia-module-samples</artifactId>
           <version>${project.version}</version>
         </dependency>
+        <dependency>
+          <groupId>info.magnolia</groupId>
+          <artifactId>magnolia-module-templating-components</artifactId>
+          <version>${project.version}</version>
+        </dependency>
       </dependencies>
     </profile>
   </profiles>
