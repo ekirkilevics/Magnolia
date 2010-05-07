@@ -157,6 +157,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new NewPropertyTask("Disabling no-cache requests", "Disable server side re-caching of requests with no-cache header (shift reload)", "config", "/modules/cache/config/configurations/default/cachePolicy", "refreshOnNoCacheRequests", "false"))
                 .addTask(new WarnTask("Warning", "Server side re-caching of requests with no-cache header (shift reload) were disabled. This can be changed at /modules/cache/config/configurations/default/cachePolicy/refreshOnNoCacheRequests"))
                 );
+        register(DeltaBuilder.update("4.3.2", "Make waiting for cache entry configurable")
+                .addTask(new NewPropertyTask("Set cache new entry timeout", "Makes sure incoming requests are not waiting for cache entries to be created longer then specified timeout", ContentRepository.CONFIG, "/modules/cache/config/cacheFactory", "blockingTimeout", "4000")));
     }
 
     private List<Task> getTasksFor364() {

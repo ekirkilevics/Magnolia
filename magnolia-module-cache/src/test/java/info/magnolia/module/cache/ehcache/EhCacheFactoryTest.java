@@ -45,9 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.cache.Cache;
 import junit.framework.TestCase;
 
@@ -173,65 +173,65 @@ public class EhCacheFactoryTest extends TestCase {
     }
 
     // commented out as this scenario fails now _every time_
-//    /**
-//     * Ensure cache unblocks and returns proper item to all the threads waiting for the item even if such is soon after evicted from the cache.
-//     */
-//    public void testBlockingAfterAddingMoreThanMaxSize() throws Exception {
-//        // make sure there's only one item allowed
-//        assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());
-//
-//        final Cache ehCache = factory.getCache("test4");
-//        // 1st call
-//        Object entry = ehCache.get("blah");
-//        log.info("On first get: {}", entry );
-//        assertNull(entry);
-//        Executor ex = Executors.newFixedThreadPool(2);
-//
-//        // 2nd call
-//        FutureTask<Object> task = new FutureTask<Object>(new Callable<Object>() {
-//
-//            public Object call() throws Exception {
-//                log.info("2nd get called");
-//                Object res = ehCache.get("blah");
-//                log.info("2nd unblocked");
-//                return res;
-//            }});
-//        ex.execute(task);
-//
-//        // take a nap to make sure 2nd thread will call get()
-//        Thread.sleep(2000);
-//
-//        log.info("Put");
-//        // add something in the main thread
-//        ehCache.put("blah", "boo");
-//        // try to read what you just put in (if the cache is misconfigured, you get the first block here, and since that would block whole test we skip it and rely on block to be exercised also in the tasks that will time out without blocking whole execution
-//        //assertEquals("boo", ehCache.get("blah"));
-//        // put new item to evict old
-//        ehCache.put("foo", "xxx");
-//        // try to read evicted item:
-//        entry = ehCache.get("blah");
-//        assertNull(entry);
-//
-//        // 3rd call - after evicted and before cached again == > block forever
-//        FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
-//
-//            public Object call() throws Exception {
-//                log.info("3rd get called");
-//                Object res = ehCache.get("blah");
-//                log.info("3rd unblocked");
-//                return res;
-//            }});
-//        ex.execute(task2);
-//
-//        log.info("verify");
-//        // thread2
-//        Object result = task.get(5, TimeUnit.SECONDS);
-//        log.info("2nd get: {}", result);
-//
-//        // thread3
-//        Object result2 = task2.get(5, TimeUnit.SECONDS);
-//        log.info("3rd get: {}", result2);
-//        assertNotNull(result);
-//        assertNotNull(result2);
-//    }
+    /**
+     * Ensure cache unblocks and returns proper item to all the threads waiting for the item even if such is soon after evicted from the cache.
+     */
+    public void testBlockingAfterAddingMoreThanMaxSize() throws Exception {
+        // make sure there's only one item allowed
+        assertEquals(1, factory.getDefaultCacheConfiguration().getMaxElementsInMemory());
+
+        factory.setBlockingTimeout(1000);
+        final Cache ehCache = factory.getCache("test4");
+        // 1st call - place mutex
+        Object entry = ehCache.get("blah");
+        log.info("On first get: {}", entry );
+        assertNull(entry);
+        Executor ex = Executors.newFixedThreadPool(2);
+
+        log.info("Put");
+        // add something in the main thread - release mutex on "blah"
+        ehCache.put("blah", "boo");
+        // try to read what you just put in (if the cache is misconfigured, you get the first block here, and since that would block whole test we skip it and rely on block to be exercised also in the tasks that will time out without blocking whole execution
+        // assertEquals("boo", ehCache.get("blah"));
+
+        // instead make 2nd call on separate thread - cache entry should exist
+        FutureTask<Object> task = new FutureTask<Object>(new Callable<Object>() {
+
+            public Object call() throws Exception {
+                log.info("2nd get called");
+                Object res = ehCache.get("blah");
+                log.info("2nd not blocked");
+                return res;
+            }});
+        ex.execute(task);
+        Object result = task.get(5, TimeUnit.SECONDS);
+        log.info("2nd get: {}", result);
+        assertEquals("boo", result);
+
+
+        // put new item to evict old
+        ehCache.put("foo", "xxx");
+        // try to read evicted item (place the mutex on "blah" again)
+        entry = ehCache.get("blah");
+        assertNull(entry);
+
+        // 3rd call - after evicted and before cached again == > block forever
+        FutureTask<Object> task2 = new FutureTask<Object>(new Callable<Object>() {
+
+            public Object call() throws Exception {
+                log.info("3rd get called");
+                try {
+                    Object res = ehCache.get("blah");
+                } catch (LockTimeoutException e) {
+                    // expected
+                }
+                log.info("3rd unblocked");
+                return null;
+            }});
+        ex.execute(task2);
+        // thread3 - since mutex on "blah" is still in place, the call should end with LTE and return null
+        Object result2 = task2.get(5, TimeUnit.SECONDS);
+        log.info("3rd get: {}", result2);
+        assertNull(result2);
+    }
 }

@@ -68,7 +68,7 @@ public class Default implements CachePolicy {
     private static final Logger log = LoggerFactory.getLogger(Default.class);
 
     private VoterSet voters;
-    
+
     private boolean refreshOnNoCacheRequests = false;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
@@ -83,17 +83,23 @@ public class Default implements CachePolicy {
             return new CachePolicyResult(CachePolicyResult.store, key, null);
         }
 
-        // we need to synchronize on the cache instance, as multiple threads might be accessing this
-        // concurrently, and we don't want to block the system if we're using a blocking cache.
-        // (since hasElement() might place a mutex on the cache key)
-        synchronized (cache) {
-            if (cache.hasElement(key)) {
-                final Object cachedEntry = cache.get(key);
-                return new CachePolicyResult(CachePolicyResult.useCache, key, cachedEntry);
-            }
-            else {
-                return new CachePolicyResult(CachePolicyResult.store, key, null);
-            }
+        // no multithreaded expiring cache can guarantee existence of the key between two subsequent calls without synchronization here on common object or mutex
+        // and synchronization on the cache is too heavy weight
+        // if (cache.hasElement(key)) {
+        //    final Object entry = cache.get(key);
+        // ... so unless having mutexes for our own cache keys and being able to synchronize on that
+        // simply make sure there is just one call ... ever. Either underlying cache has it's own key-mutex system (like ehCache) or
+        // stale value returned by cache might result in entries being generated multiple times or served stale for while ... so choose your underlying cache impl carefully
+        // either way, Magnolia should not need to care nor should it play a police for cache implementation
+
+        // for default cache impl (blocking ehCache) this call will block on given key, and on given key only, if previously requested until value is available or timeout occurs
+        final Object cachedEntry = cache.get(key);
+        // also assume that if the value can't be retrieved for given key, underlying cache is not a pig and will throw exception at some point releasing the thread and propagating the error to the user
+
+       if (cachedEntry != null) {
+            return new CachePolicyResult(CachePolicyResult.useCache, key, cachedEntry);
+        } else {
+            return new CachePolicyResult(CachePolicyResult.store, key, null);
         }
     }
 
@@ -196,11 +202,11 @@ public class Default implements CachePolicy {
             return keys;
         }
     }
-    
+
     public boolean isRefreshOnNoCacheRequests() {
         return this.refreshOnNoCacheRequests;
     }
-    
+
     public void setRefreshOnNoCacheRequests(boolean allowNoCacheHeader) {
         this.refreshOnNoCacheRequests = allowNoCacheHeader;
     }

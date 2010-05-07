@@ -61,6 +61,8 @@ public class EhCacheFactory implements CacheFactory {
     private CacheManager cacheManager;
     private CacheConfiguration defaultCacheConfiguration;
     private String diskStorePath;
+    // 0 == do not timeout ever, set to 10s by default.
+    private int blockingTimeout = 10000;
 
     public EhCacheFactory() {
         diskStorePath = Path.getCacheDirectoryPath();
@@ -119,10 +121,10 @@ public class EhCacheFactory implements CacheFactory {
             cacheManager.addCache(name);
 
             final Ehcache cache = cacheManager.getEhcache(name);
-            if (!(cache instanceof BlockingCache)) {
-                final BlockingCache newBlockingCache = new BlockingCache(cache);
-                cacheManager.replaceCacheWithDecoratedCache(cache, newBlockingCache);
-            }
+            // default EHCache is non blocking. Since our impl always requires blocking cache wrap it here.
+            final BlockingCache newBlockingCache = new BlockingCache(cache);
+            newBlockingCache.setTimeoutMillis(getBlockingTimeout());
+            cacheManager.replaceCacheWithDecoratedCache(cache, newBlockingCache);
         }
     }
 
@@ -133,4 +135,13 @@ public class EhCacheFactory implements CacheFactory {
     public CacheManager getWrappedCacheManager() {
         return cacheManager;
     }
+
+    public int getBlockingTimeout() {
+        return blockingTimeout;
+    }
+
+    public void setBlockingTimeout(int blockingTimeout) {
+        this.blockingTimeout = blockingTimeout;
+    }
+
 }

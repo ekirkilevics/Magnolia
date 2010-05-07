@@ -33,10 +33,15 @@
  */
 package info.magnolia.module.cache.ehcache;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.mbean.CacheMonitor;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 /**
  *
@@ -44,6 +49,8 @@ import net.sf.ehcache.Element;
  * @version $Revision: $ ($Author: $)
  */
 public class EhCacheWrapper implements Cache {
+
+    private static final Logger log = LoggerFactory.getLogger(EhCacheWrapper.class);
     private final Ehcache ehcache;
     private String name;
 
@@ -54,17 +61,30 @@ public class EhCacheWrapper implements Cache {
 
     public Object get(Object key) {
         final Element element = ehcache.get(key);
-        return element != null ? element.getObjectValue() : null;
+        try {
+            return element != null ? element.getObjectValue() : null;
+        } catch (LockTimeoutException e) {
+            log.error("Detected 1 thread stuck in generating response for {}. This might be temporary if obtaining the response is resource intensive or when accessing remote resources.", key);
+            throw e;
+        }
     }
 
     public boolean hasElement(Object key) {
         // we can't use isKeyInCache(), as it does not check for the element's expiration
-        // which may lead to unexpected results, since get() and getQuiet() do check
-        // for expiration and return null if the element was expired.
+        // which may lead to unexpected results.
         // return ehcache.isKeyInCache(key);
-
-        // we can't use getQuiet, as it's non-blocking
-        return ehcache.get(key) != null;
+        try {
+            // get() and getQuiet() do check for expiration and return null if the element was expired.
+            // we can't use getQuiet, as it's non-blocking which could lead to multiple copies of same page to be generated
+            // if page is requested while previous request for same page is still being processed by different thread
+            return ehcache.get(key) != null;
+        } catch (LockTimeoutException e) {
+            log.error("Detected 1 thread stuck in generating response for {}. This might be temporary if obtaining the response is resource intensive or when accessing remote resources.", key);
+            // FYI: in case you want to return some value instead of re-throwing exception: this is a dilemma ... obviously resource does not exist yet, but being stuck here for while means that it is either being generated or it takes time to generate.
+            // returning false would mean server attempts to generate the response again, possibly loosing another thread in the process
+            // returning true means server will assume resource exists and will try to retrieve it later, possibly failing with the same error
+            throw e;
+        }
     }
 
     public void put(Object key, Object value) {
