@@ -79,7 +79,6 @@ public class MailTemplate {
 
     private static final String MAIL_BCC = "bcc";
 
-
     private Map<String, String> parameters = new HashMap<String, String>();
 
     private List<MailAttachment> attachments = new ArrayList<MailAttachment>();
@@ -111,22 +110,29 @@ public class MailTemplate {
     }
 
     public Map<String, String> getParameters() {
-        return parameters;
+        // instance of this class will be re-used. Do not let references to internal variables escape the instance
+        return new HashMap<String, String>(parameters);
     }
 
     public void setParameters(Map<String, String> parameters) {
-        this.parameters = parameters;
+        // instance of this class will be re-used. Do not let references to internal variables escape the instance
+        this.parameters.clear();
+        this.parameters.putAll(parameters);
     }
 
     public List<MailAttachment> getAttachments() {
-        return attachments;
+        // instance of this class will be re-used. Do not let references to internal variables escape the instance
+        return new ArrayList<MailAttachment>(attachments);
     }
 
     public void setAttachments(List<MailAttachment> attachments) {
-        this.attachments = attachments;
+        // instance of this class will be re-used. Do not let references to internal variables escape the instance
+        this.attachments.clear();
+        this.attachments.addAll(attachments);
     }
 
     public void addAttachment(MailAttachment attachment) {
+        // instance of this class will be re-used. Do not let references to internal variables escape the instance
         this.attachments.add(attachment);
     }
 
@@ -241,9 +247,13 @@ public class MailTemplate {
             this.bcc = params.get(MAIL_BCC);
         }
 
+        // instance of this class will be re-used. Do not let references to internal variables escape the instance
+        this.parameters.clear();
         this.parameters.putAll(params);
 
         if(!CollectionUtils.isEmpty(attachments)) {
+            // instance of this class will be re-used. Do not let references to internal variables escape the instance
+            this.attachments.clear();
             this.attachments.addAll(attachments);
         }
     }
