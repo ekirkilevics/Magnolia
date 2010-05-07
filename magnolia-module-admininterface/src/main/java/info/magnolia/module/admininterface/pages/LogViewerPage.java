@@ -333,7 +333,14 @@ public class LogViewerPage extends TemplatedMVCHandler {
         return this.maxNumLinesPerPage;
     }
 
+    /**
+     * Sets new maximum value in the range <1, LONG_MAX>. 0 or negative values are ignored.
+     * @param maxNumLinesPerPage
+     */
     public void setMaxNumLinesPerPage(long maxNumLinesPerPage) {
+        if (maxNumLinesPerPage < 1) {
+            return;
+        }
         this.maxNumLinesPerPage = maxNumLinesPerPage;
     }
 
