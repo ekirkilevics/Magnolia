@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.beans.runtime;
 
+import javax.jcr.PropertyType;
+
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -153,6 +155,10 @@ public class FileProperties {
         }
 
         NodeData props = this.getContent().getNodeData(this.nodeDataName);
+        if (props.getType() != PropertyType.BINARY) {
+            return null;
+        }
+
         String filename = props.getAttribute(PROPERTY_FILENAME);
         String ext = props.getAttribute(PROPERTY_EXTENSION);
         String fullName = filename;

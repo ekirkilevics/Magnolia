@@ -41,6 +41,7 @@ import info.magnolia.cms.taglibs.BaseContentTag;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
+import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -140,7 +141,7 @@ public class ImgTag extends BaseContentTag {
 
         NodeData imageNodeData = contentNode.getNodeData(this.getNodeDataName());
 
-        if (!imageNodeData.isExist()) {
+        if (!imageNodeData.isExist() || imageNodeData.getType() != PropertyType.BINARY) {
             return EVAL_PAGE;
         }
 
