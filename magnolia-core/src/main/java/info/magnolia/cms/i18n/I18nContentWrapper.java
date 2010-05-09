@@ -67,6 +67,10 @@ public class I18nContentWrapper extends ContentWrapper {
     }
     
     protected Content wrap(Content node) {
+        // be sure we don't wrap nulls
+        if (node == null) {
+            return null;
+        }
         return new I18nContentWrapper(node);
     }
 
