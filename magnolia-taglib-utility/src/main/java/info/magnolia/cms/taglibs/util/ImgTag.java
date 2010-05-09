@@ -67,7 +67,7 @@ public class ImgTag extends BaseContentTag {
      */
     private static final long serialVersionUID = 222L;
 
-    private Map htmlAttributes = new HashMap();
+    private Map<String, String> htmlAttributes = new HashMap<String, String>();
 
     private String altNodeDataName;
 
@@ -163,11 +163,11 @@ public class ImgTag extends BaseContentTag {
         JspWriter out = pageContext.getOut();
 
         // don't modify the original map, remember tag pooling
-        Map attributes = new HashMap(htmlAttributes);
+        Map<String, String> attributes = new HashMap<String, String>(htmlAttributes);
         attributes.put("title", alt);
 
-        if (StringUtils.isBlank((String) attributes.get("width"))
-            || StringUtils.isBlank((String) attributes.get("height"))) {
+        if (StringUtils.isBlank(attributes.get("width"))
+            || StringUtils.isBlank(attributes.get("height"))) {
             String width = props.getProperty(FileProperties.PROPERTY_WIDTH);
             if (StringUtils.isNotEmpty(width)) {
                 attributes.put("width", width);
@@ -223,10 +223,10 @@ public class ImgTag extends BaseContentTag {
      * @param out
      * @throws IOException
      */
-    private void writeAttributes(JspWriter out, Map attributes) throws IOException {
-        for (Iterator iter = attributes.keySet().iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
-            String value = (String) attributes.get(name);
+    private void writeAttributes(JspWriter out, Map<String, String> attributes) throws IOException {
+        for (Iterator<String> iter = attributes.keySet().iterator(); iter.hasNext();) {
+            String name = iter.next();
+            String value = attributes.get(name);
             out.write(name);
             out.write("=\"");
             out.write(value);
