@@ -595,7 +595,14 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          if (request.getHeader(BaseSyndicatorImpl.PARENT_PATH) != null) {
              String parentPath = this.getParentPath(request);
              log.debug("parent path:" + parentPath);
-             return this.getHierarchyManager(request).getContent(parentPath);
+            try {
+                return this.getHierarchyManager(request).getContent(parentPath);
+            }
+            catch (PathNotFoundException e) {
+                throw new ExchangeException("Parent folder "
+                    + parentPath
+                    + " not yet activated, please activate it before activating children");
+            }
          } else if (request.getHeader(BaseSyndicatorImpl.NODE_UUID) != null){
              log.debug("node uuid:" + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
              return this.getHierarchyManager(request).getContentByUUID(request.getHeader(BaseSyndicatorImpl.NODE_UUID));
