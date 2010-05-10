@@ -215,6 +215,9 @@ public class LockTest extends RepositoryTestCase {
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
         // cleanup
         expect(request.getHeader(BaseSyndicatorImpl.ACTION)).andReturn(BaseSyndicatorImpl.ACTIVATE);
+        expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page");
+        expect (request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
+        expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);
         expect (request.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
         expect (request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia");
         expect (request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(ContentRepository.WEBSITE);

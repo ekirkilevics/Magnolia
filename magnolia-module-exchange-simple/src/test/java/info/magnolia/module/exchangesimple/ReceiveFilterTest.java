@@ -451,6 +451,7 @@ public class ReceiveFilterTest extends TestCase {
         response.setHeader("sa_attribute_message", expectedMessage);
 
         //cleanup()
+        expect(hm.isExist("/foo/bar")).andReturn(true);
         expect(request.getSession(false)).andReturn(null);
 
         final ReceiveFilter filter = new ReceiveFilter();

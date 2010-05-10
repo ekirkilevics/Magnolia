@@ -134,11 +134,15 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
         catch (PathNotFoundException e) {
+            // this should not happen. PNFE should be already caught and wrapped in ExchangeEx
             log.error(e.getMessage(), e);
             statusMessage = "Parent not found (not yet activated): " + e.getMessage();
             status = BaseSyndicatorImpl.ACTIVATION_FAILED;
-        }
-        catch (Throwable e) {
+        } catch (ExchangeException e) {
+            log.debug(e.getMessage(), e);
+            statusMessage = e.getMessage();
+            status = BaseSyndicatorImpl.ACTIVATION_FAILED;
+        } catch (Throwable e) {
             log.error(e.getMessage(), e);
             // we can only rely on the exception's actual message to give something back to the user here.
             statusMessage = StringUtils.defaultIfEmpty(e.getMessage(), e.getClass().getSimpleName());
@@ -385,17 +389,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          // TODO: handle same name siblings!
          String path = parentPath + (parentPath.endsWith("/") ? "" : "/") + topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
          if (hierarchyManager.isExist(path)) {
-             log.warn("Replacing {} due to name colision (but different UUIDs.)", path);
+             log.warn("Replacing {} due to name collision (but different UUIDs.)", path);
              hierarchyManager.delete(path);
          }
          try {
              importResource(data, topContentElement, hierarchyManager, parentPath);
              hierarchyManager.save();
-         }
-         catch (Exception e) {
+         } catch (PathNotFoundException e) {
+             final String  message = "Parent content " + parentPath + " is not yet activated or you do not have write access to it. Please activate the parent content before activating children and ensure you have appropriate rights"; // .. on XXX will be appended to the error message by syndicator on the author instance
+             // this is not a system error so there should not be a need to log the exception all the time.
+             log.debug(message, e);
              hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
+             throw new ExchangeException(message);
+         } catch (Exception e) {
+             final String message = "Activation failed | " + e.getMessage();
              log.error("Exception caught", e);
-             throw new ExchangeException("Activation failed | " + e.getMessage());
+             hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
+             throw new ExchangeException(message);
          }
      }
 
@@ -531,9 +541,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  }
              }
              try {
-                 Content content = this.getNode(request);
-                 if (content.isLocked()) {
-                     content.unlock();
+                 final String parentPath = getParentPath(request);
+                 if (StringUtils.isEmpty(parentPath) || this.getHierarchyManager(request).isExist(parentPath)) {
+                     Content content = this.getNode(request);
+                     if (content.isLocked()) {
+                         content.unlock();
+                     }
                  }
              } catch (LockException le) {
                  // either repository does not support locking OR this node never locked
@@ -585,8 +598,14 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          } catch (LockException le) {
              // either repository does not support locking OR this node never locked
              log.debug(le.getMessage());
+         } catch (ItemNotFoundException e) {
+             // - when deleting new piece of content on the author and mgnl tries to deactivate it on public automatically
+             log.warn("Attempt to lock non existing content {} during (de)activation.",getUUID(request));
+         } catch (PathNotFoundException e) {
+             // - when attempting to activate the content for which parent content have not been yet activated
+             log.debug("Attempt to lock non existing content {}:{} during (de)activation.",getHierarchyManager(request).getName(), getParentPath(request));
          } catch (RepositoryException re) {
-             // should never come here ... but does when creating new piece of content on the author and mgnl tries to deactivate it on public automatically ...
+             // will blow fully at later stage
              log.warn("Exception caught", re);
          }
      }
@@ -595,15 +614,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          if (request.getHeader(BaseSyndicatorImpl.PARENT_PATH) != null) {
              String parentPath = this.getParentPath(request);
              log.debug("parent path:" + parentPath);
-            try {
-                return this.getHierarchyManager(request).getContent(parentPath);
-            }
-            catch (PathNotFoundException e) {
-                throw new ExchangeException("Parent folder "
-                    + parentPath
-                    + " not yet activated, please activate it before activating children");
-            }
-         } else if (request.getHeader(BaseSyndicatorImpl.NODE_UUID) != null){
+             return this.getHierarchyManager(request).getContent(parentPath);
+         } else if (!StringUtils.isEmpty(getUUID(request))){
              log.debug("node uuid:" + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
              return this.getHierarchyManager(request).getContentByUUID(request.getHeader(BaseSyndicatorImpl.NODE_UUID));
          }
@@ -622,6 +634,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          return "";
      }
 
+     protected String getUUID(HttpServletRequest request) {
+         String parentPath = request.getHeader(BaseSyndicatorImpl.NODE_UUID);
+         if (StringUtils.isNotEmpty(parentPath)) {
+             return parentPath;
+         }
+         return "";
+     }
 
 
 }
