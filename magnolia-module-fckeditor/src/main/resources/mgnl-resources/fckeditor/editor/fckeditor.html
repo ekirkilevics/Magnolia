@@ -262,7 +262,7 @@ function WaitForActive( editorInstance, newStatus )
 		//See http://jira.magnolia-cms.com/browse/MAGNOLIA-3159.
 		if ((FCKBrowserInfo.IsSafari || FCKBrowserInfo.IsOpera) && FCK.StartupValue=='&nbsp;')
 		{
-			FCK.EditingArea.Document.body.innerHTML = ''
+			FCK.EditingArea.Document.body.innerHTML = '' ;
 		}
 
 		// Call the special "FCKeditor_OnComplete" function that should be present in
