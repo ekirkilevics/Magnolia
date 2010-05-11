@@ -135,6 +135,13 @@ public class SimpleUrlPatternTest extends TestCase {
     public void testWildcardsWithSpecialChars() {
         assertTrue(new SimpleUrlPattern("/*").match("/*/page‘.html"));
     }
+    
+    /**
+     * Test with the <code>*</code> and <code>?</code> wildcards.
+     */
+    public void testWildcardsWithNewline() {
+        assertTrue(new SimpleUrlPattern("/*").match("/page\nxxx\nbbb.html"));
+    }
 
     /**
      * Test with the <code>*</code> and <code>?</code> wildcards.
