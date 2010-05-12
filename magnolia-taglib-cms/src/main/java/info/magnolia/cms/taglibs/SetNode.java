@@ -34,9 +34,8 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.context.MgnlContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.PageContext;
 
@@ -121,8 +120,16 @@ public class SetNode extends BaseContentTag {
         Content contentNode = getFirstMatchingNode();
 
         // set attribute
-        if (contentNode != null) {
-            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, MgnlContext.getAggregationState().getMainContent()), this.scope);
+        if (contentNode != null) { 
+            Content mainContent = MgnlContext.getAggregationState().getMainContent();
+            if (mainContent == null) {
+                mainContent = contentNode;
+            }
+            info.magnolia.cms.util.NodeMapWrapper nmw = new info.magnolia.cms.util.NodeMapWrapper(
+                new I18nContentWrapper(contentNode),
+                mainContent.getHandle());
+            
+            pageContext.setAttribute(this.var, nmw, this.scope);
         }
         else {
             pageContext.removeAttribute(this.var);
