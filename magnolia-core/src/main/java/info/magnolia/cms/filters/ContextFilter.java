@@ -43,6 +43,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,17 @@ public class ContextFilter extends AbstractMgnlFilter {
             try {
                 MDC.put("requesturi", request.getRequestURI());
                 MDC.put("userid", MgnlContext.getUser().getName());
-            } catch (Throwable e) {
+
+                MDC.put("Referer", request.getHeader("Referer"));
+                MDC.put("User-Agent", request.getHeader("User-Agent"));
+                MDC.put("Remote-Host", request.getRemoteHost());
+
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    MDC.put("SessionId", session.getId());
+                }
+            }
+            catch (Throwable e) {
                 // if for any reason the MDC couldn't be set, just ignore it.
                 log.debug(e.getMessage(), e);
             }
@@ -95,8 +106,7 @@ public class ContextFilter extends AbstractMgnlFilter {
                 MgnlContext.setInstance(null);
 
                 // cleanup
-                MDC.remove("requesturi");
-                MDC.remove("userid");
+                MDC.clear();
             }
         }
     }

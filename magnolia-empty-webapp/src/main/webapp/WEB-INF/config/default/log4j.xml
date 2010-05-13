@@ -35,6 +35,10 @@ Magnolia%n
 Version: ${pom.version}%n
 Server: ${server}%n
 Url: %X{requesturi}%n
+Referer: %X{Referer}%n
+User-Agent: %X{User-Agent}%n
+Remote-Host: %X{Remote-Host}%n
+Session Id: %X{SessionId}%n
 Userid: %X{userid}%n
 Number of occurrences: %o%n
 ===================================%n
