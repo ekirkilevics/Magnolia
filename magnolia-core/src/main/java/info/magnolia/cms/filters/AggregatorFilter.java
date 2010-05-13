@@ -119,6 +119,10 @@ public class AggregatorFilter extends AbstractMgnlFilter{
         NodeData requestedData = null;
         final String templateName;
 
+        if (!isJcrPathValid(handle)) {
+            // avoid calling isExist if the path can't be valid
+            return false;
+        }
         if (hierarchyManager.isExist(handle) && !hierarchyManager.isNodeData(handle)) {
             requestedPage = hierarchyManager.getContent(handle);
 
@@ -191,6 +195,27 @@ public class AggregatorFilter extends AbstractMgnlFilter{
 
         aggregationState.setTemplateName(templateName);
 
+        return true;
+    }
+
+    /**
+     * Check if the path *may be* a valid path before calling getItem, in order to avoid annoying logs.
+     * @param handle node handle
+     * @return true if the path is invalid
+     */
+    private boolean isJcrPathValid(String handle) {
+        if (StringUtils.isBlank(handle) || StringUtils.equals(handle, "/")) {
+            // empty path not allowed
+            return false;
+        }
+        if (StringUtils.containsAny(handle, new char[]{':', '*', '\n'})) {
+            // not allowed chars
+            return false;
+        }
+        if (StringUtils.contains(handle, " /")) {
+            // trailing slash not allowed
+            return false;
+        }
         return true;
     }
 
