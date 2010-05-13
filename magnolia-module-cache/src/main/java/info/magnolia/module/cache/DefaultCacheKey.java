@@ -62,7 +62,7 @@ public class DefaultCacheKey implements Serializable {
         return (uri == null ? 13 : uri.hashCode())
             + (serverName == null ? 17 : serverName.hashCode())
             + (locale == null ? 23 : locale.hashCode())
-            + (params != null ? 27 :  params.hashCode());
+            + (params == null ? 27 :  params.hashCode());
     }
 
     @Override
