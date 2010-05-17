@@ -98,6 +98,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
         // fake old users tree config
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         setupDummyTemplate();
 
@@ -118,6 +120,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
         // fake old users tree config
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         setupDummyTemplate();
 
@@ -138,6 +142,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
         // fake old users tree config
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         setupDummyTemplate();
 
@@ -156,6 +162,8 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
 
         // fake old users tree config
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+        setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
         // setup some dialogs
         final String path = "/modules/myModule/dialogs/myDialog";
