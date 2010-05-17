@@ -122,7 +122,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     protected String richEPaste = StringUtils.EMPTY;
 
     protected String repository = StringUtils.EMPTY;
-    
+
     protected String locale;
 
     protected HierarchyManager hm;
@@ -140,6 +140,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     private String jsExecutedAfterSaving;
 
     private String itemType = ItemType.CONTENTNODE.getSystemName();
+
+    private I18nAuthoringSupport i18nAuthoringSupport;
 
     /**
      * Initialize the used parameters: path, nodeCollectionName, nodeName, ..
@@ -163,6 +165,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             hm = MgnlContext.getHierarchyManager(repository);
         }
         msgs = MessagesManager.getMessages();
+        // proxied. no need to refresh instance every time.
+        i18nAuthoringSupport = I18nAuthoringSupport.Factory.getInstance();
 
     }
 
@@ -194,8 +198,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         if (StringUtils.isNotEmpty(locale)) {
             dialog.setConfig("locale", locale);
         }
-        
-        I18nAuthoringSupport i18nAuthoringSupport = I18nAuthoringSupport.Factory.getInstance();
+
         i18nAuthoringSupport.i18nIze(dialog);
     }
 
