@@ -223,7 +223,7 @@ public class MgnlContext {
     }
 
     /**
-     * Resets the current aggregator instance if we're in a WebContext, throws an IllegalStateException otherwise.
+     * Resets the current aggregation state if we're in a WebContext, throws an IllegalStateException otherwise.
      */
     public static void resetAggregationState() {
         final WebContext ctx = getWebContextOrNull();

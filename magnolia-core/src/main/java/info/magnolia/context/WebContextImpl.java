@@ -105,8 +105,11 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         return aggregationState;
     }
 
+    /**
+     * This will only reset the original URI/URL by calling {@link AggregationState#resetURIs()}
+     */
     public void resetAggregationState() {
-        aggregationState = null;
+        getAggregationState().resetURIs();
     }
 
     /**

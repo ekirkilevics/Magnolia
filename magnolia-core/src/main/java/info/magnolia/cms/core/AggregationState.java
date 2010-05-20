@@ -71,7 +71,7 @@ public class AggregationState {
         }
         this.originalURI = strippedURI;
     }
-    
+
     public void setOriginalBrowserURI(String originalBrowserURI) {
         final String strippedURI = stripContextPathIfExists(originalBrowserURI);
         if (this.originalBrowserURI != null && !this.originalBrowserURI.equals(strippedURI)) {
@@ -119,7 +119,7 @@ public class AggregationState {
     public void setOriginalURL(String originalURL) {
         this.originalURL = originalURL;
     }
-    
+
     public String getOriginalBrowserURI() {
         return originalBrowserURI;
     }
@@ -252,5 +252,17 @@ public class AggregationState {
         } else {
             return uri;
         }
+    }
+
+    /**
+     * The original URI/URL can only be set once. A call to this methods resets the original URI/URL and allows to set them freshly.
+     */
+    public void resetURIs() {
+        this.originalURI=null;
+        this.originalURL=null;
+        this.originalBrowserURI=null;
+        this.originalBrowserURL=null;
+        // current uri have been resolved from the original, but if original changes, current has to follow, otherwise forward: virtual uri mappings will result in infinite loop since currentURI will be the original one forcing forward to act again and again
+        this.currentURI = null;
     }
 }

@@ -54,6 +54,8 @@ import org.apache.commons.lang.StringUtils;
  * non-content related attributes of the AggregationState. ContentType could become an
  * attribute of the AggregationState too and could be set later.
  *
+ * FIXME: the original uri should not be reset, MAGNOLIA-3204
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author gjoseph
@@ -63,7 +65,21 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContentTypeFilter.class);
 
+    /**
+     * If set we have to reset the aggregation state before setting the original URI/URL with new values
+     */
+    private static final String AGGREGATION_STATE_INITIALIZED = ContentTypeFilter.class.getName() + ".aggregationStateInitialized";
+
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // we will set the original uri, to avoid conflicts we have to reset the aggregation state
+        // this will mainly reset the original uri and keep all other information
+        if(request.getAttribute(AGGREGATION_STATE_INITIALIZED) != null){
+            MgnlContext.resetAggregationState();
+        }
+        else{
+            request.setAttribute(AGGREGATION_STATE_INITIALIZED, Boolean.TRUE);
+        }
+
         final String originalUri = request.getRequestURI();
         final String ext = getUriExtension(originalUri);
         StringBuffer url = request.getRequestURL();
@@ -74,10 +90,6 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
         }
 
         final String characterEncoding = setupContentTypeAndCharacterEncoding(ext, request, response);
-
-        // reset any leftover found in request
-        MgnlContext.resetAggregationState();
-
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         aggregationState.setCharacterEncoding(characterEncoding);
 
