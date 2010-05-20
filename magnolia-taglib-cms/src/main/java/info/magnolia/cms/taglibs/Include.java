@@ -63,7 +63,7 @@ public class Include extends BodyTagSupport {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Include.class);
 
     protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
-    
+
     /**
      * File to be included (e.g. /templates/jsp/x.jsp).
      * @deprecated
@@ -160,6 +160,10 @@ public class Include extends BodyTagSupport {
         boolean localContentNodeSet = false;
         Content oldContentNode = Resource.getLocalContentNode();
 
+        // remove the collection name - the new anchor point for all tags is the current content
+        String oldLocalContentNodeCollectionName = Resource.getLocalContentNodeCollectionName();
+        Resource.setLocalContentNodeCollectionName(null);
+
         try {
             // get content
             Content content = this.contentNode;
@@ -233,12 +237,14 @@ public class Include extends BodyTagSupport {
                     Resource.removeLocalContentNode();
                 }
             }
+            // reset the former collection name
+            Resource.setLocalContentNodeCollectionName(oldLocalContentNodeCollectionName);
         }
 
         this.removeAttributes();
         return EVAL_PAGE;
     }
-    
+
     private void removeAttributes() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if ((attributes != null) && (attributes.size() > 0)) {
