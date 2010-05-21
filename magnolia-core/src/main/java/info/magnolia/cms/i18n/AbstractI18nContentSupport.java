@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
-    protected static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
 
     /**
      * The content is served for this locale if the the content is not available for the current locale
@@ -119,8 +119,8 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
             }
         }
         // try to find a locale with the same language (ignore the country)
-        for (Iterator iter = getLocales().iterator(); iter.hasNext();) {
-            Locale otherCountryLocale = (Locale) iter.next();
+        for (Iterator<Locale> iter = getLocales().iterator(); iter.hasNext();) {
+            Locale otherCountryLocale = iter.next();
             // same lang, but not the same country as well or we end up in the loop
             if(locale.getLanguage().equals(otherCountryLocale.getLanguage()) && !locale.equals(otherCountryLocale)){
                 return otherCountryLocale;
@@ -217,7 +217,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
             try {
                 // test for the current language
                 Locale locale = getLocale();
-                Set<Locale> checkedLocales = new HashSet();
+                Set<Locale> checkedLocales = new HashSet<Locale>();
 
                 // getNextContentLocale() returns null once the end of the locale chain is reached
                 while(locale != null){
