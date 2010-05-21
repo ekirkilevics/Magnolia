@@ -15,6 +15,7 @@
  * or MNA you select, is prohibited.
  *
  * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
  * Public License, Version 3, as published by the Free Software
  * Foundation.  You should have received a copy of the GNU
  * General Public License, Version 3 along with this program;
