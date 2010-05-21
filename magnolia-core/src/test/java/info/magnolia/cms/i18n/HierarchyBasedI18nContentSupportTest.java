@@ -44,8 +44,8 @@ import java.util.Locale;
  *
  */
 public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupportTest {
-	public void testDetermineLocale(){
-		HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
+    public void testDetermineLocale(){
+        HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
         defSupport.addLocale(new LocaleDefinition("de", null, true));
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
@@ -84,7 +84,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
     }
 
     public void testDetermineLocaleEndlessLoop () {
-    	HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
+        HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
         defSupport.addLocale(new LocaleDefinition("it", null, true));
@@ -121,7 +121,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
     }
 
     public void testGetNodeDataEndlessLoop() throws Exception {
-    	HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
+        HierarchyBasedI18nContentSupport defSupport = new HierarchyBasedI18nContentSupport();
         defSupport.setEnabled(true);
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
