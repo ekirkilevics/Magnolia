@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
+    protected static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
 
     /**
      * The content is served for this locale if the the content is not available for the current locale
@@ -102,7 +102,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
     /**
      * Returns the closest locale for which {@link #isLocaleSupported(Locale)} is true.
-     * <ul> 
+     * <ul>
      * <li>If the locale has a country specified (fr_CH) the locale without country (fr) will be returned.</li>
      * <li>If the locale has no country specified (fr) the first locale with the same language but specific country (fr_CH) will be returned.</li>
      * <li>If this fails the fall-back locale is returned</li>
