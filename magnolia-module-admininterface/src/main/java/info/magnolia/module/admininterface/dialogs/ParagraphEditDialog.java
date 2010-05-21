@@ -33,46 +33,50 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
+import java.io.IOException;
+
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.module.admininterface.DialogHandlerManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.module.admininterface.DialogMVCHandler;
+
 import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Editing paragraph data.
+ * This dialog hander delegates to a dialog handler representing the dialog assigned to the paragraph we edit (or create).
  *
  * @author philipp
  */
 public class ParagraphEditDialog extends ConfiguredDialog {
-    private static final Logger log = LoggerFactory.getLogger(ParagraphEditDialog.class);
 
-    private final String paragraph;
+    private DialogMVCHandler dialogHandler;
 
     public ParagraphEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
         super(name, request, response, configNode);
-        paragraph = params.getParameter("mgnlParagraph"); //$NON-NLS-1$
+
+        // build the dialog handler we will delegate to
+        String paragraphName = params.getParameter("mgnlParagraph");
+
+        final String dialogName = getDialogUsedByParagraph(paragraphName);
+
+        dialogHandler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
+
+        // needed for the creation of new paragraphs
+        dialogHandler.getDialog().setConfig("paragraph", paragraphName);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.module.admininterface.DialogMVCHandler#createDialog(info.magnolia.cms.core.Content,
-     * info.magnolia.cms.core.Content)
-     */
-    protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
-        if (StringUtils.isEmpty(this.paragraph)) {
+    private String getDialogUsedByParagraph(String paragraphName) {
+        if (StringUtils.isEmpty(paragraphName)) {
             throw new IllegalStateException("No paragraph selected.");
         }
-        final Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraph);
+        final Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
         if (para == null) {
-            throw new IllegalStateException("No paragraph registered with name " + paragraph);
+            throw new IllegalStateException("No paragraph registered with name " + paragraphName);
         }
         final String dialogName;
         if (para.getDialog() != null) {
@@ -80,35 +84,22 @@ public class ParagraphEditDialog extends ConfiguredDialog {
         } else {
             dialogName = para.getName();
         }
-
-        final Content dialogConfigNode = DialogHandlerManager.getInstance().getDialogConfigNode(dialogName);
-        Dialog dialog = super.createDialog(dialogConfigNode, websiteNode);
-        dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
-        return dialog;
+        return dialogName;
     }
 
-    /**
-     * Get the configuration of the dialog from the paragraph
-     * @deprecated since 4.0 - this is not used
-     */
-    public static Content getConfigNode(HttpServletRequest request, String paragraph) {
-        Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraph);
+    // methods delegating to the paragraph's dialog handler
+    // this are the only methods called by the dialog mvc servlet
 
-        if (para == null) {
-            // out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", new String[]{paragraph}));
-            log.error("paragraph not found: " + paragraph); //$NON-NLS-1$
-            return null;
-        }
-
-        // @todo FIXME! this should return the dialog node
-        return null;
+    public String getCommand() {
+        return dialogHandler.getCommand();
     }
 
-    /**
-     * @return Returns the paragraph.
-     * @deprecated since 4.0 - this is not used
-     */
-    public String getParagraph() {
-        return paragraph;
+    public String execute(String command) {
+        return dialogHandler.execute(command);
     }
+
+    public void renderHtml(String view) throws IOException {
+        dialogHandler.renderHtml(view);
+    }
+
 }
