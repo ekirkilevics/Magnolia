@@ -132,6 +132,9 @@ public class DialogHandlerManager extends ObservedManager {
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
 
+    /**
+     * @deprecated since 4.3.2, is obsolete since fix for MAGNOLIA-2907
+     */
     public Content getDialogConfigNode(String dialogName) {
         final Object[] handlerConfig = dialogHandlers.get(dialogName);
         if (handlerConfig == null) {

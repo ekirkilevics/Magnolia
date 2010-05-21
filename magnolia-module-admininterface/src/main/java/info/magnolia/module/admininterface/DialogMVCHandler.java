@@ -437,14 +437,14 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /**
      * @param dialog The dialog to set.
      */
-    protected void setDialog(Dialog dialog) {
+    public void setDialog(Dialog dialog) {
         this.dialog = dialog;
     }
 
     /**
      * @return Returns the dialog.
      */
-    protected Dialog getDialog() {
+    public Dialog getDialog() {
         if (this.dialog == null) {
             try {
                 this.dialog = createDialog(this.getConfigNode(), this.getStorageNode());
