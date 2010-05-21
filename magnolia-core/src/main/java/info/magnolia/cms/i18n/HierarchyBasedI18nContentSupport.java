@@ -39,9 +39,9 @@ import info.magnolia.context.MgnlContext;
 
 import java.util.Locale;
 
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.lang.LocaleUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Serves i18n content found in a per locale hierarchy structure.
@@ -80,6 +80,8 @@ import org.apache.commons.lang.LocaleUtils;
  *
  */
 public class HierarchyBasedI18nContentSupport extends AbstractI18nContentSupport {
+
+    private static final Logger log = LoggerFactory.getLogger(HierarchyBasedI18nContentSupport.class);
     @Override
     protected Locale onDetermineLocale() {
         Locale locale = null;
@@ -124,10 +126,9 @@ public class HierarchyBasedI18nContentSupport extends AbstractI18nContentSupport
         return i18nURI;
     }
 
-    public NodeData getNodeData(Content node, String name, Locale locale) throws RepositoryException {
-        if (node.hasNodeData(name) && isLocaleSupported(locale)) {
-            return node.getNodeData(name);
-        }
-        return null;
+    @Override
+    public NodeData getNodeData(Content node, String name) {
+        // return the node data
+        return node.getNodeData(name);
     }
 }
