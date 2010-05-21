@@ -33,9 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import static org.easymock.EasyMock.createMock;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.test.MgnlTagTestCase;
@@ -54,6 +52,8 @@ import junit.framework.Assert;
  * @version $Revision$ ($Author$)
  */
 public class PageIteratorTest extends MgnlTagTestCase {
+
+    private AggregationState aggregationState;
 
     /**
      * {@inheritDoc}
@@ -76,7 +76,7 @@ public class PageIteratorTest extends MgnlTagTestCase {
         mainContent.addContent(mainContentChild);
         currentContent.addContent(currentContentChild);
 
-        final AggregationState aggregationState = new AggregationState();
+        aggregationState = new AggregationState();
         aggregationState.setMainContent(mainContent);
 
         aggregationState.setCurrentContent(currentContent);
@@ -92,7 +92,27 @@ public class PageIteratorTest extends MgnlTagTestCase {
         PageIterator tag = new PageIterator();
 
         tag.doStartTag();
-        Assert.assertEquals("/active/activechild", webContext.getAggregationState().getCurrentContent().getHandle());
+        Assert.assertEquals("/active/activechild", aggregationState.getCurrentContent().getHandle());
     }
+
+    /**
+     * Test for MAGNOLIA-3209
+     */
+    public void testIterateOnPagesNotOnParagraphs() throws JspException {
+        PageIterator tag = new PageIterator();
+
+        // create a paragraph and set it as the current paragraph
+        MockContent currentContent = (MockContent) aggregationState.getCurrentContent();
+        MockContent paragraph = new MockContent("pargraph", ItemType.CONTENTNODE);
+
+        currentContent.addContent(paragraph);
+
+        aggregationState.setCurrentContent(paragraph);
+
+        tag.doStartTag();
+
+        Assert.assertEquals("Must be the first child of the current page.", "/active/activechild", aggregationState.getCurrentContent().getHandle());
+    }
+
 
 }

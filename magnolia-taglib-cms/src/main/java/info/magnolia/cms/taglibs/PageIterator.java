@@ -101,6 +101,15 @@ public class PageIterator extends TagSupport {
 
     private void initContentIterator() {
         Content activePage = MgnlContext.getAggregationState().getCurrentContent();
+        // the current content can be a paragraph
+        try {
+          while (!activePage.getItemType().equals(ItemType.CONTENT)) {
+            activePage = activePage.getParent();
+          }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         Collection children = activePage.getChildren(ItemType.CONTENT);
 
         for (Iterator i = children.iterator(); i.hasNext();) {
