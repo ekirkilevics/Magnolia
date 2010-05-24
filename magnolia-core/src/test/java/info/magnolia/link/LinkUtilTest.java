@@ -125,6 +125,12 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals(HTML_WITH_ABSOLUTE_LINK, res);
     }
 
+    public void testUUIDToRootLinks() throws LinkException {
+        String res = LinkUtil.convertLinksFromUUIDPattern("<p>Large article pages have a <a href=\"${link:{uuid:{2a98b29f-b514-4949-9cb3-e1162171a2ca},repository:{website},handle:{/features/special-templates},nodeData:{},extension:{html}}}\">Table Of Contents</a> (<a href=\"${link:{uuid:{},repository:{website},handle:{/},nodeData:{},extension:{html}}}\">TOC</a>) navigation.</p>", LinkTransformerManager.getInstance().getEditorLink());
+        // the real content will actually generate link to / instead of that to /jcr:root.html
+        assertEquals("<p>Large article pages have a <a href=\"/features/special-templates.html\">Table Of Contents</a> (<a href=\"/jcr:root.html\">TOC</a>) navigation.</p>", res);
+    }
+
     public void testUUIDToRelativeLinks() throws LinkException {
         String res = LinkUtil.convertLinksFromUUIDPattern(HTML_WITH_UUIDS, LinkTransformerManager.getInstance().getRelative("/parent/sub2"));
         assertEquals(StringUtils.replace(HTML_WITH_ABSOLUTE_LINK, "/parent/sub.html", "sub.html"), res);

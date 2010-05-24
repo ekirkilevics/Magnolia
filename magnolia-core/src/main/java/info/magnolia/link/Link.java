@@ -36,17 +36,25 @@ package info.magnolia.link;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author had
  *
  */
 public class Link {
+
+    private static final Logger log = LoggerFactory.getLogger(Link.class);
+
     private String repository;
     private String handle;
     private String uuid;
@@ -62,7 +70,7 @@ public class Link {
     /**
      * A constructor for undefined links. (i.e linking to a nonexistent page, for instance)
      */
-    public Link() {    
+    public Link() {
     }
 
     /**
@@ -71,7 +79,10 @@ public class Link {
     public Link(Content content) {
         setNode(content);
         setRepository(content.getHierarchyManager().getName());
-        setUUID(content.getUUID());
+        // should we have Content.hasUUID()? ... DefaultContent hides the fact that some nodes might not have UUIDs (we can link to other content then just the one in website
+        if (content.isNodeType(ItemType.MIX_REFERENCEABLE)) {
+            setUUID(content.getUUID());
+        }
     }
 
     public Link(String repoName, Content parent, NodeData nodedata) {

@@ -91,6 +91,7 @@ public class URI2RepositoryMappingTest extends TestCase {
         expect(cnt.getNodeData("image")).andReturn(docu);
         expect(hm.getName()).andReturn("dummy-repo");
         expect(cnt.getHierarchyManager()).andReturn(hm);
+        expect(cnt.isNodeType("mix:referenceable")).andReturn(true);
         expect(cnt.getUUID()).andReturn("uu-something-real");
 
         expect(docu.getType()).andReturn(PropertyType.BINARY);
