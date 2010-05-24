@@ -155,7 +155,7 @@ public class URI2RepositoryMapping {
         if(StringUtils.isNotEmpty(fileName)){
             uri += "/" + fileName;
         }
-        if(StringUtils.isNotEmpty(uri) && StringUtils.isNotEmpty(extension)){
+        if(StringUtils.isNotEmpty(uri) && StringUtils.isNotEmpty(extension) && !StringUtils.endsWith(uri, "/")){
             uri += "." + extension ;
         }
 
