@@ -86,6 +86,9 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content c = (Content) nodes.get(path);
         if( c == null){
+            if ("/".equals(path)) {
+                return root;
+            }
             c = root.getContent(StringUtils.removeStart(path, "/"));
             cacheContent(c);
         }
@@ -203,7 +206,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     public void setWorkspace(Workspace workspace) {
         this.session.setWorkspace(workspace);
     }
-    
+
     /**
      * Set access manager for this hierarchy
      * @param accessManager
