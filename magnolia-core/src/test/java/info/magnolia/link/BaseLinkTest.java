@@ -49,6 +49,8 @@ import info.magnolia.context.MgnlContext;
 import static org.easymock.classextension.EasyMock.*;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author philipp
@@ -66,15 +68,18 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
     protected static final String HREF_ABSOLUTE_LINK = HANDLE_PARENT_SUB + ".html";
 
-    private WebContext webContext;
+    protected WebContext webContext;
+
+    protected List allMocks;
+
+    protected String website =
+        "/parent@uuid=1\n" +
+        "/parent/sub@uuid=2\n" +
+        "/parent/sub2@uuid=3";
+
 
     protected void setUp() throws Exception {
         super.setUp();
-
-        String website =
-            "/parent@uuid=1\n" +
-            "/parent/sub@uuid=2\n" +
-            "/parent/sub2@uuid=3";
 
         MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
         hm.setName(ContentRepository.WEBSITE);
@@ -86,7 +91,8 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
         page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
 
-        replay(webContext);
+        allMocks = new ArrayList();
+        allMocks.add(webContext);
         MgnlContext.setInstance(webContext);
 
         // not configured in the repository
@@ -102,7 +108,6 @@ public abstract class BaseLinkTest extends MgnlTestCase {
     }
 
     protected void tearDown() throws Exception {
-        verify(webContext);
         super.tearDown();
     }
 }

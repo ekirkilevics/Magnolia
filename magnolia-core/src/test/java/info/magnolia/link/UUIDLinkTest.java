@@ -33,6 +33,8 @@
  */
 package info.magnolia.link;
 
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.link.AbsolutePathTransformer;
 import info.magnolia.link.Link;
@@ -59,8 +61,19 @@ public class UUIDLinkTest extends BaseLinkTest {
 
     protected static final String UUID_PATTERN_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTERN_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, "/parent/sub"});
 
-
     protected static final LinkTransformer NOP_TRANSFORMER = new AbsolutePathTransformer(false, false, false);
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        replay(allMocks.toArray());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        verify(allMocks.toArray());
+        super.tearDown();
+    }
 
     public void testParseFromUUIDPattern() throws Exception {
         Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
@@ -106,7 +119,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
         assertEquals("/parent/subRenamed.html", NOP_TRANSFORMER.transform(link));
     }
-    
+
     public void doTestParsingInternalLinksToBinaries() throws Exception {
         Link link = LinkFactory.parseLink(HREF_BINARY);
         assertEquals(UUID_PATTERN_BINARY, LinkFactory.toPattern(link));

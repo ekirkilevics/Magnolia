@@ -33,12 +33,11 @@
  */
 package info.magnolia.link;
 
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.Content;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 
@@ -47,7 +46,6 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 
 /**
  * @author gjoseph
@@ -58,6 +56,18 @@ public class LinkUtilTest extends BaseLinkTest {
     private static final String HTML_WITH_ABSOLUTE_LINK = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "\">test</a>";
 
     private static final String HTML_WITH_UUIDS = "this is a <a href=\"" + UUID_PATTERN_SIMPLE + "\">test</a>";
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        replay(allMocks.toArray());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        verify(allMocks.toArray());
+        super.tearDown();
+    }
 
     public void testParsingLinks() throws IOException, RepositoryException {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs(HTML_WITH_ABSOLUTE_LINK);
