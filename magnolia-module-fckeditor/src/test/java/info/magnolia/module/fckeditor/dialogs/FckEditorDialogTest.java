@@ -51,6 +51,18 @@ public class FckEditorDialogTest extends BaseLinkTest {
      */
     protected static final String SOME_PATH = "/some/path/to/here";
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        replay(allMocks.toArray());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        verify(allMocks.toArray());
+        super.tearDown();
+    }
+
     public void testNullsAndBasicCharsAreNotTouchedForJS() {
         assertEquals("foo bar", new FckEditorDialog().escapeJsValue("foo bar"));
         assertNull(new FckEditorDialog().escapeJsValue(null));
