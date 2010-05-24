@@ -70,7 +70,7 @@ public class MagnoliaTemplatingUtilities {
     private static final Logger log = LoggerFactory.getLogger(MagnoliaTemplatingUtilities.class);
 
     protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
-    
+
     public static MagnoliaTemplatingUtilities getInstance(){
         return Components.getSingleton(MagnoliaTemplatingUtilities.class);
     }
@@ -139,10 +139,16 @@ public class MagnoliaTemplatingUtilities {
         return !isAuthorInstance();
     }
 
+    /**
+     * This method doesn't use LinkTransformerManager and WILL force creation of absolute links (ie. links without domain name  and with the context path). Any cross site links created with this method WILL BE BROKEN!!!
+     */
     public String createLink(Content node) {
         return LinkUtil.createAbsoluteLink(node);
     }
 
+    /**
+     * This method doesn't use LinkTransformerManager and WILL force creation of absolute links (ie. links without domain name  and with the context path). Any cross site links created with this method WILL BE BROKEN!!!
+     */
     public String createLink(NodeData nd) {
         try {
             return LinkUtil.createAbsoluteLink(nd);
@@ -152,6 +158,9 @@ public class MagnoliaTemplatingUtilities {
         }
     }
 
+    /**
+     * This method doesn't use LinkTransformerManager and WILL force creation of absolute links (ie. links without domain name  and with the context path). Any cross site links created with this method WILL BE BROKEN!!!
+     */
     public String createLink(String repositoryId, String uuid) {
         try {
             return LinkUtil.createAbsoluteLink(repositoryId, uuid);
@@ -172,7 +181,7 @@ public class MagnoliaTemplatingUtilities {
         }
         return StringUtils.EMPTY;
     }
-    
+
     public Content getContent(String path){
       return getContent(ContentRepository.WEBSITE, path);
     }
