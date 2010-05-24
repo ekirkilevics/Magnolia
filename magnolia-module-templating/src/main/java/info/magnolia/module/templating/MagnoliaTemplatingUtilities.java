@@ -139,31 +139,22 @@ public class MagnoliaTemplatingUtilities {
         return !isAuthorInstance();
     }
 
-    /**
-     * This method doesn't use LinkTransformerManager and WILL force creation of absolute links (ie. links without domain name  and with the context path). Any cross site links created with this method WILL BE BROKEN!!!
-     */
     public String createLink(Content node) {
-        return LinkUtil.createAbsoluteLink(node);
+        return LinkUtil.createLink(node);
     }
 
-    /**
-     * This method doesn't use LinkTransformerManager and WILL force creation of absolute links (ie. links without domain name  and with the context path). Any cross site links created with this method WILL BE BROKEN!!!
-     */
     public String createLink(NodeData nd) {
         try {
-            return LinkUtil.createAbsoluteLink(nd);
+            return LinkUtil.createLink(nd);
         } catch (LinkException e) {
             log.error("Can't resolve link defined in node {} because of {}.", nd.getHandle(), ExceptionUtils.getRootCauseMessage(e));
             return null;
         }
     }
 
-    /**
-     * This method doesn't use LinkTransformerManager and WILL force creation of absolute links (ie. links without domain name  and with the context path). Any cross site links created with this method WILL BE BROKEN!!!
-     */
     public String createLink(String repositoryId, String uuid) {
         try {
-            return LinkUtil.createAbsoluteLink(repositoryId, uuid);
+            return LinkUtil.createLink(repositoryId, uuid);
         } catch (RepositoryException e) {
             log.error("Can't resolve link with UUID {} because of {}.", uuid , ExceptionUtils.getRootCauseMessage(e));
             return null;

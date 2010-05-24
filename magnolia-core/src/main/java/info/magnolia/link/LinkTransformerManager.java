@@ -45,7 +45,7 @@ public class LinkTransformerManager {
 
     private boolean makeBrowserLinksRelative = false;
     private boolean addContextPathToBrowserLinks = false;
-    
+
     public boolean isAddContextPathToBrowserLinks() {
         return this.addContextPathToBrowserLinks;
     }
@@ -68,21 +68,21 @@ public class LinkTransformerManager {
     public static LinkTransformerManager getInstance() {
         return Components.getSingleton(LinkTransformerManager.class);
     }
-    
+
     /**
-     * Creates instance of absolute link transformer that will prepend the context path, will use URI2Repository mapping while constructing links and will localize the link if localization is set up. 
+     * Creates instance of absolute link transformer that will prepend the context path, will use URI2Repository mapping while constructing links and will localize the link if localization is set up.
      */
     public AbsolutePathTransformer getAbsolute() {
         return getAbsolute(true);
     }
-    
+
     /**
-     * Creates instance of absolute link transformer that will optionally prepend the context path, but will always use URI2Repository mapping while constructing links and will localize the link if localization is set up. 
+     * Creates instance of absolute link transformer that will optionally prepend the context path, but will always use URI2Repository mapping while constructing links and will localize the link if localization is set up.
      */
     public AbsolutePathTransformer getAbsolute(boolean addContextPath) {
         return new AbsolutePathTransformer(addContextPath, true, true);
     }
-    
+
     /**
      * Creates instance of Relative link transformer that will translate path to the provided Link relative to the content provided here. During the translation all valid URI2repository mappings and i18n will be applied.
      */
@@ -96,31 +96,35 @@ public class LinkTransformerManager {
     public RelativePathTransformer getRelative(String absolutePath) {
         return new RelativePathTransformer(absolutePath, true, true);
     }
-    
+
     /**
-     * Creates instance of Complete URL link transformer that will create fully qualified and localized link to content denoted by Link provided to its transform method. 
+     * Creates instance of Complete URL link transformer that will create fully qualified and localized link to content denoted by Link provided to its transform method.
      */
     public CompleteUrlPathTransformer getCompleteUrl() {
         return new CompleteUrlPathTransformer(true, true);
     }
-    
+
     /**
      * @see EditorLinkTransformer
      */
     public EditorLinkTransformer getEditorLink() {
         return new EditorLinkTransformer();
     }
-    
+
     /**
-     * Creates instance of link transformer that will transfrom any provided links to either absolute or relative path based on the current server configuration.
+     * Creates instance of link transformer that will transform any provided links to either absolute or relative path based on the current server configuration.
      * @param currentPath Path to make links relative to, if relative path translation is configured on the server.
      * @return
      */
     public LinkTransformer getBrowserLink(String currentPath) {
         if (isMakeBrowserLinksRelative() ) {
-            return getRelative(currentPath); 
+            return getRelative(currentPath);
         } else {
             return getAbsolute(addContextPathToBrowserLinks);
         }
+    }
+
+    public LinkTransformer chooseLinkTransformerFor(Content content) {
+        return getAbsolute();
     }
 }

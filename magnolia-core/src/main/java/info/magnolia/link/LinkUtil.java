@@ -291,4 +291,47 @@ public class LinkUtil {
         }
         return LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkFactory.createLink(content));
     }
+
+    /**
+     * Creates link guessing best possible link format from current site and provided node.
+     * @param nodedata Node data to create link for.
+     * @return Absolute link to the provided node data.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createLink(Content node) {
+        if(node == null){
+            return null;
+        }
+        return LinkTransformerManager.getInstance().chooseLinkTransformerFor(node).transform(LinkFactory.createLink(node));
+    }
+
+    /**
+     * Creates link guessing best possible link format from current site and provided node data.
+     * @param nodedata Node data to create link for.
+     * @return Absolute link to the provided node data.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createLink(NodeData nodedata) throws LinkException {
+        if(nodedata == null || !nodedata.isExist()){
+            return null;
+        }
+        try {
+            return LinkTransformerManager.getInstance().chooseLinkTransformerFor(nodedata.getParent()).transform(LinkFactory.createLink(nodedata));
+        } catch (RepositoryException e) {
+            throw new LinkException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Creates link guessing best possible link format from current site and provided content.
+     * @param uuid UUID of content to create link to.
+     * @param repository Name of the repository where content is located.
+     * @return Absolute link to the provided content.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createLink(String repository, String uuid) throws RepositoryException {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+        Content node = hm.getContentByUUID(uuid);
+        return createLink(node);
+    }
 }
