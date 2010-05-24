@@ -34,13 +34,13 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.link.Link;
+
 import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkException;
 import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
