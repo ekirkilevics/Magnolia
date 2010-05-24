@@ -34,6 +34,7 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
 
 /**
@@ -125,6 +126,15 @@ public class LinkTransformerManager {
     }
 
     public LinkTransformer chooseLinkTransformerFor(Content content) {
-        return getAbsolute();
+        if (MgnlContext.isWebContext()) {
+            final Content page = MgnlContext.getAggregationState().getMainContent();
+            if (page != null) {
+                return getRelative(page);
+            } else {
+                return getAbsolute();
+            }
+        } else {
+            return getCompleteUrl();
+        }
     }
 }

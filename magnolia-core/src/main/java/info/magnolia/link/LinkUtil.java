@@ -163,6 +163,29 @@ public class LinkUtil {
     }
 
     /**
+     * Converts provided html with links in UUID pattern format to any other kind of links guessing best transformer to use from the context.
+     * @param str Html with UUID links
+     * @param transformer Link transformer
+     * @return converted html with links as created by provided transformer.
+     * @see LinkTransformerManager
+     */
+    public static String convertLinksFromUUIDPattern(String str) throws LinkException {
+        Matcher matcher = LinkFactory.UUID_PATTERN.matcher(str);
+        StringBuffer res = new StringBuffer();
+        LinkTransformerManager manager = LinkTransformerManager.getInstance();
+        while (matcher.find()) {
+            Link link = LinkFactory.createLink(matcher.group(1), matcher.group(2), matcher.group(5), matcher.group(7), matcher.group(8), matcher.group(10), matcher.group(12));
+            String replacement = manager.chooseLinkTransformerFor(link.getNode()).transform(link);
+            // Replace "\" with "\\" and "$" with "\$" since Matcher.appendReplacement treats these characters specially
+            replacement = StringUtils.replace(replacement, "\\", "\\\\");
+            replacement = StringUtils.replace(replacement,"$", "\\$");
+            matcher.appendReplacement(res, replacement);
+        }
+        matcher.appendTail(res);
+        return res.toString();
+    }
+
+    /**
      * Determines if the given link is internal and relative.
      */
     public static boolean isInternalRelativeLink(String href) {

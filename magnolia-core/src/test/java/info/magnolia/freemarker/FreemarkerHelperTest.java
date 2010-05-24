@@ -454,8 +454,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         agg.setMainContent(page);
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
-        expect(context.getAggregationState()).andReturn(agg);
         expect(context.getHierarchyManager("website")).andReturn(hm);
+        expect(context.getAggregationState()).andReturn(agg);
 
         replay(context);
         doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"baz.html\">Bleh</a> ! ==");
@@ -468,8 +468,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
 
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
-        expect(context.getAggregationState()).andReturn(new AggregationState());
         expect(context.getHierarchyManager("website")).andReturn(hm);
+        expect(context.getAggregationState()).andReturn(new AggregationState());
         expect(context.getContextPath()).andReturn("/some-context");
 
         replay(context);

@@ -40,10 +40,8 @@ import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.LinkUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.link.LinkTransformer;
-import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkUtil;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -79,20 +77,12 @@ class NodeDataModelFactory implements MagnoliaModelFactory {
 
             case PropertyType.STRING:
                 final String s = nodeData.getString();
-                final LinkTransformer t;
-                // TODO : maybe this could be moved to LinkUtil
-                if (MgnlContext.isWebContext()) {
-                    final Content page = MgnlContext.getAggregationState().getMainContent();
-                    if (page != null) {
-                        t = LinkTransformerManager.getInstance().getRelative(page);
-                    } else {
-                        t = LinkTransformerManager.getInstance().getAbsolute();
-                    }
-                } else {
-                    t = LinkTransformerManager.getInstance().getCompleteUrl();
+                try {
+                    final String transformedString = LinkUtil.convertLinksFromUUIDPattern(s);
+                    return new SimpleScalar(transformedString);
+                } catch (LinkException e) {
+                    throw new RuntimeException("Failed to parse links in " + nodeData, e);
                 }
-                final String transformedString = LinkUtil.convertUUIDsToLinks(s, t);
-                return new SimpleScalar(transformedString);
 
             case PropertyType.BINARY:
                 return new BinaryNodeDataModel(nodeData, magnoliaWrapper);
