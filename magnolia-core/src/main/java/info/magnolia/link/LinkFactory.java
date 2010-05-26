@@ -40,8 +40,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.spi.commons.conversion.MalformedPathException;
-import org.apache.jackrabbit.spi.commons.conversion.PathParser;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
@@ -82,9 +80,9 @@ public class LinkFactory {
             throw new LinkException("can't find node " + nodeData , e);
         }
     }
-    
+
     /**
-     * Creates link to the content denoted by repository and uuid. 
+     * Creates link to the content denoted by repository and uuid.
      * @param repository Parent repository of the content of interest.
      * @param uuid UUID of the content to create link to.
      * @return link to the content with provided UUID.
@@ -116,12 +114,19 @@ public class LinkFactory {
             HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
             boolean exists = false;
             try {
-                PathParser.checkFormat(path);
-                exists = hm.isExist(path) && !hm.isNodeData(path);
-            } catch (MalformedPathException e) {
-                // we first check for path incl. the file name. While file name might not be necessarily part of the path, it might contain also non ascii chars. If that is the case, parsing exception will occur so we know that path with filename can't exist.
-                exists = false;
+                // jackrabbit own path parser
+                // TODO: rewrite this as Magnolia method or allow configuration of parser per JCR impl
+                Class parser = Class.forName("org.apache.jackrabbit.spi.commons.conversion.PathParser");
+                parser.getMethod("checkFormat", new Class[] {String.class}).invoke(null, new Object[] {path});
+            } catch (Exception e) {
+                if ("org.apache.jackrabbit.spi.commons.conversion.MalformedPathException".equals(e.getClass().getName())) {
+                    // we first check for path incl. the file name. While file name might not be necessarily part of the path, it might contain also non ascii chars. If that is the case, parsing exception will occur so we know that path with filename can't exist.
+                    exists = false;
+                } else {
+                    // ignore - parser doesn't exists
+                }
             }
+            exists = hm.isExist(path) && !hm.isNodeData(path);
             if (exists) {
                 node = hm.getContent(path);
             }
@@ -158,7 +163,7 @@ public class LinkFactory {
         link.setHandle(path);
         return link;
     }
-    
+
     /**
      * Creates link based on provided parameters.
      * @param uuid UUID of the content
@@ -192,7 +197,7 @@ public class LinkFactory {
         link.setExtension(extension);
         link.setAnchor(anchor);
         link.setParameters(parameters);
-        
+
         return link;
     }
 
@@ -219,7 +224,7 @@ public class LinkFactory {
     public static Link parseLink(String link) throws LinkException{
         // ignore context handle if existing
         link = StringUtils.removeStart(link, MgnlContext.getContextPath());
-    
+
         Matcher matcher = LinkFactory.LINK_PATTERN.matcher(link);
         if(matcher.matches()){
             String orgHandle = matcher.group(1);
@@ -263,8 +268,8 @@ public class LinkFactory {
         + "\\}\\}"  // the handle
         + "(#([^\\?\"]*))?" // anchor
         + "(\\?([^\"]*))?"); // parameters
-    
-    
+
+
     /**
      * Pattern to find a link
      */
