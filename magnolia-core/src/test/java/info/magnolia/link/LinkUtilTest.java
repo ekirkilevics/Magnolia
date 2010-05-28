@@ -160,6 +160,9 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals("../../z/x/y.html", LinkUtil.makePathRelative("/a/b/c.html", "/z/x/y.html"));
         assertEquals("../../../b.html", LinkUtil.makePathRelative("/a/b/c/d/e.html", "/a/b.html"));
         assertEquals("a/b.html", LinkUtil.makePathRelative("/a.html", "/a/b.html"));
+        assertEquals(".", LinkUtil.makePathRelative("/a.html", "/"));
+        assertEquals(".", LinkUtil.makePathRelative("/b/a.html", "/b/"));
+        assertEquals("../", LinkUtil.makePathRelative("/c/b/a.html", "/c/"));
     }
 
     public void testInternalRelativeLinksAreProperlyDetermined() {
