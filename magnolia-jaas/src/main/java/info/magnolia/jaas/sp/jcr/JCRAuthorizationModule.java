@@ -123,7 +123,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
             setACL(((MgnlUser)user).getUserNode(), principalList);
         }
 
-        if (log.isDebugEnabled()) {
+         if (log.isDebugEnabled()) {
             for (Iterator iterator = ((PrincipalCollectionImpl) principalList).iterator(); iterator.hasNext();) {
                 Principal principal = (Principal) iterator.next();
                 log.debug("ACL: {}", principal);
