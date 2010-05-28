@@ -175,7 +175,7 @@ public class LinkUtil {
         LinkTransformerManager manager = LinkTransformerManager.getInstance();
         while (matcher.find()) {
             Link link = LinkFactory.createLink(matcher.group(1), matcher.group(2), matcher.group(5), matcher.group(7), matcher.group(8), matcher.group(10), matcher.group(12));
-            String replacement = manager.chooseLinkTransformerFor(link.getNode()).transform(link);
+            String replacement = manager.getBrowserLink(link.getNode()).transform(link);
             // Replace "\" with "\\" and "$" with "\$" since Matcher.appendReplacement treats these characters specially
             replacement = StringUtils.replace(replacement, "\\", "\\\\");
             replacement = StringUtils.replace(replacement,"$", "\\$");
@@ -330,7 +330,7 @@ public class LinkUtil {
         if(node == null){
             return null;
         }
-        return LinkTransformerManager.getInstance().chooseLinkTransformerFor(node).transform(LinkFactory.createLink(node));
+        return LinkTransformerManager.getInstance().getBrowserLink(node).transform(LinkFactory.createLink(node));
     }
 
     /**
@@ -344,7 +344,7 @@ public class LinkUtil {
             return null;
         }
         try {
-            return LinkTransformerManager.getInstance().chooseLinkTransformerFor(nodedata.getParent()).transform(LinkFactory.createLink(nodedata));
+            return LinkTransformerManager.getInstance().getBrowserLink(nodedata.getParent()).transform(LinkFactory.createLink(nodedata));
         } catch (RepositoryException e) {
             throw new LinkException(e.getMessage(), e);
         }

@@ -45,6 +45,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
@@ -85,7 +86,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         foo.addContent(new MockContent("baz"));
         foo.addContent(new MockContent("gazonk"));
         final Pair pair = new Pair(Color.ORANGE, foo);
-        final Map map = createSingleValueMap("pair", pair);
+        final Map<String, Object> map = createSingleValueMap("pair", pair);
 
         tplLoader.putTemplate("test.ftl", "${pair.right} ${pair.right.gazonk} ${pair.left?string} ${pair.right?string} ${pair.right.gazonk?string}");
 
@@ -456,6 +457,8 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         expect(context.getLocale()).andReturn(Locale.CANADA);
         expect(context.getHierarchyManager("website")).andReturn(hm);
         expect(context.getAggregationState()).andReturn(agg);
+
+        LinkTransformerManager.getInstance().setMakeBrowserLinksRelative(true);
 
         replay(context);
         doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"baz.html\">Bleh</a> ! ==");
