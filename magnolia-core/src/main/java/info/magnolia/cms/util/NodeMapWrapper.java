@@ -78,7 +78,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
         super(node);
         this.handle = handle;
     }
-    
+
     @Override
     protected Content wrap(Content node) {
         return new NodeMapWrapper(node, handle);
@@ -169,9 +169,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
         }
         else {
             try {
-                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(
-                    nodeData.getString(),
-                    LinkTransformerManager.getInstance().getBrowserLink(handle));
+                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(nodeData.getString(), LinkTransformerManager.getInstance().getBrowserLink(handle));
             }
             catch (LinkException e) {
                 log.warn("Failed to parse links with from " + nodeData.getName(), e);

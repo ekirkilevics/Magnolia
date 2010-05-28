@@ -68,6 +68,9 @@ public class LinkUtil {
 
     public static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
+    // is this proxied or not? Tests says no.
+    //private static final LinkTransformerManager linkManager = LinkTransformerManager.getInstance();
+
     /**
      * Pattern to find a link.
      */
@@ -162,29 +165,10 @@ public class LinkUtil {
         return res.toString();
     }
 
-    /**
-     * Converts provided html with links in UUID pattern format to any other kind of links guessing best transformer to use from the context.
-     * @param str Html with UUID links
-     * @param transformer Link transformer
-     * @return converted html with links as created by provided transformer.
-     * @see LinkTransformerManager
-     */
     public static String convertLinksFromUUIDPattern(String str) throws LinkException {
-        Matcher matcher = LinkFactory.UUID_PATTERN.matcher(str);
-        StringBuffer res = new StringBuffer();
-        LinkTransformerManager manager = LinkTransformerManager.getInstance();
-        while (matcher.find()) {
-            Link link = LinkFactory.createLink(matcher.group(1), matcher.group(2), matcher.group(5), matcher.group(7), matcher.group(8), matcher.group(10), matcher.group(12));
-            String replacement = manager.getBrowserLink(link.getNode()).transform(link);
-            // Replace "\" with "\\" and "$" with "\$" since Matcher.appendReplacement treats these characters specially
-            replacement = StringUtils.replace(replacement, "\\", "\\\\");
-            replacement = StringUtils.replace(replacement,"$", "\\$");
-            matcher.appendReplacement(res, replacement);
-        }
-        matcher.appendTail(res);
-        return res.toString();
+        LinkTransformer transformer = LinkTransformerManager.getInstance().getBrowserLink(null);
+        return convertLinksFromUUIDPattern(str, transformer);
     }
-
     /**
      * Determines if the given link is internal and relative.
      */
@@ -330,7 +314,7 @@ public class LinkUtil {
         if(node == null){
             return null;
         }
-        return LinkTransformerManager.getInstance().getBrowserLink(node).transform(LinkFactory.createLink(node));
+        return LinkTransformerManager.getInstance().getBrowserLink(node.getHandle()).transform(LinkFactory.createLink(node));
     }
 
     /**
@@ -344,7 +328,7 @@ public class LinkUtil {
             return null;
         }
         try {
-            return LinkTransformerManager.getInstance().getBrowserLink(nodedata.getParent()).transform(LinkFactory.createLink(nodedata));
+            return LinkTransformerManager.getInstance().getBrowserLink(nodedata.getParent().getHandle()).transform(LinkFactory.createLink(nodedata));
         } catch (RepositoryException e) {
             throw new LinkException(e.getMessage(), e);
         }

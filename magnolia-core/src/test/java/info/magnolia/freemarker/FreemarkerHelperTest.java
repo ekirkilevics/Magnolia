@@ -454,13 +454,16 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final AggregationState agg = new AggregationState();
         agg.setMainContent(page);
         final WebContext context = createStrictMock(WebContext.class);
+        MgnlContext.setInstance(context);
+        expect(context.getContextPath()).andReturn("/");
         expect(context.getLocale()).andReturn(Locale.CANADA);
-        expect(context.getHierarchyManager("website")).andReturn(hm);
         expect(context.getAggregationState()).andReturn(agg);
+        expect(context.getHierarchyManager("website")).andReturn(hm);
 
         LinkTransformerManager.getInstance().setMakeBrowserLinksRelative(true);
 
         replay(context);
+        agg.setCurrentURI("/foo/bar/baz.html");
         doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"baz.html\">Bleh</a> ! ==");
         verify(context);
     }
@@ -469,10 +472,12 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final MockContent page = new MockContent("baz");
         final MockHierarchyManager hm = prepareHM(page);
 
+        LinkTransformerManager.getInstance().setAddContextPathToBrowserLinks(true);
+
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
+        expect(context.getAggregationState()).andReturn(null);
         expect(context.getHierarchyManager("website")).andReturn(hm);
-        expect(context.getAggregationState()).andReturn(new AggregationState());
         expect(context.getContextPath()).andReturn("/some-context");
 
         replay(context);

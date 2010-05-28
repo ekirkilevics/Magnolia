@@ -57,7 +57,7 @@ import static org.easymock.EasyMock.*;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractFreemarkerTestCase extends TestCase {
     protected StringTemplateLoader tplLoader;
@@ -112,6 +112,7 @@ public abstract class AbstractFreemarkerTestCase extends TestCase {
 
     protected void assertRendereredContentWithoutCheckingContext(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
         final StringWriter out = new StringWriter();
+        LinkTransformerManager.getInstance().setMakeBrowserLinksRelative(true);
         fmHelper.render(templateName, o, out);
 
         assertEquals(expectedOutput, out.toString());

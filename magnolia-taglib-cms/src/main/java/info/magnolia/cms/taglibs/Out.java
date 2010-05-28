@@ -371,7 +371,7 @@ public class Out extends BaseContentTag {
                     // ( - see info.magnolia.link.Link for an example of the special format that this next line
                     //    handles )
                     try {
-                        value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContent())); // static actpage
+                        value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContent().getHandle())); // static actpage
                     } catch (LinkException e) {
                         log.warn("Failed to parse links with from " + nodeData.getName(), e);
                     }

@@ -38,6 +38,7 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
@@ -122,34 +123,19 @@ public class LinkTransformerManager {
     /**
      * Creates instance of link transformer that will transform any provided links to either absolute or relative path based on the current server configuration.
      * @param currentPath Path to make links relative to, if relative path translation is configured on the server.
-     * @deprecated since 4.3.2 use {@link #getBrowserLink(Content)} instead
      */
     public LinkTransformer getBrowserLink(String currentPath) {
-        try {
-            return getBrowserLink(MgnlContext.getHierarchyManager("website").getContent(currentPath));
-        } catch (RepositoryException e) {
-            log.error("Attempt to create link transformer using DEPRECATED method getBrowserLink(String) have failed. Please update your code to use the replacement method instead. Generated links might not be correct.", e);
-        }
-        if (isMakeBrowserLinksRelative() ) {
-            return getRelative(currentPath);
-        } else {
-            return getAbsolute(addContextPathToBrowserLinks);
-        }
-    }
-
-    /**
-     * Creates instance of link transformer that will transform any provided links to either absolute or relative path based on the current server configuration.
-     * @param currentPath Path to make links relative to, if relative path translation is configured on the server.
-     * @return
-     */
-    public LinkTransformer getBrowserLink(Content content) {
         if (MgnlContext.isWebContext()) {
-            final Content page = MgnlContext.getAggregationState().getMainContent();
-            if (page != null && isMakeBrowserLinksRelative()) {
-                return getRelative(page);
-            } else {
-                return getAbsolute();
+            if (isMakeBrowserLinksRelative() ) {
+                final AggregationState state = MgnlContext.getAggregationState();
+                if (currentPath == null && state != null) {
+                    currentPath = state.getCurrentURI();
+                }
+                if (currentPath != null) {
+                    return getRelative(currentPath);
+                }
             }
+            return getAbsolute(addContextPathToBrowserLinks);
         } else {
             return getCompleteUrl();
         }
