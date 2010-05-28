@@ -210,6 +210,11 @@ public class LinkUtil {
         String fromPath = StringUtils.substringBeforeLast(url, "/");
         String toPath = StringUtils.substringBeforeLast(absolutePath, "/");
 
+        // reference to parent folder
+        if (StringUtils.equals(fromPath, toPath) && StringUtils.endsWith(absolutePath, "/")) {
+            return ".";
+        }
+
         String[] fromDirectories = StringUtils.split(fromPath, "/");
         String[] toDirectories = StringUtils.split(toPath, "/");
 
