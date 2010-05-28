@@ -129,13 +129,13 @@ public class SiblingsHelper {
         return current;
     }
 
-    public Content first() {
+    public Content goTofirst() {
         this.currentIndex = 0;
         this.current = siblings.get(currentIndex);
         return current;
     }
 
-    public Content last() {
+    public Content goTolast() {
         this.currentIndex = siblings.size() - 1;
         this.current = siblings.get(currentIndex);
         return current;
