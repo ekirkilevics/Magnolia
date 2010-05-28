@@ -463,7 +463,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         LinkTransformerManager.getInstance().setMakeBrowserLinksRelative(true);
 
         replay(context);
-        agg.setCurrentURI("/foo/bar/baz.html");
+        agg.setOriginalURI("/foo/bar/boo.html");
         doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"baz.html\">Bleh</a> ! ==");
         verify(context);
     }

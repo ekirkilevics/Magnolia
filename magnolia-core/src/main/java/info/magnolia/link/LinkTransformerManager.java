@@ -129,7 +129,7 @@ public class LinkTransformerManager {
             if (isMakeBrowserLinksRelative() ) {
                 final AggregationState state = MgnlContext.getAggregationState();
                 if (currentPath == null && state != null) {
-                    currentPath = state.getCurrentURI();
+                    currentPath = state.getOriginalURI();
                 }
                 if (currentPath != null) {
                     return getRelative(currentPath);
