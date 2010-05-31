@@ -74,6 +74,7 @@ public class ContextFilter extends AbstractMgnlFilter {
             contextSet = true;
             try {
                 MDC.put("requesturi", request.getRequestURI());
+                // FIXME: Performance: following line of code forces creation of "users", "userroles" and "usergroups" JCR workspace sessions on _every_ request no matter if the user is logged in or not!
                 MDC.put("userid", MgnlContext.getUser().getName());
 
                 MDC.put("Referer", request.getHeader("Referer"));
