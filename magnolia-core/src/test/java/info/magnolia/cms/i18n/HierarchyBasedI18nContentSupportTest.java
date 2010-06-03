@@ -53,7 +53,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         defSupport.addLocale(new LocaleDefinition("it", null, false));
 
         // no language
-        setCurrentURI("/home.html");
+        setCurrentURI("/baz/bar/home.html");
         Locale  locale = defSupport.determineLocale();
         assertEquals(DEFAULT_LOCALE, locale);
 
@@ -70,6 +70,25 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         assertEquals(new Locale("de", "ch"), locale);
 
         setCurrentURI("/foo/de_ch/bar/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de", "ch"), locale);
+        
+        //same locale, but unsupported country. Should default to the plain locale w/o country
+        setCurrentURI("/foo/de_at/bar/home.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de"), locale);
+        
+        //infer the locale also from the last element in the URI (e.g. a page)
+        setCurrentURI("/foo/bar/de.html");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de"), locale);
+        
+        //last element with no dot
+        setCurrentURI("/foo/bar/de");
+        locale = defSupport.determineLocale();
+        assertEquals(new Locale("de"), locale);
+        
+        setCurrentURI("/foo/bar/de_CH.html");
         locale = defSupport.determineLocale();
         assertEquals(new Locale("de", "ch"), locale);
 
@@ -91,7 +110,7 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
         defSupport.addLocale(new LocaleDefinition("it", null, true));
 
         // no language
-        setCurrentURI("/home.html");
+        setCurrentURI("/foo/bar/home.html");
         Locale  locale = defSupport.determineLocale();
         assertEquals(DEFAULT_LOCALE, locale);
 
@@ -161,18 +180,6 @@ public class HierarchyBasedI18nContentSupportTest extends DefaultI18NContentSupp
 
         //TODO what we should do when a Locale is not supported or disabled but the language tree exists anyway in the content repo?
         //return null? return the fallback locale content? throw an exception?
-        /*
-        // not supported language
-        content = new MockContent("/fr/foo/bar/");
-        content.setHierarchyManager(new MockHierarchyManager());
-        defSupport.setLocale(new Locale("fr"));
-        NodeData frenchBlah = content.setNodeData("blah", "val_fr_blah");
-        localized = defSupport.getNodeData(content, "blah");
-        assertNull("Expected null, got " + localized + " instead", localized);
-        // disabled language
-        defSupport.setLocale(new Locale("it"));
-        localized = defSupport.getNodeData(content, "blah");
-        assrtEquals(defaultblah, localized);*/
     }
 
 }

@@ -40,6 +40,7 @@ import info.magnolia.context.MgnlContext;
 import java.util.Locale;
 
 import org.apache.commons.lang.LocaleUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ import org.slf4j.LoggerFactory;
  *   + page-2
  *   + page-n
  *</pre>
- * The locale is inferred by analyzing the URI and checking whether it contains a valid Java locale code (for a definition of valid <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Locale.html">Java locale</a> code).
+ * The locale is inferred by analyzing the URI and checking whether it contains a valid Java locale code (see definition of valid <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/Locale.html">Java locale</a> code).
  * This code can be at whatever position in the URI, not necessarily the first one. For example, given the following URI <em>/my-website/node-1/node-2/de/home-page.html</em>, the locale <em>de</em>
  * will be detected and content served from here:
  * <pre>
@@ -75,6 +76,7 @@ import org.slf4j.LoggerFactory;
  *    + <strong>de</strong>
  *     + home-page
  * </pre>
+ * Also the last element in the URI, typically a page, can be used to determine the locale. E.g. given the URI <em>/foo/bar/it.html</em> a <em>it</em> will be determined.
  * If no locale is found in the URI, the default one is assumed.
  * @author fgrilli
  *
@@ -89,20 +91,28 @@ public class HierarchyBasedI18nContentSupport extends AbstractI18nContentSupport
         final String i18nURI = MgnlContext.getAggregationState().getCurrentURI();
         log.debug("URI to check for locales is {}", i18nURI);
         final String[] splitURI = i18nURI.split("/");
-        for(String uriToken: splitURI){
+        final int lastTokenIdx = splitURI.length - 1;
+        for (int i = 0; i < splitURI.length; i++) {
+            String uriToken = splitURI[i];
+            if (i == lastTokenIdx) {
+                uriToken = StringUtils.substringBefore(uriToken, ".");
+            }
             locale = determineLocalFromString(uriToken);
-            if(LocaleUtils.isAvailableLocale(locale)){
+            if (LocaleUtils.isAvailableLocale(locale)) {
                 log.debug("found a valid Locale code {}", uriToken);
-                if(isLocaleSupported(locale)){
+                if (isLocaleSupported(locale)) {
                     break;
                 } else {
-                    //the URI contains a valid Locale code but it is not supported by the current I18n configuration.
-                    //We store it anyway and eventually return it if no exact match will be found at the end of this loop.
+                    // the URI contains a valid Locale code but it is not
+                    // supported by the current I18n configuration.
+                    // We store it anyway and eventually return it if no exact
+                    // match will be found at the end of this loop.
                     validUnsupportedLocale = locale;
                 }
             }
             locale = null;
         }
+       
         return locale != null ? locale : validUnsupportedLocale;
     }
 
