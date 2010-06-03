@@ -76,7 +76,7 @@ import org.slf4j.LoggerFactory;
  *    + <strong>de</strong>
  *     + home-page
  * </pre>
- * Also the last element in the URI, typically a page, can be used to determine the locale. E.g. given the URI <em>/foo/bar/it.html</em> a <em>it</em> will be determined.
+ * Also the last element in the URI, typically a page, can be used to determine the locale. E.g. given the URI <em>/foo/bar/it.html</em> a <em>it</em> locale will be determined.
  * If no locale is found in the URI, the default one is assumed.
  * @author fgrilli
  *
