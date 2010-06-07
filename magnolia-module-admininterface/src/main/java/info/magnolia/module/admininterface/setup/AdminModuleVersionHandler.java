@@ -142,6 +142,10 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
             .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
             .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
         );
+
+        register(DeltaBuilder.update("4.3.3", "")
+            .addTask(new NodeExistsDelegateTask("Intercept","Checks if intercept node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept", new RemoveNodeTask("Remove intercept", "Remove unneeded intercept node", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept")))
+        );
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
