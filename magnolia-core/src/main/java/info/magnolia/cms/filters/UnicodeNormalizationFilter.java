@@ -64,24 +64,25 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         throws IOException, ServletException
     {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
+        String originalBrowserURI = MgnlContext.getContextPath() + aggregationState.getOriginalBrowserURI();
+        String originalBrowserURL = aggregationState.getOriginalBrowserURL();
+        String originalURINormalized = MgnlContext.getContextPath() + UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURI());
+        String originalURLNormalized = UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURL());
+        String currentURI = aggregationState.getCurrentURI();
 
-        HttpServletRequest unicodeRequest = request;
-
-        // reset aggregationstate in order to set new values for decoded uris
+        // reset uri of the aggregationState in order to set new values for decoded uris
         MgnlContext.resetAggregationState();
 
         // restore some values
-        MgnlContext.getAggregationState().setCharacterEncoding(aggregationState.getCharacterEncoding());
-        MgnlContext.getAggregationState().setOriginalBrowserURI(
-            MgnlContext.getContextPath() + aggregationState.getOriginalBrowserURI());
-        MgnlContext.getAggregationState().setOriginalBrowserURL(aggregationState.getOriginalBrowserURL());
-        MgnlContext.getAggregationState().setExtension(aggregationState.getExtension());
+        MgnlContext.getAggregationState().setOriginalBrowserURI(originalBrowserURI);
+        MgnlContext.getAggregationState().setOriginalBrowserURL(originalBrowserURL);
+        MgnlContext.getAggregationState().setCurrentURI(currentURI);
 
         // set new values for original uri and url
-        MgnlContext.getAggregationState().setOriginalURI(
-            MgnlContext.getContextPath() + UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURI()));
-        MgnlContext.getAggregationState().setOriginalURL(
-            UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURL()));
+        MgnlContext.getAggregationState().setOriginalURI(originalURINormalized);
+        MgnlContext.getAggregationState().setOriginalURL(originalURLNormalized);
+
+        HttpServletRequest unicodeRequest = request;
 
         // check if it is not a multipart form
         if (MgnlContext.getPostedForm() == null)
