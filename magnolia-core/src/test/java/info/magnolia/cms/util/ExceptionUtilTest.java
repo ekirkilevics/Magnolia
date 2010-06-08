@@ -80,5 +80,28 @@ public class ExceptionUtilTest extends TestCase {
         }
     }
 
+    public void testUnwrapIfWithCauseBeeingNull() {
+        final RuntimeException runtimeWrapping = new RuntimeException((Throwable)null);
+
+        try {
+            ExceptionUtil.unwrapIf(runtimeWrapping, IOException.class);
+            fail();
+        } catch (Throwable t) {
+            assertSame(runtimeWrapping, t);
+            assertNull(t.getCause());
+        }
+    }
+
+    public void testUnwrapIfWithUnwrapIfBeeingNull() {
+        final IOException originalException = new IOException("AIE");
+        final RuntimeException runtimeWrapping = new RuntimeException(originalException);
+        try {
+            ExceptionUtil.unwrapIf(runtimeWrapping, null);
+            fail();
+        } catch (Throwable t) {
+            assertSame(runtimeWrapping, t);
+            assertSame(originalException, t.getCause());
+        }
+    }
 
 }
