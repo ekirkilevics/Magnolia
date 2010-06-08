@@ -40,21 +40,21 @@ package info.magnolia.cms.util;
  */
 public class ExceptionUtil {
 
-    /**
-     * Given a RuntimeException, this method will
-     *  - throw its cause exception, if the cause exception is an instance of the type of the unwrapIf parameter
-     *  - throw its cause exception, if the cause exception is a RuntimeException
-     *  - throw the given RuntimeException otherwise.
-     */
-    public static <E extends Throwable> void unwrapIf(RuntimeException e, Class<E> unwrapIf) throws E {
-        final Throwable wrapped = e.getCause();
-        if (wrapped != null && unwrapIf != null && unwrapIf.isInstance(wrapped)) {
-            throw (E) wrapped;
-        } else if (wrapped != null && wrapped instanceof RuntimeException) {
-            throw (RuntimeException) wrapped;
-        } else {
-            throw e;
-        }
-    }
-
+	/**
+	 * Given a RuntimeException, this method will - throw its cause exception,
+	 * if the cause exception is an instance of the type of the unwrapIf
+	 * parameter - throw its cause exception, if the cause exception is a
+	 * RuntimeException - throw the given RuntimeException otherwise.
+	 */
+	public static <E extends Throwable> void unwrapIf(RuntimeException e,
+			Class<E> unwrapIf) throws E {
+		final Throwable wrapped = e.getCause();
+		if (unwrapIf != null && unwrapIf.isInstance(wrapped)) {
+			throw (E) wrapped;
+		} else if (wrapped != null && wrapped instanceof RuntimeException) {
+			throw (RuntimeException) wrapped;
+		} else {
+			throw e;
+		}
+	}
 }
