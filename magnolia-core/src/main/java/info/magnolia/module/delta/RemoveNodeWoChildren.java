@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,30 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.module.delta;
+
+import javax.jcr.RepositoryException;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.InstallContext;
+
 
 /**
- *
- * @author gjoseph
+ * A task that removes node if that has no children.
+ * @author ochytil
  * @version $Revision: $ ($Author: $)
  */
-public class ExceptionUtil {
+public class RemoveNodeWoChildren extends AbstractRepositoryTask {
+    private final String workspaceName;
+    private final String pathToCheck;
+    
+    public RemoveNodeWoChildren(String name, String description, String workspaceName, String pathToCheck) {
+        super(name, description);
+        this.pathToCheck = pathToCheck;
+        this.workspaceName = workspaceName;
+    }
 
-    /**
-     * Given a RuntimeException, this method will - throw its cause exception,
-     * if the cause exception is an instance of the type of the unwrapIf
-     * parameter - throw its cause exception, if the cause exception is a
-     * RuntimeException - throw the given RuntimeException otherwise.
-     */
-     public static <E extends Throwable> void unwrapIf(RuntimeException e,
-             Class<E> unwrapIf) throws E {
-        final Throwable wrapped = e.getCause();
-        if (unwrapIf != null && unwrapIf.isInstance(wrapped)) {
-           throw (E) wrapped;
-        } else if (wrapped != null && wrapped instanceof RuntimeException) {
-            throw (RuntimeException) wrapped;
-        } else {
-            throw e;
-        }
+    protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
+        final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
+           if (!hm.getContent(pathToCheck).hasChildren() == true) {
+                    final Content node = hm.getContent(pathToCheck);
+                    node.delete();
+            }
+           else ctx.warn("Was supposed to remove " + pathToCheck + " but the node was not empty");
     }
 }

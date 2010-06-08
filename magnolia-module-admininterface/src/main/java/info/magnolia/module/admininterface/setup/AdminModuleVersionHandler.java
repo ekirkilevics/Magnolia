@@ -53,6 +53,7 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.RemoveNodeWoChildren;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,6 +146,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("4.3.3", "")
             .addTask(new NodeExistsDelegateTask("Intercept","Checks if intercept node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept", new RemoveNodeTask("Remove intercept", "Remove unneeded intercept node", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept")))
+            .addTask(new NodeExistsDelegateTask("Filters","Checks if filters node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters", new RemoveNodeWoChildren("Remove filters", "Remove Filters node if has not any children", ContentRepository.CONFIG, "/modules/adminInterface/filters")))
         );
     }
 
