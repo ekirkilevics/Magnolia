@@ -19,7 +19,7 @@ for Java Content Repositories (JCR).
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
-    <documentationURL>http://documentation.magnolia-cms.com/release/4-3-3.html</documentationURL>
+    <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
   </properties>
   <issueManagement>
