@@ -331,23 +331,23 @@ public class ContentUtil {
      */
     public static void orderAfter(Content nodeToMove, String targetNodeName) throws RepositoryException{
         Content parent = nodeToMove.getParent();
-        
-        Collection<Content> children = new ArrayList(ContentUtil.getAllChildren(parent));
+
+        Collection<Content> children = new ArrayList<Content>(ContentUtil.getAllChildren(parent));
         // move all nodes before nodeToMove until the target node has been moved to
         // this will keep the original order
         for (Content child : children) {
-            // don't reorder the node we are moving. we are moving the other nodes infront of it
+            // don't reorder the node we are moving. we are moving the other nodes in front of it
             if(child.getName().equals(nodeToMove.getName())){
                 continue;
             }
-            // order the current child in front of the target node --> 
+            // order the current child in front of the target node -->
             parent.orderBefore(child.getName(), nodeToMove.getName());
             if(child.getName().equals(targetNodeName)){
                 break;
             }
         }
     }
-    
+
     public static void orderNodes(Content node, String[] nodes) throws RepositoryException{
         for (int i = nodes.length - 1; i > 0; i--) {
             node.orderBefore(nodes[i-1], nodes[i]);
@@ -549,12 +549,12 @@ public class ContentUtil {
             parent.save();
         }
     }
-    
+
     /**
-     * Utility method to change the <code>jcr:primaryType</code> value of a node. 
+     * Utility method to change the <code>jcr:primaryType</code> value of a node.
      * @param node - {@link Content} the node whose type has to be changed
      * @param newType - {@link ItemType} the new node type to be assigned
-     * @param replaceAll - boolean when <code>true</code> replaces all occurrences 
+     * @param replaceAll - boolean when <code>true</code> replaces all occurrences
      * of the old node type. When <code>false</code> replaces only the first occurrence.
      * @throws RepositoryException
      */
@@ -569,21 +569,21 @@ public class ContentUtil {
         final String newTypeName = newType.getSystemName();
         if(newTypeName.equals(oldTypeName)){
             log.info("Old node type and new one are the same {}. Nothing to change.", newTypeName);
-            return; 
+            return;
         }
         final Pattern nodeTypePattern = Pattern.compile("(<sv:property\\s+sv:name=\"jcr:primaryType\"\\s+sv:type=\"Name\"><sv:value>)("+oldTypeName+")(</sv:value>)");
         final String replacement = "$1"+newTypeName+"$3";
-        
+
         log.debug("pattern is {}", nodeTypePattern.pattern());
         log.debug("replacement string is {}", replacement);
         log.debug("replaceAll? {}", replaceAll);
-        
+
         final String destParentPath = StringUtils.defaultIfEmpty(StringUtils.substringBeforeLast(node.getHandle(), "/"), "/");
         final Session session = node.getWorkspace().getSession();
         FileOutputStream outStream = null;
         FileInputStream inStream = null;
         File file = null;
-        
+
         try {
             file = File.createTempFile("mgnl", null, Path.getTempDirectory());
             outStream = new FileOutputStream(file);
@@ -593,7 +593,7 @@ public class ContentUtil {
             log.debug("content string is {}", fileContents);
             final Matcher matcher = nodeTypePattern.matcher(fileContents);
             String replaced = null;
-            
+
             log.debug("starting find&replace...");
             long start = System.currentTimeMillis();
             if(matcher.find()) {
@@ -609,14 +609,14 @@ public class ContentUtil {
                 return;
             }
             log.debug("find&replace operations took {}ms" + (System.currentTimeMillis() - start) / 1000);
-            
+
             FileUtils.writeStringToFile(file, replaced);
             inStream = new FileInputStream(file);
             session.importXML(
                 destParentPath,
                 inStream,
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
-            
+
         } catch (IOException e) {
             throw new RepositoryException("Can't replace node " + node.getHandle(), e);
         } finally {
