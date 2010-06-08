@@ -56,11 +56,24 @@ public class UserCallback implements Callback {
     
     private User user;
 
+    // TODO rename to SetUserCallBack
     public UserCallback(User user) {
         this.user = user;
     }
 
     public User getUser() {
         return this.user;
+    }
+
+    public static class GetUserCallback implements Callback {
+        private User user;
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
     }
 }

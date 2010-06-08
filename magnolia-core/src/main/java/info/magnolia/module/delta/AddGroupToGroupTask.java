@@ -33,12 +33,17 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Group;
 import info.magnolia.cms.security.GroupManager;
+import info.magnolia.cms.security.MgnlGroup;
 import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
+import java.util.Collection;
 
 /**
  *
@@ -57,7 +62,8 @@ public class AddGroupToGroupTask extends AbstractRepositoryTask {
 
     @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final GroupManager groupManager = SecuritySupport.Factory.getInstance().getGroupManager();
+        final GroupManager realGroupManager = SecuritySupport.Factory.getInstance().getGroupManager();
+        final GroupManager groupManager = new DelegatingGroupMan(realGroupManager);
         final Group group = groupManager.getGroup(parentGroupName);
         if (group == null) {
             ctx.warn("Group \"" + parentGroupName + "\" not found, can't add \"" + nestedGroupName + "\" to its sub-groups.");
@@ -71,4 +77,38 @@ public class AddGroupToGroupTask extends AbstractRepositoryTask {
             }
         }
     }
+
+    private static class DelegatingGroupMan implements GroupManager {
+        private final GroupManager delegate;
+
+        private DelegatingGroupMan(GroupManager delegate) {
+            this.delegate = delegate;
+        }
+
+        public Group createGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
+            throw new UnsupportedOperationException();
+        }
+
+        public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
+            final Group mgnlGroup = delegate.getGroup(name);
+            if (!(mgnlGroup instanceof MgnlGroup)) {
+                return mgnlGroup;
+            }
+
+            final Content groupNode = ((MgnlGroup) mgnlGroup).getGroupNode();
+
+            final ContentWrapper wrapper = new ContentWrapper(groupNode) {
+                @Override
+                public void save() throws RepositoryException {
+                    // do nothing
+                }
+            };
+            return new MgnlGroup(wrapper) {};
+        }
+
+        public Collection<Group> getAllGroups() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
+    }
+
 }

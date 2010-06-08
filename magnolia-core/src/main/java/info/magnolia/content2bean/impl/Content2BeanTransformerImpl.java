@@ -322,6 +322,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         }
 
         if ((Collection.class.equals(propertyType)) && (value instanceof Map)) {
+            // TODO never used ?
             return ((Map) value).values();
         }
 

@@ -47,6 +47,7 @@ import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.callback.UserCallback;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
@@ -56,11 +57,14 @@ import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -111,9 +115,19 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
         setACLForRoles(roles, principalList);
         setACLForGroups(groups, principalList);
         User user = null;
-        if (callbackHandler instanceof CredentialsCallbackHandler) {
-            user = ((CredentialsCallbackHandler) callbackHandler).getUser();
+        // if (callbackHandler instanceof CredentialsCallbackHandler) {
+        // user = ((CredentialsCallbackHandler) callbackHandler).getUser();
+        //}
+        try {
+            final UserCallback.GetUserCallback callback = new UserCallback.GetUserCallback();
+            callbackHandler.handle(new Callback[]{callback});
+            user = callback.getUser();
+        } catch (IOException e) {
+            throw new RuntimeException(e); // TODO
+        } catch (UnsupportedCallbackException e) {
+            throw new RuntimeException(e); // TODO
         }
+
         // not all jaas modules will support magnolia users
         if(user == null){
             user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);

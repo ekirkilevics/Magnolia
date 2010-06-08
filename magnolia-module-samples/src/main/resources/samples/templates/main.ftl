@@ -12,7 +12,7 @@
         [@cms.links /]
     </head>
 
-    <body>
+    <body dir=>
 
     [#-- Page Dialog --]
     [@cms.mainBar dialog="mainProperties" /]
