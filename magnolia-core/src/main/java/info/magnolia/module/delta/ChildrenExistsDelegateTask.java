@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.delta;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.module.InstallContext;
+
+import javax.jcr.RepositoryException;
 
 /**
  * A task that delegates to another depending on existence of children.
+ * 
  * @author ochytil
  * @version $Revision: $ ($Author: $)
  */
@@ -46,12 +47,17 @@ public class ChildrenExistsDelegateTask extends ConditionalDelegateTask {
     private final String workspaceName;
     private final String pathToCheck;
     private final String contentType;
-    
-    public ChildrenExistsDelegateTask(String name, String description, String workspaceName, String pathToCheck, String contentType, Task ifTrue) {
-        this(name, description, workspaceName, pathToCheck, contentType, ifTrue, null);
+
+    public ChildrenExistsDelegateTask(String name, String description,
+            String workspaceName, String pathToCheck, String contentType,
+            Task ifTrue) {
+        this(name, description, workspaceName, pathToCheck, contentType,
+                ifTrue, null);
     }
 
-    public ChildrenExistsDelegateTask(String name, String description, String workspaceName, String pathToCheck, String contentType, Task ifTrue, Task ifFalse) {
+    public ChildrenExistsDelegateTask(String name, String description,
+            String workspaceName, String pathToCheck, String contentType,
+            Task ifTrue, Task ifFalse) {
         super(name, description, ifTrue, ifFalse);
         this.pathToCheck = pathToCheck;
         this.workspaceName = workspaceName;
@@ -61,12 +67,14 @@ public class ChildrenExistsDelegateTask extends ConditionalDelegateTask {
     protected boolean condition(InstallContext ctx) {
         try {
             if (contentType != null) {
-                return ctx.getHierarchyManager(workspaceName).getContent(pathToCheck).hasChildren(contentType);
-                } else {
-                    return ctx.getHierarchyManager(workspaceName).getContent(pathToCheck).hasChildren(); 
-                 }
+                return ctx.getHierarchyManager(workspaceName).getContent(
+                        pathToCheck).hasChildren(contentType);
+            } else {
+                return ctx.getHierarchyManager(workspaceName).getContent(
+                        pathToCheck).hasChildren();
+            }
         } catch (RepositoryException e) {
-            throw new RuntimeException (e);
-          }
+            throw new RuntimeException(e);
+        }
     }
 }
