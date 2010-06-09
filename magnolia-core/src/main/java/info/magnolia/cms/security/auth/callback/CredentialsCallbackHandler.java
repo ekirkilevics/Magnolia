@@ -111,9 +111,6 @@ public class CredentialsCallbackHandler implements CallbackHandler {
             else if (callbacks[i] instanceof UserCallback) {
                 user = ((UserCallback) callbacks[i]).getUser();
             }
-            else if (callbacks[i] instanceof UserCallback.GetUserCallback) {
-                ((UserCallback.GetUserCallback) callbacks[i]).setUser(user);
-            }
             else if (callbacks[i] instanceof TextOutputCallback) {
                 TextOutputCallback outputCallback = (TextOutputCallback) callbacks[i];
                 switch (outputCallback.getMessageType()) {

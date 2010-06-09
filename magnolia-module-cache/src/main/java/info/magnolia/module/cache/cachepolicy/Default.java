@@ -96,7 +96,7 @@ public class Default implements CachePolicy {
         final Object cachedEntry = cache.get(key);
         // also assume that if the value can't be retrieved for given key, underlying cache is not a pig and will throw exception at some point releasing the thread and propagating the error to the user
 
-        if (cachedEntry != null) {
+       if (cachedEntry != null) {
             return new CachePolicyResult(CachePolicyResult.useCache, key, cachedEntry);
         } else {
             return new CachePolicyResult(CachePolicyResult.store, key, null);

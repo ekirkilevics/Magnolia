@@ -43,7 +43,6 @@ import java.util.Map;
 public class DefaultCacheKey implements Serializable {
 
     // Keep the svuid fixed to prevent deserialization errors. Keep in mind that when adding new properties they will be deserialized to null!
-    //--- TODO but we flush after install/updates anyway, so... !?
     private static final long serialVersionUID = 2699497852929596651L;
 
     private String uri;

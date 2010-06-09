@@ -44,14 +44,9 @@ import info.magnolia.module.templating.RenderException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.PageContext;
 
 import java.io.Writer;
-import java.util.AbstractMap;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Simple jsp template renderer, mapped to template type <code>jsp</code>. The only valid attribute jsp templates is
@@ -96,8 +91,7 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
     }
 
     protected Map newContext() {
-        final WebContext webContext = MgnlContext.getWebContext("JspTemplateRenderer can only be used with a WebContext");
-        return webContext;
+        return MgnlContext.getWebContext("JspTemplateRenderer can only be used with a WebContext");
     }
 
     protected String getPageAttributeName() {

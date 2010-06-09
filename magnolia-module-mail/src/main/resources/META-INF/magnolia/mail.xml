@@ -6,14 +6,6 @@
   <class>info.magnolia.module.mail.MailModule</class>
   <versionHandler>info.magnolia.module.mail.setup.MailModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
-
-  <properties>
-    <property>
-      <name>info.magnolia.module.mail.handlers.MgnlMailHandler</name>
-      <value>info.magnolia.module.mail.handlers.SimpleMailHandler</value>
-    </property>
-  </properties>
-
   <dependencies>
     <dependency>
       <name>adminInterface</name>

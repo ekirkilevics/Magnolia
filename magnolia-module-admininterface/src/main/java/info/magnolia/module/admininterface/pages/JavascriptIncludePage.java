@@ -165,7 +165,7 @@ public class JavascriptIncludePage extends PageMVCHandler {
     /**
      * Render the default messages using the fallback local. This is useful because the messages_[lang].js include is new
      */
-    protected void prepareI18n(PrintWriter out) throws IOException {
+    private void prepareI18n(PrintWriter out) throws IOException {
         InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/i18n.js");
         IOUtils.copy(in, out);
         // put the default messages into the main file if one misses the messages.js file
