@@ -68,7 +68,7 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         String originalBrowserURL = aggregationState.getOriginalBrowserURL();
         String originalURINormalized = MgnlContext.getContextPath() + UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURI());
         String originalURLNormalized = UnicodeNormalizer.normalizeNFC(aggregationState.getOriginalURL());
-        String currentURI = aggregationState.getCurrentURI();
+        String currentURI = MgnlContext.getContextPath() + aggregationState.getCurrentURI();
 
         // reset uri of the aggregationState in order to set new values for decoded uris
         MgnlContext.resetAggregationState();
