@@ -44,25 +44,25 @@ public class TabEntry extends BaseTreeModel {
   private boolean closable = true;
   private HideMode hideMode = HideMode.DISPLAY;
 
-  public TabEntry(String name, LayoutContainer example, String image) {
+  public TabEntry(String name, LayoutContainer item, String image) {
     this.name = name;
     set("name", name);
     set("image", image);
-    set("example", example);
+    set("item", item);
   }
 
-  public TabEntry(String name, LayoutContainer example, String image, boolean fill) {
-    this(name, example, image);
+  public TabEntry(String name, LayoutContainer item, String image, boolean fill) {
+    this(name, item, image);
     this.fill = fill;
   }
 
-  public TabEntry(String name, LayoutContainer example, String image, boolean fill, boolean closable) {
-    this(name, example, image, fill);
+  public TabEntry(String name, LayoutContainer item, String image, boolean fill, boolean closable) {
+    this(name, item, image, fill);
     this.closable = closable;
   }
 
-  public TabEntry(String name, LayoutContainer example, String image, boolean fill, boolean closable, HideMode hideMode) {
-    this(name, example, image, fill, closable);
+  public TabEntry(String name, LayoutContainer item, String image, boolean fill, boolean closable, HideMode hideMode) {
+    this(name, item, image, fill, closable);
     this.setHideMode(hideMode);
   }
 
@@ -70,8 +70,8 @@ public class TabEntry extends BaseTreeModel {
 
   }
 
-  public LayoutContainer getExample() {
-    return (LayoutContainer) get("example");
+  public LayoutContainer getItem() {
+    return (LayoutContainer) get("item");
   }
 
   public String getId() {
@@ -87,21 +87,6 @@ public class TabEntry extends BaseTreeModel {
 
   public String getName() {
     return (String) get("name");
-  }
-
-  public String getSourceUrl() {
-    Object o = (Object) get("example");
-    String name = o.getClass().getName();
-
-    name = name.substring(name.lastIndexOf("examples.") + 9);
-    name = "code/" + name + ".html";
-    name = name.replaceFirst("\\.", "/");
-
-    if (!AdminCentral.isExplorer()) {
-      name = "../../" + name;
-    }
-
-    return name;
   }
 
   public boolean isClosable() {

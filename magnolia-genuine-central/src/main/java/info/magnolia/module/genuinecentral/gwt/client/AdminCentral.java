@@ -344,31 +344,18 @@ public class AdminCentral implements EntryPoint {
             treeTab.setScrollMode(Scroll.NONE);
         }
 
-        TabItem source = new TabItem("View Source");
-        source.setUrl(entry.getSourceUrl());
-
+        treeTab.add(entry.getItem());
         panel.add(treeTab);
-        panel.add(source);
-
-        ToolBar toolBar = new ToolBar();
-        Button item = new Button("View Source");
-
-        toolBar.add(new FillToolItem());
-        toolBar.add(item);
-
-        treeTab.add(entry.getExample());
 
         viewport.add(panel, new BorderLayoutData(LayoutRegion.CENTER));
 
         viewport.show();
         RootPanel.get().add(viewport);
-        System.out.println("viewport:" + viewport);
-
     }
 
     private void createNorth() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div id='demo-header' class='x-small-editor'><div id='demo-theme'></div><div id=demo-title>Ext GWT Examples</div></div>");
+        sb.append("<div id='demo-header' class='x-small-editor'><div id='demo-theme'></div><div id=demo-title>The Tree</div></div>");
 
         HtmlContainer northPanel = new HtmlContainer(sb.toString());
         northPanel.setStateful(false);

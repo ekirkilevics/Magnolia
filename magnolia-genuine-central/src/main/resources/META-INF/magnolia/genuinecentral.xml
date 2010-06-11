@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>genuinecentral</name>
+  <displayName>Magnolia GenUIne Admin Interface</displayName>
+  <description>New Magnolia Administration GUI</description>
+  <class>info.magnolia.module.genuinecentral.AdminCentralModule</class>
+  <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.0/*</version>
+    </dependency>
+    <dependency>
+      <name>templating</name>
+      <version>5.0/*</version>
+    </dependency>
+  </dependencies>
+</module>

@@ -16,12 +16,10 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.gwtext</groupId>
       <artifactId>gwtext</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.extjs</groupId>

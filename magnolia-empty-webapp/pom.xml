@@ -56,6 +56,11 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-genuine-central</artifactId>
+      <version>5.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
       <version>5.0-SNAPSHOT</version>
     </dependency>
@@ -181,6 +186,21 @@
             <phase>package</phase>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>1.2</version>
+        <configuration>
+          <module>info.magnolia.module.genuinecentral.AdminCentral</module>
+          <runTarget>Magnolia.html</runTarget>
+          <hostedWebapp>target/${project.name}-${project.version}</hostedWebapp>
+          <port>8080</port>
+          <debugPort>8011</debugPort>
+          <debugSuspend>false</debugSuspend>
+          <style>DETAILED</style>
+          <logLevel>DEBUG</logLevel>
+        </configuration>
       </plugin>
     </plugins>
   </build>
