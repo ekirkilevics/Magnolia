@@ -355,11 +355,12 @@ public class AdminCentral implements EntryPoint {
 
     private void createNorth() {
         StringBuffer sb = new StringBuffer();
-        sb.append("<div id='demo-header' class='x-small-editor'><div id='demo-theme'></div><div id=demo-title>The Tree</div></div>");
+        sb.append("<div id='demo-header' class='x-small-editor'><div id='demo-theme'></div></div>");
 
         HtmlContainer northPanel = new HtmlContainer(sb.toString());
         northPanel.setStateful(false);
 
+        
         ThemeManager.register(Slate.SLATE);
         ThemeSelector selector = new ThemeSelector();
         selector.setWidth(125);
