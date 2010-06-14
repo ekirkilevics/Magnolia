@@ -22,7 +22,6 @@ for Java Content Repositories (JCR).
     <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
     <gwtVersion>2.0.3</gwtVersion>
-    <gwtextVersion>2.0.5</gwtextVersion>
     <resteasyVersion>1.2.GA</resteasyVersion>
   </properties>
   <issueManagement>
@@ -279,6 +278,10 @@ for Java Content Repositories (JCR).
           <exclusion>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -662,9 +665,18 @@ for Java Content Repositories (JCR).
       </snapshots>
     </repository>
     <repository>
-      <id>jboss</id>
-      <name>jboss repo</name>
-      <url>http://repository.jboss.org/maven2</url>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Repository Group</name>
+      <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
     </repository>
   </repositories>
   <modules>
