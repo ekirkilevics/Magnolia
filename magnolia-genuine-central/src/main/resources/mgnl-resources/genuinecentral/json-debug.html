@@ -1,0 +1,25 @@
+<html>
+<body>
+URL <input name="url" id="url" value="/.magnolia/rest/" size="60" type="text"><br>
+ContentType <input name="contentType" id="contentType" value="application/json" type="text">
+<input value="Send" onclick="sendRequest()" type="button"><br>
+<textarea rows="15" cols="80" id="output"></textarea>
+<script type="text/javascript">
+
+	function sendRequest() {
+		http = new XMLHttpRequest();
+		http.open("GET", document.getElementById("url").value, true);
+		http.setRequestHeader("Accept", document.getElementById("contentType").value);
+		http.onreadystatechange = useHttpResponse;
+		http.send(null);
+	}
+
+	function useHttpResponse() {
+		if (http.readyState == 4) {
+			document.getElementById("output").value = http.responseText;
+		}
+	}
+
+</script>
+</body>
+</html>
