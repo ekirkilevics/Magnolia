@@ -10,7 +10,7 @@
     <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
   </sv:property>
   <sv:property sv:name="pattern" sv:type="String">
-    <sv:value>/.resources/genuinecentral/</sv:value>
+    <sv:value>/.resources/genuinecentral</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -32,7 +32,7 @@
       <sv:value>2007-05-02T17:00:15.025+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2010-06-14T12:23:38.963+02:00</sv:value>
+      <sv:value>2010-06-14T18:32:02.358+02:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
