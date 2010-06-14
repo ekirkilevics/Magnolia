@@ -253,11 +253,6 @@ for Java Content Repositories (JCR).
             <version>${gwtVersion}</version>
          </dependency>
          <dependency>
-            <groupId>com.gwtext</groupId>
-            <artifactId>gwtext</artifactId>
-            <version>${gwtextVersion}</version>
-         </dependency>
-         <dependency>
              <groupId>com.extjs</groupId>
              <artifactId>gxt</artifactId>
              <version>2.1.1</version>
@@ -662,13 +657,6 @@ for Java Content Repositories (JCR).
     <repository>
       <id>magnolia</id>
       <url>http://repo.magnolia-cms.com/m2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>gwtext</id>
-      <url>http://www.gwt-ext.com/maven2</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
