@@ -673,6 +673,11 @@ for Java Content Repositories (JCR).
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>jboss</id>
+      <name>jboss repo</name>
+      <url>http://repository.jboss.org/maven2</url>
+    </repository>
   </repositories>
   <modules>
     <module>magnolia-core</module>
