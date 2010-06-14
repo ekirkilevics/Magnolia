@@ -22,6 +22,7 @@ for Java Content Repositories (JCR).
     <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
     <gwtVersion>2.0.3</gwtVersion>
+    <extGWTVersion>2.1.1</extGWTVersion>
     <resteasyVersion>1.2.1.GA</resteasyVersion>
   </properties>
   <issueManagement>
@@ -254,7 +255,7 @@ for Java Content Repositories (JCR).
          <dependency>
              <groupId>com.extjs</groupId>
              <artifactId>gxt</artifactId>
-             <version>2.1.1</version>
+             <version>${extGWTVersion}</version>
          </dependency>
          <dependency>
             <groupId>javax.xml.bind</groupId>
