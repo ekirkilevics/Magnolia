@@ -18,10 +18,6 @@
       <artifactId>gwt-user</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.gwtext</groupId>
-      <artifactId>gwtext</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.extjs</groupId>
       <artifactId>gxt</artifactId>
     </dependency>
