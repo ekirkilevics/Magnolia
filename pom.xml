@@ -23,7 +23,7 @@ for Java Content Repositories (JCR).
     <javaVersion>1.5</javaVersion>
     <gwtVersion>2.0.3</gwtVersion>
     <gwtextVersion>2.0.5</gwtextVersion>
-    <resteasyVersion>1.1.GA</resteasyVersion>
+    <resteasyVersion>1.2.GA</resteasyVersion>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -267,21 +267,31 @@ for Java Content Repositories (JCR).
             <artifactId>jaxb-api</artifactId>
             <version>2.1</version>
          </dependency>
-         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>${resteasyVersion}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxb-provider</artifactId>
-            <version>${resteasyVersion}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>jaxrs-api</artifactId>
-            <version>${resteasyVersion}</version>
-         </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxrs</artifactId>
+        <version>${resteasyVersion}</version>
+        <!-- filter out unwanted jars -->
+        <exclusions>
+          <exclusion>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>tjws</groupId>
+            <artifactId>webserver</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jackson-provider</artifactId>
+        <version>${resteasyVersion}</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>

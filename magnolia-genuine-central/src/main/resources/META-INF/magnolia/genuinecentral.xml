@@ -17,4 +17,15 @@
       <version>5.0/*</version>
     </dependency>
   </dependencies>
+
+  <servlets>
+    <servlet>
+      <name>RESTServlet</name>
+      <class>info.magnolia.module.genuinecentral.json.JsonDispatcherServlet</class>
+      <comment>Exposes the REST API</comment>
+      <mappings>
+        <mapping>/.magnolia/rest/*</mapping>
+      </mappings>
+    </servlet>
+  </servlets>
 </module>
