@@ -22,7 +22,7 @@ for Java Content Repositories (JCR).
     <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
     <gwtVersion>2.0.3</gwtVersion>
-    <resteasyVersion>1.2.GA</resteasyVersion>
+    <resteasyVersion>1.2.1.GA</resteasyVersion>
   </properties>
   <issueManagement>
     <system>Jira</system>
