@@ -247,21 +247,21 @@ for Java Content Repositories (JCR).
   </build>
   <dependencyManagement>
     <dependencies>
-         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwtVersion}</version>
-         </dependency>
-         <dependency>
-             <groupId>com.extjs</groupId>
-             <artifactId>gxt</artifactId>
-             <version>${extGWTVersion}</version>
-         </dependency>
-         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-         </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-user</artifactId>
+        <version>${gwtVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.extjs</groupId>
+        <artifactId>gxt</artifactId>
+        <version>${extGWTVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.1</version>
+      </dependency>
       <dependency>
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs</artifactId>
