@@ -666,8 +666,7 @@ for Java Content Repositories (JCR).
       </snapshots>
     </repository>
     <repository>
-      <id>jboss-public-repository-group</id>
-      <name>JBoss Public Repository Group</name>
+      <id>jboss-releases-repo</id>
       <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
       <layout>default</layout>
       <releases>
