@@ -37,8 +37,6 @@ import info.magnolia.module.genuinecentral.data.MgnlContentStore;
 import info.magnolia.module.genuinecentral.dialog.DialogBuilder;
 
 import com.google.gwt.core.client.EntryPoint;
-//import com.google.gwt.core.client.JavaScriptObject;
-//import com.google.gwt.user.client.rpc.AsyncCallback;
 import java.util.Map;
 
 import com.extjs.gxt.themes.client.Slate;
@@ -53,13 +51,9 @@ import com.extjs.gxt.ui.client.widget.HtmlContainer;
 import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.custom.ThemeSelector;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
-import com.extjs.gxt.ui.client.widget.toolbar.FillToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -360,11 +354,8 @@ public class AdminCentral implements EntryPoint {
         HtmlContainer northPanel = new HtmlContainer(sb.toString());
         northPanel.setStateful(false);
 
-        
+        // register some theme ... should be probably replaced with our own custom theme later.
         ThemeManager.register(Slate.SLATE);
-        ThemeSelector selector = new ThemeSelector();
-        selector.setWidth(125);
-        northPanel.add(selector, "#demo-theme");
 
         BorderLayoutData data = new BorderLayoutData(LayoutRegion.NORTH, 33);
         data.setMargins(new Margins());
