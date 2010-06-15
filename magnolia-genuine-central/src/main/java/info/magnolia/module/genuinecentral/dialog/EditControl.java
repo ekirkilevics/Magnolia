@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,18 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral;
+package info.magnolia.module.genuinecentral.dialog;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.genuinecentral.dialog.DialogRegistry;
-
-public class GenuineCentralModule implements ModuleLifecycle {
-
-    public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("dialogs", DialogRegistry.getInstance());
-    }
-
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-    }
+public class EditControl extends ControlImpl {
 }

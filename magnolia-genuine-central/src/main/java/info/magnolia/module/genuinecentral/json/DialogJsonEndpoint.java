@@ -33,10 +33,7 @@
  */
 package info.magnolia.module.genuinecentral.json;
 
-import info.magnolia.module.genuinecentral.dialog.Control;
-import info.magnolia.module.genuinecentral.dialog.ControlImpl;
-import info.magnolia.module.genuinecentral.dialog.Dialog;
-import info.magnolia.module.genuinecentral.dialog.DialogImpl;
+import info.magnolia.module.genuinecentral.dialog.*;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -60,18 +57,23 @@ public class DialogJsonEndpoint {
             return null;
         }
 */
-        DialogImpl thing = new DialogImpl();
-        thing.setLabel("dialogLabel");
 
-        ControlImpl control = new ControlImpl();
-        control.setLabel("Title of the page");
-        control.setName("title");
-        control.setType("edit");
+        EditControl editControl = new EditControl();
+        editControl.setLabel("Title of the page");
+        editControl.setName("title");
+        editControl.setType("edit");
 
-        List<Control> controls = new ArrayList<Control>();
-        controls.add(control);
+        TabControl tab = new TabControl();
+        tab.setLabel("Properties");
+        tab.setType("tab");
+        tab.addControl(editControl);
 
-        thing.setControls(controls);
-        return thing;
+        DialogImpl dialog = new DialogImpl();
+        dialog.setLabel("Page Properties");
+        dialog.addControl(tab);
+
+        // TODO the returned dialog needs to have had i18n keys resolved
+
+        return dialog;
     }
 }

@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.genuinecentral.dialog;
 
+import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.objectfactory.Components;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,22 +44,35 @@ import java.util.Map;
  * @author Vivian Steller
  * @since 1.0.0
  */
-public class DialogRegistry {
-   private Map<String, DialogImpl> dialogs = new HashMap<String, DialogImpl>();
+public class DialogRegistry extends ObservedManager {
 
-   public Map<String, DialogImpl> getDialogs() {
+   private Map<String, Dialog> dialogs = new HashMap<String, Dialog>();
+
+   public Map<String, Dialog> getDialogs() {
       return dialogs;
    }
 
-   public void setDialogs(Map<String, DialogImpl> dialogs) {
+   public void setDialogs(Map<String, Dialog> dialogs) {
       this.dialogs = dialogs;
    }
 
-   public void addDialog(String name, DialogImpl dialog) {
+   public void addDialog(String name, Dialog dialog) {
       dialogs.put(name, dialog);
    }
 
-   public DialogImpl getDialog(String name) {
+   public Dialog getDialog(String name) {
       return dialogs.get(name);
    }
+
+    @Override
+    protected void onRegister(Content node) {
+    }
+
+    @Override
+    protected void onClear() {
+    }
+
+    public static DialogRegistry getInstance() {
+        return Components.getSingleton(DialogRegistry.class);
+    }
 }

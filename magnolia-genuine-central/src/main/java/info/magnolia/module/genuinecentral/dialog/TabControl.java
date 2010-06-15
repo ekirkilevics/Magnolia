@@ -38,18 +38,17 @@ import java.util.List;
 
 public class TabControl extends ControlImpl {
 
-    private List<ControlImpl> controls = new ArrayList<ControlImpl>();
+    private List<Control> controls = new ArrayList<Control>();
 
-    public List<ControlImpl> getControls() {
+    public List<Control> getControls() {
         return controls;
     }
 
-    public void setControls(List<ControlImpl> controls) {
+    public void setControls(List<Control> controls) {
         this.controls = controls;
     }
 
-    public void addControl(ControlImpl control) {
+    public void addControl(Control control) {
         controls.add(control);
     }
-
 }

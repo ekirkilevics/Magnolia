@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,14 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.json;
+package info.magnolia.module.genuinecentral.tree;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
+import java.util.List;
 
 @XmlRootElement
-public class DialogDefinitionTO {
+public class WebsitePage {
+
+    // Template will need to be a name:label pair...
 
     private String name;
+    private String title;
+    private String status;
+    private String template;
+    private List<String> availableTemplates;
+    private Date lastModified;
+    private List<WebsitePage> children;
 
     public String getName() {
         return name;
@@ -46,5 +56,53 @@ public class DialogDefinitionTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public List<String> getAvailableTemplates() {
+        return availableTemplates;
+    }
+
+    public void setAvailableTemplates(List<String> availableTemplates) {
+        this.availableTemplates = availableTemplates;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public List<WebsitePage> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<WebsitePage> children) {
+        this.children = children;
     }
 }
