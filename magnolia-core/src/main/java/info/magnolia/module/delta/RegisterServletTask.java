@@ -43,6 +43,8 @@ import info.magnolia.module.model.ServletParameterDefinition;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author philipp
  * @version $Id$
@@ -64,7 +66,8 @@ public class RegisterServletTask extends AbstractTask {
         final String servletFilterPath = DEFAULT_SERVLET_FILTER_PATH;
 
         try {
-            final Content servletNode = installContext.getConfigHierarchyManager().createContent(servletFilterPath, servletDefinition.getName(), ItemType.CONTENTNODE.getSystemName());
+            final Content servletNode = installContext.getConfigHierarchyManager().createContent(servletFilterPath, servletDefinition.getName(),
+                    ItemType.CONTENTNODE.getSystemName());
             NodeDataUtil.getOrCreateAndSet(servletNode, "class", "info.magnolia.cms.filters.ServletDispatchingFilter");
             NodeDataUtil.getOrCreateAndSet(servletNode, "enabled", true);
             NodeDataUtil.getOrCreateAndSet(servletNode, "servletClass", servletDefinition.getClassName());
@@ -73,6 +76,10 @@ public class RegisterServletTask extends AbstractTask {
 
             final Content mappingsNode = servletNode.createContent("mappings", ItemType.CONTENTNODE);
             for (String pattern : servletDefinition.getMappings()) {
+                if (StringUtils.isBlank(pattern)) {
+                    installContext.warn("Empty mappings configuration is not supported and sevlet was not installed.");
+                    continue;
+                }
                 String mappingNodeName = Path.getUniqueLabel(mappingsNode, Path.getValidatedLabel(pattern));
                 final Content mappingNode = mappingsNode.createContent(mappingNodeName, ItemType.CONTENTNODE);
                 NodeDataUtil.getOrCreateAndSet(mappingNode, "pattern", pattern);
@@ -82,8 +89,7 @@ public class RegisterServletTask extends AbstractTask {
             for (ServletParameterDefinition parameter : servletDefinition.getParams()) {
                 NodeDataUtil.getOrCreateAndSet(parametersNode, parameter.getName(), parameter.getValue());
             }
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             log.error("Cannot create servlet node in servlet filter.", e);
         }
     }
