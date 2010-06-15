@@ -41,21 +41,19 @@ public class GenuineCentralJsonApplication extends Application {
 
     HashSet<Object> singletons = new HashSet<Object>();
 
-    public GenuineCentralJsonApplication()
-    {
-       singletons.add(new GenuineCentralJsonEndpoint());
+    public GenuineCentralJsonApplication() {
+        singletons.add(new DialogJsonEndpoint());
+        singletons.add(new TreeJsonEndpoint());
     }
 
     @Override
-    public Set<Class<?>> getClasses()
-    {
-       HashSet<Class<?>> set = new HashSet<Class<?>>();
-       return set;
+    public Set<Class<?>> getClasses() {
+        HashSet<Class<?>> set = new HashSet<Class<?>>();
+        return set;
     }
 
     @Override
-    public Set<Object> getSingletons()
-    {
-       return singletons;
+    public Set<Object> getSingletons() {
+        return singletons;
     }
 }

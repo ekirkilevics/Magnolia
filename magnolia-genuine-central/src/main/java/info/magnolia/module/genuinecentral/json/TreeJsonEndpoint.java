@@ -33,29 +33,25 @@
  */
 package info.magnolia.module.genuinecentral.json;
 
+import info.magnolia.module.genuinecentral.tree.TreeNode;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-@Path("/dialog")
-public class GenuineCentralJsonEndpoint {
+/**
+ * The tree abstraction might be to generic, different tree views have very little in common and might be better served
+ * by dedicated endpoints for each view.
+ */
+@Path("/tree")
+public class TreeJsonEndpoint {
 
     @GET
-    @Path("/{dialogName}")
-    public DialogDefinitionTO getDialog(@PathParam("dialogName") String dialogName) {
-/*
-        DialogHandlerManager dialogHandlerManager = DialogHandlerManager.getInstance();
-        Content dialogConfigNode;
-        try {
-            dialogConfigNode = dialogHandlerManager.getDialogConfigNode(dialogName);
-        } catch (InvalidDialogHandlerException e) {
-            // TODO: Need error handling conventions for REST
-            return null;
-        }
-*/
-        DialogDefinitionTO thing = new DialogDefinitionTO();
-//        thing.setName(dialogName + " @ " + dialogConfigNode.getUUID());
-        thing.setName("bogus dialog name");
-        return thing;
+    @Path("/{treeName}/{path}")
+    public TreeNode getNode(@PathParam("treeName") String treeName, @PathParam("path") String path) {
+
+        TreeNode treeNode = new TreeNode();
+        treeNode.setName("bogusName");
+        return treeNode;
     }
 }

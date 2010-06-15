@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,55 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.genuinecentral.tree;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+@XmlRootElement
+public class TreeNode {
 
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
-@XmlRootElement(name = "dialog")
-public class DialogImpl implements Dialog {
+    private String name;
 
-    private String label;
-    private List<Control> controls = new ArrayList<Control>();
-
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public List<Control> getControls() {
-        return controls;
-    }
-
-    public void setControls(List<Control> controls) {
-        this.controls = controls;
-    }
-
-    public void addControl(ControlImpl control) {
-        controls.add(control);
-    }
-
-    public String toString() {
-        String result =
-                "label: " + this.getLabel() + "\n" +
-                        "controls:\n";
-
-        for (Control control : this.getControls()) {
-            result += "label: " + control.getLabel() + ", ";
-            result += "type: " + control.getType() + "\n";
-        }
-
-        return result;
-    }
-
 }
