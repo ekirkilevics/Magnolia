@@ -190,7 +190,16 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <!-- Let the modules to do their homework and compile themselves -->
+              <!-- we might still need to do the compiling here at some point if there are issues with cross module dependencies -->
+              <!--goal>compile</goal>
+              <goal>generateAsync</goal-->
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <module>info.magnolia.module.genuinecentral.AdminCentral</module>
           <runTarget>Magnolia.html</runTarget>

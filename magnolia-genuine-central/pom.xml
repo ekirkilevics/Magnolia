@@ -42,17 +42,22 @@
   </dependencies>
 
   <build>
-    <finalName>magnolia-genuine-central</finalName>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>gwt-maven-plugin</artifactId>
-          <version>1.2</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>generateAsync</goal>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <!--resources>
       <resource>
         <directory>src/main/java</directory>
         <includes>
@@ -62,7 +67,7 @@
       <resource>
         <directory>src/main/resources</directory>
       </resource>
-    </resources>
+    </resources-->
   </build>
 </project>
 

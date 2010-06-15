@@ -135,6 +135,11 @@ for Java Content Repositories (JCR).
                 <showWarnings>true</showWarnings>
               </configuration>
             </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>gwt-maven-plugin</artifactId>
+              <version>1.2</version>
+            </plugin>
           </plugins>
         </pluginManagement>
       </build>
