@@ -47,6 +47,11 @@ import info.magnolia.module.model.ServletDefinition;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 
+/**
+ * 
+ * @author ochytil
+ * @version $Revision: $ ($Author: $)
+ */
 public class RegisterServletTaskTest extends RepositoryTestCase {
 
     protected void setUp() throws Exception {
