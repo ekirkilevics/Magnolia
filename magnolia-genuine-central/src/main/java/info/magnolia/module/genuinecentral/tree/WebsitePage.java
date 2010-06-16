@@ -48,7 +48,7 @@ public class WebsitePage {
     private String template;
     private List<String> availableTemplates;
     private Date lastModified;
-    private List<WebsitePage> children;
+    private boolean hasChildren;
 
     public String getName() {
         return name;
@@ -98,11 +98,11 @@ public class WebsitePage {
         this.lastModified = lastModified;
     }
 
-    public List<WebsitePage> getChildren() {
-        return children;
+    public boolean isHasChildren() {
+        return hasChildren;
     }
 
-    public void setChildren(List<WebsitePage> children) {
-        this.children = children;
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
     }
 }

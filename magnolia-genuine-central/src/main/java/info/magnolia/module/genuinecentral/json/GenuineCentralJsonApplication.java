@@ -43,7 +43,7 @@ public class GenuineCentralJsonApplication extends Application {
 
     public GenuineCentralJsonApplication() {
         singletons.add(new DialogJsonEndpoint());
-        singletons.add(new TreeJsonEndpoint());
+        singletons.add(new WebsiteJsonEndpoint());
     }
 
     @Override
