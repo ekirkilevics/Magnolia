@@ -40,7 +40,8 @@ import info.magnolia.module.genuinecentral.dialog.DialogRegistry;
 public class GenuineCentralModule implements ModuleLifecycle {
 
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("dialogs", DialogRegistry.getInstance());
+        // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
+        ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {

@@ -58,19 +58,25 @@ public class DialogJsonEndpoint {
         }
 */
 
-        EditControl editControl = new EditControl();
-        editControl.setLabel("Title of the page");
-        editControl.setName("title");
-        editControl.setType("edit");
+        DialogRegistry dialogRegistry = DialogRegistry.getInstance();
 
-        TabControl tab = new TabControl();
-        tab.setLabel("Properties");
-        tab.setType("tab");
-        tab.addControl(editControl);
+        DialogImpl dialog = (DialogImpl) dialogRegistry.getDialog(dialogName);
 
-        DialogImpl dialog = new DialogImpl();
-        dialog.setLabel("Page Properties");
-        dialog.addControl(tab);
+        if (dialog == null) {
+            EditControl editControl = new EditControl();
+            editControl.setLabel("Title of the page");
+            editControl.setName("title");
+            editControl.setType("edit");
+
+            TabControl tab = new TabControl();
+            tab.setLabel("Properties");
+            tab.setType("tab");
+            tab.addControl(editControl);
+
+            dialog = new DialogImpl();
+            dialog.setLabel("Page Properties");
+            dialog.addControl(tab);
+        }
 
         // TODO the returned dialog needs to have had i18n keys resolved
 

@@ -65,7 +65,7 @@ public class DialogImpl implements Dialog {
         this.controls = controls;
     }
 
-    public void addControl(ControlImpl control) {
+    public void addControl(Control control) {
         controls.add(control);
     }
 

@@ -31,23 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral;
+package info.magnolia.module.genuinecentral.dialog;
 
-import info.magnolia.module.genuinecentral.dialog.DialogRegistry;
-
-
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
-public class AdminCentralModule {
-   private DialogRegistry dialogRegistry;
-
-   public DialogRegistry getDialogRegistry() {
-      return dialogRegistry;
-   }
-
-   public void setDialogRegistry(DialogRegistry dialogRegistry) {
-      this.dialogRegistry = dialogRegistry;
-   }
+public class DateControl extends ControlImpl {
 }

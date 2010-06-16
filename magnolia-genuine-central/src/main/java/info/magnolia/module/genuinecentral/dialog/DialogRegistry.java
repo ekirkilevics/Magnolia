@@ -38,9 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExtendingContentWrapper;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -75,9 +73,9 @@ public class DialogRegistry extends ObservedManager {
         }
 
         for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
-            Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper( iter.next()));
+            Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
             try {
-                if(dialogNode.getItemType().equals(ItemType.CONTENT)){
+                if (dialogNode.getItemType().equals(ItemType.CONTENT)) {
                     log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
                 }
             }
@@ -108,40 +106,96 @@ public class DialogRegistry extends ObservedManager {
     }
 
     protected void collectDialogNodes(Content current, List<Content> dialogNodes) throws RepositoryException {
-         if(isDialogNode(current)){
-             dialogNodes.add(current);
-             return;
-         }
-         for (Content child : ContentUtil.getAllChildren(current)) {
-             collectDialogNodes(child, dialogNodes);
-         }
-     }
+        if (isDialogNode(current)) {
+            dialogNodes.add(current);
+            return;
+        }
+        for (Content child : ContentUtil.getAllChildren(current)) {
+            collectDialogNodes(child, dialogNodes);
+        }
+    }
 
-     protected boolean isDialogNode(Content node) throws RepositoryException{
-         if(isDialogControlNode(node)){
-             return false;
-         }
+    protected boolean isDialogNode(Content node) throws RepositoryException {
+        if (isDialogControlNode(node)) {
+            return false;
+        }
 
-         // if leaf
-         if(ContentUtil.getAllChildren(node).isEmpty()){
-             return true;
-         }
+        // if leaf
+        if (ContentUtil.getAllChildren(node).isEmpty()) {
+            return true;
+        }
 
-         // if has node datas
-         if(!node.getNodeDataCollection().isEmpty()){
-             return true;
-         }
+        // if has node datas
+        if (!node.getNodeDataCollection().isEmpty()) {
+            return true;
+        }
 
-         // if one subnode is a control
-         for (Content child : node.getChildren(ItemType.CONTENTNODE)) {
-             if (isDialogControlNode(child)) {
-                 return true;
-             }
-         }
-         return false;
-     }
+        // if one subnode is a control
+        for (Content child : node.getChildren(ItemType.CONTENTNODE)) {
+            if (isDialogControlNode(child)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-     protected boolean isDialogControlNode(Content node) throws RepositoryException{
-         return node.hasNodeData("controlType") || node.hasNodeData("reference");
-     }
+    protected boolean isDialogControlNode(Content node) throws RepositoryException {
+        return node.hasNodeData("controlType") || node.hasNodeData("reference");
+    }
+
+    public Dialog getDialog(String dialogName) {
+        Content configNode = this.dialogs.get(dialogName);
+        if (configNode == null)
+            return null;
+
+        DialogImpl dialog = new DialogImpl();
+        dialog.setLabel(configNode.getNodeData("label").getString());
+
+        Iterator it = configNode.getChildren(ItemType.CONTENTNODE).iterator();
+        while (it.hasNext()) {
+            Content x = (Content) it.next();
+            
+            String controlType = x.getNodeData("controlType").getString();
+
+            if (controlType.equals("tab")) {
+                dialog.addControl(createTabControl(x));
+            }
+        }
+        return dialog;
+    }
+
+    private Control createTabControl(Content configNode) {
+        TabControl tabControl = new TabControl();
+        tabControl.setType("tab");
+        tabControl.setLabel(configNode.getNodeData("label").getString());
+
+        Iterator it = configNode.getChildren(ItemType.CONTENTNODE).iterator();
+        while (it.hasNext()) {
+            Content x = (Content) it.next();
+
+            String controlType = x.getNodeData("controlType").getString();
+
+            if (controlType.equals("edit")) {
+                tabControl.addControl(createEditControl(x));
+            } else if (controlType.equals("date")) {
+                tabControl.addControl(createDateControl(x));
+            }
+        }
+
+        return tabControl;
+    }
+
+    private EditControl createEditControl(Content configNode) {
+        EditControl editControl = new EditControl();
+        editControl.setType("edit");
+        editControl.setLabel(configNode.getNodeData("label").getString());
+        return editControl;
+    }
+
+    private DateControl createDateControl(Content configNode) {
+        DateControl dateControl = new DateControl();
+        dateControl.setType("date");
+        dateControl.setLabel(configNode.getNodeData("label").getString());
+        return dateControl;
+    }
 }

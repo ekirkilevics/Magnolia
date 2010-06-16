@@ -4,7 +4,7 @@
   <name>genuinecentral</name>
   <displayName>Magnolia GenUIne Admin Interface</displayName>
   <description>New Magnolia Administration GUI</description>
-  <class>info.magnolia.module.genuinecentral.AdminCentralModule</class>
+  <class>info.magnolia.module.genuinecentral.GenuineCentralModule</class>
   <version>${project.version}</version>
 
   <dependencies>
