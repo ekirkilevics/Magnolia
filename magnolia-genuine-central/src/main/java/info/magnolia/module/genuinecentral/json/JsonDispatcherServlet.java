@@ -48,7 +48,7 @@ public class JsonDispatcherServlet extends HttpServletDispatcher {
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        super.service(req, res);    //To change body of overridden methods use File | Settings | File Templates.
+        super.service(req, res);
     }
 
     private static ParameterAddingServletConfigWrapper addInitParameters(ServletConfig servletConfig) {
