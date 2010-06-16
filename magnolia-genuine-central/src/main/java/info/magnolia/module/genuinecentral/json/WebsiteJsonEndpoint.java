@@ -34,7 +34,7 @@
 package info.magnolia.module.genuinecentral.json;
 
 import info.magnolia.module.genuinecentral.tree.WebsitePage;
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.module.genuinecentral.tree.WebsitePageList;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -47,17 +47,24 @@ import java.util.List;
 public class WebsiteJsonEndpoint {
 
     @GET
-    @Path("{path:.*}")
-    public List<WebsitePage> getNode(@PathParam("path") String path) {
+    public WebsitePageList getRootNode() {
+        WebsitePageList pages = new WebsitePageList();
+        pages.add(createMockPage("news", "News Desk", true));
+        pages.add(createMockPage("about", "About", false));
+        return pages;
+    }
 
-        List<WebsitePage> pages = new ArrayList<WebsitePage>();
+    @GET
+    @Path("{path:(.)*}")
+    public WebsitePageList getNode(@PathParam("path") String path) {
 
-        if (path.equals(StringUtils.EMPTY)) {
-            pages.add(createMockPage("news", "News Desk", true));
-            pages.add(createMockPage("about", "About", false));
-        } else if (path.equals("news")) {
+        WebsitePageList pages = new WebsitePageList();
+
+        if (path.equals("news")) {
             pages.add(createMockPage("merger", "QWE merges with RTY", false));
             pages.add(createMockPage("hiring", "New position available", false));
+        } else if (path.equals("news/merger")) {
+        } else if (path.equals("news/hiring")) {
         } else {
             // Sends a 404 to the client
             return null;
