@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>Magnolia Login Form</title>
+    <link rel="stylesheet" href="${contextPath}/.resources/loginForm/login.css" type="text/css"/>
+
+    <script type="text/javascript">
+        window.onload = function() {
+            document.getElementById('username').focus();
+            document.getElementById('externallink').target= "_blank";
+        }
+    </script>
+  </head>
+  <body>
+    <div id="logo">
+      <img src="${contextPath}/.resources/loginForm/magnoliaLogo.gif" alt="Magnolia Enterprise Content Management"/>
+    </div>
+    <div class="page">
+      <div id="header" style="background: white url(${contextPath}/.resources/loginForm/backgroundBar.gif) repeat-x scroll 0%;">
+        <img src="${contextPath}/.resources/loginForm/lock2.gif" id="lock" alt=""/>
+
+        <h1>Magnolia Login</h1>
+      </div>
+      <div id="content">
+        <div id="error">
+        [#if errorString?exists]
+          ${errorString}
+        [#else]
+            &nbsp;
+        [/#if]
+        </div>
+        <div id="form">
+          <form id="loginForm" action="" method="post">
+            <div>
+              <label for="username">Username</label>
+              <input id="username" name="mgnlUserId" />
+              <label for="mgnlUserPSWD">Password</label>
+              <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
+              <label for="submitButton"><!--  --></label>
+              <input id="submitButton" type="submit" value="login" class="button" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      &copy; Copyright 2003-2010
+      <a href="http://www.magnolia-cms.com" id="externallink">Magnolia International Ltd.</a>
+       -
+      St. Johanns-Vorstadt 38, 4056 Basel, Switzerland
+       <br/>
+      Tel +41 61 228 9000 (9AM-5PM GMT+1)
+       -
+      <a href="mailto:info@magnolia-cms.com">info@magnolia-cms.com</a>
+      <br/>
+      Magnolia is a registered trademark of Magnolia International Ltd.
+    </div>
+  </body>
+</html>
