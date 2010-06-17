@@ -44,6 +44,8 @@ import java.util.List;
 @Path("/dialog")
 public class DialogJsonEndpoint {
 
+    // TODO: need to get the website path in a parameter, need to do save with validation and filling in values from repo
+
     @GET
     @Path("/{dialogName}")
     public Dialog getDialog(@PathParam("dialogName") String dialogName) {

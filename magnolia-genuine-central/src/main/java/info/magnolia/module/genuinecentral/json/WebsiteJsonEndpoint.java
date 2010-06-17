@@ -33,44 +33,57 @@
  */
 package info.magnolia.module.genuinecentral.json;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.genuinecentral.tree.WebsitePage;
 import info.magnolia.module.genuinecentral.tree.WebsitePageList;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+import org.apache.commons.lang.StringUtils;
 
+import javax.jcr.RepositoryException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Path("/website")
 public class WebsiteJsonEndpoint {
 
+    // We need to decide on suitable verbs for activate, deactive, move, copy and so on..
+
     @GET
-    public WebsitePageList getRootNode() {
-        WebsitePageList pages = new WebsitePageList();
-        pages.add(createMockPage("news", "News Desk", true));
-        pages.add(createMockPage("about", "About", false));
-        return pages;
+    public WebsitePageList getRootNode() throws RepositoryException {
+        return readRepository("/");
     }
 
     @GET
     @Path("{path:(.)*}")
-    public WebsitePageList getNode(@PathParam("path") String path) {
+    public WebsitePageList getNode(@PathParam("path") String path) throws RepositoryException {
 
-        WebsitePageList pages = new WebsitePageList();
-
-        if (path.equals("news")) {
+        if (path.equals("mock")) {
+            WebsitePageList pages = new WebsitePageList();
+            pages.add(createMockPage("news", "News Desk", true));
+            pages.add(createMockPage("about", "About", false));
+            return pages;
+        } else if (path.equals("mock/news")) {
+            WebsitePageList pages = new WebsitePageList();
             pages.add(createMockPage("merger", "QWE merges with RTY", false));
             pages.add(createMockPage("hiring", "New position available", false));
-        } else if (path.equals("news/merger")) {
-        } else if (path.equals("news/hiring")) {
-        } else {
-            // Sends a 404 to the client
-            return null;
+            return pages;
+        } else if (path.equals("mock/news/merger")) {
+            return new WebsitePageList();
+        } else if (path.equals("mock/news/hiring")) {
+            return new WebsitePageList();
         }
 
-        return pages;
+        return readRepository("/" + path);
     }
 
     private WebsitePage createMockPage(String name, String title, boolean hasChildren) {
@@ -88,5 +101,59 @@ public class WebsiteJsonEndpoint {
         page.setHasChildren(hasChildren);
         page.setAvailableTemplates(templates);
         return page;
+    }
+
+    private WebsitePageList readRepository(String path) throws RepositoryException {
+
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+        if (!hierarchyManager.isExist(path))
+            return null;
+
+        Content parentNode;
+            parentNode = hierarchyManager.getContent(path);
+
+        WebsitePageList pages = new WebsitePageList();
+
+        Iterator<Content> contentIterator = parentNode.getChildren(ItemType.CONTENT).iterator();
+
+        while (contentIterator.hasNext()) {
+            Content content = contentIterator.next();
+
+            boolean permissionWrite = content.isGranted(info.magnolia.cms.security.Permission.WRITE);
+            boolean isActivated = content.getMetaData().getIsActivated();
+            boolean hasChildren = !content.getChildren(ItemType.CONTENT).isEmpty();
+
+            String title = content.getNodeData("title").getString();
+
+            WebsitePage page = new WebsitePage();
+            page.setName(content.getName());
+            page.setHasChildren(hasChildren);
+            page.setStatus(isActivated?"activated":"modified");
+            page.setTemplate(getTemplateName(content));
+            page.setTitle(title);
+            page.setAvailableTemplates(getAvailableTemplates(content));
+            pages.add(page);
+        }
+
+        return pages;
+    }
+
+    private List<String> getAvailableTemplates(Content content) {
+        TemplateManager templateManager = TemplateManager.getInstance();
+        Iterator<Template> templates = templateManager.getAvailableTemplates(content);
+        ArrayList<String> list = new ArrayList<String>();
+        while (templates.hasNext()) {
+            Template template = templates.next();
+            list.add(template.getI18NTitle());
+        }
+        return list;
+    }
+
+    public String getTemplateName(Content content) {
+        TemplateManager templateManager = TemplateManager.getInstance();
+        String templateName = content.getMetaData().getTemplate();
+        Template template = templateManager.getTemplateDefinition(templateName);
+        return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
     }
 }
