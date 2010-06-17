@@ -33,15 +33,23 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
+import static com.google.gwt.http.client.RequestBuilder.GET;
+import static com.google.gwt.http.client.Response.SC_NO_CONTENT;
+import static com.google.gwt.http.client.Response.SC_NOT_FOUND;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
-import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
+import com.extjs.gxt.ui.client.data.BaseListLoadResult;
 import com.extjs.gxt.ui.client.data.BaseTreeLoader;
+import com.extjs.gxt.ui.client.data.DataReader;
+import com.extjs.gxt.ui.client.data.HttpProxy;
+import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
+import com.extjs.gxt.ui.client.data.ListLoadResult;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelKeyProvider;
-import com.extjs.gxt.ui.client.data.RpcProxy;
+import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
 import com.extjs.gxt.ui.client.store.Store;
 import com.extjs.gxt.ui.client.store.StoreSorter;
@@ -57,36 +65,112 @@ import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 import com.extjs.gxt.ui.client.widget.tips.ToolTipConfig;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class MgnlTreeGrid extends LayoutContainer {
 
-  private static final String FILE_SERVICE = "fileservice";
-
-@Override
+  @Override
   protected void onRender(Element parent, int index) {
     super.onRender(parent, index);
 
     setLayout(new FlowLayout(10));
 
-    final FileServiceAsync service = (FileServiceAsync) Registry.get(FILE_SERVICE);
+    RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/website/news?mgnlUserId=superuser&mgnlUserPSWD=superuser");
+    requestBuilder.setHeader("Accept", "application/json");
 
     // data proxy
-    RpcProxy<List<FileModel>> proxy = new RpcProxy<List<FileModel>>() {
+    HttpProxy<List<FileModel>> proxy = new HttpProxy<List<FileModel>>(requestBuilder) {
       @Override
-      protected void load(Object loadConfig, AsyncCallback<List<FileModel>> callback) {
-        service.getFolderChildren((FileModel) loadConfig, callback);
+      public void load(final DataReader<List<FileModel>> reader, final Object loadConfig, final AsyncCallback<List<FileModel>> callback) {
+        System.out.println("Attempting to load folders:" + loadConfig + " :: " + callback);
+        super.load(reader, loadConfig, callback);
+        System.out.println("After super:" + loadConfig + " :: " + callback);
+        // set the callback
+        this.builder.setCallback(new RequestCallback() {
+
+            public void onResponseReceived(Request request, Response response) {
+                System.out.println("got response from http:" + response);
+
+                try {
+                    if (response.getStatusCode() == SC_NO_CONTENT || response.getStatusCode() == SC_NOT_FOUND) {
+                        throw new Exception("No such tree");
+                    }
+
+                    System.out.println("response text:" + response.getText());
+                    List<FileModel> result = null;
+                    result = reader.read(loadConfig, response.getText());
+                    System.out.println("results:" + result);
+                    if (result == null || result.isEmpty()) {
+                        result = new ArrayList<FileModel>();
+                        // populate the dialog with the data from the response
+                        result.add(new FolderModel("/", "/"));
+                    }
+                    callback.onSuccess(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Failed to load tree: " + e.getMessage(), e);
+                }
+            }
+
+            public void onError(Request request, Throwable exception) {
+                // dispatch the exception
+                throw new RuntimeException("Failed to load tree: " + exception.getMessage(), exception);
+            }
+        });
+
+        try {
+            this.builder.send();
+        } catch (com.google.gwt.http.client.RequestException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        //service.getFolderChildren((FileModel) loadConfig, callback);
       }
     };
 
+    // json reader
+    ModelType type = new ModelType();
+    type.setRoot("children");
+    type.setRecordName("content");
+    type.addField("uuid");
+    type.addField("name");
+    type.addField("status");
+    type.addField("hasChildren");
+    type.addField("template");
+    JsonLoadResultReader<List<FileModel>> jsonReader = new JsonLoadResultReader<List<FileModel>>(type) {
+        protected ListLoadResult<ModelData> newLoadResult(Object loadConfig, List<ModelData> models) {
+            throw new UnsupportedOperationException("Do not call me!");
+          }
+        protected Object createReturnData(Object loadConfig, List<ModelData> records, int totalCount) {
+            ArrayList<FileModel> resultList = new ArrayList<FileModel>();
+            for (ModelData record: records) {
+                resultList.add(new FileModel(record.getProperties()));
+            }
+            return resultList;
+          }
+
+    };
+
     // tree loader
-    final TreeLoader<FileModel> loader = new BaseTreeLoader<FileModel>(proxy) {
+    final TreeLoader<FileModel> loader = new BaseTreeLoader<FileModel>(proxy, jsonReader) {
       @Override
       public boolean hasChildren(FileModel parent) {
-        return parent instanceof FolderModel;
+        return Boolean.parseBoolean("" + parent.get("hasChildren"));
       }
+
+      @Override
+        protected Object newLoadConfig() {
+            // return load config to be used in the proxy.load() Default is null
+            return super.newLoadConfig();
+        }
+
+
     };
 
     // trees store

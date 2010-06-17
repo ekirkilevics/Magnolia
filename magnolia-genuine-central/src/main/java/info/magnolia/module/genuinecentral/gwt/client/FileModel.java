@@ -33,12 +33,19 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
+import java.util.Map;
+
 import com.extjs.gxt.ui.client.data.BaseModelData;
 
 public class FileModel extends BaseModelData {
 
   protected FileModel() {
 
+  }
+
+  public FileModel(Map<String, Object> properties) {
+      super();
+      setProperties(properties);
   }
 
   public FileModel(String name, String path) {

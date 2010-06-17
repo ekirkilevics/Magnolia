@@ -78,7 +78,7 @@ public class AdminCentral implements EntryPoint {
     }
 
     public static final String SERVICE = "service";
-    public static final String FILE_SERVICE = "fileservice";
+    public static final String FILE_SERVICE = "treeservice";
     public static final String MODEL = "model";
 
     private Viewport viewport;
@@ -284,9 +284,6 @@ public class AdminCentral implements EntryPoint {
     }*/
 
     public void onModuleLoad() {
-        String name = GWT.getModuleName();
-        System.out.println("Hi there from Admin Central GWT");
-
         AdminCentralServiceAsync service = (AdminCentralServiceAsync) GWT.create(AdminCentralService.class);
         ServiceDefTarget endpoint = (ServiceDefTarget) service;
         String moduleRelativeURL = SERVICE;
@@ -309,7 +306,6 @@ public class AdminCentral implements EntryPoint {
                 entries.put(entry.getId(), entry);
             }
         }
-        System.out.println("Model:" + entries);
 
         Registry.register(MODEL, model);
 

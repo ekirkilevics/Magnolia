@@ -10,7 +10,7 @@
    <source path="gwt/client"/>
    <source path="dialog"/>
    <source path="data"/>
-   <servlet path="/fileservice" class="info.magnolia.module.genuinecentral.server.FileServiceImpl"/>
+   <servlet path="/.magnolia/rest/" class="info.magnolia.module.genuinecentral.json.JsonDispatcherServlet"/>
 
    <entry-point class="info.magnolia.module.genuinecentral.gwt.client.AdminCentral"/>
 
