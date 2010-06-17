@@ -46,9 +46,10 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
- * Manages the paragraphs on the system. Modules can register the nodes where the paragraphs are defined.
+ * Manages the paragraphs on the system. Modules can register the nodes where
+ * the paragraphs are defined.
+ * 
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
@@ -68,13 +69,15 @@ public class ParagraphManager extends ObservedManager {
     private Map<String, Paragraph> paragraphs = new Hashtable<String, Paragraph>();
 
     /**
-     * Returns the cached content of the requested template. TemplateInfo properties :
+     * Returns the cached content of the requested template. TemplateInfo
+     * properties :
      * <ol>
      * <li>title - title describing template</li>
      * <li>type - jsp / servlet</li>
      * <li>path - jsp / servlet path</li>
      * <li>description - description of a template</li>
      * </ol>
+     * 
      * @return a Paragraph instance
      * @deprecated since 4.0 Use {@link #getParagraphDefinition(String)} instead
      */
@@ -83,13 +86,15 @@ public class ParagraphManager extends ObservedManager {
     }
 
     /**
-     * Returns the cached content of the requested template. TemplateInfo properties :
+     * Returns the cached content of the requested template. TemplateInfo
+     * properties :
      * <ol>
      * <li>title - title describing template</li>
      * <li>type - jsp / servlet</li>
      * <li>path - jsp / servlet path</li>
      * <li>description - description of a template</li>
      * </ol>
+     * 
      * @return a Paragraph instance
      */
     public Paragraph getParagraphDefinition(String key) {
@@ -110,8 +115,12 @@ public class ParagraphManager extends ObservedManager {
         // register a listener
 
         Collection<Content> paragraphNodes = node.getChildren(ItemType.CONTENTNODE);
-        for (Content  paragraphNode : paragraphNodes) {
-            addParagraphToCache(paragraphNode);
+        for (Content paragraphNode : paragraphNodes) {
+            try {
+                addParagraphToCache(paragraphNode);
+            } catch (Exception e) {
+                log.error("Can't reload the node " + paragraphNode.getUUID() + " on location: " + paragraphNode.getHandle());
+            }
         }
 
         Collection<Content> subDefinitions = node.getChildren(ItemType.CONTENT);
@@ -119,7 +128,6 @@ public class ParagraphManager extends ObservedManager {
             // do not register other observations
             onRegister(subNode);
         }
-
     }
 
     /**
@@ -129,8 +137,7 @@ public class ParagraphManager extends ObservedManager {
         try {
             final Paragraph p = (Paragraph) Content2BeanUtil.toBean(c, true, Paragraph.class);
             addParagraphToCache(p);
-        }
-        catch (Content2BeanException e) {
+        } catch (Content2BeanException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -152,5 +159,5 @@ public class ParagraphManager extends ObservedManager {
     public void onClear() {
         this.paragraphs.clear();
     }
-
+    
 }
