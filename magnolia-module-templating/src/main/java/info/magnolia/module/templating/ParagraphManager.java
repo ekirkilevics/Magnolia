@@ -119,7 +119,7 @@ public class ParagraphManager extends ObservedManager {
             try {
                 addParagraphToCache(paragraphNode);
             } catch (Exception e) {
-                log.warn("Can't reload the node " + paragraphNode.getUUID() + " on location: " + paragraphNode.getHandle());
+                log.error("Can't reload the node " + paragraphNode.getUUID() + " on location: " + paragraphNode.getHandle());
             }
         }
 
