@@ -33,14 +33,20 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
+import java.util.Map;
+
 public class FolderModel extends FileModel {
 
-  protected FolderModel() {
+    protected FolderModel() {
 
-  }
+    }
 
-  public FolderModel(String name, String path) {
-    super(name, path);
-  }
+    public FolderModel(String name, String path) {
+        super(name, path);
+    }
+
+    public FolderModel(Map<String, Object> properties) {
+        super(properties);
+    }
 
 }

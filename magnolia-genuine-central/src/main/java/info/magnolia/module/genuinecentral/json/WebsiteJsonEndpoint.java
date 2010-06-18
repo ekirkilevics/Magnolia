@@ -128,6 +128,7 @@ public class WebsiteJsonEndpoint {
 
             WebsitePage page = new WebsitePage();
             page.setName(content.getName());
+            page.setPath(content.getHandle());
             page.setHasChildren(hasChildren);
             page.setStatus(isActivated?"activated":"modified");
             page.setTemplate(getTemplateName(content));

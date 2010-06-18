@@ -46,6 +46,7 @@ public class WebsitePage {
     private String title;
     private String status;
     private String template;
+    private String path;
     private List<String> availableTemplates;
     private Date lastModified;
     private boolean hasChildren;
@@ -104,5 +105,13 @@ public class WebsitePage {
 
     public void setHasChildren(boolean hasChildren) {
         this.hasChildren = hasChildren;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

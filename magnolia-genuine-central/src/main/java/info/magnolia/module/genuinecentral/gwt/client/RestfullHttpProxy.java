@@ -33,55 +33,27 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import java.util.Map;
+import com.extjs.gxt.ui.client.data.HttpProxy;
+import com.google.gwt.http.client.RequestBuilder;
 
-import com.extjs.gxt.ui.client.data.BaseModelData;
+public class RestfullHttpProxy<T> extends HttpProxy<T> {
 
-public class FileModel extends BaseModelData {
+    private final String originalUrl;
 
-  protected FileModel() {
+    public RestfullHttpProxy(RequestBuilder builder) {
+        super(builder);
+        originalUrl = initUrl;
+    }
 
-  }
+    public void setURL(String url) {;
+        this.initUrl = url;
+    }
 
-  public FileModel(Map<String, Object> properties) {
-      super();
-      setProperties(properties);
-  }
+    public String getURL() {
+        return initUrl;
+    }
 
-  public FileModel(String name, String path) {
-    setName(name);
-    setPath(path);
-  }
-
-  public void setName(String name) {
-    set("name", name);
-  }
-
-  public void setPath(String path) {
-    set("path", path);
-  }
-
-  public String getPath() {
-    return get("path");
-  }
-
-  public String getName() {
-    return get("name");
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-      if (this == obj) {
-          return true;
-      }
-
-      if (obj == null || !(obj instanceof FileModel)) {
-          return false;
-      }
-
-      FileModel that = (FileModel) obj;
-      return this.getName() == null ? that.getName() == null : this.getName().equals(that.getName())
-              && this.getPath() == null ? that.getPath() == null : this.getPath().equals(that.getPath());
-  }
-
+    public String getOriginalURL() {
+        return originalUrl;
+    }
 }
