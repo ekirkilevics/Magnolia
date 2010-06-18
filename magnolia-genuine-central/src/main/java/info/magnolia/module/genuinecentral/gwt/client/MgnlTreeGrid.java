@@ -85,54 +85,7 @@ public class MgnlTreeGrid extends LayoutContainer {
     requestBuilder.setHeader("Accept", "application/json");
 
     // data proxy
-    HttpProxy<List<FileModel>> proxy = new HttpProxy<List<FileModel>>(requestBuilder) {
-      @Override
-      public void load(final DataReader<List<FileModel>> reader, final Object loadConfig, final AsyncCallback<List<FileModel>> callback) {
-        System.out.println("Attempting to load folders:" + loadConfig + " :: " + callback);
-        super.load(reader, loadConfig, callback);
-        System.out.println("After super:" + loadConfig + " :: " + callback);
-        // set the callback
-        this.builder.setCallback(new RequestCallback() {
-
-            public void onResponseReceived(Request request, Response response) {
-                System.out.println("got response from http:" + response);
-
-                try {
-                    if (response.getStatusCode() == SC_NO_CONTENT || response.getStatusCode() == SC_NOT_FOUND) {
-                        throw new Exception("No such tree");
-                    }
-
-                    System.out.println("response text:" + response.getText());
-                    List<FileModel> result = null;
-                    result = reader.read(loadConfig, response.getText());
-                    System.out.println("results:" + result);
-                    if (result == null || result.isEmpty()) {
-                        result = new ArrayList<FileModel>();
-                        // populate the dialog with the data from the response
-                        result.add(new FolderModel("/", "/"));
-                    }
-                    callback.onSuccess(result);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Failed to load tree: " + e.getMessage(), e);
-                }
-            }
-
-            public void onError(Request request, Throwable exception) {
-                // dispatch the exception
-                throw new RuntimeException("Failed to load tree: " + exception.getMessage(), exception);
-            }
-        });
-
-        try {
-            this.builder.send();
-        } catch (com.google.gwt.http.client.RequestException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        //service.getFolderChildren((FileModel) loadConfig, callback);
-      }
-    };
+    HttpProxy<List<FileModel>> proxy = new HttpProxy<List<FileModel>>(requestBuilder);
 
     // json reader
     ModelType type = new ModelType();
