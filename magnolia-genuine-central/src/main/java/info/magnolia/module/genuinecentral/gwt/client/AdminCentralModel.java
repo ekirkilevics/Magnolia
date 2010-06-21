@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import info.magnolia.module.genuinecentral.gwt.resources.client.Resources;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +50,7 @@ public class AdminCentralModel extends BaseTreeModel {
     MgnlTreeGrid tree = new MgnlTreeGrid();
     tree.setTree("website");
     tree.setPath("/");
-    treeGrids.add("MgnlTreeGrid", tree, Resources.IMAGES.asynctreegrid().getHTML());
+    treeGrids.add("MgnlTreeGrid", tree, null);
     add(treeGrids);
     loadEntries(this);
   }

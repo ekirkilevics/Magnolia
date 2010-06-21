@@ -1,6 +1,0 @@
-<module>
-  <inherits name='com.extjs.gxt.ui.GXT'/>
-
-  <source path="gwt/resources/client"/>
-   <entry-point class='info.magnolia.module.genuinecentral.gwt.resources.client.Resources' />
-</module>

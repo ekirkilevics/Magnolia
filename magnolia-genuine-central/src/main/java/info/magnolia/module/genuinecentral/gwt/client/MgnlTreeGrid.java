@@ -34,6 +34,7 @@
 package info.magnolia.module.genuinecentral.gwt.client;
 
 import static com.google.gwt.http.client.RequestBuilder.GET;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
@@ -88,8 +89,7 @@ public class MgnlTreeGrid extends LayoutContainer {
         final TreeLoader<FileModel> loader = getConfiguredTreeLoader(proxy, jsonReader);
 
         // trees store
-        final TreeStore<FileModel> store = new TreeStore<FileModel>(loader);
-        store.setStoreSorter(getColumnDataSorter());
+        final TreeStore<FileModel> store = getConfiguredTreeStore(loader);
 
         ColumnModel cm = getColumnConfiguration();
 
@@ -105,13 +105,6 @@ public class MgnlTreeGrid extends LayoutContainer {
         tree.setStateful(true);
         // stateful components need a defined id
         tree.setId("statefullmgnltreegrid");
-        store.setKeyProvider(new ModelKeyProvider<FileModel>() {
-
-            public String getKey(FileModel model) {
-                return model.<String> get("id");
-            }
-
-        });
         tree.setBorders(true);
         tree.getStyle().setLeafIcon(IconHelper.createStyle("icon-page"));
         tree.setSize(400, 400);
@@ -130,6 +123,23 @@ public class MgnlTreeGrid extends LayoutContainer {
         cp.getHeader().addTool(btn);
 
         add(cp);
+    }
+
+
+    /**
+     * Prepares pre-configured tree store with the column sorter and key provider.
+     */
+    protected TreeStore<FileModel> getConfiguredTreeStore(TreeLoader<FileModel> loader) {
+        final TreeStore<FileModel> store = new TreeStore<FileModel>(loader);
+        store.setStoreSorter(getColumnDataSorter());
+        store.setKeyProvider(new ModelKeyProvider<FileModel>() {
+            public String getKey(FileModel model) {
+                // TODO: Same name siblings will have same path!!!!
+                return model.getPath();
+            }
+
+        });
+        return store;
     }
 
     /**
@@ -239,6 +249,7 @@ public class MgnlTreeGrid extends LayoutContainer {
         type.setRecordName("content");
         type.addField("uuid");
         type.addField("name");
+        type.addField("path");
         type.addField("status");
         type.addField("hasChildren");
         type.addField("template");

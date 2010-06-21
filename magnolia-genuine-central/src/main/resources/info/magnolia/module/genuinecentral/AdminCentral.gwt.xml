@@ -1,25 +1,14 @@
 <!DOCTYPE module PUBLIC "//gwt-module/" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module>
+   <inherits name='com.extjs.gxt.ui.GXT'/>
    <inherits name="com.google.gwt.user.User"/>
    <inherits name="com.google.gwt.json.JSON"/>
    <inherits name='com.extjs.gxt.themes.Themes' />
-   <!-- main dependencies and images -->
-   <inherits name='info.magnolia.module.genuinecentral.Resources' />
-
 
    <source path="gwt/client"/>
    <source path="dialog"/>
    <source path="data"/>
-   <servlet path="/.magnolia/rest/" class="info.magnolia.module.genuinecentral.json.JsonDispatcherServlet"/>
 
    <entry-point class="info.magnolia.module.genuinecentral.gwt.client.AdminCentral"/>
 
-<!--  <module>
-  <inherits name='com.extjs.gxt.samples.resources.Resources' />
-  <inherits name='com.extjs.gxt.themes.Themes' />
-  <inherits name='com.extjs.gxt.charts.Chart' />
-  <servlet path="/service" class="com.extjs.gxt.samples.server.ExampleServiceImpl"/>
-  <servlet path="/fileservice" class="com.extjs.gxt.samples.server.FileServiceImpl"/>
-  <entry-point class='com.extjs.gxt.samples.client.Examples' />
-</module>-->
 </module>

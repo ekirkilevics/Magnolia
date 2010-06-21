@@ -70,6 +70,11 @@ public class FileModel extends BaseModelData {
   }
 
   @Override
+    public int hashCode() {
+        return getPath() == null ? 17 : getPath().hashCode();
+    }
+
+  @Override
   public boolean equals(Object obj) {
       if (this == obj) {
           return true;
@@ -84,4 +89,8 @@ public class FileModel extends BaseModelData {
               && this.getPath() == null ? that.getPath() == null : this.getPath().equals(that.getPath());
   }
 
+  @Override
+    public String toString() {
+        return getPath();
+    }
 }
