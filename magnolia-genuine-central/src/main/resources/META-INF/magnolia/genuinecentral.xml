@@ -20,9 +20,9 @@
 
   <servlets>
     <servlet>
-      <name>RESTServlet</name>
-      <class>info.magnolia.module.genuinecentral.json.JsonDispatcherServlet</class>
-      <comment>Exposes the REST API</comment>
+      <name>RestDispatcherServlet</name>
+      <class>info.magnolia.module.genuinecentral.rest.RestDispatcherServlet</class>
+      <comment>Dispatches requests for REST endpoints</comment>
       <mappings>
         <mapping>/.magnolia/rest/*</mapping>
       </mappings>

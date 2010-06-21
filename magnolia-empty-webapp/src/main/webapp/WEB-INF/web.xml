@@ -43,7 +43,7 @@
 	</jsp-config>
 	<servlet>
 		<servlet-name>jsonDispatcherServlet</servlet-name>
-		<servlet-class>info.magnolia.module.genuinecentral.json.JsonDispatcherServlet</servlet-class>
+		<servlet-class>info.magnolia.module.genuinecentral.rest.RestDispatcherServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>jsonDispatcherServlet</servlet-name>

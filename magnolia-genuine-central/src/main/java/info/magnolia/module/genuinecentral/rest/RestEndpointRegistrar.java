@@ -31,29 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.json;
+package info.magnolia.module.genuinecentral.rest;
 
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+public interface RestEndpointRegistrar {
 
-public class GenuineCentralJsonApplication extends Application {
+    void registerEndpoint(Object instance);
 
-    HashSet<Object> singletons = new HashSet<Object>();
-
-    public GenuineCentralJsonApplication() {
-        singletons.add(new DialogJsonEndpoint());
-        singletons.add(new WebsiteJsonEndpoint());
-    }
-
-    @Override
-    public Set<Class<?>> getClasses() {
-        HashSet<Class<?>> set = new HashSet<Class<?>>();
-        return set;
-    }
-
-    @Override
-    public Set<Object> getSingletons() {
-        return singletons;
-    }
+    void unregisterEndpoint(Class<?> clazz);
 }

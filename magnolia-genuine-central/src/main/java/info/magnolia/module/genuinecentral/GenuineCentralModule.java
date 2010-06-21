@@ -36,12 +36,14 @@ package info.magnolia.module.genuinecentral;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.genuinecentral.dialog.DialogRegistry;
+import info.magnolia.module.genuinecentral.rest.RestEndpointManager;
 
 public class GenuineCentralModule implements ModuleLifecycle {
 
     public void start(ModuleLifecycleContext ctx) {
         // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
         ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
+        ctx.registerModuleObservingComponent("rest-endpoints", RestEndpointManager.getInstance());
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {

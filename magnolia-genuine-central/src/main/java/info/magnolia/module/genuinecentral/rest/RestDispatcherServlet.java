@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.json;
+package info.magnolia.module.genuinecentral.rest;
 
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
@@ -39,11 +39,12 @@ import javax.servlet.*;
 import java.io.IOException;
 import java.util.*;
 
-public class JsonDispatcherServlet extends HttpServletDispatcher {
+public class RestDispatcherServlet extends HttpServletDispatcher implements RestEndpointRegistrar {
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(addInitParameters(servletConfig));
+        RestEndpointManager.getInstance().setEndpointRegistrar(this);
     }
 
     @Override
@@ -53,9 +54,16 @@ public class JsonDispatcherServlet extends HttpServletDispatcher {
 
     private static ParameterAddingServletConfigWrapper addInitParameters(ServletConfig servletConfig) {
         Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("javax.ws.rs.Application", GenuineCentralJsonApplication.class.getName());
         parameters.put("resteasy.servlet.mapping.prefix", "/.magnolia/rest");
         return new ParameterAddingServletConfigWrapper(servletConfig, parameters);
+    }
+
+    public void registerEndpoint(Object instance) {
+        super.getDispatcher().getRegistry().addSingletonResource(instance);
+    }
+
+    public void unregisterEndpoint(Class<?> clazz) {
+        super.getDispatcher().getRegistry().removeRegistrations(clazz);
     }
 
     private static class ServletConfigWrapper implements ServletConfig {
