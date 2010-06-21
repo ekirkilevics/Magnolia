@@ -1,8 +1,6 @@
 <!DOCTYPE module PUBLIC "//gwt-module/" "http://google-web-toolkit.googlecode.com/svn/tags/2.0.3/distro-source/core/src/gwt-module.dtd">
 <module>
    <inherits name='com.extjs.gxt.ui.GXT'/>
-   <inherits name="com.google.gwt.user.User"/>
-   <inherits name="com.google.gwt.json.JSON"/>
    <inherits name='com.extjs.gxt.themes.Themes' />
 
    <source path="gwt/client"/>
