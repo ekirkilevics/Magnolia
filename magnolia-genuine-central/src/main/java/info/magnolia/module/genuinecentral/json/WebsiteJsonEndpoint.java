@@ -39,6 +39,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
+import info.magnolia.module.genuinecentral.dialog.Dialog;
+import info.magnolia.module.genuinecentral.dialog.DialogImpl;
 import info.magnolia.module.genuinecentral.tree.WebsitePage;
 import info.magnolia.module.genuinecentral.tree.WebsitePageList;
 import info.magnolia.module.templating.Template;
@@ -48,10 +50,10 @@ import org.apache.commons.lang.StringUtils;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -132,21 +134,35 @@ public class WebsiteJsonEndpoint {
 
     @POST
     @Path("{path:(.)*}/delete")
-    public WebsitePage delete(@PathParam("path") String path, WebsitePage page) throws Exception {
+    public WebsitePage delete(@PathParam("path") String path) throws Exception {
 
         WebsiteAccessor website = new WebsiteAccessor("website", null, null);
 
         path = "/" + path;
 
-        // This is AdminTreeMVCHandler
+        // This is AdminTreeMVCHandler.createNode(String path)...
         String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
         String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
-        // With this fix added for the simple case '/untitled'
-        if (parentPath.isEmpty())
+        // ...with this fix added for the simple case '/untitled'
+        if (StringUtils.isEmpty(parentPath))
             parentPath = "/";
         website.deleteNode(parentPath, label);
 
         return new WebsitePage();
+    }
+
+    @POST
+    @Path("{path:(.)*}/edit")
+    public Dialog edit(@PathParam("path") String path, @QueryParam("dialogName") String dialogName) {
+
+        return new DialogImpl();
+    }
+
+    @POST
+    @Path("{path:(.)*}/save")
+    public Dialog save(@PathParam("path") String path, @QueryParam("dialogName") String dialogName, @Context UriInfo uriInfo) {
+
+        return new DialogImpl();
     }
 
     private WebsitePage createMockPage(String name, String title, boolean hasChildren) {
