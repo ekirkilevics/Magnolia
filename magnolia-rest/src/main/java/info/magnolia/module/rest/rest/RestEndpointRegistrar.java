@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,17 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.rest;
 
-public abstract class AbstractDialogItem implements DialogItem {
+public interface RestEndpointRegistrar {
 
-    private DialogItem parent;
+    void registerEndpoint(Object instance);
 
-    public DialogItem getParent() {
-        return parent;
-    }
-
-    public void setParent(DialogItem parent) {
-        this.parent = parent;
-    }
+    void unregisterEndpoint(Class<?> clazz);
 }

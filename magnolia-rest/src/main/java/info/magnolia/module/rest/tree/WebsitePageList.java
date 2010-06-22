@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.tree;
+package info.magnolia.module.rest.tree;
 
 import java.util.ArrayList;
 import java.util.List;

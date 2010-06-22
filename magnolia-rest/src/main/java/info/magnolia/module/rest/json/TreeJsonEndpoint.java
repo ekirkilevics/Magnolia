@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,17 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.json;
 
-public abstract class AbstractDialogItem implements DialogItem {
+import info.magnolia.module.rest.tree.TreeNode;
 
-    private DialogItem parent;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-    public DialogItem getParent() {
-        return parent;
-    }
+/**
+ * The tree abstraction might be to generic, different tree views have very little in common and might be better served
+ * by dedicated endpoints for each view.
+ */
+@Path("/tree")
+public class TreeJsonEndpoint {
 
-    public void setParent(DialogItem parent) {
-        this.parent = parent;
+    @GET
+    @Path("/{treeName}/{path}")
+    public TreeNode getNode(@PathParam("treeName") String treeName, @PathParam("path") String path) {
+
+        TreeNode treeNode = new TreeNode();
+        treeNode.setName("bogusName");
+        return treeNode;
     }
 }

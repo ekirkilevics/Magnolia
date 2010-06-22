@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,17 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.json;
 
-public abstract class AbstractDialogItem implements DialogItem {
+import info.magnolia.module.rest.dialog.Dialog;
+import info.magnolia.module.rest.dialog.DialogImpl;
+import info.magnolia.module.rest.dialog.EditControl;
+import info.magnolia.module.rest.dialog.TabControl;
 
-    private DialogItem parent;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-    public DialogItem getParent() {
-        return parent;
-    }
+@Path("/dialog")
+public class DialogJsonEndpoint {
 
-    public void setParent(DialogItem parent) {
-        this.parent = parent;
+    @GET
+    @Path("/{dialogName}")
+    public Dialog getDialog(@PathParam("dialogName") String dialogName) {
+
+        EditControl editControl = new EditControl();
+        editControl.setLabel("Title of the page");
+        editControl.setName("title");
+        editControl.setType("edit");
+
+        TabControl tab = new TabControl();
+        tab.setLabel("Properties");
+        tab.setType("tab");
+        tab.addControl(editControl);
+
+        DialogImpl dialog = new DialogImpl();
+        dialog.setLabel("Page Properties");
+        dialog.addControl(tab);
+
+        return dialog;
     }
 }

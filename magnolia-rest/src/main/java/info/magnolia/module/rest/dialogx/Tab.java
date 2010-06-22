@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialogx;
+package info.magnolia.module.rest.dialogx;
 
 public class Tab extends AbstractDialogItemContainer {
 

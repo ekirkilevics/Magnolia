@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialogx;
+package info.magnolia.module.rest.dialogx;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;

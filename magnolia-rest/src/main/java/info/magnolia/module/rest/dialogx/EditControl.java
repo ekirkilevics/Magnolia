@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialogx;
+package info.magnolia.module.rest.dialogx;
 
 import info.magnolia.cms.core.Content;
 import org.apache.commons.lang.StringUtils;
