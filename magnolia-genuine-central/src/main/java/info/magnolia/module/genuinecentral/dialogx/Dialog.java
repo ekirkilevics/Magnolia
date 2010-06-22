@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral;
+package info.magnolia.module.genuinecentral.dialogx;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.genuinecentral.dialogx.DialogRegistry;
-import info.magnolia.module.genuinecentral.rest.RestEndpointManager;
+public class Dialog extends AbstractDialogItemContainer {
 
-public class GenuineCentralModule implements ModuleLifecycle {
+    private String name;
+    private String label;
 
-    public void start(ModuleLifecycleContext ctx) {
-        // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
-        ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
-        ctx.registerModuleObservingComponent("rest-endpoints", RestEndpointManager.getInstance());
+    public String getName() {
+        return name;
     }
 
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

@@ -33,54 +33,35 @@
  */
 package info.magnolia.module.genuinecentral.json;
 
-import info.magnolia.module.genuinecentral.dialog.*;
+import info.magnolia.module.genuinecentral.dialog.Dialog;
+import info.magnolia.module.genuinecentral.dialog.DialogImpl;
+import info.magnolia.module.genuinecentral.dialog.EditControl;
+import info.magnolia.module.genuinecentral.dialog.TabControl;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/dialog")
 public class DialogJsonEndpoint {
 
-    // TODO: need to get the website path in a parameter, need to do save with validation and filling in values from repo
-
     @GET
     @Path("/{dialogName}")
     public Dialog getDialog(@PathParam("dialogName") String dialogName) {
-/*
-        DialogHandlerManager dialogHandlerManager = DialogHandlerManager.getInstance();
-        Content dialogConfigNode;
-        try {
-            dialogConfigNode = dialogHandlerManager.getDialogConfigNode(dialogName);
-        } catch (InvalidDialogHandlerException e) {
-            // TODO: Need error handling conventions for REST
-            return null;
-        }
-*/
 
-        DialogRegistry dialogRegistry = DialogRegistry.getInstance();
+        EditControl editControl = new EditControl();
+        editControl.setLabel("Title of the page");
+        editControl.setName("title");
+        editControl.setType("edit");
 
-        DialogImpl dialog = (DialogImpl) dialogRegistry.getDialog(dialogName);
+        TabControl tab = new TabControl();
+        tab.setLabel("Properties");
+        tab.setType("tab");
+        tab.addControl(editControl);
 
-        if (dialog == null) {
-            EditControl editControl = new EditControl();
-            editControl.setLabel("Title of the page");
-            editControl.setName("title");
-            editControl.setType("edit");
-
-            TabControl tab = new TabControl();
-            tab.setLabel("Properties");
-            tab.setType("tab");
-            tab.addControl(editControl);
-
-            dialog = new DialogImpl();
-            dialog.setLabel("Page Properties");
-            dialog.addControl(tab);
-        }
-
-        // TODO the returned dialog needs to have had i18n keys resolved
+        DialogImpl dialog = new DialogImpl();
+        dialog.setLabel("Page Properties");
+        dialog.addControl(tab);
 
         return dialog;
     }

@@ -33,169 +33,29 @@
  */
 package info.magnolia.module.genuinecentral.dialog;
 
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.ExtendingContentWrapper;
-import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.objectfactory.Components;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-
-import javax.jcr.RepositoryException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Vivian Steller
  * @since 1.0.0
  */
-public class DialogRegistry extends ObservedManager {
+public class DialogRegistry {
+   private Map<String, DialogImpl> dialogs = new HashMap<String, DialogImpl>();
 
-    private static final String ND_NAME = "name";
+   public Map<String, DialogImpl> getDialogs() {
+      return dialogs;
+   }
 
-    private Map<String, Content> dialogs = Collections.synchronizedMap(new HashMap<String, Content>());
+   public void setDialogs(Map<String, DialogImpl> dialogs) {
+      this.dialogs = dialogs;
+   }
 
-    public Content getDialogNode(String name) {
-        return dialogs.get(name);
-    }
+   public void addDialog(String name, DialogImpl dialog) {
+      dialogs.put(name, dialog);
+   }
 
-    @Override
-    protected void onRegister(Content node) {
-
-        final List<Content> dialogNodes = new ArrayList<Content>();
-        try {
-            collectDialogNodes(node, dialogNodes);
-        }
-        catch (RepositoryException e) {
-            log.error("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
-            throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
-        }
-
-        for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
-            Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
-            try {
-                if (dialogNode.getItemType().equals(ItemType.CONTENT)) {
-                    log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
-                }
-            }
-            catch (RepositoryException e) {
-                log.error("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
-                throw new IllegalStateException("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e));
-            }
-            String name = dialogNode.getNodeData(ND_NAME).getString();
-            if (StringUtils.isEmpty(name)) {
-                name = dialogNode.getName();
-            }
-
-            registerDialog(name, dialogNode);
-        }
-    }
-
-    private void registerDialog(String name, Content dialogNode) {
-        this.dialogs.put(name, dialogNode);
-    }
-
-    @Override
-    protected void onClear() {
-        this.dialogs.clear();
-    }
-
-    public static DialogRegistry getInstance() {
-        return Components.getSingleton(DialogRegistry.class);
-    }
-
-    protected void collectDialogNodes(Content current, List<Content> dialogNodes) throws RepositoryException {
-        if (isDialogNode(current)) {
-            dialogNodes.add(current);
-            return;
-        }
-        for (Content child : ContentUtil.getAllChildren(current)) {
-            collectDialogNodes(child, dialogNodes);
-        }
-    }
-
-    protected boolean isDialogNode(Content node) throws RepositoryException {
-        if (isDialogControlNode(node)) {
-            return false;
-        }
-
-        // if leaf
-        if (ContentUtil.getAllChildren(node).isEmpty()) {
-            return true;
-        }
-
-        // if has node datas
-        if (!node.getNodeDataCollection().isEmpty()) {
-            return true;
-        }
-
-        // if one subnode is a control
-        for (Content child : node.getChildren(ItemType.CONTENTNODE)) {
-            if (isDialogControlNode(child)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected boolean isDialogControlNode(Content node) throws RepositoryException {
-        return node.hasNodeData("controlType") || node.hasNodeData("reference");
-    }
-
-    public Dialog getDialog(String dialogName) {
-        Content configNode = this.dialogs.get(dialogName);
-        if (configNode == null)
-            return null;
-
-        DialogImpl dialog = new DialogImpl();
-        dialog.setLabel(configNode.getNodeData("label").getString());
-
-        Iterator it = configNode.getChildren(ItemType.CONTENTNODE).iterator();
-        while (it.hasNext()) {
-            Content x = (Content) it.next();
-            
-            String controlType = x.getNodeData("controlType").getString();
-
-            if (controlType.equals("tab")) {
-                dialog.addControl(createTabControl(x));
-            }
-        }
-        return dialog;
-    }
-
-    private Control createTabControl(Content configNode) {
-        TabControl tabControl = new TabControl();
-        tabControl.setType("tab");
-        tabControl.setLabel(configNode.getNodeData("label").getString());
-
-        Iterator it = configNode.getChildren(ItemType.CONTENTNODE).iterator();
-        while (it.hasNext()) {
-            Content x = (Content) it.next();
-
-            String controlType = x.getNodeData("controlType").getString();
-
-            if (controlType.equals("edit")) {
-                tabControl.addControl(createEditControl(x));
-            } else if (controlType.equals("date")) {
-                tabControl.addControl(createDateControl(x));
-            }
-        }
-
-        return tabControl;
-    }
-
-    private EditControl createEditControl(Content configNode) {
-        EditControl editControl = new EditControl();
-        editControl.setType("edit");
-        editControl.setLabel(configNode.getNodeData("label").getString());
-        return editControl;
-    }
-
-    private DateControl createDateControl(Content configNode) {
-        DateControl dateControl = new DateControl();
-        dateControl.setType("date");
-        dateControl.setLabel(configNode.getNodeData("label").getString());
-        return dateControl;
-    }
+   public DialogImpl getDialog(String name) {
+      return dialogs.get(name);
+   }
 }

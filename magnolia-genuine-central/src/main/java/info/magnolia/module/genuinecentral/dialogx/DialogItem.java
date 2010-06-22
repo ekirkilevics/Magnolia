@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral;
+package info.magnolia.module.genuinecentral.dialogx;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.genuinecentral.dialogx.DialogRegistry;
-import info.magnolia.module.genuinecentral.rest.RestEndpointManager;
+import info.magnolia.cms.core.Content;
 
-public class GenuineCentralModule implements ModuleLifecycle {
+import javax.jcr.RepositoryException;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    public void start(ModuleLifecycleContext ctx) {
-        // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
-        ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
-        ctx.registerModuleObservingComponent("rest-endpoints", RestEndpointManager.getInstance());
-    }
+@XmlRootElement
+public interface DialogItem {
 
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-    }
+    String getName();
+
+    void setParent(DialogItem parent);
+
+    void bind(Content storageNode) throws RepositoryException;
+
+    void bind(MultivaluedMap<String, String> parameters) throws Exception;
+
+    void validate(ValidationResult validationResult);
+
+    void save(Content storageNode) throws RepositoryException;
 }

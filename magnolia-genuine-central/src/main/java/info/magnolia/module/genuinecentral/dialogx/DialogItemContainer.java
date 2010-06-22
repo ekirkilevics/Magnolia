@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral;
+package info.magnolia.module.genuinecentral.dialogx;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.genuinecentral.dialogx.DialogRegistry;
-import info.magnolia.module.genuinecentral.rest.RestEndpointManager;
+import java.util.List;
 
-public class GenuineCentralModule implements ModuleLifecycle {
+public interface DialogItemContainer extends DialogItem {
 
-    public void start(ModuleLifecycleContext ctx) {
-        // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
-        ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
-        ctx.registerModuleObservingComponent("rest-endpoints", RestEndpointManager.getInstance());
-    }
+    List<DialogItem> getSubs();
 
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-    }
+    void setSubs(List<DialogItem> subs);
+
+    void addSub(DialogItem sub);
+
+    DialogItem getSubByName(String name);
 }

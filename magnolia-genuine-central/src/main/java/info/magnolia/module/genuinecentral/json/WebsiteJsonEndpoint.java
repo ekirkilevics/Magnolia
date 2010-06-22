@@ -37,10 +37,13 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
-import info.magnolia.module.genuinecentral.dialog.Dialog;
-import info.magnolia.module.genuinecentral.dialog.DialogImpl;
+import info.magnolia.module.genuinecentral.dialogx.Dialog;
+import info.magnolia.module.genuinecentral.dialogx.DialogItemFactory;
+import info.magnolia.module.genuinecentral.dialogx.DialogRegistry;
+import info.magnolia.module.genuinecentral.dialogx.ValidationResult;
 import info.magnolia.module.genuinecentral.tree.WebsitePage;
 import info.magnolia.module.genuinecentral.tree.WebsitePageList;
 import info.magnolia.module.templating.Template;
@@ -153,16 +156,60 @@ public class WebsiteJsonEndpoint {
 
     @POST
     @Path("{path:(.)*}/edit")
-    public Dialog edit(@PathParam("path") String path, @QueryParam("dialogName") String dialogName) {
+    public Dialog edit(@PathParam("path") String path, @QueryParam("dialogName") String dialogName) throws RepositoryException {
 
-        return new DialogImpl();
+        path = "/" + path;
+
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+        if (!hierarchyManager.isExist(path))
+            return null;
+
+        Content storageNode = hierarchyManager.getContent(path);
+
+        Content dialogConfigNode = DialogRegistry.getInstance().getDialogConfigNode(dialogName);
+
+        Dialog dialog = DialogItemFactory.getInstance().createDialog(dialogConfigNode);
+
+        dialog.bind(storageNode);
+
+        return dialog;
     }
 
     @POST
     @Path("{path:(.)*}/save")
-    public Dialog save(@PathParam("path") String path, @QueryParam("dialogName") String dialogName, @Context UriInfo uriInfo) {
+    public ValidationResult save(@PathParam("path") String path, @QueryParam("dialogName") String dialogName, @Context UriInfo uriInfo) throws Exception {
 
-        return new DialogImpl();
+        path = "/" + path;
+
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+        if (!hierarchyManager.isExist(path))
+            return null;
+
+        Content storageNode = hierarchyManager.getContent(path);
+
+        Content dialogConfigNode = DialogRegistry.getInstance().getDialogConfigNode(dialogName);
+
+        Dialog dialog = DialogItemFactory.getInstance().createDialog(dialogConfigNode);
+
+        dialog.bind(storageNode);
+        dialog.bind(uriInfo.getQueryParameters());
+
+        ValidationResult validationResult = new ValidationResult();
+
+        dialog.validate(validationResult);
+
+        if (validationResult.isSuccess()) {
+            dialog.save(storageNode);
+            synchronized(ExclusiveWrite.getInstance()) {
+                storageNode.save();
+            }
+        }
+
+        // was it successful ?
+
+        return validationResult;
     }
 
     private WebsitePage createMockPage(String name, String title, boolean hasChildren) {
