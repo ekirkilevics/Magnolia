@@ -284,17 +284,6 @@ public class AdminCentral implements EntryPoint {
     }*/
 
     public void onModuleLoad() {
-        AdminCentralServiceAsync service = (AdminCentralServiceAsync) GWT.create(AdminCentralService.class);
-        ServiceDefTarget endpoint = (ServiceDefTarget) service;
-        String moduleRelativeURL = SERVICE;
-        endpoint.setServiceEntryPoint(moduleRelativeURL);
-        Registry.register(SERVICE, service);
-
-        FileServiceAsync fileservice = (FileServiceAsync) GWT.create(FileService.class);
-        endpoint = (ServiceDefTarget) fileservice;
-        moduleRelativeURL = FILE_SERVICE;
-        endpoint.setServiceEntryPoint(moduleRelativeURL);
-        Registry.register(FILE_SERVICE, fileservice);
 
         Map<String, TabEntry> entries = new FastMap<TabEntry>();
 

@@ -56,7 +56,7 @@
           <execution>
             <goals>
               <!--goal>compile</goal-->
-              <goal>generateAsync</goal>
+              <!--goal>generateAsync</goal-->
               <goal>resources</goal>
             </goals>
           </execution>
