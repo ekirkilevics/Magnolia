@@ -1,23 +1,33 @@
 <html>
 <body>
-URL <input name="url" id="url" value="/.magnolia/rest/" size="60" type="text"><br>
-ContentType <input name="contentType" id="contentType" value="application/json" type="text">
-<input value="Send" onclick="sendRequest()" type="button"><br>
+
+URL <input name="url" id="url" value="/.magnolia/rest/" size="60" type="text">
+<input value="GET" onclick="sendRequest('GET')" type="button">
+<input value="POST" onclick="sendRequest('POST')" type="button" />
+<input value="PUT" onclick="sendRequest('PUT')" type="button" />
+<input value="Clear" onclick="clearInput()" type="button" />
+<br>
+<textarea rows="7" cols="80" id="input"></textarea><br/>
 <textarea rows="15" cols="80" id="output"></textarea>
 <script type="text/javascript">
 
-	function sendRequest() {
+	function sendRequest(method) {
 		http = new XMLHttpRequest();
-		http.open("GET", document.getElementById("url").value, true);
-		http.setRequestHeader("Accept", document.getElementById("contentType").value);
+		http.open(method, document.getElementById("url").value, true);
+		http.setRequestHeader("Content-Type", "application/json");
+		http.setRequestHeader("Accept", "application/json");
 		http.onreadystatechange = useHttpResponse;
-		http.send(null);
+		http.send(document.getElementById("input").value);
 	}
 
 	function useHttpResponse() {
 		if (http.readyState == 4) {
 			document.getElementById("output").value = http.responseText;
 		}
+	}
+
+	function clearInput() {
+		document.getElementById("input").value = '';
 	}
 
 </script>

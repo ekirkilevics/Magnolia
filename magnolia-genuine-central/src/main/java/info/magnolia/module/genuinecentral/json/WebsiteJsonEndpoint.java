@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.genuinecentral.tree.WebsitePage;
 import info.magnolia.module.genuinecentral.tree.WebsitePageList;
 import info.magnolia.module.templating.Template;
@@ -45,7 +46,10 @@ import info.magnolia.module.templating.TemplateManager;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.util.ArrayList;
@@ -84,6 +88,65 @@ public class WebsiteJsonEndpoint {
         }
 
         return readRepository("/" + path);
+    }
+
+    private static class WebsiteAccessor extends WebsiteTreeHandler {
+
+        public WebsiteAccessor(String name, HttpServletRequest request, HttpServletResponse response) {
+            super(name, request, response);
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+    }
+
+    // This should be PUT... but we use POST for now since IPSecurity blocks PUT
+    @POST
+    @Path("{path:(.)*}/create")
+    public WebsitePage create(@PathParam("path") String path) {
+
+        WebsiteAccessor website = new WebsiteAccessor("website", null, null);
+
+        website.setCreateItemType("mgnl:content");
+        website.setPath("/" + path);
+        website.createNode();
+
+        return new WebsitePage();
+    }
+
+    @POST
+    @Path("{path:(.)*}/update")
+    public WebsitePage update(@PathParam("path") String path, WebsitePage page) {
+
+        // read
+
+        // set name, title and template
+
+        // save
+
+        // return
+
+        return new WebsitePage();
+    }
+
+    @POST
+    @Path("{path:(.)*}/delete")
+    public WebsitePage delete(@PathParam("path") String path, WebsitePage page) throws Exception {
+
+        WebsiteAccessor website = new WebsiteAccessor("website", null, null);
+
+        path = "/" + path;
+
+        // This is AdminTreeMVCHandler
+        String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+        String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
+        // With this fix added for the simple case '/untitled'
+        if (parentPath.isEmpty())
+            parentPath = "/";
+        website.deleteNode(parentPath, label);
+
+        return new WebsitePage();
     }
 
     private WebsitePage createMockPage(String name, String title, boolean hasChildren) {
