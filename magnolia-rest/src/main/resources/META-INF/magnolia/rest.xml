@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>genuinecentral</name>
+  <displayName>Magnolia REST API</displayName>
+  <description>New Magnolia REST API</description>
+  <class>info.magnolia.module.rest.RestModule</class>
+  <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.0/*</version>
+    </dependency>
+    <dependency>
+      <name>templating</name>
+      <version>5.0/*</version>
+    </dependency>
+  </dependencies>
+
+  <servlets>
+    <servlet>
+      <name>RestDispatcherServlet</name>
+      <class>info.magnolia.module.rest.rest.RestDispatcherServlet</class>
+      <comment>Dispatches requests for REST endpoints</comment>
+      <mappings>
+        <mapping>/.magnolia/rest/*</mapping>
+      </mappings>
+    </servlet>
+  </servlets>
+</module>
+

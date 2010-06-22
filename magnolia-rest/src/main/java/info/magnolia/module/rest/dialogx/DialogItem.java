@@ -31,23 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.genuinecentral.dialogx;
 
-import java.util.List;
+import info.magnolia.cms.core.Content;
 
+import javax.jcr.RepositoryException;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
 @XmlRootElement
-public interface Dialog {
-    String getLabel();
+public interface DialogItem {
 
-    void setLabel(String label);
+    String getName();
 
-    List<Control> getControls();
+    void setParent(DialogItem parent);
 
-    void setControls(List<Control> controls);
+    void bind(Content storageNode) throws RepositoryException;
+
+    void bind(MultivaluedMap<String, String> parameters) throws Exception;
+
+    void validate(ValidationResult validationResult);
+
+    void save(Content storageNode) throws RepositoryException;
 }

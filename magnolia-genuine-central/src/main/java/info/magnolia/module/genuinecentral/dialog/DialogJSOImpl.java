@@ -34,6 +34,8 @@
 package info.magnolia.module.genuinecentral.dialog;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import info.magnolia.module.rest.dialog.Control;
+import info.magnolia.module.rest.dialog.Dialog;
 
 import java.util.ArrayList;
 import java.util.List;

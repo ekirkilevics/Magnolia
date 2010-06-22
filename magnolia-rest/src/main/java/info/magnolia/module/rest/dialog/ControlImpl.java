@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,27 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.json;
-
-import info.magnolia.module.genuinecentral.tree.TreeNode;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+package info.magnolia.module.rest.dialog;
 
 /**
- * The tree abstraction might be to generic, different tree views have very little in common and might be better served
- * by dedicated endpoints for each view.
+ * @author Vivian Steller
+ * @since 1.0.0
  */
-@Path("/tree")
-public class TreeJsonEndpoint {
+public class ControlImpl implements Control {
+   private String type;
+   private String label;
+   private String name;
 
-    @GET
-    @Path("/{treeName}/{path}")
-    public TreeNode getNode(@PathParam("treeName") String treeName, @PathParam("path") String path) {
+   public String getName() {
+      return name;
+   }
 
-        TreeNode treeNode = new TreeNode();
-        treeNode.setName("bogusName");
-        return treeNode;
-    }
+   public void setName(String name) {
+      this.name = name;
+   }
+
+   public String getType() {
+      return type;
+   }
+
+   public void setType(String type) {
+      this.type = type;
+   }
+
+   public String getLabel() {
+      return label;
+   }
+
+   public void setLabel(String label) {
+      this.label = label;
+   }
+
 }

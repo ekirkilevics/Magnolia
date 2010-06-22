@@ -31,35 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.rest.dialog;
 
-import info.magnolia.module.rest.dialog.Control;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
+import java.util.List;
 
 /**
  * @author Vivian Steller
  * @since 1.0.0
  */
-public class DialogJSO extends JavaScriptObject {
+public interface Dialog {
+    String getLabel();
 
-   protected DialogJSO() {
-   }
+    void setLabel(String label);
 
-   public final native String getLabel() /*-{
-      return this.label;
-   }-*/;
+    List<Control> getControls();
 
-   public final native void setLabel(String label) /*-{
-      this.label = label;
-   }-*/;
-
-   public final native JsArray<ControlJSO> getControls() /*-{
-      return this.controls;
-   }-*/;
-
-   public final native void setControls(Control[] controls) /*-{
-      this.controls = controls;
-   }-*/;
+    void setControls(List<Control> controls);
 }

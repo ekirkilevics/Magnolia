@@ -31,7 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.rest.dialog;
 
-public class EditControl extends ControlImpl {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TabControl extends ControlImpl {
+
+    private List<Control> controls = new ArrayList<Control>();
+
+    public List<Control> getControls() {
+        return controls;
+    }
+
+    public void setControls(List<Control> controls) {
+        this.controls = controls;
+    }
+
+    public void addControl(Control control) {
+        controls.add(control);
+    }
 }

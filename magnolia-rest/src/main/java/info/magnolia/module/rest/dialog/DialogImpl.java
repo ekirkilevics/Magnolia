@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,38 +31,55 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.json;
+package info.magnolia.module.rest.dialog;
 
-import info.magnolia.module.genuinecentral.dialog.Dialog;
-import info.magnolia.module.genuinecentral.dialog.DialogImpl;
-import info.magnolia.module.genuinecentral.dialog.EditControl;
-import info.magnolia.module.genuinecentral.dialog.TabControl;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.util.ArrayList;
+import java.util.List;
 
-@Path("/dialog")
-public class DialogJsonEndpoint {
+/**
+ * @author Vivian Steller
+ * @since 1.0.0
+ */
+@XmlRootElement(name = "dialog")
+public class DialogImpl implements Dialog {
 
-    @GET
-    @Path("/{dialogName}")
-    public Dialog getDialog(@PathParam("dialogName") String dialogName) {
+    private String label;
+    private List<Control> controls = new ArrayList<Control>();
 
-        EditControl editControl = new EditControl();
-        editControl.setLabel("Title of the page");
-        editControl.setName("title");
-        editControl.setType("edit");
-
-        TabControl tab = new TabControl();
-        tab.setLabel("Properties");
-        tab.setType("tab");
-        tab.addControl(editControl);
-
-        DialogImpl dialog = new DialogImpl();
-        dialog.setLabel("Page Properties");
-        dialog.addControl(tab);
-
-        return dialog;
+    public String getLabel() {
+        return label;
     }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public List<Control> getControls() {
+        return controls;
+    }
+
+    public void setControls(List<Control> controls) {
+        this.controls = controls;
+    }
+
+    public void addControl(Control control) {
+        controls.add(control);
+    }
+
+    public String toString() {
+        String result =
+                "label: " + this.getLabel() + "\n" +
+                        "controls:\n";
+
+        for (Control control : this.getControls()) {
+            result += "label: " + control.getLabel() + ", ";
+            result += "type: " + control.getType() + "\n";
+        }
+
+        return result;
+    }
+
 }

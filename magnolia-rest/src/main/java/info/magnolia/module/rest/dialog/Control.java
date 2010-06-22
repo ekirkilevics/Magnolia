@@ -31,7 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.rest.dialog;
 
-public class DateControl extends ControlImpl {
+/**
+ * @author Vivian Steller
+ * @since 1.0.0
+ */
+public interface Control {
+
+   public String getName();
+
+   public void setName(String name);
+
+   public String getType();
+
+   public void setType(String type);
+
+   public String getLabel();
+
+   public void setLabel(String label);
 }

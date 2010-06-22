@@ -31,23 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.genuinecentral.dialogx;
 
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
-public interface Control {
+import java.util.List;
 
-   public String getName();
+public interface DialogItemContainer extends DialogItem {
 
-   public void setName(String name);
+    List<DialogItem> getSubs();
 
-   public String getType();
+    void setSubs(List<DialogItem> subs);
 
-   public void setType(String type);
+    void addSub(DialogItem sub);
 
-   public String getLabel();
-
-   public void setLabel(String label);
+    DialogItem getSubByName(String name);
 }

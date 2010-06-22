@@ -31,55 +31,61 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.genuinecentral.dialogx;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import info.magnolia.cms.core.Content;
 
+import javax.jcr.RepositoryException;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
-@XmlRootElement(name = "dialog")
-public class DialogImpl implements Dialog {
+public abstract class AbstractDialogItemContainer extends AbstractDialogItem implements DialogItemContainer {
 
-    private String label;
-    private List<Control> controls = new ArrayList<Control>();
+    private List<DialogItem> subs = new ArrayList<DialogItem>();
 
-    public String getLabel() {
-        return label;
+    public List<DialogItem> getSubs() {
+        return subs;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSubs(List<DialogItem> subs) {
+        this.subs = subs;
     }
 
-    public List<Control> getControls() {
-        return controls;
+    public void addSub(DialogItem sub) {
+        sub.setParent(this);
+        this.subs.add(sub);
     }
 
-    public void setControls(List<Control> controls) {
-        this.controls = controls;
-    }
-
-    public void addControl(Control control) {
-        controls.add(control);
-    }
-
-    public String toString() {
-        String result =
-                "label: " + this.getLabel() + "\n" +
-                        "controls:\n";
-
-        for (Control control : this.getControls()) {
-            result += "label: " + control.getLabel() + ", ";
-            result += "type: " + control.getType() + "\n";
+    public DialogItem getSubByName(String name) {
+        for (DialogItem sub : subs) {
+            if (sub.getName().equals(name))
+                return sub;
         }
-
-        return result;
+        return null;
     }
 
+    public void bind(Content storageNode) throws RepositoryException {
+        for (DialogItem sub : subs) {
+            sub.bind(storageNode);
+        }
+    }
+
+    public void bind(MultivaluedMap<String, String> parameters) throws Exception {
+        for (DialogItem sub : subs) {
+            sub.bind(parameters);
+        }
+    }
+
+    public void validate(ValidationResult validationResult) {
+        for (DialogItem sub : subs) {
+            sub.validate(validationResult);
+        }
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
+        for (DialogItem sub : subs) {
+            sub.save(storageNode);
+        }
+    }
 }

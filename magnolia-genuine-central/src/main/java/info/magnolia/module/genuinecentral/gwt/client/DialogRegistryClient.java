@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import info.magnolia.module.genuinecentral.dialog.Dialog;
+import info.magnolia.module.rest.dialog.Dialog;
 import info.magnolia.module.genuinecentral.dialog.DialogJSO;
 import info.magnolia.module.genuinecentral.dialog.DialogJSOImpl;
 

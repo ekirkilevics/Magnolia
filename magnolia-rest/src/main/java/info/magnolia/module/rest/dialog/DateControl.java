@@ -31,31 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.rest.dialog;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
-public class DialogRegistry {
-   private Map<String, DialogImpl> dialogs = new HashMap<String, DialogImpl>();
-
-   public Map<String, DialogImpl> getDialogs() {
-      return dialogs;
-   }
-
-   public void setDialogs(Map<String, DialogImpl> dialogs) {
-      this.dialogs = dialogs;
-   }
-
-   public void addDialog(String name, DialogImpl dialog) {
-      dialogs.put(name, dialog);
-   }
-
-   public DialogImpl getDialog(String name) {
-      return dialogs.get(name);
-   }
+public class DateControl extends ControlImpl {
 }

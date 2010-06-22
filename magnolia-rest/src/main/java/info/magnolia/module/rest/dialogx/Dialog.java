@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,11 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.rest;
+package info.magnolia.module.genuinecentral.dialogx;
 
-public interface RestEndpointRegistrar {
+public class Dialog extends AbstractDialogItemContainer {
 
-    void registerEndpoint(Object instance);
+    private String name;
+    private String label;
 
-    void unregisterEndpoint(Class<?> clazz);
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 }

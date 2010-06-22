@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,24 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.rest;
 
-import java.util.ArrayList;
-import java.util.List;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.rest.dialogx.DialogRegistry;
+import info.magnolia.module.rest.rest.RestEndpointManager;
 
-public class TabControl extends ControlImpl {
+public class RestModule implements ModuleLifecycle {
 
-    private List<Control> controls = new ArrayList<Control>();
-
-    public List<Control> getControls() {
-        return controls;
+    public void start(ModuleLifecycleContext ctx) {
+        // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
+        ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
+        ctx.registerModuleObservingComponent("rest-endpoints", RestEndpointManager.getInstance());
     }
 
-    public void setControls(List<Control> controls) {
-        this.controls = controls;
-    }
-
-    public void addControl(Control control) {
-        controls.add(control);
+    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 }

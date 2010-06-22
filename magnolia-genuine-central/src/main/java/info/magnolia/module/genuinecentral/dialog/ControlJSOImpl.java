@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.genuinecentral.dialog;
 
+import info.magnolia.module.rest.dialog.Control;
+
 /**
  * @author Vivian Steller
  * @since 1.0.0

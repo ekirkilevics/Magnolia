@@ -205,7 +205,7 @@
           <runTarget>Magnolia.html</runTarget>
           <hostedWebapp>target/${project.name}-${project.version}</hostedWebapp>
           <port>8080</port>
-          <debugPort>8011</debugPort>
+          <debugPort>8000</debugPort>
           <debugSuspend>false</debugSuspend>
           <style>DETAILED</style>
           <logLevel>DEBUG</logLevel>

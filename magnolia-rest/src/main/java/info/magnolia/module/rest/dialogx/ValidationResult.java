@@ -31,35 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.dialog;
+package info.magnolia.module.genuinecentral.dialogx;
 
-import info.magnolia.module.rest.dialog.Control;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
+@XmlRootElement
+public class ValidationResult {
 
-/**
- * @author Vivian Steller
- * @since 1.0.0
- */
-public class DialogJSO extends JavaScriptObject {
+    private List<String> messages = new ArrayList<String>();
 
-   protected DialogJSO() {
-   }
+    public List<String> getMessages() {
+        return messages;
+    }
 
-   public final native String getLabel() /*-{
-      return this.label;
-   }-*/;
+    public void addMessage(String message) {
+        this.messages.add(message);
+    }
 
-   public final native void setLabel(String label) /*-{
-      this.label = label;
-   }-*/;
-
-   public final native JsArray<ControlJSO> getControls() /*-{
-      return this.controls;
-   }-*/;
-
-   public final native void setControls(Control[] controls) /*-{
-      this.controls = controls;
-   }-*/;
+    public boolean isSuccess() {
+        return this.messages.isEmpty();
+    }
 }
