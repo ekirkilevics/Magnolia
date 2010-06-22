@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.genuinecentral.dialog;
 
-import info.magnolia.module.rest.dialog.Control;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 
@@ -59,7 +57,7 @@ public class DialogJSO extends JavaScriptObject {
       return this.controls;
    }-*/;
 
-   public final native void setControls(Control[] controls) /*-{
+   public final native void setControls(ControlJSO[] controls) /*-{
       this.controls = controls;
    }-*/;
 }

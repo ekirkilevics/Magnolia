@@ -34,8 +34,6 @@
 package info.magnolia.module.genuinecentral.dialog;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import info.magnolia.module.rest.dialog.Control;
-import info.magnolia.module.rest.dialog.Dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +42,7 @@ import java.util.List;
  * @author Vivian Steller
  * @since 1.0.0
  */
-public class DialogJSOImpl implements Dialog {
+public class DialogJSOImpl {
     private DialogJSO wrappee;
 
     public DialogJSOImpl(DialogJSO wrappee) {
@@ -59,9 +57,9 @@ public class DialogJSOImpl implements Dialog {
         wrappee.setLabel(label);
     }
 
-    public List<Control> getControls() {
+    /*    public List<Control> getControls() {
         final ArrayList<Control> controlsList = new ArrayList<Control>();
-/*        if (isArray(wrappee, "controls")) {
+        if (isArray(wrappee, "controls")) {
             final JavaScriptObject[] controlJSOs = JSOHelper.getAttributeAsJavaScriptObjectArray(wrappee, "controls");
             for (JavaScriptObject controlJSO : controlJSOs) {
                 controlsList.add(new ControlJSOImpl((ControlJSO) controlJSO.cast()));
@@ -70,15 +68,15 @@ public class DialogJSOImpl implements Dialog {
             final JavaScriptObject controlJSO = JSOHelper.getAttributeAsJavaScriptObject(wrappee, "controls");
             controlsList.add(new ControlJSOImpl((ControlJSO) controlJSO.cast()));
         }
-*/
+
         return controlsList;
     }
-
+*/
     public native boolean isArray(JavaScriptObject jso, String property) /*-{
         var prop = jso[property];
         return prop instanceof Array;
     }-*/;
-
+/*
     public void setControls(List<Control> controls) {
         wrappee.setControls(controls.toArray(new Control[controls.size()]));
     }
@@ -97,4 +95,5 @@ public class DialogJSOImpl implements Dialog {
 
         return result;
     }
+*/
 }
