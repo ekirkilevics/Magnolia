@@ -145,7 +145,7 @@ public class JspParagraphRendererTest extends TestCase {
     }
     */
 
-    public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
+    /*public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         final WebContext webContext = createNiceMock(WebContext.class);
         MgnlContext.setInstance(webContext);
         final AggregationState aggState = new AggregationState();
@@ -161,6 +161,23 @@ public class JspParagraphRendererTest extends TestCase {
         } catch (IllegalStateException e) {
             assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
+        verify(webContext);
+    }*/
+
+
+    public void testSkipRenderingIfParagraphPathIsNull() throws Exception {
+        final WebContext webContext = createNiceMock(WebContext.class);
+        MgnlContext.setInstance(webContext);
+        final AggregationState aggState = new AggregationState();
+        expect(webContext.getAggregationState()).andReturn(aggState);
+        replay(webContext);
+        final Content c = new MockContent("pouet");
+        final Paragraph paragraph = new Paragraph();
+        paragraph.setName("plop");
+        final JspParagraphRenderer renderer = new JspParagraphRenderer();
+        final StringWriter out = new StringWriter();
+        renderer.render(c, paragraph, out);
+        assertTrue(out.getBuffer().length() == 0);
         verify(webContext);
     }
 
