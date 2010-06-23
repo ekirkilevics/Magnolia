@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,35 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.json;
 
-public class Tab extends AbstractDialogItemContainer {
+import info.magnolia.module.rest.dialogx.Dialog;
 
-    private String name;
-    private String type;
-    private String label;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-    public String getName() {
-        return name;
-    }
+@Path("/repositories")
+public class RepositoryJsonEndpoint {
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @GET
+    @Path("/{repositoryName}/{path:(.)*}")
+    public Dialog getDialog(
+            @PathParam("repositoryName") String dialogName,
+            @PathParam("path") String path) {
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+        return new Dialog();
     }
 }

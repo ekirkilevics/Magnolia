@@ -79,12 +79,12 @@ public class ConfiguredDialogFactory {
         }
     }
 
-    private Tab createTab(Content configNode) {
-        Tab tab = new Tab();
-        tab.setType("tab");
-        tab.setName(configNode.getName());
-        tab.setLabel(configNode.getNodeData("label").getString());
-        return tab;
+    private TabControl createTab(Content configNode) {
+        TabControl tabControl = new TabControl();
+        tabControl.setType("tab");
+        tabControl.setName(configNode.getName());
+        tabControl.setLabel(configNode.getNodeData("label").getString());
+        return tabControl;
     }
 
     private EditControl createEditControl(Content configNode) {

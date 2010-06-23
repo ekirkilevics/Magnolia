@@ -133,6 +133,7 @@ public class DialogJsonEndpoint {
         if (validationResult.isSuccess()) {
             synchronized (ExclusiveWrite.getInstance()) {
                 dialog.save(storageNode);
+                storageNode.save();
             }
         }
 

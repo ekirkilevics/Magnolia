@@ -52,14 +52,14 @@ public class RestModule implements ModuleLifecycle {
                 editControl.setName("title");
                 editControl.setType("edit");
 
-                Tab tab = new Tab();
-                tab.setLabel("Properties");
-                tab.setType("tab");
-                tab.addSub(editControl);
+                TabControl tabControl = new TabControl();
+                tabControl.setLabel("Properties");
+                tabControl.setType("tab");
+                tabControl.addSub(editControl);
 
                 Dialog dialog = new Dialog();
                 dialog.setLabel("Page Properties");
-                dialog.addSub(tab);
+                dialog.addSub(tabControl);
 
                 return dialog;
             }
