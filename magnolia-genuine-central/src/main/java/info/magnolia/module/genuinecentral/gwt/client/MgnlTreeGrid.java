@@ -49,10 +49,11 @@ import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelKeyProvider;
 import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
+import com.extjs.gxt.ui.client.event.MenuEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.Store;
 import com.extjs.gxt.ui.client.store.StoreSorter;
 import com.extjs.gxt.ui.client.store.TreeStore;
-import com.extjs.gxt.ui.client.util.IconHelper;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.ToolButton;
@@ -60,6 +61,8 @@ import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.tips.ToolTipConfig;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
@@ -69,16 +72,16 @@ import com.google.gwt.user.client.Element;
 
 public class MgnlTreeGrid extends LayoutContainer {
 
-    private String tree = "";
+    private String treeName = "";
     private String path = "";
-
+    private TreeGrid<ModelData> tree;
     @Override
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
 
         setLayout(new FlowLayout(10));
 
-        final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/" + tree + path);
+        final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/" + treeName + path);
         requestBuilder.setHeader("Accept", "application/json");
 
         // data proxy
@@ -101,17 +104,19 @@ public class MgnlTreeGrid extends LayoutContainer {
         cp.setFrame(true);
         cp.setSize(600, 300);
 
-        TreeGrid<ModelData> tree = new TreeGrid<ModelData>(store, cm);
+        tree = new TreeGrid<ModelData>(store, cm);
         tree.setStateful(true);
         // stateful components need a defined id
         tree.setId("statefullmgnltreegrid");
         tree.setBorders(true);
-        tree.getStyle().setLeafIcon(IconHelper.createStyle("icon-page"));
+        // TODO: use one of our icons ...
+        //tree.getStyle().setLeafIcon(IconHelper.createStyle("icon-page"));
         tree.setSize(400, 400);
         tree.setAutoExpandColumn("name");
         tree.setTrackMouseOver(false);
         cp.add(tree);
 
+        // tool tip
         ToolTipConfig config = new ToolTipConfig();
         config.setTitle("Bla bla bla Title");
         config.setShowDelay(1);
@@ -122,8 +127,48 @@ public class MgnlTreeGrid extends LayoutContainer {
 
         cp.getHeader().addTool(btn);
 
+        // context menu
+        Menu contextMenu = new Menu();
+        contextMenu.setWidth(140);
+        contextMenu.setHeight(60);
+        contextMenu.setFocusOnShow(true);
+        contextMenu.setTitle("Tree Context Menu");
+
+        MenuItem insert = new MenuItem();
+        insert.setText("Insert Item");
+        insert.setBorders(true);
+        //insert.setIcon(ICONS.add());
+        contextMenu.add(insert);
+
+        MenuItem remove = new MenuItem();
+        remove.setText("Remove Selected");
+        //remove.setIcon(ICONS.delete());
+        contextMenu.add(remove);
+
+        insert.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                ModelData folder = tree.getSelectionModel().getSelectedItem();
+                if (folder != null) {
+                    // ...
+                }
+            }
+        });
+
+        remove.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                List<ModelData> selected = tree.getSelectionModel().getSelectedItems();
+                for (ModelData sel : selected) {
+                    store.remove((FileModel) sel);
+                }
+            }
+        });
+
+        tree.setContextMenu(contextMenu);
+
         add(cp);
     }
+
+
 
 
     /**
@@ -135,6 +180,7 @@ public class MgnlTreeGrid extends LayoutContainer {
         store.setKeyProvider(new ModelKeyProvider<FileModel>() {
             public String getKey(FileModel model) {
                 // TODO: Same name siblings will have same path!!!!
+                System.out.println(model.getPath() + "::" + model.getUuid());
                 return model.getPath();
             }
 
@@ -207,6 +253,7 @@ public class MgnlTreeGrid extends LayoutContainer {
 
             @Override
             public boolean loadChildren(FileModel parent) {
+                System.out.println("load children for parent:" + parent);
                 // proxy is not really RESTfull, we need to change the init uri on load children call
                 RestfullHttpProxy<List<FileModel>> restfullProxy = (RestfullHttpProxy<List<FileModel>>) proxy;
                 String url = restfullProxy.getOriginalURL();
@@ -223,6 +270,7 @@ public class MgnlTreeGrid extends LayoutContainer {
                 } else {
                     url += "/" + parentPath;
                 }
+                System.out.println("Setting url to:" + url);
                 restfullProxy.setURL(url);
                 return super.loadChildren(parent);
             }
@@ -279,11 +327,11 @@ public class MgnlTreeGrid extends LayoutContainer {
     }
 
     public String getTree() {
-        return tree;
+        return treeName;
     }
 
     public void setTree(String tree) {
-        this.tree = tree;
+        this.treeName = tree;
     }
 
     public String getPath() {
@@ -292,6 +340,10 @@ public class MgnlTreeGrid extends LayoutContainer {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public TreeGrid<ModelData> getTreeImpl() {
+        return this.tree;
     }
 
 }

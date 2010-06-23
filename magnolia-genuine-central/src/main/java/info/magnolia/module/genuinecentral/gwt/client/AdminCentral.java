@@ -45,15 +45,22 @@ import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.core.FastMap;
 import com.extjs.gxt.ui.client.core.XDOM;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ButtonBar;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -324,6 +331,11 @@ public class AdminCentral implements EntryPoint {
         }
 
         treeTab.add(entry.getItem());
+        LayoutContainer item = entry.getItem();
+        System.out.println("Item:" + item);
+        if (item instanceof MgnlTreeGrid) {
+            treeTab.add(getToolBar(((MgnlTreeGrid) item).getTreeImpl()));
+        }
         panel.add(treeTab);
 
         viewport.add(panel, new BorderLayoutData(LayoutRegion.CENTER));
@@ -345,5 +357,26 @@ public class AdminCentral implements EntryPoint {
         BorderLayoutData data = new BorderLayoutData(LayoutRegion.NORTH, 33);
         data.setMargins(new Margins());
         viewport.add(northPanel, data);
+    }
+
+    private ButtonBar getToolBar(final TreeGrid<ModelData> tree) {
+        ButtonBar buttonBar = new ButtonBar();
+        Button expand = new Button("Expand All");
+        Button collapse = new Button("Collapse All");
+        expand.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
+                tree.expandAll();
+            }
+        });
+
+        collapse.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
+                tree.collapseAll();
+            }
+        });
+        buttonBar.add(expand);
+        buttonBar.add(collapse);
+
+        return buttonBar;
     }
 }

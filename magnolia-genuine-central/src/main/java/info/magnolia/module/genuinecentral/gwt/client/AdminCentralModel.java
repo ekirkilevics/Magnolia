@@ -39,45 +39,71 @@ import java.util.List;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.TreeModel;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ButtonBar;
+import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 
 public class AdminCentralModel extends BaseTreeModel {
 
-  protected List<TabEntry> entries = new ArrayList<TabEntry>();
+    protected List<TabEntry> entries = new ArrayList<TabEntry>();
 
-  public AdminCentralModel() {
+    public AdminCentralModel() {
 
-    Tab treeGrids = new Tab("TreeGrid");
-    MgnlTreeGrid tree = new MgnlTreeGrid();
-    tree.setTree("website");
-    tree.setPath("/");
-    treeGrids.add("MgnlTreeGrid", tree, null);
-    add(treeGrids);
-    loadEntries(this);
-  }
-
-  public TabEntry findEntry(String name) {
-    if (get(name) != null) {
-      return (TabEntry) get(name);
+        Tab treeGrids = new Tab("TreeGrid");
+        MgnlTreeGrid tree = new MgnlTreeGrid();
+        tree.setTree("website");
+        tree.setPath("/");
+        treeGrids.add("MgnlTreeGrid", tree, null);
+        add(treeGrids);
+        loadEntries(this);
     }
-    for (TabEntry entry : getEntries()) {
-      if (name.equals(entry.getId())) {
-        return entry;
-      }
-    }
-    return null;
-  }
 
-  public List<TabEntry> getEntries() {
-    return entries;
-  }
-
-  private void loadEntries(TreeModel model) {
-    for (ModelData child : model.getChildren()) {
-      if (child instanceof TabEntry) {
-        entries.add((TabEntry) child);
-      } else if (child instanceof Tab) {
-        loadEntries((Tab) child);
-      }
+    public TabEntry findEntry(String name) {
+        if (get(name) != null) {
+            return (TabEntry) get(name);
+        }
+        for (TabEntry entry : getEntries()) {
+            if (name.equals(entry.getId())) {
+                return entry;
+            }
+        }
+        return null;
     }
-  }
+
+    public List<TabEntry> getEntries() {
+        return entries;
+    }
+
+    private void loadEntries(TreeModel model) {
+        for (ModelData child : model.getChildren()) {
+            if (child instanceof TabEntry) {
+                entries.add((TabEntry) child);
+            } else if (child instanceof Tab) {
+                loadEntries((Tab) child);
+            }
+        }
+    }
+
+    private ButtonBar getToolBar(final TreeGrid<FileModel> tree) {
+        ButtonBar buttonBar = new ButtonBar();
+        Button expand = new Button("Expand All");
+        Button collapse = new Button("Collapse All");
+        expand.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
+                tree.expandAll();
+            }
+        });
+
+        collapse.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
+                tree.collapseAll();
+            }
+        });
+        buttonBar.add(expand);
+        buttonBar.add(collapse);
+
+        return buttonBar;
+    }
 }
