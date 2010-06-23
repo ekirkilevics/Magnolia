@@ -9,9 +9,8 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-genuine-central</artifactId>
     <packaging>jar</packaging>
-
   <name>GenUIne Admin Central</name>
-
+  <description>The new Admin interface for Magnolia.</description>
   <dependencies>
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -25,30 +24,75 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-rest</artifactId>
-      <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-templating</artifactId>
-      <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
       <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-rest</artifactId>
+      <version>5.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-templating</artifactId>
+      <version>5.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-gui</artifactId>
+      <version>5.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-jaas</artifactId>
+      <version>5.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-fckeditor</artifactId>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main/webapp/cache</directory>
+            </fileset>
+            <fileset>
+              <directory>src/main/webapp/logs</directory>
+            </fileset>
+            <fileset>
+              <directory>src/main/webapp/repositories</directory>
+            </fileset>
+            <fileset>
+              <directory>src/main/webapp/templates</directory>
+            </fileset>
+            <fileset>
+              <directory>src/main/webapp/tmp</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <!-- these are the resources copied by the remote-resources-plugin -->
+              <directory>${basedir}/target/maven-shared-archive-resources</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
@@ -56,11 +100,23 @@
           <execution>
             <goals>
               <!--goal>compile</goal-->
-              <!--goal>generateAsync</goal-->
+              <goal>generateAsync</goal>
               <goal>resources</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <module>info.magnolia.module.genuinecentral.AdminCentral</module>
+          <runTarget>Magnolia.html</runTarget>
+          <hostedWebapp>${basedir}/src/main/webapp</hostedWebapp>
+          <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
+          <inplace>true</inplace>
+          <port>8080</port>
+          <debugPort>8000</debugPort>
+          <debugSuspend>false</debugSuspend>
+          <style>DETAILED</style>
+          <logLevel>DEBUG</logLevel>
+        </configuration>
       </plugin>
     </plugins>
     <!--resources>
@@ -76,4 +132,3 @@
     </resources-->
   </build>
 </project>
-
