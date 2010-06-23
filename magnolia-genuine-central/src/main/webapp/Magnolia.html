@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Magnolia CMS App</title>
+<script language='javascript' src='/.resources/genuinecentral/flash/swfobject.js'></script>
+<script>
+// there is a bug in gxt using deprecated getBoxObjectFor function in the tree ... the code below is a fix by defining the function and using getBoundingClientRect function that replaced the original
+// source of the fix: http://stackoverflow.com/questions/1018997/gwt-javascript-exception-in-hosted-mode-result-of-expression-doc-getboxobjectfo
+    if(typeof document.getBoxObjectFor == "undefined") {
+        document.getBoxObjectFor = function(elem) {
+            var obj = new Object;
+            var rect = elem.getBoundingClientRect();
+            obj.y = rect.top;
+            obj.x = rect.left;
+            obj.width =Math.abs(rect.right-rect.left);
+            obj.height = Math.abs(rect.bottom-rect.top);
+            return obj;
+        }
+    }
+</script>
+<link rel="stylesheet" type="text/css" href="/.resources/genuinecentral/css/gxt-all.css" />
+
+</head>
+<body id="mgnltreegrid" style="overflow: hidden">
+<iframe src="javascript:''" id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
+<script type="text/javascript" language="javascript" src="info.magnolia.module.genuinecentral.AdminCentral/info.magnolia.module.genuinecentral.AdminCentral.nocache.js"></script>
+
+</body>
+</html>
