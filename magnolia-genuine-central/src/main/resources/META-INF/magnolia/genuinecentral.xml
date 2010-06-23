@@ -4,7 +4,6 @@
   <name>genuinecentral</name>
   <displayName>Magnolia GenUIne Admin Interface</displayName>
   <description>New Magnolia Administration GUI</description>
-  <class>info.magnolia.module.genuinecentral.GenuineCentralModule</class>
   <version>${project.version}</version>
 
   <dependencies>
@@ -18,14 +17,4 @@
     </dependency>
   </dependencies>
 
-  <servlets>
-    <servlet>
-      <name>RestDispatcherServlet</name>
-      <class>info.magnolia.module.genuinecentral.rest.RestDispatcherServlet</class>
-      <comment>Dispatches requests for REST endpoints</comment>
-      <mappings>
-        <mapping>/.magnolia/rest/*</mapping>
-      </mappings>
-    </servlet>
-  </servlets>
 </module>
