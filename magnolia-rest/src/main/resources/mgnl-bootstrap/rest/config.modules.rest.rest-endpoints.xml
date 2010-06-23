@@ -34,7 +34,7 @@
       <sv:value>825b1281-dd08-4f94-903b-0c69aab94dba</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.genuinecentral.json.WebsiteJsonEndpoint</sv:value>
+      <sv:value>info.magnolia.module.rest.json.WebsiteJsonEndpoint</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -62,7 +62,7 @@
       <sv:value>ad0f7852-b59a-4b5d-bc6c-c2f47d3343c6</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.genuinecentral.json.DialogJsonEndpoint</sv:value>
+      <sv:value>info.magnolia.module.rest.json.DialogJsonEndpoint</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
