@@ -259,6 +259,7 @@ public class WebsiteJsonEndpoint {
             page.setStatus(isActivated?"activated":"modified");
             page.setTemplate(getTemplateName(content));
             page.setTitle(title);
+            page.setUuid(content.getUUID());
             page.setAvailableTemplates(getAvailableTemplates(content));
             pages.add(page);
         }

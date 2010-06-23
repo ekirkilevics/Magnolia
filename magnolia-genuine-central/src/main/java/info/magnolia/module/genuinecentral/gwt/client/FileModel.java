@@ -53,6 +53,11 @@ public class FileModel extends BaseModelData {
     setPath(path);
   }
 
+  public String getId() {
+      String uuid = get("uuid");
+      return uuid == null ? ("" + hashCode()) : uuid;
+  }
+
   public void setName(String name) {
     set("name", name);
   }
@@ -92,5 +97,9 @@ public class FileModel extends BaseModelData {
   @Override
     public String toString() {
         return getPath();
+    }
+
+    public String getUuid() {
+        return get("uuid");
     }
 }

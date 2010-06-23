@@ -43,6 +43,7 @@ public class WebsitePage {
     // Template will need to be a name:label pair...
 
     private String name;
+    private String uuid;
     private String title;
     private String status;
     private String template;
@@ -113,5 +114,13 @@ public class WebsitePage {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
