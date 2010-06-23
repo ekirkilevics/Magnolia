@@ -35,15 +35,35 @@ package info.magnolia.module.rest;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.rest.dialogx.DialogRegistry;
+import info.magnolia.module.rest.dialogx.*;
 import info.magnolia.module.rest.rest.RestEndpointManager;
 
 public class RestModule implements ModuleLifecycle {
 
     public void start(ModuleLifecycleContext ctx) {
         // Only one component can observe <moduleName>/dialogs so we'll use <moduleName>/genuine-dialogs for now
-        ctx.registerModuleObservingComponent("genuine-dialogs", DialogRegistry.getInstance());
+        ctx.registerModuleObservingComponent("genuine-dialogs", ConfiguredDialogManager.getInstance());
         ctx.registerModuleObservingComponent("rest-endpoints", RestEndpointManager.getInstance());
+
+        DialogRegistry.getInstance().registerDialog("mockDialog", new DialogProvider() {
+            public Dialog create() {
+                EditControl editControl = new EditControl();
+                editControl.setLabel("Title of the page");
+                editControl.setName("title");
+                editControl.setType("edit");
+
+                Tab tab = new Tab();
+                tab.setLabel("Properties");
+                tab.setType("tab");
+                tab.addSub(editControl);
+
+                Dialog dialog = new Dialog();
+                dialog.setLabel("Page Properties");
+                dialog.addSub(tab);
+
+                return dialog;
+            }
+        });
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {

@@ -41,7 +41,6 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.rest.dialogx.Dialog;
-import info.magnolia.module.rest.dialogx.DialogItemFactory;
 import info.magnolia.module.rest.dialogx.DialogRegistry;
 import info.magnolia.module.rest.dialogx.ValidationResult;
 import info.magnolia.module.rest.tree.WebsitePage;
@@ -55,7 +54,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.Date;
@@ -167,9 +165,7 @@ public class WebsiteJsonEndpoint {
 
         Content storageNode = hierarchyManager.getContent(path);
 
-        Content dialogConfigNode = DialogRegistry.getInstance().getDialogConfigNode(dialogName);
-
-        Dialog dialog = DialogItemFactory.getInstance().createDialog(dialogConfigNode);
+        Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
 
         dialog.bind(storageNode);
 
@@ -189,9 +185,7 @@ public class WebsiteJsonEndpoint {
 
         Content storageNode = hierarchyManager.getContent(path);
 
-        Content dialogConfigNode = DialogRegistry.getInstance().getDialogConfigNode(dialogName);
-
-        Dialog dialog = DialogItemFactory.getInstance().createDialog(dialogConfigNode);
+        Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
 
         dialog.bind(storageNode);
         dialog.bind(uriInfo.getQueryParameters());

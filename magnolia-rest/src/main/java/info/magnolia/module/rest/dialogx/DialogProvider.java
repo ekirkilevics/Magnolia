@@ -33,32 +33,7 @@
  */
 package info.magnolia.module.rest.dialogx;
 
-import info.magnolia.cms.core.Content;
+public interface DialogProvider {
 
-import javax.jcr.RepositoryException;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.xml.bind.annotation.XmlRootElement;
-
-/**
- * Dialog items are serialized using JAXB, stored to JCR, populated with values from Repo or Request and typically
- * created from repository configuration.
- */
-@XmlRootElement
-public interface DialogItem {
-
-    String getName();
-
-    void setParent(DialogItem parent);
-
-//    DialogItem getParent();
-
-    void bind(Content storageNode) throws RepositoryException;
-
-    void bind(MultivaluedMap<String, String> parameters) throws Exception;
-
-    void validate(ValidationResult validationResult);
-
-    void save(Content storageNode) throws RepositoryException;
-
-//    Messages getMessages();
+    Dialog create();
 }

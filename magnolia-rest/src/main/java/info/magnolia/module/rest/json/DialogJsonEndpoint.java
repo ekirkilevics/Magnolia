@@ -33,36 +33,180 @@
  */
 package info.magnolia.module.rest.json;
 
-import info.magnolia.module.rest.dialog.Dialog;
-import info.magnolia.module.rest.dialog.DialogImpl;
-import info.magnolia.module.rest.dialog.EditControl;
-import info.magnolia.module.rest.dialog.TabControl;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.rest.dialogx.Dialog;
+import info.magnolia.module.rest.dialogx.DialogRegistry;
+import info.magnolia.module.rest.dialogx.ValidationResult;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.jcr.RepositoryException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
-@Path("/dialog")
+@Path("/dialogs")
 public class DialogJsonEndpoint {
+
+    private static Logger log = LoggerFactory.getLogger(DialogJsonEndpoint.class);
 
     @GET
     @Path("/{dialogName}")
-    public Dialog getDialog(@PathParam("dialogName") String dialogName) {
+    public Dialog getDialog(
+            @PathParam("dialogName") String dialogName,
+            @QueryParam("mgnlRepository") String repository,
+            @QueryParam("mgnlPath") String path,
+            @QueryParam("mgnlNodeCollectionName") String nodeCollection,
+            @QueryParam("mgnlNode") String node) throws RepositoryException {
 
-        EditControl editControl = new EditControl();
-        editControl.setLabel("Title of the page");
-        editControl.setName("title");
-        editControl.setType("edit");
+        Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
 
-        TabControl tab = new TabControl();
-        tab.setLabel("Properties");
-        tab.setType("tab");
-        tab.addControl(editControl);
+        Content storageNode = getStorageNode(repository, path, nodeCollection, node);
 
-        DialogImpl dialog = new DialogImpl();
-        dialog.setLabel("Page Properties");
-        dialog.addControl(tab);
+        dialog.bind(storageNode);
 
         return dialog;
+    }
+
+    @POST
+    @Path("/{dialogName}/create")
+    public ValidationResult create(
+            @PathParam("dialogName") String dialogName,
+            @QueryParam("mgnlRepository") String repository,
+            @QueryParam("mgnlPath") String path,
+            @QueryParam("mgnlNodeCollectionName") String nodeCollection,
+            @QueryParam("mgnlNode") String node,
+            @Context UriInfo uriInfo) throws Exception {
+
+        Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
+
+        dialog.bind(uriInfo.getQueryParameters());
+
+        ValidationResult validationResult = new ValidationResult();
+        dialog.validate(validationResult);
+        if (validationResult.isSuccess()) {
+            synchronized (ExclusiveWrite.getInstance()) {
+
+                HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+
+                Content rootNode = hm.getContent(path);
+
+                Content storageNode = createStorageNode(rootNode, nodeCollection, node);
+
+                dialog.save(storageNode);
+
+                storageNode.getMetaData().setTemplate("samplesHowToJSP");
+
+                rootNode.save();
+            }
+        }
+
+        return validationResult;
+    }
+
+    @POST
+    @Path("/{dialogName}/update")
+    public ValidationResult update(
+            @PathParam("dialogName") String dialogName,
+            @QueryParam("mgnlRepository") String repository,
+            @QueryParam("mgnlPath") String path,
+            @QueryParam("mgnlNodeCollectionName") String nodeCollection,
+            @QueryParam("mgnlNode") String node,
+            @Context UriInfo uriInfo) throws Exception {
+
+        Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
+
+        Content storageNode = getStorageNode(repository, path, nodeCollection, node);
+
+        dialog.bind(storageNode);
+
+        dialog.bind(uriInfo.getQueryParameters());
+
+        ValidationResult validationResult = new ValidationResult();
+        dialog.validate(validationResult);
+        if (validationResult.isSuccess()) {
+            synchronized (ExclusiveWrite.getInstance()) {
+                dialog.save(storageNode);
+            }
+        }
+
+        return validationResult;
+    }
+
+    // Snippet taken from DialogSaveHandlerImpl and modified to not use mgnlNew as nodeName placeholder
+    private Content createStorageNode(Content rootNode, String nodeCollectionName, String nodeName) throws RepositoryException {
+
+        Content nodeCollection = null;
+        if (StringUtils.isNotEmpty(nodeCollectionName)) {
+            try {
+                nodeCollection = rootNode.getContent(nodeCollectionName);
+            }
+            catch (RepositoryException re) {
+                // nodeCollection does not exist -> create
+                nodeCollection = rootNode.createContent(nodeCollectionName, ItemType.CONTENTNODE);
+                log.debug("Create - {}" + nodeCollection.getHandle()); //$NON-NLS-1$
+            }
+        }
+        else {
+            nodeCollection = rootNode;
+        }
+
+        Content node;
+
+        if (StringUtils.isNotEmpty(nodeName)) {
+            node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE.getSystemName());
+        }
+        else {
+            nodeName = info.magnolia.cms.core.Path.getUniqueLabel(rootNode.getHierarchyManager(), nodeCollection.getHandle(), "0"); //$NON-NLS-1$
+            node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE.getSystemName());
+        }
+
+        return node;
+    }
+
+    // This is DialogMVCHandler.getStorageNode()
+    private Content getStorageNode(String repository, String path, String nodeCollectionName, String nodeName) {
+
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+
+        Content storageNode = null;
+
+        try {
+            if (path == null) {
+//                log.debug("No path defined for a dialog called by the url [{}]", this.getRequest().getRequestURL());
+                return null;
+            }
+            Content parentContent = hm.getContent(path);
+            if (StringUtils.isEmpty(nodeName)) {
+                if (StringUtils.isEmpty(nodeCollectionName)) {
+                    storageNode = parentContent;
+                } else {
+                    storageNode = parentContent.getContent(nodeCollectionName);
+                }
+            } else {
+                if (StringUtils.isEmpty(nodeCollectionName)) {
+                    storageNode = parentContent.getContent(nodeName);
+
+                } else {
+                    storageNode = parentContent.getContent(nodeCollectionName).getContent(nodeName);
+
+                }
+            }
+        }
+        catch (AccessDeniedException ade) {
+            log.error("can't read content to edit", ade);
+        }
+        catch (RepositoryException re) {
+            // content does not exist yet
+            log.debug("can't read content or it does not exist yet", re);
+        }
+
+        return storageNode;
     }
 }

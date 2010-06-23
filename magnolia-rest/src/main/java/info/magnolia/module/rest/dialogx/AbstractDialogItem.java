@@ -33,10 +33,16 @@
  */
 package info.magnolia.module.rest.dialogx;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 public abstract class AbstractDialogItem implements DialogItem {
 
     private DialogItem parent;
 
+    /**
+     * Transient to prevent infinite recursion during serialization, maybe explicit serialization is preferable..
+     */
+    @XmlTransient
     public DialogItem getParent() {
         return parent;
     }

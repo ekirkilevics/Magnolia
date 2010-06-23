@@ -39,7 +39,7 @@ import info.magnolia.objectfactory.Components;
 
 import java.util.Iterator;
 
-public class DialogItemFactory {
+public class ConfiguredDialogFactory {
 
     public Dialog createDialog(Content configNode) {
 
@@ -103,7 +103,7 @@ public class DialogItemFactory {
         return dateControl;
     }
 
-    public static DialogItemFactory getInstance() {
-        return Components.getSingleton(DialogItemFactory.class);
+    public static ConfiguredDialogFactory getInstance() {
+        return Components.getSingleton(ConfiguredDialogFactory.class);
     }
 }
