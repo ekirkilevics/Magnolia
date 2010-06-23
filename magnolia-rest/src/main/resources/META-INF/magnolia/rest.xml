@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
-  <name>genuinecentral</name>
+  <name>rest</name>
   <displayName>Magnolia REST API</displayName>
   <description>New Magnolia REST API</description>
   <class>info.magnolia.module.rest.RestModule</class>
