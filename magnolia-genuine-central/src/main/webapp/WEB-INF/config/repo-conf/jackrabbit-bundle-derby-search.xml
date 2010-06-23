@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Repository PUBLIC "-//The Apache Software Foundation//DTD Jackrabbit 1.5//EN" "http://jackrabbit.apache.org/dtd/repository-1.5.dtd">
+<Repository>
+  <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+    <param name="path" value="${rep.home}/repository" />
+  </FileSystem>
+  <Security appName="Jackrabbit">
+    <AccessManager class="org.apache.jackrabbit.core.security.SimpleAccessManager"></AccessManager>
+    <LoginModule class="org.apache.jackrabbit.core.security.SimpleLoginModule">
+      <param name="anonymousId" value="anonymous" />
+    </LoginModule>
+  </Security>
+  <DataStore class="org.apache.jackrabbit.core.data.FileDataStore">
+    <param name="path" value="${rep.home}/repository/datastore"/>
+    <param name="minRecordLength" value="1024"/>
+  </DataStore>
+  <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
+  <Workspace name="default">
+    <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+      <param name="path" value="${wsp.home}/default" />
+    </FileSystem>
+    <PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.DerbyPersistenceManager">
+      <param name="url" value="jdbc:derby:${wsp.home}/db;create=true" />
+      <param name="schemaObjectPrefix" value="${wsp.name}_" />
+    </PersistenceManager>
+    <SearchIndex class="org.apache.jackrabbit.core.query.lucene.SearchIndex">
+      <param name="path" value="${wsp.home}/index" />
+      <param name="useCompoundFile" value="true" />
+      <param name="minMergeDocs" value="100" />
+      <param name="volatileIdleTime" value="3" />
+      <param name="maxMergeDocs" value="100000" />
+      <param name="mergeFactor" value="10" />
+      <param name="maxFieldLength" value="10000" />
+      <param name="bufferSize" value="10" />
+      <param name="cacheSize" value="1000" />
+      <param name="forceConsistencyCheck" value="false" />
+      <param name="autoRepair" value="true" />
+      <param name="analyzer" value="org.apache.lucene.analysis.standard.StandardAnalyzer" />
+      <param name="queryClass" value="org.apache.jackrabbit.core.query.QueryImpl" />
+      <param name="respectDocumentOrder" value="true" />
+      <param name="resultFetchSize" value="2147483647" />
+      <param name="extractorPoolSize" value="3" />
+      <param name="extractorTimeout" value="100" />
+      <param name="extractorBackLogSize" value="100" />
+      <param name="textFilterClasses"
+        value="org.apache.jackrabbit.extractor.MsWordTextExtractor,
+               org.apache.jackrabbit.extractor.MsExcelTextExtractor,
+               org.apache.jackrabbit.extractor.MsPowerPointTextExtractor,
+               org.apache.jackrabbit.extractor.PdfTextExtractor,
+               org.apache.jackrabbit.extractor.OpenOfficeTextExtractor,
+               org.apache.jackrabbit.extractor.RTFTextExtractor,
+               org.apache.jackrabbit.extractor.HTMLTextExtractor,
+               org.apache.jackrabbit.extractor.PlainTextExtractor,
+               org.apache.jackrabbit.extractor.XMLTextExtractor" />
+    </SearchIndex>
+  </Workspace>
+  <Versioning rootPath="${rep.home}/version">
+    <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+      <param name="path" value="${rep.home}/workspaces/version" />
+    </FileSystem>
+    <PersistenceManager class="org.apache.jackrabbit.core.persistence.bundle.DerbyPersistenceManager">
+      <param name="url" value="jdbc:derby:${rep.home}/version/db;create=true" />
+      <param name="schemaObjectPrefix" value="version_" />
+    </PersistenceManager>
+  </Versioning>
+</Repository>
