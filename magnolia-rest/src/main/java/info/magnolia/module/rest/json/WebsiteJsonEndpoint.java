@@ -73,23 +73,6 @@ public class WebsiteJsonEndpoint {
     @GET
     @Path("{path:(.)*}")
     public WebsitePageList getNode(@PathParam("path") String path) throws RepositoryException {
-
-        if (path.equals("mock")) {
-            WebsitePageList pages = new WebsitePageList();
-            pages.add(createMockPage("news", "News Desk", true));
-            pages.add(createMockPage("about", "About", false));
-            return pages;
-        } else if (path.equals("mock/news")) {
-            WebsitePageList pages = new WebsitePageList();
-            pages.add(createMockPage("merger", "QWE merges with RTY", false));
-            pages.add(createMockPage("hiring", "New position available", false));
-            return pages;
-        } else if (path.equals("mock/news/merger")) {
-            return new WebsitePageList();
-        } else if (path.equals("mock/news/hiring")) {
-            return new WebsitePageList();
-        }
-
         return readRepository("/" + path);
     }
 
