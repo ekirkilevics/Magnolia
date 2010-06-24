@@ -51,7 +51,7 @@ public class TreeJsonEndpoint {
     public TreeNode getNode(@PathParam("treeName") String treeName, @PathParam("path") String path) {
 
         TreeNode treeNode = new TreeNode();
-        treeNode.setName("bogusName");
+        treeNode.setName("treeName");
         return treeNode;
     }
 }
