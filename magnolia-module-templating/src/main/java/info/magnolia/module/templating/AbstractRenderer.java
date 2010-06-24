@@ -74,12 +74,11 @@ public abstract class AbstractRenderer {
         }
 
         final String actionResult = model.execute();
-
-        final String templatePath = determineTemplatePath(content, definition, model, actionResult);
-        //a null templatePath means skip rendering. This is used, for instance, by the redirect template.
-        if(templatePath == null){
+        if(RenderingModel.SKIP_RENDERING.equals(actionResult)){
             return;
         }
+        String templatePath = determineTemplatePath(content, definition, model, actionResult);
+
         final Map ctx = newContext();
         final Map savedContextState = saveContextState(ctx);
         setupContext(ctx, content, definition, model, actionResult);
@@ -88,13 +87,15 @@ public abstract class AbstractRenderer {
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
 
         restoreContext(ctx, savedContextState);
-
     }
-    /**
-     * May return <tt>null</tt> when the rendering process should be skipped, i.e. when doing a redirect.
-     */
+
     protected String determineTemplatePath(Content content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
-        return definition.determineTemplatePath(actionResult, model);
+        String templatePath = definition.determineTemplatePath(actionResult, model);
+
+        if (templatePath == null) {
+            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+        }
+        return templatePath;
     }
 
     /**

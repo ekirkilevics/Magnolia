@@ -160,7 +160,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         assertEquals("yay : it works : tralala : success", out.toString());
     }
 
-    /*public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
+    public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         tplLoader.putTemplate("foo", "");
         final Content c = new MockContent("pouet");
         final Paragraph paragraph = new Paragraph();
@@ -171,20 +171,22 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         } catch (IllegalStateException e) {
             assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
-    }*/
+    }
 
-    public void testSkipRenderingIfParagraphPathIsNull() throws Exception {
+    public void testSkipRendering() throws Exception {
         final WebContext webContext = createNiceMock(WebContext.class);
         MgnlContext.setInstance(webContext);
         final AggregationState aggState = new AggregationState();
         expect(webContext.getAggregationState()).andReturn(aggState);
         replay(webContext);
         final Content c = new MockContent("pouet");
-        final Paragraph paragraph = new Paragraph();
-        paragraph.setName("plop");
+        final Paragraph par = new Paragraph();
+        par.setName("plop");
+        par.setTemplatePath("do_not_render_me.ftl");
+        par.setModelClass(SkippableTestState.class);
         final FreemarkerParagraphRenderer renderer = new FreemarkerParagraphRenderer();
         final StringWriter out = new StringWriter();
-        renderer.render(c, paragraph, out);
+        renderer.render(c, par, out);
         assertTrue(out.getBuffer().length() == 0);
         verify(webContext);
     }
@@ -215,6 +217,17 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
 
         public void setBlah(String blah) {
             this.blah = blah;
+        }
+    }
+
+    public static final class SkippableTestState extends RenderingModelImpl {
+
+        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+            super(content, definition, parent);
+        }
+        @Override
+        public String execute() {
+            return RenderingModel.SKIP_RENDERING;
         }
     }
 }
