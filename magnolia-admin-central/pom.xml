@@ -7,9 +7,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-genuine-central</artifactId>
+  <artifactId>magnolia-admin-central</artifactId>
     <packaging>jar</packaging>
-  <name>GenUIne Admin Central</name>
+  <name>Admin Central</name>
   <description>The new Admin interface for Magnolia.</description>
   <dependencies>
     <dependency>
