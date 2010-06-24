@@ -39,6 +39,8 @@ import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,32 +84,22 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         MgnlContext.getAggregationState().setOriginalURI(originalURINormalized);
         MgnlContext.getAggregationState().setOriginalURL(originalURLNormalized);
 
-        HttpServletRequest unicodeRequest = request;
+        HttpServletRequest unicodeRequest = new UnicodeNormalizerRequestWrapper(request);
+        MgnlContext.push(unicodeRequest, response);
 
-        // check if it is not a multipart form
-        if (MgnlContext.getPostedForm() == null)
-        {
-            unicodeRequest = new UnicodeNormalizerRequestWrapper(request);
-            MgnlContext.push(unicodeRequest, response);
-        }
-        else
-        {
+        if (MgnlContext.getPostedForm() != null) {
             // if it is a multipart form, request is already wrapped and parameters are read from multipartform object;
             // parameters are sometimes read by form.getParameter (deprecated) so we have to convert values in
             // multipartform.paramters map
-            for (Object key : MgnlContext.getPostedForm().getParameters().keySet())
-            {
+            for (Object key : MgnlContext.getPostedForm().getParameters().keySet()) {
                 String[] value = transform((String[]) MgnlContext.getPostedForm().getParameters().get(key));
                 MgnlContext.getPostedForm().getParameters().put((String) key, value);
             }
         }
 
         chain.doFilter(unicodeRequest, response);
-
-        if (MgnlContext.getPostedForm() == null)
-        {
-            MgnlContext.pop();
-        }
+        
+        MgnlContext.pop();
     }
 
     /**
@@ -189,6 +181,24 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         public String[] getParameterValues(String name)
         {
             return (String[]) getParameterMap().get(name);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getHeader(String name) {
+            String header = null;
+            try {
+                header = super.getHeader(name);
+                if (header != null) {
+                    header = URLDecoder.decode(header, getCharacterEncoding());
+                }
+            }
+            catch (UnsupportedEncodingException e) {
+                header = super.getHeader(name);
+            }
+            return header;
         }
 
     }

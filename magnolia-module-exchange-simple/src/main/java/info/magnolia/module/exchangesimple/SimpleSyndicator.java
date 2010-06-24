@@ -43,6 +43,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -156,8 +157,8 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             urlConnection = prepareConnection(subscriber);
             this.addActivationHeaders(urlConnection, activationContent);
             // set a parent path manually instead of via activationHeaders since it can differ between subscribers.
+            parentPath = URLEncoder.encode(parentPath, "UTF-8");
             urlConnection.setRequestProperty(PARENT_PATH, parentPath);
-
 
             Transporter.transport((HttpURLConnection) urlConnection, activationContent);
 
