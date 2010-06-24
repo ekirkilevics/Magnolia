@@ -33,21 +33,119 @@
  */
 package info.magnolia.module.rest.json;
 
-import info.magnolia.module.rest.dialogx.Dialog;
+import info.magnolia.module.rest.tree.TreeNode;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 
 @Path("/repositories")
 public class RepositoryJsonEndpoint {
 
     @GET
     @Path("/{repositoryName}/{path:(.)*}")
-    public Dialog getDialog(
-            @PathParam("repositoryName") String dialogName,
+    public TreeNode getNode(
+            @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path) {
 
-        return new Dialog();
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/create")
+    public TreeNode createNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path,
+            @QueryParam("itemType") String itemType) {
+
+        // depending on the itemType we will need to find a suitable command
+
+        // itemType (content, contentnode, user, role, group... but likely not metaData and nodeData)
+        // optional name? defaults to?
+        //
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/setNodeData")
+    public TreeNode setNodeData(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path,
+            @QueryParam("name") String name,
+            @QueryParam("value") String value,
+            @QueryParam("type") String type) {
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/removeNodeData")
+    public TreeNode removeNodeData(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path,
+            @QueryParam("name") String name) {
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/delete")
+    public TreeNode deleteNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path) {
+
+        // depending on the itemType might need to do different things
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/rename")
+    public TreeNode renameNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path) {
+
+        // depending on the itemType might need to do different things
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/move")
+    public TreeNode moveNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path,
+            @PathParam("newPath") String newPath) {
+
+        // some itemTypes cannot be moved, i.e. users
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/copy")
+    public TreeNode copyNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path,
+            @PathParam("newPath") String newPath) {
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/activate")
+    public TreeNode activateNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path) {
+
+        return new TreeNode();
+    }
+
+    @POST
+    @Path("/{repositoryName}/{path:(.)*}/deactivate")
+    public TreeNode deactivateNode(
+            @PathParam("repositoryName") String repositoryName,
+            @PathParam("path") String path) {
+
+        return new TreeNode();
     }
 }

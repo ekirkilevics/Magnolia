@@ -130,7 +130,9 @@ public class WebsiteJsonEndpoint {
         // ...with this fix added for the simple case '/untitled'
         if (StringUtils.isEmpty(parentPath))
             parentPath = "/";
-        website.deleteNode(parentPath, label);
+        synchronized (ExclusiveWrite.getInstance()) {
+            website.deleteNode(parentPath, label);
+        }
 
         return new WebsitePage();
     }
