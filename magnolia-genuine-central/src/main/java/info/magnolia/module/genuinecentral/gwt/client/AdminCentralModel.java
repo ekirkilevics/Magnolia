@@ -39,11 +39,6 @@ import java.util.List;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.TreeModel;
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.ButtonBar;
-import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 
 public class AdminCentralModel extends BaseTreeModel {
 
@@ -51,13 +46,19 @@ public class AdminCentralModel extends BaseTreeModel {
 
     public AdminCentralModel() {
 
-        Tab treeGrids = new Tab("TreeGrid");
-        MgnlTreeGrid tree = new MgnlTreeGrid();
-        tree.setTree("website");
-        tree.setPath("/");
-        treeGrids.add("MgnlTreeGrid", tree, null);
-        add(treeGrids);
+        add(createTab("Website", "website", "/"));
+        add(createTab("Config", "config", "/"));
         loadEntries(this);
+    }
+
+    private Tab createTab(String name, String treeName, String treePath) {
+        Tab treeGrids = new Tab(name);
+        MgnlTreeGrid tree = new MgnlTreeGrid();
+        tree.setTree(treeName);
+        tree.setPath(treePath);
+        tree.setHeading(name);
+        treeGrids.add(name, tree, null);
+        return treeGrids;
     }
 
     public TabEntry findEntry(String name) {
@@ -84,26 +85,5 @@ public class AdminCentralModel extends BaseTreeModel {
                 loadEntries((Tab) child);
             }
         }
-    }
-
-    private ButtonBar getToolBar(final TreeGrid<FileModel> tree) {
-        ButtonBar buttonBar = new ButtonBar();
-        Button expand = new Button("Expand All");
-        Button collapse = new Button("Collapse All");
-        expand.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                tree.expandAll();
-            }
-        });
-
-        collapse.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                tree.collapseAll();
-            }
-        });
-        buttonBar.add(expand);
-        buttonBar.add(collapse);
-
-        return buttonBar;
     }
 }

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
+import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BaseTreeLoader;
 import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
@@ -49,16 +50,22 @@ import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelKeyProvider;
 import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.MenuEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.Store;
 import com.extjs.gxt.ui.client.store.StoreSorter;
 import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.util.IconHelper;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.button.ButtonBar;
 import com.extjs.gxt.ui.client.widget.button.ToolButton;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
@@ -75,6 +82,9 @@ public class MgnlTreeGrid extends LayoutContainer {
     private String treeName = "";
     private String path = "";
     private TreeGrid<ModelData> tree;
+    private ContentPanel cp;
+    private String heading = "";
+
     @Override
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
@@ -96,25 +106,45 @@ public class MgnlTreeGrid extends LayoutContainer {
 
         ColumnModel cm = getColumnConfiguration();
 
-        ContentPanel cp = new ContentPanel();
+        cp = new ContentPanel();
         cp.setBodyBorder(false);
-        cp.setHeading("MgnlTreeGrid");
+        cp.setHeading(heading);
         cp.setButtonAlign(HorizontalAlignment.CENTER);
-        cp.setLayout(new FitLayout());
+        cp.setLayout(new BorderLayout());
         cp.setFrame(true);
         cp.setSize(600, 300);
 
         tree = new TreeGrid<ModelData>(store, cm);
         tree.setStateful(true);
         // stateful components need a defined id
-        tree.setId("statefullmgnltreegrid");
+        // TODO: each tree instance will need different id
+        tree.setId("statefull" + treeName + "mgnltreegrid");
         tree.setBorders(true);
         // TODO: use one of our icons ...
-        //tree.getStyle().setLeafIcon(IconHelper.createStyle("icon-page"));
+        tree.getStyle().setLeafIcon(IconHelper.createStyle("icon-page"));
         tree.setSize(400, 400);
         tree.setAutoExpandColumn("name");
         tree.setTrackMouseOver(false);
-        cp.add(tree);
+        //tree.setAutoHeight(true);
+
+        //cp.add(getToolBar(tree), new BorderLayoutData(LayoutRegion.NORTH));
+        ContentPanel south = new ContentPanel(new FitLayout());
+        south.setHeaderVisible(false);
+        south.add(getToolBar(tree));
+        BorderLayoutData southData = new BorderLayoutData(LayoutRegion.SOUTH, 30);
+        southData.setSplit(true);
+        southData.setCollapsible(true);
+        southData.setFloatable(false);
+        cp.add(south, southData);
+        ContentPanel center = new ContentPanel(new FitLayout());
+        center.add(tree);
+        center.setHeaderVisible(false);
+        BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
+        centerData.setCollapsible(false);
+        centerData.setHideCollapseTool(true);
+        // 0..1 are %
+        centerData.setSize(1);
+        cp.add(center, centerData);
 
         // tool tip
         ToolTipConfig config = new ToolTipConfig();
@@ -168,9 +198,6 @@ public class MgnlTreeGrid extends LayoutContainer {
         add(cp);
     }
 
-
-
-
     /**
      * Prepares pre-configured tree store with the column sorter and key provider.
      */
@@ -180,7 +207,6 @@ public class MgnlTreeGrid extends LayoutContainer {
         store.setKeyProvider(new ModelKeyProvider<FileModel>() {
             public String getKey(FileModel model) {
                 // TODO: Same name siblings will have same path!!!!
-                System.out.println(model.getPath() + "::" + model.getUuid());
                 return model.getPath();
             }
 
@@ -321,9 +347,55 @@ public class MgnlTreeGrid extends LayoutContainer {
                 }
                 return resultList;
             }
-
         };
         return jsonReader;
+    }
+
+    private ButtonBar getToolBar(final TreeGrid<ModelData> tree) {
+        ButtonBar buttonBar = new ButtonBar();
+
+        Button add = new Button("New Page");
+        add.setIcon(IconHelper.createPath("/.resources/icons/16/folder.png"));
+        buttonBar.add(add);
+        Button del = new Button("Delete");
+        del.setIcon(IconHelper.createPath("/.resources/icons/16/delete2.gif"));
+        buttonBar.add(del);
+        Button act = new Button("Activate");
+        act.setIcon(IconHelper.createPath("/.resources/icons/16/arrow_right_green.gif"));
+        buttonBar.add(act);
+        Button deact = new Button("Deactivate");
+        deact.setIcon(IconHelper.createPath("/.resources/icons/16/arrow_left_red.gif"));
+        buttonBar.add(deact);
+
+        Button expand = new Button("Expand All");
+        Button collapse = new Button("Collapse All");
+        expand.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
+                tree.expandAll();
+            }
+        });
+
+        collapse.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
+                tree.collapseAll();
+            }
+        });
+        buttonBar.add(expand);
+        buttonBar.add(collapse);
+
+        buttonBar.setAutoHeight(false);
+        buttonBar.setHeight(40);
+        buttonBar.setBorders(true);
+
+        return buttonBar;
+    }
+
+
+    public void setHeading(String heading) {
+        if (cp != null) {
+            cp.setHeading(heading);
+        }
+        this.heading = heading;
     }
 
     public String getTree() {

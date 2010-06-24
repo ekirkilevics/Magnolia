@@ -40,6 +40,7 @@ import com.google.gwt.core.client.EntryPoint;
 import java.util.Map;
 
 import com.extjs.gxt.themes.client.Slate;
+import com.extjs.gxt.ui.client.GXT;
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
@@ -310,39 +311,41 @@ public class AdminCentral implements EntryPoint {
             id = XDOM.getBody().getId();
         }
 
-        TabEntry entry = entries.get(id);
 
-        if (entry == null) {
-            return;
-        }
+        TabPanel panel = getTab(entries);
 
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
+        viewport.add(panel, new BorderLayoutData(LayoutRegion.CENTER));
+
 
         createNorth();
 
-        TabPanel panel = new TabPanel();
-        panel.setResizeTabs(true);
-        TabItem treeTab = new TabItem("Tree");
-        treeTab.setScrollMode(Scroll.AUTO);
-        if (entry.isFill()) {
-            treeTab.setLayout(new FitLayout());
-            treeTab.setScrollMode(Scroll.NONE);
-        }
-
-        treeTab.add(entry.getItem());
-        LayoutContainer item = entry.getItem();
-        System.out.println("Item:" + item);
-        if (item instanceof MgnlTreeGrid) {
-            treeTab.add(getToolBar(((MgnlTreeGrid) item).getTreeImpl()));
-        }
-        panel.add(treeTab);
-
-        viewport.add(panel, new BorderLayoutData(LayoutRegion.CENTER));
 
         viewport.show();
         RootPanel.get().add(viewport);
     }
+
+    private TabPanel getTab(Map<String, TabEntry> entries) {
+
+        TabPanel panel = new TabPanel();
+        panel.setResizeTabs(true);
+
+        for (Map.Entry<String, TabEntry> entry: entries.entrySet()) {
+            TabItem treeTab = new TabItem(entry.getKey());
+            treeTab.setScrollMode(Scroll.AUTO);
+            TabEntry tab = entry.getValue();
+            if (tab.isFill()) {
+                treeTab.setLayout(new FitLayout());
+                treeTab.setScrollMode(Scroll.NONE);
+            }
+
+            treeTab.add(tab.getItem());
+            LayoutContainer item = tab.getItem();
+            panel.add(treeTab);
+        }
+    return panel;
+}
 
     private void createNorth() {
         StringBuffer sb = new StringBuffer();
@@ -353,30 +356,11 @@ public class AdminCentral implements EntryPoint {
 
         // register some theme ... should be probably replaced with our own custom theme later.
         ThemeManager.register(Slate.SLATE);
+        GXT.setDefaultTheme(Slate.SLATE, true);
 
         BorderLayoutData data = new BorderLayoutData(LayoutRegion.NORTH, 33);
         data.setMargins(new Margins());
         viewport.add(northPanel, data);
     }
 
-    private ButtonBar getToolBar(final TreeGrid<ModelData> tree) {
-        ButtonBar buttonBar = new ButtonBar();
-        Button expand = new Button("Expand All");
-        Button collapse = new Button("Collapse All");
-        expand.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                tree.expandAll();
-            }
-        });
-
-        collapse.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                tree.collapseAll();
-            }
-        });
-        buttonBar.add(expand);
-        buttonBar.add(collapse);
-
-        return buttonBar;
-    }
 }
