@@ -33,8 +33,38 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.RuleBasedContentFilter;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.xml.serialize.OutputFormat;
@@ -42,41 +72,14 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import EDU.oswego.cs.dl.util.concurrent.Sync;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.util.RuleBasedContentFilter;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.exchange.Subscriber;
-import info.magnolia.logging.AuditLoggingUtil;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.context.MgnlContext;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.util.List;
-import java.util.Iterator;
-import java.util.zip.GZIPOutputStream;
-import java.net.URLConnection;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.FileInputStream;
 
 /**
  * @author Sameer Charles
@@ -441,6 +444,13 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          while (headerKeys.hasNext()) {
              String key = (String) headerKeys.next();
              String value = activationContent.getproperty(key);
+             try
+             {
+                 value = URLEncoder.encode(value, "UTF-8");
+             }
+             catch (UnsupportedEncodingException e)
+             {
+             }
              connection.setRequestProperty(key, value);
          }
      }
