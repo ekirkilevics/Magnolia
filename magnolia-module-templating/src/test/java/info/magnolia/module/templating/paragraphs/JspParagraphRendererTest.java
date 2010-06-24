@@ -177,7 +177,7 @@ public class JspParagraphRendererTest extends TestCase {
         final Content c = new MockContent("pouet");
         final Paragraph par = new Paragraph();
         par.setName("plop");
-        par.setTemplatePath("do_not_render_me.ftl");
+        par.setTemplatePath("do_not_render_me.jsp");
         par.setModelClass(SkippableTestState.class);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         final StringWriter out = new StringWriter();
