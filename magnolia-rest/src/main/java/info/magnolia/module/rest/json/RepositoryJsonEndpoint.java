@@ -33,9 +33,22 @@
  */
 package info.magnolia.module.rest.json;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.rest.tree.TreeNode;
+import info.magnolia.module.rest.tree.TreeNodeData;
+import org.apache.commons.lang.StringUtils;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 import javax.ws.rs.*;
+import java.util.Collection;
 
 @Path("/repositories")
 public class RepositoryJsonEndpoint {
@@ -44,9 +57,12 @@ public class RepositoryJsonEndpoint {
     @Path("/{repositoryName}/{path:(.)*}")
     public TreeNode getNode(
             @PathParam("repositoryName") String repositoryName,
-            @PathParam("path") String path) {
+            @PathParam("path") String path) throws RepositoryException {
 
-        return new TreeNode();
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        Content content = hm.getContent("/" + path);
+
+        return marshallContent(content);
     }
 
     @POST
@@ -54,7 +70,7 @@ public class RepositoryJsonEndpoint {
     public TreeNode createNode(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
-            @QueryParam("itemType") String itemType) {
+            @QueryParam("itemType") String itemType) throws RepositoryException {
 
         // depending on the itemType we will need to find a suitable command
 
@@ -62,7 +78,21 @@ public class RepositoryJsonEndpoint {
         // optional name? defaults to?
         //
 
-        return new TreeNode();
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+
+        String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+        String nodeName = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
+        if (StringUtils.isEmpty(parentPath))
+            parentPath = "/";
+
+        Content parentNode = hm.getContent(parentPath);
+        parentNode.createContent(nodeName, new ItemType(itemType));
+
+        synchronized (ExclusiveWrite.getInstance()) {
+            parentNode.save();
+        }
+
+        return marshallContent(parentNode);
     }
 
     @POST
@@ -72,9 +102,18 @@ public class RepositoryJsonEndpoint {
             @PathParam("path") String path,
             @QueryParam("name") String name,
             @QueryParam("value") String value,
-            @QueryParam("type") String type) {
+            @QueryParam("type") String type) throws RepositoryException {
 
-        return new TreeNode();
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        Content content = hm.getContent("/" + path);
+
+        Value nodeData = NodeDataUtil.createValue(value, Integer.parseInt(type));
+        content.setNodeData(name, nodeData);
+        synchronized (ExclusiveWrite.getInstance()) {
+            content.save();
+        }
+
+        return marshallContent(content);
     }
 
     @POST
@@ -82,18 +121,36 @@ public class RepositoryJsonEndpoint {
     public TreeNode removeNodeData(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
-            @QueryParam("name") String name) {
+            @QueryParam("name") String name) throws RepositoryException {
 
-        return new TreeNode();
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        Content content = hm.getContent("/" + path);
+
+        content.deleteNodeData(name);
+
+        synchronized (ExclusiveWrite.getInstance()) {
+            content.save();
+        }
+
+        return marshallContent(content);
     }
 
     @POST
     @Path("/{repositoryName}/{path:(.)*}/delete")
     public TreeNode deleteNode(
             @PathParam("repositoryName") String repositoryName,
-            @PathParam("path") String path) {
+            @PathParam("path") String path) throws RepositoryException {
 
         // depending on the itemType might need to do different things
+
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        Content current = hm.getContent("/" + path);
+
+        Content parent = current.getParent();
+        current.delete();
+        synchronized (ExclusiveWrite.getInstance()) {
+            parent.save();
+        }
 
         return new TreeNode();
     }
@@ -102,11 +159,20 @@ public class RepositoryJsonEndpoint {
     @Path("/{repositoryName}/{path:(.)*}/rename")
     public TreeNode renameNode(
             @PathParam("repositoryName") String repositoryName,
-            @PathParam("path") String path) {
+            @PathParam("path") String path,
+            @QueryParam("name") String name) throws RepositoryException {
 
         // depending on the itemType might need to do different things
 
-        return new TreeNode();
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        Content current = hm.getContent("/" + path);
+
+        ContentUtil.rename(current, name);
+        synchronized (ExclusiveWrite.getInstance()) {
+            current.getParent().save();
+        }
+
+        return marshallContent(current);
     }
 
     @POST
@@ -115,6 +181,8 @@ public class RepositoryJsonEndpoint {
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
             @PathParam("newPath") String newPath) {
+
+        // place before/after
 
         // some itemTypes cannot be moved, i.e. users
 
@@ -147,5 +215,27 @@ public class RepositoryJsonEndpoint {
             @PathParam("path") String path) {
 
         return new TreeNode();
+    }
+
+    private TreeNode marshallContent(Content content) throws RepositoryException {
+        TreeNode treeNode = new TreeNode();
+        treeNode.setName(content.getName());
+        treeNode.setPath(content.getHandle());
+        treeNode.setUuid(content.getUUID());
+        treeNode.setType(content.getNodeTypeName());
+
+        Collection<NodeData> nodeDatas = content.getNodeDataCollection();
+
+        for (NodeData nodeData : nodeDatas) {
+
+            TreeNodeData data = new TreeNodeData();
+            data.setName(nodeData.getName());
+            data.setType(String.valueOf(nodeData.getType()));
+            data.setValue(NodeDataUtil.getValueString(nodeData));
+
+            treeNode.getNodeData().add(data);
+        }
+
+        return treeNode;
     }
 }

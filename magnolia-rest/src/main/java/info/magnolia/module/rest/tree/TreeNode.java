@@ -34,6 +34,8 @@
 package info.magnolia.module.rest.tree;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @XmlRootElement
@@ -43,9 +45,11 @@ public class TreeNode {
     private String type;
     private String path;
     private String uuid;
-    private List<TreeNodeData> nodeData;
+    private List<TreeNodeData> nodeData = new ArrayList<TreeNodeData>();
 
-    // need metadata too..
+    // need metadata too.. (maybe this is better to place in a bean of its own...)
+    private String status; // created, modified, activated
+    private Date lastModified;
 
     // need to return child nodes, but only 1 level deep, i.e. children of children are not returned
 
