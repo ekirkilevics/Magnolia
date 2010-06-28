@@ -44,6 +44,7 @@ public class RestDispatcherServlet extends HttpServletDispatcher implements Rest
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(addInitParameters(servletConfig));
+        super.getDispatcher().getProviderFactory().addExceptionMapper(new RestExceptionMapper());
         RestEndpointManager.getInstance().setEndpointRegistrar(this);
     }
 
