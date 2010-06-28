@@ -74,6 +74,9 @@ public abstract class AbstractRenderer {
         }
 
         final String actionResult = model.execute();
+        if(RenderingModel.SKIP_RENDERING.equals(actionResult)){
+            return;
+        }
         String templatePath = determineTemplatePath(content, definition, model, actionResult);
 
         final Map ctx = newContext();
@@ -158,7 +161,7 @@ public abstract class AbstractRenderer {
     }
 
     /**
-     * This gets the aggregation state without throwing an exception if the current context is not a WebContext 
+     * This gets the aggregation state without throwing an exception if the current context is not a WebContext
      */
     protected AggregationState getAggregationStateSafely() {
         if(MgnlContext.isWebContext()){

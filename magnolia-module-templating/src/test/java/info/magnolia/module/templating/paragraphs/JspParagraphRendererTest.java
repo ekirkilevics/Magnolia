@@ -36,6 +36,7 @@ package info.magnolia.module.templating.paragraphs;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderingModel;
+import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentWrapper;
@@ -50,6 +51,8 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
+import static org.easymock.classextension.EasyMock.createNiceMock;
+import static org.easymock.classextension.EasyMock.replay;
 
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -165,6 +168,25 @@ public class JspParagraphRendererTest extends TestCase {
     }
 
 
+    public void testSkipRendering() throws Exception {
+        final WebContext webContext = createNiceMock(WebContext.class);
+        MgnlContext.setInstance(webContext);
+        final AggregationState aggState = new AggregationState();
+        expect(webContext.getAggregationState()).andReturn(aggState);
+        replay(webContext);
+        final Content c = new MockContent("pouet");
+        final Paragraph par = new Paragraph();
+        par.setName("plop");
+        par.setTemplatePath("do_not_render_me.jsp");
+        par.setModelClass(SkippableTestState.class);
+        final JspParagraphRenderer renderer = new JspParagraphRenderer();
+        final StringWriter out = new StringWriter();
+        renderer.render(c, par, out);
+        assertTrue(out.getBuffer().length() == 0);
+        verify(webContext);
+    }
+
+
     public void testShouldFailIfNoContextIsSet() throws Exception {
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
@@ -197,5 +219,16 @@ public class JspParagraphRendererTest extends TestCase {
             return unwrap(((ContentWrapper) c).getWrappedContent());
         }
         return c;
+    }
+
+    public static final class SkippableTestState extends RenderingModelImpl {
+
+        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+            super(content, definition, parent);
+        }
+        @Override
+        public String execute() {
+            return RenderingModel.SKIP_RENDERING;
+        }
     }
 }

@@ -34,34 +34,32 @@
 package info.magnolia.module.templating.paragraphs;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.verify;
 import static org.easymock.classextension.EasyMock.createNiceMock;
 import static org.easymock.classextension.EasyMock.replay;
 import freemarker.cache.StringTemplateLoader;
-import freemarker.template.TemplateException;
-import info.magnolia.link.LinkTransformerManager;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.RenderingModel;
-import info.magnolia.module.templating.RenderingModelImpl;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.engine.DefaultRenderingEngine;
-import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.EmptyMessages;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerConfig;
+import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModel;
+import info.magnolia.module.templating.RenderingModelImpl;
+import info.magnolia.module.templating.engine.DefaultRenderingEngine;
+import info.magnolia.module.templating.engine.RenderingEngine;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -77,7 +75,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         tplLoader = new StringTemplateLoader();
         final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
         fmTemplateLoader.addTemplateLoader(tplLoader);
@@ -175,6 +173,24 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         }
     }
 
+    public void testSkipRendering() throws Exception {
+        final WebContext webContext = createNiceMock(WebContext.class);
+        MgnlContext.setInstance(webContext);
+        final AggregationState aggState = new AggregationState();
+        expect(webContext.getAggregationState()).andReturn(aggState);
+        replay(webContext);
+        final Content c = new MockContent("pouet");
+        final Paragraph par = new Paragraph();
+        par.setName("plop");
+        par.setTemplatePath("do_not_render_me.ftl");
+        par.setModelClass(SkippableTestState.class);
+        final FreemarkerParagraphRenderer renderer = new FreemarkerParagraphRenderer();
+        final StringWriter out = new StringWriter();
+        renderer.render(c, par, out);
+        assertTrue(out.getBuffer().length() == 0);
+        verify(webContext);
+    }
+
     public static final class SimpleTestState extends RenderingModelImpl{
         public SimpleTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
             super(content, definition, parent);
@@ -201,6 +217,17 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
 
         public void setBlah(String blah) {
             this.blah = blah;
+        }
+    }
+
+    public static final class SkippableTestState extends RenderingModelImpl {
+
+        public SkippableTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+            super(content, definition, parent);
+        }
+        @Override
+        public String execute() {
+            return RenderingModel.SKIP_RENDERING;
         }
     }
 }
