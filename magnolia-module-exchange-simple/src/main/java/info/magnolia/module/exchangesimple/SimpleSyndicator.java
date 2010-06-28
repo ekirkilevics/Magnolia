@@ -39,6 +39,7 @@ import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -152,12 +153,18 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
         log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName()); //$NON-NLS-1$
 
+        try {
+            parentPath = URLEncoder.encode(parentPath, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e) {
+            // do nothing
+        }
+
         URLConnection urlConnection = null;
         try {
             urlConnection = prepareConnection(subscriber);
             this.addActivationHeaders(urlConnection, activationContent);
             // set a parent path manually instead of via activationHeaders since it can differ between subscribers.
-            parentPath = URLEncoder.encode(parentPath, "UTF-8");
             urlConnection.setRequestProperty(PARENT_PATH, parentPath);
 
             Transporter.transport((HttpURLConnection) urlConnection, activationContent);
