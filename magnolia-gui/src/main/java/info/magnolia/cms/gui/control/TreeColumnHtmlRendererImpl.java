@@ -61,7 +61,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         }
         else {
             NodeData data = content.getNodeData(treeColumn.getName());
-            html = NodeDataUtil.getValueString(data, treeColumn.getDateFormat());
+            html = ControlImpl.escapeHTML(NodeDataUtil.getValueString(data, treeColumn.getDateFormat()));
         }
         // @todo (value is not shown after saving ...)
         if (treeColumn.getKeyValue().size() != 0) {
