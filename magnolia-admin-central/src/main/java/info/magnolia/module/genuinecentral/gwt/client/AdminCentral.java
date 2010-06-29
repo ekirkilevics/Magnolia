@@ -33,10 +33,13 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import info.magnolia.module.genuinecentral.data.MgnlContentStore;
-import info.magnolia.module.genuinecentral.dialog.DialogBuilder;
 
 import com.google.gwt.core.client.EntryPoint;
+
+import info.magnolia.module.genuinecentral.gwt.client.tree.DefaultTreeConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.extjs.gxt.themes.client.Slate;
@@ -44,38 +47,24 @@ import com.extjs.gxt.ui.client.GXT;
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.core.FastMap;
 import com.extjs.gxt.ui.client.core.XDOM;
 import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.ButtonBar;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
-import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * @author Vivian Steller Created 23.08.2009 09:12:43
  */
 public class AdminCentral implements EntryPoint {
-
-    private DialogBuilder dialogBuilder;
-    // private DataSourceProvider dataSourceProvider;
-    private MgnlContentStore contentStore;
-    private DialogRegistryClient dialogRegistry;
 
     public static boolean isExplorer() {
         String test = Window.Location.getPath();
@@ -85,11 +74,12 @@ public class AdminCentral implements EntryPoint {
         return true;
     }
 
-    public static final String SERVICE = "service";
-    public static final String FILE_SERVICE = "treeservice";
+    public static final String ADMIN_CENTRAL = "adminCentral";
     public static final String MODEL = "model";
+    private static final String DEFAULT_TREE_CONFIG = "defaultTreeConfig";
 
     private Viewport viewport;
+    private TabPanel menuPanel;
 
     public AdminCentral() {
 /*        dialogRegistry = new DialogRegistryClient();
@@ -293,59 +283,92 @@ public class AdminCentral implements EntryPoint {
 
     public void onModuleLoad() {
 
-        Map<String, TabEntry> entries = new FastMap<TabEntry>();
-
-        AdminCentralModel model = new AdminCentralModel();
-        for (int i = 0; i < model.getChildren().size(); i++) {
-            Tab cat = (Tab) model.getChildren().get(i);
-            for (int j = 0; j < cat.getChildren().size(); j++) {
-                TabEntry entry = (TabEntry) cat.getChildren().get(j);
-                entries.put(entry.getId(), entry);
-            }
-        }
-
-        Registry.register(MODEL, model);
+        System.out.println("Loading Admin Central");
 
         String id = Window.Location.getParameter("id");
         if (id == null) {
             id = XDOM.getBody().getId();
         }
 
+        // expose AC to all now
+        Registry.register(ADMIN_CENTRAL, this);
 
-        TabPanel panel = getTab(entries);
+        for (Map.Entry<String, Object> module : Registry.getAll().entrySet()) {
+            System.out.println("(In AC) Found registered module: " + module.getKey() + " :: " + module.getValue());
+        }
+        // TODO: load the list of dependent modules from the admin central
+        if (Registry.get("wcm") != null) {
+            init();
+        }
+    }
+
+    public void init() {
+
+        System.out.println("Initializing Admin central");
+
+        createDefaultTreeConfig();
+
+        createDefaultMenu();
 
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
-        viewport.add(panel, new BorderLayoutData(LayoutRegion.CENTER));
+        viewport.add(this.menuPanel, new BorderLayoutData(LayoutRegion.CENTER));
 
 
         createNorth();
-
 
         viewport.show();
         RootPanel.get().add(viewport);
     }
 
-    private TabPanel getTab(Map<String, TabEntry> entries) {
+    private void createDefaultTreeConfig() {
+        Registry.register(DEFAULT_TREE_CONFIG, new DefaultTreeConfig());
+    }
 
-        TabPanel panel = new TabPanel();
-        panel.setResizeTabs(true);
+    private void createDefaultMenu() {
+        List<Tab> entries = new ArrayList<Tab>();
+        // TODO: read the configuration from the config workspace
+        entries.add(createTab("Website", "website", "/", "wcmTreeConfig"));
+        entries.add(createTab("Config", "website", "/", DEFAULT_TREE_CONFIG));
 
-        for (Map.Entry<String, TabEntry> entry: entries.entrySet()) {
-            TabItem treeTab = new TabItem(entry.getKey());
-            treeTab.setScrollMode(Scroll.AUTO);
-            TabEntry tab = entry.getValue();
-            if (tab.isFill()) {
-                treeTab.setLayout(new FitLayout());
-                treeTab.setScrollMode(Scroll.NONE);
+        this.menuPanel = new TabPanel();
+
+        menuPanel.setResizeTabs(true);
+
+        for (Tab entry: entries) {
+            for (ModelData child : entry.getChildren()) {
+                addMenuEntry(entry.getName(), child);
             }
-
-            treeTab.add(tab.getItem());
-            LayoutContainer item = tab.getItem();
-            panel.add(treeTab);
         }
-    return panel;
-}
+    }
+
+    private Tab createTab(String name, String treeName, String treePath, String config) {
+        Tab treeGrids = new Tab(name);
+        MgnlTreeGrid tree = new MgnlTreeGrid(config);
+        tree.setTree(treeName);
+        tree.setPath(treePath);
+        tree.setHeading(name);
+        treeGrids.add(name, tree, null);
+        return treeGrids;
+    }
+
+    private void addMenuEntry(String title, Object menuItem) {
+        // TODO: right now the menu items are tab entries, but that will change later
+        TabItem treeTab = new TabItem(title);
+        treeTab.setScrollMode(Scroll.AUTO);
+        TabEntry tab = (TabEntry) menuItem;
+        if (tab.isFill()) {
+            treeTab.setLayout(new FitLayout());
+            treeTab.setScrollMode(Scroll.NONE);
+        }
+
+        treeTab.add(tab.getItem());
+        getMenu().add(treeTab);
+    }
+
+    private TabPanel getMenu() {
+        return this.menuPanel;
+    }
 
     private void createNorth() {
         StringBuffer sb = new StringBuffer();

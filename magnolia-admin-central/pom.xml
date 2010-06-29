@@ -56,7 +56,6 @@
       <version>5.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>

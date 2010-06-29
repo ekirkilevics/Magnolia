@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.data.BaseModelData;
@@ -84,6 +85,11 @@ public class MgnlTreeGrid extends LayoutContainer {
     private TreeGrid<ModelData> tree;
     private ContentPanel cp;
     private String heading = "";
+    private TreeConfig config;
+
+    public MgnlTreeGrid(String config) {
+        this.config = (TreeConfig) Registry.get(config);
+    }
 
     @Override
     protected void onRender(Element parent, int index) {
@@ -120,12 +126,11 @@ public class MgnlTreeGrid extends LayoutContainer {
         // TODO: each tree instance will need different id
         tree.setId("statefull" + treeName + "mgnltreegrid");
         tree.setBorders(true);
-        // TODO: use one of our icons ...
-        tree.getStyle().setLeafIcon(IconHelper.createStyle("icon-page"));
         tree.setSize(400, 400);
-        tree.setAutoExpandColumn("name");
         tree.setTrackMouseOver(false);
         //tree.setAutoHeight(true);
+
+        config.configureTree(tree);
 
         //cp.add(getToolBar(tree), new BorderLayoutData(LayoutRegion.NORTH));
         ContentPanel south = new ContentPanel(new FitLayout());

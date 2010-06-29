@@ -33,57 +33,11 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.data.TreeModel;
+import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 
-public class AdminCentralModel extends BaseTreeModel {
+public interface TreeConfig {
 
-    protected List<TabEntry> entries = new ArrayList<TabEntry>();
+    void configureTree(TreeGrid<ModelData> tree);
 
-    public AdminCentralModel() {
-
-        add(createTab("Website", "website", "/"));
-        add(createTab("Config", "config", "/"));
-        loadEntries(this);
-    }
-
-    private Tab createTab(String name, String treeName, String treePath) {
-        Tab treeGrids = new Tab(name);
-        MgnlTreeGrid tree = new MgnlTreeGrid();
-        tree.setTree(treeName);
-        tree.setPath(treePath);
-        tree.setHeading(name);
-        treeGrids.add(name, tree, null);
-        return treeGrids;
-    }
-
-    public TabEntry findEntry(String name) {
-        if (get(name) != null) {
-            return (TabEntry) get(name);
-        }
-        for (TabEntry entry : getEntries()) {
-            if (name.equals(entry.getId())) {
-                return entry;
-            }
-        }
-        return null;
-    }
-
-    public List<TabEntry> getEntries() {
-        return entries;
-    }
-
-    private void loadEntries(TreeModel model) {
-        for (ModelData child : model.getChildren()) {
-            if (child instanceof TabEntry) {
-                entries.add((TabEntry) child);
-            } else if (child instanceof Tab) {
-                loadEntries((Tab) child);
-            }
-        }
-    }
 }
