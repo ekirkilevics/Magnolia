@@ -41,7 +41,6 @@ import static org.easymock.classextension.EasyMock.*;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
-import java.text.MessageFormat;
 
 /**
  * @author gjoseph
@@ -57,7 +56,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         expect(licenseExtractor.get(LicenseFileExtractor.BUILD_NUMBER)).andReturn("30. July 2008");
         expect(licenseExtractor.get(LicenseFileExtractor.PRODUCT_DOMAIN)).andReturn("www.magnolia-cms.com");
         expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER)).andReturn("Magnolia International");
-        expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_ADDRESS)).andReturn("Maiengasse 30 - 4054 Basel - Switzerland");
+        expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_ADDRESS)).andReturn("St.Johanns-Vorstadt 38 - 4054 Basel - Switzerland");
         expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_EMAIL)).andReturn("info@magnolia-cms.com");
         replay(licenseExtractor);
 
@@ -78,7 +77,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         tag.setJspContext(pageContext);
         tag.doTag();
 
-        assertJspContent("I'm using version 7.5.3 of the Test Edition of Magnolia which was built on 30. July 2008 by Magnolia International. These guys have their offices at Maiengasse 30 - 4054 Basel - Switzerland, and can be reached by email at info@magnolia-cms.com. Their wonderful website is at http://www.magnolia-cms.com !");
+        assertJspContent("I'm using version 7.5.3 of the Test Edition of Magnolia which was built on 30. July 2008 by Magnolia International. These guys have their offices at St.Johanns-Vorstadt 38 - 4054 Basel - Switzerland, and can be reached by email at info@magnolia-cms.com. Their wonderful website is at http://www.magnolia-cms.com !");
     }
 
     protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {
