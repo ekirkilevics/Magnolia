@@ -10,7 +10,7 @@
     <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
   </sv:property>
   <sv:property sv:name="pattern" sv:type="String">
-    <sv:value>/info.magnolia.module.genuinecentral.</sv:value>
+    <sv:value>/info.magnolia.module.</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
