@@ -55,6 +55,7 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
+import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RemovePermissionTask;
 import info.magnolia.module.delta.Task;
@@ -189,6 +190,10 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
             .addTask(new BootstrapSingleModuleResource("Publication date","Add new controls to the activation dialog.", "config.modules.workflow.dialogs.startActivationWorkflow.xml"))
             .addTask(new BootstrapSingleModuleResource("Publication date","Add new controls to the workitem dialog", "config.modules.workflow.dialogs.editActivationWorkItem.xml"))
             .addTask(new RemovePermissionTask("Update workflow-base role", "Updates the workflow-base role, removing unnecessary permission to self.", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
+
+        register(DeltaBuilder.update("4.3.3", "")
+            .addTask(new NodeExistsDelegateTask("StartActivationWorkflowDialog", "Checs if startActivationWorkflow node exists", ContentRepository.CONFIG, "/modules/workflow/dialogs/startActivationWorkflow", new CheckAndModifyPropertyValueTask("StartActivationWorkflowDialog", "Increases the height to 450px to prevent visual artefacts on FF on Linux", ContentRepository.CONFIG, "/modules/workflow/dialogs/startActivationWorkflow", "height", "400", "450")))
+        );
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext ctx) {
