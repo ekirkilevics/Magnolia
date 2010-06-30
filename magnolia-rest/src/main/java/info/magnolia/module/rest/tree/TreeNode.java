@@ -52,6 +52,8 @@ public class TreeNode {
     private Date lastModified;
 
     // need to return child nodes, but only 1 level deep, i.e. children of children are not returned
+    // for now only names are returned
+    private List<String> children = new ArrayList<String>();
 
     public String getName() {
         return name;
@@ -91,5 +93,13 @@ public class TreeNode {
 
     public void setNodeData(List<TreeNodeData> nodeData) {
         this.nodeData = nodeData;
+    }
+
+    public boolean addChild(String name) {
+        return children.add(name);
+    }
+
+    public List<String> getChildren() {
+        return children;
     }
 }

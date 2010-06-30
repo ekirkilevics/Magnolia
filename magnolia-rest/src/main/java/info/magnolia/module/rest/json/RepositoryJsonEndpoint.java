@@ -78,6 +78,8 @@ public class RepositoryJsonEndpoint {
         // optional name? defaults to?
         //
 
+        // we need to provide a default name and unique name generation too...
+
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
@@ -86,13 +88,13 @@ public class RepositoryJsonEndpoint {
             parentPath = "/";
 
         Content parentNode = hm.getContent(parentPath);
-        parentNode.createContent(nodeName, new ItemType(itemType));
+        Content newNode = parentNode.createContent(nodeName, new ItemType(itemType));
 
         synchronized (ExclusiveWrite.getInstance()) {
             parentNode.save();
         }
 
-        return marshallContent(parentNode);
+        return marshallContent(newNode);
     }
 
     @POST
@@ -234,6 +236,10 @@ public class RepositoryJsonEndpoint {
             data.setValue(NodeDataUtil.getValueString(nodeData));
 
             treeNode.getNodeData().add(data);
+        }
+
+        for (Content child : ContentUtil.getAllChildren(content)) {
+            treeNode.addChild(child.getName());
         }
 
         return treeNode;
