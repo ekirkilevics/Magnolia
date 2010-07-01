@@ -52,6 +52,7 @@ import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
+import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
@@ -59,6 +60,7 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -329,7 +331,8 @@ public class AdminCentral implements EntryPoint {
         List<Tab> entries = new ArrayList<Tab>();
         // TODO: read the configuration from the config workspace
         entries.add(createTab("Website", "website", "/", "wcmTreeConfig"));
-        entries.add(createTab("Config", "website", "/", DEFAULT_TREE_CONFIG));
+        // TODO: connect to config tree instead of website ... right now just showing different config for same workspace
+        entries.add(createTab("Config", "webiste", "/", DEFAULT_TREE_CONFIG));
 
         this.menuPanel = new TabPanel();
 
@@ -384,6 +387,19 @@ public class AdminCentral implements EntryPoint {
         BorderLayoutData data = new BorderLayoutData(LayoutRegion.NORTH, 33);
         data.setMargins(new Margins());
         viewport.add(northPanel, data);
+    }
+
+    public void openDialog(Object object) {
+        PopupPanel dialog = new PopupPanel(false, true);
+        dialog.add(new Label("welcome to the dialog hell"));
+        dialog.setTitle("booo");
+        dialog.setStyleName(Slate.SLATE.getName());
+        dialog.setWidth("" + 200);
+        dialog.setHeight("" + 200);
+        dialog.setPopupPosition(10, 10);
+        dialog.setVisible(true);
+        dialog.show();
+        viewport.add(dialog);
     }
 
 }

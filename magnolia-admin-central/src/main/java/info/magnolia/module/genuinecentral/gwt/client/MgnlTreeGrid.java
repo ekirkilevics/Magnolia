@@ -33,23 +33,14 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import static com.google.gwt.http.client.RequestBuilder.GET;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 
 import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
-import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.extjs.gxt.ui.client.data.BaseTreeLoader;
-import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
-import com.extjs.gxt.ui.client.data.ListLoadResult;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelKeyProvider;
-import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.MenuEvent;
@@ -74,7 +65,6 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.tips.ToolTipConfig;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
 
@@ -97,18 +87,8 @@ public class MgnlTreeGrid extends LayoutContainer {
 
         setLayout(new FlowLayout(10));
 
-        final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/" + treeName + path);
-        requestBuilder.setHeader("Accept", "application/json");
-
-        // data proxy
-        RestfullHttpProxy<List<FileModel>> proxy = new RestfullHttpProxy<List<FileModel>>(requestBuilder);
-
-        JsonLoadResultReader<List<FileModel>> jsonReader = getConfiguredReader();
-
-        final TreeLoader<FileModel> loader = getConfiguredTreeLoader(proxy, jsonReader);
-
         // trees store
-        final TreeStore<FileModel> store = getConfiguredTreeStore(loader);
+        final TreeStore<FileModel> store = getConfiguredTreeStore(ServerConnector.getTreeLoader(treeName, path, null));
 
         ColumnModel cm = getColumnConfiguration();
 
@@ -163,9 +143,18 @@ public class MgnlTreeGrid extends LayoutContainer {
         cp.getHeader().addTool(btn);
 
         // context menu
+        final Menu contextMenu = createContextMenu(store);
+
+        tree.setContextMenu(contextMenu);
+
+        add(cp);
+    }
+
+    private Menu createContextMenu(final TreeStore<FileModel> store) {
         Menu contextMenu = new Menu();
         contextMenu.setWidth(140);
-        contextMenu.setHeight(60);
+        //contextMenu.setHeight(60);
+        contextMenu.setAutoHeight(afterRender);
         contextMenu.setFocusOnShow(true);
         contextMenu.setTitle("Tree Context Menu");
 
@@ -180,11 +169,32 @@ public class MgnlTreeGrid extends LayoutContainer {
         //remove.setIcon(ICONS.delete());
         contextMenu.add(remove);
 
+        MenuItem openDialog = new MenuItem();
+        openDialog.setText("Open Dialog");
+        //remove.setIcon(ICONS.delete());
+        contextMenu.add(openDialog);
+
+        openDialog.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                ModelData selected = tree.getSelectionModel().getSelectedItem();
+                String dialogName = null;
+                if (selected != null) {
+                    dialogName = selected.get("dialog");
+                }
+                AdminCentral central = Registry.get(AdminCentral.ADMIN_CENTRAL);
+                central.openDialog(dialogName);
+            }
+        });
+
         insert.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData folder = tree.getSelectionModel().getSelectedItem();
+                System.out.println("Folder: " + folder);
                 if (folder != null) {
                     // ...
+                } else {
+                    // root
+                    ServerConnector.createContent(treeName, path + "untitled");
                 }
             }
         });
@@ -198,9 +208,7 @@ public class MgnlTreeGrid extends LayoutContainer {
             }
         });
 
-        tree.setContextMenu(contextMenu);
-
-        add(cp);
+        return contextMenu;
     }
 
     /**
@@ -257,104 +265,6 @@ public class MgnlTreeGrid extends LayoutContainer {
         };
     }
 
-    /**
-     * Preconfigured tree loader. There should be no need to override this.
-     * @param requestBuilder
-     */
-    protected TreeLoader<FileModel> getConfiguredTreeLoader(final RestfullHttpProxy<List<FileModel>> proxy, JsonLoadResultReader<List<FileModel>> jsonReader) {
-        // tree loader
-        final TreeLoader<FileModel> loader = new BaseTreeLoader<FileModel>(proxy, jsonReader) {
-            @Override
-            public boolean hasChildren(FileModel parent) {
-                return Boolean.parseBoolean("" + parent.get("hasChildren"));
-            }
-
-            @Override
-            protected Object newLoadConfig() {
-                Map<String, String> params = getRequestParameters();
-                if (params == null) {
-                    return null;
-                }
-                ModelData config = new BaseModelData();
-                for (Map.Entry<String, String> param : params.entrySet()) {
-                    config.set(param.getKey(), param.getValue());
-                }
-                return config;
-            }
-
-            @Override
-            public boolean loadChildren(FileModel parent) {
-                System.out.println("load children for parent:" + parent);
-                // proxy is not really RESTfull, we need to change the init uri on load children call
-                RestfullHttpProxy<List<FileModel>> restfullProxy = (RestfullHttpProxy<List<FileModel>>) proxy;
-                String url = restfullProxy.getOriginalURL();
-                // Using StringUtils would require inclusion of its sources for compilation ... this could bloat the build quite quickly
-                //url = StringUtils.removeEnd(url, "/") + StringUtils.removeStart(parent.getPath(), "/");
-                if (url != null && url.endsWith("/")) {
-                    url = url.substring(0, url.length() - 1);
-                }
-                final String parentPath = parent.getPath();
-                if (parentPath == null) {
-                    url += "/";
-                } else if (parentPath.startsWith("/")) {
-                    url += parentPath;
-                } else {
-                    url += "/" + parentPath;
-                }
-                System.out.println("Setting url to:" + url);
-                restfullProxy.setURL(url);
-                return super.loadChildren(parent);
-            }
-        };
-        return loader;
-    }
-
-    /**
-     * Override this to include extra parameters
-     * @return
-     */
-    protected Map<String, String> getRequestParameters() {
-        // can be used to specify only certain properties to be retrieved or add extra params (such as username & pwd)
-        Map<String, String> config = new java.util.HashMap<String, String>();
-        config.put("mgnlUserId", "superuser");
-        config.put("mgnlUserPSWD", "superuser");
-        return config;
-     }
-
-    private JsonLoadResultReader<List<FileModel>> getConfiguredReader() {
-        // TODO: generate model types or use different kind of deserialization !!!
-        ModelType type = new ModelType();
-        type.setRoot("children");
-        type.setRecordName("content");
-        type.addField("uuid");
-        type.addField("name");
-        type.addField("path");
-        type.addField("status");
-        type.addField("hasChildren");
-        type.addField("template");
-
-        JsonLoadResultReader<List<FileModel>> jsonReader = new JsonLoadResultReader<List<FileModel>>(type) {
-            protected ListLoadResult<ModelData> newLoadResult(Object loadConfig, List<ModelData> models) {
-                throw new UnsupportedOperationException("Do not call me!");
-            }
-
-            protected Object createReturnData(Object loadConfig, List<ModelData> records, int totalCount) {
-                ArrayList<FileModel> resultList = new ArrayList<FileModel>();
-                for (ModelData record : records) {
-                    FileModel model;
-                    Object hasChildren = record.get("hasChildren");
-                    if (hasChildren != null && Boolean.parseBoolean(hasChildren.toString())) {
-                        model = new FolderModel(record.getProperties());
-                    } else {
-                        model = new FileModel(record.getProperties());
-                    }
-                    resultList.add(model);
-                }
-                return resultList;
-            }
-        };
-        return jsonReader;
-    }
 
     private ButtonBar getToolBar(final TreeGrid<ModelData> tree) {
         ButtonBar buttonBar = new ButtonBar();
