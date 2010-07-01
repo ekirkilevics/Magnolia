@@ -332,7 +332,7 @@ public class AdminCentral implements EntryPoint {
         // TODO: read the configuration from the config workspace
         entries.add(createTab("Website", "website", "/", "wcmTreeConfig"));
         // TODO: connect to config tree instead of website ... right now just showing different config for same workspace
-        entries.add(createTab("Config", "webiste", "/", DEFAULT_TREE_CONFIG));
+        entries.add(createTab("Config", "website", "/", DEFAULT_TREE_CONFIG));
 
         this.menuPanel = new TabPanel();
 
