@@ -37,6 +37,8 @@ package info.magnolia.module.genuinecentral.gwt.client;
 import com.google.gwt.core.client.EntryPoint;
 
 import info.magnolia.module.genuinecentral.gwt.client.tree.DefaultTreeConfig;
+import info.magnolia.module.rest.dialog.DialogImpl;
+import info.magnolia.module.rest.dialog.DialogRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,7 @@ import com.extjs.gxt.ui.client.core.XDOM;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
+import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
 import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.TabItem;
@@ -390,16 +393,20 @@ public class AdminCentral implements EntryPoint {
     }
 
     public void openDialog(Object object) {
-        PopupPanel dialog = new PopupPanel(false, true);
-        dialog.add(new Label("welcome to the dialog hell"));
-        dialog.setTitle("booo");
-        dialog.setStyleName(Slate.SLATE.getName());
-        dialog.setWidth("" + 200);
-        dialog.setHeight("" + 200);
-        dialog.setPopupPosition(10, 10);
-        dialog.setVisible(true);
-        dialog.show();
+        final Dialog dialog = new Dialog();
+        dialog.setTitle("boo");
+        dialog.setModal(true);
+        dialog.setBlinkModal(true);
+        dialog.setWidth(200);
+        dialog.setHeight(200);
+        dialog.setHeading("blah blah");
+        /*final DialogRegistry dialogRegistry = new DialogRegistry();
+        DialogImpl d = dialogRegistry.getDialog((String) object);
+        d.getControls();
+        */
         viewport.add(dialog);
+        dialog.show();
+        dialog.center();
     }
 
 }
