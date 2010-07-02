@@ -35,10 +35,10 @@ package info.magnolia.module.rest.json;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Arrays;
-
 /**
  * Immutable representation of an absolute path, avoids code duplication and error prone use of StringUtils.
+ *
+ * Treats the empty string as the root node.
  */
 public class AbsolutePath {
 
@@ -66,7 +66,7 @@ public class AbsolutePath {
         return path();
     }
 
-    private String path() {
+    public String path() {
         return "/" + StringUtils.join(this.segments, "/", 0, this.length);
     }
 
