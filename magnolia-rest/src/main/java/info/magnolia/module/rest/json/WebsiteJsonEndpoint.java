@@ -56,7 +56,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,13 +66,13 @@ public class WebsiteJsonEndpoint {
 
     @GET
     public WebsitePageList getRootNode() throws RepositoryException {
-        return readRepository("/");
+        return getNode("");
     }
 
     @GET
     @Path("{path:(.)*}")
     public WebsitePageList getNode(@PathParam("path") String path) throws RepositoryException {
-        return readRepository("/" + path);
+        return marshallChildren(path);
     }
 
     private static class WebsiteAccessor extends WebsiteTreeHandler {
@@ -87,18 +86,31 @@ public class WebsiteJsonEndpoint {
         }
     }
 
+    // Since JAX-RS wont match an empty path param (hopefully im doing something wrong...)
+    @POST
+    @Path("/create")
+    public WebsitePageList create() throws RepositoryException {
+        return create("");
+    }
+
     // This should be PUT... but we use POST for now since IPSecurity blocks PUT
     @POST
     @Path("{path:(.)*}/create")
-    public WebsitePage create(@PathParam("path") String path) {
+    public WebsitePageList create(@PathParam("path") String path) throws RepositoryException {
+
+        AbsolutePath p = new AbsolutePath(path);
 
         WebsiteAccessor website = new WebsiteAccessor("website", null, null);
 
         website.setCreateItemType("mgnl:content");
-        website.setPath("/" + path);
+        website.setPath(p.toString());
         website.createNode();
 
-        return new WebsitePage();
+        AbsolutePath newNodePath = p.append(website.getNewNodeName());
+
+        WebsitePageList list = new WebsitePageList();
+        list.add(marshallNode(newNodePath.toString()));
+        return list;
     }
 
     @POST
@@ -120,18 +132,16 @@ public class WebsiteJsonEndpoint {
     @Path("{path:(.)*}/delete")
     public WebsitePage delete(@PathParam("path") String path) throws Exception {
 
+        AbsolutePath p = new AbsolutePath(path);
+
+        if (p.isRoot()) {
+            // cant delete the root node
+        }
+
         WebsiteAccessor website = new WebsiteAccessor("website", null, null);
 
-        path = "/" + path;
-
-        // This is AdminTreeMVCHandler.createNode(String path)...
-        String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
-        String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
-        // ...with this fix added for the simple case '/untitled'
-        if (StringUtils.isEmpty(parentPath))
-            parentPath = "/";
         synchronized (ExclusiveWrite.getInstance()) {
-            website.deleteNode(parentPath, label);
+            website.deleteNode(p.parentPath(), p.name());
         }
 
         return new WebsitePage();
@@ -141,14 +151,7 @@ public class WebsiteJsonEndpoint {
     @Path("{path:(.)*}/edit")
     public Dialog edit(@PathParam("path") String path, @QueryParam("dialogName") String dialogName) throws RepositoryException {
 
-        path = "/" + path;
-
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-
-        if (!hierarchyManager.isExist(path))
-            return null;
-
-        Content storageNode = hierarchyManager.getContent(path);
+        Content storageNode = getContent(path);
 
         Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
 
@@ -161,14 +164,7 @@ public class WebsiteJsonEndpoint {
     @Path("{path:(.)*}/save")
     public ValidationResult save(@PathParam("path") String path, @QueryParam("dialogName") String dialogName, @Context UriInfo uriInfo) throws Exception {
 
-        path = "/" + path;
-
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-
-        if (!hierarchyManager.isExist(path))
-            return null;
-
-        Content storageNode = hierarchyManager.getContent(path);
+        Content storageNode = getContent(path);
 
         Dialog dialog = DialogRegistry.getInstance().getDialogProvider(dialogName).create();
 
@@ -181,7 +177,7 @@ public class WebsiteJsonEndpoint {
 
         if (validationResult.isSuccess()) {
             dialog.save(storageNode);
-            synchronized(ExclusiveWrite.getInstance()) {
+            synchronized (ExclusiveWrite.getInstance()) {
                 storageNode.save();
             }
         }
@@ -191,59 +187,71 @@ public class WebsiteJsonEndpoint {
         return validationResult;
     }
 
-    private WebsitePage createMockPage(String name, String title, boolean hasChildren) {
+    private WebsitePageList marshallChildren(String parentPath) throws RepositoryException {
 
-        List<String> templates = new ArrayList<String>();
-        templates.add("main");
-        templates.add("section");
+        Content parentNode = getContent(parentPath);
 
-        WebsitePage page = new WebsitePage();
-        page.setName(name);
-        page.setTitle(title);
-        page.setLastModified(new Date());
-        page.setStatus("active");
-        page.setTemplate("main");
-        page.setHasChildren(hasChildren);
-        page.setAvailableTemplates(templates);
-        return page;
-    }
-
-    private WebsitePageList readRepository(String path) throws RepositoryException {
-
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-
-        if (!hierarchyManager.isExist(path))
+        if (parentNode == null)
             return null;
 
-        Content parentNode;
-            parentNode = hierarchyManager.getContent(path);
+        return marshallChildren(parentNode);
+    }
 
-        WebsitePageList pages = new WebsitePageList();
+    private WebsitePageList marshallChildren(Content parentNode) {
 
         Iterator<Content> contentIterator = parentNode.getChildren(ItemType.CONTENT).iterator();
 
+        WebsitePageList pages = new WebsitePageList();
         while (contentIterator.hasNext()) {
             Content content = contentIterator.next();
-
-            boolean permissionWrite = content.isGranted(info.magnolia.cms.security.Permission.WRITE);
-            boolean isActivated = content.getMetaData().getIsActivated();
-            boolean hasChildren = !content.getChildren(ItemType.CONTENT).isEmpty();
-
-            String title = content.getNodeData("title").getString();
-
-            WebsitePage page = new WebsitePage();
-            page.setName(content.getName());
-            page.setPath(content.getHandle());
-            page.setHasChildren(hasChildren);
-            page.setStatus(isActivated?"activated":"modified");
-            page.setTemplate(getTemplateName(content));
-            page.setTitle(title);
-            page.setUuid(content.getUUID());
-            page.setAvailableTemplates(getAvailableTemplates(content));
-            pages.add(page);
+            pages.add(marshallNode(content));
         }
-
         return pages;
+    }
+
+    private WebsitePage marshallNode(String path) throws RepositoryException {
+
+        Content storageNode = getContent(path);
+
+        if (storageNode == null)
+            return null;
+
+        return marshallNode(storageNode);
+    }
+
+    private WebsitePage marshallNode(Content content) {
+
+        boolean permissionWrite = content.isGranted(info.magnolia.cms.security.Permission.WRITE);
+        boolean isActivated = content.getMetaData().getIsActivated();
+        boolean hasChildren = !content.getChildren(ItemType.CONTENT).isEmpty();
+
+        String title = content.getNodeData("title").getString();
+
+        WebsitePage page = new WebsitePage();
+        page.setName(content.getName());
+        page.setPath(content.getHandle());
+        page.setHasChildren(hasChildren);
+        page.setStatus(isActivated ? "activated" : "modified");
+        page.setTemplate(getTemplateName(content));
+        page.setTitle(title);
+        page.setUuid(content.getUUID());
+        page.setAvailableTemplates(getAvailableTemplates(content));
+
+        return page;
+    }
+
+    private Content getContent(String path) throws RepositoryException {
+        return getContent(new AbsolutePath(path));
+    }
+
+    private Content getContent(AbsolutePath path) throws RepositoryException {
+
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+        if (!hierarchyManager.isExist(path.toString()))
+            return null;
+
+        return hierarchyManager.getContent(path.toString());
     }
 
     private List<String> getAvailableTemplates(Content content) {
