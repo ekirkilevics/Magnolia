@@ -83,6 +83,8 @@ public class AbsolutePath {
     }
 
     public AbsolutePath append(String name) {
+        if (name.indexOf("/") != -1)
+            throw new IllegalArgumentException("Name must not be contain a '/' character");
         String[] newSegments = new String[this.length + 1];
         System.arraycopy(this.segments, 0, newSegments, 0, this.length);
         newSegments[this.length] = name;
