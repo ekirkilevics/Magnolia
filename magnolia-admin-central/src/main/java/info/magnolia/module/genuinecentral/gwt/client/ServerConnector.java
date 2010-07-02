@@ -43,10 +43,12 @@ import java.util.Map;
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BaseTreeLoader;
 import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
+import com.extjs.gxt.ui.client.data.JsonReader;
 import com.extjs.gxt.ui.client.data.ListLoadResult;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
+import com.extjs.gxt.ui.client.store.TreeStore;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -55,6 +57,32 @@ import com.google.gwt.http.client.Response;
 
 public class ServerConnector {
 
+    private final static ModelType FILE_MODEL_TYPE = new ModelType();
+    private static final ModelType LIST_OF_FILES_MODEL_TYPE = new ModelType();
+
+    static {
+        LIST_OF_FILES_MODEL_TYPE.setRoot("children");
+        LIST_OF_FILES_MODEL_TYPE.setRecordName("content");
+        LIST_OF_FILES_MODEL_TYPE.addField("uuid");
+        LIST_OF_FILES_MODEL_TYPE.addField("name");
+        LIST_OF_FILES_MODEL_TYPE.addField("path");
+        LIST_OF_FILES_MODEL_TYPE.addField("status");
+        LIST_OF_FILES_MODEL_TYPE.addField("hasChildren");
+        LIST_OF_FILES_MODEL_TYPE.addField("template");
+
+        FILE_MODEL_TYPE.setRoot("child");
+        FILE_MODEL_TYPE.setRecordName("content");
+        FILE_MODEL_TYPE.addField("uuid");
+        FILE_MODEL_TYPE.addField("name");
+        FILE_MODEL_TYPE.addField("path");
+        FILE_MODEL_TYPE.addField("status");
+        FILE_MODEL_TYPE.addField("hasChildren");
+        FILE_MODEL_TYPE.addField("template");
+
+    }
+
+    private static final JsonLoadResultReader<List<FileModel>> jsonReader = createConfiguredReader();
+
     public static TreeLoader<FileModel> getTreeLoader(String treeName, String rootPath, Map<String, String> additionalParams) {
         final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/" + treeName + rootPath);
         requestBuilder.setHeader("Accept", "application/json");
@@ -62,7 +90,6 @@ public class ServerConnector {
         // data proxy
         RestfullHttpProxy<List<FileModel>> proxy = new RestfullHttpProxy<List<FileModel>>(requestBuilder);
 
-        JsonLoadResultReader<List<FileModel>> jsonReader = getConfiguredReader();
 
         return getConfiguredTreeLoader(proxy, jsonReader, additionalParams);
     }
@@ -135,19 +162,10 @@ public class ServerConnector {
      }
 
 
-    private static JsonLoadResultReader<List<FileModel>> getConfiguredReader() {
+    private static JsonLoadResultReader<List<FileModel>> createConfiguredReader() {
         // TODO: generate model types or use different kind of deserialization !!!
-        ModelType type = new ModelType();
-        type.setRoot("children");
-        type.setRecordName("content");
-        type.addField("uuid");
-        type.addField("name");
-        type.addField("path");
-        type.addField("status");
-        type.addField("hasChildren");
-        type.addField("template");
 
-        JsonLoadResultReader<List<FileModel>> jsonReader = new JsonLoadResultReader<List<FileModel>>(type) {
+        JsonLoadResultReader<List<FileModel>> jsonReader = new JsonLoadResultReader<List<FileModel>>(LIST_OF_FILES_MODEL_TYPE) {
             protected ListLoadResult<ModelData> newLoadResult(Object loadConfig, List<ModelData> models) {
                 throw new UnsupportedOperationException("Do not call me!");
             }
@@ -155,13 +173,7 @@ public class ServerConnector {
             protected Object createReturnData(Object loadConfig, List<ModelData> records, int totalCount) {
                 ArrayList<FileModel> resultList = new ArrayList<FileModel>();
                 for (ModelData record : records) {
-                    FileModel model;
-                    Object hasChildren = record.get("hasChildren");
-                    if (hasChildren != null && Boolean.parseBoolean(hasChildren.toString())) {
-                        model = new FolderModel(record.getProperties());
-                    } else {
-                        model = new FileModel(record.getProperties());
-                    }
+                    FileModel model = new FileModel(record.getProperties());
                     resultList.add(model);
                 }
                 return resultList;
@@ -170,20 +182,43 @@ public class ServerConnector {
         return jsonReader;
     }
 
-    public static void createContent(String treeName, String path) {
+    public static void createContent(String treeName, final FileModel folder, final TreeStore<FileModel> store) {
+        final String path = folder == null ? "" : folder.getPath();
         final RequestBuilder requestBuilder = new RequestBuilder(POST, "/.magnolia/rest/" + treeName + path + "/create");
         requestBuilder.setHeader("Accept", "application/json");
-        requestBuilder.setCallback(new RequestCallback() {
+        RequestCallback callback = new RequestCallback() {
 
             public void onResponseReceived(Request request, Response response) {
-                System.out.println("got response: " + response.getText());
+                String responseText = response.getText();
+                System.out.println("got response: " + responseText);
+                System.out.println("Begin parsing response in an object");
+                // TODO: remove this after service return created child on create
+                responseText = "{children:[{\"name\":\"untitled"+store.getChildCount()+"\",\"path\":\""+path+"/untitled"+store.getChildCount()+"\",\"status\":\"modified\",\"template\":\"\",\"title\":\"\",\"availableTemplates\":[],\"uuid\":\"0c7fa58a-90fa-4392-86b4-7f9b95e0352b"+store.getChildCount()+"\",\"hasChildren\":false}]}";
+                FileModel child = jsonReader.read(null, responseText).get(0);
+                System.out.println("Child:" + child);
+                if (folder != null) {
+                    if (store.getChildCount(folder) == 0) {
+                        //w/o child yet ... need to convert into a folder first
+                        folder.setHasChildren(true);
+                        store.update(folder);
+                    }
+                    store.insert(folder, child, store.getChildCount(folder), false);
+                } else {
+                    store.insert(child, store.getChildCount(), false);
+                }
             }
 
             public void onError(Request request, Throwable exception) {
                 exception.printStackTrace();
                 System.out.println("got error: " + exception.getMessage());
             }
-        });
+
+            @Override
+            public String toString() {
+                return super.toString();
+            }
+        };
+        requestBuilder.setCallback(callback);
 
         try {
             requestBuilder.send();

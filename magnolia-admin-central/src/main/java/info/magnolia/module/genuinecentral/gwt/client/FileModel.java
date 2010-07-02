@@ -74,6 +74,12 @@ public class FileModel extends BaseModelData {
     return get("name");
   }
 
+  public boolean isLeaf() {
+      // used by tree
+      Object hasChildren = get("hasChildren");
+      return hasChildren == null || !Boolean.parseBoolean(hasChildren.toString());
+  }
+
   @Override
     public int hashCode() {
         return getPath() == null ? 17 : getPath().hashCode();
@@ -101,5 +107,9 @@ public class FileModel extends BaseModelData {
 
     public String getUuid() {
         return get("uuid");
+    }
+
+    public void setHasChildren(boolean b) {
+        set("hasChildren", "true");
     }
 }

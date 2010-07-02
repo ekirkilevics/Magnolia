@@ -54,8 +54,11 @@ import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.button.ButtonBar;
 import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.grid.CellEditor;
 import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
+import com.extjs.gxt.ui.client.widget.grid.EditorGrid.ClicksToEdit;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
@@ -63,6 +66,7 @@ import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.tips.ToolTipConfig;
+import com.extjs.gxt.ui.client.widget.treegrid.EditorTreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -72,7 +76,7 @@ public class MgnlTreeGrid extends LayoutContainer {
 
     private String treeName = "";
     private String path = "";
-    private TreeGrid<ModelData> tree;
+    private EditorTreeGrid<ModelData> tree;
     private ContentPanel cp;
     private String heading = "";
     private TreeConfig config;
@@ -100,7 +104,8 @@ public class MgnlTreeGrid extends LayoutContainer {
         cp.setFrame(true);
         cp.setSize(600, 300);
 
-        tree = new TreeGrid<ModelData>(store, cm);
+        tree = new EditorTreeGrid<ModelData>(store, cm);
+        tree.setClicksToEdit(ClicksToEdit.TWO);
         tree.setStateful(true);
         // stateful components need a defined id
         // TODO: each tree instance will need different id
@@ -188,14 +193,10 @@ public class MgnlTreeGrid extends LayoutContainer {
 
         insert.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
-                ModelData folder = tree.getSelectionModel().getSelectedItem();
-                System.out.println("Folder: " + folder);
-                if (folder != null) {
-                    // ...
-                } else {
-                    // root
-                    ServerConnector.createContent(treeName, path + "untitled");
-                }
+                FileModel folder = (FileModel) tree.getSelectionModel().getSelectedItem();
+                System.out.println("Folder: " + folder + "; tree:" + treeName + "; currentPath:" + path);
+                // as ugly as it is we need callback from the request to server to update store
+                ServerConnector.createContent(treeName, folder, store);
             }
         });
 
@@ -233,6 +234,10 @@ public class MgnlTreeGrid extends LayoutContainer {
     protected ColumnModel getColumnConfiguration() {
         ColumnConfig name = new ColumnConfig("name", "Name", 100);
         name.setRenderer(new TreeGridCellRenderer<ModelData>());
+        // define field editor (to be invoked on double click)
+        TextField<String> textNoBlank = new TextField<String>();
+        textNoBlank.setAllowBlank(false);
+        name.setEditor(new CellEditor(textNoBlank));
 
         ColumnConfig date = new ColumnConfig("date", "Date", 100);
         date.setDateTimeFormat(DateTimeFormat.getMediumDateTimeFormat());
@@ -251,12 +256,9 @@ public class MgnlTreeGrid extends LayoutContainer {
 
             @Override
             public int compare(Store<FileModel> store, FileModel m1, FileModel m2, String property) {
-                boolean m1Folder = m1 instanceof FolderModel;
-                boolean m2Folder = m2 instanceof FolderModel;
-
-                if (m1Folder && !m2Folder) {
+                if (!m1.isLeaf() && m2.isLeaf()) {
                     return -1;
-                } else if (!m1Folder && m2Folder) {
+                } else if (m1.isLeaf() && !m2.isLeaf()) {
                     return 1;
                 }
 
