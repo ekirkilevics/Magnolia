@@ -59,7 +59,7 @@ import org.apache.commons.lang.ArrayUtils;
  *          - loginForm  /mgnl-resources/loginForm/login.html
  *          - realmName  Magnolia
  *        - class        info.magnolia.cms.util.UrlPatternDelegate
- *        - url          ./magnolia*
+ *        - url          /.magnolia*
  *      + public
  *        + delegate
  *          - class      info.magnolia.cms.security.auth.callback.FormClientCallback
