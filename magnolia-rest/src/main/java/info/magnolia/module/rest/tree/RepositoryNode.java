@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,14 +33,27 @@
  */
 package info.magnolia.module.rest.tree;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class TreeNodeData {
+@XmlRootElement
+public class RepositoryNode {
 
     private String name;
     private String type;
-    private List<Object> columnValues = new ArrayList<Object>();
+    private String path;
+    private String uuid;
+    private List<RepositoryNodeData> nodeData = new ArrayList<RepositoryNodeData>();
+
+    // need metadata too.. (maybe this is better to place in a bean of its own...)
+    private String status; // created, modified, activated
+    private Date lastModified;
+
+    // need to return child nodes, but only 1 level deep, i.e. children of children are not returned
+    // for now only names are returned
+    private List<String> children = new ArrayList<String>();
 
     public String getName() {
         return name;
@@ -58,11 +71,35 @@ public class TreeNodeData {
         this.type = type;
     }
 
-    public List<Object> getColumnValues() {
-        return columnValues;
+    public String getPath() {
+        return path;
     }
 
-    public void addNodeData(Object value) {
-        columnValues.add(value);
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public boolean addChild(String name) {
+        return children.add(name);
+    }
+
+    public List<String> getChildren() {
+        return children;
+    }
+
+    public List<RepositoryNodeData> getNodeData() {
+        return nodeData;
+    }
+
+    public void setNodeData(List<RepositoryNodeData> nodeData) {
+        this.nodeData = nodeData;
     }
 }

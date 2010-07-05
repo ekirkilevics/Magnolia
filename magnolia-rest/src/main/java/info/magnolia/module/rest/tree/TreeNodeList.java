@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,33 +36,16 @@ package info.magnolia.module.rest.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeNodeData {
+public class TreeNodeList {
 
-    private String name;
-    private String type;
-    private List<Object> columnValues = new ArrayList<Object>();
+    private List<TreeNode> children = new ArrayList<TreeNode>();
 
-    public String getName() {
-        return name;
+    public List<TreeNode> getChildren() {
+        return children;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<Object> getColumnValues() {
-        return columnValues;
-    }
-
-    public void addNodeData(Object value) {
-        columnValues.add(value);
+    public void addChild(TreeNode child) {
+        this.children.add(child);
     }
 }
+

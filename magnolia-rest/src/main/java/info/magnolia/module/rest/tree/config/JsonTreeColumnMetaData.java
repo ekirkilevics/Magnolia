@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,16 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree;
+package info.magnolia.module.rest.tree.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
 
-public class TreeNodeData {
+import javax.jcr.RepositoryException;
+
+public class JsonTreeColumnMetaData extends JsonTreeColumn {
 
     private String name;
-    private String type;
-    private List<Object> columnValues = new ArrayList<Object>();
+    private String dateFormat;
+    private boolean readOnly;
+
+    @Override
+    public String getType() {
+        return "metaData";
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
 
     public String getName() {
         return name;
@@ -50,19 +65,21 @@ public class TreeNodeData {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
-    public List<Object> getColumnValues() {
-        return columnValues;
+    @Override
+    public Object getValue(Content storageNode) {
+        return storageNode.getMetaData().getStringProperty(getName());
     }
 
-    public void addNodeData(Object value) {
-        columnValues.add(value);
+    @Override
+    public Object getValue(Content storageNode, NodeData nodeData) throws RepositoryException {
+        return "-";
     }
 }

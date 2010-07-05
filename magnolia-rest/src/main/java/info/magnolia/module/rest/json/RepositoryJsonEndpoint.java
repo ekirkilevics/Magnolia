@@ -41,6 +41,8 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.rest.tree.RepositoryNode;
+import info.magnolia.module.rest.tree.RepositoryNodeData;
 import info.magnolia.module.rest.tree.TreeNode;
 import info.magnolia.module.rest.tree.TreeNodeData;
 import org.apache.commons.lang.StringUtils;
@@ -55,7 +57,7 @@ public class RepositoryJsonEndpoint {
 
     @GET
     @Path("/{repositoryName}/{path:(.)*}")
-    public TreeNode getNode(
+    public RepositoryNode getNode(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path) throws RepositoryException {
 
@@ -67,7 +69,7 @@ public class RepositoryJsonEndpoint {
 
     @POST
     @Path("/{repositoryName}/{path:(.)*}/create")
-    public TreeNode createNode(
+    public RepositoryNode createNode(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
             @QueryParam("itemType") String itemType) throws RepositoryException {
@@ -99,7 +101,7 @@ public class RepositoryJsonEndpoint {
 
     @POST
     @Path("/{repositoryName}/{path:(.)*}/setNodeData")
-    public TreeNode setNodeData(
+    public RepositoryNode setNodeData(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
             @QueryParam("name") String name,
@@ -120,7 +122,7 @@ public class RepositoryJsonEndpoint {
 
     @POST
     @Path("/{repositoryName}/{path:(.)*}/removeNodeData")
-    public TreeNode removeNodeData(
+    public RepositoryNode removeNodeData(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
             @QueryParam("name") String name) throws RepositoryException {
@@ -139,7 +141,7 @@ public class RepositoryJsonEndpoint {
 
     @POST
     @Path("/{repositoryName}/{path:(.)*}/delete")
-    public TreeNode deleteNode(
+    public RepositoryNode deleteNode(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path) throws RepositoryException {
 
@@ -154,12 +156,12 @@ public class RepositoryJsonEndpoint {
             parent.save();
         }
 
-        return new TreeNode();
+        return new RepositoryNode();
     }
 
     @POST
     @Path("/{repositoryName}/{path:(.)*}/rename")
-    public TreeNode renameNode(
+    public RepositoryNode renameNode(
             @PathParam("repositoryName") String repositoryName,
             @PathParam("path") String path,
             @QueryParam("name") String name) throws RepositoryException {
@@ -219,8 +221,8 @@ public class RepositoryJsonEndpoint {
         return new TreeNode();
     }
 
-    private TreeNode marshallContent(Content content) throws RepositoryException {
-        TreeNode treeNode = new TreeNode();
+    private RepositoryNode marshallContent(Content content) throws RepositoryException {
+        RepositoryNode treeNode = new RepositoryNode();
         treeNode.setName(content.getName());
         treeNode.setPath(content.getHandle());
         treeNode.setUuid(content.getUUID());
@@ -230,7 +232,7 @@ public class RepositoryJsonEndpoint {
 
         for (NodeData nodeData : nodeDatas) {
 
-            TreeNodeData data = new TreeNodeData();
+            RepositoryNodeData data = new RepositoryNodeData();
             data.setName(nodeData.getName());
             data.setType(String.valueOf(nodeData.getType()));
             data.setValue(NodeDataUtil.getValueString(nodeData));

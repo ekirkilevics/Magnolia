@@ -37,12 +37,30 @@ import junit.framework.TestCase;
 
 public class AbsolutePathTest extends TestCase {
 
+    public void testConstructors() {
+
+        assertEquals("/", new AbsolutePath(null).path());
+        assertEquals("/", new AbsolutePath("").path());
+        assertEquals("/", new AbsolutePath("/").path());
+        assertEquals("/", new AbsolutePath("/////").path());
+
+        assertEquals("/test", new AbsolutePath("", "test").path());
+        assertEquals("/foo/bar", new AbsolutePath("", "foo/bar").path());
+        assertEquals("/foo/bar", new AbsolutePath("foo", "bar").path());
+        assertEquals("/foo/bar", new AbsolutePath("foo/bar", "").path());
+        assertEquals("/foo/bar", new AbsolutePath("foo/bar", "/").path());
+        assertEquals("/foo/bar", new AbsolutePath("/foo", "/bar").path());
+
+        assertEquals("/foo/bar", new AbsolutePath(new AbsolutePath("/foo"), "/bar").path());
+    }
+
     public void testIsRoot() {
 
         assertTrue(new AbsolutePath("").isRoot());
         assertTrue(new AbsolutePath("/").isRoot());
         assertFalse(new AbsolutePath("untitled").isRoot());
         assertFalse(new AbsolutePath("/untitled").isRoot());
+        assertFalse(new AbsolutePath("     ").isRoot());
     }
 
     public void testPath() {
@@ -115,16 +133,43 @@ public class AbsolutePathTest extends TestCase {
 
     public void testAppend() {
 
-        AbsolutePath path = new AbsolutePath("untitled").append("sub");
+        AbsolutePath path = new AbsolutePath("untitled").appendSegment("sub");
 
         assertEquals("/untitled/sub", path.path());
         assertEquals("sub", path.name());
         assertEquals("untitled", path.parent().name());
 
         try {
-            path.append("not/allowed");
+            path.appendSegment("not/allowed");
             fail();
         } catch (IllegalArgumentException expected) {
         }
+    }
+
+    public void testRelativeTo() {
+
+        AbsolutePath deep = new AbsolutePath("/aaa/bbb/ccc/ddd");
+        AbsolutePath shallow = new AbsolutePath("/aaa/bbb");
+
+        assertEquals("/ccc/ddd", deep.relativeTo(shallow).path());
+
+        assertEquals("/", deep.relativeTo(deep).path());
+
+        try {
+            shallow.relativeTo(deep);
+            fail();
+        } catch (IllegalArgumentException expected) {
+        }
+
+        try {
+            new AbsolutePath("/foo").relativeTo(new AbsolutePath("/bar"));
+            fail();
+        } catch (IllegalArgumentException expected) {
+        }
+    }
+
+    public void testAppendPath() {
+
+        assertEquals("/foo/bar/zed", new AbsolutePath("/foo").appendPath("bar/zed").path());
     }
 }

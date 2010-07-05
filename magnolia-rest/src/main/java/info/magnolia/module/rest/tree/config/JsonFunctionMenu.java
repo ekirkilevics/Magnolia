@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,38 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree;
+package info.magnolia.module.rest.tree.config;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeNodeData {
+public class JsonFunctionMenu {
 
-    private String name;
-    private String type;
-    private List<Object> columnValues = new ArrayList<Object>();
+    // TODO need to support separators
 
-    public String getName() {
-        return name;
+    private List<JsonFunctionMenuItem> items = new ArrayList<JsonFunctionMenuItem>();
+
+    public void addItem(JsonFunctionMenuItem item) {
+        this.items.add(item);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<Object> getColumnValues() {
-        return columnValues;
-    }
-
-    public void addNodeData(Object value) {
-        columnValues.add(value);
+    public List<JsonFunctionMenuItem> getItems() {
+        return items;
     }
 }

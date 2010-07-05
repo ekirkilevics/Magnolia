@@ -106,7 +106,7 @@ public class WebsiteJsonEndpoint {
         website.setPath(p.toString());
         website.createNode();
 
-        AbsolutePath newNodePath = p.append(website.getNewNodeName());
+        AbsolutePath newNodePath = p.appendSegment(website.getNewNodeName());
 
         WebsitePageList list = new WebsitePageList();
         list.add(marshallNode(newNodePath.toString()));

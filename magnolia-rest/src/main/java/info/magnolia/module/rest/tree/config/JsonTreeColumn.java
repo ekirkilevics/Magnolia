@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,38 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree;
+package info.magnolia.module.rest.tree.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
 
-public class TreeNodeData {
+import javax.jcr.RepositoryException;
 
-    private String name;
-    private String type;
-    private List<Object> columnValues = new ArrayList<Object>();
+public abstract class JsonTreeColumn {
 
-    public String getName() {
-        return name;
+    private String title;
+    private int width = 1;
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getType() {
-        return type;
+    public int getWidth() {
+        return width;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setWidth(int width) {
+        this.width = width;
     }
 
-    public List<Object> getColumnValues() {
-        return columnValues;
-    }
+    public abstract Object getValue(Content storageNode) throws RepositoryException;
 
-    public void addNodeData(Object value) {
-        columnValues.add(value);
-    }
+    public abstract Object getValue(Content storageNode, NodeData nodeData) throws RepositoryException;
+
+    public abstract String getType();
 }

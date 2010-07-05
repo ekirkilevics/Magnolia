@@ -35,7 +35,6 @@ package info.magnolia.module.rest.tree;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @XmlRootElement
@@ -45,15 +44,9 @@ public class TreeNode {
     private String type;
     private String path;
     private String uuid;
-    private List<TreeNodeData> nodeData = new ArrayList<TreeNodeData>();
-
-    // need metadata too.. (maybe this is better to place in a bean of its own...)
-    private String status; // created, modified, activated
-    private Date lastModified;
-
-    // need to return child nodes, but only 1 level deep, i.e. children of children are not returned
-    // for now only names are returned
-    private List<String> children = new ArrayList<String>();
+    private boolean hasChildren;
+    private List<Object> columnValues;
+    private List<TreeNodeData> nodeDatas = new ArrayList<TreeNodeData>();
 
     public String getName() {
         return name;
@@ -87,19 +80,27 @@ public class TreeNode {
         this.uuid = uuid;
     }
 
-    public List<TreeNodeData> getNodeData() {
-        return nodeData;
+    public boolean isHasChildren() {
+        return hasChildren;
     }
 
-    public void setNodeData(List<TreeNodeData> nodeData) {
-        this.nodeData = nodeData;
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
     }
 
-    public boolean addChild(String name) {
-        return children.add(name);
+    public List<Object> getColumnValues() {
+        return columnValues;
     }
 
-    public List<String> getChildren() {
-        return children;
+    public void setColumnValues(List<Object> columnValues) {
+        this.columnValues = columnValues;
+    }
+
+    public List<TreeNodeData> getNodeDatas() {
+        return nodeDatas;
+    }
+
+    public void addNodeData(TreeNodeData nodeData) {
+        this.nodeDatas.add(nodeData);
     }
 }
