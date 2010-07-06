@@ -31,23 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree.config;
+package info.magnolia.module.rest.tree;
 
-import java.util.ArrayList;
-import java.util.List;
+import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
 
-/**
- * A menu is an ordered list of menu items.
- */
-public class JsonMenu {
+import javax.jcr.RepositoryException;
 
-    private List<JsonMenuItem> items = new ArrayList<JsonMenuItem>();
+public interface TreeHandler {
 
-    public void addItem(JsonMenuItem item) {
-        this.items.add(item);
-    }
+    TreeNodeList getChildren(String path) throws RepositoryException;
 
-    public List<JsonMenuItem> getItems() {
-        return items;
-    }
+    JsonTreeConfiguration getConfiguration() throws RepositoryException;
 }
