@@ -38,10 +38,12 @@ import info.magnolia.module.rest.tree.TreeHandler;
 import info.magnolia.module.rest.tree.TreeNodeList;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 
 @Path("/tree")
 public class TreeJsonEndpoint {
@@ -77,14 +79,17 @@ public class TreeJsonEndpoint {
     }
 
     @POST
-    @Path("/{treeName}/command")
-    public Object executeCommand(@PathParam("treeName") String treeName) throws Exception {
+    @Path("/{treeName}/{path:(.)*}/command")
+    public Object executeCommand(
+            @PathParam("treeName") String treeName,
+            @PathParam("path") String path,
+            @Context HttpServletRequest request) throws Exception {
 
         TreeHandler treeHandler = JsonTreeHandlerManager.getInstance().getTreeHandler(treeName);
 
         if (treeHandler == null)
             return null;
 
-        return "";
+        return treeHandler.executeCommand(path, request.getParameter("command"), request.getParameterMap());
     }
 }

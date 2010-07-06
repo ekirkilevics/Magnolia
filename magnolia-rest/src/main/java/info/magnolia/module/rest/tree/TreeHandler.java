@@ -36,10 +36,13 @@ package info.magnolia.module.rest.tree;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
 
 import javax.jcr.RepositoryException;
+import java.util.Map;
 
 public interface TreeHandler {
 
     TreeNodeList getChildren(String path) throws RepositoryException;
 
     JsonTreeConfiguration getConfiguration() throws RepositoryException;
+
+    Object executeCommand(String path, String command, Map parameters) throws RepositoryException;
 }

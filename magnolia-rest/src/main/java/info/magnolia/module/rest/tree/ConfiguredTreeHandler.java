@@ -75,6 +75,15 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return configuration;
     }
 
+    public Object executeCommand(String path, String command, Map parameters) throws RepositoryException {
+
+        // TODO depending on command perform different actions
+
+        // Will need to return messages (AlertUtil equivalent) and enough information for the UI to update itself
+
+        return null;
+    }
+
     private TreeNodeList marshallTreeNodeChildren(JsonTreeConfiguration treeConfiguration, Content content) throws RepositoryException {
         TreeNodeList nodes = new TreeNodeList();
         for (Content child : this.getChildren(content)) {
