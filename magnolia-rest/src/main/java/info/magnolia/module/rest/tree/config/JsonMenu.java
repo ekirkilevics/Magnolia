@@ -33,35 +33,21 @@
  */
 package info.magnolia.module.rest.tree.config;
 
-public class JsonContextMenuItem {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String name;
-    private String label;
-    private String icon;
+/**
+ * A menu is an ordered list of menu items.
+ */
+public class JsonMenu {
 
-    // TODO needs some kind of action/command connected to it
+    private List<JsonMenuItem> items = new ArrayList<JsonMenuItem>();
 
-    public String getName() {
-        return name;
+    public void addItem(JsonMenuItem item) {
+        this.items.add(item);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public List<JsonMenuItem> getItems() {
+        return items;
     }
 }

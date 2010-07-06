@@ -39,6 +39,11 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
+/**
+ * Column that displays the value of a name NodeData.
+ *
+ * The returned value is a string.
+ */
 public class JsonTreeColumnNodeData extends JsonTreeColumn {
 
     private String name;

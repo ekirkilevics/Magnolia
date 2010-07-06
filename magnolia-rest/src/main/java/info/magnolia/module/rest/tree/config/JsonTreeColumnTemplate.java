@@ -43,21 +43,16 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Column that displays the available templates for a node.
+ *
+ * Returns an object that contains both the currently selected template and all the available templates.
+ */
 public class JsonTreeColumnTemplate extends JsonTreeColumn {
-
-    private String title;
 
     @Override
     public String getType() {
         return "template";
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @Override

@@ -38,6 +38,12 @@ import info.magnolia.cms.core.NodeData;
 
 import javax.jcr.RepositoryException;
 
+/**
+ * A column in a tree view. Has a title and a type that indicates what should be displayed in the column. The value
+ * of JsonTreeNode.columnValues will match the type of the column.
+ *
+ * TODO needs localization by primarily a local i18nBaseName and fall back to TreeConfiguration.i18nBaseName
+ */
 public abstract class JsonTreeColumn {
 
     private String title;

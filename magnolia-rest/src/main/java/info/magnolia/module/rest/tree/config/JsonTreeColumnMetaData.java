@@ -38,6 +38,11 @@ import info.magnolia.cms.core.NodeData;
 
 import javax.jcr.RepositoryException;
 
+/**
+ * Column that displays a metaData property.
+ *
+ * The returned value is a string.
+ */
 public class JsonTreeColumnMetaData extends JsonTreeColumn {
 
     private String name;

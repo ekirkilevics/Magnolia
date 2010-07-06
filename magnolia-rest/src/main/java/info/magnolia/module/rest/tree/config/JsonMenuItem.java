@@ -33,20 +33,59 @@
  */
 package info.magnolia.module.rest.tree.config;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Represents a menu item on either a context menu or a function bar.
+ *
+ * Actions resulting from clicking/choosing the menu item include both server side actions and client
+ * side actions such as refreshing the view.
+ *
+ * If the separator property is true no other values apply.
+ */
+public class JsonMenuItem {
 
-public class JsonFunctionMenu {
+    private String name;
+    private String label;
+    private String icon;
+    private boolean separator;
+    private String command;
 
-    // TODO need to support separators
-
-    private List<JsonFunctionMenuItem> items = new ArrayList<JsonFunctionMenuItem>();
-
-    public void addItem(JsonFunctionMenuItem item) {
-        this.items.add(item);
+    public boolean isSeparator() {
+        return separator;
     }
 
-    public List<JsonFunctionMenuItem> getItems() {
-        return items;
+    public void setSeparator(boolean separator) {
+        this.separator = separator;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

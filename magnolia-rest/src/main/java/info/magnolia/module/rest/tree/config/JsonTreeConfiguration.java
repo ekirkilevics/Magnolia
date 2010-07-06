@@ -34,9 +34,12 @@
 package info.magnolia.module.rest.tree.config;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.*;
 
+/**
+ * Configuration for a tree view.
+ */
 @XmlRootElement
 public class JsonTreeConfiguration {
 
@@ -45,14 +48,26 @@ public class JsonTreeConfiguration {
     private String rootPath;
 
     private List<JsonTreeColumn> columns = new ArrayList<JsonTreeColumn>();
-    private JsonContextMenu contextMenu;
-    private JsonFunctionMenu functionMenu;
+    private JsonMenu contextMenu;
+    private JsonMenu functionMenu;
     private boolean flatMode;
 
-    // itemtypes to include with icons and strict
-    // does it make sense to make itemtypes to include a configurable strategy?
+    // TODO localization, columns and menu items need to be able to do localization using the basename from here
 
-    // comparator for sorting order
+    // list of item types to include, will appear in this order
+    private List<String> itemTypes = new ArrayList<String>();
+    private Set<String> strictItemTypes = new HashSet<String>();
+    @XmlTransient
+    private Comparator sortComparator;
+    private String i18nBaseName;
+
+    public int getColumnsWidth() {
+        int n = 0;
+        for (JsonTreeColumn column : columns) {
+            n += column.getWidth();
+        }
+        return n;
+    }
 
     public String getRepository() {
         return repository;
@@ -78,19 +93,19 @@ public class JsonTreeConfiguration {
         return columns;
     }
 
-    public JsonContextMenu getContextMenu() {
+    public JsonMenu getContextMenu() {
         return contextMenu;
     }
 
-    public void setContextMenu(JsonContextMenu contextMenu) {
+    public void setContextMenu(JsonMenu contextMenu) {
         this.contextMenu = contextMenu;
     }
 
-    public JsonFunctionMenu getFunctionMenu() {
+    public JsonMenu getFunctionMenu() {
         return functionMenu;
     }
 
-    public void setFunctionMenu(JsonFunctionMenu functionMenu) {
+    public void setFunctionMenu(JsonMenu functionMenu) {
         this.functionMenu = functionMenu;
     }
 
@@ -112,5 +127,45 @@ public class JsonTreeConfiguration {
 
     public boolean isFlatMode() {
         return flatMode;
+    }
+
+    public void setSortComparator(Comparator sortComparator) {
+        this.sortComparator = sortComparator;
+    }
+
+    public void setItemTypes(List<String> itemTypes) {
+        this.itemTypes = itemTypes;
+    }
+
+    public void setStrictItemTypes(Set<String> strictItemTypes) {
+        this.strictItemTypes = strictItemTypes;
+    }
+
+    public Comparator getSortComparator() {
+        return sortComparator;
+    }
+
+    public List<String> getItemTypes() {
+        return itemTypes;
+    }
+
+    public Set<String> getStrictItemTypes() {
+        return strictItemTypes;
+    }
+
+    public String getI18nBaseName() {
+        return i18nBaseName;
+    }
+
+    public void setI18nBaseName(String i18nBaseName) {
+        this.i18nBaseName = i18nBaseName;
+    }
+
+    public void addItemType(String itemType) {
+        this.itemTypes.add(itemType);
+    }
+
+    public void addStrictItemType(String strictItemType) {
+        this.strictItemTypes.add(strictItemType);
     }
 }

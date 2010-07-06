@@ -37,6 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a node in a tree. NodeData's are not nodes themselves, instead they're a sort of sub nodes contained
+ * within a tree node. They're not always included, depending on how the tree configuration is configured.
+ */
 @XmlRootElement
 public class TreeNode {
 

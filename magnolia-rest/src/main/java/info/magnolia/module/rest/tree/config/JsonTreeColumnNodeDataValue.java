@@ -35,13 +35,25 @@ package info.magnolia.module.rest.tree.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
+/**
+ * Column that displays the value of a NodeData in a tree.
+ *
+ * The returned value is a string.
+ */
 public class JsonTreeColumnNodeDataValue extends JsonTreeColumn {
 
-    // TODO date format for date values
+    private String dateFormat;
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
 
     @Override
     public String getType() {

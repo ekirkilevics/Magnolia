@@ -40,21 +40,16 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
+/**
+ * Column that displays the type of a NodeData when displayed in a tree.
+ *
+ * The returned value is a string.
+ */
 public class JsonTreeColumnNodeDataType extends JsonTreeColumn {
-
-    private String name;
 
     @Override
     public String getType() {
         return "nodeDataType";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

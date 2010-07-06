@@ -44,81 +44,90 @@ public class AbsolutePath {
 
     private static final String[] EMPTY_STRING_ARRAY = new String[]{};
 
-    public static final AbsolutePath ROOT = new AbsolutePath(EMPTY_STRING_ARRAY);
+    public static final AbsolutePath ROOT = new AbsolutePath(EMPTY_STRING_ARRAY, 0, 0);
 
     private final String[] segments;
-    private final int length;
+    private final int startIndex;
+    private final int endIndex;
 
     public AbsolutePath(String path) {
-        this(splitSegments(path));
+        this(split(path));
     }
 
     public AbsolutePath(AbsolutePath base, String relative) {
-        this(add(base.segments, base.length, splitSegments(relative)));
+        this(add(base.segments, base.startIndex, base.endIndex, split(relative)));
     }
 
     public AbsolutePath(String base, String relative) {
-        this(add(splitSegments(base), splitSegments(relative)));
+        this(add(split(base), split(relative)));
     }
 
     private AbsolutePath(String[] segments) {
-        this(segments, segments.length);
+        this(segments, 0, segments.length);
     }
 
-    private AbsolutePath(String[] segments, int length) {
+    private AbsolutePath(String[] segments, int startIndex, int endIndex) {
         this.segments = segments;
-        this.length = length;
+        this.startIndex = startIndex;
+        this.endIndex = endIndex;
     }
 
     public boolean isRoot() {
-        return this.length == 0;
+        return startIndex == endIndex;
     }
 
     public String toString() {
         return path();
     }
 
+    public int length() {
+        return length(segments, startIndex, endIndex);
+    }
+
+    public int depth() {
+        return endIndex - startIndex;
+    }
+
     public String path() {
-        return "/" + StringUtils.join(this.segments, '/', 0, this.length);
+        return join(segments, startIndex, endIndex);
     }
 
     public AbsolutePath parent() {
         if (isRoot())
             throw new IllegalStateException("Cannot return parent of root node");
-        return new AbsolutePath(this.segments, this.length - 1);
+        return new AbsolutePath(segments, startIndex, endIndex - 1);
     }
 
     public String parentPath() {
         if (isRoot())
             throw new IllegalStateException("Cannot return parent path of root node");
-        return "/" + StringUtils.join(this.segments, '/', 0, this.length - 1);
+        return join(segments, startIndex, endIndex - 1);
     }
 
     public AbsolutePath appendSegment(String name) {
-        if (name.indexOf("/") != -1)
-            throw new IllegalArgumentException("Name must not be contain a '/' character");
-        return new AbsolutePath(add(this.segments, this.length, name));
+        if (name.indexOf('/') != -1)
+            throw new IllegalArgumentException("Segment to append must not contain a '/' character");
+        return new AbsolutePath(add(segments, startIndex, endIndex, name));
     }
 
     public AbsolutePath appendPath(String path) {
-        return new AbsolutePath(add(this.segments, this.length, splitSegments(path)));
+        return new AbsolutePath(this, path);
     }
 
     public AbsolutePath relativeTo(AbsolutePath absolute) {
-        if (absolute.length > length)
+
+        // They must have the same depth
+        if (absolute.depth() > depth())
             throw new IllegalArgumentException("");
-        for (int i = 0; i < absolute.length; i++) {
-            if (!segments[i].equals(absolute.segments[i]))
-                throw new IllegalArgumentException("");
-        }
-        if (absolute.length == length)
+
+        // They must be equal down to where absolute ends
+        if (!equals(segments, startIndex, startIndex + absolute.depth(), absolute.segments, absolute.startIndex))
+            throw new IllegalArgumentException("");
+
+        if (absolute.depth() == depth())
             return ROOT;
 
-        // if we had a start index in this class we could avoid creating a new array here and just return a new instance using the same array with an offset
-
-        String[] newArray = new String[this.length - absolute.length];
-        System.arraycopy(this.segments, absolute.length, newArray, 0, this.length - absolute.length);
-        return new AbsolutePath(newArray);
+        return new AbsolutePath(segments, startIndex + absolute.depth(), endIndex);
     }
 
     /**
@@ -127,30 +136,63 @@ public class AbsolutePath {
     public String name() {
         if (isRoot())
             return "/";
-        return segments[length - 1];
+        return segments[endIndex - 1];
     }
 
-    private static String[] splitSegments(String path) {
-        if (StringUtils.isEmpty(path))
+    private static String[] split(String path) {
+        if (path == null || path.length() == 0)
             return EMPTY_STRING_ARRAY;
+        if (path.indexOf('/') == -1)
+            return new String[]{path};
         return StringUtils.split(path, '/');
     }
 
-    private static String[] add(String[] array, int length, String name) {
-        String[] newArray = new String[length + 1];
-        System.arraycopy(array, 0, newArray, 0, length);
-        newArray[length] = name;
+    private static String[] add(String[] array, int startIndex, int endIndex, String element) {
+        String[] newArray = new String[(endIndex - startIndex) + 1];
+        System.arraycopy(array, startIndex, newArray, 0, endIndex - startIndex);
+        newArray[endIndex] = element;
         return newArray;
     }
 
     private static String[] add(String[] first, String[] second) {
-        return add(first, first.length, second);
+        return add(first, 0, first.length, second);
     }
 
-    private static String[] add(String[] first, int length, String[] second) {
-        String[] newArray = new String[length + second.length];
-        System.arraycopy(first, 0, newArray, 0, length);
-        System.arraycopy(second, 0, newArray, length, second.length);
+    private static String[] add(String[] first, int startIndex, int endIndex, String[] second) {
+        String[] newArray = new String[(endIndex - startIndex) + second.length];
+        System.arraycopy(first, startIndex, newArray, 0, (endIndex - startIndex));
+        System.arraycopy(second, 0, newArray, (endIndex - startIndex), second.length);
         return newArray;
+    }
+
+    private static int length(String[] array, int startIndex, int endIndex) {
+        if (startIndex == endIndex)
+            return 1;
+        int n = endIndex - startIndex;
+        for (int index = startIndex; index < endIndex; index++)
+            n += array[index].length();
+        return n;
+    }
+
+    private static String join(String[] array, int startIndex, int endIndex) {
+        if (startIndex == endIndex)
+            return "/";
+        int pos = 0;
+        char[] chars = new char[length(array, startIndex, endIndex)];
+        for (int index = startIndex; index < endIndex; index++) {
+            chars[pos++] = '/';
+            String str = array[index];
+            str.getChars(0, str.length(), chars, pos);
+            pos += str.length();
+        }
+        return new String(chars);
+    }
+
+    private static boolean equals(String[] array, int startIndex, int endIndex, String[] second, int secondStartIndex) {
+        for (int index = startIndex; index < endIndex; index++) {
+            if (!array[index].equals(second[secondStartIndex++]))
+                return false;
+        }
+        return true;
     }
 }
