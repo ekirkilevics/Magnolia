@@ -49,6 +49,7 @@ import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.core.XDOM;
+import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.LoadEvent;
 import com.extjs.gxt.ui.client.data.Loader;
 import com.extjs.gxt.ui.client.data.ModelData;
@@ -402,10 +403,11 @@ public class AdminCentral implements EntryPoint {
     public void openDialog(Object object) {
         final Dialog dialog = createDialog(object);
         Map<String,String> params = new HashMap<String, String>();
-        params.put("mgnlPath", "/howTo-jsp/main");
-        params.put("mgnlNode", "0");
+        params.put("mgnlPath", "/howTo-freemarker");
+        //params.put("mgnlNode", "");
+        params.put("mgnlNodeCollection", "main");
         params.put("mgnlRepository", "website");
-        Loader<List<FileModel>> store = ServerConnector.getDialogLoader("howTo", params);
+        Loader<List<FileModel>> store = ServerConnector.getDialogLoader("controlsShowRoom", params);
         store.load();
         store.addLoadListener(new LoadListener(){
             @Override
@@ -413,6 +415,7 @@ public class AdminCentral implements EntryPoint {
                 List<FileModel> data = le.getData();
                 FormData formData = new FormData();
                 TabPanel tabs = new TabPanel();
+                tabs.setTabScroll(true);
                 for(FileModel model: data){
                     String type = model.get("type");
                     if("tab".equals(type)){
@@ -421,18 +424,24 @@ public class AdminCentral implements EntryPoint {
                         tab.setText((String)model.get("label", "no label"));
                         tab.setLayout(new FormLayout());
                         tab.setAutoHeight(true);
-                        tab.setId("dummy");
+                        List<BaseModelData> controls = model.get("subs");
+                        if(controls == null) continue;
+                        for(BaseModelData control: controls) {
+                            type = control.get("type");
+                            if("edit".equals(type)){
+                                TextField<String> textField = new TextField<String>();
+                                textField.setFieldLabel((String)control.get("label", "no label"));
+                                textField.setValue((String)control.get("value", ""));
+                                tab.add(textField, formData);
+                            } else if("date".equals(type)){
+                                DateField date = new DateField();
+                                date.setFieldLabel((String)control.get("label", "no label"));
+                                long timestamp = control.get("value") != null ? Long.parseLong(""+control.get("value")) : new Date().getTime();
+                                date.setValue(new Date(timestamp));
+                                tab.add(date, formData);
+                            }
+                        }
                         tabs.add(tab);
-                    } else if("edit".equals(type)){
-                        TextField<String> textField = new TextField<String>();
-                        textField.setFieldLabel((String)model.get("label", "no label"));
-                        textField.setValue((String)model.get("value", ""));
-                        tabs.findItem("dummy", false).add(textField, formData);
-                    } else if("date".equals(type)){
-                        DateField date = new DateField();
-                        date.setFieldLabel((String)model.get("label", "no label"));
-                        date.setValue(new Date(((Double)model.get("value")).longValue()));
-                        tabs.findItem("dummy", false).add(date, formData);
                     }
                 }
                 dialog.add(tabs,formData);
