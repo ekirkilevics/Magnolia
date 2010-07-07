@@ -43,7 +43,8 @@ import java.util.Map;
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BaseTreeLoader;
 import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
-import com.extjs.gxt.ui.client.data.JsonReader;
+import com.extjs.gxt.ui.client.data.Loader;
+import com.extjs.gxt.ui.client.data.BaseLoader;
 import com.extjs.gxt.ui.client.data.ListLoadResult;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelType;
@@ -59,6 +60,7 @@ public class ServerConnector {
 
     private final static ModelType FILE_MODEL_TYPE = new ModelType();
     private static final ModelType LIST_OF_FILES_MODEL_TYPE = new ModelType();
+    private static final ModelType DIALOG_MODEL_TYPE = new ModelType();
 
     static {
         LIST_OF_FILES_MODEL_TYPE.setRoot("children");
@@ -79,9 +81,16 @@ public class ServerConnector {
         FILE_MODEL_TYPE.addField("hasChildren");
         FILE_MODEL_TYPE.addField("template");
 
+        DIALOG_MODEL_TYPE.setRoot("subs");
+        DIALOG_MODEL_TYPE.addField("name");
+        DIALOG_MODEL_TYPE.addField("value");
+        DIALOG_MODEL_TYPE.addField("type");
+        DIALOG_MODEL_TYPE.addField("label");
+
     }
 
-    private static final JsonLoadResultReader<List<FileModel>> jsonReader = createConfiguredReader();
+    private static final JsonLoadResultReader<List<FileModel>> jsonTreeReader = createConfiguredReader(LIST_OF_FILES_MODEL_TYPE);
+    private static final JsonLoadResultReader<List<FileModel>> jsonDialogReader = createConfiguredReader(DIALOG_MODEL_TYPE);
 
     public static TreeLoader<FileModel> getTreeLoader(String treeName, String rootPath, Map<String, String> additionalParams) {
         final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/" + treeName + rootPath);
@@ -89,9 +98,30 @@ public class ServerConnector {
 
         // data proxy
         RestfullHttpProxy<List<FileModel>> proxy = new RestfullHttpProxy<List<FileModel>>(requestBuilder);
+        return getConfiguredTreeLoader(proxy, jsonTreeReader, additionalParams);
+    }
 
 
-        return getConfiguredTreeLoader(proxy, jsonReader, additionalParams);
+    public static Loader<List<FileModel>> getDialogLoader(final String dialogName, final Map<String, String> extraParams){
+        final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/dialogs/" + dialogName);
+        requestBuilder.setHeader("Accept", "application/json");
+        // data proxy
+        RestfullHttpProxy<List<FileModel>> proxy = new RestfullHttpProxy<List<FileModel>>(requestBuilder);
+
+        return new BaseLoader<List<FileModel>>(proxy, jsonDialogReader) {
+             @Override
+             protected Object newLoadConfig() {
+                 Map<String, String> params = getRequestParameters(extraParams);
+                 if (params == null) {
+                     return null;
+                 }
+                 ModelData config = new BaseModelData();
+                 for (Map.Entry<String, String> param : params.entrySet()) {
+                     config.set(param.getKey(), param.getValue());
+                 }
+                 return config;
+             }
+        };
     }
 
     /**
@@ -162,23 +192,21 @@ public class ServerConnector {
      }
 
 
-    private static JsonLoadResultReader<List<FileModel>> createConfiguredReader() {
+    private static JsonLoadResultReader<List<FileModel>> createConfiguredReader(final ModelType modelType) {
         // TODO: generate model types or use different kind of deserialization !!!
-
-        JsonLoadResultReader<List<FileModel>> jsonReader = new JsonLoadResultReader<List<FileModel>>(LIST_OF_FILES_MODEL_TYPE) {
-            protected ListLoadResult<ModelData> newLoadResult(Object loadConfig, List<ModelData> models) {
-                throw new UnsupportedOperationException("Do not call me!");
-            }
-
-            protected Object createReturnData(Object loadConfig, List<ModelData> records, int totalCount) {
-                ArrayList<FileModel> resultList = new ArrayList<FileModel>();
-                for (ModelData record : records) {
-                    FileModel model = new FileModel(record.getProperties());
-                    resultList.add(model);
+        JsonLoadResultReader<List<FileModel>> jsonReader = new JsonLoadResultReader<List<FileModel>>(modelType) {
+                protected ListLoadResult<ModelData> newLoadResult(Object loadConfig, List<ModelData> models) {
+                    throw new UnsupportedOperationException("Do not call me!");
                 }
-                return resultList;
-            }
-        };
+                protected Object createReturnData(Object loadConfig, List<ModelData> records, int totalCount) {
+                    ArrayList<FileModel> resultList = new ArrayList<FileModel>();
+                    for (ModelData record : records) {
+                        FileModel model = new FileModel(record.getProperties());
+                        resultList.add(model);
+                    }
+                    return resultList;
+                }
+            } ;
         return jsonReader;
     }
 
@@ -194,7 +222,7 @@ public class ServerConnector {
                 System.out.println("Begin parsing response in an object");
                 // TODO: remove this after service return created child on create
                 responseText = "{children:[{\"name\":\"untitled"+store.getChildCount()+"\",\"path\":\""+path+"/untitled"+store.getChildCount()+"\",\"status\":\"modified\",\"template\":\"\",\"title\":\"\",\"availableTemplates\":[],\"uuid\":\"0c7fa58a-90fa-4392-86b4-7f9b95e0352b"+store.getChildCount()+"\",\"hasChildren\":false}]}";
-                FileModel child = jsonReader.read(null, responseText).get(0);
+                FileModel child = jsonTreeReader.read(null, responseText).get(0);
                 System.out.println("Child:" + child);
                 if (folder != null) {
                     if (store.getChildCount(folder) == 0) {

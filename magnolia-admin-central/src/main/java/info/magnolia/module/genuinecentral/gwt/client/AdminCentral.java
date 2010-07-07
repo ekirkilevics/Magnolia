@@ -34,13 +34,12 @@
 package info.magnolia.module.genuinecentral.gwt.client;
 
 
-import com.google.gwt.core.client.EntryPoint;
 
 import info.magnolia.module.genuinecentral.gwt.client.tree.DefaultTreeConfig;
-import info.magnolia.module.rest.dialog.DialogImpl;
-import info.magnolia.module.rest.dialog.DialogRegistry;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,21 +49,29 @@ import com.extjs.gxt.ui.client.Registry;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.core.XDOM;
+import com.extjs.gxt.ui.client.data.LoadEvent;
+import com.extjs.gxt.ui.client.data.Loader;
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.LoadListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
-import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.DateField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.FormLayout;
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+
 
 /**
  * @author Vivian Steller Created 23.08.2009 09:12:43
@@ -393,20 +400,58 @@ public class AdminCentral implements EntryPoint {
     }
 
     public void openDialog(Object object) {
-        final Dialog dialog = new Dialog();
-        dialog.setTitle("boo");
-        dialog.setModal(true);
-        dialog.setBlinkModal(true);
-        dialog.setWidth(200);
-        dialog.setHeight(200);
-        dialog.setHeading("blah blah");
-        /*final DialogRegistry dialogRegistry = new DialogRegistry();
-        DialogImpl d = dialogRegistry.getDialog((String) object);
-        d.getControls();
-        */
-        viewport.add(dialog);
-        dialog.show();
-        dialog.center();
+        final Dialog dialog = createDialog(object);
+        Map<String,String> params = new HashMap<String, String>();
+        params.put("mgnlPath", "/howTo-jsp/main");
+        params.put("mgnlNode", "0");
+        params.put("mgnlRepository", "website");
+        Loader<List<FileModel>> store = ServerConnector.getDialogLoader("howTo", params);
+        store.load();
+        store.addLoadListener(new LoadListener(){
+            @Override
+            public void loaderLoad(LoadEvent le) {
+                List<FileModel> data = le.getData();
+                FormData formData = new FormData();
+                TabPanel tabs = new TabPanel();
+                for(FileModel model: data){
+                    String type = model.get("type");
+                    if("tab".equals(type)){
+                        TabItem tab = new TabItem();
+                        tab.setStyleAttribute("padding", "10px");
+                        tab.setText((String)model.get("label", "no label"));
+                        tab.setLayout(new FormLayout());
+                        tab.setAutoHeight(true);
+                        tab.setId("dummy");
+                        tabs.add(tab);
+                    } else if("edit".equals(type)){
+                        TextField<String> textField = new TextField<String>();
+                        textField.setFieldLabel((String)model.get("label", "no label"));
+                        textField.setValue((String)model.get("value", ""));
+                        tabs.findItem("dummy", false).add(textField, formData);
+                    } else if("date".equals(type)){
+                        DateField date = new DateField();
+                        date.setFieldLabel((String)model.get("label", "no label"));
+                        date.setValue(new Date(((Double)model.get("value")).longValue()));
+                        tabs.findItem("dummy", false).add(date, formData);
+                    }
+                }
+                dialog.add(tabs,formData);
+                viewport.add(dialog);
+                dialog.show();
+                dialog.center();
+            }
+        });
     }
+
+    private Dialog createDialog(Object object) {
+        final Dialog dialog = new Dialog();
+        dialog.setModal(true);
+        dialog.setWidth(500);
+        dialog.setHeight(500);
+        dialog.setHeading("I am dialog");
+        dialog.addButton(new Button("Cancel"));
+        dialog.addButton(new Button("Submit"));
+        return dialog;
+      }
 
 }
