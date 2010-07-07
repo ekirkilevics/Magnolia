@@ -40,6 +40,9 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.rest.json.AbsolutePath;
+import info.magnolia.module.rest.tree.commands.CreateNodeCommand;
+import info.magnolia.module.rest.tree.commands.CreateWebsiteNodeCommand;
+import info.magnolia.module.rest.tree.commands.DeleteNodeCommand;
 import info.magnolia.module.rest.tree.config.JsonTreeColumn;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
 
@@ -60,12 +63,12 @@ public class ConfiguredTreeHandler implements TreeHandler {
 
     public TreeNodeList getChildren(String path) throws RepositoryException {
 
-        Content content = getContent(path);
+        Content content = getContent(getAbsolutePath(path));
 
         if (content == null)
             return null;
 
-        return marshallTreeNodeChildren(configuration, content);
+        return marshallTreeNodeChildren(content);
     }
 
     public JsonTreeConfiguration getConfiguration() {
@@ -75,24 +78,71 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return configuration;
     }
 
-    public Object executeCommand(String path, String command, Map parameters) throws RepositoryException {
-
-        // TODO depending on command perform different actions
+    public Object executeCommand(String path, String commandName, Map parameters) throws RepositoryException {
 
         // Will need to return messages (AlertUtil equivalent) and enough information for the UI to update itself
 
+        if (commandName.equals("create")) {
+
+            // There will have to be a set of commands per tree, for now hard coded
+            CreateNodeCommand command;
+            if (name.equals("website"))
+                command = new CreateWebsiteNodeCommand();
+            else
+                command = new CreateNodeCommand();
+
+            // We are extremely tied to the command here by unpacking the arguments, executing the command with those arguments, and then creating the result
+
+            String itemType = getFirstParameter(parameters, "itemType");
+            String name = getFirstParameter(parameters, "name");
+
+            Content content = command.executeCommand(this.repository, getAbsolutePath(path), name, itemType);
+
+            TreeNodeList list = new TreeNodeList();
+            list.addChild(marshallTreeNode(content));
+            return list;
+
+        } else if (commandName.equals("delete")) {
+
+            DeleteNodeCommand command = new DeleteNodeCommand();
+
+            Content parentNode = command.executeCommand(this.repository, getAbsolutePath(path));
+
+            return marshallTreeNodeChildren(parentNode);
+
+        } else {
+            throw new IllegalArgumentException("Unknown command [" + commandName + "]");
+        }
+    }
+
+    private AbsolutePath getAbsolutePath(String relative) {
+        return new AbsolutePath(this.getRootPath(), relative);
+    }
+
+    private String getFirstParameter(Map parameters, String name) {
+
+        // Since we're using HttpServletRequest.getParameters() ... temporary
+
+        Object o = parameters.get(name);
+        if (o instanceof String)
+            return (String) o;
+        if (o instanceof String[]) {
+            String[] array = (String[]) o;
+            if (array.length > 0)
+                return array[0];
+        }
         return null;
     }
 
-    private TreeNodeList marshallTreeNodeChildren(JsonTreeConfiguration treeConfiguration, Content content) throws RepositoryException {
+    private TreeNodeList marshallTreeNodeChildren(Content content) throws RepositoryException {
         TreeNodeList nodes = new TreeNodeList();
         for (Content child : this.getChildren(content)) {
-            nodes.addChild(marshallTreeNode(treeConfiguration, child));
+            nodes.addChild(marshallTreeNode(child));
         }
         return nodes;
     }
 
-    private TreeNode marshallTreeNode(JsonTreeConfiguration treeConfiguration, Content content) throws RepositoryException {
+    private TreeNode marshallTreeNode(Content content) throws RepositoryException {
 
         AbsolutePath repositoryPath = new AbsolutePath(content.getHandle());
         AbsolutePath treeRootPath = new AbsolutePath(getRootPath());
@@ -106,7 +156,7 @@ public class ConfiguredTreeHandler implements TreeHandler {
 
         treeNode.setHasChildren(hasChildren(content));
 
-        treeNode.setColumnValues(readColumnValues(treeConfiguration, content));
+        treeNode.setColumnValues(readColumnValues(configuration, content));
 
         if (getItemTypes().contains(Tree.ITEM_TYPE_NODEDATA)) {
             List<NodeData> nodeDatas = new ArrayList<NodeData>(content.getNodeDataCollection());
@@ -122,7 +172,7 @@ public class ConfiguredTreeHandler implements TreeHandler {
                 TreeNodeData data = new TreeNodeData();
                 data.setName(nodeData.getName());
                 data.setType(NodeDataUtil.getTypeName(nodeData));
-                for (JsonTreeColumn column : treeConfiguration.getColumns()) {
+                for (JsonTreeColumn column : configuration.getColumns()) {
                     data.addNodeData(column.getValue(content, nodeData));
                 }
                 treeNode.addNodeData(data);
@@ -140,16 +190,14 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return values;
     }
 
-    private Content getContent(String path) throws RepositoryException {
-
-        AbsolutePath p = new AbsolutePath(getRootPath(), path);
+    private Content getContent(AbsolutePath path) throws RepositoryException {
 
         HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(getRepository());
 
-        if (!hierarchyManager.isExist(p.path()))
+        if (!hierarchyManager.isExist(path.path()))
             return null;
 
-        return hierarchyManager.getContent(p.path());
+        return hierarchyManager.getContent(path.path());
     }
 
     private boolean hasChildren(Content content) throws RepositoryException {

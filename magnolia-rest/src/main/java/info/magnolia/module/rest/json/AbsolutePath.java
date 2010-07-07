@@ -105,6 +105,10 @@ public class AbsolutePath {
     }
 
     public AbsolutePath appendSegment(String name) {
+        if (name == null)
+            throw new IllegalArgumentException("Segment to append must not be null");
+        if (name.length() == 0)
+            throw new IllegalArgumentException("Segment to append must not be empty");
         if (name.indexOf('/') != -1)
             throw new IllegalArgumentException("Segment to append must not contain a '/' character");
         return new AbsolutePath(add(segments, startIndex, endIndex, name));

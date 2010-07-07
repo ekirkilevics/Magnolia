@@ -39,19 +39,18 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.rest.dialogx.Dialog;
 import info.magnolia.module.rest.dialogx.DialogRegistry;
 import info.magnolia.module.rest.dialogx.ValidationResult;
 import info.magnolia.module.rest.tree.WebsitePage;
 import info.magnolia.module.rest.tree.WebsitePageList;
+import info.magnolia.module.rest.tree.commands.CreateWebsiteNodeCommand;
+import info.magnolia.module.rest.tree.commands.DeleteNodeCommand;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -75,17 +74,6 @@ public class WebsiteJsonEndpoint {
         return marshallChildren(path);
     }
 
-    private static class WebsiteAccessor extends WebsiteTreeHandler {
-
-        public WebsiteAccessor(String name, HttpServletRequest request, HttpServletResponse response) {
-            super(name, request, response);
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-    }
-
     // Since JAX-RS wont match an empty path param (hopefully im doing something wrong...)
     @POST
     @Path("/create")
@@ -98,18 +86,12 @@ public class WebsiteJsonEndpoint {
     @Path("{path:(.)*}/create")
     public WebsitePageList create(@PathParam("path") String path) throws RepositoryException {
 
-        AbsolutePath p = new AbsolutePath(path);
+        CreateWebsiteNodeCommand command = new CreateWebsiteNodeCommand();
 
-        WebsiteAccessor website = new WebsiteAccessor("website", null, null);
-
-        website.setCreateItemType("mgnl:content");
-        website.setPath(p.toString());
-        website.createNode();
-
-        AbsolutePath newNodePath = p.appendSegment(website.getNewNodeName());
+        Content content = command.executeCommand(ContentRepository.WEBSITE, new AbsolutePath(path), null, "mgnl:content");
 
         WebsitePageList list = new WebsitePageList();
-        list.add(marshallNode(newNodePath.toString()));
+        list.add(marshallNode(content));
         return list;
     }
 
@@ -138,11 +120,9 @@ public class WebsiteJsonEndpoint {
             // cant delete the root node
         }
 
-        WebsiteAccessor website = new WebsiteAccessor("website", null, null);
+        DeleteNodeCommand command = new DeleteNodeCommand();
 
-        synchronized (ExclusiveWrite.getInstance()) {
-            website.deleteNode(p.parentPath(), p.name());
-        }
+        command.executeCommand(ContentRepository.WEBSITE, p);
 
         return new WebsitePage();
     }
