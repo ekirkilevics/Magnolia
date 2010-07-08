@@ -53,11 +53,11 @@ public class ConfiguredDialogFactory {
     }
 
     private void getSubs(Content parentConfigNode, DialogItemContainer dialogItemContainer) {
-        Iterator it = parentConfigNode.getChildren(ItemType.CONTENTNODE).iterator();
+        Iterator<Content> it = parentConfigNode.getChildren(ItemType.CONTENTNODE).iterator();
         while (it.hasNext()) {
-            Content configNode = (Content) it.next();
+            Content configNode = it.next();
 
-            String controlType = configNode.getNodeData("controlType").getString();
+            final String controlType = configNode.getNodeData("controlType").getString();
 
             DialogItem dialogItem = null;
             if (controlType.equals("tab")) {
@@ -94,6 +94,7 @@ public class ConfiguredDialogFactory {
         editControl.setLabel(configNode.getNodeData("label").getString());
         editControl.setRequired(configNode.getNodeData("required").getBoolean());
         editControl.setDescription(configNode.getNodeData("description").getString());
+        editControl.setWidth(configNode.getNodeData("width").getString());
         return editControl;
     }
 

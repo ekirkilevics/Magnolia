@@ -47,6 +47,7 @@ public class EditControl extends AbstractDialogItem {
     private String label;
     private String value;
     private String description;
+    private String width;
     private boolean required;
 
     public String getType() {
@@ -81,6 +82,30 @@ public class EditControl extends AbstractDialogItem {
         this.value = value;
     }
 
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
     public void bind(Content storageNode) throws RepositoryException {
         if (storageNode.hasNodeData(this.name)) {
             this.value = storageNode.getNodeData(this.name).getString();
@@ -101,21 +126,5 @@ public class EditControl extends AbstractDialogItem {
         if (this.value != null) {
             storageNode.setNodeData(this.name, this.value);
         }
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
