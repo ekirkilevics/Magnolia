@@ -419,7 +419,6 @@ public class AdminCentral implements EntryPoint {
 
                 TabPanel tabs = new TabPanel();
                 tabs.setTabScroll(true);
-                int tabsCount = 1;
                 for(FileModel model: data){
                     String type = model.get("type");
                     if("tab".equals(type)){
@@ -455,7 +454,6 @@ public class AdminCentral implements EntryPoint {
                                 tab.add(date, formData);
                             }
                         }
-                        System.out.println("adding tab #"+(tabsCount++) + " with name "+tab.getText());
                         tabs.add(tab);
                     }
                 }
