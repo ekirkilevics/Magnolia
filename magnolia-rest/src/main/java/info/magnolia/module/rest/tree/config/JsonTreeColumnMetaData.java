@@ -40,7 +40,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Column that displays a metaData property.
- *
+ * <p/>
  * The returned value is a string.
  */
 public class JsonTreeColumnMetaData extends JsonTreeColumn {

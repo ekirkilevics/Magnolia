@@ -31,41 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree.config;
+package info.magnolia.module.rest.tree.commands;
 
-/**
- * Represents a menu item on either a context menu or a function bar.
- * <p/>
- * Actions resulting from clicking/choosing the menu item include both server side actions and client
- * side actions such as refreshing the view.
- * <p/>
- * If the separator property is true no other values apply.
- * <p/>
- * TODO: A context menu item that opens a dialog needs to have the dialog name specified.
- */
-public class JsonMenuItem extends TreeConfigurationItem {
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.rest.json.AbsolutePath;
 
-    private String name;
-    private String label;
-    private String icon;
-    private boolean separator;
-    private String command;
+public abstract class AbstractTreeCommand implements TreeCommand {
 
-    public boolean isSeparator() {
-        return separator;
-    }
-
-    public void setSeparator(boolean separator) {
-        this.separator = separator;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
-    public void setCommand(String command) {
-        this.command = command;
-    }
+    private String name; // Set by C2B
+    private String repository;
+    private AbsolutePath path;
+    private HierarchyManager hierarchyManager;
 
     public String getName() {
         return name;
@@ -75,19 +52,26 @@ public class JsonMenuItem extends TreeConfigurationItem {
         this.name = name;
     }
 
-    public String getLabel() {
-        return getMessage(label);
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setPath(AbsolutePath path) {
+        this.path = path;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getRepository() {
+        return repository;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public AbsolutePath getPath() {
+        return path;
+    }
+
+    public HierarchyManager getHierarchyManager() {
+        if (hierarchyManager == null) {
+            hierarchyManager = MgnlContext.getHierarchyManager(repository);
+        }
+        return hierarchyManager;
     }
 }

@@ -42,7 +42,7 @@ import java.util.Map;
 
 /**
  * Represents the first column, the one with the tree graphics.
- *
+ * <p/>
  * The return value is the text to use for the node (and the icon?)
  */
 public class JsonTreeColumnLabel extends JsonTreeColumn {

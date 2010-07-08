@@ -36,7 +36,6 @@ package info.magnolia.module.rest.tree.commands;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.module.rest.json.AbsolutePath;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
@@ -45,10 +44,10 @@ import javax.jcr.RepositoryException;
 public class CreateWebsiteNodeCommand extends CreateNodeCommand {
 
     @Override
-    public Content executeCommand(String repository, AbsolutePath parentPath, String name, String itemType) throws RepositoryException {
-        Content newNode = super.executeCommand(repository, parentPath, name, itemType);
+    public Content execute() throws RepositoryException {
+        Content newNode = super.execute();
 
-        if (itemType.equals(ItemType.CONTENT.getSystemName())) {
+        if (getItemType().equals(ItemType.CONTENT.getSystemName())) {
             Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(newNode);
             if (newTemplate != null) {
                 newNode.getMetaData().setTemplate(newTemplate.getName());

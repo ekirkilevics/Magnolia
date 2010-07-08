@@ -31,63 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree.config;
+package info.magnolia.module.rest.tree.commands;
 
-/**
- * Represents a menu item on either a context menu or a function bar.
- * <p/>
- * Actions resulting from clicking/choosing the menu item include both server side actions and client
- * side actions such as refreshing the view.
- * <p/>
- * If the separator property is true no other values apply.
- * <p/>
- * TODO: A context menu item that opens a dialog needs to have the dialog name specified.
- */
-public class JsonMenuItem extends TreeConfigurationItem {
+import info.magnolia.module.rest.json.AbsolutePath;
 
-    private String name;
-    private String label;
-    private String icon;
-    private boolean separator;
-    private String command;
+import javax.jcr.RepositoryException;
 
-    public boolean isSeparator() {
-        return separator;
-    }
+public interface TreeCommand {
 
-    public void setSeparator(boolean separator) {
-        this.separator = separator;
-    }
+    void setRepository(String repository);
 
-    public String getCommand() {
-        return command;
-    }
+    void setPath(AbsolutePath path);
 
-    public void setCommand(String command) {
-        this.command = command;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return getMessage(label);
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
+    Object execute() throws RepositoryException;
 }

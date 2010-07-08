@@ -45,7 +45,7 @@ import java.util.Map;
 
 /**
  * Column that displays the available templates for a node.
- *
+ * <p/>
  * Returns an object that contains both the currently selected template and all the available templates.
  */
 public class JsonTreeColumnTemplate extends JsonTreeColumn {

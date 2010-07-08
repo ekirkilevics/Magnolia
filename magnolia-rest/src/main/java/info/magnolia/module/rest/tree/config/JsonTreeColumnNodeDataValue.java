@@ -40,7 +40,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Column that displays the value of a NodeData in a tree.
- *
+ * <p/>
  * The returned value is a string.
  */
 public class JsonTreeColumnNodeDataValue extends JsonTreeColumn {

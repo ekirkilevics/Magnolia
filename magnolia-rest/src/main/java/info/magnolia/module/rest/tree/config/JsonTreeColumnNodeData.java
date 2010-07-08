@@ -35,13 +35,12 @@ package info.magnolia.module.rest.tree.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
 /**
  * Column that displays the value of a name NodeData.
- *
+ * <p/>
  * The returned value is a string.
  */
 public class JsonTreeColumnNodeData extends JsonTreeColumn {

@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.rest.tree;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
@@ -41,16 +42,18 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.rest.json.AbsolutePath;
-import info.magnolia.module.rest.tree.commands.CreateNodeCommand;
-import info.magnolia.module.rest.tree.commands.CreateWebsiteNodeCommand;
-import info.magnolia.module.rest.tree.commands.DeleteNodeCommand;
+import info.magnolia.module.rest.tree.commands.TreeCommand;
 import info.magnolia.module.rest.tree.config.JsonTreeColumn;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class ConfiguredTreeHandler implements TreeHandler {
@@ -66,8 +69,15 @@ public class ConfiguredTreeHandler implements TreeHandler {
     private String i18nBaseName;
     private Messages messages;
 
+    private Content configNode;
+
+    // called by content2bean
+    public void setContent(Content configNode) {
+        this.configNode = configNode;
+    }
+
+    // called by content2bean
     public void init() {
-        // called by content2bean
 
         initMessages();
     }
@@ -96,41 +106,51 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return configuration;
     }
 
-    public Object executeCommand(String path, String commandName, Map parameters) throws RepositoryException {
+    public Object executeCommand(String path, String commandName, Map parameters) throws Exception {
 
-        // Will need to return messages (AlertUtil equivalent) and enough information for the UI to update itself
+        TreeCommand command = createCommandObject(path, commandName, parameters);
 
-        if (commandName.equals("create")) {
+        // Invoke the command
+        Object result = command.execute();
 
-            // There will have to be a set of commands per tree, for now hard coded
-            CreateNodeCommand command;
-            if (name.equals("website"))
-                command = new CreateWebsiteNodeCommand();
-            else
-                command = new CreateNodeCommand();
+        // Return a suitable response
 
-            // We are extremely tied to the command here by unpacking the arguments, executing the command with those arguments, and then creating the result
+        // When we create a node we should return a TreeNodeList of its parent (the client needs to see how the new node is ordered among its siblings)
 
-            String itemType = getFirstParameter(parameters, "itemType");
-            String name = getFirstParameter(parameters, "name");
+        // When we update a node its enough to return just that node
 
-            Content content = command.executeCommand(this.repository, getAbsolutePath(path), name, itemType);
+        // When we move a node around we need to return a TreeNodeList of its new parent (the client also needs to know that it's not still there)
 
-            TreeNodeList list = new TreeNodeList();
-            list.addChild(marshallTreeNode(content));
-            return list;
+        // When we copy a node we need to return a TreeNodeList of the newly created nodes parent (the client needs to see it in order with its siblings)
 
-        } else if (commandName.equals("delete")) {
+        // Will also need to return messages (AlertUtil equivalent)
 
-            DeleteNodeCommand command = new DeleteNodeCommand();
+        // TODO this is temporary code, see the comments above about what should be returned...
+        return marshallTreeNodeChildren((Content) result);
+    }
 
-            Content parentNode = command.executeCommand(this.repository, getAbsolutePath(path));
+    private TreeCommand createCommandObject(String path, String commandName, Map parameters) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, RepositoryException, Content2BeanException {
 
-            return marshallTreeNodeChildren(parentNode);
-
-        } else {
+        // TODO: should use this.configNode once the ObservedManager is written
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        String commandPath = "/modules/rest/genuine-trees/" + name + "/commands/" + commandName;
+        if (!hm.isExist(commandPath)) {
             throw new IllegalArgumentException("Unknown command [" + commandName + "]");
         }
+
+        TreeCommand command = (TreeCommand) Content2BeanUtil.toBean(hm.getContent(commandPath));
+
+        // Common parameters
+        command.setRepository(this.repository);
+        command.setPath(getAbsolutePath(path));
+
+        // Request parameters are set using reflection
+        for (Object parameterName : parameters.keySet()) {
+            String parameter = getFirstParameter(parameters, (String) parameterName);
+            BeanUtils.setProperty(command, (String) parameterName, parameter);
+        }
+
+        return command;
     }
 
     private AbsolutePath getAbsolutePath(String relative) {

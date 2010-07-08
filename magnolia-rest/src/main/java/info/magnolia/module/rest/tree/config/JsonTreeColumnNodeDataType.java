@@ -36,13 +36,12 @@ package info.magnolia.module.rest.tree.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
-import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
 /**
  * Column that displays the type of a NodeData when displayed in a tree.
- *
+ * <p/>
  * The returned value is a string.
  */
 public class JsonTreeColumnNodeDataType extends JsonTreeColumn {

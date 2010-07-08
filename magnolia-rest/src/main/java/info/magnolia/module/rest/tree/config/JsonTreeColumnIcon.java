@@ -45,7 +45,7 @@ import java.util.List;
 
 /**
  * The standard activation icons.
- *
+ * <p/>
  * The returned column value is a list of icon hrefs.
  */
 public class JsonTreeColumnIcon extends JsonTreeColumn {

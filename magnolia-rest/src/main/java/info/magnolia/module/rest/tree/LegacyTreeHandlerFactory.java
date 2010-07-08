@@ -46,6 +46,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.admininterface.TreeHandlerManager;
 import info.magnolia.module.admininterface.trees.TemplateColumn;
+import info.magnolia.module.rest.tree.commands.CreateNodeCommand;
+import info.magnolia.module.rest.tree.commands.CreateWebsiteNodeCommand;
+import info.magnolia.module.rest.tree.commands.DeleteNodeCommand;
 import info.magnolia.module.rest.tree.config.*;
 import info.magnolia.objectfactory.Classes;
 import org.apache.commons.lang.StringUtils;
@@ -56,6 +59,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.*;
 
+/**
+ * Bootstraps a ConfiguredTreeHandler into repository from a configured AdminTreeMVCHandler. Test code to get something in the repo to test with.
+ */
 public class LegacyTreeHandlerFactory {
 
     public boolean bootstrapLegacyTreeHandler(String treeName) throws RepositoryException, Content2BeanException {
@@ -211,7 +217,23 @@ public class LegacyTreeHandlerFactory {
 
         writeConfiguration(handlerNode, handler.getConfiguration());
 
+        writeCommands(handlerNode, handler.getName());
+
         configParent.save();
+    }
+
+    private void writeCommands(Content handlerNode, String name) throws RepositoryException {
+        Content commandsNode = handlerNode.createContent("commands", ItemType.CONTENTNODE);
+        if (name.equals("website")) {
+            Content content = commandsNode.createContent("create", ItemType.CONTENTNODE);
+            content.setNodeData("class", CreateWebsiteNodeCommand.class.getName());
+            content.setNodeData("itemType", ItemType.CONTENT.getSystemName());
+        } else {
+            Content content = commandsNode.createContent("create", ItemType.CONTENTNODE);
+            content.setNodeData("class", CreateNodeCommand.class.getName());
+            content.setNodeData("itemType", ItemType.CONTENT.getSystemName());
+        }
+        commandsNode.createContent("delete", ItemType.CONTENTNODE).setNodeData("class", DeleteNodeCommand.class.getName());
     }
 
     private void writeConfiguration(Content handlerNode, JsonTreeConfiguration cfg) throws RepositoryException {

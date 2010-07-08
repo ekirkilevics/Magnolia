@@ -44,5 +44,5 @@ public interface TreeHandler {
 
     JsonTreeConfiguration getConfiguration() throws RepositoryException;
 
-    Object executeCommand(String path, String command, Map parameters) throws RepositoryException;
+    Object executeCommand(String path, String command, Map parameters) throws Exception;
 }

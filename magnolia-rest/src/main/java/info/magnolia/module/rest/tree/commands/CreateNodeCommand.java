@@ -34,7 +34,6 @@
 package info.magnolia.module.rest.tree.commands;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
@@ -43,34 +42,45 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
-public class CreateNodeCommand {
+public class CreateNodeCommand extends AbstractTreeCommand {
 
-    public Content executeCommand(String repository, AbsolutePath parentPath, String name, String itemType) throws RepositoryException {
+    private String nodeName;
+    private String itemType;
 
-        // name is optional
-        name = StringUtils.defaultIfEmpty(name, "untitled");
-
-        AbsolutePath requestedPath = parentPath.appendSegment(name);
-
-        AbsolutePath uniquePath = getUniquePath(repository, requestedPath);
-
-        return createNode(repository, uniquePath, itemType);
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
-    private AbsolutePath getUniquePath(String repository, AbsolutePath path) {
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
 
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
+    public String getItemType() {
+        return itemType;
+    }
 
-        String uniqueName = Path.getUniqueLabel(hierarchyManager, path.parentPath(), path.name());
+    public Content execute() throws RepositoryException {
+
+        // nodeName is optional
+        String name = StringUtils.defaultIfEmpty(this.nodeName, "untitled");
+
+        AbsolutePath requestedPath = getPath().appendSegment(name);
+
+        AbsolutePath uniquePath = getUniquePath(requestedPath);
+
+        return createNode(uniquePath, itemType);
+    }
+
+    private AbsolutePath getUniquePath(AbsolutePath path) {
+
+        String uniqueName = Path.getUniqueLabel(getHierarchyManager(), path.parentPath(), path.name());
 
         return path.parent().appendSegment(uniqueName);
     }
 
-    private Content createNode(String repository, AbsolutePath path, String itemType) throws RepositoryException {
+    private Content createNode(AbsolutePath path, String itemType) throws RepositoryException {
 
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
-
-        Content parentNode = hierarchyManager.getContent(path.parentPath());
+        Content parentNode = getHierarchyManager().getContent(path.parentPath());
 
         Content newNode = parentNode.createContent(path.name(), itemType);
         newNode.getMetaData().setAuthorId(MgnlContext.getUser().getName());

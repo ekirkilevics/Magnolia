@@ -34,24 +34,19 @@
 package info.magnolia.module.rest.tree.commands;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.rest.json.AbsolutePath;
 
 import javax.jcr.RepositoryException;
 
-public class DeleteNodeCommand {
+public class DeleteNodeCommand extends AbstractTreeCommand {
 
-    public Content executeCommand(String repository, AbsolutePath path) throws RepositoryException {
+    public Content execute() throws RepositoryException {
 
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
-
-        Content parentNode = hierarchyManager.getContent(path.parentPath());
+        Content parentNode = getHierarchyManager().getContent(getPath().parentPath());
 
         // deactivate node goes here
 
-        parentNode.delete(path.name());
+        parentNode.delete(getPath().name());
 
         synchronized (ExclusiveWrite.getInstance()) {
             parentNode.save();
