@@ -35,7 +35,7 @@ package info.magnolia.module.rest.json;
 
 import junit.framework.TestCase;
 
-public class StrucutredPathTest extends TestCase {
+public class StructuredPathTest extends TestCase {
 
     public void testConstructors() {
 
