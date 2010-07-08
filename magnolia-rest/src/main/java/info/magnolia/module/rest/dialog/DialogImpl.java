@@ -34,8 +34,6 @@
 package info.magnolia.module.rest.dialog;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 

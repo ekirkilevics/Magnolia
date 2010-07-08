@@ -39,15 +39,15 @@ package info.magnolia.module.rest.dialog;
  */
 public interface Control {
 
-   public String getName();
+    public String getName();
 
-   public void setName(String name);
+    public void setName(String name);
 
-   public String getType();
+    public String getType();
 
-   public void setType(String type);
+    public void setType(String type);
 
-   public String getLabel();
+    public String getLabel();
 
-   public void setLabel(String label);
+    public void setLabel(String label);
 }

@@ -41,21 +41,21 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class DialogRegistry {
-   private Map<String, DialogImpl> dialogs = new HashMap<String, DialogImpl>();
+    private Map<String, DialogImpl> dialogs = new HashMap<String, DialogImpl>();
 
-   public Map<String, DialogImpl> getDialogs() {
-      return dialogs;
-   }
+    public Map<String, DialogImpl> getDialogs() {
+        return dialogs;
+    }
 
-   public void setDialogs(Map<String, DialogImpl> dialogs) {
-      this.dialogs = dialogs;
-   }
+    public void setDialogs(Map<String, DialogImpl> dialogs) {
+        this.dialogs = dialogs;
+    }
 
-   public void addDialog(String name, DialogImpl dialog) {
-      dialogs.put(name, dialog);
-   }
+    public void addDialog(String name, DialogImpl dialog) {
+        dialogs.put(name, dialog);
+    }
 
-   public DialogImpl getDialog(String name) {
-      return dialogs.get(name);
-   }
+    public DialogImpl getDialog(String name) {
+        return dialogs.get(name);
+    }
 }
