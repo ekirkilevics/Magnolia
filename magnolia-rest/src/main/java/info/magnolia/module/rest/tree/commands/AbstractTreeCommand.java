@@ -35,13 +35,13 @@ package info.magnolia.module.rest.tree.commands;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.rest.json.AbsolutePath;
+import info.magnolia.module.rest.json.StructuredPath;
 
 public abstract class AbstractTreeCommand implements TreeCommand {
 
     private String name; // Set by C2B
     private String repository;
-    private AbsolutePath path;
+    private StructuredPath path;
     private HierarchyManager hierarchyManager;
 
     public String getName() {
@@ -56,7 +56,7 @@ public abstract class AbstractTreeCommand implements TreeCommand {
         this.repository = repository;
     }
 
-    public void setPath(AbsolutePath path) {
+    public void setPath(StructuredPath path) {
         this.path = path;
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractTreeCommand implements TreeCommand {
         return repository;
     }
 
-    public AbsolutePath getPath() {
+    public StructuredPath getPath() {
         return path;
     }
 

@@ -40,33 +40,33 @@ import org.apache.commons.lang.StringUtils;
  * <p/>
  * Treats the empty string as the root node.
  */
-public class AbsolutePath {
+public class StructuredPath {
 
     private static final String[] EMPTY_STRING_ARRAY = new String[]{};
 
-    public static final AbsolutePath ROOT = new AbsolutePath(EMPTY_STRING_ARRAY, 0, 0);
+    public static final StructuredPath ROOT = new StructuredPath(EMPTY_STRING_ARRAY, 0, 0);
 
     private final String[] segments;
     private final int startIndex;
     private final int endIndex;
 
-    public AbsolutePath(String path) {
+    public StructuredPath(String path) {
         this(split(path));
     }
 
-    public AbsolutePath(AbsolutePath base, String relative) {
+    public StructuredPath(StructuredPath base, String relative) {
         this(add(base.segments, base.startIndex, base.endIndex, split(relative)));
     }
 
-    public AbsolutePath(String base, String relative) {
+    public StructuredPath(String base, String relative) {
         this(add(split(base), split(relative)));
     }
 
-    private AbsolutePath(String[] segments) {
+    private StructuredPath(String[] segments) {
         this(segments, 0, segments.length);
     }
 
-    private AbsolutePath(String[] segments, int startIndex, int endIndex) {
+    private StructuredPath(String[] segments, int startIndex, int endIndex) {
         this.segments = segments;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
@@ -92,10 +92,10 @@ public class AbsolutePath {
         return join(segments, startIndex, endIndex);
     }
 
-    public AbsolutePath parent() {
+    public StructuredPath parent() {
         if (isRoot())
             throw new IllegalStateException("Cannot return parent of root node");
-        return new AbsolutePath(segments, startIndex, endIndex - 1);
+        return new StructuredPath(segments, startIndex, endIndex - 1);
     }
 
     public String parentPath() {
@@ -104,21 +104,21 @@ public class AbsolutePath {
         return join(segments, startIndex, endIndex - 1);
     }
 
-    public AbsolutePath appendSegment(String name) {
+    public StructuredPath appendSegment(String name) {
         if (name == null)
             throw new IllegalArgumentException("Segment to append must not be null");
         if (name.length() == 0)
             throw new IllegalArgumentException("Segment to append must not be empty");
         if (name.indexOf('/') != -1)
             throw new IllegalArgumentException("Segment to append must not contain a '/' character");
-        return new AbsolutePath(add(segments, startIndex, endIndex, name));
+        return new StructuredPath(add(segments, startIndex, endIndex, name));
     }
 
-    public AbsolutePath appendPath(String path) {
-        return new AbsolutePath(this, path);
+    public StructuredPath appendPath(String path) {
+        return new StructuredPath(this, path);
     }
 
-    public AbsolutePath relativeTo(AbsolutePath absolute) {
+    public StructuredPath relativeTo(StructuredPath absolute) {
 
         // They must have the same depth
         if (absolute.depth() > depth())
@@ -131,7 +131,7 @@ public class AbsolutePath {
         if (absolute.depth() == depth())
             return ROOT;
 
-        return new AbsolutePath(segments, startIndex + absolute.depth(), endIndex);
+        return new StructuredPath(segments, startIndex + absolute.depth(), endIndex);
     }
 
     /**

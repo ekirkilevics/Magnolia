@@ -90,7 +90,7 @@ public class TreeJsonEndpoint {
         if (treeHandler == null)
             return null;
 
-        AbsolutePath p = new AbsolutePath(path);
+        StructuredPath p = new StructuredPath(path);
         String treePath = p.parentPath();
         String command = p.name();
 

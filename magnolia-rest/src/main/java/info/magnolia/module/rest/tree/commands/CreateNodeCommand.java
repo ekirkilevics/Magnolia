@@ -37,7 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.rest.json.AbsolutePath;
+import info.magnolia.module.rest.json.StructuredPath;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -64,21 +64,21 @@ public class CreateNodeCommand extends AbstractTreeCommand {
         // nodeName is optional
         String name = StringUtils.defaultIfEmpty(this.nodeName, "untitled");
 
-        AbsolutePath requestedPath = getPath().appendSegment(name);
+        StructuredPath requestedPath = getPath().appendSegment(name);
 
-        AbsolutePath uniquePath = getUniquePath(requestedPath);
+        StructuredPath uniquePath = getUniquePath(requestedPath);
 
         return createNode(uniquePath, itemType);
     }
 
-    private AbsolutePath getUniquePath(AbsolutePath path) {
+    private StructuredPath getUniquePath(StructuredPath path) {
 
         String uniqueName = Path.getUniqueLabel(getHierarchyManager(), path.parentPath(), path.name());
 
         return path.parent().appendSegment(uniqueName);
     }
 
-    private Content createNode(AbsolutePath path, String itemType) throws RepositoryException {
+    private Content createNode(StructuredPath path, String itemType) throws RepositoryException {
 
         Content parentNode = getHierarchyManager().getContent(path.parentPath());
 

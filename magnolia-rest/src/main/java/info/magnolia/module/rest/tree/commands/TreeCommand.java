@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.rest.tree.commands;
 
-import info.magnolia.module.rest.json.AbsolutePath;
+import info.magnolia.module.rest.json.StructuredPath;
 
 import javax.jcr.RepositoryException;
 
@@ -41,7 +41,7 @@ public interface TreeCommand {
 
     void setRepository(String repository);
 
-    void setPath(AbsolutePath path);
+    void setPath(StructuredPath path);
 
     Object execute() throws RepositoryException;
 }

@@ -45,7 +45,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.rest.json.AbsolutePath;
+import info.magnolia.module.rest.json.StructuredPath;
 import info.magnolia.module.rest.tree.commands.TreeCommand;
 import info.magnolia.module.rest.tree.config.JsonTreeColumn;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
@@ -153,8 +153,8 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return command;
     }
 
-    private AbsolutePath getAbsolutePath(String relative) {
-        return new AbsolutePath(this.getRootPath(), relative);
+    private StructuredPath getAbsolutePath(String relative) {
+        return new StructuredPath(this.getRootPath(), relative);
     }
 
     private String getFirstParameter(Map parameters, String name) {
@@ -182,9 +182,9 @@ public class ConfiguredTreeHandler implements TreeHandler {
 
     private TreeNode marshallTreeNode(Content content) throws RepositoryException {
 
-        AbsolutePath repositoryPath = new AbsolutePath(content.getHandle());
-        AbsolutePath treeRootPath = new AbsolutePath(getRootPath());
-        AbsolutePath treePath = repositoryPath.relativeTo(treeRootPath);
+        StructuredPath repositoryPath = new StructuredPath(content.getHandle());
+        StructuredPath treeRootPath = new StructuredPath(getRootPath());
+        StructuredPath treePath = repositoryPath.relativeTo(treeRootPath);
 
         TreeNode treeNode = new TreeNode();
         treeNode.setName(content.getName());
@@ -228,7 +228,7 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return values;
     }
 
-    private Content getContent(AbsolutePath path) throws RepositoryException {
+    private Content getContent(StructuredPath path) throws RepositoryException {
 
         HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(getRepository());
 
