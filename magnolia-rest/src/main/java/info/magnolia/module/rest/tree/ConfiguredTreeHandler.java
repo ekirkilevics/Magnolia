@@ -92,9 +92,9 @@ public class ConfiguredTreeHandler implements TreeHandler {
             configuration.initMessages(messages);
     }
 
-    public TreeNodeList getChildren(String path) throws RepositoryException {
+    public TreeNodeList getChildren(StructuredPath path) throws RepositoryException {
 
-        Content content = getContent(getAbsolutePath(path));
+        Content content = getContent(getRepositoryPath(path));
 
         if (content == null)
             return null;
@@ -106,7 +106,7 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return configuration;
     }
 
-    public Object executeCommand(String path, String commandName, Map parameters) throws Exception {
+    public Object executeCommand(StructuredPath path, String commandName, Map parameters) throws Exception {
 
         TreeCommand command = createCommandObject(path, commandName, parameters);
 
@@ -129,7 +129,7 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return marshallTreeNodeChildren((Content) result);
     }
 
-    private TreeCommand createCommandObject(String path, String commandName, Map parameters) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, RepositoryException, Content2BeanException {
+    private TreeCommand createCommandObject(StructuredPath path, String commandName, Map parameters) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, RepositoryException, Content2BeanException {
 
         // TODO: should use this.configNode once the ObservedManager is written
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
@@ -142,7 +142,7 @@ public class ConfiguredTreeHandler implements TreeHandler {
 
         // Common parameters
         command.setRepository(this.repository);
-        command.setPath(getAbsolutePath(path));
+        command.setPath(getRepositoryPath(path));
 
         // Request parameters are set using reflection
         for (Object parameterName : parameters.keySet()) {
@@ -153,8 +153,8 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return command;
     }
 
-    private StructuredPath getAbsolutePath(String relative) {
-        return new StructuredPath(this.getRootPath(), relative);
+    private StructuredPath getRepositoryPath(StructuredPath relative) {
+        return StructuredPath.valueOf(this.getRootPath()).append(relative);
     }
 
     private String getFirstParameter(Map parameters, String name) {
@@ -182,8 +182,8 @@ public class ConfiguredTreeHandler implements TreeHandler {
 
     private TreeNode marshallTreeNode(Content content) throws RepositoryException {
 
-        StructuredPath repositoryPath = new StructuredPath(content.getHandle());
-        StructuredPath treeRootPath = new StructuredPath(getRootPath());
+        StructuredPath repositoryPath = StructuredPath.valueOf(content.getHandle());
+        StructuredPath treeRootPath = StructuredPath.valueOf(getRootPath());
         StructuredPath treePath = repositoryPath.relativeTo(treeRootPath);
 
         TreeNode treeNode = new TreeNode();

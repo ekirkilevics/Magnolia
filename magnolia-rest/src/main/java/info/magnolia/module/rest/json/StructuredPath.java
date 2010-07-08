@@ -40,26 +40,19 @@ import org.apache.commons.lang.StringUtils;
  * <p/>
  * Treats the empty string as the root node.
  */
-public class StructuredPath {
+public final class StructuredPath {
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[]{};
-
-    public static final StructuredPath ROOT = new StructuredPath(EMPTY_STRING_ARRAY, 0, 0);
+    public static final StructuredPath ROOT = new StructuredPath(null, 0, 0);
 
     private final String[] segments;
     private final int startIndex;
     private final int endIndex;
 
-    public StructuredPath(String path) {
-        this(split(path));
-    }
-
-    public StructuredPath(StructuredPath base, String relative) {
-        this(add(base.segments, base.startIndex, base.endIndex, split(relative)));
-    }
-
-    public StructuredPath(String base, String relative) {
-        this(add(split(base), split(relative)));
+    public static StructuredPath valueOf(String path) {
+        String[] segments = split(path);
+        if (segments == null)
+            return ROOT;
+        return new StructuredPath(segments);
     }
 
     private StructuredPath(String[] segments) {
@@ -73,7 +66,7 @@ public class StructuredPath {
     }
 
     public boolean isRoot() {
-        return startIndex == endIndex;
+        return segments == null;
     }
 
     public String toString() {
@@ -95,6 +88,8 @@ public class StructuredPath {
     public StructuredPath parent() {
         if (isRoot())
             throw new IllegalStateException("Cannot return parent of root node");
+        if (depth() == 1)
+            return ROOT;
         return new StructuredPath(segments, startIndex, endIndex - 1);
     }
 
@@ -111,16 +106,34 @@ public class StructuredPath {
             throw new IllegalArgumentException("Segment to append must not be empty");
         if (name.indexOf('/') != -1)
             throw new IllegalArgumentException("Segment to append must not contain a '/' character");
+        if (isRoot())
+            return new StructuredPath(new String[]{name});
         return new StructuredPath(add(segments, startIndex, endIndex, name));
     }
 
     public StructuredPath appendPath(String path) {
-        return new StructuredPath(this, path);
+        if (isRoot())
+            return valueOf(path);
+        String[] second = split(path);
+        if (second == null)
+            return this;
+        return new StructuredPath(add(segments, startIndex, endIndex, second));
+    }
+
+    public StructuredPath append(StructuredPath path) {
+        if (path.isRoot())
+            return this;
+        if (isRoot())
+            return path;
+        return new StructuredPath(add(segments, startIndex, endIndex, path.segments, path.startIndex, path.endIndex));
     }
 
     public StructuredPath relativeTo(StructuredPath absolute) {
 
-        // They must have the same depth
+        if (absolute.isRoot())
+            return this;
+
+        // The other instance must be shorter or equal
         if (absolute.depth() > depth())
             throw new IllegalArgumentException("");
 
@@ -145,10 +158,11 @@ public class StructuredPath {
 
     private static String[] split(String path) {
         if (path == null || path.length() == 0)
-            return EMPTY_STRING_ARRAY;
+            return null;
         if (path.indexOf('/') == -1)
             return new String[]{path};
-        return StringUtils.split(path, '/');
+        String[] segments = StringUtils.split(path, '/');
+        return segments.length != 0 ? segments : null;
     }
 
     private static String[] add(String[] array, int startIndex, int endIndex, String element) {
@@ -158,14 +172,14 @@ public class StructuredPath {
         return newArray;
     }
 
-    private static String[] add(String[] first, String[] second) {
-        return add(first, 0, first.length, second);
+    private static String[] add(String[] first, int startIndex, int endIndex, String[] second) {
+        return add(first, startIndex, endIndex, second, 0, second.length);
     }
 
-    private static String[] add(String[] first, int startIndex, int endIndex, String[] second) {
-        String[] newArray = new String[(endIndex - startIndex) + second.length];
+    private static String[] add(String[] first, int startIndex, int endIndex, String[] second, int secondStartIndex, int secondEndIndex) {
+        String[] newArray = new String[(endIndex - startIndex) + (secondEndIndex - secondStartIndex)];
         System.arraycopy(first, startIndex, newArray, 0, (endIndex - startIndex));
-        System.arraycopy(second, 0, newArray, (endIndex - startIndex), second.length);
+        System.arraycopy(second, secondStartIndex, newArray, (endIndex - startIndex), (secondEndIndex - secondStartIndex));
         return newArray;
     }
 

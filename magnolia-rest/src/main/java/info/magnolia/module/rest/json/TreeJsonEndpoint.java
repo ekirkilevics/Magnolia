@@ -63,7 +63,7 @@ public class TreeJsonEndpoint {
         if (treeHandler == null)
             return null;
 
-        return treeHandler.getChildren("/" + path);
+        return treeHandler.getChildren(StructuredPath.valueOf(path));
     }
 
     @POST
@@ -90,8 +90,8 @@ public class TreeJsonEndpoint {
         if (treeHandler == null)
             return null;
 
-        StructuredPath p = new StructuredPath(path);
-        String treePath = p.parentPath();
+        StructuredPath p = StructuredPath.valueOf(path);
+        StructuredPath treePath = p.parent();
         String command = p.name();
 
         return treeHandler.executeCommand(treePath, command, request.getParameterMap());

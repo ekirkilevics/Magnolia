@@ -88,7 +88,7 @@ public class WebsiteJsonEndpoint {
 
         CreateWebsiteNodeCommand command = new CreateWebsiteNodeCommand();
         command.setRepository(ContentRepository.WEBSITE);
-        command.setPath(new StructuredPath(path));
+        command.setPath(StructuredPath.valueOf(path));
         command.setItemType("mgnl:content");
 
         Content content = command.execute();
@@ -117,7 +117,7 @@ public class WebsiteJsonEndpoint {
     @Path("{path:(.)*}/delete")
     public WebsitePage delete(@PathParam("path") String path) throws Exception {
 
-        StructuredPath p = new StructuredPath(path);
+        StructuredPath p = StructuredPath.valueOf(path);
 
         if (p.isRoot()) {
             // cant delete the root node
@@ -226,7 +226,7 @@ public class WebsiteJsonEndpoint {
     }
 
     private Content getContent(String path) throws RepositoryException {
-        return getContent(new StructuredPath(path));
+        return getContent(StructuredPath.valueOf(path));
     }
 
     private Content getContent(StructuredPath path) throws RepositoryException {

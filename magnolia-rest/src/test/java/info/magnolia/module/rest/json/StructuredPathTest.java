@@ -39,105 +39,96 @@ public class StructuredPathTest extends TestCase {
 
     public void testConstructors() {
 
-        assertEquals("/", new StructuredPath(null).path());
-        assertEquals("/", new StructuredPath("").path());
-        assertEquals("/", new StructuredPath("/").path());
-        assertEquals("/", new StructuredPath("/////").path());
-
-        assertEquals("/test", new StructuredPath("", "test").path());
-        assertEquals("/foo/bar", new StructuredPath("", "foo/bar").path());
-        assertEquals("/foo/bar", new StructuredPath("foo", "bar").path());
-        assertEquals("/foo/bar", new StructuredPath("foo/bar", "").path());
-        assertEquals("/foo/bar", new StructuredPath("foo/bar", "/").path());
-        assertEquals("/foo/bar", new StructuredPath("/foo", "/bar").path());
-
-        assertEquals("/foo/bar", new StructuredPath(new StructuredPath("/foo"), "/bar").path());
+        assertEquals("/", path(null).path());
+        assertEquals("/", path("").path());
+        assertEquals("/", path("/").path());
+        assertEquals("/", path("/////").path());
     }
 
     public void testIsRoot() {
 
-        assertTrue(new StructuredPath(null).isRoot());
-        assertTrue(new StructuredPath("").isRoot());
-        assertTrue(new StructuredPath("/").isRoot());
-        assertTrue(new StructuredPath("//").isRoot());
-        assertFalse(new StructuredPath("untitled").isRoot());
-        assertFalse(new StructuredPath("/untitled").isRoot());
-        assertFalse(new StructuredPath("     ").isRoot());
-        assertFalse(new StructuredPath(" /").isRoot());
-        assertFalse(new StructuredPath("/ ").isRoot());
+        assertTrue(path(null).isRoot());
+        assertTrue(path("").isRoot());
+        assertTrue(path("/").isRoot());
+        assertTrue(path("//").isRoot());
+        assertFalse(path("untitled").isRoot());
+        assertFalse(path("/untitled").isRoot());
+        assertFalse(path("     ").isRoot());
+        assertFalse(path(" /").isRoot());
+        assertFalse(path("/ ").isRoot());
     }
 
     public void testPath() {
 
-        assertEquals("/", new StructuredPath("").path());
-        assertEquals("/", new StructuredPath("/").path());
-        assertEquals("/untitled", new StructuredPath("untitled").path());
-        assertEquals("/untitled", new StructuredPath("/untitled").path());
+        assertEquals("/", path("").path());
+        assertEquals("/", path("/").path());
+        assertEquals("/untitled", path("untitled").path());
+        assertEquals("/untitled", path("/untitled").path());
 
-        assertEquals("/1/2/3/4/5", new StructuredPath("/1/2/3/4/5/").path());
+        assertEquals("/1/2/3/4/5", path("/1/2/3/4/5/").path());
     }
 
     public void testToString() {
 
-        assertEquals("/", new StructuredPath("").toString());
-        assertEquals("/", new StructuredPath("/").toString());
-        assertEquals("/untitled", new StructuredPath("untitled").toString());
-        assertEquals("/untitled", new StructuredPath("/untitled").toString());
+        assertEquals("/", path("").toString());
+        assertEquals("/", path("/").toString());
+        assertEquals("/untitled", path("untitled").toString());
+        assertEquals("/untitled", path("/untitled").toString());
     }
 
     public void testParentPath() {
 
         try {
-            new StructuredPath("").parentPath();
+            path("").parentPath();
             fail();
         } catch (IllegalStateException expected) {
         }
         try {
-            new StructuredPath("/").parentPath();
+            path("/").parentPath();
             fail();
         } catch (IllegalStateException expected) {
         }
 
-        assertEquals("/untitled", new StructuredPath("untitled/sub").parentPath());
-        assertEquals("/untitled", new StructuredPath("/untitled/sub").parentPath());
+        assertEquals("/untitled", path("untitled/sub").parentPath());
+        assertEquals("/untitled", path("/untitled/sub").parentPath());
 
-        assertEquals("/untitled/sub", new StructuredPath("/untitled/sub/node").parentPath());
+        assertEquals("/untitled/sub", path("/untitled/sub/node").parentPath());
     }
 
     public void testParent() {
 
         try {
-            new StructuredPath("").parent();
+            path("").parent();
             fail();
         } catch (IllegalStateException expected) {
         }
         try {
-            new StructuredPath("/").parent();
+            path("/").parent();
             fail();
         } catch (IllegalStateException expected) {
         }
 
-        assertEquals("/", new StructuredPath("untitled").parent().path());
-        assertEquals("/", new StructuredPath("/untitled").parent().path());
+        assertEquals("/", path("untitled").parent().path());
+        assertEquals("/", path("/untitled").parent().path());
 
-        assertEquals("/untitled", new StructuredPath("untitled/sub").parent().path());
-        assertEquals("/untitled", new StructuredPath("/untitled/sub").parent().path());
+        assertEquals("/untitled", path("untitled/sub").parent().path());
+        assertEquals("/untitled", path("/untitled/sub").parent().path());
 
-        assertEquals("/untitled/sub", new StructuredPath("/untitled/sub/node").parent().path());
+        assertEquals("/untitled/sub", path("/untitled/sub/node").parent().path());
     }
 
     public void testName() {
         
-        assertEquals("/", new StructuredPath("").name());
-        assertEquals("untitled", new StructuredPath("/untitled").name());
-        assertEquals("sub", new StructuredPath("/untitled/sub").name());
-        assertEquals("node", new StructuredPath("/untitled/sub/node").name());
+        assertEquals("/", path("").name());
+        assertEquals("untitled", path("/untitled").name());
+        assertEquals("sub", path("/untitled/sub").name());
+        assertEquals("node", path("/untitled/sub/node").name());
 
     }
 
     public void testAppendSegment() {
 
-        StructuredPath path = new StructuredPath("untitled").appendSegment("sub");
+        StructuredPath path = path("untitled").appendSegment("sub");
 
         assertEquals("/untitled/sub", path.path());
         assertEquals("sub", path.name());
@@ -155,12 +146,14 @@ public class StructuredPathTest extends TestCase {
             fail();
         } catch (IllegalArgumentException expected) {
         }
+
+        StructuredPath.ROOT.appendSegment("qwe");
     }
 
     public void testRelativeTo() {
 
-        StructuredPath deep = new StructuredPath("/aaa/bbb/ccc/ddd");
-        StructuredPath shallow = new StructuredPath("/aaa/bbb");
+        StructuredPath deep = path("/aaa/bbb/ccc/ddd");
+        StructuredPath shallow = path("/aaa/bbb");
 
         assertEquals("/ccc/ddd", deep.relativeTo(shallow).path());
 
@@ -173,14 +166,38 @@ public class StructuredPathTest extends TestCase {
         }
 
         try {
-            new StructuredPath("/foo").relativeTo(new StructuredPath("/bar"));
+            path("/foo").relativeTo(path("/bar"));
             fail();
         } catch (IllegalArgumentException expected) {
         }
+
+        assertEquals("/foo", path("/foo").relativeTo(StructuredPath.ROOT).path());
+
+        assertEquals("/", StructuredPath.ROOT.relativeTo(StructuredPath.ROOT).path());
     }
 
     public void testAppendPath() {
 
-        assertEquals("/foo/bar/zed", new StructuredPath("/foo").appendPath("bar/zed").path());
+        assertEquals("/foo/bar/zed", path("/foo").appendPath("bar/zed").path());
+    }
+
+    public void testAppend() {
+
+        assertEquals("/", StructuredPath.ROOT.append(StructuredPath.ROOT).path());
+        assertEquals("/", path("").append(path(null)).path());
+        assertEquals("/foo", path("").append(path("foo")).path());
+        assertEquals("/foo/bar/zed", path("/foo").append(path("bar/zed")).path());
+    }
+
+    public void testLength() {
+        assertEquals(1, StructuredPath.ROOT.length());
+        assertEquals(1, path(null).length());
+        assertEquals(1, path("").length());
+        assertEquals(4, path("foo").length());
+        assertEquals(8, path("foo/bar").length());
+    }
+
+    private StructuredPath path(String path) {
+        return StructuredPath.valueOf(path);
     }
 }
