@@ -46,6 +46,8 @@ public class EditControl extends AbstractDialogItem {
     private String name;
     private String label;
     private String value;
+    private String description;
+    private boolean required;
 
     public String getType() {
         return type;
@@ -99,5 +101,21 @@ public class EditControl extends AbstractDialogItem {
         if (this.value != null) {
             storageNode.setNodeData(this.name, this.value);
         }
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -92,6 +92,8 @@ public class ConfiguredDialogFactory {
         editControl.setType("edit");
         editControl.setName(configNode.getName());
         editControl.setLabel(configNode.getNodeData("label").getString());
+        editControl.setRequired(configNode.getNodeData("required").getBoolean());
+        editControl.setDescription(configNode.getNodeData("description").getString());
         return editControl;
     }
 

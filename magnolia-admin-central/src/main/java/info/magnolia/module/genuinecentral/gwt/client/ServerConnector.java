@@ -94,6 +94,8 @@ public class ServerConnector {
         DIALOG_MODEL_TYPE.addField("value");
         DIALOG_MODEL_TYPE.addField("type");
         DIALOG_MODEL_TYPE.addField("label");
+        DIALOG_MODEL_TYPE.addField("required");
+        DIALOG_MODEL_TYPE.addField("description");
         DIALOG_MODEL_TYPE.addField("subs");
 
     }
