@@ -79,7 +79,7 @@ public class TreeJsonEndpoint {
     }
 
     @POST
-    @Path("/{treeName}/{path:(.)*}/command")
+    @Path("/{treeName}/{path:(.)*}")
     public Object executeCommand(
             @PathParam("treeName") String treeName,
             @PathParam("path") String path,
@@ -90,6 +90,10 @@ public class TreeJsonEndpoint {
         if (treeHandler == null)
             return null;
 
-        return treeHandler.executeCommand(path, request.getParameter("command"), request.getParameterMap());
+        AbsolutePath p = new AbsolutePath(path);
+        String treePath = p.parentPath();
+        String command = p.name();
+
+        return treeHandler.executeCommand(treePath, command, request.getParameterMap());
     }
 }

@@ -87,8 +87,11 @@ public class WebsiteJsonEndpoint {
     public WebsitePageList create(@PathParam("path") String path) throws RepositoryException {
 
         CreateWebsiteNodeCommand command = new CreateWebsiteNodeCommand();
+        command.setRepository(ContentRepository.WEBSITE);
+        command.setPath(new AbsolutePath(path));
+        command.setItemType("mgnl:content");
 
-        Content content = command.executeCommand(ContentRepository.WEBSITE, new AbsolutePath(path), null, "mgnl:content");
+        Content content = command.execute();
 
         WebsitePageList list = new WebsitePageList();
         list.add(marshallNode(content));
@@ -121,8 +124,10 @@ public class WebsiteJsonEndpoint {
         }
 
         DeleteNodeCommand command = new DeleteNodeCommand();
+        command.setRepository(ContentRepository.WEBSITE);
+        command.setPath(p);
 
-        command.executeCommand(ContentRepository.WEBSITE, p);
+        command.execute();
 
         return new WebsitePage();
     }

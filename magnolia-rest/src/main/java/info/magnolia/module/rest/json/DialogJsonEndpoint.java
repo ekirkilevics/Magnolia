@@ -153,8 +153,7 @@ public class DialogJsonEndpoint {
                 nodeCollection = rootNode.createContent(nodeCollectionName, ItemType.CONTENTNODE);
                 log.debug("Create - {}" + nodeCollection.getHandle()); //$NON-NLS-1$
             }
-        }
-        else {
+        } else {
             nodeCollection = rootNode;
         }
 
@@ -162,8 +161,7 @@ public class DialogJsonEndpoint {
 
         if (StringUtils.isNotEmpty(nodeName)) {
             node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE.getSystemName());
-        }
-        else {
+        } else {
             nodeName = info.magnolia.cms.core.Path.getUniqueLabel(rootNode.getHierarchyManager(), nodeCollection.getHandle(), "0"); //$NON-NLS-1$
             node = nodeCollection.createContent(nodeName, ItemType.CONTENTNODE.getSystemName());
         }

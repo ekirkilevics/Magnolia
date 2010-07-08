@@ -44,7 +44,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.rest.tree.RepositoryNode;
 import info.magnolia.module.rest.tree.RepositoryNodeData;
 import info.magnolia.module.rest.tree.TreeNode;
-import info.magnolia.module.rest.tree.TreeNodeData;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
