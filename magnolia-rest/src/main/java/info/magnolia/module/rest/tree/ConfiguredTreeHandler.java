@@ -37,6 +37,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.control.Tree;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.rest.json.AbsolutePath;
@@ -45,6 +48,7 @@ import info.magnolia.module.rest.tree.commands.CreateWebsiteNodeCommand;
 import info.magnolia.module.rest.tree.commands.DeleteNodeCommand;
 import info.magnolia.module.rest.tree.config.JsonTreeColumn;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 import java.util.*;
@@ -60,6 +64,23 @@ public class ConfiguredTreeHandler implements TreeHandler {
     private Comparator sortComparator;
 
     private String i18nBaseName;
+    private Messages messages;
+
+    public void init() {
+        // called by content2bean
+
+        initMessages();
+    }
+
+    private void initMessages() {
+
+        messages = MessagesManager.getMessages();
+        if (StringUtils.isNotEmpty(i18nBaseName))
+            messages = MessagesUtil.chain(i18nBaseName, messages);
+
+        if (configuration != null)
+            configuration.initMessages(messages);
+    }
 
     public TreeNodeList getChildren(String path) throws RepositoryException {
 
@@ -72,9 +93,6 @@ public class ConfiguredTreeHandler implements TreeHandler {
     }
 
     public JsonTreeConfiguration getConfiguration() {
-
-        // TODO localization, columns and menu items need to be able to do localization using the basename from here
-
         return configuration;
     }
 

@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.rest.tree.config;
 
+import info.magnolia.cms.i18n.Messages;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ import java.util.List;
  * Configuration for a tree view.
  */
 @XmlRootElement
-public class JsonTreeConfiguration {
+public class JsonTreeConfiguration extends TreeConfigurationItem {
 
     private List<JsonTreeColumn> columns = new ArrayList<JsonTreeColumn>();
     private List<JsonMenuItem> contextMenuItems = new ArrayList<JsonMenuItem>();
@@ -86,5 +88,18 @@ public class JsonTreeConfiguration {
 
     public void addFunctionMenuItem(JsonMenuItem menuItem) {
         this.functionMenuItems.add(menuItem);
+    }
+
+    public void initMessages(Messages parentMessages) {
+        super.initMessages(parentMessages);
+        for (JsonTreeColumn column : columns) {
+            column.initMessages(getMessages());
+        }
+        for (JsonMenuItem menuItem : contextMenuItems) {
+            menuItem.initMessages(getMessages());
+        }
+        for (JsonMenuItem menuItem : functionMenuItems) {
+            menuItem.initMessages(getMessages());
+        }
     }
 }

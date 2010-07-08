@@ -56,11 +56,15 @@ public class AbsolutePathTest extends TestCase {
 
     public void testIsRoot() {
 
+        assertTrue(new AbsolutePath(null).isRoot());
         assertTrue(new AbsolutePath("").isRoot());
         assertTrue(new AbsolutePath("/").isRoot());
+        assertTrue(new AbsolutePath("//").isRoot());
         assertFalse(new AbsolutePath("untitled").isRoot());
         assertFalse(new AbsolutePath("/untitled").isRoot());
         assertFalse(new AbsolutePath("     ").isRoot());
+        assertFalse(new AbsolutePath(" /").isRoot());
+        assertFalse(new AbsolutePath("/ ").isRoot());
     }
 
     public void testPath() {
@@ -131,7 +135,7 @@ public class AbsolutePathTest extends TestCase {
 
     }
 
-    public void testAppend() {
+    public void testAppendSegment() {
 
         AbsolutePath path = new AbsolutePath("untitled").appendSegment("sub");
 
@@ -139,8 +143,15 @@ public class AbsolutePathTest extends TestCase {
         assertEquals("sub", path.name());
         assertEquals("untitled", path.parent().name());
 
+        assertCantAppendSegment(path, null);
+        assertCantAppendSegment(path, "");
+        assertCantAppendSegment(path, "/");
+        assertCantAppendSegment(path, "paths/are/not/allowed");
+    }
+
+    private void assertCantAppendSegment(AbsolutePath path, String s) {
         try {
-            path.appendSegment("not/allowed");
+            path.appendSegment(s);
             fail();
         } catch (IllegalArgumentException expected) {
         }

@@ -41,7 +41,7 @@ package info.magnolia.module.rest.tree.config;
  *
  * If the separator property is true no other values apply.
  */
-public class JsonMenuItem {
+public class JsonMenuItem extends TreeConfigurationItem {
 
     private String name;
     private String label;
@@ -74,7 +74,7 @@ public class JsonMenuItem {
     }
 
     public String getLabel() {
-        return label;
+        return getMessage(label);
     }
 
     public void setLabel(String label) {

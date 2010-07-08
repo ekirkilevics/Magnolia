@@ -33,39 +33,42 @@
  */
 package info.magnolia.module.rest.tree.config;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesUtil;
+import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
+public class TreeConfigurationItem {
 
-/**
- * A column in a tree view. Has a title and a type that indicates what should be displayed in the column. The value
- * of JsonTreeNode.columnValues will match the type of the column.
- */
-public abstract class JsonTreeColumn extends TreeConfigurationItem {
+    private String i18nBaseName;
+    private Messages messages;
 
-    private String title;
-    private int width = 1;
-
-    public String getTitle() {
-        return getMessage(title);
+    public String getI18nBaseName() {
+        return i18nBaseName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setI18nBaseName(String i18nBaseName) {
+        this.i18nBaseName = i18nBaseName;
     }
 
-    public int getWidth() {
-        return width;
+    public Messages getMessages() {
+        return messages;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public void setMessages(Messages messages) {
+        this.messages = messages;
     }
 
-    public abstract Object getValue(Content storageNode) throws RepositoryException;
+    public void initMessages(Messages parentMessages) {
+        if (StringUtils.isEmpty(i18nBaseName))
+            messages = parentMessages;
+        else
+            messages = MessagesUtil.chain(i18nBaseName, parentMessages);
+    }
 
-    public abstract Object getValue(Content storageNode, NodeData nodeData) throws RepositoryException;
-
-    public abstract String getType();
+    public String getMessage(String key) {
+        Messages messages = getMessages();
+        if (messages == null)
+            return key;
+        return messages.getWithDefault(key, key);
+    }
 }
