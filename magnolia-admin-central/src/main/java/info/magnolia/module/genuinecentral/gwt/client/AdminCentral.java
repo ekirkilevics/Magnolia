@@ -46,7 +46,6 @@ import java.util.Map;
 import com.extjs.gxt.themes.client.Slate;
 import com.extjs.gxt.ui.client.GXT;
 import com.extjs.gxt.ui.client.Registry;
-import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.core.XDOM;
@@ -54,9 +53,11 @@ import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.LoadEvent;
 import com.extjs.gxt.ui.client.data.Loader;
 import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.event.LoadListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Dialog;
 import com.extjs.gxt.ui.client.widget.HtmlContainer;
 import com.extjs.gxt.ui.client.widget.TabItem;
@@ -64,14 +65,15 @@ import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.DateField;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.AccordionLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.layout.FormLayout;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -94,7 +96,6 @@ public class AdminCentral implements EntryPoint {
     private static final String DEFAULT_TREE_CONFIG = "defaultTreeConfig";
 
     private Viewport viewport;
-    private TabPanel menuPanel;
 
     public AdminCentral() {
 /*        dialogRegistry = new DialogRegistryClient();
@@ -323,21 +324,41 @@ public class AdminCentral implements EntryPoint {
 
         createDefaultTreeConfig();
 
-        createDefaultMenu();
-
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
-        viewport.add(this.menuPanel, new BorderLayoutData(LayoutRegion.CENTER));
-
 
         createNorth();
-
+        createVerticalNavigation();
+        createDefaultMenu();
         viewport.show();
         RootPanel.get().add(viewport);
     }
 
     private void createDefaultTreeConfig() {
         Registry.register(DEFAULT_TREE_CONFIG, new DefaultTreeConfig());
+    }
+
+    private void createVerticalNavigation(){
+        ContentPanel west = new ContentPanel();
+        west.setBodyBorder(false);
+        west.setLayout(new AccordionLayout());
+
+        ContentPanel nav = new ContentPanel();
+        nav.setHeading("Navigation");
+        nav.setBorders(false);
+        nav.setBodyStyle("fontSize: 12px; padding: 6px");
+        nav.addText("kjfkjksjfkjskfjksjfkj");
+        west.add(nav);
+
+        ContentPanel settings = new ContentPanel();
+        settings.setHeading("Settings");
+        settings.setBorders(false);
+        west.add(settings);
+
+        BorderLayoutData westData = new BorderLayoutData(LayoutRegion.WEST, 200, 100, 300);
+        westData.setMargins(new Margins(5, 0, 5, 5));
+        westData.setCollapsible(true);
+        viewport.add(west, westData);
     }
 
     private void createDefaultMenu() {
@@ -347,18 +368,20 @@ public class AdminCentral implements EntryPoint {
         // TODO: connect to config tree instead of website ... right now just showing different config for same workspace
         entries.add(createTab("Config", "website", "/", DEFAULT_TREE_CONFIG));
 
-        this.menuPanel = new TabPanel();
-
+        final TabPanel menuPanel= new TabPanel();
         menuPanel.setResizeTabs(true);
+        menuPanel.setItemId("menuPanel");
 
         for (Tab entry: entries) {
             for (ModelData child : entry.getChildren()) {
-                addMenuEntry(entry.getName(), child);
+                addMenuEntry(entry.getName(), menuPanel, child);
             }
         }
+
+        viewport.add(menuPanel, new BorderLayoutData(LayoutRegion.CENTER));
     }
 
-    private Tab createTab(String name, String treeName, String treePath, String config) {
+    private Tab createTab(final String name, final String treeName, final String treePath, final String config) {
         Tab treeGrids = new Tab(name);
         MgnlTreeGrid tree = new MgnlTreeGrid(config);
         tree.setTree(treeName);
@@ -368,7 +391,7 @@ public class AdminCentral implements EntryPoint {
         return treeGrids;
     }
 
-    private void addMenuEntry(String title, Object menuItem) {
+    private void addMenuEntry(final String title, final TabPanel menu, final Object menuItem) {
         // TODO: right now the menu items are tab entries, but that will change later
         TabItem treeTab = new TabItem(title);
         treeTab.setScrollMode(Scroll.AUTO);
@@ -379,12 +402,9 @@ public class AdminCentral implements EntryPoint {
         }
 
         treeTab.add(tab.getItem());
-        getMenu().add(treeTab);
+        menu.add(treeTab);
     }
 
-    private TabPanel getMenu() {
-        return this.menuPanel;
-    }
 
     private void createNorth() {
         StringBuffer sb = new StringBuffer();
