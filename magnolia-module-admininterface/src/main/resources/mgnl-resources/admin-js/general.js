@@ -43,17 +43,17 @@ var mgnlTreeMoveNode=false;
 
 function getMousePos(evt)
     {
-    var x,y;
-    if (document.all)
-        {
-        x=window.event.clientX+document.body.scrollLeft;
-        y=window.event.clientY+document.body.scrollTop;
-        }
-    else
-        {
-        x=evt.pageX;
-        y=evt.pageY;
-        }
+    if (!evt) { evt = window.event; }
+    if (!document || !evt || !document.body || !document.documentElement) { return; }
+    
+    var x = evt.pageX || (evt.clientX +
+    (document.documentElement.scrollLeft || document.body.scrollLeft || 0) -
+    (document.documentElement.clientLeft || 0));
+    
+    var y = evt.pageY || (evt.clientY +
+    (document.documentElement.scrollTop || document.body.scrollTop || 0) -
+    (document.documentElement.clientTop || 0));
+    
     xMousePos = x;
     yMousePos = y;
 
