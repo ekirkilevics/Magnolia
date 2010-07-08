@@ -46,6 +46,7 @@ import java.util.Map;
 import com.extjs.gxt.themes.client.Slate;
 import com.extjs.gxt.ui.client.GXT;
 import com.extjs.gxt.ui.client.Registry;
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.Style.LayoutRegion;
 import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.core.XDOM;
@@ -63,6 +64,7 @@ import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.DateField;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
@@ -413,7 +415,8 @@ public class AdminCentral implements EntryPoint {
             @Override
             public void loaderLoad(LoadEvent le) {
                 List<FileModel> data = le.getData();
-                FormData formData = new FormData();
+                FormData formData = new FormData("80%");
+
                 TabPanel tabs = new TabPanel();
                 tabs.setTabScroll(true);
                 int tabsCount = 1;
@@ -434,6 +437,11 @@ public class AdminCentral implements EntryPoint {
                                 textField.setFieldLabel((String)control.get("label", "no label"));
                                 textField.setValue((String)control.get("value", ""));
                                 textField.setAllowBlank(!(Boolean)control.get("required"));
+                                String width = control.get("width");
+                                if(width != null && width.length() > 0){
+                                    //FIXME seems to have no effect at all
+                                    textField.setWidth(width);
+                                }
                                 String description = control.get("description");
                                 if(description != null && description.length() > 0){
                                     textField.setToolTip(description);
@@ -462,7 +470,7 @@ public class AdminCentral implements EntryPoint {
     private Dialog createDialog(Object object) {
         final Dialog dialog = new Dialog();
         dialog.setModal(true);
-        dialog.setWidth(500);
+        dialog.setWidth(600);
         dialog.setHeight(500);
         dialog.setHeading("I am dialog");
         dialog.addButton(new Button("Cancel"));

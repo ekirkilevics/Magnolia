@@ -35,34 +35,25 @@ package info.magnolia.module.genuinecentral.gwt.client;
 
 import static com.google.gwt.http.client.RequestBuilder.GET;
 import static com.google.gwt.http.client.RequestBuilder.POST;
+import info.magnolia.module.genuinecentral.gwt.client.data.MgnlJsonLoadResultReader;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.extjs.gxt.ui.client.data.BaseLoader;
 import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BaseTreeLoader;
-import com.extjs.gxt.ui.client.data.DataField;
 import com.extjs.gxt.ui.client.data.JsonLoadResultReader;
 import com.extjs.gxt.ui.client.data.Loader;
-import com.extjs.gxt.ui.client.data.BaseLoader;
-import com.extjs.gxt.ui.client.data.ListLoadResult;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
 import com.extjs.gxt.ui.client.store.TreeStore;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
 public class ServerConnector {
 
@@ -96,6 +87,7 @@ public class ServerConnector {
         DIALOG_MODEL_TYPE.addField("label");
         DIALOG_MODEL_TYPE.addField("required");
         DIALOG_MODEL_TYPE.addField("description");
+        DIALOG_MODEL_TYPE.addField("width");
         DIALOG_MODEL_TYPE.addField("subs");
 
     }
@@ -202,113 +194,9 @@ public class ServerConnector {
         return config;
      }
 
-
     private static <T extends BaseModelData> JsonLoadResultReader<List<T>> createConfiguredReader(final ModelType modelType) {
         // TODO: generate model types or use different kind of deserialization !!!
-        JsonLoadResultReader<List<T>> jsonReader = new JsonLoadResultReader<List<T>>(modelType) {
-            private void setValue(ModelData model, JSONValue value, DataField field){
-                String name = field.getName();
-                Class type = field.getType();
-                if (value.isBoolean() != null) {
-                    model.set(name, value.isBoolean().booleanValue());
-                  } else if (value.isNumber() != null) {
-                    if (type != null) {
-                      Double d = value.isNumber().doubleValue();
-                      if (type.equals(Integer.class)) {
-                        model.set(name, d.intValue());
-                      } else if (type.equals(Long.class)) {
-                        model.set(name, d.longValue());
-                      } else if (type.equals(Float.class)) {
-                        model.set(name, d.floatValue());
-                      } else {
-                        model.set(name, d);
-                      }
-                    } else {
-                      model.set(name, value.isNumber().doubleValue());
-                    }
-                  } else if (value.isObject() != null) {
-                    // nothing
-                  } else if (value.isString() != null) {
-                    String s = value.isString().stringValue();
-                    if (type != null) {
-                      if (type.equals(Date.class)) {
-                        if ("timestamp".equals(field.getFormat())) {
-                          Date d = new Date(Long.parseLong(s) * 1000);
-                          model.set(name, d);
-                        } else {
-                          DateTimeFormat format = DateTimeFormat.getFormat(field.getFormat());
-                          Date d = format.parse(s);
-                          model.set(name, d);
-                        }
-                      }
-                    } else {
-                      model.set(name, s);
-                    }
-                  } else if (value.isNull() != null) {
-                    model.set(name, null);
-                  }
-            }
-                protected ListLoadResult<ModelData> newLoadResult(Object loadConfig, List<ModelData> models) {
-                    throw new UnsupportedOperationException("Do not call me!");
-                }
-                protected Object createReturnData(Object loadConfig, List<ModelData> records, int totalCount) {
-                    ArrayList<FileModel> resultList = new ArrayList<FileModel>();
-                    for (ModelData record : records) {
-                        FileModel model = new FileModel(record.getProperties());
-                        resultList.add(model);
-                    }
-                    return resultList;
-                }
-                public java.util.List<T> read(Object loadConfig, Object data) {
-                    JSONObject jsonRoot = null;
-                    if (data instanceof JavaScriptObject) {
-                      jsonRoot = new JSONObject((JavaScriptObject) data);
-                    } else {
-                      jsonRoot = (JSONObject) JSONParser.parse((String) data);
-                    }
-                    JSONArray root = (JSONArray) jsonRoot.get(modelType.getRoot());
-                    int size = root.size();
-                    ArrayList<ModelData> models = new ArrayList<ModelData>();
-                    for (int i = 0; i < size; i++) {
-                      JSONObject obj = (JSONObject) root.get(i);
-                      ModelData model = newModelInstance();
-                      for (int j = 0; j < modelType.getFieldCount(); j++) {
-                        DataField field = modelType.getField(j);
-                        String map = field.getMap() != null ? field.getMap() : field.getName();
-                        JSONValue value = obj.get(map);
-                        if (value == null) continue;
-                        if (value.isArray() != null) {
-                            JSONArray nested = (JSONArray) value;
-                            int nestedSize = nested.size();
-                            List<ModelData> nestedModels = new ArrayList<ModelData>();
-                            for(int n=0; n < nestedSize; n++){
-                                JSONObject nestedObj = (JSONObject) nested.get(n);
-                                ModelData nestedModel = newModelInstance();
-                                for (int k = 0; k < modelType.getFieldCount(); k++) {
-                                    field = modelType.getField(k);
-                                    map = field.getMap() != null ? field.getMap() : field.getName();
-                                    value = nestedObj.get(map);
-                                    if (value == null) continue;
-                                    setValue(nestedModel, value, field);
-                                }
-                                nestedModels.add(nestedModel);
-                                model.set("subs", nestedModels);
-                            }
-                        } else {
-                            setValue(model, value, field);
-                        }
-                      }
-                      models.add(model);
-                    }
-                    int totalCount = models.size();
-                    if (modelType.getTotalName() != null) {
-                      totalCount = getTotalCount(jsonRoot);
-                    }
-                    return (List<T>) createReturnData(loadConfig, models, totalCount);
-                };
-            } ;
-
-        return jsonReader;
+        return new MgnlJsonLoadResultReader<List<T>>(modelType);
     }
 
     public static void createContent(String treeName, final FileModel folder, final TreeStore<FileModel> store) {
