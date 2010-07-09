@@ -242,12 +242,7 @@ public class ServerConnector {
 
             public void onResponseReceived(Request request, Response response) {
                 String responseText = response.getText();
-                System.out.println("got response: " + responseText);
-                System.out.println("Begin parsing response in an object");
-                // TODO: remove this after service return created child on create
-                responseText = "{children:[{\"name\":\"untitled"+store.getChildCount()+"\",\"path\":\""+path+"/untitled"+store.getChildCount()+"\",\"status\":\"modified\",\"template\":\"\",\"title\":\"\",\"availableTemplates\":[],\"uuid\":\"0c7fa58a-90fa-4392-86b4-7f9b95e0352b"+store.getChildCount()+"\",\"hasChildren\":false}]}";
                 FileModel child = jsonTreeReader.read(null, responseText).get(0);
-                System.out.println("Child:" + child);
                 if (folder != null) {
                     if (store.getChildCount(folder) == 0) {
                         //w/o child yet ... need to convert into a folder first

@@ -68,6 +68,7 @@ import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.tips.ToolTipConfig;
+import com.extjs.gxt.ui.client.widget.treegrid.CellTreeGridSelectionModel;
 import com.extjs.gxt.ui.client.widget.treegrid.EditorTreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
@@ -195,8 +196,18 @@ public class MgnlTreeGrid extends LayoutContainer {
 
         insert.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
-                FileModel folder = (FileModel) tree.getSelectionModel().getSelectedItem();
-                System.out.println("Folder: " + folder + "; tree:" + treeName + "; currentPath:" + path);
+                FileModel folder = null;
+                if (tree.getSelectionModel() instanceof CellTreeGridSelectionModel) {
+                    // this model is specific to the EditorTreeGrid
+                    CellTreeGridSelectionModel<ModelData> selection = (CellTreeGridSelectionModel) tree.getSelectionModel();
+                    if (selection.getSelectCell() == null) {
+                        folder = null;
+                    } else {
+                        folder = (FileModel) selection.getSelectCell().model;
+                    }
+                } else {
+                    folder = (FileModel) tree.getSelectionModel().getSelectedItem();
+                }
                 // as ugly as it is we need callback from the request to server to update store
                 ServerConnector.createContent(treeName, folder, store);
             }
