@@ -39,6 +39,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class RestEndpointManager extends ObservedManager {
             if (nodeData.isExist()) {
                 String clazz = nodeData.getString();
                 endpointClasses.add(clazz);
-                if (endpointRegistrar != null) {
+                if (endpointRegistrar != null && StringUtils.isNotEmpty(clazz)) {
                     registerEndpoint(endpointRegistrar, clazz);
                 }
             }
