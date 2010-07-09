@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.genuinecentral.gwt.client;
+package info.magnolia.module.genuinecentral.gwt.client.models;
 
 import java.util.Map;
 

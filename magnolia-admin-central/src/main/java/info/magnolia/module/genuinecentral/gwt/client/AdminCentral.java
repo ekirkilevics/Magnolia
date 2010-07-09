@@ -35,6 +35,9 @@ package info.magnolia.module.genuinecentral.gwt.client;
 
 
 
+import info.magnolia.module.genuinecentral.gwt.client.models.DialogModel;
+import info.magnolia.module.genuinecentral.gwt.client.models.FileModel;
+import info.magnolia.module.genuinecentral.gwt.client.models.MenuModel;
 import info.magnolia.module.genuinecentral.gwt.client.tree.DefaultTreeConfig;
 
 import java.util.ArrayList;
@@ -53,7 +56,6 @@ import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.LoadEvent;
 import com.extjs.gxt.ui.client.data.Loader;
 import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.event.EventType;
 import com.extjs.gxt.ui.client.event.LoadListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.ThemeManager;
@@ -73,7 +75,6 @@ import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.layout.FormLayout;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -343,15 +344,17 @@ public class AdminCentral implements EntryPoint {
         west.setBodyBorder(false);
         west.setLayout(new AccordionLayout());
 
+        Loader<List<MenuModel>> store = ServerConnector.getAdminCentralMenuLoader(null);
+        store.load();
+
         ContentPanel nav = new ContentPanel();
-        nav.setHeading("Navigation");
+        nav.setHeading("Item 1");
         nav.setBorders(false);
         nav.setBodyStyle("fontSize: 12px; padding: 6px");
-        nav.addText("kjfkjksjfkjskfjksjfkj");
         west.add(nav);
 
         ContentPanel settings = new ContentPanel();
-        settings.setHeading("Settings");
+        settings.setHeading("Item 2");
         settings.setBorders(false);
         west.add(settings);
 
@@ -429,7 +432,7 @@ public class AdminCentral implements EntryPoint {
         //params.put("mgnlNode", "");
         params.put("mgnlNodeCollection", "main");
         params.put("mgnlRepository", "website");
-        Loader<List<FileModel>> store = ServerConnector.getDialogLoader("controlsShowRoom", params);
+        Loader<List<DialogModel>> store = ServerConnector.getDialogLoader("controlsShowRoom", params);
         store.load();
         store.addLoadListener(new LoadListener(){
             @Override

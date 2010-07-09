@@ -36,6 +36,9 @@ package info.magnolia.module.genuinecentral.gwt.client;
 import static com.google.gwt.http.client.RequestBuilder.GET;
 import static com.google.gwt.http.client.RequestBuilder.POST;
 import info.magnolia.module.genuinecentral.gwt.client.data.MgnlJsonLoadResultReader;
+import info.magnolia.module.genuinecentral.gwt.client.models.DialogModel;
+import info.magnolia.module.genuinecentral.gwt.client.models.FileModel;
+import info.magnolia.module.genuinecentral.gwt.client.models.MenuModel;
 
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,7 @@ import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.data.ModelType;
 import com.extjs.gxt.ui.client.data.TreeLoader;
 import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -60,6 +64,7 @@ public class ServerConnector {
     private final static ModelType FILE_MODEL_TYPE = new ModelType();
     private static final ModelType LIST_OF_FILES_MODEL_TYPE = new ModelType();
     private static final ModelType DIALOG_MODEL_TYPE = new ModelType();
+    private static final ModelType MENU_MODEL_TYPE = new ModelType();
 
     static {
         LIST_OF_FILES_MODEL_TYPE.setRoot("children");
@@ -90,28 +95,37 @@ public class ServerConnector {
         DIALOG_MODEL_TYPE.addField("width");
         DIALOG_MODEL_TYPE.addField("subs");
 
+        MENU_MODEL_TYPE.setRoot("subs");
+        MENU_MODEL_TYPE.addField("tree");
+        MENU_MODEL_TYPE.addField("name");
+        MENU_MODEL_TYPE.addField("i18nBaseName");
+        MENU_MODEL_TYPE.addField("icon");
+        MENU_MODEL_TYPE.addField("label");
+        MENU_MODEL_TYPE.addField("subs");
+
     }
 
     private static final JsonLoadResultReader<List<FileModel>> jsonTreeReader = createConfiguredReader(LIST_OF_FILES_MODEL_TYPE);
-    private static final JsonLoadResultReader<List<FileModel>> jsonDialogReader = createConfiguredReader(DIALOG_MODEL_TYPE);
+    private static final JsonLoadResultReader<List<DialogModel>> jsonDialogReader = createConfiguredReader(DIALOG_MODEL_TYPE);
+    private static final JsonLoadResultReader<List<MenuModel>> jsonMenuReader = createConfiguredReader(MENU_MODEL_TYPE);
 
-    public static TreeLoader<FileModel> getTreeLoader(String treeName, String rootPath, Map<String, String> additionalParams) {
+    public static TreeLoader<FileModel> getTreeLoader(final String treeName, final String rootPath, final Map<String, String> extraParams) {
         final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/" + treeName + rootPath);
         requestBuilder.setHeader("Accept", "application/json");
 
         // data proxy
         RestfullHttpProxy<List<FileModel>> proxy = new RestfullHttpProxy<List<FileModel>>(requestBuilder);
-        return getConfiguredTreeLoader(proxy, jsonTreeReader, additionalParams);
+        return getConfiguredTreeLoader(proxy, jsonTreeReader, extraParams);
     }
 
 
-    public static Loader<List<FileModel>> getDialogLoader(final String dialogName, final Map<String, String> extraParams){
+    public static Loader<List<DialogModel>> getDialogLoader(final String dialogName, final Map<String, String> extraParams){
         final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/dialogs/" + dialogName);
         requestBuilder.setHeader("Accept", "application/json");
         // data proxy
-        RestfullHttpProxy<List<FileModel>> proxy = new RestfullHttpProxy<List<FileModel>>(requestBuilder);
+        RestfullHttpProxy<List<DialogModel>> proxy = new RestfullHttpProxy<List<DialogModel>>(requestBuilder);
 
-        return new BaseLoader<List<FileModel>>(proxy, jsonDialogReader) {
+        return new BaseLoader<List<DialogModel>>(proxy, jsonDialogReader) {
              @Override
              protected Object newLoadConfig() {
                  Map<String, String> params = getRequestParameters(extraParams);
@@ -124,6 +138,27 @@ public class ServerConnector {
                  }
                  return config;
              }
+        };
+    }
+    public static Loader<List<MenuModel>> getAdminCentralMenuLoader(final Map<String, String> extraParams){
+        final RequestBuilder requestBuilder = new RequestBuilder(GET, "/.magnolia/rest/admincentral/menu");
+        requestBuilder.setHeader("Accept", "application/json");
+        // data proxy
+        RestfullHttpProxy<List<MenuModel>> proxy = new RestfullHttpProxy<List<MenuModel>>(requestBuilder);
+
+        return new BaseLoader<List<MenuModel>>(proxy, jsonMenuReader) {
+            @Override
+            protected Object newLoadConfig() {
+                Map<String, String> params = getRequestParameters(extraParams);
+                if (params == null) {
+                    return null;
+                }
+                ModelData config = new BaseModelData();
+                for (Map.Entry<String, String> param : params.entrySet()) {
+                    config.set(param.getKey(), param.getValue());
+                }
+                return config;
+            }
         };
     }
 

@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
+import info.magnolia.module.genuinecentral.gwt.client.models.FileModel;
+
 import java.util.Arrays;
 import java.util.List;
 
