@@ -454,6 +454,11 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             }
             configureDialog(this.dialog);
         }
+        if (StringUtils.isEmpty(this.dialog.getConfigValue("paragraph"))) {
+            // make sure paragraph name is set even after reloading the dialog due to failed validation
+            String paragraphName = params.getParameter("mgnlParagraph");
+            this.dialog.setConfig("paragraph", paragraphName);
+        }
         return this.dialog;
     }
 
