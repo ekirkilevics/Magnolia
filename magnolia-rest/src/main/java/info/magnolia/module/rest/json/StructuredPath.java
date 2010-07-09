@@ -38,51 +38,45 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Immutable representation of an absolute path, avoids code duplication and error prone use of StringUtils.
  * <p/>
- * Treats the empty string as the root node.
+ * null and empty string is treated as root, missing leading slash is added, trailing slash is removed, multiple adjacent slashes are combined
  */
 public final class StructuredPath {
 
-    public static final StructuredPath ROOT = new StructuredPath(null, 0, 0);
+    public static final StructuredPath ROOT = new StructuredPath("/");
 
-    private final String[] segments;
-    private final int startIndex;
-    private final int endIndex;
+    private final String string;
 
     public static StructuredPath valueOf(String path) {
-        String[] segments = split(path);
-        if (segments == null)
+        String s = cleanup(path);
+        if (s.length() == 1)
             return ROOT;
-        return new StructuredPath(segments);
+        return new StructuredPath(s);
     }
 
-    private StructuredPath(String[] segments) {
-        this(segments, 0, segments.length);
-    }
-
-    private StructuredPath(String[] segments, int startIndex, int endIndex) {
-        this.segments = segments;
-        this.startIndex = startIndex;
-        this.endIndex = endIndex;
+    private StructuredPath(String string) {
+        this.string = string;
     }
 
     public boolean isRoot() {
-        return segments == null;
+        return string.length() == 1;
     }
 
     public String toString() {
-        return path();
+        return string;
     }
 
     public int length() {
-        return length(segments, startIndex, endIndex);
+        return string.length();
     }
 
     public int depth() {
-        return endIndex - startIndex;
+        if (isRoot())
+            return 0;
+        return StringUtils.countMatches(string, "/");
     }
 
     public String path() {
-        return join(segments, startIndex, endIndex);
+        return string;
     }
 
     public StructuredPath parent() {
@@ -90,13 +84,13 @@ public final class StructuredPath {
             throw new IllegalStateException("Cannot return parent of root node");
         if (depth() == 1)
             return ROOT;
-        return new StructuredPath(segments, startIndex, endIndex - 1);
+        return new StructuredPath(StringUtils.substringBeforeLast(string, "/"));
     }
 
     public String parentPath() {
         if (isRoot())
             throw new IllegalStateException("Cannot return parent path of root node");
-        return join(segments, startIndex, endIndex - 1);
+        return StringUtils.substringBeforeLast(string, "/");
     }
 
     public StructuredPath appendSegment(String name) {
@@ -107,17 +101,17 @@ public final class StructuredPath {
         if (name.indexOf('/') != -1)
             throw new IllegalArgumentException("Segment to append must not contain a '/' character");
         if (isRoot())
-            return new StructuredPath(new String[]{name});
-        return new StructuredPath(add(segments, startIndex, endIndex, name));
+            return new StructuredPath("/" + name);
+        return new StructuredPath(string + "/" + name);
     }
 
     public StructuredPath appendPath(String path) {
         if (isRoot())
             return valueOf(path);
-        String[] second = split(path);
-        if (second == null)
+        String relative = cleanup(path);
+        if (relative.length() == 1)
             return this;
-        return new StructuredPath(add(segments, startIndex, endIndex, second));
+        return new StructuredPath(string + relative);
     }
 
     public StructuredPath append(StructuredPath path) {
@@ -125,92 +119,42 @@ public final class StructuredPath {
             return this;
         if (isRoot())
             return path;
-        return new StructuredPath(add(segments, startIndex, endIndex, path.segments, path.startIndex, path.endIndex));
+        return new StructuredPath(string + path.string);
     }
 
-    public StructuredPath relativeTo(StructuredPath absolute) {
+    public StructuredPath relativeTo(StructuredPath base) {
 
-        if (absolute.isRoot())
+        if (base.isRoot())
             return this;
 
         // The other instance must be shorter or equal
-        if (absolute.depth() > depth())
+        if (base.length() > length())
             throw new IllegalArgumentException("");
 
-        // They must be equal down to where absolute ends
-        if (!equals(segments, startIndex, startIndex + absolute.depth(), absolute.segments, absolute.startIndex))
+        if (!string.startsWith(base.string))
             throw new IllegalArgumentException("");
 
-        if (absolute.depth() == depth())
+        if (base.length() == length())
             return ROOT;
 
-        return new StructuredPath(segments, startIndex + absolute.depth(), endIndex);
+        return new StructuredPath(string.substring(base.length()));
     }
 
     /**
      * @return the name of the last segment
      */
     public String name() {
-        if (isRoot())
-            return "/";
-        return segments[endIndex - 1];
+        return isRoot() ? "/" : StringUtils.substringAfterLast(string, "/");
     }
 
-    private static String[] split(String path) {
+    public static String cleanup(String path) {
         if (path == null || path.length() == 0)
-            return null;
-        if (path.indexOf('/') == -1)
-            return new String[]{path};
-        String[] segments = StringUtils.split(path, '/');
-        return segments.length != 0 ? segments : null;
-    }
-
-    private static String[] add(String[] array, int startIndex, int endIndex, String element) {
-        String[] newArray = new String[(endIndex - startIndex) + 1];
-        System.arraycopy(array, startIndex, newArray, 0, endIndex - startIndex);
-        newArray[endIndex] = element;
-        return newArray;
-    }
-
-    private static String[] add(String[] first, int startIndex, int endIndex, String[] second) {
-        return add(first, startIndex, endIndex, second, 0, second.length);
-    }
-
-    private static String[] add(String[] first, int startIndex, int endIndex, String[] second, int secondStartIndex, int secondEndIndex) {
-        String[] newArray = new String[(endIndex - startIndex) + (secondEndIndex - secondStartIndex)];
-        System.arraycopy(first, startIndex, newArray, 0, (endIndex - startIndex));
-        System.arraycopy(second, secondStartIndex, newArray, (endIndex - startIndex), (secondEndIndex - secondStartIndex));
-        return newArray;
-    }
-
-    private static int length(String[] array, int startIndex, int endIndex) {
-        if (startIndex == endIndex)
-            return 1;
-        int n = endIndex - startIndex;
-        for (int index = startIndex; index < endIndex; index++)
-            n += array[index].length();
-        return n;
-    }
-
-    private static String join(String[] array, int startIndex, int endIndex) {
-        if (startIndex == endIndex)
             return "/";
-        int pos = 0;
-        char[] chars = new char[length(array, startIndex, endIndex)];
-        for (int index = startIndex; index < endIndex; index++) {
-            chars[pos++] = '/';
-            String str = array[index];
-            str.getChars(0, str.length(), chars, pos);
-            pos += str.length();
-        }
-        return new String(chars);
-    }
+        if (path.indexOf('/') == -1)
+            return "/" + path;
 
-    private static boolean equals(String[] array, int startIndex, int endIndex, String[] second, int secondStartIndex) {
-        for (int index = startIndex; index < endIndex; index++) {
-            if (!array[index].equals(second[secondStartIndex++]))
-                return false;
-        }
-        return true;
+        // this can be optimized down to one char array creation and a subsequent array copy in String
+
+        return "/" + StringUtils.join(StringUtils.split(path, '/'), '/');
     }
 }

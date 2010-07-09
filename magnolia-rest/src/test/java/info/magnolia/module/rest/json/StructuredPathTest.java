@@ -37,7 +37,7 @@ import junit.framework.TestCase;
 
 public class StructuredPathTest extends TestCase {
 
-    public void testConstructors() {
+    public void testValueOf() {
 
         assertEquals("/", path(null).path());
         assertEquals("/", path("").path());
@@ -178,6 +178,9 @@ public class StructuredPathTest extends TestCase {
 
     public void testAppendPath() {
 
+        assertEquals("/foo/bar", path("/foo/bar").appendPath(null).path());
+        assertEquals("/foo/bar", path("").appendPath("foo/bar/").path());
+
         assertEquals("/foo/bar/zed", path("/foo").appendPath("bar/zed").path());
     }
 
@@ -195,6 +198,14 @@ public class StructuredPathTest extends TestCase {
         assertEquals(1, path("").length());
         assertEquals(4, path("foo").length());
         assertEquals(8, path("foo/bar").length());
+    }
+
+    public void testDepth() {
+        assertEquals(0, StructuredPath.ROOT.depth());
+        assertEquals(0, path(null).depth());
+        assertEquals(0, path("").depth());
+        assertEquals(1, path("foo").depth());
+        assertEquals(2, path("foo/bar").depth());
     }
 
     private StructuredPath path(String path) {
