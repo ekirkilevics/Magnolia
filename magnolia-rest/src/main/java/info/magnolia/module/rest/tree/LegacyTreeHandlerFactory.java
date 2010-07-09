@@ -46,9 +46,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.admininterface.TreeHandlerManager;
 import info.magnolia.module.admininterface.trees.TemplateColumn;
-import info.magnolia.module.rest.tree.commands.CreateNodeCommand;
-import info.magnolia.module.rest.tree.commands.CreateWebsiteNodeCommand;
-import info.magnolia.module.rest.tree.commands.DeleteNodeCommand;
+import info.magnolia.module.rest.tree.commands.*;
 import info.magnolia.module.rest.tree.config.*;
 import info.magnolia.objectfactory.Classes;
 import org.apache.commons.lang.StringUtils;
@@ -234,6 +232,8 @@ public class LegacyTreeHandlerFactory {
             content.setNodeData("itemType", ItemType.CONTENT.getSystemName());
         }
         commandsNode.createContent("delete", ItemType.CONTENTNODE).setNodeData("class", DeleteNodeCommand.class.getName());
+        commandsNode.createContent("setMetaData", ItemType.CONTENTNODE).setNodeData("class", SetMetaDataCommand.class.getName());
+        commandsNode.createContent("setNodeData", ItemType.CONTENTNODE).setNodeData("class", SetNodeDataCommand.class.getName());
     }
 
     private void writeConfiguration(Content handlerNode, JsonTreeConfiguration cfg) throws RepositoryException {

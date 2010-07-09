@@ -42,6 +42,8 @@ import javax.jcr.RepositoryException;
  * Column that displays the value of a NodeData in a tree.
  * <p/>
  * The returned value is a string.
+ *
+ * See {@link info.magnolia.module.rest.tree.commands.SetNodeDataCommand}
  */
 public class JsonTreeColumnNodeDataValue extends JsonTreeColumn {
 

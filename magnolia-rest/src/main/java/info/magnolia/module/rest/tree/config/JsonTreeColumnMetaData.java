@@ -42,6 +42,8 @@ import javax.jcr.RepositoryException;
  * Column that displays a metaData property.
  * <p/>
  * The returned value is a string.
+ *
+ * See {@link info.magnolia.module.rest.tree.commands.SetMetaDataCommand}
  */
 public class JsonTreeColumnMetaData extends JsonTreeColumn {
 

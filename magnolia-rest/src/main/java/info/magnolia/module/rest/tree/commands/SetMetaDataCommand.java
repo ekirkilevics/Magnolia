@@ -31,62 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree.config;
+package info.magnolia.module.rest.tree.commands;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ExclusiveWrite;
 
 import javax.jcr.RepositoryException;
 
-/**
- * Column that displays the value of a name NodeData.
- * <p/>
- * The returned value is a string.
- *
- * See {@link info.magnolia.module.rest.tree.commands.SetNodeDataCommand}
- */
-public class JsonTreeColumnNodeData extends JsonTreeColumn {
+public class SetMetaDataCommand extends AbstractTreeCommand {
 
-    private String name;
-    private String dateFormat;
-    private boolean readOnly;
+    private String propertyName;
+    private String value;
 
-    @Override
-    public String getType() {
-        return "nodeData";
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 
-    public boolean isReadOnly() {
-        return readOnly;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDateFormat() {
-        return dateFormat;
-    }
-
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
-    }
-
-    @Override
-    public Object getValue(Content storageNode) throws RepositoryException {
-        return storageNode.getNodeData(getName()).getString();
-    }
-
-    @Override
-    public Object getValue(Content storageNode, NodeData nodeData) throws RepositoryException {
-        return "";
+    public Object execute() throws RepositoryException {
+        synchronized (ExclusiveWrite.getInstance()) {
+            Content content = getHierarchyManager().getContent(getPath().path());
+            content.getMetaData().setProperty(propertyName, value);
+            content.updateMetaData();
+            content.save();
+            return content;
+        }
     }
 }
