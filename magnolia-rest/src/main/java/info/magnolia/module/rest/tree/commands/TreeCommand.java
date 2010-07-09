@@ -43,5 +43,10 @@ public interface TreeCommand {
 
     void setPath(StructuredPath path);
 
-    Object execute() throws RepositoryException;
+    /**
+     * Returns all the nodes that were effected by this command. If the targeted node was created or deleted this is
+     * the parent node since it had its children changed. If the node was moved this is both the original parent and the
+     * new parent since both those nodes were effected.
+     */
+    CommandExecutionResult execute() throws RepositoryException;
 }

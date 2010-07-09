@@ -31,24 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.tree.commands;
+package info.magnolia.module.rest.tree;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.jcr.RepositoryException;
+public class TreeNodeWithChildren extends TreeNode {
 
-public class CreateWebsiteNodeCommand extends CreateNodeCommand {
+    private List<TreeNode> children = new ArrayList<TreeNode>();
 
-    @Override
-    protected void postProcessNewContent(Content content) throws RepositoryException {
-        if (getItemType().equals(ItemType.CONTENT.getSystemName())) {
-            Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(content);
-            if (newTemplate != null) {
-                content.getMetaData().setTemplate(newTemplate.getName());
-            }
-        }
+    public List<TreeNode> getChildren() {
+        return children;
+    }
+
+    public void addChild(TreeNode child) {
+        this.children.add(child);
     }
 }
+

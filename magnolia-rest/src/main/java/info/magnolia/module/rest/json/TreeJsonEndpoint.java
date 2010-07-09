@@ -34,8 +34,9 @@
 package info.magnolia.module.rest.json;
 
 import info.magnolia.module.rest.tree.JsonTreeHandlerManager;
+import info.magnolia.module.rest.tree.TreeCommandExecutionResult;
 import info.magnolia.module.rest.tree.TreeHandler;
-import info.magnolia.module.rest.tree.TreeNodeList;
+import info.magnolia.module.rest.tree.TreeNodeWithChildren;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,20 +51,20 @@ public class TreeJsonEndpoint {
 
     @GET
     @Path("/{treeName}")
-    public TreeNodeList getNode(@PathParam("treeName") String treeName) throws Exception {
+    public TreeNodeWithChildren getNode(@PathParam("treeName") String treeName) throws Exception {
         return getNode(treeName, "");
     }
 
     @GET
     @Path("/{treeName}/{path:(.)*}")
-    public TreeNodeList getNode(@PathParam("treeName") String treeName, @PathParam("path") String path) throws Exception {
+    public TreeNodeWithChildren getNode(@PathParam("treeName") String treeName, @PathParam("path") String path) throws Exception {
 
         TreeHandler treeHandler = JsonTreeHandlerManager.getInstance().getTreeHandler(treeName);
 
         if (treeHandler == null)
             return null;
 
-        return treeHandler.getChildren(StructuredPath.valueOf(path));
+        return treeHandler.getNode(StructuredPath.valueOf(path));
     }
 
     @POST
@@ -80,7 +81,7 @@ public class TreeJsonEndpoint {
 
     @POST
     @Path("/{treeName}/{path:(.)*}")
-    public Object executeCommand(
+    public TreeCommandExecutionResult executeCommand(
             @PathParam("treeName") String treeName,
             @PathParam("path") String path,
             @Context HttpServletRequest request) throws Exception {

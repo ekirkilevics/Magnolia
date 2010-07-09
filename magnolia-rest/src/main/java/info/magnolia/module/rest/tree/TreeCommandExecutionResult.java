@@ -33,19 +33,29 @@
  */
 package info.magnolia.module.rest.tree;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeNodeList {
+@XmlRootElement
+public class TreeCommandExecutionResult {
 
-    private List<TreeNode> children = new ArrayList<TreeNode>();
+    private String message;
+    private List<TreeNodeWithChildren> effectedContent = new ArrayList<TreeNodeWithChildren>();
 
-    public List<TreeNode> getChildren() {
-        return children;
+    public String getMessage() {
+        return message;
     }
 
-    public void addChild(TreeNode child) {
-        this.children.add(child);
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<TreeNodeWithChildren> getEffectedContent() {
+        return effectedContent;
+    }
+
+    public boolean addTreeNodeList(TreeNodeWithChildren treeNodeWithChildren) {
+        return effectedContent.add(treeNodeWithChildren);
     }
 }
-

@@ -40,7 +40,7 @@ import javax.jcr.RepositoryException;
 
 public class DeleteNodeCommand extends AbstractTreeCommand {
 
-    public Content execute() throws RepositoryException {
+    public CommandExecutionResult execute() throws RepositoryException {
 
         Content parentNode = getHierarchyManager().getContent(getPath().parentPath());
 
@@ -52,6 +52,6 @@ public class DeleteNodeCommand extends AbstractTreeCommand {
             parentNode.save();
         }
 
-        return parentNode;
+        return new CommandExecutionResult(parentNode);
     }
 }

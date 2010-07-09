@@ -44,6 +44,8 @@ public abstract class AbstractTreeCommand implements TreeCommand {
     private StructuredPath path;
     private HierarchyManager hierarchyManager;
 
+    // TODO add i18nBaseName for command result messages
+
     public String getName() {
         return name;
     }

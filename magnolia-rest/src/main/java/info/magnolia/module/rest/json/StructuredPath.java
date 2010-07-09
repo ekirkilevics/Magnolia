@@ -90,6 +90,8 @@ public final class StructuredPath {
     public String parentPath() {
         if (isRoot())
             throw new IllegalStateException("Cannot return parent path of root node");
+        if (depth() == 1)
+            return "/";
         return StringUtils.substringBeforeLast(string, "/");
     }
 

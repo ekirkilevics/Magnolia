@@ -34,21 +34,37 @@
 package info.magnolia.module.rest.tree.commands;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 
-import javax.jcr.RepositoryException;
+public class CommandExecutionResult {
 
-public class CreateWebsiteNodeCommand extends CreateNodeCommand {
+    private String message; // with i18n applied
+    private Content[] effectedContent;
 
-    @Override
-    protected void postProcessNewContent(Content content) throws RepositoryException {
-        if (getItemType().equals(ItemType.CONTENT.getSystemName())) {
-            Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(content);
-            if (newTemplate != null) {
-                content.getMetaData().setTemplate(newTemplate.getName());
-            }
-        }
+    public CommandExecutionResult() {
+    }
+
+    public CommandExecutionResult(Content... effectedContent) {
+        this.effectedContent = effectedContent;
+    }
+
+    public CommandExecutionResult(String message, Content... effectedContent) {
+        this.message = message;
+        this.effectedContent = effectedContent;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Content[] getEffectedContent() {
+        return effectedContent;
+    }
+
+    public void setEffectedContent(Content[] effectedContent) {
+        this.effectedContent = effectedContent;
     }
 }

@@ -91,10 +91,10 @@ public class WebsiteJsonEndpoint {
         command.setPath(StructuredPath.valueOf(path));
         command.setItemType("mgnl:content");
 
-        Content content = command.execute();
+        command.execute();
 
         WebsitePageList list = new WebsitePageList();
-        list.add(marshallNode(content));
+        list.add(marshallNode(getContent(command.getUniquePath())));
         return list;
     }
 

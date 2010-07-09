@@ -46,6 +46,11 @@ public class CreateNodeCommand extends AbstractTreeCommand {
 
     private String nodeName;
     private String itemType;
+    private StructuredPath uniquePath;
+
+    public StructuredPath getUniquePath() {
+        return uniquePath;
+    }
 
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
@@ -59,16 +64,18 @@ public class CreateNodeCommand extends AbstractTreeCommand {
         return itemType;
     }
 
-    public Content execute() throws RepositoryException {
+    public CommandExecutionResult execute() throws RepositoryException {
 
         // nodeName is optional
         String name = StringUtils.defaultIfEmpty(this.nodeName, "untitled");
 
         StructuredPath requestedPath = getPath().appendSegment(name);
 
-        StructuredPath uniquePath = getUniquePath(requestedPath);
+        uniquePath = getUniquePath(requestedPath);
 
-        return createNode(uniquePath, itemType);
+        Content newContent = createNode(uniquePath, itemType);
+
+        return new CommandExecutionResult(newContent.getParent());
     }
 
     private StructuredPath getUniquePath(StructuredPath path) {
@@ -87,10 +94,15 @@ public class CreateNodeCommand extends AbstractTreeCommand {
         newNode.getMetaData().setCreationDate();
         newNode.getMetaData().setModificationDate();
 
+        postProcessNewContent(newNode);
+
         synchronized (ExclusiveWrite.getInstance()) {
             parentNode.save();
         }
 
         return newNode;
+    }
+
+    protected void postProcessNewContent(Content content) throws RepositoryException {
     }
 }

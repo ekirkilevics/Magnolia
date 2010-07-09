@@ -51,13 +51,13 @@ public class SetMetaDataCommand extends AbstractTreeCommand {
         this.value = value;
     }
 
-    public Object execute() throws RepositoryException {
+    public CommandExecutionResult execute() throws RepositoryException {
         synchronized (ExclusiveWrite.getInstance()) {
             Content content = getHierarchyManager().getContent(getPath().path());
             content.getMetaData().setProperty(propertyName, value);
             content.updateMetaData();
             content.save();
-            return content;
+            return new CommandExecutionResult(content);
         }
     }
 }

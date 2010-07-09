@@ -53,7 +53,7 @@ public class SetNodeDataCommand extends AbstractTreeCommand {
         this.value = value;
     }
 
-    public Object execute() throws RepositoryException {
+    public CommandExecutionResult execute() throws RepositoryException {
 
         // This is Tree.saveNodeData()
 
@@ -103,7 +103,7 @@ public class SetNodeDataCommand extends AbstractTreeCommand {
             }
             content.updateMetaData();
             content.save();
-            return content;
+            return new CommandExecutionResult(content);
         }
     }
 }

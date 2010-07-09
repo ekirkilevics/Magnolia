@@ -46,6 +46,7 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.rest.json.StructuredPath;
+import info.magnolia.module.rest.tree.commands.CommandExecutionResult;
 import info.magnolia.module.rest.tree.commands.TreeCommand;
 import info.magnolia.module.rest.tree.config.JsonTreeColumn;
 import info.magnolia.module.rest.tree.config.JsonTreeConfiguration;
@@ -92,41 +93,45 @@ public class ConfiguredTreeHandler implements TreeHandler {
             configuration.initMessages(messages);
     }
 
-    public TreeNodeList getChildren(StructuredPath path) throws RepositoryException {
+    public TreeNodeWithChildren getNode(StructuredPath path) throws RepositoryException {
 
         Content content = getContent(getRepositoryPath(path));
 
         if (content == null)
             return null;
 
-        return marshallTreeNodeChildren(content);
+        return marshallTreeNodeWithChildren(content);
     }
 
     public JsonTreeConfiguration getConfiguration() {
         return configuration;
     }
 
-    public Object executeCommand(StructuredPath path, String commandName, Map parameters) throws Exception {
+    public TreeCommandExecutionResult executeCommand(StructuredPath path, String commandName, Map parameters) throws Exception {
 
         TreeCommand command = createCommandObject(path, commandName, parameters);
 
         // Invoke the command
-        Object result = command.execute();
+        CommandExecutionResult result = command.execute();
 
         // Return a suitable response
 
-        // When we create a node we should return a TreeNodeList of its parent (the client needs to see how the new node is ordered among its siblings)
+        // When we create a node we should return a TreeNodeWithChildren of its parent (the client needs to see how the new node is ordered among its siblings)
 
         // When we update a node its enough to return just that node
 
-        // When we move a node around we need to return a TreeNodeList of its new parent (the client also needs to know that it's not still there)
+        // When we move a node around we need to return a TreeNodeWithChildren of its new parent (the client also needs to know that it's not still there)
 
-        // When we copy a node we need to return a TreeNodeList of the newly created nodes parent (the client needs to see it in order with its siblings)
+        // When we copy a node we need to return a TreeNodeWithChildren of the newly created nodes parent (the client needs to see it in order with its siblings)
 
-        // Will also need to return messages (AlertUtil equivalent)
+        TreeCommandExecutionResult x = new TreeCommandExecutionResult();
+        x.setMessage(result.getMessage());
 
-        // TODO this is temporary code, see the comments above about what should be returned...
-        return marshallTreeNodeChildren((Content) result);
+        for (Content content : result.getEffectedContent()) {
+            x.addTreeNodeList(marshallTreeNodeWithChildren(content));
+        }
+
+        return x;
     }
 
     private TreeCommand createCommandObject(StructuredPath path, String commandName, Map parameters) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, RepositoryException, Content2BeanException {
@@ -172,8 +177,9 @@ public class ConfiguredTreeHandler implements TreeHandler {
         return null;
     }
 
-    private TreeNodeList marshallTreeNodeChildren(Content content) throws RepositoryException {
-        TreeNodeList nodes = new TreeNodeList();
+    private TreeNodeWithChildren marshallTreeNodeWithChildren(Content content) throws RepositoryException {
+        TreeNodeWithChildren nodes = new TreeNodeWithChildren();
+        populateTreeNode(content, nodes);
         for (Content child : this.getChildren(content)) {
             nodes.addChild(marshallTreeNode(child));
         }
@@ -181,12 +187,16 @@ public class ConfiguredTreeHandler implements TreeHandler {
     }
 
     private TreeNode marshallTreeNode(Content content) throws RepositoryException {
+        TreeNode treeNode = new TreeNode();
+        populateTreeNode(content, treeNode);
+        return treeNode;
+    }
 
+    private void populateTreeNode(Content content, TreeNode treeNode) throws RepositoryException {
         StructuredPath repositoryPath = StructuredPath.valueOf(content.getHandle());
         StructuredPath treeRootPath = StructuredPath.valueOf(getRootPath());
         StructuredPath treePath = repositoryPath.relativeTo(treeRootPath);
 
-        TreeNode treeNode = new TreeNode();
         treeNode.setName(content.getName());
         treeNode.setType(content.getNodeTypeName());
         treeNode.setUuid(content.getUUID());
@@ -216,8 +226,6 @@ public class ConfiguredTreeHandler implements TreeHandler {
                 treeNode.addNodeData(data);
             }
         }
-
-        return treeNode;
     }
 
     private List<Object> readColumnValues(JsonTreeConfiguration c, Content content) throws RepositoryException {

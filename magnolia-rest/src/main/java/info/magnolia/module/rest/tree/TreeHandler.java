@@ -41,9 +41,9 @@ import java.util.Map;
 
 public interface TreeHandler {
 
-    TreeNodeList getChildren(StructuredPath path) throws RepositoryException;
+    TreeNodeWithChildren getNode(StructuredPath path) throws RepositoryException;
 
     JsonTreeConfiguration getConfiguration() throws RepositoryException;
 
-    Object executeCommand(StructuredPath path, String command, Map parameters) throws Exception;
+    TreeCommandExecutionResult executeCommand(StructuredPath path, String command, Map parameters) throws Exception;
 }
