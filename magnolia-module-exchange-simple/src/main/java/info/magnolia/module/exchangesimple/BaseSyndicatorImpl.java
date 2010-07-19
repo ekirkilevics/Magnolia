@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Syndicator;
@@ -444,12 +445,13 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          while (headerKeys.hasNext()) {
              String key = (String) headerKeys.next();
              String value = activationContent.getproperty(key);
-             try
-             {
-                 value = URLEncoder.encode(value, "UTF-8");
-             }
-             catch (UnsupportedEncodingException e)
-             {
+             if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
+                 try {
+                     value = URLEncoder.encode(value, "UTF-8");
+                 }
+                 catch (UnsupportedEncodingException e) {
+                  // do nothing
+                 }
              }
              connection.setRequestProperty(key, value);
          }
