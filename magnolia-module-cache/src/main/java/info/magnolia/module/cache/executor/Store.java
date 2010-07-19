@@ -134,7 +134,7 @@ public class Store extends AbstractExecutor {
                 cachePolicyResult.setCachedEntry(cachedEntry);
                 // let policy know the uuid in case it wants to do something with it
                 final Content content = MgnlContext.getAggregationState().getCurrentContent();
-                if (content != null) {
+                if (content != null && content.isNodeType("mix:referenceable")) {
                     final String uuid = content.getUUID();
                     String repo = content.getHierarchyManager().getName();
                     getCachePolicy(cache).persistCacheKey(repo, uuid, key);
