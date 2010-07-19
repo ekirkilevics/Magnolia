@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
@@ -153,11 +154,13 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
         log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName()); //$NON-NLS-1$
 
-        try {
-            parentPath = URLEncoder.encode(parentPath, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
-            // do nothing
+        if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
+            try {
+                parentPath = URLEncoder.encode(parentPath, "UTF-8");
+            }
+            catch (UnsupportedEncodingException e) {
+                // do nothing
+            }
         }
 
         URLConnection urlConnection = null;
