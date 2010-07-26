@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.3.5-SNAPSHOT</version>
+    <version>4.3.5</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -18,17 +18,17 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.3.5-SNAPSHOT</version>
+      <version>4.3.5</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-cms</artifactId>
-      <version>4.3.5-SNAPSHOT</version>
+      <version>4.3.5</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-mail</artifactId>
-      <version>4.3.5-SNAPSHOT</version>
+      <version>4.3.5</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.3.5-SNAPSHOT</version>
+      <version>4.3.5</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
