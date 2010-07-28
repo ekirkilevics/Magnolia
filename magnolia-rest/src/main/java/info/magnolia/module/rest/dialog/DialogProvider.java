@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
 public interface DialogProvider {
 

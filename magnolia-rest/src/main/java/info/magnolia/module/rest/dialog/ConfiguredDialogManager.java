@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;

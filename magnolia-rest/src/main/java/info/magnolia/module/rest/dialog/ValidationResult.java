@@ -31,34 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
-import info.magnolia.cms.core.Content;
-
-import javax.jcr.RepositoryException;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Dialog items are serialized using JAXB, stored to JCR, populated with values from Repo or Request and typically
- * created from repository configuration.
- */
 @XmlRootElement
-public interface DialogItem {
+public class ValidationResult {
 
-    String getName();
+    private List<String> messages = new ArrayList<String>();
 
-    void setParent(DialogItem parent);
+    public List<String> getMessages() {
+        return messages;
+    }
 
-//    DialogItem getParent();
+    public void addMessage(String message) {
+        this.messages.add(message);
+    }
 
-    void bind(Content storageNode) throws RepositoryException;
-
-    void bind(MultivaluedMap<String, String> parameters) throws Exception;
-
-    void validate(ValidationResult validationResult);
-
-    void save(Content storageNode) throws RepositoryException;
-
-//    Messages getMessages();
+    public boolean isSuccess() {
+        return this.messages.isEmpty();
+    }
 }

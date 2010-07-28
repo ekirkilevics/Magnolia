@@ -31,23 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
-import javax.xml.bind.annotation.XmlTransient;
+import info.magnolia.cms.core.Content;
 
-public abstract class AbstractDialogItem implements DialogItem {
+import javax.jcr.RepositoryException;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    private DialogItem parent;
+/**
+ * Dialog items are serialized using JAXB, stored to JCR, populated with values from Repo or Request and typically
+ * created from repository configuration.
+ */
+@XmlRootElement
+public interface DialogItem {
 
-    /**
-     * Transient to prevent infinite recursion during serialization, maybe explicit serialization is preferable..
-     */
-    @XmlTransient
-    public DialogItem getParent() {
-        return parent;
-    }
+    String getName();
 
-    public void setParent(DialogItem parent) {
-        this.parent = parent;
-    }
+    void setParent(DialogItem parent);
+
+//    DialogItem getParent();
+
+    void bind(Content storageNode) throws RepositoryException;
+
+    void bind(MultivaluedMap<String, String> parameters) throws Exception;
+
+    void validate(ValidationResult validationResult);
+
+    void save(Content storageNode) throws RepositoryException;
+
+//    Messages getMessages();
 }

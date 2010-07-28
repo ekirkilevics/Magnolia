@@ -31,31 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
-import info.magnolia.objectfactory.Components;
+import java.util.List;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+public interface DialogItemContainer extends DialogItem {
 
-public class DialogRegistry {
+    List<DialogItem> getSubs();
 
-    private Map<String, DialogProvider> dialogs = Collections.synchronizedMap(new HashMap<String, DialogProvider>());
+    void setSubs(List<DialogItem> subs);
 
-    public DialogProvider getDialogProvider(String dialogName) {
-        return dialogs.get(dialogName);
-    }
+    void addSub(DialogItem sub);
 
-    public void registerDialog(String dialogName, DialogProvider dialogProvider) {
-        this.dialogs.put(dialogName, dialogProvider);
-    }
-
-    public void unregisterDialog(String dialogName) {
-        this.dialogs.remove(dialogName);
-    }
-
-    public static DialogRegistry getInstance() {
-        return Components.getSingleton(DialogRegistry.class);
-    }
+    DialogItem getSubByName(String name);
 }

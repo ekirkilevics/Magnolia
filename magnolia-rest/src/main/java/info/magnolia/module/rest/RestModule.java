@@ -35,7 +35,7 @@ package info.magnolia.module.rest;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.rest.dialogx.*;
+import info.magnolia.module.rest.dialog.*;
 import info.magnolia.module.rest.rest.RestEndpointManager;
 
 public class RestModule implements ModuleLifecycle {

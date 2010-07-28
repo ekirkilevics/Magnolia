@@ -31,24 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
 import info.magnolia.cms.core.Content;
-import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 import javax.ws.rs.core.MultivaluedMap;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
-public class EditControl extends AbstractDialogItem {
+public class DateControl extends AbstractDialogItem {
 
     private String type;
     private String name;
     private String label;
-    private String value;
-    private String description;
-    private String width;
-    private boolean required;
+    private Date value;
 
     public String getType() {
         return type;
@@ -74,57 +73,33 @@ public class EditControl extends AbstractDialogItem {
         this.label = label;
     }
 
-    public String getValue() {
+    public Date getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Date value) {
         this.value = value;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setWidth(String width) {
-        this.width = width;
-    }
-
-    public String getWidth() {
-        return width;
     }
 
     public void bind(Content storageNode) throws RepositoryException {
         if (storageNode.hasNodeData(this.name)) {
-            this.value = storageNode.getNodeData(this.name).getString();
+            this.value = storageNode.getNodeData(this.name).getDate().getTime();
         }
     }
 
     public void bind(MultivaluedMap<String, String> parameters) throws ParseException {
-        this.value = parameters.getFirst(this.name);
+        if (parameters.containsKey(this.name))
+            this.value = new SimpleDateFormat("yyyy-MM-dd").parse(parameters.getFirst(this.name));
     }
 
     public void validate(ValidationResult validationResult) {
-        if (StringUtils.isEmpty(this.value)) {
-            validationResult.addMessage("Value must no be empty");
-        }
     }
 
     public void save(Content storageNode) throws RepositoryException {
         if (this.value != null) {
-            storageNode.setNodeData(this.name, this.value);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(this.value);
+            storageNode.setNodeData(this.name, calendar);
         }
     }
 }

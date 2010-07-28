@@ -31,31 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
-import info.magnolia.cms.core.Content;
+public class Dialog extends AbstractDialogItemContainer {
 
-import javax.jcr.RepositoryException;
-import javax.ws.rs.core.MultivaluedMap;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-public class DateControl extends AbstractDialogItem {
-
-    private String type;
     private String name;
     private String label;
-    private Date value;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getName() {
         return name;
@@ -71,35 +52,5 @@ public class DateControl extends AbstractDialogItem {
 
     public void setLabel(String label) {
         this.label = label;
-    }
-
-    public Date getValue() {
-        return value;
-    }
-
-    public void setValue(Date value) {
-        this.value = value;
-    }
-
-    public void bind(Content storageNode) throws RepositoryException {
-        if (storageNode.hasNodeData(this.name)) {
-            this.value = storageNode.getNodeData(this.name).getDate().getTime();
-        }
-    }
-
-    public void bind(MultivaluedMap<String, String> parameters) throws ParseException {
-        if (parameters.containsKey(this.name))
-            this.value = new SimpleDateFormat("yyyy-MM-dd").parse(parameters.getFirst(this.name));
-    }
-
-    public void validate(ValidationResult validationResult) {
-    }
-
-    public void save(Content storageNode) throws RepositoryException {
-        if (this.value != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(this.value);
-            storageNode.setNodeData(this.name, calendar);
-        }
     }
 }

@@ -31,26 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.dialogx;
+package info.magnolia.module.rest.dialog;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement
-public class ValidationResult {
+public abstract class AbstractDialogItem implements DialogItem {
 
-    private List<String> messages = new ArrayList<String>();
+    private DialogItem parent;
 
-    public List<String> getMessages() {
-        return messages;
+    /**
+     * Transient to prevent infinite recursion during serialization, maybe explicit serialization is preferable..
+     */
+    @XmlTransient
+    public DialogItem getParent() {
+        return parent;
     }
 
-    public void addMessage(String message) {
-        this.messages.add(message);
-    }
-
-    public boolean isSuccess() {
-        return this.messages.isEmpty();
+    public void setParent(DialogItem parent) {
+        this.parent = parent;
     }
 }
