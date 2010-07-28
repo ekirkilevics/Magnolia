@@ -10,6 +10,6 @@
    <source path="dialog"/>
    <source path="data"/>
 
-   <entry-point class="info.magnolia.module.genuinecentral.gwt.client.AdminCentral"/>
+   <entry-point class="info.magnolia.module.genuinecentral.gwt.client.AdminCentralEntryPoint"/>
 
 </module>

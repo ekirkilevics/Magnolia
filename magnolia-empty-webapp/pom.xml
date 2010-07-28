@@ -211,7 +211,7 @@
           </execution>
         </executions>
         <configuration>
-          <module>info.magnolia.module.webapp.AllTogetherNow</module>
+          <module>info.magnolia.module.webapp.AdminCentralGWTModuleAggregator</module>
           <runTarget>.resources/Magnolia.html</runTarget>
           <hostedWebapp>${basedir}/src/main/webapp</hostedWebapp>
           <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>

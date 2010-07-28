@@ -74,7 +74,16 @@ import com.extjs.gxt.ui.client.widget.treegrid.TreeGrid;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.History;
 
+/**
+ * MgnlTreeGrid is a wrapper around ExtGWT tree grid providing basic configuration for features required by the Magnolia
+ * tree such as context menu, icons, cell editing on double click etc.
+ *
+ * Apart from the obvious features necessary to imitiate the original Magnolia tree, there are also other supporting classes necessary for the correct tree functionality such as the backend store for the tree items.
+ * @author had
+ *
+ */
 public class MgnlTreeGrid extends LayoutContainer {
 
     private String treeName = "";
@@ -189,8 +198,8 @@ public class MgnlTreeGrid extends LayoutContainer {
                 if (selected != null) {
                     dialogName = selected.get("dialog");
                 }
-                AdminCentral central = Registry.get(AdminCentral.ADMIN_CENTRAL);
-                central.openDialog(dialogName);
+                // use history to dispatch actions that leat to view transitions
+                History.newItem("dialog");
             }
         });
 

@@ -31,24 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.module.webapp.gwt.client;
+package info.magnolia.module.genuinecentral.gwt.client.presenter;
 
-import java.util.Map;
+import com.google.gwt.user.client.ui.HasWidgets;
 
-import info.magnolia.module.genuinecentral.gwt.client.AdminCentral;
+public interface Presenter {
 
-import com.extjs.gxt.ui.client.Registry;
-import com.google.gwt.core.client.EntryPoint;
+    void go(HasWidgets container);
 
-public class AllTogether implements EntryPoint {
-
-    public void onModuleLoad() {
-        for (Map.Entry<String, Object> module : Registry.getAll().entrySet()) {
-            System.out.println("(In All) Found registered module: " + module.getKey() + " :: " + module.getValue());
-        }
-
-        AdminCentral central = Registry.get("adminCentral");
-        central.init();
-    }
+    void bind();
 
 }

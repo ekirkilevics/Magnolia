@@ -33,36 +33,29 @@
  */
 package info.magnolia.module.genuinecentral.gwt.client;
 
-import com.extjs.gxt.ui.client.Style.HideMode;
-import com.extjs.gxt.ui.client.data.BaseTreeModel;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
+public class MenuConfiguration {
 
-public class Tab extends BaseTreeModel {
+    private String title;
+    private TreeConfiguration treeConfiguration;
 
-  protected Tab() {
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public Tab(String name) {
-    set("name", name);
-  }
+    public boolean hasShowTreeOnClick() {
+        return treeConfiguration != null;
+    }
 
-  public String getName() {
-    return (String) get("name");
-  }
+    public TreeConfiguration getTreeConfiguration() {
+        return treeConfiguration;
+    }
 
-  public String toString() {
-    return getName();
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public void add(String title, LayoutContainer page, String image) {
-    add(new TabEntry(title, page, image));
-  }
+    public void setTreeConfiguration(TreeConfiguration treeConfig) {
+        this.treeConfiguration = treeConfig;
+    }
 
-  public void add(String title, LayoutContainer page, String image, boolean fill) {
-    add(new TabEntry(title, page, image, fill));
-  }
-
-  public void add(String title, LayoutContainer page, String image, boolean fill, boolean closable, HideMode hideMode) {
-    add(new TabEntry(title, page, image, fill, closable, hideMode));
-  }
 }
