@@ -51,6 +51,11 @@ import javax.jcr.Value;
 import javax.ws.rs.*;
 import java.util.Collection;
 
+/**
+ * Service for accessing the repositories and manipulating their content.
+ * @author tobias
+ *
+ */
 @Path("/repositories")
 public class RepositoryJsonEndpoint {
 

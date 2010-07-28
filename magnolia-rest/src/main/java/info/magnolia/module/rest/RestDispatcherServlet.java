@@ -39,6 +39,12 @@ import javax.servlet.*;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Dispatcher of the rest requests to the dynamically registered endpoints.
+ * @author tobias
+ *
+ * @deprecated move the support for init parameters to the core and specify those params via module descriptor
+ */
 public class RestDispatcherServlet extends HttpServletDispatcher implements RestEndpointRegistrar {
 
     @Override

@@ -45,6 +45,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Observed manager for dynamically configuring rest end points via Magnolia repository.
+ * @author tobias
+ *
+ */
 public class RestEndpointManager extends ObservedManager {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RestEndpointManager.class);
@@ -54,9 +59,9 @@ public class RestEndpointManager extends ObservedManager {
 
     @Override
     protected void onRegister(Content node) {
-        Iterator it = node.getChildren(ItemType.CONTENTNODE).iterator();
+        Iterator<Content> it = node.getChildren(ItemType.CONTENTNODE).iterator();
         while (it.hasNext()) {
-            Content x = (Content) it.next();
+            Content x = it.next();
             NodeData nodeData = x.getNodeData("class");
             if (nodeData.isExist()) {
                 String clazz = nodeData.getString();

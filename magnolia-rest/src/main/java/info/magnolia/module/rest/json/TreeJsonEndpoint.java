@@ -46,6 +46,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 
+/**
+ * Service for retrieving tree configurations.
+ * @author tobias
+ *
+ * @deprecated Do we really need the special service for that or can it be done via request to the /repository service? Also if this service is really needed then is should be provided by admin central module since it is admin central specific.
+ */
 @Path("/tree")
 public class TreeJsonEndpoint {
 

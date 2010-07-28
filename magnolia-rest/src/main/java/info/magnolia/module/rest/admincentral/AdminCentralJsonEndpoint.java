@@ -45,6 +45,13 @@ import javax.ws.rs.Path;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Service for providing admin central specific configuration data, e.g. menu.
+ *
+ * @author tobias
+ *
+ * @deprecated should move to the admin central module.
+ */
 @Path("/admincentral")
 public class AdminCentralJsonEndpoint {
 

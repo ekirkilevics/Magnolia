@@ -52,6 +52,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+/**
+ * Service for providing the dialog configurations
+ * @author tobias
+ *
+ */
 @Path("/dialogs")
 public class DialogJsonEndpoint {
 
@@ -75,6 +80,9 @@ public class DialogJsonEndpoint {
         return dialog;
     }
 
+    /**
+     * @deprecated evaluate posibility of saving nodes created by dialogs via repository service rather then in the special method
+     */
     @POST
     @Path("/{dialogName}/create")
     public ValidationResult create(
@@ -111,6 +119,9 @@ public class DialogJsonEndpoint {
         return validationResult;
     }
 
+    /**
+     * @deprecated evaluate posibility of saving nodes created by dialogs via repository service rather then in the special method
+     */
     @POST
     @Path("/{dialogName}/update")
     public ValidationResult update(

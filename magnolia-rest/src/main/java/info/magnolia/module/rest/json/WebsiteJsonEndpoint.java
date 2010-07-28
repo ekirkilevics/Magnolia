@@ -58,6 +58,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Service providing data in form suitable for tree browsing (i.e. incl. children and with the requested property values listed for each child).
+ * @author tobias
+ *
+ * @deprecated since this service is specific to browsing the trees, which is admin central functionality it should be probably provided by the admin central or wcm module.
+ */
 @Path("/website")
 public class WebsiteJsonEndpoint {
 
