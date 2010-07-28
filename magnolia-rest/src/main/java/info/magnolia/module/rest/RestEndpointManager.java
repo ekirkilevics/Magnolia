@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.rest;
+package info.magnolia.module.rest;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;

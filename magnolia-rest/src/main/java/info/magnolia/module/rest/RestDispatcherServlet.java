@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.rest;
+package info.magnolia.module.rest;
 
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 

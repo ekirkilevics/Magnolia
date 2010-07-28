@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.rest.rest;
+package info.magnolia.module.rest;
 
 public interface RestEndpointRegistrar {
 
