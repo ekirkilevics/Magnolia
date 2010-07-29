@@ -37,7 +37,10 @@ package info.magnolia.objectfactory;
  * Implementations of ComponentFactory provide their own instantiation mechanisms. Implementations could
  * for instance get constructor parameters from some well-known place, or call an initialization method, etc.
  *
- * ComponentFactory implementations can be registered in place of the component they're
+ * ComponentFactory implementations can be registered in place of the component they're instantiating. (i.e using the
+ * same key)
+ *
+ * @param <T> the type of component this factory instantiates.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
