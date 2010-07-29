@@ -55,7 +55,6 @@ import javax.jcr.RepositoryException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 

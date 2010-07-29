@@ -34,7 +34,6 @@
 package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.objectfactory.Components;
 
 

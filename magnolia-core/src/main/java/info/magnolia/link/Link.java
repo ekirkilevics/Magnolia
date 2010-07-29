@@ -40,8 +40,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 
 import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
