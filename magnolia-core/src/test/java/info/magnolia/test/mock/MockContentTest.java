@@ -35,12 +35,10 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentUtil;
 import junit.framework.TestCase;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.collection.TransformedCollection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 

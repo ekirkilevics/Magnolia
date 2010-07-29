@@ -33,8 +33,6 @@
  */
 package info.magnolia.link;
 
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

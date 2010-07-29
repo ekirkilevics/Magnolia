@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.link.AbsolutePathTransformer;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.link.LinkException;

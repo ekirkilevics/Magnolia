@@ -37,8 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 

@@ -36,10 +36,7 @@ package info.magnolia.link;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.link.AbsolutePathTransformer;
-import info.magnolia.link.Link;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.link.LinkTransformer;
 import info.magnolia.test.mock.MockContent;
 
 import java.text.MessageFormat;

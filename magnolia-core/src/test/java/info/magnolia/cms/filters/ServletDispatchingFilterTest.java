@@ -38,8 +38,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockAggregationState;
-import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockContext;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import junit.framework.TestCase;

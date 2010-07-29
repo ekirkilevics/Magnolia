@@ -36,10 +36,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.Components;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * A wrapper around java.text.Normalizer and com.ibm.icu.text.Normalizer; uses the former if present, or none

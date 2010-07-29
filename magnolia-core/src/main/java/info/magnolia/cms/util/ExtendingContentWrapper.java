@@ -39,7 +39,6 @@ import java.util.LinkedHashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.AbstractContent;
