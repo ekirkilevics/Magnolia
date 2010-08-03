@@ -43,6 +43,8 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * Aggregates the necessary information to render content. Filled-in progressively by various filters.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -93,22 +93,22 @@ public class FileProperties {
     public static final String HANDLE = "handle"; // /en/mainColumnParagraph/04/file //$NON-NLS-1$
 
     /**
-     * /en/mainColumnParagraph/04/file.Pdf
+     * /en/mainColumnParagraph/04/file.Pdf.
      */
     public static final String PATH_WITHOUT_NAME = "pathWithoutName"; //$NON-NLS-1$
 
     /**
-     * path including fileName: <code>/en/mainColumnParagraph/04/file/report2004.Pdf</code>
+     * path including fileName: <code>/en/mainColumnParagraph/04/file/report2004.Pdf</code>.
      */
     public static final String PATH = "path"; //$NON-NLS-1$
 
     /**
-     * size in bytes: <code>263492</code>
+     * size in bytes: <code>263492</code>.
      */
     public static final String SIZE_BYTES = "sizeBytes"; //$NON-NLS-1$
 
     /**
-     * size in KB: <code>257.3</code>
+     * size in KB: <code>257.3</code>.
      */
     public static final String SIZE_KB = "sizeKB"; //$NON-NLS-1$
 

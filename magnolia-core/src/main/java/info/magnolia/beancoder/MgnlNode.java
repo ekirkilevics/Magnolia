@@ -206,6 +206,9 @@ public class MgnlNode implements Node {
         }
     }
 
+    /**
+     * Wraps an iterator of the given node's child nodes.
+     */
     class MgnlNodeIterator implements Iterator {
 
         Content node;
@@ -230,6 +233,9 @@ public class MgnlNode implements Node {
         }
     }
 
+    /**
+     * Wraps an iterator of the given node's properties.
+     */
     class MgnlPropertyIterator implements Iterator {
 
         private Content mnode;

@@ -137,8 +137,8 @@ public class DefaultContent extends AbstractContent {
     }
 
     /**
-     * creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of magnolia
-     * as well as JCR implementation
+     * Creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of Magnolia
+     * as well as JCR implementation.
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
      * @param contentType JCR node type as configured

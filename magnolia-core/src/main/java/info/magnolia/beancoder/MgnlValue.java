@@ -43,7 +43,7 @@ import openwfe.org.jcr.Value;
 
 
 /**
- * Magnolia Wrapper for value
+ * Magnolia Wrapper for value.
  */
 public class MgnlValue implements Value {
 

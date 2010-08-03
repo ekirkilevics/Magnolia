@@ -90,7 +90,7 @@ public abstract class ObservedManager {
     }
 
     /**
-     * Calls onClear and reregister the nodes by calling onRegister
+     * Calls onClear and reregister the nodes by calling onRegister.
      */
     public synchronized void reload() {
         // Call onClear and reregister the nodes by calling onRegister
@@ -116,7 +116,7 @@ public abstract class ObservedManager {
     }
 
     /**
-     * Reload a specifig node
+     * Reload a specific node.
      * @param node
      */
     protected void reload(Content node) {
@@ -124,7 +124,7 @@ public abstract class ObservedManager {
     }
 
     /**
-     * Clears the registered uuids and calls onClear().
+     * Clears the registered UUIDs and calls onClear().
      */
     public void clear() {
         this.registeredUUIDs.clear();
@@ -132,7 +132,7 @@ public abstract class ObservedManager {
     }
 
     /**
-     * Registers a node
+     * Registers a node.
      * @param node
      */
     protected abstract void onRegister(Content node);

@@ -47,7 +47,7 @@ import openwfe.org.jcr.Value;
 
 
 /**
- * Magnolia wrapper for the property
+ * Magnolia wrapper for the property.
  */
 public class MgnlProperty implements Property {
 

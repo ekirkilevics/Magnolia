@@ -43,17 +43,17 @@ import info.magnolia.objectfactory.Components;
 public class VersionConfig {
 
     /**
-     * maximum index to keep
+     * maximum index to keep.
      */
     public static final String MAX_VERSION_INDEX = "maxVersionIndex";
 
     /**
-     * is versioning is active (at application level, JCR is always configured to version if implemented)
+     * is versioning is active. (at application level, JCR is always configured to version if implemented)
      */
     public static final String ACTIVE = "active";
 
     /**
-     * maximum number of version index
+     * maximum number of version index.
      */
     private static long maxVersions = 2; // default is 3 which could be overwritten through config
 
@@ -66,28 +66,28 @@ public class VersionConfig {
     }
 
     /**
-     * Initialize bean
+     * Initialize bean.
      */
     public void init() {
         load();
     }
 
     /**
-     * Its a fixed config bean
+     * Its a fixed config bean.
      */
     public void load() {
         // nothing to do
     }
 
     /**
-     * Read config and reload bean
+     * Read config and reload bean.
      */
     public void reload() {
         load();
     }
 
     /**
-     * Checks active flag in version config
+     * Checks active flag in version config.
      * @return true if versioning is active at application level
      */
     public boolean isActive() {
@@ -95,7 +95,7 @@ public class VersionConfig {
     }
 
     /**
-     * Get maximum number of versions allowed in version history
+     * Get maximum number of versions allowed in version history.
      * @return max version index
      */
     public long getMaxVersionAllowed() {

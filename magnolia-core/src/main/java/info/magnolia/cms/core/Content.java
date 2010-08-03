@@ -69,7 +69,7 @@ public interface Content extends Cloneable {
     /**
      * Gets the Content node of the current node with the specified name.
      * @param name of the node acting as <code>Content</code>
-     * @return <node>Content </node>
+     * @return Content
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights
@@ -81,7 +81,7 @@ public interface Content extends Cloneable {
      * Creates a Content node under the current node with the specified name. The default node type
      * {@link ItemType#CONTENT} will be use as the contents primary type.
      * @param name of the node to be created as <code>Content</code>
-     * @return newly created <node>Content </node>
+     * @return newly created <code>Content</code>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights
@@ -93,7 +93,7 @@ public interface Content extends Cloneable {
      * Creates a Content node under the current node with the specified name.
      * @param name of the node to be created as <code>Content</code>
      * @param contentType JCR node type as configured
-     * @return newly created <node>Content </node>
+     * @return newly created <code>Content</code>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights
@@ -105,7 +105,7 @@ public interface Content extends Cloneable {
      * Creates a Content node under the current node with the specified name.
      * @param name of the node to be created as <code>Content</code>
      * @param contentType ItemType
-     * @return newly created <node>Content </node>
+     * @return newly created <code>Content</code>
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights
@@ -315,7 +315,7 @@ public interface Content extends Cloneable {
     Collection<Content> getChildren(String contentType, String namePattern);
 
     /**
-     * Returns the first child with the given name, any node type
+     * Returns the first child with the given name, any node type.
      * @param namePattern child node name
      * @return first found node with the given name or <code>null</code> if not found
      * @deprecated since 4.3, either use {@link #getContent(String)} or {@link #getChildren(String)}
@@ -531,7 +531,7 @@ public interface Content extends Cloneable {
     VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException;
 
     /**
-     * get the current base version of this node
+     * get the current base version of this node.
      * @return base ContentVersion
      * @throws UnsupportedRepositoryOperationException
      * @throws RepositoryException
@@ -575,7 +575,7 @@ public interface Content extends Cloneable {
     boolean isGranted(long permissions);
 
     /**
-     * Remove this path
+     * Remove this path.
      * @throws RepositoryException if an error occurs
      */
     void delete() throws RepositoryException;
@@ -725,7 +725,7 @@ public interface Content extends Cloneable {
     public interface ContentFilter {
 
         /**
-         * Test if this content should be included in a resultant collection
+         * Test if this content should be included in a resultant collection.
          * @param content
          * @return if true this will be a part of collection
          */

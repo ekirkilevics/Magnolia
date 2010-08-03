@@ -53,7 +53,7 @@ import java.util.TimeZone;
 
 
 /**
- * $Id$
+ *
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
@@ -89,14 +89,14 @@ public class MetaData {
     public static final int ACTIVATION_STATUS_ACTIVATED = 2;
 
     /**
-     * meta data node
+     * meta data node.
      */
     private Node node;
 
     private AccessManager accessManager;
 
     /**
-     * Package private constructor
+     * Package private constructor.
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
      */
     protected MetaData(Node workingNode, AccessManager manager) {
@@ -136,7 +136,7 @@ public class MetaData {
     }
 
     /**
-     * Get all meta data properties
+     * Get all meta data properties.
      * @return property iterator
      * @deprecated since 4.0 - not used.
      */
@@ -173,7 +173,7 @@ public class MetaData {
     }
 
     /**
-     * get property name with the prefix
+     * get property name with the prefix.
      * @param name
      * @return name with namespace prefix
      */
@@ -202,7 +202,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, adds creation date of the current node
+     * Part of metadata, adds creation date of the current node.
      */
     public void setCreationDate() throws AccessDeniedException {
         allowUpdate();
@@ -219,7 +219,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, adds activated status of the current node
+     * Part of metadata, adds activated status of the current node.
      */
     public void setActivated() throws AccessDeniedException {
         allowUpdate();
@@ -235,7 +235,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, get last activated status of the current node
+     * Part of metadata, get last activated status of the current node.
      * @return Calendar
      */
     public boolean getIsActivated() {
@@ -243,7 +243,7 @@ public class MetaData {
     }
 
     /**
-     * Returns one of the ACTIVATION_STATUS_* constants
+     * Returns one of the ACTIVATION_STATUS_* constants.
      */
     public int getActivationStatus(){
         if (getIsActivated()) {
@@ -263,7 +263,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, adds activated date of the current node
+     * Part of metadata, adds activated date of the current node.
      */
     public void setLastActivationActionDate() throws AccessDeniedException {
         allowUpdate();
@@ -272,7 +272,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, get last activated/de- date of the current node
+     * Part of metadata, get last activated/de- date of the current node.
      * @return Calendar
      */
     public Calendar getLastActionDate() {
@@ -280,7 +280,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, adds modification date of the current node
+     * Part of metadata, adds modification date of the current node.
      */
     public void setModificationDate() throws AccessDeniedException {
         allowUpdate();
@@ -289,7 +289,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, get last modified date of the current node
+     * Part of metadata, get last modified date of the current node.
      * @return Calendar
      */
     public Calendar getModificationDate() {
@@ -322,7 +322,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, current logged-in author who last activated this page
+     * Part of metadata, current logged-in author who last activated this page.
      * @param value
      */
     public void setActivatorId(String value) throws AccessDeniedException {
@@ -339,7 +339,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, template which will be used to render content of this node
+     * Part of metadata, template which will be used to render content of this node.
      * @param value
      */
     public void setTemplate(String value) throws AccessDeniedException {
@@ -348,7 +348,7 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, template type : JSP - Servlet - _xxx_
+     * Part of metadata, template type : JSP - Servlet - _xxx_.
      * @param value
      * @deprecated since 4.0 - not used - template type is determined by template definition
      */
@@ -357,10 +357,6 @@ public class MetaData {
         setProperty(this.getInternalPropertyName(TEMPLATE_TYPE), value);
     }
 
-    /**
-     * @param name
-     * @param value
-     */
     public void setProperty(String name, String value) throws AccessDeniedException {
         allowUpdate();
         name = this.getInternalPropertyName(name);
@@ -383,10 +379,6 @@ public class MetaData {
         }
     }
 
-    /**
-     * @param name
-     * @param value
-     */
     public void setProperty(String name, long value) throws AccessDeniedException {
         allowUpdate();
         name = this.getInternalPropertyName(name);
@@ -413,10 +405,6 @@ public class MetaData {
         }
     }
 
-    /**
-     * @param name
-     * @param value
-     */
     public void setProperty(String name, double value) throws AccessDeniedException {
         allowUpdate();
         name = this.getInternalPropertyName(name);
@@ -443,10 +431,6 @@ public class MetaData {
         }
     }
 
-    /**
-     * @param name
-     * @param value
-     */
     public void setProperty(String name, boolean value) throws AccessDeniedException {
         allowUpdate();
         name = this.getInternalPropertyName(name);
@@ -473,10 +457,6 @@ public class MetaData {
         }
     }
 
-    /**
-     * @param name
-     * @param value
-     */
     public void setProperty(String name, Calendar value) throws AccessDeniedException {
         allowUpdate();
         name = this.getInternalPropertyName(name);
@@ -500,9 +480,6 @@ public class MetaData {
         }
     }
 
-    /**
-     * @param name
-     */
     public Calendar getDateProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
@@ -521,9 +498,6 @@ public class MetaData {
         return null;
     }
 
-    /**
-     * @param name
-     */
     public boolean getBooleanProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
@@ -542,9 +516,6 @@ public class MetaData {
         return false;
     }
 
-    /**
-     * @param name
-     */
     public double getDoubleProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
@@ -563,9 +534,6 @@ public class MetaData {
         return 0d;
     }
 
-    /**
-     * @param name
-     */
     public long getLongProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
@@ -608,7 +576,7 @@ public class MetaData {
     }
 
     /**
-     * remove specified property
+     * remove specified property.
      * @param name of the property to be removed
      * @throws PathNotFoundException if property does not exist
      * @throws RepositoryException if unable to remove
@@ -618,7 +586,7 @@ public class MetaData {
     }
 
     /**
-     * check if property exist
+     * check if property exists.
      * @param name
      * @return true if the specified property exist
      *
@@ -634,9 +602,6 @@ public class MetaData {
         return false;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
         return new ToStringBuilder(this).append("title", this.getTitle()) //$NON-NLS-1$
             .append("template", this.getTemplate()) //$NON-NLS-1$

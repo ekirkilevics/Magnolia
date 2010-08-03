@@ -62,7 +62,6 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author pbaerfuss
  * @version $Id$
- *
  */
 public abstract class AbstractContent extends ContentHandler implements Content {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractContent.class);
@@ -264,12 +263,16 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     /**
      * {@inheritDoc}
-     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}.
      */    
     public Collection<Content> getChildren(final String contentType, final String namePattern) {
         return getChildren(new NodeTypeFilter(contentType), namePattern, null);
     }
 
+    /**
+     * {@inheritDoc}
+     * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}.
+     */
     public Collection<Content> getChildren(ContentFilter filter, Comparator<Content> orderCriteria) {
         return getChildren(filter, null, orderCriteria);
     }

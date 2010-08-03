@@ -63,6 +63,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * This class is responsible for loading the various "magnolia.properties" files, merging them,
+ * and substituting variables in their values.
  * @author pbracher
  * @author fgiust
  */
@@ -70,17 +72,17 @@ public class PropertiesInitializer {
     private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
 
     /**
-     * The properties file containing the bean default implementations
+     * The properties file containing the bean default implementations.
      */
     private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
 
     /**
-     * Placeholder prefix: "${"
+     * Placeholder prefix: "${"-
      */
     public static final String PLACEHOLDER_PREFIX = "${";
 
     /**
-     * Placeholder suffix: "}"
+     * Placeholder suffix: "}".
      */
     public static final String PLACEHOLDER_SUFFIX = "}";
 

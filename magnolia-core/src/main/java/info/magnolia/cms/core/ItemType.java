@@ -68,22 +68,22 @@ public final class ItemType implements Serializable {
     public static final String NT_FILE = "nt:file"; //$NON-NLS-1$
 
     /**
-     * Node type: resource
+     * Node type: resource.
      */
     public static final String NT_RESOURCE = "mgnl:resource"; //$NON-NLS-1$
 
     /**
-     * Node type: metadata
+     * Node type: metadata.
      */
     public static final String NT_METADATA = "mgnl:metaData"; //$NON-NLS-1$
 
     /**
-     * "wfe:workItem"
+     * "wfe:workItem".
      */
     public static final ItemType WORKITEM = new ItemType("workItem");
 
     /**
-     * "wfe:expression"
+     * "wfe:expression".
      */
     public static final ItemType EXPRESSION = new ItemType("expression"); //$NON-NLS-1$
 
