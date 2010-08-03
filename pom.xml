@@ -654,12 +654,13 @@ for Java Content Repositories (JCR).
   </dependencyManagement>
   <distributionManagement>
     <site>
-      <id>dev.magnolia-cms.com</id>
-      <name>dev.magnolia-cms.com</name>
-      <url>scp://dev.magnolia-cms.com/sites/dev/ref/${project.version}</url>
+      <id>magnolia.public.sites</id>
+      <url>dav:http://nexus.magnolia-cms.com/content/sites/magnolia.public.sites/ref/${artifactId}/${project.version}</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
+
+  <!-- TODO - get rid of this ?? -->
   <repositories>
     <!-- just a little trick for folks who don't have our parent pom in their local repo yet -->
     <repository>
