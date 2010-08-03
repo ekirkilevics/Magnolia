@@ -38,6 +38,8 @@ import info.magnolia.cms.util.UrlPattern;
 
 
 /**
+ * A simple implementation of VirtualURIMapping based on {@link UrlPattern}.
+ *
  * @author philipp
  * @version $Id$
  */

@@ -34,6 +34,8 @@
 package info.magnolia.api;
 
 /**
+ * Generic, top-level exception thrown by various Magnolia subsystems.
+ * See subclasses.
  *
  * @author philipp
  * @version $Id$

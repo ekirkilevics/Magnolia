@@ -41,32 +41,28 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Describes a uri to repository mapping
+ * Describes a uri to repository mapping.
+ *
  * @author Philipp Bracher
  * @version $Id$
  */
 public class URI2RepositoryMapping {
 
     /**
-     * The prefix which triggers this mapping
+     * The prefix which triggers this mapping.
      */
     private String URIPrefix;
 
     /**
-     * The repository used for this mapping
+     * The repository used for this mapping.
      */
     private String repository;
 
     /**
-     * The prefix added to the uri to create a full handle
+     * The prefix added to the uri to create a full handle.
      */
     private String handlePrefix;
 
-    /**
-     * @param uriPrefix
-     * @param repository
-     * @param handlePrefix
-     */
     public URI2RepositoryMapping(String uriPrefix, String repository, String handlePrefix) {
         this.URIPrefix = uriPrefix;
         this.repository = repository;
@@ -77,9 +73,7 @@ public class URI2RepositoryMapping {
     }
 
     /**
-     * True if this mapping can get applied to the specified uri
-     * @param uri
-     * @return
+     * True if this mapping can get applied to the specified uri.
      */
     public boolean matches(String uri) {
         if (uri == null) {
@@ -89,9 +83,7 @@ public class URI2RepositoryMapping {
     }
 
     /**
-     * Create a node handle based on an uri
-     * @param uri
-     * @return
+     * Create a node handle based on an uri.
      */
     public String getHandle(String uri) {
         String handle;
@@ -108,9 +100,7 @@ public class URI2RepositoryMapping {
     }
 
     /**
-     * Clean a handle. Remove double / and add always a leading /
-     * @param handle
-     * @return
+     * Clean a handle. Remove double / and add always a leading /.
      */
     private String cleanHandle(String handle) {
         if (!handle.startsWith("/")) {
@@ -123,9 +113,7 @@ public class URI2RepositoryMapping {
     }
 
     /**
-     * Create a uri based on a handle
-     * @param handle
-     * @return
+     * Create a uri based on a handle.
      */
     public String getURI(String handle) {
         try {

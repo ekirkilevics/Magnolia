@@ -34,8 +34,7 @@
 package info.magnolia.cms.beans.config;
 
 /**
- * @author
- * @version $Revision$ ($Author$)
+ * Thrown when initial configuration can't be loaded.
  */
 public class ConfigurationException extends RuntimeException {
 

@@ -48,7 +48,7 @@ import org.safehaus.uuid.UUIDGenerator;
  */
 public final class Path {
     /**
-     * New unlabeled nodes default name
+     * New unlabeled nodes default name.
      */
     private static final String DEFAULT_UNTITLED_NODE_NAME = "untitled";
 
@@ -143,7 +143,7 @@ public final class Path {
     }
 
     /**
-     * Gets absolute filesystem path, adds application root if path is not absolute
+     * Gets absolute filesystem path, adds application root if path is not absolute.
      */
     public static String getAbsoluteFileSystemPath(String path) {
         if (isAbsolute(path)) {
@@ -194,9 +194,7 @@ public final class Path {
     }
 
     /**
-     * <p>
-     * Replace illegal characters based on system property magnolia.ut8.enabled
-     * </p>
+     * Replace illegal characters based on system property magnolia.ut8.enabled.
      * @param label label to validate
      * @return validated label
      */
@@ -212,13 +210,11 @@ public final class Path {
     }
 
     /**
-     * <p>
-     * if charset eq to UTF-8 replase this characters:
+     * If charset eq to UTF-8 replaces these characters:
      * jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 46: [.] 58 [:] 92: [\] 39 :[']
      * url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
      *  
      * else replace illegal characters except [_] [0-9], [A-Z], [a-z], [-], [_]
-     * </p>
      * @param label label to validate
      * @return validated label
      */
@@ -304,9 +300,6 @@ public final class Path {
 
     }
 
-    /**
-     * @param baseName
-     */
     private static String createUniqueName(String baseName) {
         int pos;
         for (pos = baseName.length() - 1; pos >= 0; pos--) {

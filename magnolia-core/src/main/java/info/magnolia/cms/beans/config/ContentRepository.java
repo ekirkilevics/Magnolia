@@ -66,10 +66,10 @@ import java.util.Map;
 
 
 /**
+ * TODO needs serious refactoring and cleanup.
+ *
  * @author Sameer Charles
  * $Id$
- *
- * TODO needs serious refactoring and cleanup.
  */
 public final class ContentRepository {
     private static final Logger log = LoggerFactory.getLogger(ContentRepository.class);
@@ -130,7 +130,7 @@ public final class ContentRepository {
     public static String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
 
     /**
-     * repository default password
+     * repository default password.
      */
     public static String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
@@ -151,7 +151,7 @@ public final class ContentRepository {
     private static Map repositoryMapping = new Hashtable();
 
     /**
-     * holds all repository names as configured in repositories.xml
+     * holds all repository names as configured in repositories.xml.
      */
     private static Map repositoryNameMap = new Hashtable();
 
@@ -268,7 +268,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Load repository mappings and params using repositories.xml
+     * Load repository mappings and params using repositories.xml.
      * @throws Exception
      */
     private static void loadRepositories() throws Exception {
@@ -320,7 +320,7 @@ public final class ContentRepository {
     }
 
     /**
-     * load repository name mapping
+     * load repository name mapping.
      * @param root element of repositories.xml
      */
     private static void loadRepositoryNameMap(Element root) {
@@ -381,7 +381,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Load hierarchy manager for the specified repository and workspace
+     * Load hierarchy manager for the specified repository and workspace.
      */
     private static void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
@@ -415,7 +415,7 @@ public final class ContentRepository {
 
     /**
      * Returns magnolia specific Repository name where this workspace is registered
-     * within <Repository/>
+     * within <Repository/>.
      * */
     public static String getParentRepositoryName(String workspaceName) throws RepositoryException {
         Iterator values = repositoryNameMap.values().iterator();
@@ -429,7 +429,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Get mapped repository name
+     * Get mapped repository name.
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
@@ -442,7 +442,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Get mapped workspace name
+     * Get mapped workspace name.
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
@@ -455,7 +455,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Add a mapped repository name
+     * Add a mapped repository name.
      * @param name
      * @param repositoryName
      */
@@ -464,7 +464,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Add a mapped repository name
+     * Add a mapped repository name.
      * @param name
      * @param repositoryName
      * @param workspaceName
@@ -476,7 +476,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Get default workspace name
+     * Get default workspace name.
      * @return default name if there are no workspaces defined or there is no workspace present with name "default",
      * otherwise return same name as repository name.
      */
@@ -551,7 +551,7 @@ public final class ContentRepository {
     }
 
     /**
-     * Gets repository names array as configured in repositories.xml
+     * Gets repository names array as configured in repositories.xml.
      * @return repository names
      */
     public static Iterator getAllRepositoryNames() {
@@ -559,7 +559,7 @@ public final class ContentRepository {
     }
 
     /**
-     * get internal workspace name
+     * get internal workspace name.
      * @param workspaceName
      * @return workspace name as configured in magnolia repositories.xml
      * */

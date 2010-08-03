@@ -53,6 +53,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * Manages mappings of file extensions with their MIME types and icon.
+ *
  * @author Sameer Charles
  * @version 1.1
  */
@@ -67,7 +69,7 @@ public class MIMEMapping {
     private static final String DEFAULT_CHAR_ENCODING = "UTF-8";
 
     /**
-     * Used to keep the configuration in memory
+     * Used to keep the configuration in memory.
      */
     protected static class MIMEMappingItem {
 
@@ -214,7 +216,7 @@ public class MIMEMapping {
     }
 
     /**
-     * Returns the icon used for rendering this type
+     * Returns the icon used for rendering this type.
      * @return the icon name
      */
     public static String getMIMETypeIcon(String extension) {

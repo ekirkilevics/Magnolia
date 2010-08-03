@@ -34,6 +34,9 @@
 package info.magnolia.cms.beans.config;
 
 /**
+ * VirtualURIMapping implementations are used by {@link info.magnolia.cms.beans.config.VirtualURIManager} and {@link info.magnolia.cms.filters.VirtualUriFilter}
+ * to transform incoming uri requests.
+ * 
  * @author philipp
  * @version $Id$
  *

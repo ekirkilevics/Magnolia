@@ -49,7 +49,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Maps uri prefixes to repositories
+ * Maps uri prefixes to repositories.
+ * 
  * @author Philipp Bracher
  * @version $Id$
  */
@@ -60,7 +61,7 @@ public class URI2RepositoryManager {
     private static Logger log = LoggerFactory.getLogger(URI2RepositoryManager.class);
 
     /**
-     * The mappings
+     * The mappings.
      */
     private Collection<URI2RepositoryMapping> mappings;
 
@@ -77,7 +78,7 @@ public class URI2RepositoryManager {
     }
 
     /**
-     * The mapping to use for this uri
+     * The mapping to use for this uri.
      */
     public URI2RepositoryMapping getMapping(String uri) {
         for (URI2RepositoryMapping mapping : mappings) {
@@ -93,25 +94,21 @@ public class URI2RepositoryManager {
     }
 
     /**
-     * Get the handle for this uri
-     * @param uri
-     * @return
+     * Get the handle for this uri.
      */
     public String getHandle(String uri) {
         return this.getMapping(uri).getHandle(uri);
     }
 
     /**
-     * Get the repository to use for this uri
-     * @param uri
-     * @return
+     * Get the repository to use for this uri.
      */
     public String getRepository(String uri) {
         return this.getMapping(uri).getRepository();
     }
 
     /**
-     * Get the uri to use for this handle
+     * Get the uri to use for this handle.
      */
     public String getURI(String repository, String handle) {
         try {

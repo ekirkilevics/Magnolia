@@ -33,12 +33,13 @@
  */
 package info.magnolia.cms.core;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.DeprecationUtil;
 
 /**
+ * Abstract super class for {@link Content} and {@link info.magnolia.cms.core.version.ContentVersion}
+ * @see info.magnolia.cms.core.AbstractContent
+ * 
  * @author Sameer Charles
  * @version $Revision $ ($Author $) $Id$
  */
@@ -50,13 +51,13 @@ public abstract class ContentHandler implements Cloneable {
     protected HierarchyManager hierarchyManager;
 
     /**
-     * package private constructor
+     * package private constructor.
      */
     ContentHandler() {
     }
 
     /**
-     * Set access manager for this object
+     * Set access manager for this object.
      * @param manager
      * @deprecated use setHierarchyManager instead
      */
@@ -65,7 +66,7 @@ public abstract class ContentHandler implements Cloneable {
     }
 
     /**
-     * Get access manager if previously set for this object
+     * Get access manager if previously set for this object.
      * @return AccessManager
      * @deprecated since 4.0 - use getHierarchyManager instead
      */
@@ -92,16 +93,15 @@ public abstract class ContentHandler implements Cloneable {
     }
 
     /**
-     * Get hierarchy manager if previously set for this object
+     * Get hierarchy manager if previously set for this object.
      * @return HierarchyManager
-     * @throws RepositoryException
      */
     public HierarchyManager getHierarchyManager() {
         return hierarchyManager;
     }
 
     /**
-     * Set hierarchy manager
+     * Set hierarchy manager.
      * @param hierarchyManager
      */
     public void setHierarchyManager(HierarchyManager hierarchyManager) {

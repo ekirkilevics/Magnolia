@@ -58,6 +58,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Default JCR-based implementation of {@link HierarchyManager}.
+ *
  * @author Sameer Charles
  * $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
  */
@@ -67,7 +69,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     /**
      * instead of defining each field transient, we explicitly says what needs to be
-     * serialized
+     * serialized.
      * */
     private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("userId", String.class),
@@ -87,7 +89,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     private QueryManager queryManager;
 
     /**
-     * All serializable properties
+     * All serializable properties.
      * */
     private String userId;
 
@@ -113,7 +115,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Reinitialize itself with the partial deserialized data
+     * Reinitialize itself with the partial deserialized data.
      * */
     private void reInitialize() {
         WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
@@ -128,7 +130,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Set access manager for this hierarchy
+     * Set access manager for this hierarchy.
      * @param accessManager
      */
     protected void setAccessManager(AccessManager accessManager) {
@@ -136,7 +138,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Get access manager
+     * Get access manager.
      * @return accessmanager attached to this hierarchy
      */
     public AccessManager getAccessManager() {
@@ -144,7 +146,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Set query manager for this hierarchy
+     * Set query manager for this hierarchy.
      * @param queryManager
      */
     protected void setQueryManager(QueryManager queryManager) {
@@ -178,8 +180,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * creates contentNode of type <b>contentType </b> contentType must be defined in item type definition of magnolia
-     * as well as JCR implementation
+     * Creates contentNode of type <b>contentType</b>. contentType must be defined in item type definition of Magnolia
+     * as well as JCR implementation.
      * @param path absolute (primary) path to this <code>Node</code>
      * @param label page name
      * @param contentType , JCR node type as configured
@@ -214,7 +216,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     /**
      * Helper method to set page properties, create page calls this method. you could call this method anytime to create
-     * working page properties
+     * working page properties.
      */
     protected void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setCreationDate();
@@ -224,7 +226,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * get content object of the requested URI
+     * get content object of the requested URI.
      * @param path of the content to be initialized
      * @return Content
      * @throws javax.jcr.PathNotFoundException
@@ -268,7 +270,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
 
     /**
-     * get NodeData object of the requested URI
+     * get NodeData object of the requested URI.
      * @param path of the atom to be initialized
      * @return NodeData
      * @throws javax.jcr.PathNotFoundException
@@ -285,7 +287,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     /**
      * returns the first page with a given template name that is found in tree that starts from the page given py the
-     * path (including this page)
+     * path (including this page).
      * @param path handle of the page from where the search should start
      * @param templateName template name to search for
      * @return first Content hierarchy node that has the specified template name assigned
@@ -324,7 +326,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * removes specified path, it can be either node or property
+     * removes specified path, it can be either node or property.
      * @param path to be removed
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
@@ -438,7 +440,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * checks if the requested resource is an NodeData (Property)
+     * checks if the requested resource is an NodeData (Property).
      * @param path of the requested NodeData
      * @return boolean true is the requested content is an NodeData
      */
@@ -473,7 +475,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * gets currently used workspace for this hierarchy manager
+     * gets currently used workspace for this hierarchy manager.
      */
     public Workspace getWorkspace() {
         if (null == this.workspace) {
@@ -483,7 +485,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * move content to the specified location
+     * move content to the specified location.
      * @param source source node path
      * @param destination node where the node has to be moved
      * @throws javax.jcr.PathNotFoundException
@@ -498,7 +500,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * copy content to the specified location
+     * copy content to the specified location.
      * @param source source node path
      * @param destination node where the node has to be copied
      * @throws javax.jcr.PathNotFoundException
@@ -513,7 +515,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Persists all changes to the repository if validation succeds
+     * Persists all changes to the repository if validation succeeds.
      * @throws RepositoryException
      */
     public void save() throws RepositoryException {
@@ -534,7 +536,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     }
 
     /**
-     * Refreshes this session
+     * Refreshes this session.
      * @param keepChanges
      * @throws RepositoryException
      * @see javax.jcr.Session#refresh(boolean)

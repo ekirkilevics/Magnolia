@@ -40,6 +40,10 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * A global holder for system-wide configuration properties.
+ *
+ * @see info.magnolia.cms.beans.config.PropertiesInitializer
+ * 
  * @author Sameer charles
  * @version 2.0 $Id$
  */

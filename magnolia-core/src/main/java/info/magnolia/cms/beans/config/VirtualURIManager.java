@@ -49,6 +49,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Store for all virtual URI to template/page mapping.
+ * 
  * @author Sameer Charles
  * @version 2.0
  */

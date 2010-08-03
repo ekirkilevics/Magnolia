@@ -44,9 +44,6 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Collection;
 

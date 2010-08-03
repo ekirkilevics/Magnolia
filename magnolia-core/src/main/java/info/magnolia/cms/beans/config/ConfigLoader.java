@@ -34,7 +34,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.module.ModuleManagementException;
@@ -61,7 +60,7 @@ public class ConfigLoader {
      * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
      *
      * @param context ServletContext
-     * @see SystemProperty
+     * @see info.magnolia.cms.core.SystemProperty
      */
     public ConfigLoader(ServletContext context) {
 

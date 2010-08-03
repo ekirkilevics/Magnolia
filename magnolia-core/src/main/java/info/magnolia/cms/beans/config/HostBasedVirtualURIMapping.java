@@ -86,7 +86,7 @@ public class HostBasedVirtualURIMapping implements VirtualURIMapping {
     }
 
     /**
-     * Adds a host mapping (used by content2bean)
+     * Adds a host mapping (used by content2bean).
      * @param mapping in the form host=path
      */
     public void addHost(String mapping) {
