@@ -105,6 +105,7 @@ public class FreemarkerHelper {
                 return value;
             }
         };
+        cfg.setTemplateExceptionHandler(freemarkerConfig.getTemplateExceptionHandler());
 
         // ... and here we essentially do the same by instantiate delegator implementations of FreeMarker components, which delegate to our observed FreemarkerConfig
         // these setters do more than their equivalent getters, so we can't just override the getter instead.
@@ -112,11 +113,8 @@ public class FreemarkerHelper {
         cfg.setTemplateLoader(new ConfigDelegatingTemplateLoader(freemarkerConfig));
         cfg.setObjectWrapper(new ConfigDelegatingObjectWrapper(freemarkerConfig));
 
-
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         cfg.setDefaultEncoding("UTF8");
-        // TODO : configure this (maybe based on the dev-mode system property)
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
         //cfg.setTemplateUpdateDelay(10);
     }
 
