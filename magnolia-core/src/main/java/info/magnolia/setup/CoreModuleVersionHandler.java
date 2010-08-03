@@ -47,8 +47,12 @@ import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.MoveNodeTask;
+import info.magnolia.module.delta.NewPropertyTask;
+import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.GenericTasks;
@@ -170,6 +174,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 ))
                 .addTask(new UpdateUserPermissions())
         );
+        
+        register(DeltaBuilder.update("4.3.6", "")
+                .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", ContentRepository.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
+                .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class","Unable to set property class because it already exists"),  new NewPropertyTask("Class", "Creates property class and sets it to class path", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {

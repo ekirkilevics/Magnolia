@@ -37,6 +37,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.freemarker.models.MagnoliaModelFactory;
@@ -73,6 +74,7 @@ public class FreemarkerConfig {
     private final List<MagnoliaModelFactory> registeredModelFactories;
     private final List<TemplateLoader> templateLoaders;
     private final Map<String, TemplateModel> sharedVariables;
+    private TemplateExceptionHandler templateExceptionHandler = new ModeDependentTemplateExceptionHandler();
 
     private ObjectWrapper objectWrapper;
     private TemplateLoader multiTL;
@@ -133,5 +135,13 @@ public class FreemarkerConfig {
 
     public void addSharedVariable(String name, TemplateModel value) {
         sharedVariables.put(name, value);
+    }
+
+    public TemplateExceptionHandler getTemplateExceptionHandler() {
+        return templateExceptionHandler;
+    }
+
+    public void setTemplateExceptionHandler(TemplateExceptionHandler templateExceptionHandler) {
+        this.templateExceptionHandler = templateExceptionHandler;
     }
 }
