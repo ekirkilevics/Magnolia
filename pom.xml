@@ -133,11 +133,6 @@ for Java Content Repositories (JCR).
                 <showWarnings>true</showWarnings>
               </configuration>
             </plugin>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>gwt-maven-plugin</artifactId>
-              <version>1.2</version>
-            </plugin>
           </plugins>
         </pluginManagement>
       </build>
@@ -186,6 +181,35 @@ for Java Content Repositories (JCR).
     </plugins>
     <pluginManagement>
       <plugins>
+        <!-- delete inplace webapp stuff -->
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <configuration>
+            <filesets>
+              <fileset>
+                <directory>src/main/webapp/cache</directory>
+              </fileset>
+              <fileset>
+                <directory>src/main/webapp/logs</directory>
+              </fileset>
+              <fileset>
+                <directory>src/main/webapp/repositories</directory>
+              </fileset>
+              <fileset>
+                <directory>src/main/webapp/templates</directory>
+              </fileset>
+              <fileset>
+                <directory>src/main/webapp/tmp</directory>
+              </fileset>
+            </filesets>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>gwt-maven-plugin</artifactId>
+          <version>1.2</version>
+        </plugin>
+        
         <!-- generate TLDs -->
         <plugin>
           <groupId>org.codehaus.xdoclet</groupId>
