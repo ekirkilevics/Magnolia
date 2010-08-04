@@ -270,8 +270,13 @@ for Java Content Repositories (JCR).
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs</artifactId>
         <version>${resteasyVersion}</version>
-        <!-- filter out unwanted jars -->
         <exclusions>
+          <!-- scannotation is on central at net.sf.scannotation - org.scannotation is only available on https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/
+               see http://jira.codehaus.org/browse/MAVENUPLOAD-1984 -->
+          <exclusion>
+            <groupId>org.scannotation</groupId>
+            <artifactId>scannotation</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
@@ -294,6 +299,12 @@ for Java Content Repositories (JCR).
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jackson-provider</artifactId>
         <version>${resteasyVersion}</version>
+      </dependency>
+      <!-- replace org.scannotation.scannotation with net.sf.scannotation -->
+      <dependency>
+        <groupId>net.sf.scannotation</groupId>
+        <artifactId>scannotation</artifactId>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
