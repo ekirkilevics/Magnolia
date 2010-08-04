@@ -21,8 +21,6 @@ for Java Content Repositories (JCR).
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
     <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
-    <gwtVersion>2.0.3</gwtVersion>
-    <resteasyVersion>1.2.1.GA</resteasyVersion>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -254,7 +252,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
-        <version>${gwtVersion}</version>
+        <version>2.0.3</version>
       </dependency>
       <dependency>
         <groupId>com.extjs</groupId>
@@ -269,7 +267,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs</artifactId>
-        <version>${resteasyVersion}</version>
+        <version>1.2.1.GA</version>
         <exclusions>
           <!-- scannotation is on central at net.sf.scannotation - org.scannotation is only available on https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/
                see http://jira.codehaus.org/browse/MAVENUPLOAD-1984 -->
@@ -298,7 +296,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jackson-provider</artifactId>
-        <version>${resteasyVersion}</version>
+        <version>1.2.1.GA</version>
       </dependency>
       <!-- replace org.scannotation.scannotation with net.sf.scannotation -->
       <dependency>
