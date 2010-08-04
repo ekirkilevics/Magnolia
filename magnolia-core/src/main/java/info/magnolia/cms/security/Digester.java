@@ -41,15 +41,25 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Date: Jul 6, 2004 Time: 11:26:05 AM
+ * Encryption helper.
+ *
+ * Supported algorithm:
+ * <ul>
+ * <li>SHA-1 </li>
+ * <li>MD5 </li>
+ * </ul>
+ * Future:
+ * <ul>
+ * <li>SHA-256 </li>
+ * <li>SHA-384 </li>
+ * <li>SHA-512 </li>
+ * </ul>
+ *
  * @author Sameer Charles
  * @version 2.0
  */
 public final class Digester {
 
-    /**
-     * supported algorithms
-     */
     public static final String SHA1 = "SHA-1"; //$NON-NLS-1$
 
     public static final String MD5 = "MD5"; //$NON-NLS-1$
@@ -73,38 +83,12 @@ public final class Digester {
         // unused
     }
 
-    /**
-     * Supported algorithm:
-     * <ul>
-     * <li>SHA-1 </li>
-     * <li>MD5 </li>
-     * </ul>
-     * Future:
-     * <ul>
-     * <li>SHA-256 </li>
-     * <li>SHA-384 </li>
-     * <li>SHA-512 </li>
-     * </ul>
-     */
     public static String getDigest(String data, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);
         md.reset();
         return new String(md.digest(data.getBytes()));
     }
 
-    /**
-     * Supported algorithm:
-     * <ul>
-     * <li>SHA-1 </li>
-     * <li>MD5 </li>
-     * </ul>
-     * Future:
-     * <ul>
-     * <li>SHA-256 </li>
-     * <li>SHA-384 </li>
-     * <li>SHA-512 </li>
-     * </ul>
-     */
     public static byte[] getDigest(byte[] data, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);
         md.reset();
@@ -112,9 +96,7 @@ public final class Digester {
     }
 
     /**
-     * <p>
-     * gets SHA-1 encoded -> hex string
-     * </p>
+     * Gets SHA-1 encoded -> hex string.
      */
     public static String getSHA1Hex(String data) {
         try {
@@ -128,9 +110,7 @@ public final class Digester {
     }
 
     /**
-     * <p>
-     * gets MD5 encoded -> hex string
-     * </p>
+     * Gets MD5 encoded -> hex string.
      */
     public static String getMD5Hex(String data) {
         try {
@@ -144,22 +124,18 @@ public final class Digester {
     }
 
     /**
-     * <p>
-     * converts a byte array to a string Hex
+     * Converts a byte array to a string Hex.
      * @param data to be converted
      * @return string representing hex values of the byte array
-     * </p>
      */
     public static String toHEX(String data) {
         return Digester.toHEX(data.getBytes());
     }
 
     /**
-     * <p>
-     * converts a byte array to a string Hex
+     * Converts a byte array to a string Hex.
      * @param data to be converted
      * @return string representing hex values of the byte array
-     * </p>
      */
     public static String toHEX(byte[] data) {
         StringBuffer hexValue = new StringBuffer();
