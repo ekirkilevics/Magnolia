@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -43,7 +43,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /**
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
