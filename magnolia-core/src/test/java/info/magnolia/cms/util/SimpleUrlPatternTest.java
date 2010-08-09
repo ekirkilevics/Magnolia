@@ -45,6 +45,11 @@ import java.io.UnsupportedEncodingException;
  */
 public class SimpleUrlPatternTest extends TestCase {
 
+    public void testDotDoPattern() {
+       final SimpleUrlPattern sup = new SimpleUrlPattern("*.do");
+       assertFalse(sup.match("/.resources/enterprise-css/registration.css"));
+    }
+
     /**
      * Test without wildcards.
      */

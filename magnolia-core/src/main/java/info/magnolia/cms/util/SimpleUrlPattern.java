@@ -56,7 +56,7 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * Any char, newline included.
      */
-    public static final String URL_CHAR_PATTERN = "(.*\\n*)"; //$NON-NLS-1$
+    public static final String URL_CHAR_PATTERN = "."; //$NON-NLS-1$
 
     /**
      * Regexp pattern used for the simple keyword <code>*</code>. Matches 0 or more characters.
@@ -90,7 +90,7 @@ public final class SimpleUrlPattern implements UrlPattern {
      */
     public SimpleUrlPattern(String string) {
         this.length = StringUtils.removeEnd(string, "*").length();
-        this.pattern = Pattern.compile(getEncodedString(string));
+        this.pattern = Pattern.compile(getEncodedString(string), Pattern.DOTALL);
         this.patternString = string;
     }
 
