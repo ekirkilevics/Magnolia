@@ -1,0 +1,2 @@
+This is a temporary hack until both Vaadin Treetable widget is not available through an official maven repo. The vaadin-6.4-SNAPSHOT.jar file was
+needed to compile the Treetable widget against (the latest stable version 6.4.1 won't suffice).
