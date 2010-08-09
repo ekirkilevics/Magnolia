@@ -93,9 +93,8 @@
       </plugin>
     </plugins>
   </build>
-
+<!--
   <repositories>
-    <!--
     <repository>
       <id>vaadin-snapshots</id>
       <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
@@ -111,6 +110,7 @@
        a clever trick for non 'mavenized' dependencies without resorting to mvn:install-file or the deprecated system scope and system path.
        See http://brettporter.wordpress.com/2009/06/10/a-maven-friendly-pattern-for-storing-dependencies-in-version-control/
     -->
+    <!--
     <repository>
       <id>local</id>
       <url>file:${basedir}/src/repository</url>
@@ -119,6 +119,7 @@
       </snapshots>
     </repository>
   </repositories>
+  -->
 
   <!--
   <pluginRepositories>
@@ -153,6 +154,8 @@
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin-treetable</artifactId>
       <version>0.4.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/src/repository/com/vaadin/vaadin-treetable/0.4.0/vaadin-treetable-0.4.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
