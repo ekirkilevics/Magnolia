@@ -227,7 +227,7 @@ public class AdminCentralVaadinApplication extends Application {
          * dan: simply remove next in order to get the default theme
          * ("reindeer")
          */
-        // setTheme("runo");
+        setTheme("runo");
         initLayout();
         initContactAddRemoveButtons();
         initContactDetailsView();
