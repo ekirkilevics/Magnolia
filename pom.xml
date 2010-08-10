@@ -210,13 +210,7 @@ for Java Content Repositories (JCR).
               </fileset>
             </filesets>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>gwt-maven-plugin</artifactId>
-          <version>1.2</version>
-        </plugin>
-        
+        </plugin>  
         <!-- generate TLDs -->
         <plugin>
           <groupId>org.codehaus.xdoclet</groupId>
@@ -733,10 +727,6 @@ for Java Content Repositories (JCR).
     <module>magnolia-module-fckeditor</module>
     <module>magnolia-module-admininterface</module>
     <module>magnolia-module-admincentral-vaadin</module>
-    <!--
-    <module>magnolia-admin-central</module>
-    <module>magnolia-module-wcm</module>
-    -->
     <module>magnolia-module-cache</module>
     <module>magnolia-module-templating-components</module>
     <module>magnolia-taglib-cms</module>
