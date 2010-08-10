@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -66,6 +66,7 @@ import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 
 /**
  * Demo Application - simple AdressBook
@@ -191,6 +192,7 @@ public class AdminCentralVaadinApplication extends Application {
         try {
             parent = MgnlContext.getHierarchyManager("website").getContent(path);
         } catch (RepositoryException e) {
+            //getMainWindow().showNotification("Something bad happened", e.getMessage(), Notification.TYPE_WARNING_MESSAGE);
             throw new RuntimeException(e);
         }
         IndexedContainer ic = new IndexedContainer();
