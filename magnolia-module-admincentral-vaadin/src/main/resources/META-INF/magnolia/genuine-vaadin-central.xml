@@ -20,21 +20,21 @@
 
   <servlets>
     <servlet>
-      <name>Vaadin Application Servlet</name>
+      <name>VaadinApplicationServlet</name>
       <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
        <mappings>
          <mapping>/*</mapping>
       </mappings>
        <params>
-       <param>
-            <name>application</name>
-            <value>info.magnolia.module.admincentral.AdminCentralVaadinApplication</value>
-        </param>
-        <param>
-  		<name>widgetset</name>
-  		<value>info.magnolia.module.admincentral.widgetset.AdminCentralWidgetset</value>
-  	    </param>
-  	    </params>
+         <param>
+           <name>application</name>
+           <value>info.magnolia.module.admincentral.AdminCentralVaadinApplication</value>
+         </param>
+         <param>
+           <name>widgetset</name>
+           <value>info.magnolia.module.admincentral.widgetset.AdminCentralWidgetset</value>
+         </param>
+       </params>
     </servlet>
   </servlets>
 </module>
