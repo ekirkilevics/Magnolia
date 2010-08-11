@@ -35,6 +35,11 @@ package info.magnolia.module.admincentral.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 
+/**
+ * Module's version handler.
+ * @author fgrilli
+ *
+ */
 public class AdminCentralVaadinModuleVersionHandler extends DefaultModuleVersionHandler {
 
 }

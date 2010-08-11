@@ -37,6 +37,7 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
 /**
+ * Magnolia's AdminCentral Module.
  * @author fgrilli
  *
  */

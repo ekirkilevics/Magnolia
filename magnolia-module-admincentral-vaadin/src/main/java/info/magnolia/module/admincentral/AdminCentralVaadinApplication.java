@@ -66,10 +66,9 @@ import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
 /**
- * Demo Application - simple AdressBook
+ * Demo Application - simple AdressBook.
  *
  * Added Tree Table Add on to WEB-Inf/lib...
  *
@@ -90,9 +89,7 @@ public class AdminCentralVaadinApplication extends Application {
     private static final String[] websiteFields = { "page", "title", "status", "template", "modificationDate" };
 
     private static final String[] websiteVisibleCols = { "Page", "Title", "Status", "Template", "Mod. Date" };
-    /**
-     * Title to be displayed in the window
-     */
+
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
     private Accordion accordion = createAccordion();
