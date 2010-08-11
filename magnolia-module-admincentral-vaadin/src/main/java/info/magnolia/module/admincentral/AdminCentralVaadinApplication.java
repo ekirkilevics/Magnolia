@@ -66,6 +66,7 @@ import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.dialog.DialogFactory;
 
 /**
  * Demo Application - simple AdressBook.
@@ -93,6 +94,7 @@ public class AdminCentralVaadinApplication extends Application {
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
     private Accordion accordion = createAccordion();
+    private VerticalLayout mainContainer;
 
     private IndexedContainer addressBookData = createDummyData();
     //private IndexedContainer addressBookData = createWebsiteTreeData("/", ItemType.CONTENTNODE.getSystemName());
@@ -115,6 +117,7 @@ public class AdminCentralVaadinApplication extends Application {
         Accordion a = new Accordion();
         a.addTab(l1, "Website", null);
         a.addTab(l2, "Config", null);
+        a.addTab(new Label("For testing dialogs"), "Dialogs", null);
         a.addListener(new Accordion.SelectedTabChangeListener() {
 
             /**
@@ -128,6 +131,17 @@ public class AdminCentralVaadinApplication extends Application {
                 if (tab != null) {
                     getMainWindow().showNotification(
                             "Selected tab: " + tab.getCaption());
+
+                    if (tab.getCaption().equals("Dialogs")) {
+                        mainContainer.removeAllComponents();
+                        Button open = new Button("Edit paragraph",
+                                new Button.ClickListener() {
+                                    public void buttonClick(Button.ClickEvent event) {
+                                        getMainWindow().addWindow(new DialogFactory().createDialog("bogus"));
+                                    }
+                                });
+                        mainContainer.addComponent(open);
+                    }
                 }
             }
         });
@@ -355,12 +369,12 @@ public class AdminCentralVaadinApplication extends Application {
      * possibilities...
      */
     void initLayout() {
-        SplitPanel splitPanel = new SplitPanel(
-                SplitPanel.ORIENTATION_HORIZONTAL);
+        SplitPanel splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         setMainWindow(new Window(WINDOW_TITLE, splitPanel));
         splitPanel.setSplitPosition(20);
-        VerticalLayout vertical = new VerticalLayout();
-        vertical.setSizeFull();
+
+        mainContainer = new VerticalLayout();
+        mainContainer.setSizeFull();
 
         accordion.setSizeFull();
 
@@ -371,11 +385,11 @@ public class AdminCentralVaadinApplication extends Application {
         bottomLeftCorner.setWidth("100%");
 
         splitPanel.addComponent(accordion);
-        splitPanel.addComponent(vertical);
-        vertical.addComponent(contactList);
-        vertical.addComponent(bottomLeftCorner);
+        splitPanel.addComponent(mainContainer);
+        mainContainer.addComponent(contactList);
+        mainContainer.addComponent(bottomLeftCorner);
 
-        vertical.setExpandRatio(contactList, 10);
-        vertical.setExpandRatio(bottomLeftCorner, 1);
+        mainContainer.setExpandRatio(contactList, 10);
+        mainContainer.setExpandRatio(bottomLeftCorner, 1);
     }
 }
