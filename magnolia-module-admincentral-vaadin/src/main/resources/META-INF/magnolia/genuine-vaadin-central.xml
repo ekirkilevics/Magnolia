@@ -23,7 +23,8 @@
       <name>VaadinApplicationServlet</name>
       <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
        <mappings>
-         <mapping>/*</mapping>
+         <mapping>/AdminCentral/*</mapping>
+         <mapping>/VAADIN/*</mapping>
       </mappings>
        <params>
          <param>
