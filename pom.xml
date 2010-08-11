@@ -280,6 +280,11 @@ for Java Content Repositories (JCR).
         <version>6.4.1</version>
       </dependency>
       <dependency>
+        <groupId>com.vaadin.addon</groupId>
+        <artifactId>vaadin-treetable</artifactId>
+        <version>0.4.0</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
         <version>2.0.3</version>
