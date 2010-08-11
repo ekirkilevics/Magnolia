@@ -709,19 +709,6 @@ for Java Content Repositories (JCR).
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
-      <id>jboss-releases-repo</id>
-      <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-      <layout>default</layout>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>never</updatePolicy>
-      </snapshots>
-    </repository>
   </repositories>
   <modules>
     <module>magnolia-core</module>
