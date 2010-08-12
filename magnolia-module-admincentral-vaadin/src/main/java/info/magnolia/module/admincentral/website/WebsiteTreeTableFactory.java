@@ -35,12 +35,18 @@ package info.magnolia.module.admincentral.website;
 
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
+import com.vaadin.data.Container;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Table.TableDragMode;
 
@@ -61,6 +67,9 @@ public class WebsiteTreeTableFactory {
         super();
     }
 
+    /**
+     * @return the single instance
+     */
     public static WebsiteTreeTableFactory getInstance() {
         if (instance == null) {
             instance = new WebsiteTreeTableFactory();
@@ -69,11 +78,52 @@ public class WebsiteTreeTableFactory {
     }
 
     /**
-     * @return TreeTable hosting the Websites
+     * @return WebsiteTreeTable displaying the Websites
      */
-    public TreeTable createWebsiteTreeTable() {
-        final TreeTable table = new TreeTable();
+    public WebsiteTreeTable createWebsiteTreeTable() {
+        final WebsiteTreeTable table = new WebsiteTreeTable();
         table.setSizeFull();
+        table.setEditable(true);
+        table.setSelectable(true);
+        addDragAndDrop(table);
+        addEditingByDoubleClick(table);
+        return table;
+    }
+
+    private void addEditingByDoubleClick(final WebsiteTreeTable table) {
+        table.setTableFieldFactory(new DefaultFieldFactory() {
+            public Field createField(Container container, Object itemId,
+                                     Object propertyId, Component uiContext) {
+                ItemClickEvent selection = table.getSelectedContactId();
+                if (selection != null) {
+                    if ((selection.getItemId().equals(itemId))
+                                    && (selection.getPropertyId().equals(propertyId))) {
+                        return super.createField(container, itemId, propertyId,
+                                        uiContext);
+                    }
+                }
+                return null;
+            }
+        });
+
+        table.addListener(new ItemClickEvent.ItemClickListener() {
+            public void itemClick(ItemClickEvent event) {
+                if (event.isDoubleClick()) {
+                    table.setSelectedContactId(event);
+                    table.setEditable(true);
+                }
+                else if (table.isEditable()) {
+                    table.setEditable(false);
+                    table.setValue(event.getItemId());
+                }
+            }
+        });
+    }
+
+    /**
+     *Add Drag and Drop functionality to the provided TreeTable
+     */
+    private void addDragAndDrop(final TreeTable table) {
         table.setDragMode(TableDragMode.ROW);
         table.setDropHandler(new DropHandler() {
 
@@ -147,6 +197,5 @@ public class WebsiteTreeTableFactory {
                 }
             }
         });
-        return table;
     };
 }

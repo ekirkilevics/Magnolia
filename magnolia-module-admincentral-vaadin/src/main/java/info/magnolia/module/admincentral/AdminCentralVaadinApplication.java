@@ -77,12 +77,14 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
+
 /**
  * Demo Application - simple AdressBook.
  * <p/>
  * Added Tree Table Add on to WEB-Inf/lib...
  * <p/>
- * TODO show website tree instead of dummy address book data. Started to work on that but it's clearly a mess as you can see.
+ * TODO show website tree instead of dummy address book data. Started to work on that but it's
+ * clearly a mess as you can see.
  *
  * @author dan
  * @author fgrilli
@@ -94,7 +96,9 @@ public class AdminCentralVaadinApplication extends Application {
     private static String[] fields = {"First Name", "Last Name", "Company",
             "Mobile Phone", "Work Phone", "Home Phone", "Work Email",
             "Home Email", "Street", "Zip", "City", "State", "Country"};
+
     private static final long serialVersionUID = 5773744599513735815L;
+
     private static String[] visibleCols = new String[]{"Last Name",
             "First Name", "Company"};
 
@@ -105,23 +109,20 @@ public class AdminCentralVaadinApplication extends Application {
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
     private Navigation menu = createMenu();
+
     private VerticalLayout mainContainer;
 
     private IndexedContainer addressBookData = createDummyData();
-    //private IndexedContainer addressBookData = createWebsiteTreeData("/", ItemType.CONTENTNODE.getSystemName());
+
+    // private IndexedContainer addressBookData = createWebsiteTreeData("/",
+    // ItemType.CONTENTNODE.getSystemName());
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
+
     private Form contactEditor = new Form();
+
     private TreeTable contactList = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
+
     private Button contactRemovalButton;
-
-    /**
-     * Used for deciding, whether a table column gets editable or not (only
-     * the selected one will be...).
-     * <p/>
-     * Hint: not yet properly working
-     */
-    private ItemClickEvent selectedContactId = null;
-
 
     private Navigation createMenu() {
         Navigation navigation = null;
@@ -143,11 +144,15 @@ public class AdminCentralVaadinApplication extends Application {
                             mainContainer.removeAllComponents();
                             Button open = new Button("Edit paragraph",
                                     new Button.ClickListener() {
+
                                         public void buttonClick(Button.ClickEvent event) {
                                             try {
                                                 openDialog();
-                                            } catch (RepositoryException e) {
-                                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                            }
+                                            catch (RepositoryException e) {
+                                                e.printStackTrace(); // To change body of catch
+                                                                     // statement use File |
+                                                                     // Settings | File Templates.
                                             }
                                         }
                                     });
@@ -157,7 +162,8 @@ public class AdminCentralVaadinApplication extends Application {
                 }
             });
 
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
             getMainWindow().showNotification("Application menu could not be created.", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
         }
@@ -170,28 +176,6 @@ public class AdminCentralVaadinApplication extends Application {
         Content storageNode = ContentUtil.createPath(hm, "/modules/genuine-vaadin-central/foobar", true);
 
         getMainWindow().addWindow(new DialogFactory().createDialog("bogus", storageNode));
-    }
-
-    /**
-     * @return TreeTable
-     */
-    private TreeTable createContactList() {
-        TreeTable table = new TreeTable();
-        table.setSizeFull();
-        table.setTableFieldFactory(new TableFieldFactory() {
-            private static final long serialVersionUID = 3299668916157924056L;
-
-            public Field createField(Container container, Object itemId,
-                                     Object propertyId, Component uiContext) {
-                /**
-                 * Cell is editable if it is the selected one...
-                 */
-                return (selectedContactId != null && selectedContactId
-                        .equals(itemId)) ? new TextField() : null;
-            }
-        });
-        table.setEditable(true);
-        return table;
     }
 
     /**
@@ -227,8 +211,10 @@ public class AdminCentralVaadinApplication extends Application {
         Content parent = null;
         try {
             parent = MgnlContext.getHierarchyManager("website").getContent(path);
-        } catch (RepositoryException e) {
-            //getMainWindow().showNotification("Something bad happened", e.getMessage(), Notification.TYPE_WARNING_MESSAGE);
+        }
+        catch (RepositoryException e) {
+            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
+            // Notification.TYPE_WARNING_MESSAGE);
             throw new RuntimeException(e);
         }
         IndexedContainer ic = new IndexedContainer();
@@ -251,7 +237,8 @@ public class AdminCentralVaadinApplication extends Application {
             ic.getContainerProperty(id, "title").setValue(content.getTitle());
             ic.getContainerProperty(id, "status").setValue(content.getMetaData().getActivationStatus());
             ic.getContainerProperty(id, "template").setValue(content.getTemplate());
-            ic.getContainerProperty(id, "modificationDate").setValue(DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
+            ic.getContainerProperty(id, "modificationDate").setValue(
+                DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
 
         }
         return ic;
@@ -260,8 +247,7 @@ public class AdminCentralVaadinApplication extends Application {
     @Override
     public void init() {
         /**
-         * dan: simply remove next in order to get the default theme
-         * ("reindeer")
+         * dan: simply remove next in order to get the default theme ("reindeer")
          */
         setTheme("runo");
         initLayout();
@@ -275,6 +261,7 @@ public class AdminCentralVaadinApplication extends Application {
         // New item button
         bottomLeftCorner.addComponent(new Button("+",
                 new Button.ClickListener() {
+
                     /**
                      *
                      */
@@ -288,6 +275,7 @@ public class AdminCentralVaadinApplication extends Application {
 
         // Remove item button
         contactRemovalButton = new Button("-", new Button.ClickListener() {
+
             /**
              *
              */
@@ -326,35 +314,9 @@ public class AdminCentralVaadinApplication extends Application {
     private void initContactList() {
         contactList.setContainerDataSource(addressBookData);
         contactList.setVisibleColumns(visibleCols);
-        contactList.setSelectable(true);
-        contactList.setTableFieldFactory(new DefaultFieldFactory() {
-            @Override
-            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
-                if (selectedContactId != null) {
-                    if ((selectedContactId.getItemId().equals(itemId))
-                            && (selectedContactId.getPropertyId().equals(propertyId))) {
-                        return super.createField(container, itemId, propertyId, uiContext);
-                    }
-                }
-                return null;
-            }
-        });
-
-        contactList.addListener(new ItemClickEvent.ItemClickListener() {
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-                    selectedContactId = event;
-                    contactList.setEditable(true);
-                } else if (contactList.isEditable()) {
-                    contactList.setEditable(false);
-                    contactList.setValue(event.getItemId());
-                }
-            }
-        });
-
         /**
-         * dan: For the showcase we need a Tree-Structure - so loop over the contacts and create an simple tree structure
-         * (depth 3)
+         * dan: For the showcase we need a Tree-Structure - so loop over the contacts and create an
+         * simple tree structure (depth 3)
          */
         Object[] ids = contactList.getItemIds().toArray();
         Object current = null;
@@ -367,10 +329,11 @@ public class AdminCentralVaadinApplication extends Application {
             contactList.setParent(next, current);
             contactList.setParent(nextNext, next);
         }
-
-
     }
 
+    /**
+     * TODO dlipp: decided whether needed or not - remove or fix then.
+     */
     private void initFilteringControls() {
         for (final String pn : visibleCols) {
             final TextField sf = new TextField();
@@ -380,11 +343,6 @@ public class AdminCentralVaadinApplication extends Application {
             sf.setImmediate(true);
             bottomLeftCorner.setExpandRatio(sf, 1);
             sf.addListener(new Property.ValueChangeListener() {
-                /**
-                 *
-                 */
-                private static final long serialVersionUID = 1L;
-
                 public void valueChange(ValueChangeEvent event) {
                     addressBookData.removeContainerFilters(pn);
                     if (sf.toString().length() > 0 && !pn.equals(sf.toString())) {
@@ -399,8 +357,7 @@ public class AdminCentralVaadinApplication extends Application {
     }
 
     /**
-     * package-private modifier is used for better testing
-     * possibilities...
+     * package-private modifier is used for better testing possibilities...
      */
     void initLayout() {
         SplitPanel splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
