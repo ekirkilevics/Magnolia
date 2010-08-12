@@ -33,32 +33,36 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.OptionGroup;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
+
+import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+
 /**
- * Maintains a registry of configured controls and creates new instances of them.
+ * Radio control for selecting one of several options.
  */
-public class ControlRegistry {
+public class RadioControl implements DialogControl {
 
-    public DialogControl createControl(String type) {
+    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
 
-        if (type.equals("date"))
-            return new DateControl();
-        if (type.equals("checkbox"))
-            return new CheckBoxControl();
-        if (type.equals("edit"))
-            return new EditControl();
-        if (type.equals("file"))
-            return new FileControl();
-        if (type.equals("link"))
-            return new LinkControl();
-        if (type.equals("radio"))
-            return new RadioControl();
-        if (type.equals("select"))
-            return new SelectControl();
-        if (type.equals("slider"))
-            return new SliderControl();
-        if (type.equals("static"))
-            return new StaticControl();
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("Berlin");
+        options.add("Paris");
+        options.add("Madrid");
 
-        throw new IllegalArgumentException("No control registered for type [" + type + "]");
+        OptionGroup group = new OptionGroup(null, options);
+
+        group.setNullSelectionAllowed(false);
+
+        layout.addComponent(group);
+    }
+
+    public void validate() {
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
     }
 }

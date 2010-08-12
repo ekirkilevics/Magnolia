@@ -33,32 +33,28 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Layout;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
+
+import javax.jcr.RepositoryException;
+
 /**
- * Maintains a registry of configured controls and creates new instances of them.
+ * Control for setting a value to true or false.
  */
-public class ControlRegistry {
+public class CheckBoxControl implements DialogControl {
 
-    public DialogControl createControl(String type) {
+    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
 
-        if (type.equals("date"))
-            return new DateControl();
-        if (type.equals("checkbox"))
-            return new CheckBoxControl();
-        if (type.equals("edit"))
-            return new EditControl();
-        if (type.equals("file"))
-            return new FileControl();
-        if (type.equals("link"))
-            return new LinkControl();
-        if (type.equals("radio"))
-            return new RadioControl();
-        if (type.equals("select"))
-            return new SelectControl();
-        if (type.equals("slider"))
-            return new SliderControl();
-        if (type.equals("static"))
-            return new StaticControl();
+        CheckBox checkBox = new CheckBox();
+        checkBox.setCaption("Click to toggle");
+        layout.addComponent(checkBox);
+    }
 
-        throw new IllegalArgumentException("No control registered for type [" + type + "]");
+    public void validate() {
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
     }
 }

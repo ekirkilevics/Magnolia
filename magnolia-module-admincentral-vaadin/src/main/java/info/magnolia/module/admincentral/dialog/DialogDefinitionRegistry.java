@@ -46,34 +46,33 @@ public class DialogDefinitionRegistry {
 
         DialogTab tab1 = new DialogTab();
         tab1.setLabel("Content");
-        tab1.addSub(createEdit("title", "Title", "Title of the paragraph"));
-        tab1.addSub(createEdit("description", "Short description", null));
-        tab1.addSub(createDate("date", "Date", "Date of publication"));
+        tab1.addSub(createItem("checkbox", "visible", "Visible", "Toggle to show or hide this paragraph"));
+        tab1.addSub(createItem("date", "date", "Date", "Date of publication"));
+        tab1.addSub(createItem("edit", "title", "Title", "Title of the paragraph"));
+        tab1.addSub(createItem("file", "image", "Image", "An image"));
+        tab1.addSub(createItem("link", "link", "Target page", "Page to link to"));
+        tab1.addSub(createItem("radio", "textSize", "Text size", "Size of text"));
+        tab1.addSub(createItem("select", "city", "City", ""));
+        tab1.addSub(createItem("slider", "fontWeight", "Font Weight", ""));
+        tab1.addSub(createItem("static", "staticText", "Static", "Static"));
         dialog.addTab(tab1);
 
         DialogTab tab2 = new DialogTab();
         tab2.setLabel("Margins");
-        tab2.addSub(createEdit("leftMargin", "Left margin", "Margin on the left"));
-        tab2.addSub(createEdit("rightMargin", "Right margin", "Margin on the right"));
+        tab2.addSub(createItem("edit", "leftMargin", "Left margin", "Margin on the left"));
+        tab2.addSub(createItem("edit", "rightMargin", "Right margin", "Margin on the right"));
         dialog.addTab(tab2);
 
         return dialog;
     }
 
-    private DialogItem createDate(String name, String label, String description) {
+    private DialogItem createItem(String controlType, String name, String label, String description) {
         DialogItem date = new DialogItem();
         date.setName(name);
         date.setLabel(label);
         date.setDescription(description);
-        date.setControlType("date");
+        date.setControlType(controlType);
         return date;
     }
 
-    private DialogItem createEdit(String name, String label, String description) {
-        DialogItem edit = new DialogItem();
-        edit.setName(name);
-        edit.setLabel(label);
-        edit.setControlType("edit");
-        return edit;
-    }
 }

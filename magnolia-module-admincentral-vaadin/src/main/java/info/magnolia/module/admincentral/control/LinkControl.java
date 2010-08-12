@@ -33,32 +33,50 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
+
+import javax.jcr.RepositoryException;
+
 /**
- * Maintains a registry of configured controls and creates new instances of them.
+ * Control for selecting a page to link to.
+ *
+ * TODO: needs to open subwindow with a treetable where the editor can browse to the desired page.
  */
-public class ControlRegistry {
+public class LinkControl implements DialogControl {
 
-    public DialogControl createControl(String type) {
+    public void create(DialogItem dialogItem, Content storageNode, final Layout layout) {
 
-        if (type.equals("date"))
-            return new DateControl();
-        if (type.equals("checkbox"))
-            return new CheckBoxControl();
-        if (type.equals("edit"))
-            return new EditControl();
-        if (type.equals("file"))
-            return new FileControl();
-        if (type.equals("link"))
-            return new LinkControl();
-        if (type.equals("radio"))
-            return new RadioControl();
-        if (type.equals("select"))
-            return new SelectControl();
-        if (type.equals("slider"))
-            return new SliderControl();
-        if (type.equals("static"))
-            return new StaticControl();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        throw new IllegalArgumentException("No control registered for type [" + type + "]");
+        TextField field = new TextField();
+        horizontalLayout.addComponent(field);
+
+        Button button = new Button();
+        button.setCaption("Browse..");
+        button.addListener(new Button.ClickListener() {
+            public void buttonClick(Button.ClickEvent event) {
+
+                Window window = new Window("Choose page");
+                window.setModal(true);
+                window.setClosable(true);
+
+                layout.getApplication().getMainWindow().addWindow(window);
+            }
+        });
+        horizontalLayout.addComponent(button);
+
+        layout.addComponent(horizontalLayout);
+    }
+
+    public void validate() {
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
     }
 }

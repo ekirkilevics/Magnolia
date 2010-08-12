@@ -33,32 +33,34 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Layout;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
+
+import javax.jcr.RepositoryException;
+
 /**
- * Maintains a registry of configured controls and creates new instances of them.
+ * Control for selecting one of a set of options from a drop down select box.
  */
-public class ControlRegistry {
+public class SelectControl implements DialogControl {
 
-    public DialogControl createControl(String type) {
+    private static final String[] cities = new String[] { "Berlin", "Brussels",
+              "Helsinki", "Madrid", "Oslo", "Paris", "Stockholm" };
 
-        if (type.equals("date"))
-            return new DateControl();
-        if (type.equals("checkbox"))
-            return new CheckBoxControl();
-        if (type.equals("edit"))
-            return new EditControl();
-        if (type.equals("file"))
-            return new FileControl();
-        if (type.equals("link"))
-            return new LinkControl();
-        if (type.equals("radio"))
-            return new RadioControl();
-        if (type.equals("select"))
-            return new SelectControl();
-        if (type.equals("slider"))
-            return new SliderControl();
-        if (type.equals("static"))
-            return new StaticControl();
+    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
 
-        throw new IllegalArgumentException("No control registered for type [" + type + "]");
+        ComboBox l = new ComboBox("Please select a city");
+        for (int i = 0; i < cities.length; i++) {
+            l.addItem(cities[i]);
+        }
+
+        layout.addComponent(l);
+    }
+
+    public void validate() {
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
     }
 }

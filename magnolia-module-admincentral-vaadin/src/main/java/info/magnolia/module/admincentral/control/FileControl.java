@@ -33,32 +33,29 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Upload;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
+
+import javax.jcr.RepositoryException;
+
 /**
- * Maintains a registry of configured controls and creates new instances of them.
+ * File upload control.
+ *
+ * TODO: The Vaadin component adds an upload button that we dont want.
  */
-public class ControlRegistry {
+public class FileControl implements DialogControl {
 
-    public DialogControl createControl(String type) {
+    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+        Upload upload = new Upload();
+        upload.setWidth("100%");
+        layout.addComponent(upload);
+    }
 
-        if (type.equals("date"))
-            return new DateControl();
-        if (type.equals("checkbox"))
-            return new CheckBoxControl();
-        if (type.equals("edit"))
-            return new EditControl();
-        if (type.equals("file"))
-            return new FileControl();
-        if (type.equals("link"))
-            return new LinkControl();
-        if (type.equals("radio"))
-            return new RadioControl();
-        if (type.equals("select"))
-            return new SelectControl();
-        if (type.equals("slider"))
-            return new SliderControl();
-        if (type.equals("static"))
-            return new StaticControl();
+    public void validate() {
+    }
 
-        throw new IllegalArgumentException("No control registered for type [" + type + "]");
+    public void save(Content storageNode) throws RepositoryException {
     }
 }
