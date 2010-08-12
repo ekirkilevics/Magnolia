@@ -128,7 +128,6 @@ public class AdminCentralVaadinApplication extends Application {
         Navigation navigation = null;
         try {
             navigation = new Navigation("/modules/adminInterface/config/menu");
-            navigation.addTab(new Label("For testing dialogs"), "Dialogs", null);
             navigation.addListener(new Accordion.SelectedTabChangeListener() {
 
                 private static final long serialVersionUID = 1L;
@@ -161,7 +160,6 @@ public class AdminCentralVaadinApplication extends Application {
                     }
                 }
             });
-
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
