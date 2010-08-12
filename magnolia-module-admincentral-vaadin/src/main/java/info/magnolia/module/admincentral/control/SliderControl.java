@@ -34,11 +34,7 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.data.Property;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Slider;
+import com.vaadin.ui.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
 
@@ -47,9 +43,9 @@ import javax.jcr.RepositoryException;
 /**
  * Slider control for selecting a number in a fixed range.
  */
-public class SliderControl implements DialogControl {
+public class SliderControl extends AbstractDialogControl {
 
-    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 

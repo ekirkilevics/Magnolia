@@ -34,8 +34,8 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
 
@@ -44,12 +44,12 @@ import javax.jcr.RepositoryException;
 /**
  * Control for editing text in dialogs.
  */
-public class EditControl implements DialogControl {
+public class EditControl extends AbstractDialogControl {
 
     private DialogItem dialogItem;
     private TextField field;
 
-    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
         this.dialogItem = dialogItem;
         field = new TextField();
         field.setRequired(true);

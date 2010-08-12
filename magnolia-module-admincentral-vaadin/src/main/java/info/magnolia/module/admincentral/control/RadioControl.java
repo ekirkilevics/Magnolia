@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
 
@@ -44,9 +44,9 @@ import java.util.ArrayList;
 /**
  * Radio control for selecting one of several options.
  */
-public class RadioControl implements DialogControl {
+public class RadioControl extends AbstractDialogControl {
 
-    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
 
         ArrayList<String> options = new ArrayList<String>();
         options.add("Berlin");

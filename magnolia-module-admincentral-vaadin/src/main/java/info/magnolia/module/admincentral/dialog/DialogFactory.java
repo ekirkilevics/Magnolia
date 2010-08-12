@@ -88,18 +88,10 @@ public class DialogFactory {
 
             for (DialogItem dialogItem : dialogTab.getSubs()) {
 
-                grid.addComponent(new Label(dialogItem.getLabel()));
-
-                VerticalLayout verticalLayout = new VerticalLayout();
-
                 DialogControl control = controlRegistry.createControl(dialogItem.getControlType());
                 controls.add(control);
 
-                control.create(dialogItem, storageNode, verticalLayout);
-
-                if (dialogItem.getDescription() != null)
-                    verticalLayout.addComponent(new Label(dialogItem.getDescription()));
-                grid.addComponent(verticalLayout);
+                control.create(dialogItem, storageNode, grid);
 
                 grid.newLine();
             }

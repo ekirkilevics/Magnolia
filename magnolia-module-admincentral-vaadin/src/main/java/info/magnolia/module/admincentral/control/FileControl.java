@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
 
@@ -45,9 +45,9 @@ import javax.jcr.RepositoryException;
  *
  * TODO: The Vaadin component adds an upload button that we dont want.
  */
-public class FileControl implements DialogControl {
+public class FileControl extends AbstractDialogControl {
 
-    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
         Upload upload = new Upload();
         upload.setWidth("100%");
         layout.addComponent(upload);

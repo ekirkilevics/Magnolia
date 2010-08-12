@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import info.magnolia.cms.core.Content;
@@ -47,9 +48,15 @@ import javax.jcr.RepositoryException;
  */
 public class StaticControl implements DialogControl {
 
-    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+    public void create(DialogItem dialogItem, Content storageNode, GridLayout layout) {
 
-        layout.addComponent(new Label("This is static text"));
+        int rows = layout.getRows();
+        layout.setRows(rows + 1);
+
+        layout.addComponent(
+                new Label("This is static text"),
+                0, rows,
+                1, rows);
     }
 
     public void validate() {

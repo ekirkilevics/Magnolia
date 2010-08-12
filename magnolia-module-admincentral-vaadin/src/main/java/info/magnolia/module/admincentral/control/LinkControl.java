@@ -33,11 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
 
@@ -48,9 +44,9 @@ import javax.jcr.RepositoryException;
  *
  * TODO: needs to open subwindow with a treetable where the editor can browse to the desired page.
  */
-public class LinkControl implements DialogControl {
+public class LinkControl extends AbstractDialogControl {
 
-    public void create(DialogItem dialogItem, Content storageNode, final Layout layout) {
+    public void addControl(DialogItem dialogItem, Content storageNode, final VerticalLayout layout) {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 

@@ -33,15 +33,19 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
+/**
+ * Provides gui setup, validation and saving of dialog field.
+ */
 public interface DialogControl {
 
-    void create(DialogItem dialogItem, Content storageNode, Layout layout);
+    void create(DialogItem dialogItem, Content storageNode, GridLayout layout);
 
     void validate();
 

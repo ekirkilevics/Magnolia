@@ -33,7 +33,9 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogItem;
@@ -41,16 +43,26 @@ import info.magnolia.module.admincentral.dialog.DialogItem;
 import javax.jcr.RepositoryException;
 
 /**
- * Control for setting a value to true or false.
+ * Abstract base class for controls that have a label displayed to the left and a description placed below any
+ * components that the implementing class wants to add.
  */
-public class CheckBoxControl extends AbstractDialogControl {
+public abstract class AbstractDialogControl implements DialogControl {
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
+    public final void create(DialogItem dialogItem, Content storageNode, GridLayout grid) {
 
-        CheckBox checkBox = new CheckBox();
-        checkBox.setCaption("Click to toggle");
-        layout.addComponent(checkBox);
+        grid.addComponent(new Label(dialogItem.getLabel()));
+
+        VerticalLayout verticalLayout = new VerticalLayout();
+
+        addControl(dialogItem, storageNode, verticalLayout);
+
+        if (dialogItem.getDescription() != null)
+            verticalLayout.addComponent(new Label(dialogItem.getDescription()));
+
+        grid.addComponent(verticalLayout);
     }
+
+    protected abstract void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout);
 
     public void validate() {
     }
