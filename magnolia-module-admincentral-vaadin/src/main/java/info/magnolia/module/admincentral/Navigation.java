@@ -29,16 +29,11 @@ public class Navigation extends Accordion{
     private static final long serialVersionUID = 1L;
 
     /**
-     * The node containing the menu and submenu items
-     */
-    private Content node;
-
-    /**
      * @param path the path to the menu
      */
     public Navigation(final String path) throws RepositoryException{
         // get it with system permission
-        node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
+        final Content node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
         // loop over the menu items
         for (Iterator<Content> iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content menuItem = iter.next();
