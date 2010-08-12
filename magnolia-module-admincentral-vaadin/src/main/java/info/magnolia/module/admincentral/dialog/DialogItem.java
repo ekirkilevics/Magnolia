@@ -36,11 +36,42 @@ package info.magnolia.module.admincentral.dialog;
 /**
  * Definition of an item used in a dialog to edit content.
  */
-public interface DialogItem {
+public class DialogItem {
 
-    String getName();
+    private String name;
+    private String label;
+    private String description;
+    private String controlType;
 
-    String getLabel();
+    public String getName() {
+        return name;
+    }
 
-    String getDescription();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getControlType() {
+        return controlType;
+    }
+
+    public void setControlType(String controlType) {
+        this.controlType = controlType;
+    }
 }

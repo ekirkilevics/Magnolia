@@ -61,18 +61,19 @@ public class DialogDefinitionRegistry {
     }
 
     private DialogItem createDate(String name, String label, String description) {
-        DialogDate date = new DialogDate();
+        DialogItem date = new DialogItem();
         date.setName(name);
         date.setLabel(label);
         date.setDescription(description);
+        date.setControlType("date");
         return date;
     }
 
-    private DialogEdit createEdit(String name, String label, String description) {
-        DialogEdit edit = new DialogEdit();
+    private DialogItem createEdit(String name, String label, String description) {
+        DialogItem edit = new DialogItem();
         edit.setName(name);
         edit.setLabel(label);
-        edit.setDescription(description);
+        edit.setControlType("edit");
         return edit;
     }
 }

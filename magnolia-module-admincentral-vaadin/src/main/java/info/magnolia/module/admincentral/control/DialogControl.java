@@ -31,11 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.module.admincentral.control;
 
-/**
- * Dialog item for editing text.
- */
-public class DialogEdit extends AbstractDialogItem {
+import com.vaadin.ui.Layout;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
 
+import javax.jcr.RepositoryException;
+
+public interface DialogControl {
+
+    void create(DialogItem dialogItem, Content storageNode, Layout layout);
+
+    void validate();
+
+    void save(Content storageNode) throws RepositoryException;
 }

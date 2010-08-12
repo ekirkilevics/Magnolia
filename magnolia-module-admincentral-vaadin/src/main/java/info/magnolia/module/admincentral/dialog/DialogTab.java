@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * A tab in a dialog.
  */
-public class DialogTab implements DialogItemContainer {
+public class DialogTab {
 
     private String label;
     private List<DialogItem> subs = new ArrayList<DialogItem>();

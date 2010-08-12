@@ -31,18 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.module.admincentral.control;
 
-import java.util.List;
+import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.TextField;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
+
+import javax.jcr.RepositoryException;
 
 /**
- * Interface to be implemented by classes that contains dialogs items.
+ * Control for editing text in dialogs.
  */
-public interface DialogItemContainer {
+public class EditControl implements DialogControl {
 
-    List<DialogItem> getSubs();
+    private DialogItem dialogItem;
+    private TextField field;
 
-    void setSubs(List<DialogItem> subs);
+    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+        this.dialogItem = dialogItem;
+        field = new TextField();
+        field.setRequired(true);
+        field.addValidator(new StringLengthValidator("String must not be empty", 2, -1, false));
+        layout.addComponent(field);
 
-    boolean addSub(DialogItem dialogItem);
+        if (storageNode != null) {
+            field.setValue(storageNode.getNodeData(dialogItem.getName()).getString());
+        }
+    }
+
+    public void validate() {
+        field.validate();
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
+        storageNode.setNodeData(dialogItem.getName(), (String) field.getValue());
+    }
 }

@@ -33,15 +33,6 @@
  */
 package info.magnolia.module.admincentral;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
-
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.jcr.RepositoryException;
-
 import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -66,13 +57,23 @@ import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.DialogFactory;
+
+import javax.jcr.RepositoryException;
+import java.text.DateFormat;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Demo Application - simple AdressBook.
- *
+ * <p/>
  * Added Tree Table Add on to WEB-Inf/lib...
- *
+ * <p/>
  * TODO show website tree instead of dummy address book data. Started to work on that but it's clearly a mess as you can see.
  *
  * @author dan
@@ -80,16 +81,16 @@ import info.magnolia.module.admincentral.dialog.DialogFactory;
  */
 public class AdminCentralVaadinApplication extends Application {
 
-    private static String[] fields = { "First Name", "Last Name", "Company",
+    private static String[] fields = {"First Name", "Last Name", "Company",
             "Mobile Phone", "Work Phone", "Home Phone", "Work Email",
-            "Home Email", "Street", "Zip", "City", "State", "Country" };
+            "Home Email", "Street", "Zip", "City", "State", "Country"};
     private static final long serialVersionUID = 5773744599513735815L;
-    private static String[] visibleCols = new String[] { "Last Name",
-            "First Name", "Company" };
+    private static String[] visibleCols = new String[]{"Last Name",
+            "First Name", "Company"};
 
-    private static final String[] websiteFields = { "page", "title", "status", "template", "modificationDate" };
+    private static final String[] websiteFields = {"page", "title", "status", "template", "modificationDate"};
 
-    private static final String[] websiteVisibleCols = { "Page", "Title", "Status", "Template", "Mod. Date" };
+    private static final String[] websiteVisibleCols = {"Page", "Title", "Status", "Template", "Mod. Date"};
 
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
@@ -106,10 +107,11 @@ public class AdminCentralVaadinApplication extends Application {
     /**
      * Used for deciding, whether a table column gets editable or not (only
      * the selected one will be...).
-     *
+     * <p/>
      * Hint: not yet properly working
      */
     private Object selectedContactId = null;
+
     private Accordion createAccordion() {
         Label l1 = new Label("There are no previous Website actions.");
         Label l2 = new Label("There are no saved Configs.");
@@ -137,7 +139,11 @@ public class AdminCentralVaadinApplication extends Application {
                         Button open = new Button("Edit paragraph",
                                 new Button.ClickListener() {
                                     public void buttonClick(Button.ClickEvent event) {
-                                        getMainWindow().addWindow(new DialogFactory().createDialog("bogus"));
+                                        try {
+                                            openDialog();
+                                        } catch (RepositoryException e) {
+                                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                        }
                                     }
                                 });
                         mainContainer.addComponent(open);
@@ -147,6 +153,15 @@ public class AdminCentralVaadinApplication extends Application {
         });
         return a;
     }
+
+    private void openDialog() throws RepositoryException {
+
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        Content storageNode = ContentUtil.createPath(hm, "/modules/genuine-vaadin-central/foobar", true);
+
+        getMainWindow().addWindow(new DialogFactory().createDialog("bogus", storageNode));
+    }
+
     /**
      * @return TreeTable
      */
@@ -157,7 +172,7 @@ public class AdminCentralVaadinApplication extends Application {
             private static final long serialVersionUID = 3299668916157924056L;
 
             public Field createField(Container container, Object itemId,
-                    Object propertyId, Component uiContext) {
+                                     Object propertyId, Component uiContext) {
                 /**
                  * Cell is editable if it is the selected one...
                  */
@@ -174,12 +189,12 @@ public class AdminCentralVaadinApplication extends Application {
      */
     private IndexedContainer createDummyData() {
 
-        String[] fnames = { "Peter", "Alice", "Joshua", "Mike", "Olivia",
+        String[] fnames = {"Peter", "Alice", "Joshua", "Mike", "Olivia",
                 "Nina", "Alex", "Rita", "Dan", "Umberto", "Henrik", "Rene",
-                "Lisa", "Marge" };
-        String[] lnames = { "Smith", "Gordon", "Simpson", "Brown", "Clavel",
+                "Lisa", "Marge"};
+        String[] lnames = {"Smith", "Gordon", "Simpson", "Brown", "Clavel",
                 "Simons", "Verne", "Scott", "Allison", "Gates", "Rowling",
-                "Barks", "Ross", "Schneider", "Tate" };
+                "Barks", "Ross", "Schneider", "Tate"};
 
         IndexedContainer ic = new IndexedContainer();
 
@@ -198,7 +213,7 @@ public class AdminCentralVaadinApplication extends Application {
         return ic;
     }
 
-    private IndexedContainer createWebsiteTreeData(String path, String itemType){
+    private IndexedContainer createWebsiteTreeData(String path, String itemType) {
         Content parent = null;
         try {
             parent = MgnlContext.getHierarchyManager("website").getContent(path);
@@ -218,8 +233,8 @@ public class AdminCentralVaadinApplication extends Application {
             sortedNodes.addAll(nodes);
             nodes = sortedNodes;
         }*/
-       Iterator<Content> it = nodes.iterator();
-        while(it.hasNext()){
+        Iterator<Content> it = nodes.iterator();
+        while (it.hasNext()) {
             Content content = it.next();
             Object id = ic.addItem();
             ic.getContainerProperty(id, "page").setValue(content.getName());

@@ -33,15 +33,24 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.control.ControlRegistry;
+import info.magnolia.module.admincentral.control.DialogControl;
+
+import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates dialogs for presentation in the gui.
@@ -49,8 +58,9 @@ import com.vaadin.ui.Window;
 public class DialogFactory {
 
     private DialogDefinitionRegistry dialogDefinitionRegistry = new DialogDefinitionRegistry();
+    private ControlRegistry controlRegistry = new ControlRegistry();
 
-    public Window createDialog(String name) {
+    public Window createDialog(String name, Content storageNode) {
 
         final Window subwindow = new Window("Edit paragraph");
         subwindow.setModal(true);
@@ -66,7 +76,9 @@ public class DialogFactory {
         TabSheet sheet = new TabSheet();
         layout.addComponent(sheet);
 
-        DialogDefinition dialog = dialogDefinitionRegistry.getDialog("bogus");
+        final List<DialogControl> controls = new ArrayList<DialogControl>();
+
+        DialogDefinition dialog = dialogDefinitionRegistry.getDialog(name);
 
         for (DialogTab dialogTab : dialog.getTabs()) {
 
@@ -79,10 +91,11 @@ public class DialogFactory {
                 grid.addComponent(new Label(dialogItem.getLabel()));
 
                 VerticalLayout verticalLayout = new VerticalLayout();
-                if (dialogItem instanceof DialogEdit)
-                    verticalLayout.addComponent(new TextField());
-                else if (dialogItem instanceof DialogDate)
-                    verticalLayout.addComponent(new DateField());
+
+                DialogControl control = controlRegistry.createControl(dialogItem.getControlType());
+                controls.add(control);
+
+                control.create(dialogItem, storageNode, verticalLayout);
 
                 if (dialogItem.getDescription() != null)
                     verticalLayout.addComponent(new Label(dialogItem.getDescription()));
@@ -96,10 +109,37 @@ public class DialogFactory {
 
         HorizontalLayout buttons = new HorizontalLayout();
 
+        final String uuid = storageNode.getUUID();
+
         Button close = new Button("Save", new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
-                subwindow.getParent().showNotification("Invalid", Window.Notification.TYPE_WARNING_MESSAGE);
 
+                try {
+                    final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+                    Content storageNode = hm.getContentByUUID(uuid);
+
+                    // Validate
+                    for (DialogControl control : controls) {
+                        try {
+                            control.validate();
+                        } catch (Validator.InvalidValueException e) {
+                            subwindow.getParent().showNotification(e.getMessage(), Window.Notification.TYPE_WARNING_MESSAGE);
+                            return;
+                        }
+                    }
+
+                    // Save
+                    for (DialogControl control : controls) {
+                        control.save(storageNode);
+                    }
+
+                    storageNode.save();
+
+                } catch (RepositoryException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+                ((Window) subwindow.getParent()).removeWindow(subwindow);
             }
         });
         buttons.addComponent(close);

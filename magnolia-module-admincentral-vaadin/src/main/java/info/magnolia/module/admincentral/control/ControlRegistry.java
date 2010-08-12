@@ -31,38 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.module.admincentral.control;
 
 /**
- * Skeleton implementation intended to be used as a base class when implementing dialog items.
+ * Maintains a registry of configured controls and creates new instances of them.
  */
-public abstract class AbstractDialogItem implements DialogItem {
+public class ControlRegistry {
 
-    private String name;
-    private String label;
-    private String description;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public DialogControl createControl(String type) {
+        if (type.equals("edit"))
+            return new EditControl();
+        if (type.equals("date"))
+            return new DateControl();
+        throw new IllegalArgumentException("No control registered for type [" + type + "]");
     }
 }

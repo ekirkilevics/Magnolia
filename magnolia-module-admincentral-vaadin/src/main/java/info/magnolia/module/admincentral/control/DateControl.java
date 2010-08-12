@@ -31,10 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.module.admincentral.control;
+
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.Layout;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogItem;
 
 /**
- * DialogItem for editing a date.
+ * Control for selecting dates in a dialog.
  */
-public class DialogDate extends AbstractDialogItem {
+public class DateControl implements DialogControl {
+
+    public void create(DialogItem dialogItem, Content storageNode, Layout layout) {
+        layout.addComponent(new DateField());
+    }
+
+    public void validate() {
+    }
+
+    public void save(Content storageNode) {
+    }
 }
