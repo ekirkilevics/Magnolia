@@ -45,6 +45,7 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -63,6 +64,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.DialogFactory;
+import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
 import javax.jcr.RepositoryException;
 import java.text.DateFormat;
@@ -101,7 +103,7 @@ public class AdminCentralVaadinApplication extends Application {
     //private IndexedContainer addressBookData = createWebsiteTreeData("/", ItemType.CONTENTNODE.getSystemName());
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
     private Form contactEditor = new Form();
-    private TreeTable contactList = createContactList();
+    private TreeTable contactList = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
     private Button contactRemovalButton;
 
     /**
@@ -110,7 +112,8 @@ public class AdminCentralVaadinApplication extends Application {
      * <p/>
      * Hint: not yet properly working
      */
-    private Object selectedContactId = null;
+    private ItemClickEvent selectedContactId = null;
+
 
     private Accordion createAccordion() {
         Label l1 = new Label("There are no previous Website actions.");
@@ -317,8 +320,30 @@ public class AdminCentralVaadinApplication extends Application {
         contactList.setContainerDataSource(addressBookData);
         contactList.setVisibleColumns(visibleCols);
         contactList.setSelectable(true);
-        //contactList.setEditable(true);
-        // contactList.setImmediate(true);
+        contactList.setTableFieldFactory(new DefaultFieldFactory() {
+            @Override
+            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
+                if (selectedContactId != null) {
+                    if ((selectedContactId.getItemId().equals(itemId))
+                            && (selectedContactId.getPropertyId().equals(propertyId))) {
+                        return super.createField(container, itemId, propertyId, uiContext);
+                    }
+                }
+                return null;
+            }
+        });
+
+        contactList.addListener(new ItemClickEvent.ItemClickListener() {
+            public void itemClick(ItemClickEvent event) {
+                if (event.isDoubleClick()) {
+                    selectedContactId = event;
+                    contactList.setEditable(true);
+                } else if (contactList.isEditable()) {
+                    contactList.setEditable(false);
+                    contactList.setValue(event.getItemId());
+                }
+            }
+        });
 
         /**
          * dan: For the showcase we need a Tree-Structure - so loop over the contacts and create an simple tree structure
@@ -336,20 +361,7 @@ public class AdminCentralVaadinApplication extends Application {
             contactList.setParent(nextNext, next);
         }
 
-        contactList.addListener(new Property.ValueChangeListener() {
-            /**
-             *
-             */
-            private static final long serialVersionUID = 1L;
 
-            public void valueChange(ValueChangeEvent event) {
-                Object id = contactList.getValue();
-                contactEditor.setItemDataSource(id == null ? null : contactList
-                        .getItem(id));
-                contactRemovalButton.setVisible(id != null);
-                selectedContactId = id;
-            }
-        });
     }
 
     private void initFilteringControls() {
