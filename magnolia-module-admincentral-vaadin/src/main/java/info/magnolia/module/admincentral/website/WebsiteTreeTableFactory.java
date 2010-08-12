@@ -35,10 +35,7 @@ package info.magnolia.module.admincentral.website;
 
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.MouseEvents;
 import com.vaadin.event.Transferable;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
