@@ -33,6 +33,23 @@
  */
 package info.magnolia.module.admincentral;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.dialog.DialogFactory;
+import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
+
+import java.text.DateFormat;
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -58,18 +75,7 @@ import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.DialogFactory;
-import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
-
-import javax.jcr.RepositoryException;
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Iterator;
+import com.vaadin.ui.Window.Notification;
 
 /**
  * Demo Application - simple AdressBook.
@@ -82,6 +88,8 @@ import java.util.Iterator;
  * @author fgrilli
  */
 public class AdminCentralVaadinApplication extends Application {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinApplication.class);
 
     private static String[] fields = {"First Name", "Last Name", "Company",
             "Mobile Phone", "Work Phone", "Home Phone", "Work Email",
@@ -96,7 +104,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
-    private Accordion accordion = createAccordion();
+    private Navigation menu = createMenu();
     private VerticalLayout mainContainer;
 
     private IndexedContainer addressBookData = createDummyData();
@@ -115,46 +123,45 @@ public class AdminCentralVaadinApplication extends Application {
     private ItemClickEvent selectedContactId = null;
 
 
-    private Accordion createAccordion() {
-        Label l1 = new Label("There are no previous Website actions.");
-        Label l2 = new Label("There are no saved Configs.");
+    private Navigation createMenu() {
+        Navigation navigation = null;
+        try {
+            navigation = new Navigation("/modules/adminInterface/config/menu");
+            navigation.addTab(new Label("For testing dialogs"), "Dialogs", null);
+            navigation.addListener(new Accordion.SelectedTabChangeListener() {
 
-        Accordion a = new Accordion();
-        a.addTab(l1, "Website", null);
-        a.addTab(l2, "Config", null);
-        a.addTab(new Label("For testing dialogs"), "Dialogs", null);
-        a.addListener(new Accordion.SelectedTabChangeListener() {
+                private static final long serialVersionUID = 1L;
 
-            /**
-             *
-             */
-            private static final long serialVersionUID = 1L;
+                public void selectedTabChange(SelectedTabChangeEvent event) {
+                    TabSheet tabsheet = event.getTabSheet();
+                    Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
+                    if (tab != null) {
+                        getMainWindow().showNotification(
+                                "Selected tab: " + tab.getCaption());
 
-            public void selectedTabChange(SelectedTabChangeEvent event) {
-                TabSheet tabsheet = event.getTabSheet();
-                Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
-                if (tab != null) {
-                    getMainWindow().showNotification(
-                            "Selected tab: " + tab.getCaption());
-
-                    if (tab.getCaption().equals("Dialogs")) {
-                        mainContainer.removeAllComponents();
-                        Button open = new Button("Edit paragraph",
-                                new Button.ClickListener() {
-                                    public void buttonClick(Button.ClickEvent event) {
-                                        try {
-                                            openDialog();
-                                        } catch (RepositoryException e) {
-                                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        if (tab.getCaption().equals("Dialogs")) {
+                            mainContainer.removeAllComponents();
+                            Button open = new Button("Edit paragraph",
+                                    new Button.ClickListener() {
+                                        public void buttonClick(Button.ClickEvent event) {
+                                            try {
+                                                openDialog();
+                                            } catch (RepositoryException e) {
+                                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                            }
                                         }
-                                    }
-                                });
-                        mainContainer.addComponent(open);
+                                    });
+                            mainContainer.addComponent(open);
+                        }
                     }
                 }
-            }
-        });
-        return a;
+            });
+
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+            getMainWindow().showNotification("Application menu could not be created.", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+        }
+        return navigation;
     }
 
     private void openDialog() throws RepositoryException {
@@ -403,7 +410,7 @@ public class AdminCentralVaadinApplication extends Application {
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
 
-        accordion.setSizeFull();
+        menu.setSizeFull();
 
         contactEditor.setSizeFull();
         contactEditor.getLayout().setMargin(true);
@@ -411,7 +418,7 @@ public class AdminCentralVaadinApplication extends Application {
 
         bottomLeftCorner.setWidth("100%");
 
-        splitPanel.addComponent(accordion);
+        splitPanel.addComponent(menu);
         splitPanel.addComponent(mainContainer);
         mainContainer.addComponent(contactList);
         mainContainer.addComponent(bottomLeftCorner);
