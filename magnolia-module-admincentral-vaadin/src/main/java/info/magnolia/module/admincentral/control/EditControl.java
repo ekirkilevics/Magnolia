@@ -37,7 +37,6 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
@@ -46,18 +45,31 @@ import javax.jcr.RepositoryException;
  */
 public class EditControl extends AbstractDialogControl {
 
-    private DialogItem dialogItem;
     private TextField field;
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
-        this.dialogItem = dialogItem;
+    private int rows = 0;
+    private boolean wordwrap = false;
+    private boolean secret = false;
+    private boolean required = false;
+    private String requiredErrorMessage;
+    private int maxLength = -1;
+    private String inputPrompt;
+
+    public void addControl(Content storageNode, VerticalLayout layout) {
+
         field = new TextField();
-        field.setRequired(true);
+        field.setRequired(required);
+        field.setRequiredError(requiredErrorMessage);
+        field.setMaxLength(maxLength);
+        field.setInputPrompt(inputPrompt);
+        field.setWordwrap(wordwrap);
+        field.setRows(rows);
+        field.setSecret(secret);
         field.addValidator(new StringLengthValidator("String must not be empty", 2, -1, false));
         layout.addComponent(field);
 
         if (storageNode != null) {
-            field.setValue(storageNode.getNodeData(dialogItem.getName()).getString());
+            field.setValue(storageNode.getNodeData(getName()).getString());
         }
     }
 
@@ -66,6 +78,62 @@ public class EditControl extends AbstractDialogControl {
     }
 
     public void save(Content storageNode) throws RepositoryException {
-        storageNode.setNodeData(dialogItem.getName(), (String) field.getValue());
+        storageNode.setNodeData(getName(), (String) field.getValue());
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public boolean isWordwrap() {
+        return wordwrap;
+    }
+
+    public void setWordwrap(boolean wordwrap) {
+        this.wordwrap = wordwrap;
+    }
+
+    public boolean isSecret() {
+        return secret;
+    }
+
+    public void setSecret(boolean secret) {
+        this.secret = secret;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getRequiredErrorMessage() {
+        return requiredErrorMessage;
+    }
+
+    public void setRequiredErrorMessage(String requiredErrorMessage) {
+        this.requiredErrorMessage = requiredErrorMessage;
+    }
+
+    public int getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public String getInputPrompt() {
+        return inputPrompt;
+    }
+
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
     }
 }

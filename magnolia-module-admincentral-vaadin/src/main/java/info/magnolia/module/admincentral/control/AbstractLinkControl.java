@@ -33,21 +33,49 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
 /**
- * Provides gui setup, validation and saving of dialog field.
+ * Control for selecting a page to link to.
+ *
+ * TODO: needs to open subwindow with a treetable where the editor can browse to the desired page.
  */
-public interface DialogControl {
+public abstract class AbstractLinkControl extends AbstractDialogControl {
 
-    void create(DialogItem dialogItem, Content storageNode, GridLayout layout);
+    public void addControl(Content storageNode, final VerticalLayout layout) {
 
-    void validate();
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-    void save(Content storageNode) throws RepositoryException;
+        TextField field = new TextField();
+        horizontalLayout.addComponent(field);
+
+        Button button = new Button();
+        button.setCaption("Browse..");
+        button.addListener(new Button.ClickListener() {
+            public void buttonClick(Button.ClickEvent event) {
+
+                Window window = new Window("Choose page");
+                window.setModal(true);
+                window.setClosable(true);
+
+                layout.getApplication().getMainWindow().addWindow(window);
+            }
+        });
+        horizontalLayout.addComponent(button);
+
+        layout.addComponent(horizontalLayout);
+    }
+
+    public void validate() {
+    }
+
+    public void save(Content storageNode) throws RepositoryException {
+    }
 }

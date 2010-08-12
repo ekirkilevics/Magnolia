@@ -35,26 +35,25 @@ package info.magnolia.module.admincentral.control;
 
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
+import info.magnolia.module.admincentral.dialog.DialogControl;
 
 import javax.jcr.RepositoryException;
 
 /**
  * Control for adding a static line of content to a dialog.
- *
- * TODO: Since adding label and description to the dialog is currently done by the dialog itself before calling the control this control doesn't look right.
  */
 public class StaticControl implements DialogControl {
 
-    public void create(DialogItem dialogItem, Content storageNode, GridLayout layout) {
+    private String label;
+
+    public void create(Content storageNode, GridLayout layout) {
 
         int rows = layout.getRows();
         layout.setRows(rows + 1);
 
         layout.addComponent(
-                new Label("This is static text"),
+                new Label(label),
                 0, rows,
                 1, rows);
     }
@@ -63,5 +62,13 @@ public class StaticControl implements DialogControl {
     }
 
     public void save(Content storageNode) throws RepositoryException {
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

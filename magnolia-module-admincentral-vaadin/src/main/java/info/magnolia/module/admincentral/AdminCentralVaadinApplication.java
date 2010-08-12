@@ -38,7 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.DialogFactory;
+import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
 import java.text.DateFormat;
@@ -173,7 +173,7 @@ public class AdminCentralVaadinApplication extends Application {
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Content storageNode = ContentUtil.createPath(hm, "/modules/genuine-vaadin-central/foobar", true);
 
-        getMainWindow().addWindow(new DialogFactory().createDialog("bogus", storageNode));
+        getMainWindow().addWindow(new DialogRegistry().getDialog("bogus", storageNode));
     }
 
     /**

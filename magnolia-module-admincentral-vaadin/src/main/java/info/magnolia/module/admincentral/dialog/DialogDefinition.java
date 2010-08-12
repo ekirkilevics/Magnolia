@@ -36,18 +36,12 @@ package info.magnolia.module.admincentral.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A definition of a configured dialog. Holds a list of tabs.
+ */
 public class DialogDefinition {
 
-    private String name;
     private List<DialogTab> tabs = new ArrayList<DialogTab>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<DialogTab> getTabs() {
         return tabs;

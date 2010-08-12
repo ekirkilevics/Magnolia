@@ -36,7 +36,6 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
@@ -44,10 +43,12 @@ import javax.jcr.RepositoryException;
  * File upload control.
  *
  * TODO: The Vaadin component adds an upload button that we dont want.
+ *
+ * TODO: We need to supply a preview of the file, for instance a thumbnail in the case of an image
  */
 public class FileControl extends AbstractDialogControl {
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
+    public void addControl(Content storageNode, VerticalLayout layout) {
         Upload upload = new Upload();
         upload.setWidth("100%");
         layout.addComponent(upload);

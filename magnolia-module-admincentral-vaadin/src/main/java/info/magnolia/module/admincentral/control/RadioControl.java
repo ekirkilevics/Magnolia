@@ -36,24 +36,27 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Radio control for selecting one of several options.
  */
 public class RadioControl extends AbstractDialogControl {
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
+    private Map<String, String> options;
 
-        ArrayList<String> options = new ArrayList<String>();
-        options.add("Berlin");
-        options.add("Paris");
-        options.add("Madrid");
+    // TODO needs configuration for reading in options from separate node
 
-        OptionGroup group = new OptionGroup(null, options);
+    public void addControl(Content storageNode, VerticalLayout layout) {
+
+        OptionGroup group = new OptionGroup();
+
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            group.addItem(entry.getKey());
+            group.setItemCaption(entry.getKey(), entry.getValue());
+        }
 
         group.setNullSelectionAllowed(false);
 
@@ -64,5 +67,13 @@ public class RadioControl extends AbstractDialogControl {
     }
 
     public void save(Content storageNode) throws RepositoryException {
+    }
+
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
     }
 }

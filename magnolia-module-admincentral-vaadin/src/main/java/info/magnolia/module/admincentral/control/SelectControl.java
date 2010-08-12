@@ -36,23 +36,24 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
+import java.util.Map;
 
 /**
  * Control for selecting one of a set of options from a drop down select box.
  */
 public class SelectControl extends AbstractDialogControl {
 
-    private static final String[] cities = new String[] { "Berlin", "Brussels",
-              "Helsinki", "Madrid", "Oslo", "Paris", "Stockholm" };
+    private Map<String, String> options;
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
+    public void addControl(Content storageNode, VerticalLayout layout) {
 
-        ComboBox l = new ComboBox("Please select a city");
-        for (int i = 0; i < cities.length; i++) {
-            l.addItem(cities[i]);
+        ComboBox l = new ComboBox();
+
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            l.addItem(entry.getValue());
+            l.setItemCaption(entry.getValue(), entry.getKey());
         }
 
         layout.addComponent(l);
@@ -62,5 +63,13 @@ public class SelectControl extends AbstractDialogControl {
     }
 
     public void save(Content storageNode) throws RepositoryException {
+    }
+
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
     }
 }

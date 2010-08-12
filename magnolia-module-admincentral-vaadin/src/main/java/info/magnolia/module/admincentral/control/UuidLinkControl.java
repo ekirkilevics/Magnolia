@@ -33,67 +33,21 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogControl;
 
 import javax.jcr.RepositoryException;
 
 /**
- * Abstract base class for controls that have a label displayed to the left and a description placed below any
- * components that the implementing class wants to add.
+ * Control for selecting a page to link to.
+ *
+ * TODO: needs to open subwindow with a treetable where the editor can browse to the desired page.
  */
-public abstract class AbstractDialogControl implements DialogControl {
+public class UuidLinkControl extends AbstractLinkControl {
 
-    private String name;
-    private String label;
-    private String description;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public final void create(Content storageNode, GridLayout grid) {
-
-        grid.addComponent(new Label(label));
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-
-        addControl(storageNode, verticalLayout);
-
-        if (description != null)
-            verticalLayout.addComponent(new Label(description));
-
-        grid.addComponent(verticalLayout);
-    }
-
-    protected abstract void addControl(Content storageNode, VerticalLayout layout);
-
-    public void validate() {
-    }
+    // TODO add repository
 
     public void save(Content storageNode) throws RepositoryException {
+
+        // Save UUID
     }
 }

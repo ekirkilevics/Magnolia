@@ -37,7 +37,6 @@ import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -45,22 +44,15 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.control.ControlRegistry;
-import info.magnolia.module.admincentral.control.DialogControl;
 
 import javax.jcr.RepositoryException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Creates dialogs for presentation in the gui.
+ * Abstract DialogProvider that creates the dialog from a DialogDefinition.
  */
-public class DialogFactory {
+public abstract class AbstractDialogProvider implements DialogProvider {
 
-    private DialogDefinitionRegistry dialogDefinitionRegistry = new DialogDefinitionRegistry();
-    private ControlRegistry controlRegistry = new ControlRegistry();
-
-    public Window createDialog(String name, Content storageNode) {
+    public Window createDialog(Content storageNode) throws RepositoryException {
 
         final Window subwindow = new Window("Edit paragraph");
         subwindow.setModal(true);
@@ -76,9 +68,7 @@ public class DialogFactory {
         TabSheet sheet = new TabSheet();
         layout.addComponent(sheet);
 
-        final List<DialogControl> controls = new ArrayList<DialogControl>();
-
-        DialogDefinition dialog = dialogDefinitionRegistry.getDialog(name);
+        final DialogDefinition dialog = getDialogDefinition();
 
         for (DialogTab dialogTab : dialog.getTabs()) {
 
@@ -86,12 +76,9 @@ public class DialogFactory {
             grid.setSpacing(true);
             grid.setMargin(true);
 
-            for (DialogItem dialogItem : dialogTab.getSubs()) {
+            for (DialogControl dialogItem : dialogTab.getControls()) {
 
-                DialogControl control = controlRegistry.createControl(dialogItem.getControlType());
-                controls.add(control);
-
-                control.create(dialogItem, storageNode, grid);
+                dialogItem.create(storageNode, grid);
 
                 grid.newLine();
             }
@@ -111,18 +98,22 @@ public class DialogFactory {
                     Content storageNode = hm.getContentByUUID(uuid);
 
                     // Validate
-                    for (DialogControl control : controls) {
-                        try {
-                            control.validate();
-                        } catch (Validator.InvalidValueException e) {
-                            subwindow.getParent().showNotification(e.getMessage(), Window.Notification.TYPE_WARNING_MESSAGE);
-                            return;
+                    for (DialogTab dialogTab : dialog.getTabs()) {
+                        for (DialogControl control : dialogTab.getControls()) {
+                            try {
+                                control.validate();
+                            } catch (Validator.InvalidValueException e) {
+                                subwindow.getParent().showNotification(e.getMessage(), Window.Notification.TYPE_WARNING_MESSAGE);
+                                return;
+                            }
                         }
                     }
 
                     // Save
-                    for (DialogControl control : controls) {
-                        control.save(storageNode);
+                    for (DialogTab dialogTab : dialog.getTabs()) {
+                        for (DialogControl control : dialogTab.getControls()) {
+                            control.save(storageNode);
+                        }
                     }
 
                     storageNode.save();
@@ -151,4 +142,6 @@ public class DialogFactory {
 
         return subwindow;
     }
+
+    protected abstract DialogDefinition getDialogDefinition() throws RepositoryException;
 }

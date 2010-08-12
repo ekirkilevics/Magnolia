@@ -31,34 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.control;
+package info.magnolia.module.admincentral.dialog;
 
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 
+import javax.jcr.RepositoryException;
+
 /**
- * Control for selecting dates in a dialog.
+ * DialogProvider that instantiates a dialog from a configuration node.
  */
-public class DateControl extends AbstractDialogControl {
+public class ConfiguredDialogProvider extends AbstractDialogProvider {
 
-    private boolean time = false;
+    private Content configNode;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
-        layout.addComponent(new DateField());
+    public ConfiguredDialogProvider(Content configNode) {
+        this.configNode = configNode;
     }
 
-    public void validate() {
-    }
+    @Override
+    protected DialogDefinition getDialogDefinition() throws RepositoryException {
 
-    public void save(Content storageNode) {
-    }
+        // TODO use content2bean to read configuration from repository
 
-    public boolean isTime() {
-        return time;
-    }
-
-    public void setTime(boolean time) {
-        this.time = time;
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

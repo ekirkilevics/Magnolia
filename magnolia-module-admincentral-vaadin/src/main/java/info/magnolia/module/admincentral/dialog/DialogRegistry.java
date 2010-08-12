@@ -31,34 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.control;
+package info.magnolia.module.admincentral.dialog;
+
+import com.vaadin.ui.Window;
+import info.magnolia.cms.core.Content;
+
+import javax.jcr.RepositoryException;
 
 /**
- * Maintains a registry of configured controls and creates new instances of them.
+ * Maintains a registry of dialog providers registered by name.
  */
-public class ControlRegistry {
+public class DialogRegistry {
 
-    public DialogControl createControl(String type) {
-
-        if (type.equals("date"))
-            return new DateControl();
-        if (type.equals("checkbox"))
-            return new CheckBoxControl();
-        if (type.equals("edit"))
-            return new EditControl();
-        if (type.equals("file"))
-            return new FileControl();
-        if (type.equals("link"))
-            return new LinkControl();
-        if (type.equals("radio"))
-            return new RadioControl();
-        if (type.equals("select"))
-            return new SelectControl();
-        if (type.equals("slider"))
-            return new SliderControl();
-        if (type.equals("static"))
-            return new StaticControl();
-
-        throw new IllegalArgumentException("No control registered for type [" + type + "]");
+    public Window getDialog(String name, Content storageNode) throws RepositoryException {
+        return new MockDialogProvider().createDialog(storageNode);
     }
 }

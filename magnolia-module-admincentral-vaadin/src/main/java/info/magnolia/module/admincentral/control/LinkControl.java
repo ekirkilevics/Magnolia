@@ -33,9 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.*;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
@@ -44,35 +42,12 @@ import javax.jcr.RepositoryException;
  *
  * TODO: needs to open subwindow with a treetable where the editor can browse to the desired page.
  */
-public class LinkControl extends AbstractDialogControl {
+public class LinkControl extends AbstractLinkControl {
 
-    public void addControl(DialogItem dialogItem, Content storageNode, final VerticalLayout layout) {
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-        TextField field = new TextField();
-        horizontalLayout.addComponent(field);
-
-        Button button = new Button();
-        button.setCaption("Browse..");
-        button.addListener(new Button.ClickListener() {
-            public void buttonClick(Button.ClickEvent event) {
-
-                Window window = new Window("Choose page");
-                window.setModal(true);
-                window.setClosable(true);
-
-                layout.getApplication().getMainWindow().addWindow(window);
-            }
-        });
-        horizontalLayout.addComponent(button);
-
-        layout.addComponent(horizontalLayout);
-    }
-
-    public void validate() {
-    }
+    // TODO add extension, repository and tree
 
     public void save(Content storageNode) throws RepositoryException {
+
+        // Save link
     }
 }

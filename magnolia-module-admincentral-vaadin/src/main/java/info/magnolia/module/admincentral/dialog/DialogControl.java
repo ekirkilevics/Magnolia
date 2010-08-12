@@ -31,34 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.control;
+package info.magnolia.module.admincentral.dialog;
 
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.GridLayout;
 import info.magnolia.cms.core.Content;
 
+import javax.jcr.RepositoryException;
+
 /**
- * Control for selecting dates in a dialog.
+ * Provides gui setup, validation and saving of dialog field.
  */
-public class DateControl extends AbstractDialogControl {
+public interface DialogControl {
 
-    private boolean time = false;
+    void create(Content storageNode, GridLayout layout);
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
-        layout.addComponent(new DateField());
-    }
+    void validate();
 
-    public void validate() {
-    }
-
-    public void save(Content storageNode) {
-    }
-
-    public boolean isTime() {
-        return time;
-    }
-
-    public void setTime(boolean time) {
-        this.time = time;
-    }
+    void save(Content storageNode) throws RepositoryException;
 }

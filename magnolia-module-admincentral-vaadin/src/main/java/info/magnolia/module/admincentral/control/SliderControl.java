@@ -34,9 +34,12 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.data.Property;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Slider;
+import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
@@ -45,7 +48,11 @@ import javax.jcr.RepositoryException;
  */
 public class SliderControl extends AbstractDialogControl {
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
+    private int min;
+    private int max;
+    private int resolution;
+
+    public void addControl(Content storageNode, VerticalLayout layout) {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
@@ -54,8 +61,9 @@ public class SliderControl extends AbstractDialogControl {
 
         final Slider slider = new Slider("Select a value between 0 and 100");
         slider.setWidth("100%");
-        slider.setMin(0);
-        slider.setMax(100);
+        slider.setMin(min);
+        slider.setMax(max);
+        slider.setResolution(resolution);
         slider.setImmediate(true);
         slider.addListener(new Property.ValueChangeListener() {
 
@@ -76,5 +84,29 @@ public class SliderControl extends AbstractDialogControl {
     }
 
     public void save(Content storageNode) throws RepositoryException {
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(int resolution) {
+        this.resolution = resolution;
     }
 }

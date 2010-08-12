@@ -37,12 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A tab in a dialog.
+ * A tab in a dialog. Holds a list of controls contained in the tab.
  */
 public class DialogTab {
 
     private String label;
-    private List<DialogItem> subs = new ArrayList<DialogItem>();
+    private List<DialogControl> controls = new ArrayList<DialogControl>();
 
     public String getLabel() {
         return label;
@@ -52,15 +52,15 @@ public class DialogTab {
         this.label = label;
     }
 
-    public List<DialogItem> getSubs() {
-        return subs;
+    public List<DialogControl> getControls() {
+        return controls;
     }
 
-    public void setSubs(List<DialogItem> subs) {
-        this.subs = subs;
+    public void setControls(List<DialogControl> controls) {
+        this.controls = controls;
     }
 
-    public boolean addSub(DialogItem dialogItem) {
-        return subs.add(dialogItem);
+    public boolean addControl(DialogControl dialogControl) {
+        return controls.add(dialogControl);
     }
 }

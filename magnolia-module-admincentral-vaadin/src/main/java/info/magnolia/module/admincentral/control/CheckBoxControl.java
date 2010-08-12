@@ -36,7 +36,6 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogItem;
 
 import javax.jcr.RepositoryException;
 
@@ -45,10 +44,9 @@ import javax.jcr.RepositoryException;
  */
 public class CheckBoxControl extends AbstractDialogControl {
 
-    public void addControl(DialogItem dialogItem, Content storageNode, VerticalLayout layout) {
+    public void addControl(Content storageNode, VerticalLayout layout) {
 
         CheckBox checkBox = new CheckBox();
-        checkBox.setCaption("Click to toggle");
         layout.addComponent(checkBox);
     }
 

@@ -33,45 +33,15 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import com.vaadin.ui.Window;
+import info.magnolia.cms.core.Content;
+
+import javax.jcr.RepositoryException;
+
 /**
- * Definition of an item used in a dialog to edit content.
+ * Instantiates a dialog.
  */
-public class DialogItem {
+public interface DialogProvider {
 
-    private String name;
-    private String label;
-    private String description;
-    private String controlType;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getControlType() {
-        return controlType;
-    }
-
-    public void setControlType(String controlType) {
-        this.controlType = controlType;
-    }
+    Window createDialog(Content storageNode) throws RepositoryException;
 }
