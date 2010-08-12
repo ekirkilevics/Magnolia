@@ -694,7 +694,7 @@ for Java Content Repositories (JCR).
   <distributionManagement>
     <site>
       <id>magnolia.public.sites</id>
-      <url>dav:http://nexus.magnolia-cms.com/content/sites/magnolia.public.sites/ref/${artifactId}/${project.version}</url>
+      <url>dav:http://nexus.magnolia-cms.com/content/sites/magnolia.public.sites/ref/${project.version}</url>
     </site>
     <downloadUrl>http://sourceforge.net/projects/magnolia/files/</downloadUrl>
   </distributionManagement>
