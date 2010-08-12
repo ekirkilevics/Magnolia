@@ -102,7 +102,7 @@ public class SelfTest extends TestCase {
         ComponentsTestUtil.setImplementation(SystemContext.class, MockContext.class);
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
         MgnlContext.setInstance(ctx);
-        new TestCommand().execute((org.apache.commons.chain.Context)ctx);
+        new DummyCommand().execute((org.apache.commons.chain.Context)ctx);
     }
     
     protected void tearDown() throws Exception {

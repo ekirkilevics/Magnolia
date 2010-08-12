@@ -43,7 +43,7 @@ import info.magnolia.context.Context;
  * @author had
  * @version $Id:$
  */
-public class TestCommand extends MgnlCommand {
+public class DummyCommand extends MgnlCommand {
 
     private List versionMap;
 
