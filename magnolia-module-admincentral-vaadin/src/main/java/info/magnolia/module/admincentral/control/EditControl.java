@@ -33,10 +33,11 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 
@@ -54,6 +55,8 @@ public class EditControl extends AbstractDialogControl {
     private String requiredErrorMessage;
     private int maxLength = -1;
     private String inputPrompt;
+    private String validationPattern;
+    private String validationMessage;
 
     public void addControl(Content storageNode, VerticalLayout layout) {
 
@@ -65,6 +68,8 @@ public class EditControl extends AbstractDialogControl {
         field.setWordwrap(wordwrap);
         field.setRows(rows);
         field.setSecret(secret);
+        if (StringUtils.isNotEmpty(validationPattern))
+            field.addValidator(new RegexpValidator(validationPattern, validationMessage));
         layout.addComponent(field);
 
         if (storageNode != null) {
@@ -134,5 +139,21 @@ public class EditControl extends AbstractDialogControl {
 
     public void setInputPrompt(String inputPrompt) {
         this.inputPrompt = inputPrompt;
+    }
+
+    public String getValidationPattern() {
+        return validationPattern;
+    }
+
+    public void setValidationPattern(String validationPattern) {
+        this.validationPattern = validationPattern;
+    }
+
+    public String getValidationMessage() {
+        return validationMessage;
+    }
+
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
     }
 }

@@ -73,12 +73,23 @@ public class MockDialogProvider implements DialogProvider {
 
         DialogTab tab2 = new DialogTab();
         tab2.setLabel("Margins");
-        tab2.addControl(createEdit("leftMargin", "Left margin", "Margin on the left"));
-        tab2.addControl(createEdit("rightMargin", "Right margin", "Margin on the right"));
+        tab2.addControl(createEditNumeric("leftMargin", "Left margin", "Margin on the left"));
+        tab2.addControl(createEditNumeric("rightMargin", "Right margin", "Margin on the right"));
         tab2.addControl(createRichText("bodyText", "Body text", "Text in paragraph body"));
         dialog.addTab(tab2);
 
         return dialog;
+    }
+
+    private EditControl createEditNumeric(String name, String label, String description) {
+        EditControl control = new EditControl();
+        control.setName(name);
+        control.setLabel(label);
+        control.setDescription(description);
+        control.setInputPrompt("Enter a number..");
+        control.setValidationPattern("^[0-9]+$");
+        control.setValidationMessage("Field '" + label + "' must be numeric");
+        return control;
     }
 
     private StaticControl createStatic(String label) {
