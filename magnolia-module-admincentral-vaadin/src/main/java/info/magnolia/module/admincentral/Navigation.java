@@ -2,15 +2,21 @@ package info.magnolia.module.admincentral;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.dialog.DialogRegistry;
+import info.magnolia.module.admincentral.website.WebsiteTreeTable;
+import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
+import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Accordion;
@@ -19,6 +25,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -70,6 +77,7 @@ public class Navigation extends Accordion{
         }
         //TODO for testing only. To be removed.
         addTab(new Label("For testing dialogs"), "Dialogs", null);
+        addListener(new SelectedMenuItemTabChangeListener());
     }
 
     /**
@@ -102,6 +110,7 @@ public class Navigation extends Accordion{
     protected boolean isMenuItemRenderable(Content menuItem) {
         return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(menuItem.getHandle(), Permission.READ);
     }
+
     //TODO extract this as a top level class?
     public class MenuItem extends Button{
         private static final long serialVersionUID = 1L;
@@ -132,6 +141,60 @@ public class Navigation extends Accordion{
 
             });
         }
+    }
+
+    public class SelectedMenuItemTabChangeListener implements SelectedTabChangeListener {
+
+        private static final long serialVersionUID = 1L;
+
+        public void selectedTabChange(SelectedTabChangeEvent event) {
+            TabSheet tabsheet = event.getTabSheet();
+            Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
+            if (tab != null) {
+                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
+
+            if("website".equalsIgnoreCase(tab.getCaption())) {
+                ComponentContainer mainContainer = (ComponentContainer)getComponentByCaption("mainContainer");
+                mainContainer.removeAllComponents();
+                WebsiteTreeTable  website = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
+                Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
+                website.setContainerDataSource(websiteData);
+                website.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
+                mainContainer.addComponent(website);
+            }
+            //TODO remove this if block, it's here just for testing purposes
+            if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
+                ComponentContainer mainContainer = (ComponentContainer)getComponentByCaption("mainContainer");
+                mainContainer.removeAllComponents();
+                Button open = new Button("Edit paragraph",
+                        new Button.ClickListener() {
+
+                            public void buttonClick(Button.ClickEvent event) {
+                                try {
+                                    openDialog();
+                                }
+                                catch (RepositoryException e) {
+                                    e.printStackTrace(); // To change body of catch
+                                                         // statement use File |
+                                                         // Settings | File Templates.
+                                }
+                            }
+                        });
+                mainContainer.addComponent(open);
+            }
+          }
+        }
+    };
+
+    //TODO remove me, I'm here just for testing purposes
+    private void openDialog() throws RepositoryException {
+
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        Content storageNode = ContentUtil.createPath(hm, "/modules/genuine-vaadin-central/foobar", true);
+
+        DialogRegistry dialogRegistry = DialogRegistry.getInstance();
+
+        getApplication().getMainWindow().addWindow(dialogRegistry.createDialog("mock", storageNode));
     }
 }
 
