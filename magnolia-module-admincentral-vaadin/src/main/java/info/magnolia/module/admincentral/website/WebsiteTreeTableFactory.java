@@ -70,9 +70,14 @@ import com.vaadin.ui.Table.TableDragMode;
 /**
  * Creates the TreeTable for the Websites.
  *
+ * TODO dlipp: See WorkItemContainer -> use BeanItemContainer to have proper model in container...
+ *
+ * TODO dlipp: Move to Controller-type
+ *
  * @author dlipp
  */
 public class WebsiteTreeTableFactory {
+
     private static WebsiteTreeTableFactory instance;
 
     private static Logger log = LoggerFactory.getLogger(WebsiteTreeTableFactory.class);
@@ -94,22 +99,25 @@ public class WebsiteTreeTableFactory {
         super();
     }
 
-    Hierarchical addChildrenToContainer(Hierarchical ic, Content parent) {
+    Hierarchical addChildrenToContainer(Hierarchical container, Content parent, Object parentId) {
         Collection<Content> nodes = parent.getChildren();
         Iterator<Content> it = nodes.iterator();
         while (it.hasNext()) {
             Content child = it.next();
+            Object id = container.addItem();
+            container.getContainerProperty(id, WebsiteTreeTable.PAGE).setValue(child.getName());
+            container.getContainerProperty(id, WebsiteTreeTable.TITLE).setValue(child.getTitle());
+            container.getContainerProperty(id, WebsiteTreeTable.STATUS).setValue(child.getMetaData().getActivationStatus());
+            container.getContainerProperty(id, WebsiteTreeTable.TEMPLATE).setValue(child.getTemplate());
+            container.getContainerProperty(id, WebsiteTreeTable.MOD_DATE).setValue(child.getMetaData().getModificationDate().getTime());
+            addChildrenToContainer(container, child, id);
             log.info("Setting " + parent.getName() + " as parent for " + child.getName());
-            ic.setParent(child, parent);
-            Object id = ic.addItem();
-            ic.getContainerProperty(id, WebsiteTreeTable.PAGE).setValue(child.getName());
-            ic.getContainerProperty(id, WebsiteTreeTable.TITLE).setValue(child.getTitle());
-            ic.getContainerProperty(id, WebsiteTreeTable.STATUS).setValue(child.getMetaData().getActivationStatus());
-            ic.getContainerProperty(id, WebsiteTreeTable.TEMPLATE).setValue(child.getTemplate());
-            ic.getContainerProperty(id, WebsiteTreeTable.MOD_DATE).setValue(child.getMetaData().getModificationDate().getTime());
-            addChildrenToContainer(ic, child);
+
+            if (parentId != null) {
+                container.setParent(id, parentId);
+            }
         }
-        return ic;
+        return container;
 
     }
 
@@ -139,7 +147,7 @@ public class WebsiteTreeTableFactory {
                 // On which side of the target the item was dropped
                 VerticalDropLocation location = target.getDropLocation();
 
-                 log.debug("DropLocation: " + location.name());
+                log.debug("DropLocation: " + location.name());
 
                 HieararchicalContainerOrderedWrapper container = (HieararchicalContainerOrderedWrapper) table
                         .getContainerDataSource();
@@ -232,6 +240,9 @@ public class WebsiteTreeTableFactory {
         table.setEditable(true);
         table.setSelectable(true);
         table.setColumnCollapsingAllowed(true);
+        // TODO dlipp: check whether to open a bug here (reordering does not work when swapping with
+        // first (tree) column).
+        table.setColumnReorderingAllowed(true);
         addDragAndDrop(table);
         addEditingByDoubleClick(table);
         return table;
@@ -248,8 +259,9 @@ public class WebsiteTreeTableFactory {
             parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
         }
         catch (RepositoryException e) {
-            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
-            // Notification.TYPE_WARNING_MESSAGE);
+            /**
+             * TODO: proper ExceptionHandling
+             */
             throw new RuntimeException(e);
         }
         Hierarchical ic = new HieararchicalContainerOrderedWrapper(new ContainerHierarchicalWrapper(new IndexedContainer()));
@@ -260,7 +272,7 @@ public class WebsiteTreeTableFactory {
         ic.addContainerProperty(WebsiteTreeTable.TEMPLATE, String.class, "");
         ic.addContainerProperty(WebsiteTreeTable.MOD_DATE, Date.class, "");
 
-        addChildrenToContainer(ic, parent);
+        addChildrenToContainer(ic, parent, null);
         return ic;
     }
 }
