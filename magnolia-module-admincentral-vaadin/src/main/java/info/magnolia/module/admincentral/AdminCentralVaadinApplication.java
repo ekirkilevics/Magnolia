@@ -290,13 +290,12 @@ public class AdminCentralVaadinApplication extends Application {
         while (it.hasNext()) {
             Content content = it.next();
             Object id = ic.addItem();
-            ic.getContainerProperty(id, "page").setValue(content.getName());
-            ic.getContainerProperty(id, "title").setValue(content.getTitle());
-            ic.getContainerProperty(id, "status").setValue(content.getMetaData().getActivationStatus());
-            ic.getContainerProperty(id, "template").setValue(content.getTemplate());
-            ic.getContainerProperty(id, "modificationDate").setValue(
+            ic.getContainerProperty(id, websiteFields[0]).setValue(content.getName());
+            ic.getContainerProperty(id, websiteFields[1]).setValue(content.getTitle());
+            ic.getContainerProperty(id, websiteFields[2]).setValue(content.getMetaData().getActivationStatus());
+            ic.getContainerProperty(id, websiteFields[3]).setValue(content.getTemplate());
+            ic.getContainerProperty(id, websiteFields[4]).setValue(
                 DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
-
         }
         return ic;
     }
@@ -304,21 +303,6 @@ public class AdminCentralVaadinApplication extends Application {
     private void initContactList() {
         websites.setContainerDataSource(websiteData);
         websites.setVisibleColumns(websiteFields);
-        /**
-         * dan: For the showcase we need a Tree-Structure - so loop over the contacts and create an
-         * simple tree structure (depth 3)
-         */
-        Object[] ids = websites.getItemIds().toArray();
-        Object current = null;
-        Object next = null;
-        Object nextNext = null;
-        for (int i = 0; i < ids.length - 2; i = i + 3) {
-            current = ids[i];
-            next = ids[i + 1];
-            nextNext = ids[i + 2];
-            websites.setParent(next, current);
-            websites.setParent(nextNext, next);
-        }
     }
 
     /**
