@@ -33,15 +33,12 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import com.vaadin.ui.Window;
-import info.magnolia.cms.core.Content;
-
 import javax.jcr.RepositoryException;
 
 /**
- * Instantiates a dialog.
+ * Provides a dialog definition.
  */
 public interface DialogProvider {
 
-    Window createDialog(Content storageNode) throws RepositoryException;
+    DialogDefinition getDialogDefinition() throws RepositoryException;
 }

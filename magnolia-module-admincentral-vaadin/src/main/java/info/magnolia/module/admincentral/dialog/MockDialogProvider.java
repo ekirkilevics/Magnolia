@@ -52,12 +52,9 @@ import java.util.Map;
 /**
  * Mock DialogProvider that instantiates a dialog useful while prototyping.
  */
-public class MockDialogProvider extends AbstractDialogProvider {
+public class MockDialogProvider implements DialogProvider {
 
-    @Override
-    protected DialogDefinition getDialogDefinition() throws RepositoryException {
-
-        // This is all mock, its supposed to read it from the repository instead.
+    public DialogDefinition getDialogDefinition() throws RepositoryException {
 
         DialogDefinition dialog = new DialogDefinition();
 

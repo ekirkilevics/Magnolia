@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import com.vaadin.ui.Window;
-import info.magnolia.cms.core.Content;
 import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
@@ -48,26 +46,26 @@ public class DialogRegistry {
 
     private final Map<String, DialogProvider> providers = new HashMap<String, DialogProvider>();
 
-    public void registerDialog(String name, DialogProvider provider) {
+    public void registerDialog(String dialogName, DialogProvider provider) {
         synchronized (providers) {
-            if (providers.containsKey(name))
-                throw new IllegalStateException("Dialog already registered for name [" + name + "]");
-            providers.put(name, provider);
+            if (providers.containsKey(dialogName))
+                throw new IllegalStateException("Dialog already registered for name [" + dialogName + "]");
+            providers.put(dialogName, provider);
         }
     }
 
-    public void unregisterDialog(String name) {
+    public void unregisterDialog(String dialogName) {
         synchronized (providers) {
-            providers.remove(name);
+            providers.remove(dialogName);
         }
     }
 
-    public Window createDialog(String name, Content storageNode) throws RepositoryException {
+    public DialogDefinition getDialog(String dialogName) throws RepositoryException {
         DialogProvider dialogProvider;
         synchronized (providers) {
-            dialogProvider = providers.get(name);
+            dialogProvider = providers.get(dialogName);
         }
-        return dialogProvider.createDialog(storageNode);
+        return dialogProvider.getDialogDefinition();
     }
 
     public static DialogRegistry getInstance() {

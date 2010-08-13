@@ -40,7 +40,7 @@ import javax.jcr.RepositoryException;
 /**
  * DialogProvider that instantiates a dialog from a configuration node.
  */
-public class ConfiguredDialogProvider extends AbstractDialogProvider {
+public class ConfiguredDialogProvider implements DialogProvider {
 
     private Content configNode;
 
@@ -48,8 +48,7 @@ public class ConfiguredDialogProvider extends AbstractDialogProvider {
         this.configNode = configNode;
     }
 
-    @Override
-    protected DialogDefinition getDialogDefinition() throws RepositoryException {
+    public DialogDefinition getDialogDefinition() throws RepositoryException {
 
         // TODO use content2bean to read configuration from repository
 

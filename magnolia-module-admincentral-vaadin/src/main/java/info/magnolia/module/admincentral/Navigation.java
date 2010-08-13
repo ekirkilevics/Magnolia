@@ -2,13 +2,11 @@ package info.magnolia.module.admincentral;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.DialogRegistry;
+import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.website.WebsiteTreeTable;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
@@ -165,33 +163,10 @@ public class Navigation extends Accordion{
             if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
                 ComponentContainer mainContainer = (ComponentContainer)getComponentByCaption("mainContainer");
                 mainContainer.removeAllComponents();
-                Button open = new Button("Edit paragraph",
-                        new Button.ClickListener() {
-
-                            public void buttonClick(Button.ClickEvent event) {
-                                try {
-                                    openDialog();
-                                }
-                                catch (RepositoryException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                mainContainer.addComponent(open);
+                mainContainer.addComponent(new DialogSandboxPage());
             }
           }
         }
-    };
-
-    //TODO remove me, I'm here just for testing purposes
-    private void openDialog() throws RepositoryException {
-
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
-        Content storageNode = ContentUtil.createPath(hm, "/modules/genuine-vaadin-central/foobar", true);
-
-        DialogRegistry dialogRegistry = DialogRegistry.getInstance();
-
-        getApplication().getMainWindow().addWindow(dialogRegistry.createDialog("mock", storageNode));
     }
 }
 
