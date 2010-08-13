@@ -12,6 +12,10 @@
       <name>core</name>
       <version>5.0/*</version>
     </dependency>
+    <dependency>
+      <name>templating</name>
+      <version>5.0/*</version>
+    </dependency>
   </dependencies>
 
   <servlets>
