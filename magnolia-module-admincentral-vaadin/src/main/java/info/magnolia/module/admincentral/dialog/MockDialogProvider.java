@@ -39,6 +39,7 @@ import info.magnolia.module.admincentral.control.EditControl;
 import info.magnolia.module.admincentral.control.FileControl;
 import info.magnolia.module.admincentral.control.LinkControl;
 import info.magnolia.module.admincentral.control.RadioControl;
+import info.magnolia.module.admincentral.control.RichTextControl;
 import info.magnolia.module.admincentral.control.SelectControl;
 import info.magnolia.module.admincentral.control.SliderControl;
 import info.magnolia.module.admincentral.control.StaticControl;
@@ -77,6 +78,7 @@ public class MockDialogProvider extends AbstractDialogProvider {
         tab2.setLabel("Margins");
         tab2.addControl(createEdit("leftMargin", "Left margin", "Margin on the left"));
         tab2.addControl(createEdit("rightMargin", "Right margin", "Margin on the right"));
+        tab2.addControl(createRichText("bodyText", "Body text", "Text in paragraph body"));
         dialog.addTab(tab2);
 
         return dialog;
@@ -167,6 +169,14 @@ public class MockDialogProvider extends AbstractDialogProvider {
         control.setRequiredErrorMessage("Must not be empty");
         control.setMaxLength(15);
         control.setInputPrompt("Type here..");
+        return control;
+    }
+
+    private RichTextControl createRichText(String name, String label, String description) {
+        RichTextControl control = new RichTextControl();
+        control.setName(name);
+        control.setLabel(label);
+        control.setDescription(description);
         return control;
     }
 

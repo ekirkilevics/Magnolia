@@ -33,59 +33,49 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.DateField;
+import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 
 /**
- * Control for selecting dates in a dialog.
+ * Control for editing rich text.
  */
-public class DateControl extends AbstractDialogControl {
+public class RichTextControl extends AbstractDialogControl {
 
-    private boolean required;
-    private String requiredErrorMessage;
-    private boolean time = false;
+    private RichTextArea richTextArea;
 
-    // TODO vaadin has better resolution than just date or date+time
-
-    // TODO locale and date format
-
-    private DateField dateField;
+    private boolean wordwrap = true;
+    private int rows = 0;
 
     public void addControl(Content storageNode, VerticalLayout layout) {
-        dateField = new DateField();
-        dateField.setResolution(time ? DateField.RESOLUTION_MIN : DateField.RESOLUTION_DAY);
-        layout.addComponent(dateField);
+
+        richTextArea = new RichTextArea();
+        richTextArea.setWordwrap(wordwrap);
+        richTextArea.setRows(rows);
+
+        layout.addComponent(richTextArea);
     }
 
     public void validate() {
-        dateField.validate();
+        richTextArea.validate();
     }
 
     public void save(Content storageNode) {
     }
 
-    public boolean isTime() {
-        return time;
+    public boolean isWordwrap() {
+        return wordwrap;
     }
 
-    public void setTime(boolean time) {
-        this.time = time;
+    public void setWordwrap(boolean wordwrap) {
+        this.wordwrap = wordwrap;
     }
 
-    public boolean isRequired() {
-        return required;
+    public int getRows() {
+        return rows;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public String getRequiredErrorMessage() {
-        return requiredErrorMessage;
-    }
-
-    public void setRequiredErrorMessage(String requiredErrorMessage) {
-        this.requiredErrorMessage = requiredErrorMessage;
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 }

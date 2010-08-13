@@ -36,6 +36,7 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 import java.util.Map;
@@ -45,24 +46,46 @@ import java.util.Map;
  */
 public class SelectControl extends AbstractDialogControl {
 
+    private ComboBox comboBox;
+
+    private String defaultValue;
+    private boolean nullSelectionAllowed = false;
+    private boolean required = false;
+    private String requiredErrorMessage;
+    private String inputPrompt;
     private Map<String, String> options;
 
     public void addControl(Content storageNode, VerticalLayout layout) {
 
-        ComboBox l = new ComboBox();
+        comboBox = new ComboBox();
+        comboBox.setNullSelectionAllowed(nullSelectionAllowed);
+        comboBox.setRequired(required);
+        comboBox.setRequiredError(requiredErrorMessage);
+        comboBox.setInputPrompt(inputPrompt);
 
         for (Map.Entry<String, String> entry : options.entrySet()) {
-            l.addItem(entry.getValue());
-            l.setItemCaption(entry.getValue(), entry.getKey());
+            comboBox.addItem(entry.getKey());
+            comboBox.setItemCaption(entry.getKey(), entry.getValue());
         }
 
-        layout.addComponent(l);
+        layout.addComponent(comboBox);
+
+        if (storageNode != null) {
+            String value = storageNode.getNodeData(getName()).getString();
+            if (StringUtils.isNotEmpty(value))
+                comboBox.select(value);
+        } else {
+            if (StringUtils.isNotEmpty(defaultValue))
+                comboBox.setValue(defaultValue);
+        }
     }
 
     public void validate() {
+        comboBox.validate();
     }
 
     public void save(Content storageNode) throws RepositoryException {
+        storageNode.setNodeData(getName(), (String)comboBox.getValue());
     }
 
     public Map<String, String> getOptions() {
@@ -71,5 +94,45 @@ public class SelectControl extends AbstractDialogControl {
 
     public void setOptions(Map<String, String> options) {
         this.options = options;
+    }
+
+    public String getInputPrompt() {
+        return inputPrompt;
+    }
+
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public boolean isNullSelectionAllowed() {
+        return nullSelectionAllowed;
+    }
+
+    public void setNullSelectionAllowed(boolean nullSelectionAllowed) {
+        this.nullSelectionAllowed = nullSelectionAllowed;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getRequiredErrorMessage() {
+        return requiredErrorMessage;
+    }
+
+    public void setRequiredErrorMessage(String requiredErrorMessage) {
+        this.requiredErrorMessage = requiredErrorMessage;
     }
 }

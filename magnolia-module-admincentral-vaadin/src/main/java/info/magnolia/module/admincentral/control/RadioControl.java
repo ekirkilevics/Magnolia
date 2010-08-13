@@ -36,6 +36,7 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 import java.util.Map;
@@ -45,13 +46,21 @@ import java.util.Map;
  */
 public class RadioControl extends AbstractDialogControl {
 
+    private boolean required;
+    private String requiredErrorMessage;
+    private boolean nullSelectionAllowed;
     private Map<String, String> options;
+
+    private OptionGroup group;
 
     // TODO needs configuration for reading in options from separate node
 
     public void addControl(Content storageNode, VerticalLayout layout) {
 
-        OptionGroup group = new OptionGroup();
+        group = new OptionGroup();
+        group.setNullSelectionAllowed(nullSelectionAllowed);
+        group.setRequired(required);
+        group.setRequiredError(requiredErrorMessage);
 
         for (Map.Entry<String, String> entry : options.entrySet()) {
             group.addItem(entry.getKey());
@@ -61,12 +70,20 @@ public class RadioControl extends AbstractDialogControl {
         group.setNullSelectionAllowed(false);
 
         layout.addComponent(group);
+
+        if (storageNode != null) {
+            String value = storageNode.getNodeData(getName()).getString();
+            if (StringUtils.isNotEmpty(value))
+                group.select(value);
+        }
     }
 
     public void validate() {
+        group.validate();
     }
 
     public void save(Content storageNode) throws RepositoryException {
+        storageNode.setNodeData(getName(), (String)group.getValue());
     }
 
     public Map<String, String> getOptions() {
@@ -75,5 +92,29 @@ public class RadioControl extends AbstractDialogControl {
 
     public void setOptions(Map<String, String> options) {
         this.options = options;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getRequiredErrorMessage() {
+        return requiredErrorMessage;
+    }
+
+    public void setRequiredErrorMessage(String requiredErrorMessage) {
+        this.requiredErrorMessage = requiredErrorMessage;
+    }
+
+    public boolean isNullSelectionAllowed() {
+        return nullSelectionAllowed;
+    }
+
+    public void setNullSelectionAllowed(boolean nullSelectionAllowed) {
+        this.nullSelectionAllowed = nullSelectionAllowed;
     }
 }

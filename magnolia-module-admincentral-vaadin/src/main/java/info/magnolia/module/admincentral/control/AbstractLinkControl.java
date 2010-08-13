@@ -49,12 +49,17 @@ import javax.jcr.RepositoryException;
  */
 public abstract class AbstractLinkControl extends AbstractDialogControl {
 
+    private boolean required;
+    private String requiredErrorMessage;
+
+    private TextField field;
+
     public void addControl(Content storageNode, final VerticalLayout layout) {
 
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
 
-        TextField field = new TextField();
-        horizontalLayout.addComponent(field);
+        field = new TextField();
+        field.setRequired(required);
+        field.setRequiredError(requiredErrorMessage);
 
         Button button = new Button();
         button.setCaption("Browse..");
@@ -68,14 +73,33 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
                 layout.getApplication().getMainWindow().addWindow(window);
             }
         });
-        horizontalLayout.addComponent(button);
 
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        horizontalLayout.addComponent(field);
+        horizontalLayout.addComponent(button);
         layout.addComponent(horizontalLayout);
     }
 
     public void validate() {
+        field.validate();
     }
 
     public void save(Content storageNode) throws RepositoryException {
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getRequiredErrorMessage() {
+        return requiredErrorMessage;
+    }
+
+    public void setRequiredErrorMessage(String requiredErrorMessage) {
+        this.requiredErrorMessage = requiredErrorMessage;
     }
 }

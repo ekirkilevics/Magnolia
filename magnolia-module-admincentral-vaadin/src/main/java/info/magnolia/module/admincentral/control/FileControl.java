@@ -48,8 +48,13 @@ import javax.jcr.RepositoryException;
  */
 public class FileControl extends AbstractDialogControl {
 
+    private boolean required;
+    private String requiredErrorMessage;
+
+    private Upload upload;
+
     public void addControl(Content storageNode, VerticalLayout layout) {
-        Upload upload = new Upload();
+        upload = new Upload();
         upload.setWidth("100%");
         layout.addComponent(upload);
     }
@@ -58,5 +63,21 @@ public class FileControl extends AbstractDialogControl {
     }
 
     public void save(Content storageNode) throws RepositoryException {
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getRequiredErrorMessage() {
+        return requiredErrorMessage;
+    }
+
+    public void setRequiredErrorMessage(String requiredErrorMessage) {
+        this.requiredErrorMessage = requiredErrorMessage;
     }
 }

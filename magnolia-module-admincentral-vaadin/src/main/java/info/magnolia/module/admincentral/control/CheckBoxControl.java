@@ -44,13 +44,16 @@ import javax.jcr.RepositoryException;
  */
 public class CheckBoxControl extends AbstractDialogControl {
 
+    private CheckBox checkBox;
+
     public void addControl(Content storageNode, VerticalLayout layout) {
 
-        CheckBox checkBox = new CheckBox();
+        checkBox = new CheckBox();
         layout.addComponent(checkBox);
     }
 
     public void validate() {
+        checkBox.validate();
     }
 
     public void save(Content storageNode) throws RepositoryException {

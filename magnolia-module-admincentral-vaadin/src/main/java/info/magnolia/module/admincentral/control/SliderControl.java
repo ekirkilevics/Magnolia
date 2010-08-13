@@ -52,6 +52,8 @@ public class SliderControl extends AbstractDialogControl {
     private int max;
     private int resolution;
 
+    private Slider slider;
+
     public void addControl(Content storageNode, VerticalLayout layout) {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -59,7 +61,7 @@ public class SliderControl extends AbstractDialogControl {
         final Label value = new Label("0");
         value.setWidth("3em");
 
-        final Slider slider = new Slider("Select a value between 0 and 100");
+        slider = new Slider("Select a value between 0 and 100");
         slider.setWidth("100%");
         slider.setMin(min);
         slider.setMax(max);
@@ -81,9 +83,11 @@ public class SliderControl extends AbstractDialogControl {
     }
 
     public void validate() {
+        slider.validate();
     }
 
     public void save(Content storageNode) throws RepositoryException {
+        storageNode.setNodeData(getName(), (Double)slider.getValue());
     }
 
     public int getMin() {

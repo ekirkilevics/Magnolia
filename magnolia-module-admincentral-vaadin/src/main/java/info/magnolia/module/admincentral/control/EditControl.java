@@ -48,7 +48,7 @@ public class EditControl extends AbstractDialogControl {
     private TextField field;
 
     private int rows = 0;
-    private boolean wordwrap = false;
+    private boolean wordwrap = true;
     private boolean secret = false;
     private boolean required = false;
     private String requiredErrorMessage;
@@ -65,7 +65,6 @@ public class EditControl extends AbstractDialogControl {
         field.setWordwrap(wordwrap);
         field.setRows(rows);
         field.setSecret(secret);
-        field.addValidator(new StringLengthValidator("String must not be empty", 2, -1, false));
         layout.addComponent(field);
 
         if (storageNode != null) {
