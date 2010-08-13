@@ -263,41 +263,40 @@ public class AdminCentralVaadinApplication extends Application {
      * Gets Data for the Websites
      */
     IndexedContainer getWebsiteData() {
-        return createDummyData();
-//        Content parent = null;
-//        try {
-//            parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
-//        }
-//        catch (RepositoryException e) {
-//            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
-//            // Notification.TYPE_WARNING_MESSAGE);
-//            throw new RuntimeException(e);
-//        }
-//        IndexedContainer ic = new IndexedContainer();
-//
-//        for (String p : websiteFields) {
-//            ic.addContainerProperty(p, String.class, "");
-//        }
-//        Collection<Content> nodes = parent.getChildren();
-//        /*Comparator comp = this.getSortComparator();
-//        if(comp != null){
-//            Collection sortedNodes = new TreeSet(comp);
-//            sortedNodes.addAll(nodes);
-//            nodes = sortedNodes;
-//        }*/
-//        Iterator<Content> it = nodes.iterator();
-//        while (it.hasNext()) {
-//            Content content = it.next();
-//            Object id = ic.addItem();
-//            ic.getContainerProperty(id, "page").setValue(content.getName());
-//            ic.getContainerProperty(id, "title").setValue(content.getTitle());
-//            ic.getContainerProperty(id, "status").setValue(content.getMetaData().getActivationStatus());
-//            ic.getContainerProperty(id, "template").setValue(content.getTemplate());
-//            ic.getContainerProperty(id, "modificationDate").setValue(
-//                DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
-//
-//        }
-//        return ic;
+        Content parent = null;
+        try {
+            parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
+        }
+        catch (RepositoryException e) {
+            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
+            // Notification.TYPE_WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        }
+        IndexedContainer ic = new IndexedContainer();
+
+        for (String p : websiteFields) {
+            ic.addContainerProperty(p, String.class, "");
+        }
+        Collection<Content> nodes = parent.getChildren();
+        /*Comparator comp = this.getSortComparator();
+        if(comp != null){
+            Collection sortedNodes = new TreeSet(comp);
+            sortedNodes.addAll(nodes);
+            nodes = sortedNodes;
+        }*/
+        Iterator<Content> it = nodes.iterator();
+        while (it.hasNext()) {
+            Content content = it.next();
+            Object id = ic.addItem();
+            ic.getContainerProperty(id, "page").setValue(content.getName());
+            ic.getContainerProperty(id, "title").setValue(content.getTitle());
+            ic.getContainerProperty(id, "status").setValue(content.getMetaData().getActivationStatus());
+            ic.getContainerProperty(id, "template").setValue(content.getTemplate());
+            ic.getContainerProperty(id, "modificationDate").setValue(
+                DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
+
+        }
+        return ic;
     }
 
     private void initContactList() {
