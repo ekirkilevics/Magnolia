@@ -125,7 +125,7 @@ public class Navigation extends Accordion{
 
                 public void buttonClick(ClickEvent event) {
                     ComponentContainer mainContent = (ComponentContainer)getComponentByCaption("mainContainer");
-                    //add proper component here, for now just show onclick action
+                    //TODO add proper component here, for now just show onclick action
                     getApplication().getMainWindow().showNotification("OnClick", onClickAction, Notification.TYPE_HUMANIZED_MESSAGE);
                 }
 
