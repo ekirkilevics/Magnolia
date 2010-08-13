@@ -47,14 +47,30 @@ import com.vaadin.event.ItemClickEvent;
  */
 public class WebsiteTreeTable extends TreeTable {
 
+    public static final String PAGE = "Page";
+
+    public static final String TITLE = "Title";
+
+    public static final String STATUS = "Status";
+
+    public static final String TEMPLATE = "Template";
+
+    public static final String MOD_DATE = "Mod. Date";
+
+    public static final String[] WEBSITE_FIELDS = {PAGE, TITLE, STATUS, TEMPLATE, MOD_DATE};
+
     /**
-     * Used for deciding, whether a table column gets editable or not (only
-     * the selected one will be...).
+     * Liste of editable fields
+     */
+    public static final String[] EDITABLE_FIELDS = {PAGE, TITLE, TEMPLATE};
+
+    /**
+     * Used for deciding, whether a table column gets editable or not (only the selected one will
+     * be...).
      * <p/>
      * Hint: not yet properly working
      */
     private ItemClickEvent selectedContactId = null;
-
 
     public ItemClickEvent getSelectedContactId() {
         return selectedContactId;
@@ -62,5 +78,15 @@ public class WebsiteTreeTable extends TreeTable {
 
     public void setSelectedContactId(ItemClickEvent selectedContactId) {
         this.selectedContactId = selectedContactId;
+    }
+
+    /**
+     * PAGE should not be collapsable...
+     */
+    @Override
+    public void setColumnCollapsed(Object propertyId, boolean collapsed) throws IllegalAccessException {
+        if (!PAGE.equals(propertyId)) {
+            super.setColumnCollapsed(propertyId, collapsed);
+        }
     }
 }

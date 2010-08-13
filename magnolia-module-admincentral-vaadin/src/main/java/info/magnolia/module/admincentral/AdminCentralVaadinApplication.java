@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
+import info.magnolia.module.admincentral.website.WebsiteTreeTable;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
 import java.text.DateFormat;
@@ -93,15 +94,13 @@ public class AdminCentralVaadinApplication extends Application {
 
     private static final long serialVersionUID = 5773744599513735815L;
 
-    private static final String[] websiteFields = {"Page", "Title", "Status", "Template", "Mod. Date"};
-
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
     private Navigation menu = createMenu();
 
     private VerticalLayout mainContainer;
 
-    private IndexedContainer websiteData = getWebsiteData();
+    private IndexedContainer websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
 
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
 
@@ -261,55 +260,17 @@ public class AdminCentralVaadinApplication extends Application {
         });
     }
 
-    /**
-     * Gets Data for the Websites
-     */
-    IndexedContainer getWebsiteData() {
-        Content parent = null;
-        try {
-            parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
-        }
-        catch (RepositoryException e) {
-            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
-            // Notification.TYPE_WARNING_MESSAGE);
-            throw new RuntimeException(e);
-        }
-        IndexedContainer ic = new IndexedContainer();
-
-        for (String p : websiteFields) {
-            ic.addContainerProperty(p, String.class, "");
-        }
-        Collection<Content> nodes = parent.getChildren();
-        /*Comparator comp = this.getSortComparator();
-        if(comp != null){
-            Collection sortedNodes = new TreeSet(comp);
-            sortedNodes.addAll(nodes);
-            nodes = sortedNodes;
-        }*/
-        Iterator<Content> it = nodes.iterator();
-        while (it.hasNext()) {
-            Content content = it.next();
-            Object id = ic.addItem();
-            ic.getContainerProperty(id, websiteFields[0]).setValue(content.getName());
-            ic.getContainerProperty(id, websiteFields[1]).setValue(content.getTitle());
-            ic.getContainerProperty(id, websiteFields[2]).setValue(content.getMetaData().getActivationStatus());
-            ic.getContainerProperty(id, websiteFields[3]).setValue(content.getTemplate());
-            ic.getContainerProperty(id, websiteFields[4]).setValue(
-                DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
-        }
-        return ic;
-    }
 
     private void initContactList() {
         websites.setContainerDataSource(websiteData);
-        websites.setVisibleColumns(websiteFields);
+        websites.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
     }
 
     /**
      * TODO dlipp: decided whether needed or not - remove or fix then.
      */
     private void initFilteringControls() {
-        for (final String pn : websiteFields) {
+        for (final String pn : WebsiteTreeTable.WEBSITE_FIELDS) {
             final TextField sf = new TextField();
             bottomLeftCorner.addComponent(sf);
             sf.setWidth("100%");

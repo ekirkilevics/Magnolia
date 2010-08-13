@@ -33,9 +33,21 @@
  */
 package info.magnolia.module.admincentral.website;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
+
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -46,7 +58,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Table.TableDragMode;
 
@@ -85,6 +96,7 @@ public class WebsiteTreeTableFactory {
         table.setSizeFull();
         table.setEditable(true);
         table.setSelectable(true);
+        table.setColumnCollapsingAllowed(true);
         addDragAndDrop(table);
         addEditingByDoubleClick(table);
         return table;
@@ -92,14 +104,17 @@ public class WebsiteTreeTableFactory {
 
     void addEditingByDoubleClick(final WebsiteTreeTable table) {
         table.setTableFieldFactory(new DefaultFieldFactory() {
+
             public Field createField(Container container, Object itemId,
                                      Object propertyId, Component uiContext) {
                 ItemClickEvent selection = table.getSelectedContactId();
                 if (selection != null) {
                     if ((selection.getItemId().equals(itemId))
                                     && (selection.getPropertyId().equals(propertyId))) {
+                        if (Arrays.asList(WebsiteTreeTable.EDITABLE_FIELDS).contains(propertyId)) {
                         return super.createField(container, itemId, propertyId,
                                         uiContext);
+                        }
                     }
                 }
                 return null;
@@ -107,6 +122,7 @@ public class WebsiteTreeTableFactory {
         });
 
         table.addListener(new ItemClickEvent.ItemClickListener() {
+
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
                     table.setSelectedContactId(event);
@@ -198,4 +214,47 @@ public class WebsiteTreeTableFactory {
             }
         });
     };
+
+    /**
+     * Gets Data for the Websites
+     *
+     * TODO: put @ proper place
+     */
+    public IndexedContainer getWebsiteData() {
+        Content parent = null;
+        try {
+            parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
+        }
+        catch (RepositoryException e) {
+            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
+            // Notification.TYPE_WARNING_MESSAGE);
+            throw new RuntimeException(e);
+        }
+        IndexedContainer ic = new IndexedContainer();
+
+        ic.addContainerProperty(WebsiteTreeTable.PAGE, String.class, "");
+        ic.addContainerProperty(WebsiteTreeTable.TITLE, String.class, "");
+        ic.addContainerProperty(WebsiteTreeTable.STATUS, String.class, "");
+        ic.addContainerProperty(WebsiteTreeTable.TEMPLATE, String.class, "");
+        ic.addContainerProperty(WebsiteTreeTable.MOD_DATE, Date.class, "");
+
+        Collection<Content> nodes = parent.getChildren();
+        /*Comparator comp = this.getSortComparator();
+        if(comp != null){
+            Collection sortedNodes = new TreeSet(comp);
+            sortedNodes.addAll(nodes);
+            nodes = sortedNodes;
+        }*/
+        Iterator<Content> it = nodes.iterator();
+        while (it.hasNext()) {
+            Content content = it.next();
+            Object id = ic.addItem();
+            ic.getContainerProperty(id, WebsiteTreeTable.PAGE).setValue(content.getName());
+            ic.getContainerProperty(id, WebsiteTreeTable.TITLE).setValue(content.getTitle());
+            ic.getContainerProperty(id, WebsiteTreeTable.STATUS).setValue(content.getMetaData().getActivationStatus());
+            ic.getContainerProperty(id, WebsiteTreeTable.TEMPLATE).setValue(content.getTemplate());
+            ic.getContainerProperty(id, WebsiteTreeTable.MOD_DATE).setValue(content.getMetaData().getModificationDate().getTime());
+        }
+        return ic;
+    }
 }
