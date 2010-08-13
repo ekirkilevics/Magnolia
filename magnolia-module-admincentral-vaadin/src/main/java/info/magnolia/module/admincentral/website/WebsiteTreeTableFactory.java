@@ -90,7 +90,7 @@ public class WebsiteTreeTableFactory {
         return table;
     }
 
-    private void addEditingByDoubleClick(final WebsiteTreeTable table) {
+    void addEditingByDoubleClick(final WebsiteTreeTable table) {
         table.setTableFieldFactory(new DefaultFieldFactory() {
             public Field createField(Container container, Object itemId,
                                      Object propertyId, Component uiContext) {
@@ -123,7 +123,7 @@ public class WebsiteTreeTableFactory {
     /**
      *Add Drag and Drop functionality to the provided TreeTable
      */
-    private void addDragAndDrop(final TreeTable table) {
+    void addDragAndDrop(final TreeTable table) {
         table.setDragMode(TableDragMode.ROW);
         table.setDropHandler(new DropHandler() {
 
