@@ -44,6 +44,9 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -65,20 +68,14 @@ import com.vaadin.ui.Table.TableDragMode;
 
 
 /**
- * Creates the TreeTable for the Websites
+ * Creates the TreeTable for the Websites.
  *
  * @author dlipp
  */
 public class WebsiteTreeTableFactory {
-
     private static WebsiteTreeTableFactory instance;
 
-    /**
-     * Prevent creation of multiple instances
-     */
-    private WebsiteTreeTableFactory() {
-        super();
-    }
+    private static Logger log = LoggerFactory.getLogger(WebsiteTreeTableFactory.class);
 
     /**
      * @return the single instance
@@ -91,17 +88,105 @@ public class WebsiteTreeTableFactory {
     }
 
     /**
-     * @return WebsiteTreeTable displaying the Websites
+     * Prevent creation of multiple instances
      */
-    public WebsiteTreeTable createWebsiteTreeTable() {
-        final WebsiteTreeTable table = new WebsiteTreeTable();
-        table.setSizeFull();
-        table.setEditable(true);
-        table.setSelectable(true);
-        table.setColumnCollapsingAllowed(true);
-        addDragAndDrop(table);
-        addEditingByDoubleClick(table);
-        return table;
+    private WebsiteTreeTableFactory() {
+        super();
+    }
+
+    Hierarchical addChildrenToContainer(Hierarchical ic, Content parent) {
+        Collection<Content> nodes = parent.getChildren();
+        Iterator<Content> it = nodes.iterator();
+        while (it.hasNext()) {
+            Content child = it.next();
+            log.info("Setting " + parent.getName() + " as parent for " + child.getName());
+            ic.setParent(child, parent);
+            Object id = ic.addItem();
+            ic.getContainerProperty(id, WebsiteTreeTable.PAGE).setValue(child.getName());
+            ic.getContainerProperty(id, WebsiteTreeTable.TITLE).setValue(child.getTitle());
+            ic.getContainerProperty(id, WebsiteTreeTable.STATUS).setValue(child.getMetaData().getActivationStatus());
+            ic.getContainerProperty(id, WebsiteTreeTable.TEMPLATE).setValue(child.getTemplate());
+            ic.getContainerProperty(id, WebsiteTreeTable.MOD_DATE).setValue(child.getMetaData().getModificationDate().getTime());
+            addChildrenToContainer(ic, child);
+        }
+        return ic;
+
+    }
+
+    /**
+     *Add Drag and Drop functionality to the provided TreeTable
+     */
+    void addDragAndDrop(final TreeTable table) {
+        table.setDragMode(TableDragMode.ROW);
+        table.setDropHandler(new DropHandler() {
+
+            /*
+             * @seecom.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.
+             * DragAndDropEvent)
+             */
+            public void drop(DragAndDropEvent event) {
+                // Wrapper for the object that is dragged
+                Transferable t = event.getTransferable();
+
+                // Make sure the drag source is the same tree
+                if (t.getSourceComponent() != table)
+                    return;
+
+                AbstractSelectTargetDetails target = (AbstractSelectTargetDetails) event.getTargetDetails();
+                // Get ids of the dragged item and the target item
+                Object sourceItemId = t.getData("itemId");
+                Object targetItemId = target.getItemIdOver();
+                // On which side of the target the item was dropped
+                VerticalDropLocation location = target.getDropLocation();
+
+                 log.debug("DropLocation: " + location.name());
+
+                HieararchicalContainerOrderedWrapper container = (HieararchicalContainerOrderedWrapper) table
+                        .getContainerDataSource();
+                // Drop right on an item -> make it a child -
+                if (location == VerticalDropLocation.MIDDLE) {
+                    table.setParent(sourceItemId, targetItemId);
+                    forceRefreshOfTreeTable();
+                }
+                // Drop at the top of a subtree -> make it previous
+                else if (location == VerticalDropLocation.TOP) {
+                    Object parentId = container.getParent(targetItemId);
+                    if (parentId != null) {
+                        log.debug("Parent:" + container.getItem(parentId));
+                        container.setParent(sourceItemId, parentId);
+                        container.addItemAfter(parentId, sourceItemId);
+                        forceRefreshOfTreeTable();
+                    }
+                }
+
+                // Drop below another item -> make it next
+                else if (location == VerticalDropLocation.BOTTOM) {
+                    Object parentId = container.getParent(targetItemId);
+                    if (parentId != null) {
+                        container.setParent(sourceItemId, parentId);
+                        // container.moveAfterSibling(sourceItemId,
+                        // targetItemId);
+                        container.removeItem(targetItemId);
+                        container.addItemAfter(sourceItemId, targetItemId);
+                        forceRefreshOfTreeTable();
+                    }
+                }
+            }
+
+            private void forceRefreshOfTreeTable() {
+                // TODO replace this hack - get Table to be refreshed the proper
+                // way (Hack from Vaadin Demo-Sources... - TreeTableWorkLog)
+                Object tempId = table.getContainerDataSource().addItem();
+                table.removeItem(tempId);
+            }
+
+            /*
+             * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
+             */
+            public AcceptCriterion getAcceptCriterion() {
+                return AcceptAll.get();
+            }
+        });
     }
 
     void addEditingByDoubleClick(final WebsiteTreeTable table) {
@@ -136,86 +221,21 @@ public class WebsiteTreeTableFactory {
                 }
             }
         });
-    }
+    };
 
     /**
-     *Add Drag and Drop functionality to the provided TreeTable
+     * @return WebsiteTreeTable displaying the Websites
      */
-    void addDragAndDrop(final TreeTable table) {
-        table.setDragMode(TableDragMode.ROW);
-        table.setDropHandler(new DropHandler() {
-
-            private void forceRefreshOfTreeTable() {
-                // TODO replace this hack - get Table to be refreshed the proper
-                // way (Hack from Vaadin Demo-Sources... - TreeTableWorkLog)
-                Object tempId = table.getContainerDataSource().addItem();
-                table.removeItem(tempId);
-            }
-
-            /*
-             * @see com.vaadin.event.dd.DropHandler#getAcceptCriterion()
-             */
-            public AcceptCriterion getAcceptCriterion() {
-                return AcceptAll.get();
-            }
-
-            /*
-             * @seecom.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.
-             * DragAndDropEvent)
-             */
-            public void drop(DragAndDropEvent event) {
-                // Wrapper for the object that is dragged
-                Transferable t = event.getTransferable();
-
-                // Make sure the drag source is the same tree
-                if (t.getSourceComponent() != table)
-                    return;
-
-                AbstractSelectTargetDetails target = (AbstractSelectTargetDetails) event.getTargetDetails();
-                // Get ids of the dragged item and the target item
-                Object sourceItemId = t.getData("itemId");
-                Object targetItemId = target.getItemIdOver();
-                // On which side of the target the item was dropped
-                VerticalDropLocation location = target.getDropLocation();
-
-                // TODO: remove next line as soon as it's properly working
-                System.out.println("DropLocation: " + location.name());
-
-                HieararchicalContainerOrderedWrapper container = (HieararchicalContainerOrderedWrapper) table
-                        .getContainerDataSource();
-                // Drop right on an item -> make it a child -
-                if (location == VerticalDropLocation.MIDDLE) {
-                    table.setParent(sourceItemId, targetItemId);
-                    forceRefreshOfTreeTable();
-                }
-                // Drop at the top of a subtree -> make it previous
-                else if (location == VerticalDropLocation.TOP) {
-                    Object parentId = container.getParent(targetItemId);
-                    if (parentId != null) {
-                        // TODO: remove next line as soon as it's properly
-                        // working
-                        System.out.println("Parent:" + container.getItem(parentId));
-                        container.setParent(sourceItemId, parentId);
-                        container.addItemAfter(parentId, sourceItemId);
-                        forceRefreshOfTreeTable();
-                    }
-                }
-
-                // Drop below another item -> make it next
-                else if (location == VerticalDropLocation.BOTTOM) {
-                    Object parentId = container.getParent(targetItemId);
-                    if (parentId != null) {
-                        container.setParent(sourceItemId, parentId);
-                        // container.moveAfterSibling(sourceItemId,
-                        // targetItemId);
-                        container.removeItem(targetItemId);
-                        container.addItemAfter(sourceItemId, targetItemId);
-                        forceRefreshOfTreeTable();
-                    }
-                }
-            }
-        });
-    };
+    public WebsiteTreeTable createWebsiteTreeTable() {
+        final WebsiteTreeTable table = new WebsiteTreeTable();
+        table.setSizeFull();
+        table.setEditable(true);
+        table.setSelectable(true);
+        table.setColumnCollapsingAllowed(true);
+        addDragAndDrop(table);
+        addEditingByDoubleClick(table);
+        return table;
+    }
 
     /**
      * Gets Data for the Websites
@@ -242,23 +262,5 @@ public class WebsiteTreeTableFactory {
 
         addChildrenToContainer(ic, parent);
         return ic;
-    }
-
-    Hierarchical addChildrenToContainer(Hierarchical ic, Content parent) {
-        Collection<Content> nodes = parent.getChildren();
-        Iterator<Content> it = nodes.iterator();
-        while (it.hasNext()) {
-            Content content = it.next();
-            ic.setParent(content, parent);
-            Object id = ic.addItem();
-            ic.getContainerProperty(id, WebsiteTreeTable.PAGE).setValue(content.getName());
-            ic.getContainerProperty(id, WebsiteTreeTable.TITLE).setValue(content.getTitle());
-            ic.getContainerProperty(id, WebsiteTreeTable.STATUS).setValue(content.getMetaData().getActivationStatus());
-            ic.getContainerProperty(id, WebsiteTreeTable.TEMPLATE).setValue(content.getTemplate());
-            ic.getContainerProperty(id, WebsiteTreeTable.MOD_DATE).setValue(content.getMetaData().getModificationDate().getTime());
-            addChildrenToContainer(ic, content);
-        }
-        return ic;
-
     }
 }
