@@ -47,6 +47,8 @@ import javax.jcr.RepositoryException;
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.Hierarchical;
+import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
@@ -112,7 +114,7 @@ public class WebsiteTreeTableFactory {
                     if ((selection.getItemId().equals(itemId))
                                     && (selection.getPropertyId().equals(propertyId))) {
                         if (Arrays.asList(WebsiteTreeTable.EDITABLE_FIELDS).contains(propertyId)) {
-                        return super.createField(container, itemId, propertyId,
+                            return super.createField(container, itemId, propertyId,
                                         uiContext);
                         }
                     }
@@ -220,7 +222,7 @@ public class WebsiteTreeTableFactory {
      *
      * TODO: put @ proper place
      */
-    public IndexedContainer getWebsiteData() {
+    public Hierarchical getWebsiteData() {
         Content parent = null;
         try {
             parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
@@ -230,7 +232,7 @@ public class WebsiteTreeTableFactory {
             // Notification.TYPE_WARNING_MESSAGE);
             throw new RuntimeException(e);
         }
-        IndexedContainer ic = new IndexedContainer();
+        Hierarchical ic = new HieararchicalContainerOrderedWrapper(new ContainerHierarchicalWrapper(new IndexedContainer()));
 
         ic.addContainerProperty(WebsiteTreeTable.PAGE, String.class, "");
         ic.addContainerProperty(WebsiteTreeTable.TITLE, String.class, "");
@@ -238,23 +240,25 @@ public class WebsiteTreeTableFactory {
         ic.addContainerProperty(WebsiteTreeTable.TEMPLATE, String.class, "");
         ic.addContainerProperty(WebsiteTreeTable.MOD_DATE, Date.class, "");
 
+        addChildrenToContainer(ic, parent);
+        return ic;
+    }
+
+    Hierarchical addChildrenToContainer(Hierarchical ic, Content parent) {
         Collection<Content> nodes = parent.getChildren();
-        /*Comparator comp = this.getSortComparator();
-        if(comp != null){
-            Collection sortedNodes = new TreeSet(comp);
-            sortedNodes.addAll(nodes);
-            nodes = sortedNodes;
-        }*/
         Iterator<Content> it = nodes.iterator();
         while (it.hasNext()) {
             Content content = it.next();
+            ic.setParent(content, parent);
             Object id = ic.addItem();
             ic.getContainerProperty(id, WebsiteTreeTable.PAGE).setValue(content.getName());
             ic.getContainerProperty(id, WebsiteTreeTable.TITLE).setValue(content.getTitle());
             ic.getContainerProperty(id, WebsiteTreeTable.STATUS).setValue(content.getMetaData().getActivationStatus());
             ic.getContainerProperty(id, WebsiteTreeTable.TEMPLATE).setValue(content.getTemplate());
             ic.getContainerProperty(id, WebsiteTreeTable.MOD_DATE).setValue(content.getMetaData().getModificationDate().getTime());
+            addChildrenToContainer(ic, content);
         }
         return ic;
+
     }
 }

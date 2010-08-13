@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.admincentral;
 
-import com.vaadin.terminal.ClassResource;
-import com.vaadin.ui.Embedded;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -51,18 +49,18 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.MouseEvents;
+import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
@@ -98,7 +96,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     private VerticalLayout mainContainer;
 
-    private IndexedContainer websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
+    private Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
 
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
 
@@ -201,7 +199,6 @@ public class AdminCentralVaadinApplication extends Application {
         initContactAddRemoveButtons();
         initContactDetailsView();
         initContactList();
-        initFilteringControls();
     }
 
     private void initContactAddRemoveButtons() {
@@ -262,31 +259,6 @@ public class AdminCentralVaadinApplication extends Application {
     private void initContactList() {
         websites.setContainerDataSource(websiteData);
         websites.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
-    }
-
-    /**
-     * TODO dlipp: decided whether needed or not - remove or fix then.
-     */
-    private void initFilteringControls() {
-        for (final String pn : WebsiteTreeTable.WEBSITE_FIELDS) {
-            final TextField sf = new TextField();
-            bottomLeftCorner.addComponent(sf);
-            sf.setWidth("100%");
-            sf.setInputPrompt(pn);
-            sf.setImmediate(true);
-            bottomLeftCorner.setExpandRatio(sf, 1);
-            sf.addListener(new Property.ValueChangeListener() {
-                public void valueChange(ValueChangeEvent event) {
-                    websiteData.removeContainerFilters(pn);
-                    if (sf.toString().length() > 0 && !pn.equals(sf.toString())) {
-                        websiteData.addContainerFilter(pn, sf.toString(),
-                                true, false);
-                    }
-                    getMainWindow().showNotification(
-                            "" + websiteData.size() + " matches found");
-                }
-            });
-        }
     }
 
     /**
