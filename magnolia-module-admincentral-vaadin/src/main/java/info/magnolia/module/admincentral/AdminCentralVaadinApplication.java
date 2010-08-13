@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral;
 
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.ui.Embedded;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -309,7 +311,17 @@ public class AdminCentralVaadinApplication extends Application {
 
         bottomLeftCorner.setWidth("100%");
 
-        splitPanel.addComponent(menu);
+        VerticalLayout leftPaneLayout = new VerticalLayout();
+        leftPaneLayout.setMargin(true);
+        Embedded embedded = new Embedded();
+        embedded.setType(Embedded.TYPE_IMAGE);
+        embedded.setSource(new ClassResource("/mgnl-resources/admin-images/magnoliaLogo.gif", this));
+        embedded.setWidth("294px");
+        embedded.setHeight("36px");
+        leftPaneLayout.addComponent(embedded);
+        leftPaneLayout.addComponent(menu);
+
+        splitPanel.addComponent(leftPaneLayout);
         splitPanel.addComponent(mainContainer);
         mainContainer.addComponent(websites);
         mainContainer.addComponent(bottomLeftCorner);
