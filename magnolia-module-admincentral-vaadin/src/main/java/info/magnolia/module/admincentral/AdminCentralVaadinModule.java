@@ -35,22 +35,23 @@ package info.magnolia.module.admincentral;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.admincentral.dialog.DialogRegistry;
+import info.magnolia.module.admincentral.dialog.MockDialogProvider;
+import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
 
 /**
  * Magnolia's AdminCentral Module.
- * @author fgrilli
  *
+ * @author fgrilli
  */
 public class AdminCentralVaadinModule implements ModuleLifecycle{
 
     public void start(ModuleLifecycleContext ctx) {
-        // TODO Auto-generated method stub
+        ctx.registerModuleObservingComponent("vaadin-dialogs", ConfiguredDialogManager.getInstance());
 
+        DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
     public void stop(ModuleLifecycleContext ctx) {
-        // TODO Auto-generated method stub
-
     }
-
 }

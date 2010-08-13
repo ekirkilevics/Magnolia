@@ -35,15 +35,42 @@ package info.magnolia.module.admincentral.dialog;
 
 import com.vaadin.ui.Window;
 import info.magnolia.cms.core.Content;
+import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Maintains a registry of dialog providers registered by name.
  */
 public class DialogRegistry {
 
-    public Window getDialog(String name, Content storageNode) throws RepositoryException {
-        return new MockDialogProvider().createDialog(storageNode);
+    private final Map<String, DialogProvider> providers = new HashMap<String, DialogProvider>();
+
+    public void registerDialog(String name, DialogProvider provider) {
+        synchronized (providers) {
+            if (providers.containsKey(name))
+                throw new IllegalStateException("Dialog already registered for name [" + name + "]");
+            providers.put(name, provider);
+        }
+    }
+
+    public void unregisterDialog(String name) {
+        synchronized (providers) {
+            providers.remove(name);
+        }
+    }
+
+    public Window createDialog(String name, Content storageNode) throws RepositoryException {
+        DialogProvider dialogProvider;
+        synchronized (providers) {
+            dialogProvider = providers.get(name);
+        }
+        return dialogProvider.createDialog(storageNode);
+    }
+
+    public static DialogRegistry getInstance() {
+        return Components.getSingleton(DialogRegistry.class);
     }
 }

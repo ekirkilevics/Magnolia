@@ -160,7 +160,9 @@ public class AdminCentralVaadinApplication extends Application {
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Content storageNode = ContentUtil.createPath(hm, "/modules/genuine-vaadin-central/foobar", true);
 
-        getMainWindow().addWindow(new DialogRegistry().getDialog("bogus", storageNode));
+        DialogRegistry dialogRegistry = DialogRegistry.getInstance();
+
+        getMainWindow().addWindow(dialogRegistry.createDialog("mock", storageNode));
     }
 
     /**
