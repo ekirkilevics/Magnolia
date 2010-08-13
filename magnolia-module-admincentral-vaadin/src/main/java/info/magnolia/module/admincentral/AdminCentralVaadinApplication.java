@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
@@ -60,21 +59,16 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Window.Notification;
 
 
@@ -99,12 +93,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     private static final long serialVersionUID = 5773744599513735815L;
 
-    private static String[] visibleCols = new String[]{"Last Name",
-            "First Name", "Company"};
-
-    private static final String[] websiteFields = {"page", "title", "status", "template", "modificationDate"};
-
-    private static final String[] websiteVisibleCols = {"Page", "Title", "Status", "Template", "Mod. Date"};
+    private static final String[] websiteFields = {"Page", "Title", "Status", "Template", "Mod. Date"};
 
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
@@ -112,15 +101,13 @@ public class AdminCentralVaadinApplication extends Application {
 
     private VerticalLayout mainContainer;
 
-    private IndexedContainer addressBookData = createDummyData();
+    private IndexedContainer websiteData = getWebsiteData();
 
-    // private IndexedContainer addressBookData = createWebsiteTreeData("/",
-    // ItemType.CONTENTNODE.getSystemName());
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
 
     private Form contactEditor = new Form();
 
-    private TreeTable contactList = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
+    private TreeTable websites = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
 
     private Button contactRemovalButton;
 
@@ -205,43 +192,6 @@ public class AdminCentralVaadinApplication extends Application {
         return ic;
     }
 
-    private IndexedContainer createWebsiteTreeData(String path, String itemType) {
-        Content parent = null;
-        try {
-            parent = MgnlContext.getHierarchyManager("website").getContent(path);
-        }
-        catch (RepositoryException e) {
-            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
-            // Notification.TYPE_WARNING_MESSAGE);
-            throw new RuntimeException(e);
-        }
-        IndexedContainer ic = new IndexedContainer();
-
-        for (String p : websiteFields) {
-            ic.addContainerProperty(p, String.class, "");
-        }
-        Collection<Content> nodes = parent.getChildren(itemType);
-        /*Comparator comp = this.getSortComparator();
-        if(comp != null){
-            Collection sortedNodes = new TreeSet(comp);
-            sortedNodes.addAll(nodes);
-            nodes = sortedNodes;
-        }*/
-        Iterator<Content> it = nodes.iterator();
-        while (it.hasNext()) {
-            Content content = it.next();
-            Object id = ic.addItem();
-            ic.getContainerProperty(id, "page").setValue(content.getName());
-            ic.getContainerProperty(id, "title").setValue(content.getTitle());
-            ic.getContainerProperty(id, "status").setValue(content.getMetaData().getActivationStatus());
-            ic.getContainerProperty(id, "template").setValue(content.getTemplate());
-            ic.getContainerProperty(id, "modificationDate").setValue(
-                DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
-
-        }
-        return ic;
-    }
-
     @Override
     public void init() {
         /**
@@ -266,8 +216,8 @@ public class AdminCentralVaadinApplication extends Application {
                     private static final long serialVersionUID = 1L;
 
                     public void buttonClick(ClickEvent event) {
-                        Object id = contactList.addItem();
-                        contactList.setValue(id);
+                        Object id = websites.addItem();
+                        websites.setValue(id);
                     }
                 }));
 
@@ -280,8 +230,8 @@ public class AdminCentralVaadinApplication extends Application {
             private static final long serialVersionUID = 1L;
 
             public void buttonClick(ClickEvent event) {
-                contactList.removeItem(contactList.getValue());
-                contactList.select(null);
+                websites.removeItem(websites.getValue());
+                websites.select(null);
             }
         });
         contactRemovalButton.setVisible(false);
@@ -294,7 +244,7 @@ public class AdminCentralVaadinApplication extends Application {
     private void initContactDetailsView() {
         final Window dialog = new Window("Address Details");
         dialog.addComponent(contactEditor);
-        contactList.addListener(new ItemClickEvent.ItemClickListener() {
+        websites.addListener(new ItemClickEvent.ItemClickListener() {
 
             /**
              *
@@ -309,14 +259,55 @@ public class AdminCentralVaadinApplication extends Application {
         });
     }
 
+    /**
+     * Gets Data for the Websites
+     */
+    IndexedContainer getWebsiteData() {
+        return createDummyData();
+//        Content parent = null;
+//        try {
+//            parent = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent("/");
+//        }
+//        catch (RepositoryException e) {
+//            // getMainWindow().showNotification("Something bad happened", e.getMessage(),
+//            // Notification.TYPE_WARNING_MESSAGE);
+//            throw new RuntimeException(e);
+//        }
+//        IndexedContainer ic = new IndexedContainer();
+//
+//        for (String p : websiteFields) {
+//            ic.addContainerProperty(p, String.class, "");
+//        }
+//        Collection<Content> nodes = parent.getChildren();
+//        /*Comparator comp = this.getSortComparator();
+//        if(comp != null){
+//            Collection sortedNodes = new TreeSet(comp);
+//            sortedNodes.addAll(nodes);
+//            nodes = sortedNodes;
+//        }*/
+//        Iterator<Content> it = nodes.iterator();
+//        while (it.hasNext()) {
+//            Content content = it.next();
+//            Object id = ic.addItem();
+//            ic.getContainerProperty(id, "page").setValue(content.getName());
+//            ic.getContainerProperty(id, "title").setValue(content.getTitle());
+//            ic.getContainerProperty(id, "status").setValue(content.getMetaData().getActivationStatus());
+//            ic.getContainerProperty(id, "template").setValue(content.getTemplate());
+//            ic.getContainerProperty(id, "modificationDate").setValue(
+//                DateFormat.getInstance().format(content.getMetaData().getModificationDate().getTime()));
+//
+//        }
+//        return ic;
+    }
+
     private void initContactList() {
-        contactList.setContainerDataSource(addressBookData);
-        contactList.setVisibleColumns(visibleCols);
+        websites.setContainerDataSource(websiteData);
+        websites.setVisibleColumns(websiteFields);
         /**
          * dan: For the showcase we need a Tree-Structure - so loop over the contacts and create an
          * simple tree structure (depth 3)
          */
-        Object[] ids = contactList.getItemIds().toArray();
+        Object[] ids = websites.getItemIds().toArray();
         Object current = null;
         Object next = null;
         Object nextNext = null;
@@ -324,8 +315,8 @@ public class AdminCentralVaadinApplication extends Application {
             current = ids[i];
             next = ids[i + 1];
             nextNext = ids[i + 2];
-            contactList.setParent(next, current);
-            contactList.setParent(nextNext, next);
+            websites.setParent(next, current);
+            websites.setParent(nextNext, next);
         }
     }
 
@@ -333,7 +324,7 @@ public class AdminCentralVaadinApplication extends Application {
      * TODO dlipp: decided whether needed or not - remove or fix then.
      */
     private void initFilteringControls() {
-        for (final String pn : visibleCols) {
+        for (final String pn : websiteFields) {
             final TextField sf = new TextField();
             bottomLeftCorner.addComponent(sf);
             sf.setWidth("100%");
@@ -342,13 +333,13 @@ public class AdminCentralVaadinApplication extends Application {
             bottomLeftCorner.setExpandRatio(sf, 1);
             sf.addListener(new Property.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
-                    addressBookData.removeContainerFilters(pn);
+                    websiteData.removeContainerFilters(pn);
                     if (sf.toString().length() > 0 && !pn.equals(sf.toString())) {
-                        addressBookData.addContainerFilter(pn, sf.toString(),
+                        websiteData.addContainerFilter(pn, sf.toString(),
                                 true, false);
                     }
                     getMainWindow().showNotification(
-                            "" + addressBookData.size() + " matches found");
+                            "" + websiteData.size() + " matches found");
                 }
             });
         }
@@ -375,10 +366,10 @@ public class AdminCentralVaadinApplication extends Application {
 
         splitPanel.addComponent(menu);
         splitPanel.addComponent(mainContainer);
-        mainContainer.addComponent(contactList);
+        mainContainer.addComponent(websites);
         mainContainer.addComponent(bottomLeftCorner);
 
-        mainContainer.setExpandRatio(contactList, 10);
+        mainContainer.setExpandRatio(websites, 10);
         mainContainer.setExpandRatio(bottomLeftCorner, 1);
     }
 }
