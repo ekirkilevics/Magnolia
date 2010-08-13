@@ -17,8 +17,8 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -48,20 +48,21 @@ public class Navigation extends Accordion{
         super.attach();
         for (Iterator<Content> iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content menuItem = iter.next();
-            Panel panel = new Panel();
-            panel.setStyleName(BaseTheme.PANEL_LIGHT);
+            GridLayout gridLayout = new GridLayout(1,1);
+            gridLayout.setSpacing(true);
+            gridLayout.setMargin(true);
             // check permission
             if (isMenuItemRenderable(menuItem)) {
                 // sub menu items (2 levels only)
                 for (Iterator<Content> iterator = menuItem.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
                     Content sub = iterator.next();
                     if (isMenuItemRenderable(sub)) {
-                        panel.addComponent(new MenuItem(sub));
+                        gridLayout.addComponent(new MenuItem(sub));
                     }
                 }
             }
-            if(panel.getComponentIterator().hasNext()){
-                addTab(panel, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
+            if(gridLayout.getComponentIterator().hasNext()){
+                addTab(gridLayout, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             } else {
                 //TODO empty tabs (e.g. website) should not be openable(sp?) but I could not figure out a way to do it with the Tab API so far
                 addTab(new Label(), getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
