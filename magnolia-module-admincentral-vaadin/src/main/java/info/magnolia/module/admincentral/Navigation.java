@@ -15,8 +15,11 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
 
@@ -35,7 +38,6 @@ public class Navigation extends Accordion{
      * @param path the path to the menu
      */
     public Navigation(final String path) throws RepositoryException{
-        // get it with system permission
         node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
     }
     /**
@@ -44,7 +46,6 @@ public class Navigation extends Accordion{
     @Override
     public void attach() {
         super.attach();
-        // loop over the menu items
         for (Iterator<Content> iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content menuItem = iter.next();
             Panel panel = new Panel();
@@ -83,6 +84,16 @@ public class Navigation extends Accordion{
         return iconPath.replaceFirst(".resources/", "mgnl-resources/");
     }
 
+    protected Component getComponentByCaption(String caption){
+        for(Iterator<Component> iter = getApplication().getMainWindow().getComponentIterator(); iter.hasNext();){
+            Component component = iter.next();
+            if(caption.equalsIgnoreCase(component.getCaption())){
+                return component;
+            }
+        }
+        return null;
+    }
+
     /**
      * @param menuItem
      * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
@@ -109,7 +120,16 @@ public class Navigation extends Accordion{
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
             setIcon(new ClassResource(getIconPath(content), getApplication()));
-            String onClickAction = NodeDataUtil.getString(content, "onclick").trim();
+            final String onClickAction = NodeDataUtil.getString(content, "onclick").trim();
+            addListener(new Button.ClickListener () {
+
+                public void buttonClick(ClickEvent event) {
+                    ComponentContainer mainContent = (ComponentContainer)getComponentByCaption("mainContainer");
+                    //add proper component here, for now just show onclick action
+                    getApplication().getMainWindow().showNotification("OnClick", onClickAction, Notification.TYPE_HUMANIZED_MESSAGE);
+                }
+
+            });
         }
     }
 }

@@ -42,10 +42,6 @@ import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.website.WebsiteTreeTable;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Iterator;
-
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -301,6 +297,9 @@ public class AdminCentralVaadinApplication extends Application {
 
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
+        //We need this to fetch it from within the MenuItem's onclick handler and add the proper component
+        //TODO is there a better way to achieve this?
+        mainContainer.setCaption("mainContainer");
 
         menu.setSizeFull();
 
