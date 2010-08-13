@@ -71,7 +71,6 @@ public class Navigation extends Accordion{
             if(gridLayout.getComponentIterator().hasNext()){
                 addTab(gridLayout, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             } else {
-                //TODO empty tabs (e.g. website) should not be openable(sp?) but I could not figure out a way to do it with the Tab API so far
                 addTab(new Label(), getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
         }
@@ -174,9 +173,7 @@ public class Navigation extends Accordion{
                                     openDialog();
                                 }
                                 catch (RepositoryException e) {
-                                    e.printStackTrace(); // To change body of catch
-                                                         // statement use File |
-                                                         // Settings | File Templates.
+                                    e.printStackTrace();
                                 }
                             }
                         });
