@@ -37,21 +37,25 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
 
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * Factory for dialogs. This class handles the registration of native dialogs mantaing a map of (control name | dialog
+ * Factory for dialogs. This class handles the registration of native dialogs maintaining a map of (control name | dialog
  * class).
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public final class DialogFactory {
-    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DialogFactory.class);
+    private final static Logger log = LoggerFactory.getLogger(DialogFactory.class);
 
 
     /**
