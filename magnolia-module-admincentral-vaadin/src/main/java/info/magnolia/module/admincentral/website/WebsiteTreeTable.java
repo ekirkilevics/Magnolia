@@ -36,7 +36,6 @@ package info.magnolia.module.admincentral.website;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.event.ItemClickEvent;
 
-
 /**
  * Widget to display the Website-structure. Extending TreeTable is required in order to have a
  * single place where the whole widget and events can be kept - separated from the Application
@@ -60,7 +59,7 @@ public class WebsiteTreeTable extends TreeTable {
     public static final String[] WEBSITE_FIELDS = {PAGE, TITLE, STATUS, TEMPLATE, MOD_DATE};
 
     /**
-     * Liste of editable fields
+     * Liste of editable fields.
      */
     public static final String[] EDITABLE_FIELDS = {PAGE, TITLE, TEMPLATE};
 

@@ -69,15 +69,14 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Table.TableDragMode;
 
-
 /**
  * Creates the TreeTable for the Websites.
  *
- * TODO dlipp: See WorkItemContainer -> use BeanItemContainer to have proper model in container...
- *
- * TODO dlipp: Move to Controller-type
+ * TODO dlipp: See WorkItemContainer -> use BeanItemContainer to have proper model in container.
+ * TODO dlipp: Move to Controller-type.
  *
  * @author dlipp
+ * @version $Id:$
  */
 public class WebsiteTreeTableFactory {
 
@@ -109,7 +108,7 @@ public class WebsiteTreeTableFactory {
     }
 
     /**
-     * Prevent creation of multiple instances
+     * Prevent creation of multiple instances.
      */
     private WebsiteTreeTableFactory() {
     }
@@ -172,7 +171,7 @@ public class WebsiteTreeTableFactory {
 
 
     /**
-     *Add Drag and Drop functionality to the provided TreeTable
+     *Add Drag and Drop functionality to the provided TreeTable.
      */
     void addDragAndDrop(final TreeTable table) {
         table.setDragMode(TableDragMode.ROW);
@@ -300,7 +299,7 @@ public class WebsiteTreeTableFactory {
     }
 
     /**
-     * Gets Data for the Websites
+     * Gets Data for the Websites.
      *
      * TODO: put @ proper place
      */

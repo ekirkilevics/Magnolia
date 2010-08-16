@@ -73,6 +73,13 @@
           </webAppConfig>
         </configuration>
       </plugin>
+      <plugin>
+        <!-- TODO this is temporary ! Parent disables the validation due to amount of errors in the project, but this new module enables it explicitly. No more errors on new code !! -->
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <failOnViolation>true</failOnViolation>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
