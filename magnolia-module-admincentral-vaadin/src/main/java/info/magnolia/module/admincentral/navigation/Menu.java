@@ -6,6 +6,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.website.WebsiteTreeTable;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
@@ -37,6 +38,9 @@ public class Menu extends Accordion{
 
     private static final long serialVersionUID = 1L;
     private Content node = null;
+    //keep a reference to the Application's main container. The reference is initialized in the attach() method, so that we're sure the
+    //getApplication() method does not return null.
+    private ComponentContainer mainContainer = null;
 
     /**
      * @param path the path to the menu
@@ -74,6 +78,7 @@ public class Menu extends Accordion{
         //TODO for testing only. To be removed.
         addTab(new Label("For testing dialogs"), "Dialogs", null);
         addListener(new SelectedMenuItemTabChangeListener());
+        mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
     }
 
     /**
@@ -130,7 +135,7 @@ public class Menu extends Accordion{
             addListener(new Button.ClickListener () {
 
                 public void buttonClick(ClickEvent event) {
-                    ComponentContainer mainContent = (ComponentContainer)getComponentByCaption("mainContainer");
+                	//ComponentContainer mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
                     //TODO add proper component here, for now just show onclick action
                     getApplication().getMainWindow().showNotification("OnClick", onClickAction, Notification.TYPE_HUMANIZED_MESSAGE);
                 }
@@ -142,7 +147,7 @@ public class Menu extends Accordion{
     public class SelectedMenuItemTabChangeListener implements SelectedTabChangeListener {
 
         private static final long serialVersionUID = 1L;
-
+        //private final Component websiteTreeTable = ((AdminCentralVaadinApplication)getApplication()).getWebsiteTreeTable();
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
@@ -150,7 +155,6 @@ public class Menu extends Accordion{
                 getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
 
             if("website".equalsIgnoreCase(tab.getCaption())) {
-                ComponentContainer mainContainer = (ComponentContainer)getComponentByCaption("mainContainer");
                 mainContainer.removeAllComponents();
                 WebsiteTreeTable  website = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
                 Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
@@ -160,7 +164,6 @@ public class Menu extends Accordion{
             }
             //TODO remove this if block, it's here just for testing purposes
             if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
-                ComponentContainer mainContainer = (ComponentContainer)getComponentByCaption("mainContainer");
                 mainContainer.removeAllComponents();
                 mainContainer.addComponent(new DialogSandboxPage());
             }

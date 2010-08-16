@@ -47,6 +47,7 @@ import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.terminal.ClassResource;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
@@ -84,6 +85,7 @@ public class AdminCentralVaadinApplication extends Application {
         Menu menu = null;
         try {
             menu = new Menu("/modules/adminInterface/config/menu");
+            menu.setSizeFull();
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -107,6 +109,10 @@ public class AdminCentralVaadinApplication extends Application {
         websites.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
     }
 
+    public ComponentContainer getMainContainer(){
+        return mainContainer;
+    }
+
     /**
      * package-private modifier is used for better testing possibilities...
      */
@@ -117,11 +123,6 @@ public class AdminCentralVaadinApplication extends Application {
 
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
-        //We need this to fetch it from within the MenuItem's onclick handler and add the proper component
-        //TODO is there a better way to achieve this?
-        mainContainer.setCaption("mainContainer");
-
-        menu.setSizeFull();
 
         bottomLeftCorner.setWidth("100%");
 
