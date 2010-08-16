@@ -60,22 +60,22 @@ public class MockDialogProvider implements DialogProvider {
 
         DialogTab tab1 = new DialogTab();
         tab1.setLabel("Content");
-        tab1.addControl(createCheckBox("visible", "Visible", "Toggle to show or hide this paragraph"));
-        tab1.addControl(createDate("date", "Date", "Date of publication"));
-        tab1.addControl(createEdit("title", "Title", "Title of the paragraph"));
-        tab1.addControl(createFile("image", "Image", "An image"));
-        tab1.addControl(createLink("link", "Target page", "Page to link to"));
-        tab1.addControl(createRadio("textSize", "Text size", "Size of text",options()));
-        tab1.addControl(createSelect("city", "City", "", options()));
-        tab1.addControl(createSlider("fontWeight", "Font Weight", ""));
-        tab1.addControl(createStatic("This is static text long enough to use the full width"));
+        tab1.addField(createCheckBox("visible", "Visible", "Toggle to show or hide this paragraph"));
+        tab1.addField(createDate("date", "Date", "Date of publication"));
+        tab1.addField(createEdit("title", "Title", "Title of the paragraph"));
+        tab1.addField(createFile("image", "Image", "An image"));
+        tab1.addField(createLink("link", "Target page", "Page to link to"));
+        tab1.addField(createRadio("textSize", "Text size", "Size of text",options()));
+        tab1.addField(createSelect("city", "City", "", options()));
+        tab1.addField(createSlider("fontWeight", "Font Weight", ""));
+        tab1.addField(createStatic("This is static text long enough to use the full width"));
         dialog.addTab(tab1);
 
         DialogTab tab2 = new DialogTab();
         tab2.setLabel("Margins");
-        tab2.addControl(createEditNumeric("leftMargin", "Left margin", "Margin on the left"));
-        tab2.addControl(createEditNumeric("rightMargin", "Right margin", "Margin on the right"));
-        tab2.addControl(createRichText("bodyText", "Body text", "Text in paragraph body"));
+        tab2.addField(createEditNumeric("leftMargin", "Left margin", "Margin on the left"));
+        tab2.addField(createEditNumeric("rightMargin", "Right margin", "Margin on the right"));
+        tab2.addField(createRichText("bodyText", "Body text", "Text in paragraph body"));
         dialog.addTab(tab2);
 
         return dialog;

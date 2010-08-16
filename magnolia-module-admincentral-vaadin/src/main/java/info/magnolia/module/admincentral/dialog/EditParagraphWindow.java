@@ -86,7 +86,7 @@ public class EditParagraphWindow extends Window {
             grid.setSpacing(true);
             grid.setMargin(true);
 
-            for (DialogControl dialogItem : dialogTab.getControls()) {
+            for (DialogControl dialogItem : dialogTab.getFields()) {
 
                 dialogItem.create(storageNode, grid);
 
@@ -135,7 +135,7 @@ public class EditParagraphWindow extends Window {
 
             // Validate
             for (DialogTab dialogTab : dialog.getTabs()) {
-                for (DialogControl control : dialogTab.getControls()) {
+                for (DialogControl control : dialogTab.getFields()) {
                     try {
                         control.validate();
                     } catch (Validator.InvalidValueException e) {
@@ -147,7 +147,7 @@ public class EditParagraphWindow extends Window {
 
             // Save
             for (DialogTab dialogTab : dialog.getTabs()) {
-                for (DialogControl control : dialogTab.getControls()) {
+                for (DialogControl control : dialogTab.getFields()) {
                     control.save(storageNode);
                 }
             }

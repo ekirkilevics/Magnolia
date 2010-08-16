@@ -42,7 +42,7 @@ import java.util.List;
 public class DialogTab {
 
     private String label;
-    private List<DialogControl> controls = new ArrayList<DialogControl>();
+    private List<DialogControl> fields = new ArrayList<DialogControl>();
 
     public String getLabel() {
         return label;
@@ -52,15 +52,15 @@ public class DialogTab {
         this.label = label;
     }
 
-    public List<DialogControl> getControls() {
-        return controls;
+    public List<DialogControl> getFields() {
+        return fields;
     }
 
-    public void setControls(List<DialogControl> controls) {
-        this.controls = controls;
+    public void setFields(List<DialogControl> fields) {
+        this.fields = fields;
     }
 
-    public boolean addControl(DialogControl dialogControl) {
-        return controls.add(dialogControl);
+    public boolean addField(DialogControl dialogField) {
+        return fields.add(dialogField);
     }
 }

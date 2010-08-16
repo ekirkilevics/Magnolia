@@ -34,6 +34,8 @@
 package info.magnolia.module.admincentral.dialog;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 
 import javax.jcr.RepositoryException;
 
@@ -49,9 +51,11 @@ public class ConfiguredDialogProvider implements DialogProvider {
     }
 
     public DialogDefinition getDialogDefinition() throws RepositoryException {
-
-        // TODO use content2bean to read configuration from repository
-
-        throw new UnsupportedOperationException("Not implemented");
+        try {
+            DialogDefinition definition = (DialogDefinition) Content2BeanUtil.toBean(configNode, true, DialogDefinition.class);
+            return definition;
+        } catch (Content2BeanException e) {
+            throw new RepositoryException(e);
+        }
     }
 }
