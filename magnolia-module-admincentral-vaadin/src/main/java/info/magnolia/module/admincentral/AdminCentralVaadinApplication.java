@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral;
 
 
+import info.magnolia.module.admincentral.navigation.Menu;
 import info.magnolia.module.admincentral.website.WebsiteTreeTable;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
@@ -55,12 +56,7 @@ import com.vaadin.ui.Window.Notification;
 
 
 /**
- * Demo Application - simple AdressBook.
- * <p/>
- * Added Tree Table Add on to WEB-Inf/lib...
- * <p/>
- * TODO show website tree instead of dummy address book data. Started to work on that but it's
- * clearly a mess as you can see.
+ * Magnolia's AdminCentral.
  *
  * @author dan
  * @author fgrilli
@@ -73,7 +69,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
-    private Navigation menu = createMenu();
+    private Menu menu = createMenu();
 
     private VerticalLayout mainContainer;
 
@@ -84,16 +80,16 @@ public class AdminCentralVaadinApplication extends Application {
     private TreeTable websites = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
 
 
-    private Navigation createMenu() {
-        Navigation navigation = null;
+    private Menu createMenu() {
+        Menu menu = null;
         try {
-            navigation = new Navigation("/modules/adminInterface/config/menu");
+            menu = new Menu("/modules/adminInterface/config/menu");
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
             getMainWindow().showNotification("Application menu could not be created.", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
         }
-        return navigation;
+        return menu;
     }
 
     @Override
