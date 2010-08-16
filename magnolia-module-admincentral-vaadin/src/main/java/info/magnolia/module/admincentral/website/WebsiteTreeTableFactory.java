@@ -44,15 +44,18 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.Action;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -80,6 +83,19 @@ public class WebsiteTreeTableFactory {
 
     private static WebsiteTreeTableFactory instance;
 
+    // Actions for the context menu
+    private static final Action ACTION_ADD = new Action("Add item");
+
+    private static final Action ACTION_DELETE = new Action("Delete");
+
+    private static final Action ACTION_OTHER = new Action("Other");
+
+    private static final Action[] JSP_ACTIONS = new Action[]{ACTION_ADD,
+            ACTION_DELETE};
+
+    private static final Action[] FTL_ACTIONS = new Action[]{ACTION_ADD,
+        ACTION_OTHER};
+
     private static Logger log = LoggerFactory.getLogger(WebsiteTreeTableFactory.class);
 
     /**
@@ -96,7 +112,6 @@ public class WebsiteTreeTableFactory {
      * Prevent creation of multiple instances
      */
     private WebsiteTreeTableFactory() {
-        super();
     }
 
     Hierarchical addChildrenToContainer(Hierarchical container, Content parent, Object parentId) {
@@ -118,8 +133,43 @@ public class WebsiteTreeTableFactory {
             }
         }
         return container;
-
     }
+
+    void addContextMenu(final TreeTable table) {
+        table.addActionHandler(new Action.Handler() {
+            /*
+             * Handle actions
+             */
+            public void handleAction(Action action, Object sender, Object target) {
+                if (action == ACTION_ADD) {
+                    Object itemId = table.addItem();
+                    table.setParent(itemId, target);
+
+                    Item item = table.getItem(itemId);
+                    Property name = item.getItemProperty(WebsiteTreeTable.PAGE);
+                    name.setValue("New Item");
+                    Property status = item.getItemProperty(WebsiteTreeTable.STATUS);
+                    status.setValue(0);
+                    Property modDate = item.getItemProperty(WebsiteTreeTable.MOD_DATE);
+                    modDate.setValue(new Date());
+                }
+                else if (action == ACTION_DELETE) {
+                    table.removeItem(target);
+                }
+            }
+
+            public Action[] getActions(Object target, Object sender) {
+                Item selection = table.getItem(target);
+                String template = (String) selection.getItemProperty(WebsiteTreeTable.TEMPLATE).getValue();
+                log.info("Getting Actions for template: " + template + ", sender: " + sender);
+                // TODO: Just a dummy demo for creating different context menus depending on
+                // selected item...
+                return template.endsWith("JSP") ? JSP_ACTIONS : FTL_ACTIONS;
+            }
+        });
+    }
+
+
 
     /**
      *Add Drag and Drop functionality to the provided TreeTable
@@ -245,6 +295,7 @@ public class WebsiteTreeTableFactory {
         table.setColumnReorderingAllowed(true);
         addDragAndDrop(table);
         addEditingByDoubleClick(table);
+        addContextMenu(table);
         return table;
     }
 
@@ -265,7 +316,6 @@ public class WebsiteTreeTableFactory {
             throw new RuntimeException(e);
         }
         Hierarchical ic = new HieararchicalContainerOrderedWrapper(new ContainerHierarchicalWrapper(new IndexedContainer()));
-
         ic.addContainerProperty(WebsiteTreeTable.PAGE, String.class, "");
         ic.addContainerProperty(WebsiteTreeTable.TITLE, String.class, "");
         ic.addContainerProperty(WebsiteTreeTable.STATUS, String.class, "");
