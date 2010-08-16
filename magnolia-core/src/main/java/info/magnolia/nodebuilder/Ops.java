@@ -241,6 +241,20 @@ public abstract class Ops {
         };
     }
 
+    /**
+     * No operation; can be useful in ternary expression, for instance.
+     */
+    public static NodeOperation noop() {
+        return new NodeOperation() {
+            public NodeOperation then(NodeOperation... childrenOps) {
+                return null;
+            }
+
+            public void exec(Content context, ErrorHandler errorHandler) {
+            }
+        };
+    }
+
     abstract static class AbstractOp implements NodeOperation {
         private NodeOperation[] childrenOps = {};
 
