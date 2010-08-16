@@ -33,15 +33,20 @@
  */
 package info.magnolia.module.admincentral.website;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.event.dd.DropHandler;
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.ui.DefaultFieldFactory;
+
 
 /**
- * Tests for WebsiteTreeTableFactory
- *
  * @author dlipp
  * @version $Id$
  */
@@ -53,5 +58,32 @@ public class WebsiteTreeTableFactoryTest {
         assertTrue("TreeTabel expected to be editable", treeTable.isEditable());
         assertTrue("TreeTable expected to be selectable", treeTable.isSelectable());
         assertNotNull(treeTable.getTableFieldFactory());
+    }
+
+    @Test
+    public void testDropHandler() {
+        WebsiteTreeTable treeTable = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
+        DropHandler dropHandler = treeTable.getDropHandler();
+        assertNotNull(dropHandler);
+
+        AcceptCriterion acceptCriterion = dropHandler.getAcceptCriterion();
+        assertEquals(AcceptAll.get(), acceptCriterion);
+
+        /**
+         * TODO: create sample TableModel & DragAndDropEvent to test D&D in detail
+         */
+    }
+
+    @Test
+    public void testDoulbeClickEditing() {
+        WebsiteTreeTable treeTable = new WebsiteTreeTable();
+        assertEquals(DefaultFieldFactory.class,treeTable.getTableFieldFactory().getClass());
+
+        WebsiteTreeTableFactory.getInstance().addEditingByDoubleClick(treeTable);
+        assertNotNull(treeTable.getTableFieldFactory());
+
+        /**
+         * TODO: Test the ItemClickListener
+         */
     }
 }
