@@ -46,6 +46,8 @@ import com.vaadin.ui.DefaultFieldFactory;
 
 
 /**
+ * Test for WebsiteTreeTableFactory.
+ *
  * @author dlipp
  * @version $Id$
  */
