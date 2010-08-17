@@ -48,6 +48,9 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Accordion;
@@ -57,6 +60,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -69,10 +73,12 @@ import com.vaadin.ui.themes.BaseTheme;
 public class Menu extends Accordion{
 
     private static final long serialVersionUID = 1L;
+    private static final Logger log = LoggerFactory.getLogger(Menu.class);
     private Content node = null;
-    //keep a reference to the Application's main container. The reference is initialized in the attach() method, so that we're sure the
+    //keep a reference to the Application's main container.The reference is initialized in the attach() method, so that we're sure the
     //getApplication() method does not return null.
     private ComponentContainer mainContainer = null;
+    private UriFragmentUtility uriFragmentUtility = null;
 
     /**
      * @param path the path to the menu
@@ -86,6 +92,7 @@ public class Menu extends Accordion{
     @Override
     public void attach() {
         super.attach();
+
         for (Iterator<Content> iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content menuItem = iter.next();
             GridLayout gridLayout = new GridLayout(1,1);
@@ -104,13 +111,15 @@ public class Menu extends Accordion{
             if(gridLayout.getComponentIterator().hasNext()){
                 addTab(gridLayout, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             } else {
-                addTab(new Label(), getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
+                Label label = new Label();
+                addTab(label, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
         }
         //TODO for testing only. To be removed.
         addTab(new Label("For testing dialogs"), "Dialogs", null);
         addListener(new SelectedMenuItemTabChangeListener());
         mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
+        uriFragmentUtility = ((AdminCentralVaadinApplication)getApplication()).getUriFragmentUtility();
     }
 
     /**
@@ -189,26 +198,27 @@ public class Menu extends Accordion{
     public class SelectedMenuItemTabChangeListener implements SelectedTabChangeListener {
 
         private static final long serialVersionUID = 1L;
-        //private final Component websiteTreeTable = ((AdminCentralVaadinApplication)getApplication()).getWebsiteTreeTable();
+
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
                 getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
+                uriFragmentUtility.setFragment(tab.getCaption(), false);
 
-            if("website".equalsIgnoreCase(tab.getCaption())) {
-                mainContainer.removeAllComponents();
-                WebsiteTreeTable  website = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
-                Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
-                website.setContainerDataSource(websiteData);
-                website.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
-                mainContainer.addComponent(website);
-            }
-            //TODO remove this if block, it's here just for testing purposes
-            if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
-                mainContainer.removeAllComponents();
-                mainContainer.addComponent(new DialogSandboxPage());
-            }
+                if("website".equalsIgnoreCase(tab.getCaption())) {
+                    mainContainer.removeAllComponents();
+                    WebsiteTreeTable  website = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
+                    Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
+                    website.setContainerDataSource(websiteData);
+                    website.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
+                    mainContainer.addComponent(website);
+                }
+                //TODO remove this if block, it's here just for testing purposes
+                if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
+                    mainContainer.removeAllComponents();
+                    mainContainer.addComponent(new DialogSandboxPage());
+                }
           }
         }
     }

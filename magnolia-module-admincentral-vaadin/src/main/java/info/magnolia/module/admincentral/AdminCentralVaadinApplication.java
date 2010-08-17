@@ -38,6 +38,8 @@ import info.magnolia.module.admincentral.navigation.Menu;
 import info.magnolia.module.admincentral.website.WebsiteTreeTable;
 import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
 
+import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -47,10 +49,15 @@ import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.terminal.ClassResource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
@@ -80,6 +87,8 @@ public class AdminCentralVaadinApplication extends Application {
 
     private TreeTable websites = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
 
+    //This is needed to make application bookmarkable. See http://vaadin.com/book/-/page/advanced.urifu.html
+    private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
     private Menu createMenu() {
         Menu menu = null;
@@ -102,6 +111,7 @@ public class AdminCentralVaadinApplication extends Application {
         setTheme("runo");
         initLayout();
         initWebsiteTreeTable();
+        restoreApplicationStatus();
     }
 
     private void initWebsiteTreeTable() {
@@ -109,8 +119,14 @@ public class AdminCentralVaadinApplication extends Application {
         websites.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
     }
 
+    //TODO can this arise concurrency issues? Use ThreadLocal? Anyway, it should not be an issue, because as stated at
+    //http://vaadin.com/book/-/page/architecture.server-side.html "... [Vaadin] associates an Application instance with each session."
     public ComponentContainer getMainContainer(){
         return mainContainer;
+    }
+
+    public UriFragmentUtility getUriFragmentUtility(){
+        return uriFragmentUtility;
     }
 
     /**
@@ -118,8 +134,8 @@ public class AdminCentralVaadinApplication extends Application {
      */
     void initLayout() {
         SplitPanel splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-        setMainWindow(new Window(WINDOW_TITLE, splitPanel));
         splitPanel.setSplitPosition(20);
+        setMainWindow(new Window(WINDOW_TITLE, splitPanel));
 
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
@@ -133,15 +149,47 @@ public class AdminCentralVaadinApplication extends Application {
         embedded.setSource(new ClassResource("/mgnl-resources/admin-images/magnoliaLogo.gif", this));
         embedded.setWidth("294px");
         embedded.setHeight("36px");
+
         leftPaneLayout.addComponent(embedded);
         leftPaneLayout.addComponent(menu);
+        leftPaneLayout.addComponent(uriFragmentUtility);
 
         splitPanel.addComponent(leftPaneLayout);
         splitPanel.addComponent(mainContainer);
+
         mainContainer.addComponent(websites);
         mainContainer.addComponent(bottomLeftCorner);
 
         mainContainer.setExpandRatio(websites, 10);
         mainContainer.setExpandRatio(bottomLeftCorner, 1);
+    }
+
+    void restoreApplicationStatus() {
+        uriFragmentUtility.addListener(new FragmentChangedListener() {
+
+            public void fragmentChanged(FragmentChangedEvent source) {
+                String fragment = source.getUriFragmentUtility().getFragment();
+                log.info("fragment is {}", fragment);
+                if (fragment != null) {
+                    restoreSelectedMenuItemTabFromURIFragment(fragment);
+                }
+            }
+        });
+    }
+
+    /**
+     * Tries to restore the menu status as it was saved i.e. by bookmarking the application URL.
+     * @param fragment - String
+     */
+    void restoreSelectedMenuItemTabFromURIFragment(final String fragment) {
+        for (Iterator<Component> iterator = menu.getComponentIterator(); iterator.hasNext();) {
+            Component tabContent = iterator.next();
+            Tab tab = menu.getTab(tabContent);
+            if (uriFragmentUtility.getFragment().equalsIgnoreCase(tab.getCaption())) {
+                log.info("restoring app status: opening menu tab with caption {}", fragment);
+                menu.setSelectedTab(tabContent);
+                return;
+            }
+        }
     }
 }
