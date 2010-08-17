@@ -185,7 +185,7 @@ public class AdminCentralVaadinApplication extends Application {
         for (Iterator<Component> iterator = menu.getComponentIterator(); iterator.hasNext();) {
             Component tabContent = iterator.next();
             Tab tab = menu.getTab(tabContent);
-            if (uriFragmentUtility.getFragment().equalsIgnoreCase(tab.getCaption())) {
+            if (fragment.equalsIgnoreCase(tab.getCaption())) {
                 log.info("restoring app status: opening menu tab with caption {}", fragment);
                 menu.setSelectedTab(tabContent);
                 return;
