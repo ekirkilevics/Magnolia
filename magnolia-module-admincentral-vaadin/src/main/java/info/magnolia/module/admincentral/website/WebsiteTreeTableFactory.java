@@ -62,6 +62,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
@@ -80,22 +81,43 @@ import com.vaadin.ui.Table.TableDragMode;
  */
 public class WebsiteTreeTableFactory {
 
+    private static Logger log = LoggerFactory.getLogger(WebsiteTreeTableFactory.class);
+
     private static WebsiteTreeTableFactory instance;
 
     // Actions for the context menu
-    private static final Action ACTION_ADD = new Action("Add item");
+    private static final Action ACTION_ADD = createAddAction();
 
-    private static final Action ACTION_DELETE = new Action("Delete");
+    private static final Action ACTION_DELETE = createDeleteAction();
 
-    private static final Action ACTION_OTHER = new Action("Other");
+    private static final Action ACTION_OTHER = createHelpAction();
 
-    private static final Action[] JSP_ACTIONS = new Action[]{ACTION_ADD,
-            ACTION_DELETE};
-
+    /**
+     * TODO: define what menu items and what icons to use. Do not load icons from the web then - that's quite slow...
+     */
     private static final Action[] FTL_ACTIONS = new Action[]{ACTION_ADD,
         ACTION_OTHER};
 
-    private static Logger log = LoggerFactory.getLogger(WebsiteTreeTableFactory.class);
+    private static final Action[] JSP_ACTIONS = new Action[]{ACTION_ADD,
+        ACTION_DELETE};
+
+    private static Action createAddAction() {
+        Action add = new Action("Add");
+        add.setIcon(new ExternalResource("http://www.iconarchive.com/download/deleket/button/Button-Add.ico"));
+        return add;
+    }
+
+    private static Action createDeleteAction() {
+        Action add = new Action("Delete");
+        add.setIcon(new ExternalResource("http://www.iconarchive.com/download/deleket/button/Button-Delete.ico"));
+        return add;
+    }
+
+    private static Action createHelpAction() {
+        Action add = new Action("Other");
+        add.setIcon(new ExternalResource("http://www.iconarchive.com/download/deleket/button/Button-Help.ico"));
+        return add;
+    }
 
     /**
      * @return the single instance
@@ -113,6 +135,9 @@ public class WebsiteTreeTableFactory {
     private WebsiteTreeTableFactory() {
     }
 
+    /**
+     * Recursively add Children of passed parent to the provided container.
+     */
     Hierarchical addChildrenToContainer(Hierarchical container, Content parent, Object parentId) {
         Collection<Content> nodes = parent.getChildren();
         Iterator<Content> it = nodes.iterator();
@@ -136,6 +161,16 @@ public class WebsiteTreeTableFactory {
 
     void addContextMenu(final TreeTable table) {
         table.addActionHandler(new Action.Handler() {
+
+            public Action[] getActions(Object target, Object sender) {
+                Item selection = table.getItem(target);
+                String template = (String) selection.getItemProperty(WebsiteTreeTable.TEMPLATE).getValue();
+                log.info("Getting Actions for template: " + template + ", sender: " + sender);
+                // TODO: Just a dummy demo for creating different context menus depending on
+                // selected item...
+                return template.endsWith("JSP") ? JSP_ACTIONS : FTL_ACTIONS;
+            }
+
             /*
              * Handle actions
              */
@@ -156,19 +191,8 @@ public class WebsiteTreeTableFactory {
                     table.removeItem(target);
                 }
             }
-
-            public Action[] getActions(Object target, Object sender) {
-                Item selection = table.getItem(target);
-                String template = (String) selection.getItemProperty(WebsiteTreeTable.TEMPLATE).getValue();
-                log.info("Getting Actions for template: " + template + ", sender: " + sender);
-                // TODO: Just a dummy demo for creating different context menus depending on
-                // selected item...
-                return template.endsWith("JSP") ? JSP_ACTIONS : FTL_ACTIONS;
-            }
         });
     }
-
-
 
     /**
      *Add Drag and Drop functionality to the provided TreeTable.
@@ -301,7 +325,7 @@ public class WebsiteTreeTableFactory {
     /**
      * Gets Data for the Websites.
      *
-     * TODO: put @ proper place
+     * TODO: put at proper place
      */
     public Hierarchical getWebsiteData() {
         Content parent = null;
