@@ -34,20 +34,7 @@
 package info.magnolia.module.admincentral;
 
 
-import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.website.WebsiteTreeTable;
-import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
-
-import java.util.Iterator;
-
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.Application;
-import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -61,6 +48,13 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
+import info.magnolia.module.admincentral.navigation.Menu;
+import info.magnolia.module.admincentral.website.WebsitePage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.util.Iterator;
 
 
 /**
@@ -81,11 +75,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     private VerticalLayout mainContainer;
 
-    private Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
-
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
-
-    private TreeTable websites = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
 
     //This is needed to make application bookmarkable. See http://vaadin.com/book/-/page/advanced.urifu.html
     private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
@@ -110,13 +100,7 @@ public class AdminCentralVaadinApplication extends Application {
          */
         setTheme("runo");
         initLayout();
-        initWebsiteTreeTable();
         restoreApplicationStatus();
-    }
-
-    private void initWebsiteTreeTable() {
-        websites.setContainerDataSource(websiteData);
-        websites.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
     }
 
     //TODO can this arise concurrency issues? Use ThreadLocal? Anyway, it should not be an issue, because as stated at
@@ -157,11 +141,9 @@ public class AdminCentralVaadinApplication extends Application {
         splitPanel.addComponent(leftPaneLayout);
         splitPanel.addComponent(mainContainer);
 
-        mainContainer.addComponent(websites);
-        mainContainer.addComponent(bottomLeftCorner);
-
-        mainContainer.setExpandRatio(websites, 10);
-        mainContainer.setExpandRatio(bottomLeftCorner, 1);
+        // Set the startup page
+        // TODO this should be the decision of navigation/menu
+        mainContainer.addComponent(new WebsitePage());
     }
 
     void restoreApplicationStatus() {

@@ -41,8 +41,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
-import info.magnolia.module.admincentral.website.WebsiteTreeTable;
-import info.magnolia.module.admincentral.website.WebsiteTreeTableFactory;
+import info.magnolia.module.admincentral.website.WebsitePage;
 
 import java.util.Iterator;
 
@@ -208,12 +207,9 @@ public class Menu extends Accordion{
 
                 if("website".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
-                    WebsiteTreeTable  website = WebsiteTreeTableFactory.getInstance().createWebsiteTreeTable();
-                    Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
-                    website.setContainerDataSource(websiteData);
-                    website.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
-                    mainContainer.addComponent(website);
+                    mainContainer.addComponent(new WebsitePage());
                 }
+
                 //TODO remove this if block, it's here just for testing purposes
                 if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
