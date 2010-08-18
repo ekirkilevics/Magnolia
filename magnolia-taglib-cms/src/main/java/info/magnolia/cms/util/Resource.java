@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 /**
+ * A utility class.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  * @deprecated since 4.0 - use {@link info.magnolia.cms.taglibs.Resource} if you really have to, but it is deprecated and will eventually be dropped.

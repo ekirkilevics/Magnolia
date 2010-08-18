@@ -35,9 +35,6 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Set contentNode in resource.
@@ -49,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class Set extends BaseContentTag {
 
     public static final String SCOPE_GLOBAL = "global";
-    
+
     public static final String SCOPE_LOCAL = "local";
 
     public static final String SCOPE_PARAGRAPH = "paragraph";
@@ -59,7 +56,7 @@ public class Set extends BaseContentTag {
     public static final String SCOPE_PAGE = "page";
 
     private String scope = SCOPE_GLOBAL;
-    
+
     /**
      * Reset the former status after executing the body.
      */
@@ -69,7 +66,7 @@ public class Set extends BaseContentTag {
      * If forBodyOnly is true we have to reset the former status.
      */
     private Content previousNode;
-    
+
     /**
      * @deprecated use the contentNode attribute
      * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
@@ -101,7 +98,7 @@ public class Set extends BaseContentTag {
         }
 
         setNode(node);
-        
+
         return EVAL_BODY_INCLUDE;
     }
 
@@ -142,7 +139,7 @@ public class Set extends BaseContentTag {
         this.forBodyOnly = false;
         this.previousNode = null;
     }
-    
+
     public String getScope() {
         return this.scope;
     }
@@ -161,7 +158,7 @@ public class Set extends BaseContentTag {
     public void setScope(String scope) {
         this.scope = scope;
     }
-    
+
     public boolean isForBodyOnly() {
         return this.forBodyOnly;
     }

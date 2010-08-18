@@ -44,10 +44,11 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
  * allows you to provide functionality that is only available to page authors but not to the general public.
  * @jsp.tag name="adminOnly" body-content="JSP"
  * @jsp.tag-example
- * <cms:adminOnly>
- *    <cms:editBar/>
- * </cms:adminOnly>
- *
+ * <pre>
+ * &lt;cms:adminOnly&gt;
+ *    &lt;cms:editBar/&gt;
+ * &lt;/cms:adminOnly&gt;
+ *</pre>
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)

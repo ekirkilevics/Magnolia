@@ -59,13 +59,14 @@ import java.util.Iterator;
 
  * @jsp.tag name="contentNodeIterator" body-content="JSP"
  * @jsp.tag-example
- * <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
- *   <cms:adminOnly>
- *     <cms:editBar/>
- *   </cms:adminOnly>
- *   <cms:includeTemplate/>
- * </cms:contentNodeIterator>
- *
+ * <pre>
+ * &lt;cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs"&gt;
+ *   &lt;cms:adminOnly&gt;
+ *     &lt;cms:editBar/&gt;
+ *   &lt;/cms:adminOnly&gt;
+ *   &lt;cms:includeTemplate/&gt;
+ * &lt;/cms:contentNodeIterator&gt;
+ *</pre>
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author David Smith
@@ -214,7 +215,9 @@ public class ContentNodeIterator extends BaseContentTag {
     }
 
     protected LoopTagStatus getLoopStatus() {
-
+        /**
+         * Implementation class.
+         */
         class Status implements LoopTagStatus, Serializable {
 
             public Object getCurrent() {

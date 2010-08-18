@@ -184,7 +184,7 @@ public class EditButton extends TagSupport {
 
    /**
      * Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.
-     * @TODO: deprecate this ???
+     * TODO: deprecate this ???
      * @param path relative to WEB-INF.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -213,7 +213,7 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * get the content path (Page or Node)
+     * get the content path (Page or Node).
      * @return String path
      */
     private String getPath() {

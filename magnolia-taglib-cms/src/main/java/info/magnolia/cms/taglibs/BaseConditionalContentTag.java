@@ -36,10 +36,8 @@ package info.magnolia.cms.taglibs;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
+ * Base class for implementing conditional tags (e.g. {@link IfEmpty}). Subclasses need to implement the {@link BaseConditionalContentTag#condition()} method.
  * @author philipp
  * @version $Id$
  *

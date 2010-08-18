@@ -52,14 +52,15 @@ import java.util.List;
  * Displays a newBar that allows you to create new paragraphs.
  * @jsp.tag name="newBar" body-content="JSP"
  * @jsp.tag-example
- *     <cms:newBar contentNodeCollectionName="mainColumnParagraphs"
- *                 paragraph="samplesTextImage,samplesDownload,samplesLink"/>
- *
+ * <pre>
+ * &lt;cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="samplesTextImage,samplesDownload,samplesLink"/&gt;
+ *</pre>
  *
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
 public class NewBar extends TagSupport implements BarTag {
+
     private static final Logger log = LoggerFactory.getLogger(NewBar.class);
 
     private static final String DEFAULT_NEW_LABEL = "buttons.new"; //$NON-NLS-1$
