@@ -34,14 +34,13 @@
 package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class AbstractRenderableTest extends TestCase {
     private MockContent dummyContent = new MockContent("");
