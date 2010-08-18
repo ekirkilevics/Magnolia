@@ -49,7 +49,7 @@ public interface Bean2ContentProcessor {
     public Content setNodeDatas(Content node, Object bean, Bean2ContentTransformer transformer) throws Content2BeanException;
 
     /**
-     * Get your instance here
+     * Creates singleton instance of the bean2content processor.
      */
     class Factory{
         public static Bean2ContentProcessor getProcessor(){

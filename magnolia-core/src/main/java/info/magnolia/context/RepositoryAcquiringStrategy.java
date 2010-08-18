@@ -37,6 +37,11 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 
+/**
+ * Contract for repository access providers. Each provider needs to be able to provide heirarchy manager, query manager for repositories that are searchable and access manager for repositories with enabled security. If given functionality is not available on the reporisotry, provider needs to return null.
+ * @author had
+ * @version $Id: $
+ */
 public interface RepositoryAcquiringStrategy {
     HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
     AccessManager getAccessManager(String repositoryId, String workspaceId);

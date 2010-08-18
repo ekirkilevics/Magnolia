@@ -39,17 +39,32 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Default context provider.
+ * @author had
+ * @version $Id: $
+ */
 public class ContextFactory {
+
+    /**
+     * @return new instance of the web context on every call.
+     */
     public WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         WebContext ctx = Components.getComponentProvider().newInstance(WebContext.class);
         ctx.init(request, response, servletContext);
         return ctx;
     }
 
+    /**
+     * @return singleton instance of the <code>SystemContext</code>.
+     */
     public SystemContext getSystemContext() {
         return Components.getSingleton(SystemContext.class);
     }
 
+    /**
+     * @return singleton instance of itself.
+     */
     public static ContextFactory getInstance(){
         return Components.getSingleton(ContextFactory.class);
     }

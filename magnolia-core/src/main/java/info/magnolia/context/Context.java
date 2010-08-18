@@ -44,26 +44,26 @@ import java.util.Map;
 
 
 /**
- * This interface defines all the methods which should be implemented by any configured magnolia context, implementing
+ * This interface defines all the methods which should be implemented by any configured magnolia context. Implementing
  * class should never be accessible directly but only via MgnlContext static methods which work on a local (Thread) copy
- * of the implementation
+ * of the implementation.
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
 public interface Context extends org.apache.commons.chain.Context {
 
     /**
-     * Attribute visibility scope
+     * Attribute visibility scope.
      */
     public static final int LOCAL_SCOPE = 1;
 
     /**
-     * Attribute visibility scope Shared by all requests from this session
+     * Attribute visibility scope Shared by all requests from this session.
      */
     public static final int SESSION_SCOPE = 2;
 
     /**
-     * Attribute visibility scope, its visible to all sessions of this application
+     * Attribute visibility scope, its visible to all sessions of this application.
      */
     public static final int APPLICATION_SCOPE = 3;
 
@@ -86,7 +86,7 @@ public interface Context extends org.apache.commons.chain.Context {
     public static final String ATTRIBUTE_EXCEPTION = "exception";
 
     /**
-     * If this is not a UserContext this method will very likely return the system user
+     * If this is not a UserContext this method will very likely return the system user.
      */
     public User getUser();
 
@@ -96,19 +96,19 @@ public interface Context extends org.apache.commons.chain.Context {
     public void setLocale(Locale locale);
 
     /**
-     * Get the current locale
+     * Get the current locale.
      */
     public Locale getLocale();
 
     /**
-     * Get hierarchy manager initialized for this user
+     * Get hierarchy manager initialized for this user.
      * @param repositoryId
      * @return hierarchy manager
      */
     public HierarchyManager getHierarchyManager(String repositoryId);
 
     /**
-     * Get hierarchy manager initialized for this user
+     * Get hierarchy manager initialized for this user.
      * @param repositoryId
      * @param workspaceId
      * @return hierarchy manager
@@ -116,14 +116,14 @@ public interface Context extends org.apache.commons.chain.Context {
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
 
     /**
-     * Get access manager for the specified repository on default workspace
+     * Get access manager for the specified repository on default workspace.
      * @param repositoryId
      * @return access manager
      */
     public AccessManager getAccessManager(String repositoryId);
 
     /**
-     * Get access manager for the specified repository on the specified workspace
+     * Get access manager for the specified repository on the specified workspace.
      * @param repositoryId
      * @param workspaceId
      * @return access manager
@@ -131,14 +131,14 @@ public interface Context extends org.apache.commons.chain.Context {
     public AccessManager getAccessManager(String repositoryId, String workspaceId);
 
     /**
-     * Get QueryManager created for this user on the specified repository
+     * Get QueryManager created for this user on the specified repository.
      * @param repositoryId
      * @return query manager
      */
     public QueryManager getQueryManager(String repositoryId);
 
     /**
-     * Get QueryManager created for this user on the specified repository and workspace
+     * Get QueryManager created for this user on the specified repository and workspace.
      * @param repositoryId
      * @param workspaceId
      * @return query manager
@@ -146,7 +146,7 @@ public interface Context extends org.apache.commons.chain.Context {
     public QueryManager getQueryManager(String repositoryId, String workspaceId);
 
     /**
-     * Set attribute value, scope of the attribute is defined
+     * Set attribute value, scope of the attribute is defined.
      * @param name is used as a key
      * @param value
      * @param scope , highest level of scope from which this attribute is visible
@@ -154,7 +154,7 @@ public interface Context extends org.apache.commons.chain.Context {
     public void setAttribute(String name, Object value, int scope);
 
     /**
-     * Get attribute value
+     * Get attribute value.
      * @param name to which value is associated to
      * @param scope the scope (request, session, application)
      * @return attribute value
@@ -170,21 +170,21 @@ public interface Context extends org.apache.commons.chain.Context {
     public Object getAttribute(String name);
 
     /**
-     * Get a map of a attributes set in the scope
+     * Get a map of a attributes set in the scope.
      * @param scope
      * @return the map
      */
     public Map<String, Object> getAttributes(int scope);
 
     /**
-     * Remove an attribute
+     * Remove an attribute.
      * @param name
      * @param scope
      */
     public void removeAttribute(String name, int scope);
 
     /**
-     * Get an over all map
+     * Get an over all map.
      * @return the map
      */
     public Map<String, Object> getAttributes();

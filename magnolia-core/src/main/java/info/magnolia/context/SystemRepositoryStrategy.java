@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Uses a single full access AccessManager. Jcr sessions are only released if no event listener were registered.
+ * Uses a single full access AccessManager. JCR sessions are only released if no event listener were registered.
  */
 public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     private AccessManager accessManager;

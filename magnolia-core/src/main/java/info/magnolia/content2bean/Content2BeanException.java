@@ -35,17 +35,12 @@ package info.magnolia.content2bean;
 
 import info.magnolia.api.MgnlException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
+ * Exception thrown during execution of content to bean transformation.
  * @author philipp
  * @version $Id$
  */
 public class Content2BeanException extends MgnlException {
-
-    private static Logger log = LoggerFactory.getLogger(Content2BeanException.class);
 
     public Content2BeanException() {
     }

@@ -38,6 +38,7 @@ import info.magnolia.objectfactory.Components;
 import java.util.LinkedHashMap;
 
 /**
+ * Contract for mapping of the type and its properties to appropriate java beans.
  * @author philipp
  * @version $Id$
  *

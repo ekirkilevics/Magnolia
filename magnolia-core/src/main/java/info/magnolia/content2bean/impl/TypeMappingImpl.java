@@ -53,29 +53,27 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Basic type mapping implementation.
  * @author philipp
  * @version $Id$
  *
  */
 public class TypeMappingImpl implements TypeMapping {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(TypeMappingImpl.class);
 
     /**
-     * Property types already resolved
+     * Property types already resolved.
      */
     protected static Map<String, PropertyTypeDescriptor> propertyTypes = new HashMap<String, PropertyTypeDescriptor>();
 
     /**
-     * Descriptors for types
+     * Descriptors for types.
      **/
     protected static Map<Class<?>, TypeDescriptor> types = new HashMap<Class<?>, TypeDescriptor>();
 
     /**
-     * Get a adder method. Transforms name to singular
+     * Get a adder method. Transforms name to singular.
      */
     public Method getAddMethod(Class<?> type, String name, int numberOfParameters) {
         name = StringUtils.capitalize(name);
@@ -99,7 +97,7 @@ public class TypeMappingImpl implements TypeMapping {
     }
 
     /**
-     * Cache the already resolved types
+     * Cache the already resolved types.
      *
      */
     public PropertyTypeDescriptor getPropertyTypeDescriptor(Class<?> beanClass, String propName) {
@@ -200,7 +198,7 @@ public class TypeMappingImpl implements TypeMapping {
     }
 
     /**
-     * Find a method
+     * Find a method.
      * @param numberOfParameters
      */
     protected Method getExactMethod(Class<?> type, String name, int numberOfParameters) {

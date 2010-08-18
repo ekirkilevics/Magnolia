@@ -39,19 +39,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Delegate to an other command at runtime
+ * Delegate to an other command at runtime.
  * @author Philipp Bracher
  * @version $Id$
  *
  */
 public class DelegateCommand implements Command {
-    /**
-     * Log
-     */
+
     Logger log = LoggerFactory.getLogger(DelegateCommand.class);
 
     /**
-     * The command name used to delegate to
+     * The command name used to delegate to.
      */
     private String commandName;
 

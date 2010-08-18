@@ -36,42 +36,38 @@ package info.magnolia.context;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * <code>Hashtable</code> based implementation of the <code>AttributeStrategy</code>.
+ * @author had
+ * @version $Id: $
+ */
 public class MapAttributeStrategy implements AttributeStrategy {
     private Map<String, Object> map = new Hashtable<String, Object>();
 
     public MapAttributeStrategy() {
     }
 
-    /**
-     * Use the Map.put()
-     */
     public void setAttribute(String name, Object value, int scope) {
         this.map.put(name, value);
     }
 
-    /**
-     * Use the Map.get()
-     */
     public Object getAttribute(String name, int scope) {
         return this.map.get(name);
     }
 
-    /**
-     * use the Map.remove()
-     */
     public void removeAttribute(String name, int scope) {
         this.map.remove(name);
     }
 
     /**
-     * Ignore scope and return the inner map
+     * Ignore scope and return the inner map.
      */
     public Map<String, Object> getAttributes(int scope) {
         return this.getAttributes();
     }
 
     /**
-     * Returns the inner map
+     * Returns the inner map.
      */
     public Map<String, Object> getAttributes() {
         return this.map;

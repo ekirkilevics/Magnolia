@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Default implementation of the Context interface
+ * Default implementation of the Context interface.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -67,7 +67,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * The locale for this context
+     * The locale for this context.
      */
     protected Locale locale;
 
@@ -120,7 +120,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * Get attribute value
+     * Get the attribute value.
      * @param name to which value is associated to
      * @return attribute value
      */
@@ -136,7 +136,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * Merge the scopes maps
+     * Merge the scopes maps.
      */
     public Map<String, Object> getAttributes() {
         final Map<String, Object> map = new HashMap<String, Object>();
@@ -147,7 +147,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * If not yet set try to get the locale of the user. Else use the locale of the system context
+     * If not yet set try to get the locale of the user. Else use the locale of the system context.
      * @see Context#getLocale()
      */
     public Locale getLocale() {
@@ -167,14 +167,14 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * TODO: This duplicates methods from MessagesManager : remove either
+     * TODO: This duplicates methods from MessagesManager : remove either.
      */
     public Messages getMessages() {
         return getMessages(MessagesManager.DEFAULT_BASENAME);
     }
 
     /**
-     * TODO: This duplicates methods from MessagesManager : remove either
+     * TODO: This duplicates methods from MessagesManager : remove either.
      */
     public Messages getMessages(String basename) {
         return MessagesManager.getMessages(basename, getLocale());
@@ -192,15 +192,16 @@ public abstract class AbstractContext implements Context, Serializable {
         return this.getQueryManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
     }
 
+     // ------ Map interface methods -------
     /**
-     * Map implemenation
+     * {@inheritDoc}
      */
     public Object get(Object key) {
         return this.getAttribute(key.toString());
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public Object put(Object key, Object value) {
         this.setAttribute(key.toString(), value, Context.LOCAL_SCOPE);
@@ -208,7 +209,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public void clear() {
         for (String key : this.getAttributes().keySet()) {
@@ -218,35 +219,35 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * Map implementation. This implementation is very slow
+     * This implementation is very slow!
      */
     public boolean containsValue(Object value) {
         return this.getAttributes().containsValue(value);
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public Set<Entry<String, Object>> entrySet() {
         return this.getAttributes().entrySet();
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public boolean isEmpty() {
         return this.getAttributes().isEmpty();
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public Set<String> keySet() {
         return this.getAttributes().keySet();
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public void putAll(Map map) {
         for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
@@ -256,7 +257,7 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public Object remove(Object key) {
         Object obj = this.getAttribute(key.toString());
@@ -265,21 +266,21 @@ public abstract class AbstractContext implements Context, Serializable {
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public Collection<Object> values() {
         return this.getAttributes().values();
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public boolean containsKey(Object arg0) {
         return this.getAttributes().containsKey(arg0);
     }
 
     /**
-     * Map implementation
+     * {@inheritDoc}
      */
     public int size() {
         return this.getAttributes().size();

@@ -35,6 +35,11 @@ package info.magnolia.context;
 
 import java.util.Map;
 
+/**
+ * Contract for attribute storage and management.
+ * @author had
+ * @version $Id: $
+ */
 public interface AttributeStrategy {
     void setAttribute(String name, Object value, int scope);
     Object getAttribute(String name, int scope);

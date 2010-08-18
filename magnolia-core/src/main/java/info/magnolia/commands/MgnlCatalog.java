@@ -36,7 +36,7 @@ package info.magnolia.commands;
 import org.apache.commons.chain.impl.CatalogBase;
 
 /**
- * Knows its own name
+ * Named command catalogs. Used to choose from multiple commands of the same name. The commands from catalog with name matching the repository will be used.
  * @author philipp
  * @version $Id$
  *

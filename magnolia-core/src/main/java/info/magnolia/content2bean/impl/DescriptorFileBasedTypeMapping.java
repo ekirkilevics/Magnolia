@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Type Mapper implementation resolving the mapping from file based descriptors. Descriptors are the properties files with extension .content2bean.
  * @author philipp
  * @version $Id$
  *

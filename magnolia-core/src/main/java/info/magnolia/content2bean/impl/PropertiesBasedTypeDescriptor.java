@@ -42,7 +42,9 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Properties;
 
 /**
+ * Property file based type descriptor. Descriptor resolves the transformer class name from the property named "transformer".
  * @author pbracher
+ * @version $Id$
  */
 public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
 

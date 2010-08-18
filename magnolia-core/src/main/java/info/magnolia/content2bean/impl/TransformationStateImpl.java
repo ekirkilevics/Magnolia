@@ -40,6 +40,11 @@ import info.magnolia.content2bean.TypeDescriptor;
 import org.apache.commons.collections.ArrayStack;
 
 
+/**
+ * Transformation state implementation. Contains stacks of info for the types, beans and the content.
+ * @author had
+ * @version $Id$
+ */
 public class TransformationStateImpl implements TransformationState {
 
     protected ArrayStack typeStack = new ArrayStack();

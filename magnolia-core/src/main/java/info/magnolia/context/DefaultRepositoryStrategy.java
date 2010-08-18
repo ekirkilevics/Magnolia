@@ -35,8 +35,6 @@ package info.magnolia.context;
 
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import java.util.HashMap;
@@ -46,7 +44,6 @@ import java.util.Map;
  * Uses a user based access manager.
  */
 public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
-    private static final Logger log = LoggerFactory.getLogger(DefaultRepositoryStrategy.class);
 
     private Map<String, AccessManager> accessManagers = new HashMap<String, AccessManager>();
     protected UserContext context;

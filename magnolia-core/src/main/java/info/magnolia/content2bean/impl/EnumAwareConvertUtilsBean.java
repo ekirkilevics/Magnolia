@@ -37,10 +37,10 @@ import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.Converter;
 
 /**
- * A custom implementation of ConvertUtilsBean which can deal with java 5 enums.
+ * A custom implementation of ConvertUtilsBean which can deal with Enum feature introduced in Java 5.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id: $
  */
 class EnumAwareConvertUtilsBean extends ConvertUtilsBean {
     private final EnumConverter enumConverter = new EnumConverter();
