@@ -78,9 +78,10 @@ public class ConfiguredTreePage extends VerticalLayout {
         treeTable.setColumnReorderingAllowed(true);
 
         treeTable.setContainerDataSource(getWebsiteData());
+        setHeight("100%");
 
         addEditingByDoubleClick();
-        
+
         addComponent(treeTable);
     }
 

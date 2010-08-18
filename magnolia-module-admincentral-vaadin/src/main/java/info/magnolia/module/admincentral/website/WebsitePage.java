@@ -54,6 +54,7 @@ public class WebsitePage extends VerticalLayout {
         Container.Hierarchical websiteData = WebsiteTreeTableFactory.getInstance().getWebsiteData();
         website.setContainerDataSource(websiteData);
         website.setVisibleColumns(WebsiteTreeTable.WEBSITE_FIELDS);
+        setHeight("100%");
         addComponent(website);
     }
 }
