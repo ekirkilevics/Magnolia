@@ -37,11 +37,12 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
 /**
+ * Handles module's lifecycle.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class TemplatingModule implements ModuleLifecycle {
-    
+
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
         ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());

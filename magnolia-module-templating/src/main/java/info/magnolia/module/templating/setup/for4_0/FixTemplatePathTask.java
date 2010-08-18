@@ -49,7 +49,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * since 4.0 the templatePath property was moved to parameters content node, this class fixes it by
- * moving it back
+ * moving it back.
  * @author tmiyar
  *
  */

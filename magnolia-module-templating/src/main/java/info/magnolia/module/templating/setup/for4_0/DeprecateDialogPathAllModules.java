@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Renames dialogPath to dialog and sets the property to the dialog name, in all modules in all paragraphs nodes
+ * Renames dialogPath to dialog and sets the property to the dialog name, in all modules in all paragraphs nodes.
  * @author tmiyar
  *
  */

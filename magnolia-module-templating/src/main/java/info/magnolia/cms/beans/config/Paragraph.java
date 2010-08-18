@@ -35,6 +35,7 @@ package info.magnolia.cms.beans.config;
 
 
 /**
+ * Represents a paragraph definition.
  * @deprecated since 4.0 - moved to info.magnolia.module.templating.Paragraph
  */
 public class Paragraph extends info.magnolia.module.templating.Paragraph {

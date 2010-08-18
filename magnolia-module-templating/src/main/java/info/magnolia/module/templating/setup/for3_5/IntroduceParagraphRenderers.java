@@ -37,7 +37,7 @@ import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.InstallContext;
 
 /**
- *
+ * Introduces paragraph renderers.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -48,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * Manages the template renderers of the system.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */

@@ -161,7 +161,7 @@ public abstract class AbstractRenderer {
     }
 
     /**
-     * This gets the aggregation state without throwing an exception if the current context is not a WebContext
+     * This gets the aggregation state without throwing an exception if the current context is not a WebContext.
      */
     protected AggregationState getAggregationStateSafely() {
         if(MgnlContext.isWebContext()){

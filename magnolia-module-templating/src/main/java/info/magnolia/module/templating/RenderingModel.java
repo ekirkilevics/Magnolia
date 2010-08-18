@@ -41,6 +41,7 @@ import info.magnolia.cms.core.Content;
  * will provide helper methods to the template. The {@link #execute()} method is
  * executed before the rendering starts. The model is available under the name
  * <code>model</code>.
+ * @param <RD> - an instance of {@link RenderableDefinition}
  * @author pbracher
  * @version $Id$
  */

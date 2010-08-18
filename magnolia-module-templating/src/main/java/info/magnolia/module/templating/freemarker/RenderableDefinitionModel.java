@@ -51,6 +51,9 @@ import info.magnolia.freemarker.models.MagnoliaModelFactory;
  * @version $Id$
  */
 public class RenderableDefinitionModel extends BeanModel {
+    /**
+     * A factory for the enclosing type.
+     */
     public static final class Factory implements MagnoliaModelFactory {
         public Class factoryFor() {
             return RenderableDefinition.class;

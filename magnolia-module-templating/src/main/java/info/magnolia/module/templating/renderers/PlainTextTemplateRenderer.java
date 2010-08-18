@@ -48,6 +48,7 @@ import java.io.Writer;
 import java.util.Map;
 
 /**
+ * Template renderer for plain text.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
