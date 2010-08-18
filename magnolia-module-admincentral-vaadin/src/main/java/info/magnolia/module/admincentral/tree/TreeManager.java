@@ -38,10 +38,19 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.objectfactory.Components;
 
+
 /**
  * Maintains a registry of configured tree definitions.
  */
 public class TreeManager extends ObservedManager {
+
+    /**
+     * TODO dlipp: I'd prefer hiding this constructor to make sure everybody uses the getInstance
+     * methode. Unfortunately this is not (yet) supported be the DefaultClassFactory: it cannot call
+     * private constructures right now.
+     */
+    public TreeManager() {
+    }
 
     @Override
     protected void onRegister(Content node) {
