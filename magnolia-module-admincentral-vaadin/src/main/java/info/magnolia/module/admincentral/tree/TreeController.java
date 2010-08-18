@@ -68,20 +68,18 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Table.TableDragMode;
 
 
 /**
- * A page for AdminCentral that finds its TreeDefinition in the repository.
+ * Controller for Trees. Reads config (columns etc.) and data from JCR.
+ *
+ * TODO: Refactor for better testability
  */
-public class ConfiguredTreePage extends VerticalLayout {
+public class TreeController {
 
-    private static Logger log = LoggerFactory.getLogger(ConfiguredTreePage.class);
-
-
-    // TODO: read the available menus from repository as well?
+    // TODO: read the available menus from repository together with their icons
     private static final Action ACTION_ADD = createAddAction();
 
     private static final Action ACTION_DELETE = createDeleteAction();
@@ -97,6 +95,8 @@ public class ConfiguredTreePage extends VerticalLayout {
 
     private static final Action[] JSP_ACTIONS = new Action[]{ACTION_ADD,
         ACTION_DELETE};
+
+    private static Logger log = LoggerFactory.getLogger(TreeController.class);
 
     private static Action createAddAction() {
         Action add = new Action("Add");
@@ -116,107 +116,43 @@ public class ConfiguredTreePage extends VerticalLayout {
         return add;
     }
 
-    private TreeTable treeTable;
-
-    private TreeDefinition treeDefinition;
-
     private Object selectedItemId = null;
 
     private Object selectedPropertyId = null;
 
-    /**
-     * TODO: decide where to provide the definition from (MVC Question).
-     */
-    public ConfiguredTreePage(String name) {
-        this(TreeManager.getInstance().getTree(name));
+    private TreeDefinition treeDefinition;
+
+    private TreeTable treeTable;
+
+    public TreeController() {
     }
 
-    public ConfiguredTreePage(TreeDefinition definition) {
+    public void addChildren(Content parent, Object parentItemId, ItemType type, String pathToIcon, Container.Hierarchical container) throws RepositoryException{
+        for (Content content : parent.getChildren(type)) {
+            Object itemId = container.addItem();
 
-        this.treeDefinition = definition;
+            treeTable.setItemIcon(itemId, new ClassResource(pathToIcon, AdminCentralVaadinApplication.application));
 
-        treeTable = new TreeTable();
-        treeTable.setSizeFull();
-        treeTable.setEditable(true);
-        treeTable.setSelectable(true);
-        treeTable.setColumnCollapsingAllowed(true);
-        // TODO: check Ticket http://dev.vaadin.com/ticket/5453
-        treeTable.setColumnReorderingAllowed(true);
-        treeTable.setContainerDataSource(getWebsiteData());
-        setHeight("100%");
-        addContextMenu();
-        addEditingByDoubleClick();
-        addDragAndDrop();
-        addComponent(treeTable);
+            if (parentItemId != null) {
+                container.setParent(itemId, parentItemId);
+            }
+
+            for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
+                container.getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(content));
+            }
+
+            addChildrenToContainer(container, content, itemId);
+        }
     }
 
-    public Container.Hierarchical getWebsiteData() {
-
-        Content parent = null;
-        try {
-            parent = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContent(treeDefinition.getPath());
-        }
-        catch (RepositoryException e) {
-            /**
-             * TODO: proper ExceptionHandling
-             */
-            throw new RuntimeException(e);
-        }
-
-        Container.Hierarchical container = new HieararchicalContainerOrderedWrapper(new ContainerHierarchicalWrapper(new IndexedContainer()));
-
-        for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
-            container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
-        }
-
-        try {
-            addChildrenToContainer(container, parent, null);
-        }
-        catch (RepositoryException e) {
-            // TODO proper exception handling (maybe logging the vaadin exception handler is enough)
-            throw new RuntimeException(e);
-        }
-
-        return container;
-    }
 
     /**
      * Recursively add Children of passed parent to the provided container.
      */
     private Container.Hierarchical addChildrenToContainer(Container.Hierarchical container, Content parent, Object parentItemId) throws RepositoryException {
 
-        for (Content content : parent.getChildren(ItemType.CONTENT)) {
-
-            Object itemId = container.addItem();
-
-            treeTable.setItemIcon(itemId, new ClassResource("/mgnl-resources/icons/16/folder_cubes.gif", AdminCentralVaadinApplication.application));
-
-            if (parentItemId != null) {
-                container.setParent(itemId, parentItemId);
-            }
-
-            for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
-                container.getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(content));
-            }
-
-            addChildrenToContainer(container, content, itemId);
-        }
-
-        for (Content content : parent.getChildren(ItemType.CONTENTNODE)) {
-            Object itemId = container.addItem();
-
-            treeTable.setItemIcon(itemId, new ClassResource("/mgnl-resources/icons/16/cubes.gif", AdminCentralVaadinApplication.application));
-
-            if (parentItemId != null) {
-                container.setParent(itemId, parentItemId);
-            }
-
-            for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
-                container.getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(content));
-            }
-
-            addChildrenToContainer(container, content, itemId);
-        }
+        addChildren(parent, parentItemId, ItemType.CONTENT, "/mgnl-resources/icons/16/folder_cubes.gif", container);
+        addChildren(parent, parentItemId, ItemType.CONTENTNODE, "/mgnl-resources/icons/16/cubes.gif", container);
 
         if (treeDefinition.isIncludeNodeData()) {
             for (NodeData nodeData : parent.getNodeDataCollection()) {
@@ -237,40 +173,6 @@ public class ConfiguredTreePage extends VerticalLayout {
         return container;
     }
 
-    void addEditingByDoubleClick() {
-
-        treeTable.setTableFieldFactory(new DefaultFieldFactory() {
-
-            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
-                if (selectedItemId != null) {
-                    if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                        if (ArrayUtils.contains(WebsiteTreeTable.EDITABLE_FIELDS, propertyId)) {
-                            return super.createField(container, itemId, propertyId, uiContext);
-                        }
-                    }
-                }
-                return null;
-            }
-        });
-
-        treeTable.addListener(new ItemClickEvent.ItemClickListener() {
-
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-
-                    // TODO we need to unset these somehow...
-
-                    selectedItemId = event.getItemId();
-                    selectedPropertyId = event.getPropertyId();
-                    treeTable.setEditable(true);
-                }
-                else if (treeTable.isEditable()) {
-                    treeTable.setEditable(false);
-                    treeTable.setValue(event.getItemId());
-                }
-            }
-        });
-    }
 
     void addContextMenu() {
         treeTable.addActionHandler(new Action.Handler() {
@@ -383,6 +285,90 @@ public class ConfiguredTreePage extends VerticalLayout {
                 return AcceptAll.get();
             }
         });
+    }
+
+    void addEditingByDoubleClick() {
+
+        treeTable.setTableFieldFactory(new DefaultFieldFactory() {
+
+            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
+                if (selectedItemId != null) {
+                    if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
+                        if (ArrayUtils.contains(WebsiteTreeTable.EDITABLE_FIELDS, propertyId)) {
+                            return super.createField(container, itemId, propertyId, uiContext);
+                        }
+                    }
+                }
+                return null;
+            }
+        });
+
+        treeTable.addListener(new ItemClickEvent.ItemClickListener() {
+
+            public void itemClick(ItemClickEvent event) {
+                if (event.isDoubleClick()) {
+
+                    // TODO we need to unset these somehow...
+
+                    selectedItemId = event.getItemId();
+                    selectedPropertyId = event.getPropertyId();
+                    treeTable.setEditable(true);
+                }
+                else if (treeTable.isEditable()) {
+                    treeTable.setEditable(false);
+                    treeTable.setValue(event.getItemId());
+                }
+            }
+        });
+    }
+
+    /**
+     * Create, configure and return TreeTable.
+     */
+    public TreeTable createTreeTable(String name) {
+        treeDefinition = TreeManager.getInstance().getTree(name);
+        treeTable = new TreeTable();
+        treeTable.setSizeFull();
+        treeTable.setEditable(true);
+        treeTable.setSelectable(true);
+        treeTable.setColumnCollapsingAllowed(true);
+        // TODO: check Ticket http://dev.vaadin.com/ticket/5453
+        treeTable.setColumnReorderingAllowed(true);
+        treeTable.setContainerDataSource(getWebsiteData());
+        addContextMenu();
+        addEditingByDoubleClick();
+        addDragAndDrop();
+        return treeTable;
+     }
+
+    public Container.Hierarchical getWebsiteData() {
+
+        Content parent = null;
+        try {
+            parent = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContent(treeDefinition.getPath());
+        }
+        catch (RepositoryException e) {
+            /**
+             * TODO: proper ExceptionHandling
+             */
+            throw new RuntimeException(e);
+        }
+
+        Container.Hierarchical container = new HieararchicalContainerOrderedWrapper(new ContainerHierarchicalWrapper(new IndexedContainer()));
+
+        for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
+            container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
+        }
+
+        try {
+            addChildrenToContainer(container, parent, null);
+        }
+        catch (RepositoryException e) {
+            // TODO proper exception handling (maybe logging the vaadin exception handler is enough)
+            throw new RuntimeException(e);
+        }
+
+        return container;
     }
 
 }

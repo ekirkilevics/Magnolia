@@ -36,7 +36,7 @@ package info.magnolia.module.admincentral;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.tree.ConfiguredTreePage;
+import info.magnolia.module.admincentral.tree.TreeController;
 
 import java.util.Iterator;
 
@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
+import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
@@ -172,8 +173,8 @@ public class AdminCentralVaadinApplication extends Application {
 
         // Set the startup page
         // TODO this should be the decision of navigation/menu;
-        final ConfiguredTreePage startPage = new ConfiguredTreePage("website");
-        mainContainer.addComponent(startPage);
+        TreeTable treeTable = new TreeController().createTreeTable("website");
+        mainContainer.addComponent(treeTable);
         bottomLeftCorner.setWidth("100%");
         mainContainer.addComponent(bottomLeftCorner);
         mainContainer.setSizeFull();
@@ -187,7 +188,7 @@ public class AdminCentralVaadinApplication extends Application {
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);
 
-        mainContainer.setExpandRatio(startPage, 15.0f);
+        mainContainer.setExpandRatio(treeTable, 15.0f);
         mainContainer.setExpandRatio(bottomLeftCorner, 1.0f);
 
     }

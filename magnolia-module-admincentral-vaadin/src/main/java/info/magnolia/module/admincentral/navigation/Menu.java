@@ -41,7 +41,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
-import info.magnolia.module.admincentral.tree.ConfiguredTreePage;
+import info.magnolia.module.admincentral.tree.TreeController;
 
 import java.util.Iterator;
 
@@ -208,12 +208,12 @@ public class Menu extends Accordion{
 
                 if("website".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
-                    mainContainer.addComponent(new ConfiguredTreePage("website"));
+                    mainContainer.addComponent(new TreeController().createTreeTable("website"));
                 }
 
                 if("configuration".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
-                    mainContainer.addComponent(new ConfiguredTreePage("config"));
+                    mainContainer.addComponent(new TreeController().createTreeTable("config"));
                 }
 
                 //TODO remove this if block, it's here just for testing purposes
