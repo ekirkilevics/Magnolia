@@ -194,6 +194,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
+        <!-- TODO this configuration can go if we upgrade to parent pom 17 - See http://jira.magnolia-cms.com/browse/BUILD-28 -->
         <version>1.0-beta-4</version>
         <executions>
           <execution>
