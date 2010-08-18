@@ -42,9 +42,11 @@ import info.magnolia.context.Context;
 import java.util.Map;
 
 /**
- * Exposes Context instances as MapModels:
- * SimpleMapModel would prevent us from using Context's specific methods
- * SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods.
+ * Exposes Context instances as different MapModels.
+ * <ul>
+ *  <li>SimpleMapModel would prevent us from using Context's specific methods</li>
+ *  <li>SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods.</li>
+ * </ul>
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

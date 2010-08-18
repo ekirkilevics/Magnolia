@@ -43,9 +43,9 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /**
- * 
+ * Exception handler providing different output based on the configuration of the current instance. Full stacktrace gets rendered on the author instance only, while ignoring the stacktraces in preview mode and on public instances.
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id: $
  */
 public class ModeDependentTemplateExceptionHandler implements TemplateExceptionHandler {
     public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {

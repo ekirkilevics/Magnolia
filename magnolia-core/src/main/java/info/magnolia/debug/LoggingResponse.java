@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
- * Wrapps a response and records the set headers and http status
+ * Wraps a response and records the set headers and http status for debugging purposes.
  * @author philipp
  * @version $Id$
  */

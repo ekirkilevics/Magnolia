@@ -44,7 +44,7 @@ import info.magnolia.context.MgnlContext;
 
 /**
  * Key based time measuring.
- * 
+ *
  * @author philipp
  * @version $Id$
  *
@@ -53,6 +53,9 @@ public class PerformanceTestStatus {
 
     private static final String ATTRIBUTE_NAME = PerformanceTestStatus.class.getName();
 
+    /**
+     * Simple place holder for the start and total execution times.
+     */
     class TestStatus{
        long start = -1;
        long total = -1;

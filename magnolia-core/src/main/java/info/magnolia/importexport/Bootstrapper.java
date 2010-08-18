@@ -62,7 +62,7 @@ public final class Bootstrapper {
     private static final Logger log = LoggerFactory.getLogger(Bootstrapper.class);
 
     /**
-     * Used to process an additional filtering for the bootstrap files
+     * Filter used to provide an additional filtering for the bootstrap files.
      *
      * @author philipp
      */
@@ -71,9 +71,6 @@ public final class Bootstrapper {
         boolean accept(String filename);
     }
 
-    /**
-     * don't instantiate
-     */
     private Bootstrapper() {
         // unused
     }
@@ -120,7 +117,7 @@ public final class Bootstrapper {
     }
 
     /**
-     * Bootstrap the array of files
+     * Bootstrap the array of files.
      */
     private static boolean bootstrapFiles(String repositoryName, File[] files) {
         try {
@@ -181,7 +178,7 @@ public final class Bootstrapper {
     }
 
     /**
-     * Return the standard bootstrap dirs defined in the magnolia.properies file
+     * Return the standard bootstrap dirs defined in the <code>magnolia.properies</code> file.
      * @return Array of directory names
      */
     public static String[] getBootstrapDirs() {

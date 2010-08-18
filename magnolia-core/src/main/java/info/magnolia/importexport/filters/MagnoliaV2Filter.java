@@ -39,9 +39,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
 
-
 /**
- * Sax filter, strips version information from a jcr xml (system view).
+ * SAX filter, strips version information from a JCR XML (system view).
  */
 public class MagnoliaV2Filter extends XMLFilterImpl {
 
@@ -124,7 +123,6 @@ public class MagnoliaV2Filter extends XMLFilterImpl {
 
         if (inMetadataElement > 0) {
             // MAGNOILA-2653 skip nested elements (sv:value)
-            // os skipped property
             if ( skipProperty ){
                 return;
             }

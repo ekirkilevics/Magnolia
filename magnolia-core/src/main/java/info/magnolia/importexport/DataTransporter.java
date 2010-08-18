@@ -91,7 +91,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
- * imports and exports XML data
+ * Utility class for manipulation of XML files (mainly JCR XML).
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  * @author Oliver Lietz
  */
@@ -114,13 +114,13 @@ public class DataTransporter {
     public static final String DOT = ".";
 
     public static final String SLASH = "/";
-    
+
     public static final String UTF8 = "UTF-8";
 
     public static final String JCR_ROOT = "jcr:root";
 
     /**
-     * Document -> File
+     * Converts a xml document into a file.
      * @param xmlDocument uploaded file
      * @param repositoryName selected repository
      * @param basepath base path in repository
@@ -141,7 +141,7 @@ public class DataTransporter {
     }
 
     /**
-     * File -> InputStream
+     * Creates an <code>InputStream</code> backed by the specified xml file.
      * @param xmlFile (zipped/gzipped) XML file to import
      * @param repositoryName selected repository
      * @param basepath base path in repository
@@ -176,9 +176,9 @@ public class DataTransporter {
             filenameWithoutExt = StringUtils.substringBeforeLast(xmlFile.getName(), DOT);
         }
         String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
-        
-        pathName = decodePath(pathName,  UTF8); 
-        
+
+        pathName = decodePath(pathName,  UTF8);
+
         String basepath = SLASH + StringUtils.replace(pathName, DOT, SLASH);
 
         if (xmlFile.getName().endsWith(PROPERTIES)) {
@@ -191,7 +191,7 @@ public class DataTransporter {
     }
 
     /**
-     * Overwrite or set single values
+     * Deprecated.
      * @param properties
      * @param repositoryName
      * @deprecated since 4.0 - use the PropertiesImportExport class instead.
@@ -218,7 +218,7 @@ public class DataTransporter {
     }
 
     /**
-     * imports XML stream into repository<p/>
+     * Imports XML stream into repository.
      * XML is filtered by <code>MagnoliaV2Filter</code>, <code>VersionFilter</code> and <code>ImportXmlRootFilter</code>
      * if <code>keepVersionHistory</code> is set to <code>false</code>
      * @param xmlStream XML stream to import
@@ -375,7 +375,7 @@ public class DataTransporter {
     }
 
     /**
-     * creates a stream from the (zipped/gzipped) XML file
+     * Creates a stream from the (zipped/gzipped) XML file.
      * @param xmlFile
      * @return stream of the file
      * @throws IOException
@@ -440,7 +440,7 @@ public class DataTransporter {
     }
 
     /**
-     * This export the content of the repository, and format it if necessary
+     * Exports the content of the repository, and format it if necessary.
      * @param stream the stream to write the content to
      * @param reader the reader to use to parse the xml content (so that we can perform filtering), if null instanciate
      * a default one
@@ -519,17 +519,17 @@ public class DataTransporter {
 
         IOUtils.closeQuietly(inputStream);
     }
-    
+
     /**
-     * 
+     *
      * @param path path to encode
-     * @param separator "." (dot) or "/", it will be not encoded if found 
-     * @param enc charset 
+     * @param separator "." (dot) or "/", it will be not encoded if found
+     * @param enc charset
      * @return the path encoded
      */
     public static String encodePath(String path, String separator, String enc)
     {
-        String pathEncoded = StringUtils.EMPTY; 
+        String pathEncoded = StringUtils.EMPTY;
         try
         {
             if (!StringUtils.contains(path, separator))
@@ -558,7 +558,7 @@ public class DataTransporter {
         }
         return pathEncoded;
     }
-    
+
     /**
      * decode a path (ex. %D0%9D%D0%B0.%B2%D0%BE%D0%BB%D0%BD)
      * @param path path to decode

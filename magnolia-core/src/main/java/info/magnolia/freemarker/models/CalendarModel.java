@@ -42,7 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
-*
+* Date model wrapper for the calendar node data values (node data type DATE) used in freemarker templates.
 * @author gjoseph
 * @version $Revision: $ ($Author: $)
 */

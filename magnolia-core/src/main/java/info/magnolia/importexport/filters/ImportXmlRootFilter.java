@@ -41,6 +41,9 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 
+/**
+ * XML Filter for cleaning up version store from imported root node files.
+ */
 public class ImportXmlRootFilter extends XMLFilterImpl {
 
     // this is true if it is an import of a file containing jcr:root node
@@ -75,7 +78,7 @@ public class ImportXmlRootFilter extends XMLFilterImpl {
     }
 
     /**
-     * Root node was found should be called after parsing to check if a root node was indeed found
+     * Root node was found should be called after parsing to check if a root node was indeed found.
      */
     public boolean rootNodeWasFound() {
         return rootNodeFound;

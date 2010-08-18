@@ -46,7 +46,7 @@ import java.util.List;
 
 
 /**
- * A base abstract filter that can be subclassed in order to easily implement removal of properties based on their
+ * A base abstract filter that can be sub-classed in order to easily implement removal of properties based on their
  * name/content.
  * @author fgiust
  * @version $Revision$ ($Author$)
@@ -164,6 +164,9 @@ public abstract class SkipNodePropertyFilter extends XMLFilterImpl {
      */
     protected abstract boolean filter(String propertyValue, String parentNodeName);
 
+    /**
+     * Temporary element storage node.
+     */
     public static class BufferedElement {
 
         private String uri;

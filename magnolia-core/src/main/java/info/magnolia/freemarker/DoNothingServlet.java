@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 
 /**
+ * Dummy servlet used to satisfy all freemarker dependencies at runtime.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

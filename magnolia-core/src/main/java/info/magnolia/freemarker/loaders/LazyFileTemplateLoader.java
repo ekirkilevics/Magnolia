@@ -44,7 +44,7 @@ import java.io.IOException;
  * lazily, thus allowing setting its parameters with content2bean.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id: $
  */
 public class LazyFileTemplateLoader extends AbstractDelegatingTemplateLoader {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LazyFileTemplateLoader.class);

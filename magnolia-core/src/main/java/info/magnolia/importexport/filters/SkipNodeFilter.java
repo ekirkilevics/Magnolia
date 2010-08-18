@@ -39,7 +39,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
- * A simple filter that removes whole nodes
+ * A simple filter that skips over import of child nodes.
  *
  * @author tmiyar
  * @version $Revision: $ ($Author: $)
