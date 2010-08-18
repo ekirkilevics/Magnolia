@@ -49,11 +49,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * @author philipp
- * @version $Id$
+ * Maps a URI to content stored in the repository. Determine the workspace name
+ * and content path.
  *
+ * @see URI2RepositoryMapping, {@link URI2RepositoryManager}
+ * @author philipp
  */
 public class RepositoryMappingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RepositoryMappingFilter.class);

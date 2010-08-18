@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Handles the bypassing
+ * A implementation of {@link FilterChain} having a bypass mechanism.
  * @author philipp
  * @version $Id$
  *

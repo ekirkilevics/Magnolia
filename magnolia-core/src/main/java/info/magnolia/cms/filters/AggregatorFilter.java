@@ -58,6 +58,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Reads the accessed content from the repository and puts it into the {@link AggregationState}.
  * @author philipp
  * @version $Id$
  *

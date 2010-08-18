@@ -52,6 +52,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
+ * Normalizes the current URI to the NFC form which is used internally.
+ * @see UnicodeNormalizer
+ *
  * @author Luca Boati
  * @version $Id: $
  */
@@ -98,7 +101,7 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         }
 
         chain.doFilter(unicodeRequest, response);
-        
+
         MgnlContext.pop();
     }
 
@@ -126,6 +129,9 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         return toNormalize;
     }
 
+    /**
+     * Normalizes the parameter strings.
+     */
     public class UnicodeNormalizerRequestWrapper extends HttpServletRequestWrapper
     {
 

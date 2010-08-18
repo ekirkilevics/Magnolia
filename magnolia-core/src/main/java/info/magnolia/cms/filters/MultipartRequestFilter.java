@@ -215,6 +215,10 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         form.addDocument(atomName, fileName, type, file);
     }
 
+
+    /**
+     * Hides the complexity and exposes the parameter as if they were normal post parameters.
+     */
     static class MultipartRequestWrapper extends HttpServletRequestWrapper {
         private final MultipartForm form;
 

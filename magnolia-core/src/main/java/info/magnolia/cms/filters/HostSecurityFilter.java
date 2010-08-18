@@ -83,7 +83,7 @@ public class HostSecurityFilter extends OncePerRequestAbstractMgnlFilter {
     }
 
     /**
-     * Adds a mapping (used by content2bean)
+     * Adds a mapping (used by content2bean).
      * @param mapping in the form /path=host
      */
     public void addMapping(String mapping) {

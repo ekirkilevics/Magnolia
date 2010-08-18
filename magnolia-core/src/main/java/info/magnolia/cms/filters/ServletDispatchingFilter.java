@@ -346,7 +346,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
 
         /**
          * The given Matcher should be built from a Pattern containing two groups:
-         * (1) servletPath (2) ignored (3) pathInfo
+         * (1) servletPath (2) ignored (3) pathInfo.
          */
         public WrappedRequest(HttpServletRequest request, Matcher matcher) {
             super(request);
