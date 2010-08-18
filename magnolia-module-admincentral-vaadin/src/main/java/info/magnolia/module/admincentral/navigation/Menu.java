@@ -50,7 +50,6 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
