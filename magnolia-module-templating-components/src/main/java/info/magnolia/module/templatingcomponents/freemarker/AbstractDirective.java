@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * A base class for freemarker directives used in Magnolia.
+ * Subclasses need to implement the {@link AbstractDirective#prepareUIComponent(ServerConfiguration, AggregationState, Environment, Map, TemplateModel[], TemplateDirectiveBody)} method.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -93,7 +95,7 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
      * is thrown away after the execution of the directive. When no parameters are passed, the Map is readonly, but it
      * is otherwise a regular HashMap which has been instantiated shortly before the execution of the directive. However, since
      * this behavior is not mandated by their API, nor documented (at the time of writing, with FreeMarker 2.3.16), we
-     * should exert caution. Unit tests hopefully cover this, so we'll be safe when updating to newer FreeMarker versions. 
+     * should exert caution. Unit tests hopefully cover this, so we'll be safe when updating to newer FreeMarker versions.
      */
     protected abstract AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException;
 

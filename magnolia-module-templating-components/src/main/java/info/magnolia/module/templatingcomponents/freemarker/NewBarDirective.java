@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * A freemarker directive for the new bar UI component.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

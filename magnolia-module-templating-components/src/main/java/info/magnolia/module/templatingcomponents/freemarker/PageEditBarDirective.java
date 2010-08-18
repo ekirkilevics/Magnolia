@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * A freemarker directive for the page edit bar UI component.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

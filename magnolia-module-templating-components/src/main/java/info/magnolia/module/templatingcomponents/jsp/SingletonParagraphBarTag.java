@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Jsp tag which renders a singleton paragraph bar UI component.
  * @jsp.tag name="singleton" body-content="scriptless"
  *
  * @author gjoseph

@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
+ * Base class for jsp tags. Subclasses need to implement the {@link AbstractTag#prepareUIComponent(ServerConfiguration, AggregationState)} method.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
