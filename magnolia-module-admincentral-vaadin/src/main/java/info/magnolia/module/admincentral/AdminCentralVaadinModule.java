@@ -33,8 +33,13 @@
  */
 package info.magnolia.module.admincentral;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.admincentral.commands.ConvertDialogsCommand;
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.dialog.MockDialogProvider;
 import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
@@ -46,8 +51,17 @@ import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManag
  */
 public class AdminCentralVaadinModule implements ModuleLifecycle{
 
+    private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinModule.class);
+
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("vaadin-dialogs", ConfiguredDialogManager.getInstance());
+        ctx.registerModuleObservingComponent("mgnl50dialogs", ConfiguredDialogManager.getInstance());
+
+        // TODO: convert dialogs during upgrade process and not everytime on startup
+        try {
+            new ConvertDialogsCommand().execute(MgnlContext.getInstance());
+        } catch (Exception e) {
+            log.error("Failed to convert dialog structure.", e);
+        }
 
         DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
