@@ -49,6 +49,7 @@ import org.apache.commons.io.IOUtils;
 
 
 /**
+ * Loads the message from properties files accessed as classpath resources.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -82,7 +83,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
         if (bundle == null) {
             InputStream stream = null;
             try {
-                // TODO : isnt this what ResourceBundle does? except maybe for some ClasspathResourcesUtil magic ? 
+                // TODO : isnt this what ResourceBundle does? except maybe for some ClasspathResourcesUtil magic ?
                 final String path = "/" + StringUtils.replace(basename, ".", "/");
                 final Locale locale = getLocale();
                 final Locale defaultLocale = MessagesManager.getInstance().getDefaultLocale();

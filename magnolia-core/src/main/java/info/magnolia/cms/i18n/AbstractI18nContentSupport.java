@@ -52,10 +52,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
+ * An abstract implementation of {@link I18nContentSupport} which stores the
+ * locale specific content in node data having a local suffix:
+ * &lt;name&gt;_&lt;locale&gt;.
+ *
+ * The detection of the current locale, based on the URI for instance, is left to the concrete implementation.
  * @author philipp
- * @version $Id$
  *
  */
 public abstract class AbstractI18nContentSupport implements I18nContentSupport {
@@ -63,7 +66,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     private static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
 
     /**
-     * The content is served for this locale if the the content is not available for the current locale
+     * The content is served for this locale if the the content is not available for the current locale.
      */
     private Locale fallbackLocale = new Locale("en");
 

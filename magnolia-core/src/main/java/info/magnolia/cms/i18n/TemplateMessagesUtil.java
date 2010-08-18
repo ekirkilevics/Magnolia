@@ -61,7 +61,7 @@ public final class TemplateMessagesUtil {
     }
 
     /**
-     * Get the messages for the templates
+     * Get the messages for the templates.
      * @return
      */
     public static Messages getMessages() {
