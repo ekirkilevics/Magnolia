@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Deprecated.
  * @deprecated since 4.0: usage removed. Providers are now shutdown by the ConfigLoader. Modules should handle their own lifecycles since 3.5.
  *
  * @author Fabrizio Giustina

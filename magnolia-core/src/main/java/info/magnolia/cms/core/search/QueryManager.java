@@ -39,6 +39,7 @@ import javax.jcr.query.InvalidQueryException;
 
 
 /**
+ * Equivalent to {@link QueryManager} but using {@link Content} objects.
  * Date: Apr 4, 2005 Time: 11:00:02 AM
  * @author Sameer Charles
  */

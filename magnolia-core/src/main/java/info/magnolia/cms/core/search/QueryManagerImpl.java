@@ -41,6 +41,7 @@ import javax.jcr.query.InvalidQueryException;
 
 
 /**
+ * Wrapping a JCR {@link javax.jcr.query.QueryManager}.
  * Date: Mar 29, 2005 Time: 2:54:21 PM
  * @author Sameer Charles
  */

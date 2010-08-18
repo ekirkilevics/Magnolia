@@ -37,9 +37,9 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.DeprecationUtil;
 
 /**
- * Abstract super class for {@link Content} and {@link info.magnolia.cms.core.version.ContentVersion}
+ * Abstract super class for {@link Content} and {@link info.magnolia.cms.core.version.ContentVersion}.
  * @see info.magnolia.cms.core.AbstractContent
- * 
+ *
  * @author Sameer Charles
  * @version $Revision $ ($Author $) $Id$
  */

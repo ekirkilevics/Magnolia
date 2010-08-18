@@ -61,9 +61,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Util to copy nodes and hierarchies between workspaces. A {@link Content.ContentFilter} defines what such a copy process includes.
+ * This is used to copy pages to the version workspace. While the paragraph nodes have to be copied the sub-pages should not.
+ *
  * @author Sameer Charles
  * $Id$
- * Utility class to copy nodes using specified Roles to the magnolia specific version store
  */
 public final class CopyUtil {
 
@@ -72,26 +74,17 @@ public final class CopyUtil {
      */
     private static Logger log = LoggerFactory.getLogger(CopyUtil.class);
 
-    /**
-     * singleton instance
-     */
     private static final CopyUtil thisInstance = new CopyUtil();
 
-    /**
-     * private class
-     */
     private CopyUtil() {
     }
 
-    /**
-     * get instance
-     */
     public static CopyUtil getInstance() {
         return thisInstance;
     }
 
     /**
-     * copy given node to the version store using specified filter
+     * Copy given node to the version store using specified filter.
      * @param source
      * @param filter
      */
@@ -132,7 +125,7 @@ public final class CopyUtil {
     }
 
     /**
-     * copy source to destination using the provided filter
+     * Copy source to destination using the provided filter.
      * @param source node in version store
      * @param destination which needs to be restored
      * @param filter this must be the same filter as used while creating this version
@@ -148,10 +141,7 @@ public final class CopyUtil {
     }
 
     /**
-     * recursively removes all child nodes from node using specified filter
-     * @param source
-     * @param destination
-     * @param filter
+     * Recursively removes all child nodes from node using specified filter.
      */
     private void removeNonExistingChildNodes(Content source, Content destination, Content.ContentFilter filter)
         throws RepositoryException {
@@ -183,10 +173,7 @@ public final class CopyUtil {
     }
 
     /**
-     * copy all child nodes from node1 to node2
-     * @param node1
-     * @param node2
-     * @param filter
+     * Copy all child nodes from node1 to node2.
      */
     private void copyAllChildNodes(Content node1, Content node2, Content.ContentFilter filter)
         throws RepositoryException {
@@ -197,13 +184,6 @@ public final class CopyUtil {
         }
     }
 
-    /**
-     * clone
-     * @param node
-     * @param parent
-     * @param filter
-     * @param removeExisting
-     */
     public void clone(Content node, Content parent, Content.ContentFilter filter, boolean removeExisting)
         throws RepositoryException {
         try {
@@ -232,11 +212,6 @@ public final class CopyUtil {
         }
     }
 
-    /**
-     * clone
-     * @param node
-     * @param parent
-     */
     private void clone(Content node, Content parent) throws RepositoryException {
         if (node.getJCRNode().getDefinition().isAutoCreated()) {
             Content destination = parent.getContent(node.getName());
@@ -254,8 +229,7 @@ public final class CopyUtil {
     }
 
     /**
-     * remove all properties under the given node
-     * @param node
+     * Remove all properties under the given node.
      */
     private void removeProperties(Content node) throws RepositoryException {
         PropertyIterator properties = node.getJCRNode().getProperties();
@@ -276,7 +250,7 @@ public final class CopyUtil {
     }
 
     /**
-     * import while preserving UUID, parameters supplied must be from separate workspaces
+     * Import while preserving UUID, parameters supplied must be from separate workspaces.
      * @param parent under which the specified node will be imported
      * @param node
      * @throws RepositoryException
@@ -298,9 +272,7 @@ public final class CopyUtil {
     }
 
     /**
-     * merge all non reserved properties
-     * @param source
-     * @param destination
+     * Merge all non reserved properties.
      */
     private void updateProperties(Content source, Content destination) throws RepositoryException {
         Node sourceNode = source.getJCRNode();
@@ -365,14 +337,14 @@ public final class CopyUtil {
     }
 
     /**
-     * get version store hierarchy manager
+     * Get version store hierarchy manager.
      */
     private HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);
     }
 
     /**
-     * get hierarchy manager of the specified workspace
+     * Get hierarchy manager of the specified workspace.
      * @param workspaceId
      */
     private HierarchyManager getHierarchyManager(String workspaceId) {
@@ -380,7 +352,7 @@ public final class CopyUtil {
     }
 
     /**
-     * get temporary node
+     * Get temporary node.
      */
     private Content getTemporaryPath() throws RepositoryException {
         return getHierarchyManager().getContent("/" + VersionManager.TMP_REFERENCED_NODES);

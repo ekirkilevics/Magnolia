@@ -113,12 +113,12 @@ public class FileProperties {
     public static final String SIZE_KB = "sizeKB"; //$NON-NLS-1$
 
     /**
-     * size in MB: <code>0.2</code>
+     * size in MB: <code>0.2</code>.
      */
     public static final String SIZE_MB = "sizeMB"; //$NON-NLS-1$
 
     /**
-     * size and unit depending of size in bytes, KB, or MB: <code>257.3</code>
+     * size and unit depending of size in bytes, KB, or MB: <code>257.3</code>.
      */
     public static final String SIZE = "size"; //$NON-NLS-1$
 

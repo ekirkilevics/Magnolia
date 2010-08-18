@@ -46,10 +46,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Singleton class which should be used for any operation related to versioning VersionManager synchronizes all
- * operations like add version, restore version and remove version but it does not synchronize between operations
+ * CE version of the VersionManager. Limited to one version only.
+ *
  * @author Sameer Charles
- * $Id:VersionManager.java 6430 2006-09-20 11:25:35Z scharles $
  */
 public final class VersionManager extends BaseVersionManager {
 
@@ -59,7 +58,7 @@ public final class VersionManager extends BaseVersionManager {
     private static Logger log = LoggerFactory.getLogger(VersionManager.class);
 
     /**
-     * do not instanciate
+     * Don't instanciate.
      */
     public VersionManager() {
         try {
@@ -71,22 +70,19 @@ public final class VersionManager extends BaseVersionManager {
         }
     }
 
-    /**
-     * get instance
-     */
     public static VersionManager getInstance() {
         return Components.getSingleton(VersionManager.class);
     }
 
     /**
-     * since version is set "only revert" always return true
-     * */
+     * Since version is set "only revert" always return true.
+     */
     public boolean isInvalidMaxVersions() {
         return VersionConfig.getInstance().getMaxVersionAllowed() < 1;
     }
 
     /**
-     * set version history to max version possible
+     * Set version history to max version possible.
      * @param node
      * @throws RepositoryException if failed to get VersionHistory or fail to remove
      */

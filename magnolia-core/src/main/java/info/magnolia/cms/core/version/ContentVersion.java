@@ -71,6 +71,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Wraps a versioned node (frozen node) and allows traversing the hierarchy as if the node where in the original place.
  * @author Sameer Charles
  * $Id$
  */
@@ -95,42 +96,33 @@ public class ContentVersion extends DefaultContent {
         }
     }
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(ContentVersion.class);
 
     /**
-     * user who created this version
+     * User who created this version.
      */
     public static final String VERSION_USER = "versionUser"; //$NON-NLS-1$
 
     /**
-     * name of the base node
+     * Name of the base node.
      */
     public static final String NAME = "name";
 
     /**
-     * version node (nt:version)
+     * Version node (nt:version).
      */
     private Version state;
 
     /**
-     * base content
+     * The node as existing in the workspace. Not the version node.
      */
     private AbstractContent base;
 
     /**
-     * Rule used to create this version
+     * Rule used to create this version.
      */
     private Rule rule;
 
-    /**
-     * package private constructor
-     * @param thisVersion
-     * @param base content on which this version is based on
-     * @throws RepositoryException
-     */
     public ContentVersion(Version thisVersion, AbstractContent base) throws RepositoryException {
         if (thisVersion == null) {
             throw new RepositoryException("Failed to get ContentVersion, version does not exist");
@@ -163,7 +155,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Set frozen node of this version as working node
+     * Set frozen node of this version as working node.
      * @throws RepositoryException
      */
     private void init() throws RepositoryException {
@@ -183,7 +175,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Get creation date of this version
+     * Get creation date of this version.
      * @throws RepositoryException
      * @return creation date as calendar
      */
@@ -192,7 +184,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Return the name of the version represented by this object
+     * Return the name of the version represented by this object.
      * @return the versions name
      * @throws RepositoryException
      */
@@ -201,7 +193,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Get containing version history
+     * Get containing version history.
      * @throws RepositoryException
      * @return version history associated to this version
      */
@@ -223,7 +215,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * The name of the user who created this version
+     * The name of the user who created this version.
      */
     public String getUserName() {
         try {
@@ -236,7 +228,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * get original path of this versioned content
+     * Get original path of this versioned content.
      */
     public String getHandle() {
         return this.base.getHandle();
@@ -247,100 +239,63 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * create Content node under the current node with the specified name
-     * @param name of the node to be created as <code>Content</code>
-     * @return newly created <node>Content </node>
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Content createContent(String name) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * create Content node under the current node with the specified name
-     * @param name of the node to be created as <code>Content</code>
-     * @param contentType JCR node type as configured
-     * @return newly created <node>Content </node>
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Content createContent(String name, String contentType) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Create Content node under the current node with the specified name.
-     * @param name of the node to be created as <code>Content</code>
-     * @param contentType ItemType
-     * @return newly created <node>Content </node>
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Content createContent(String name, ItemType contentType) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * create top level NodeData object
-     * @param name to be created
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public NodeData createNodeData(String name) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Create NodeData with the given value and type.
-     * @param name to be created
-     * @param value to be set initially
-     * @param type propertyType
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public NodeData createNodeData(String name, Value value, int type) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Create NodeData with the given value and type.
-     * @param name to be created
-     * @param value to be set initially
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public NodeData createNodeData(String name, Value value) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * create top level NodeData object
-     * @param name to be created
-     * @param type propertyType
-     * @return NodeData requested <code>NodeData</code> object
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     *  Throws an {@link AccessDeniedException} as versions are read only.
      */
     public NodeData createNodeData(String name, int type) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * delete NodeData with the specified name
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void deleteNodeData(String name) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * you could call this method anytime to update working page properties - Modification date & Author ID
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void updateMetaData() throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
@@ -363,7 +318,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Get collection of specified content type
+     * Get collection of specified content type.
      * @param contentType JCR node type as configured
      * @return Collection of content nodes
      */
@@ -375,7 +330,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Get collection of specified content type
+     * Get collection of specified content type.
      * @param contentType ItemType
      * @return Collection of content nodes
      */
@@ -420,31 +375,18 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * get parent content object
-     * @return Content representing parent node
-     * @throws javax.jcr.PathNotFoundException
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Returns the parent of the base node.
      */
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return this.base.getParent();
     }
 
-    /**
-     * get absolute parent object starting from the root node
-     * @param level level at which the requested node exist, relative to the ROOT node
-     * @return Content representing parent node
-     * @throws info.magnolia.cms.security.AccessDeniedException if the current session does not have sufficient access
-     * rights to complete the operation
-     * @throws javax.jcr.RepositoryException if an error occurs
-     */
     public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return this.base.getAncestor(level);
     }
 
     /**
-     * Convenience method for taglib
+     * Convenience method for taglib.
      * @return Content representing node on level 0
      * @throws javax.jcr.RepositoryException if an error occurs
      */
@@ -453,7 +395,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
+     * Get node level from the ROOT node : FIXME implement getDepth in javax.jcr.
      * @return level at which current node exist, relative to the ROOT node
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException if an error occurs
@@ -463,10 +405,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * move current node to the specified location above the named <code>beforename</code>
-     * @param srcName where current node has to be moved
-     * @param beforeName name of the node before the current node has to be placed
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
@@ -485,7 +424,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * returns primary node type definition of the associated Node of this object
+     * Returns primary node type definition of the associated Node of this object.
      * @throws RepositoryException if an error occurs
      */
     public NodeType getNodeType() throws RepositoryException {
@@ -495,72 +434,49 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Restores this node to the state defined by the version with the specified versionName.
-     * @param versionName
-     * @param removeExisting
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void restore(String versionName, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Restores this node to the state defined by the specified version.
-     * @param version
-     * @param removeExisting
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void restore(Version version, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Restores the specified version to relPath, relative to this node.
-     * @param version
-     * @param relPath
-     * @param removeExisting
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void restore(Version version, String relPath, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Restores this node to the state recorded in the version specified by versionLabel.
-     * @param versionLabel
-     * @param removeExisting
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * add version leaving the node checked out
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Version addVersion() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to add version on version preview");
     }
 
     /**
-     * add version leaving the node checked out
-     * @param rule to be used to collect content
-     * @throws javax.jcr.RepositoryException if an error occurs
-     * @see info.magnolia.cms.util.Rule
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Version addVersion(Rule rule) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to add version on version preview");
     }
 
     /**
-     * Returns <code>true</code> if this <code>Item</code> has been saved but has subsequently been modified through
-     * the current session and therefore the state of this item as recorded in the session differs from the state of
-     * this item as saved. Within a transaction, <code>isModified</code> on an <code>Item</code> may return
-     * <code>false</code> (because the <code>Item</code> has been saved since the modification) even if the
-     * modification in question is not in persistent storage (because the transaction has not yet been committed). <p/>
-     * Note that in level 1 (that is, read-only) implementations, this method will always return <code>false</code>.
-     * @return <code>true</code> if this item is modified; <code>false</code> otherwise.
+     * Returns always false as verions are read only.
      */
     public boolean isModified() {
         log.error("Not valid for version");
@@ -568,61 +484,49 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * @return version history
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public VersionHistory getVersionHistory() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to read VersionHistory of Version");
     }
 
     /**
-     * @return Version iterator retreived from version history
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public VersionIterator getAllVersions() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get VersionIterator of Version");
     }
 
     /**
-     * get the current base version of this node
-     * @return base ContentVersion
-     * @throws javax.jcr.UnsupportedRepositoryOperationException
-     * @throws javax.jcr.RepositoryException
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public ContentVersion getBaseVersion() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get base version of Version");
     }
 
     /**
-     * get content view over the jcr version object
-     * @param version
-     * @return version object wrapped in ContentVersion
-     * @see info.magnolia.cms.core.version.ContentVersion
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public ContentVersion getVersionedContent(Version version) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get preview of Version itself");
     }
 
     /**
-     * get content view over the jcr version object
-     * @param versionName
-     * @return version object wrapped in ContentVersion
-     * @see info.magnolia.cms.core.version.ContentVersion
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get preview of Version itself");
     }
 
     /**
-     * Persists all changes to the repository if validation succeds
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void save() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * checks for the allowed access rights
+     * Checks for the allowed access rights.
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
@@ -631,23 +535,21 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Remove this path
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void delete() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Remove specified path
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void delete(String path) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * UUID of the node refrenced by this object
+     * UUID of the node refrenced by this object.
      * @return uuid
      */
     public String getUUID() {
@@ -655,101 +557,63 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * add specified mixin type if allowed
-     * @param type mixin type to be added
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void addMixin(String type) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * Removes the specified mixin node type from this node. Also removes mixinName from this node's jcr:mixinTypes
-     * property. <b>The mixin node type removal takes effect on save</b>.
-     * @param type , mixin type to be removed
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void removeMixin(String type) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
 
     /**
-     * places a lock on this object
-     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it applies only to
-     * this node.
-     * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
-     * or automatically unlocked for some other reason.
-     * @return A Lock object containing a lock token.
-     * @throws javax.jcr.lock.LockException if this node is already locked or <code>isDeep</code> is true and a
-     * descendant node of this node already holds a lock.
-     * @throws javax.jcr.RepositoryException if an error occurs
-     * @see javax.jcr.Node#lock(boolean, boolean)
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
     /**
-     * places a lock on this object
-     * @param isDeep if true this lock will apply to this node and all its descendants; if false, it applies only to
-     * this node.
-     * @param isSessionScoped if true, this lock expires with the current session; if false it expires when explicitly
-     * or automatically unlocked for some other reason.
-     * @param yieldFor number of milliseconds for which this method will try to get a lock
-     * @return A Lock object containing a lock token.
-     * @throws javax.jcr.lock.LockException if this node is already locked or <code>isDeep</code> is true and a
-     * descendant node of this node already holds a lock.
-     * @throws javax.jcr.RepositoryException if an error occurs
-     * @see javax.jcr.Node#lock(boolean, boolean)
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
     /**
-     * Returns the Lock object that applies to this node. This may be either a lock on this node itself or a deep lock
-     * on a node above this node.
-     * @throws javax.jcr.lock.LockException If no lock applies to this node, a LockException is thrown.
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public Lock getLock() throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
     /**
-     * Removes the lock on this node. Also removes the properties jcr:lockOwner and jcr:lockIsDeep from this node. These
-     * changes are persisted automatically; <b>there is no need to call save</b>.
-     * @throws javax.jcr.lock.LockException if either does not currently hold a lock, or holds a lock for which this
-     * Session does not have the correct lock token
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public void unlock() throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
     /**
-     * Returns true if this node holds a lock; otherwise returns false. To hold a lock means that this node has actually
-     * had a lock placed on it specifically, as opposed to just having a lock apply to it due to a deep lock held by a
-     * node above.
-     * @return a boolean
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public boolean holdsLock() throws RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
     /**
-     * Returns true if this node is locked either as a result of a lock held by this node or by a deep lock on a node
-     * above this node; otherwise returns false.
-     * @return a boolean
-     * @throws javax.jcr.RepositoryException if an error occurs
+     * Throws an {@link AccessDeniedException} as versions are read only.
      */
     public boolean isLocked() throws RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
     /**
-     * Get hierarchy manager if previously set for this object
+     * Get hierarchy manager if previously set for this object.
      * @return HierarchyManager
      */
     public HierarchyManager getHierarchyManager() {
@@ -757,7 +621,7 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * Get access manager if previously set for this object
+     * Get access manager if previously set for this object.
      * @return AccessManager
      * @deprecated use getHierarchyManager instead
      */

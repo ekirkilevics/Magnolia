@@ -34,6 +34,7 @@
 package info.magnolia.cms.core.ie;
 
 /**
+ * Deprecated.
  * @author gjoseph
  * @version $Revision$ ($Author$)
  * @deprecated since 4.0, use {@link info.magnolia.importexport.DataTransporter}

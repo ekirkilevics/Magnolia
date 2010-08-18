@@ -38,6 +38,7 @@ import info.magnolia.objectfactory.Components;
 
 
 /**
+ * Factory to create {@link QueryManager} objects.
  * @author Sameer Charles
  */
 

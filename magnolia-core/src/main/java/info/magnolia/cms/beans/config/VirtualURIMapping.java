@@ -36,7 +36,7 @@ package info.magnolia.cms.beans.config;
 /**
  * VirtualURIMapping implementations are used by {@link info.magnolia.cms.beans.config.VirtualURIManager} and {@link info.magnolia.cms.filters.VirtualUriFilter}
  * to transform incoming uri requests.
- * 
+ *
  * @author philipp
  * @version $Id$
  *
@@ -45,8 +45,15 @@ package info.magnolia.cms.beans.config;
 public interface VirtualURIMapping {
     public MappingResult mapURI(String uri);
 
+    /**
+     * Mapping information returned by {@link VirtualURIMapping#mapURI(String)}.
+     */
     public static class MappingResult{
         private String toURI;
+
+        /**
+         * Qualifies the matching (the length of the pattern). The best matching will win.
+         */
         private int level;
 
         public int getLevel() {

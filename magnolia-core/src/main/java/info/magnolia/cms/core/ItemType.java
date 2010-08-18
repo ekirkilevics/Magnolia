@@ -37,6 +37,7 @@ import java.io.Serializable;
 
 
 /**
+ * The Magnolia equivalent to {@link NodeType}.
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
  */

@@ -82,6 +82,9 @@ public class ServerConfiguration {
         return Components.getSingleton(ServerConfiguration.class);
     }
 
+    /**
+     * A special instance factory preventing recursive instantiation. The server configuration contains sub-nodes but only the direct properties belong to the server configuration bean.
+     */
     public static final class InstanceFactory extends ObservedComponentFactory<ServerConfiguration> {
         public InstanceFactory() {
             super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
