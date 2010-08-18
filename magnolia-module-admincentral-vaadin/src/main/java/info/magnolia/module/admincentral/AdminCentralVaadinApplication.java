@@ -49,7 +49,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.website.WebsitePage;
+import info.magnolia.module.admincentral.tree.ConfiguredTreePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +77,12 @@ public class AdminCentralVaadinApplication extends Application {
 
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
 
+    /**
+     * TODO this is a sad little hack to get hold of this instance in classes that create and return
+     * vaadin components (controllers). They need it in order to load icons with ClassResource.
+     */
+    public static AdminCentralVaadinApplication application;
+
     //This is needed to make application bookmarkable. See http://vaadin.com/book/-/page/advanced.urifu.html
     private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
@@ -95,6 +101,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     @Override
     public void init() {
+        application = this;
         /**
          * dan: simply remove next in order to get the default theme ("reindeer")
          */
@@ -143,7 +150,7 @@ public class AdminCentralVaadinApplication extends Application {
 
         // Set the startup page
         // TODO this should be the decision of navigation/menu
-        mainContainer.addComponent(new WebsitePage());
+        mainContainer.addComponent(new ConfiguredTreePage("website"));
     }
 
     void restoreApplicationStatus() {

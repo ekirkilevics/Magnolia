@@ -45,6 +45,9 @@ public class TreeDefinition {
     private String repository;
     private String path;
 
+    // TODO needs configuration for item types to include, for now only nodedata on/off is supported
+    private boolean includeNodeData;
+
     /**
      * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show their children. Used
      * in the security trees.
@@ -122,5 +125,13 @@ public class TreeDefinition {
 
     public void setContextMenu(List<MenuItem> contextMenu) {
         this.contextMenu = contextMenu;
+    }
+
+    public boolean isIncludeNodeData() {
+        return includeNodeData;
+    }
+
+    public void setIncludeNodeData(boolean includeNodeData) {
+        this.includeNodeData = includeNodeData;
     }
 }

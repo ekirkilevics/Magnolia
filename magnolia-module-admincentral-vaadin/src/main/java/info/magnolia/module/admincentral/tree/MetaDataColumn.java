@@ -33,8 +33,36 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.NodeData;
+
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Column that displays a property for a nodes MetaData. Used to display the modification date of content nodes.
  */
 public class MetaDataColumn extends TreeColumn {
+
+    // TODO should have name of MetaData property, for now always returns the mod. date
+
+    @Override
+    public Class<?> getType() {
+        return Date.class;
+    }
+
+    @Override
+    public Object getValue(Content content) {
+        MetaData metaData = content.getMetaData();
+        Calendar date = metaData.getModificationDate();
+        if (date != null)
+            return date.getTime();
+        return null;
+    }
+
+    @Override
+    public Object getValue(Content content, NodeData nodeData) {
+        return null;
+    }
 }

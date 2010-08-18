@@ -33,8 +33,28 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 /**
  * A column consisting of one or more icons. Used for permissions and activation status.
  */
 public class IconColumn extends TreeColumn {
+
+    // TODO this column isnt a value column per se, it will need completely special rendering...
+    
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
+
+    @Override
+    public Object getValue(Content content) {
+        return "";
+    }
+
+    @Override
+    public Object getValue(Content content, NodeData nodeData) {
+        return "";
+    }
 }

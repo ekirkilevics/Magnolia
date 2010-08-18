@@ -33,9 +33,40 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+
 /**
  * A column that displays the currently selected template for a node and allows the editor to choose from a list of
  * available templates. Used in the website tree.
  */
 public class TemplateColumn extends TreeColumn {
+
+    // TODO this class needs to implement special on-click behaviour (and on click it will need to access the Content object)
+
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
+
+    @Override
+    public Object getValue(Content content) {
+
+        String template = content.getMetaData().getTemplate();
+
+        TemplateManager templateManager = TemplateManager.getInstance();
+        Template definition = templateManager.getTemplateDefinition(template);
+        if (definition != null) {
+            return definition.getI18NTitle();
+        }
+
+        return "";
+    }
+
+    @Override
+    public Object getValue(Content content, NodeData nodeData) {
+        return "";
+    }
 }

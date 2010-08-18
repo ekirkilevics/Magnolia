@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 /**
  * Base class for tree columns.
  */
@@ -56,4 +59,10 @@ public abstract class TreeColumn {
     public void setWidth(int width) {
         this.width = width;
     }
+
+    public abstract Class<?> getType();
+
+    public abstract Object getValue(Content content);
+
+    public abstract Object getValue(Content content, NodeData nodeData);
 }

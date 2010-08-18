@@ -33,8 +33,26 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 /**
  * Describes a column that contains the label of the item with an optional icon.
  */
 public class LabelColumn extends TreeColumn {
+
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
+
+    @Override
+    public Object getValue(Content content) {
+        return content.getName();
+    }
+
+    @Override
+    public Object getValue(Content content, NodeData nodeData) {
+        return nodeData.getName();
+    }
 }

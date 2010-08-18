@@ -33,9 +33,36 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 /**
  * A column that displays a NodeData value when viewing a content node. Used in the website tree for the 'Title' column.
  */
 public class NodeDataColumn extends TreeColumn {
 
+    private String nodeDataName;
+
+    public void setNodeDataName(String nodeDataName) {
+        this.nodeDataName = nodeDataName;
+    }
+
+    public String getNodeDataName() {
+        return nodeDataName;
+    }
+
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
+
+    @Override
+    public Object getValue(Content content) {
+        return content.getNodeData(nodeDataName).getString();
+    }
+
+    @Override
+    public Object getValue(Content content, NodeData nodeData) {
+        return "";
+    }
 }

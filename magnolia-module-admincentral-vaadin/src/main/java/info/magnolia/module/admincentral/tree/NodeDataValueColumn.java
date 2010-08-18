@@ -33,9 +33,28 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 /**
  * Describes a column that displays the value of a NodeData. Used in the config tree when a row in the TreeTable is a
  * NodeData.
  */
 public class NodeDataValueColumn extends TreeColumn {
+
+
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
+
+    @Override
+    public Object getValue(Content content) {
+        return "";
+    }
+
+    @Override
+    public Object getValue(Content content, NodeData nodeData) {
+        return nodeData.getString();
+    }
 }

@@ -41,6 +41,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
+import info.magnolia.module.admincentral.tree.ConfiguredTreePage;
 import info.magnolia.module.admincentral.website.WebsitePage;
 
 import java.util.Iterator;
@@ -113,8 +114,11 @@ public class Menu extends Accordion{
                 addTab(label, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
         }
+
         //TODO for testing only. To be removed.
         addTab(new Label("For testing dialogs"), "Dialogs", null);
+        addTab(new Label("For viewing the old impl"), "Website (old)", null);
+
         addListener(new SelectedMenuItemTabChangeListener());
         mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
         uriFragmentUtility = ((AdminCentralVaadinApplication)getApplication()).getUriFragmentUtility();
@@ -206,7 +210,12 @@ public class Menu extends Accordion{
 
                 if("website".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
-                    mainContainer.addComponent(new WebsitePage());
+                    mainContainer.addComponent(new ConfiguredTreePage("website"));
+                }
+
+                if("configuration".equalsIgnoreCase(tab.getCaption())) {
+                    mainContainer.removeAllComponents();
+                    mainContainer.addComponent(new ConfiguredTreePage("config"));
                 }
 
                 //TODO remove this if block, it's here just for testing purposes
@@ -214,7 +223,13 @@ public class Menu extends Accordion{
                     mainContainer.removeAllComponents();
                     mainContainer.addComponent(new DialogSandboxPage());
                 }
-          }
+
+                //TODO remove this if block, it's here just for testing purposes
+                if("website (old)".equalsIgnoreCase(tab.getCaption())) {
+                    mainContainer.removeAllComponents();
+                    mainContainer.addComponent(new WebsitePage());
+                }
+            }
         }
     }
 }
