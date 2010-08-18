@@ -105,22 +105,22 @@ public class SimpleMailTag extends TagSupport {
     private String template;
 
     /**
-     * log the mails
+     * log the mails.
      */
     private boolean logging;
 
     /**
-     * encoding of the log file
+     * encoding of the log file.
      */
     private String loggingEncoding = "UTF8";
 
     /**
-     * directory to place the log files
+     * directory to place the log files.
      */
     private String loggingDirectory = "/mailtracking";
 
     /**
-     * The extension for the log files
+     * The extension for the log files.
      */
     private String loggingExtension = "log";
 

@@ -60,37 +60,37 @@ import javax.imageio.ImageIO;
  */
 public class Text2PngFactory {
 
-    /** Font name */
+    /** Font name. */
     private String fontname;
 
-    /** Font size */
+    /** Font size. */
     private int fontsize;
 
-    /** Text to render */
+    /** Text to render. */
     private String text = "";
 
-    /** Text color */
+    /** Text color. */
     private int r = 0;
 
     private int g = 0;
 
     private int b = 0;
 
-    /** Background colour */
+    /** Background colour. */
     private int br = 0xff;
 
     private int bg = 0xff;
 
     private int bb = 0xff;
 
-    /** Used to obtain fontmetrics for given fontname */
+    /** Used to obtain fontmetrics for given fontname. */
     private Graphics2D g2;
 
-    /** Cached Font object */
+    /** Cached Font object. */
     private Font cachedFont;
 
     /**
-     * Construct factory without setting font
+     * Construct factory without setting font.
      */
     public Text2PngFactory() {
         // Create a single-pixel buffered image to do font stuff with
@@ -100,7 +100,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Construct factory with given font face and size
+     * Construct factory with given font face and size.
      * @param fontname Name of TrueType font
      * @param fontsize Point size of font
      * @throws IOException if font can't be loaded
@@ -111,7 +111,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Construct factory with given font face and size
+     * Construct factory with given font face and size.
      * @param fontname Name of TrueType font
      * @param fontsize Point size of font
      * @param text The text to render
@@ -130,7 +130,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Renders the current text to a .png file
+     * Renders the current text to a .png file.
      * @param location Location to write the file out to
      * @throws IOException if file cannot be created
      */
@@ -139,7 +139,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Renders the current text to a .png file
+     * Renders the current text to a .png file.
      * @param location Location to write the file out to
      * @throws IOException if file cannot be created
      */
@@ -148,7 +148,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Renders the current text in the current font fontname, fontsize and color
+     * Renders the current text in the current font fontname, fontsize and color.
      * @return Image containing rendered text
      * @throws IOException if no font name has been specified yet
      */
@@ -199,7 +199,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Set the text to be rendered by the Txt2PngFactory
+     * Set the text to be rendered by the Txt2PngFactory.
      * @param text The text to render
      */
     public void setText(String text) {
@@ -207,7 +207,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Set 8-bit RGB values for text colour
+     * Set 8-bit RGB values for text colour.
      * @param r Red component (0-255)
      * @param g Green component (0-255)
      * @param b Blue component (0-255)
@@ -219,7 +219,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Set 8-bit RGB values for background colour
+     * Set 8-bit RGB values for background colour.
      * @param r Red component (0-255)
      * @param g Green component (0-255)
      * @param b Blue component (0-255)
@@ -231,7 +231,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Set the TrueType font to render with
+     * Set the TrueType font to render with.
      * @param fontname The name of the font to use
      */
     public void setFontFace(String fontname) throws IOException, FontFormatException {
@@ -243,7 +243,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Set the point size of the font
+     * Set the point size of the font.
      * @param fontsize The point size of the font
      */
     public void setFontSize(int fontsize) {
@@ -254,7 +254,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Updates the cached font object
+     * Updates the cached font object.
      * @throws IOException if the font can't be loaded
      * @throws FontFormatException if font is not a valid TTF
      */
@@ -301,7 +301,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Updates the cached font to new font derived with new size
+     * Updates the cached font to new font derived with new size.
      */
     private void updateSize() {
 
@@ -317,7 +317,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Get the FontMetrics object for the current font
+     * Get the FontMetrics object for the current font.
      * @return FontMetrics object for current font
      */
     private FontMetrics getFontMetrics() {
@@ -326,7 +326,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Get a Font object for the current fontname and fontsize
+     * Get a Font object for the current fontname and fontsize.
      * @return Font object for current name and size
      */
     private Font getFont() {
@@ -335,7 +335,7 @@ public class Text2PngFactory {
     }
 
     /**
-     * Sets rendering hints for optimal rendering quality
+     * Sets rendering hints for optimal rendering quality.
      * @param graphics Graphics2D object to set rendering options on
      */
     private void setOptimalRenderQuality(Graphics2D graphics) {

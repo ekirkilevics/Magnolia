@@ -65,26 +65,29 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li><code>navTitle</code>: a title to use for the navigation menu, if different from the real page title</li>
  * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
- * <li><code>wrappingElement</code>: an optional html element (div, span, p, etc) to go within the <a> tag wrapping the anchor text
+ * <li><code>wrappingElement</code>: an optional html element (div, span, p, etc) to go within the &lt;a&gt; tag wrapping the anchor text
  * </ul>
  *
  * @jsp.tag name="simpleNavigation" body-content="empty"
  * @jsp.tag-example
- * <cmsu:simpleNavigation startLevel="3" style="mystyle"/>
- * Will output the following:
- * <ul class="level3 mystyle">
- *     <li><a href="...">page 1 name </a></li>
- *     <li><a href="...">page 2 name </a></li>
- *     <li class="trail"><a href="...">page 3 name </a>
- *         <ul class="level3">
- *             <li><a href="...">subpage 1 name </a></li>
- *             <li><a href="...">subpage 2 name </a></li>
- *             <li><strong><a href="...">selected page name </a></strong></li>
- *         </ul>
- *     </li>
- *     <li><a href="...">page 4 name </a></li>
- * </ul>
+ * <pre>
+ * &lt;cmsu:simpleNavigation startLevel="3" style="mystyle"/&gt;
  *
+ * Will output the following:
+ *
+ * &lt;ul class="level3 mystyle"&gt;
+ *     &lt;li&gt;&lt;a href="..."&gt;page 1 name &lt;/a&gt;&lt;/li&gt;
+ *     &lt;li&gt;&lt;a href="..."&gt;page 2 name &lt;/a&gt;&lt;/li&gt;
+ *     &lt;li class="trail"&gt;&lt;a href="..."&gt;page 3 name &lt;/a&gt;
+ *         &lt;ul class="level3"&gt;
+ *             &lt;li&gt;&lt;a href="..."&gt;subpage 1 name &lt;/a&gt;&lt;/li&gt;
+ *             &lt;li&gt;&lt;a href="..."&gt;subpage 2 name &lt;/a&gt;&lt;/li&gt;
+ *             &lt;li&gt;&lt;strong&gt;&lt;a href="..."&gt;selected page name &lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
+ *         &lt;/ul&gt;
+ *     &lt;/li&gt;
+ *     &lt;li&gt;&lt;a href="..."&gt;page 4 name &lt;/a&gt;&lt;/li&gt;
+ * &lt;/ul&gt;
+ *</pre>
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -202,7 +205,7 @@ public class SimpleNavigationTag extends TagSupport {
     private String style;
 
     /**
-     * html element to wrap the anchortext. (i.e. <a><wrapper>...</wrapper></a>
+     * html element to wrap the anchortext. (i.e. &lt;a&gt;&lt;wrapper&gt;...&lt;/wrapper&gt;&lt;/a&gt;)
      */
     public String wrapperElement;
 

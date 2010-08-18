@@ -59,7 +59,7 @@ public class StrToObj extends BodyTagSupport {
     private String delims;
 
     /**
-     * name of the pageContext variable where the obj is put to
+     * name of the pageContext variable where the obj is put to.
      * @jsp.attribute required="true" rtexprvalue="false"
      */
     public void setVar(String var) {
@@ -67,7 +67,7 @@ public class StrToObj extends BodyTagSupport {
     }
 
     /**
-     * delimiters characters; default: "\n"
+     * delimiters characters; default: <code>"\n"</Code>.
      * @jsp.attribute required="false" rtexprvalue="false"
      */
     public void setDelims(String delims) {

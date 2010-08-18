@@ -59,11 +59,12 @@ import org.slf4j.LoggerFactory;
  * Output a set of snippets taken from any paragraph in the given page mathing any of the search term.
  * @jsp.tag name="searchResultSnippet" body-content="empty"
  * @jsp.tag-example
- * <cmsu:simplesearch query="${param.search}" var="results" />
- * <c:forEach items="${results}" var="page">
- *   <cmsu:searchResultSnippet query="${param.search}" page="${page}" />
- * </c:forEach>
- *
+ * <pre>
+ * &lt;cmsu:simplesearch query="${param.search}" var="results" /&gt;
+ * &lt;c:forEach items="${results}" var="page"&gt;
+ *   &lt;cmsu:searchResultSnippet query="${param.search}" page="${page}" /&gt;
+ * &lt;/c:forEach&gt;
+ *</pre>
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
