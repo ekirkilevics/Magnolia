@@ -36,6 +36,8 @@ package info.magnolia.cms.exchange;
 import java.util.Collection;
 
 /**
+ * Contract for activation targets (subscribers). Provides full access and management of subscribers.
+ * TODO: rename to SubscriberManager.
  * @author Sameer Charles
  * $Id$
  */
@@ -47,6 +49,11 @@ public interface ActivationManager {
 
     public void addSubscribers(Subscriber subscriber);
 
+    /**
+     * Path to stored configuration for the subscribers.
+     * @deprecated There's no real need to expose this as such a location is an implementation detail.
+     * @return
+     */
     public String getConfigPath();
 
     public boolean hasAnyActiveSubscriber();

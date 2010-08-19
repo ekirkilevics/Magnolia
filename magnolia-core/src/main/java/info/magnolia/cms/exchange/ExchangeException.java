@@ -39,7 +39,9 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * @author Sameer Charles $Id: ExchangeException.java 6341 2006-09-12 09:18:27Z philipp $
+ * Exception thrown in case of any problems occuring during activation.
+ * @author Sameer Charles
+ * @version $Id: ExchangeException.java 6341 2006-09-12 09:18:27Z philipp $
  */
 public class ExchangeException extends MgnlException {
 

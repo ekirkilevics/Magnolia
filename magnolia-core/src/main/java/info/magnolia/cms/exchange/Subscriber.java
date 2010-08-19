@@ -36,8 +36,9 @@ package info.magnolia.cms.exchange;
 import java.util.Collection;
 
 /**
+ * Subscriber is a java bean holding all configuration details of the subscription at runtime.
  * @author Sameer Charles
- * $Id$
+ * @version $Id$
  */
 public interface Subscriber {
 
@@ -62,9 +63,9 @@ public interface Subscriber {
     public Subscription getMatchedSubscription(String path, String repositoryId);
 
     public boolean isSubscribed(String path, String repositoryId);
-    
+
     public void setAuthenticationMethod(String method);
-    
+
     public String getAuthenticationMethod();
 
 }
