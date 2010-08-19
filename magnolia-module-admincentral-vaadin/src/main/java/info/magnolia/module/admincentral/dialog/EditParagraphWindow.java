@@ -35,6 +35,7 @@ package info.magnolia.module.admincentral.dialog;
 
 import com.vaadin.data.Validator;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
@@ -44,6 +45,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.control.StaticControl;
+
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -69,56 +72,70 @@ public class EditParagraphWindow extends Window {
         this.nodeName = nodeName;
         this.dialog = DialogRegistry.getInstance().getDialog(dialogName);
 
-        Content storageNode = getContentNode();
+        HorizontalLayout buttons = new HorizontalLayout();
+        Component mainViewArea;
 
-        setModal(true);
-        setResizable(false);
-        setScrollable(false);
-        setClosable(false);
-        setWidth("400px");
-        setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
-
-        TabSheet sheet = new TabSheet();
-
-        for (DialogTab dialogTab : dialog.getTabs()) {
-
+        if (dialog == null) {
             GridLayout grid = new GridLayout(2, 1);
             grid.setSpacing(true);
             grid.setMargin(true);
+            StaticControl warning = new StaticControl();
+            warning.setLabel("Dialog \"" + dialogName + "\" for this paragraph cannot be found. Please contact system administrator.");
+            warning.create(null, grid);
+            mainViewArea = grid;
+        } else {
 
-            for (DialogControl dialogItem : dialogTab.getFields()) {
+            Content storageNode = getContentNode();
 
-                dialogItem.create(storageNode, grid);
+            setModal(true);
+            setResizable(true);
+            setScrollable(false);
+            setClosable(false);
+            setWidth("800px");
+            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
 
-                grid.newLine();
+            TabSheet sheet = new TabSheet();
+
+            for (DialogTab dialogTab : dialog.getTabs()) {
+
+                GridLayout grid = new GridLayout(2, 1);
+                grid.setSpacing(true);
+                grid.setMargin(true);
+
+                for (DialogControl dialogItem : dialogTab.getFields()) {
+
+                    dialogItem.create(storageNode, grid);
+
+                    grid.newLine();
+                }
+
+                sheet.addTab(grid, dialogTab.getLabel(), null);
             }
 
-            sheet.addTab(grid, dialogTab.getLabel(), null);
+            Button close = new Button(dialog.getMessages().get("buttons.save"), new Button.ClickListener() {
+                public void buttonClick(Button.ClickEvent event) {
+                    if (save())
+                        closeWindow();
+                }
+            });
+            buttons.addComponent(close);
+            buttons.setComponentAlignment(close, "right");
+
+            mainViewArea = sheet;
         }
 
-        Button close = new Button("Save", new Button.ClickListener() {
-            public void buttonClick(Button.ClickEvent event) {
-                if (save())
-                    closeWindow();
-            }
-        });
-
-        Button cancel = new Button("Cancel", new Button.ClickListener() {
+        Button cancel = new Button(dialog.getMessages().get("buttons.cancel"), new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
                 closeWindow();
             }
         });
-
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.addComponent(close);
-        buttons.setComponentAlignment(close, "right");
         buttons.addComponent(cancel);
         buttons.setComponentAlignment(cancel, "right");
 
         VerticalLayout layout = (VerticalLayout) getContent();
         layout.setMargin(true);
         layout.setSpacing(true);
-        layout.addComponent(sheet);
+        layout.addComponent(mainViewArea);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, "right");
     }

@@ -60,10 +60,18 @@ public class DialogRegistry {
         }
     }
 
+    /**
+     * Gets dialog definition for dialog of provided name or null when such dialog is not registered.
+     * @param dialogName name of the dialog to retrieve. Case sensitive. Null is not allowed.
+     * @return dialog definition or null when dialog of requested name doesn't exist.
+     */
     public DialogDefinition getDialog(String dialogName) throws RepositoryException {
         DialogProvider dialogProvider;
         synchronized (providers) {
             dialogProvider = providers.get(dialogName);
+        }
+        if (dialogProvider == null) {
+            return null;
         }
         return dialogProvider.getDialogDefinition();
     }

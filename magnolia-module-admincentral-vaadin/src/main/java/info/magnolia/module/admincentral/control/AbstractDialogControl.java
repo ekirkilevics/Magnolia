@@ -38,6 +38,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogControl;
+import info.magnolia.module.admincentral.dialog.DialogTab;
+import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+
 
 import javax.jcr.RepositoryException;
 
@@ -45,11 +48,12 @@ import javax.jcr.RepositoryException;
  * Abstract base class for controls that have a label displayed to the left and a description placed below any
  * components that the implementing class wants to add.
  */
-public abstract class AbstractDialogControl implements DialogControl {
+public abstract class AbstractDialogControl extends I18nAwareComponent implements DialogControl {
 
     private String name;
     private String label;
     private String description;
+    private DialogTab parent;
 
     public String getName() {
         return name;
@@ -75,9 +79,21 @@ public abstract class AbstractDialogControl implements DialogControl {
         this.description = description;
     }
 
+    public DialogTab getParent() {
+        return parent;
+    }
+
+    public I18nAwareComponent getI18nAwareParent() {
+        return parent;
+    }
+
+    public void setParent(DialogTab parent) {
+        this.parent = parent;
+    }
+
     public final void create(Content storageNode, GridLayout grid) {
 
-        grid.addComponent(new Label(label));
+        grid.addComponent(new Label(getMessages().get(label)));
 
         VerticalLayout verticalLayout = new VerticalLayout();
 
@@ -96,4 +112,5 @@ public abstract class AbstractDialogControl implements DialogControl {
 
     public void save(Content storageNode) throws RepositoryException {
     }
+
 }

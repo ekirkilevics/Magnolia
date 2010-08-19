@@ -48,4 +48,5 @@ public interface DialogControl {
     void validate();
 
     void save(Content storageNode) throws RepositoryException;
+
 }

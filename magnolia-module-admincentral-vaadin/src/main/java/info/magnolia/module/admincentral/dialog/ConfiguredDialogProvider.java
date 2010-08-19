@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.dialog;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 
@@ -47,7 +48,8 @@ public class ConfiguredDialogProvider implements DialogProvider {
     private Content configNode;
 
     public ConfiguredDialogProvider(Content configNode) {
-        this.configNode = configNode;
+        // session that opened provided content might not be alive by the time we need to use this
+        this.configNode = new LazyContentWrapper(configNode);
     }
 
     public DialogDefinition getDialogDefinition() throws RepositoryException {

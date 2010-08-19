@@ -39,8 +39,15 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * AdminCentral Page/Section/View (main container content) for testing dialog stuff, temporary stuff.
@@ -51,6 +58,75 @@ public class DialogSandboxPage extends VerticalLayout {
 
         setMargin(true);
 
+        //GridLayout grid = createMockDialogGrid();
+
+        final TextField field = new TextField();
+        field.setRequired(true);
+        field.setRequiredError("please specify paragraph to edit first");
+        field.setMaxLength(500);
+        field.setInputPrompt("paragraph handle");
+        field.setRows(1);
+        addComponent(field);
+
+
+
+//        options = DialogRegistry.getInstance().getDialog(dialogName);
+//
+//        for (Map.Entry<String, String> entry : options.entrySet()) {
+//            comboBox.addItem(entry.getKey());
+//            comboBox.setItemCaption(entry.getKey(), entry.getValue());
+//        }
+//        addComponent(grid);
+
+        addComponent(new Button("New/Edit paragraph", new Button.ClickListener() {
+
+            public void buttonClick(Button.ClickEvent event) {
+                try {
+                    String paragraphHandle = (String) field.getValue();
+                    if (StringUtils.isBlank(paragraphHandle)) {
+                        return;
+                    }
+                    Content paragraph = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(paragraphHandle);
+                    String paragraphTemplate = paragraph.getMetaData().getTemplate();
+                    Paragraph paragraphDef = ParagraphManager.getInstance().getParagraphDefinition(paragraphTemplate);
+                    String pageHandle = getPageHandle(paragraph);
+                    String nodeCollection = StringUtils.substringBeforeLast(StringUtils.substringAfter(paragraphHandle, pageHandle + "/"), "/" + paragraph.getName());
+                    if ("/".equals(nodeCollection)) {
+                        // no collection at all
+                        nodeCollection = null;
+                    }
+
+                    getApplication().getMainWindow().addWindow(new EditParagraphWindow(paragraphDef.getDialog(),
+                            ContentRepository.WEBSITE, pageHandle, nodeCollection, paragraph.getName()));
+                } catch (RepositoryException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }));
+
+        /*
+        addComponent(new Button("Select paragraph", new Button.ClickListener() {
+
+            public void buttonClick(Button.ClickEvent event) {
+                getApplication().getMainWindow().addWindow(new SelectParagraphWindow((String) paragraphs.getValue(),
+                        (String) repository.getValue(), (String) path.getValue(), (String) nodeCollectionName.getValue(), (String) nodeName.getValue()));
+            }
+        }));
+        */
+    }
+
+    private String getPageHandle(Content content) throws RepositoryException {
+        while (content != null) {
+            if (content.getItemType().equals(ItemType.CONTENT)) {
+                return content.getHandle();
+            }
+            content = content.getParent();
+        }
+        return null;
+    }
+
+    private GridLayout createMockDialogGrid() {
         final TextField dialog = createLongTextField("mock");
         final TextField repository = createLongTextField(ContentRepository.CONFIG);
         final TextField path = createLongTextField("/modules/genuine-vaadin-central");
@@ -76,27 +152,7 @@ public class DialogSandboxPage extends VerticalLayout {
         grid.newLine();
         grid.addComponent(new Label("Paragraphs"));
         grid.addComponent(paragraphs);
-        addComponent(grid);
-
-        addComponent(new Button("New/Edit paragraph", new Button.ClickListener() {
-
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-
-                    getApplication().getMainWindow().addWindow(new EditParagraphWindow((String) dialog.getValue(),
-                            (String) repository.getValue(), (String) path.getValue(), (String) nodeCollectionName.getValue(), (String) nodeName.getValue()));
-                } catch (RepositoryException e) {
-                    e.printStackTrace();
-                }
-            }
-        }));
-        addComponent(new Button("Select paragraph", new Button.ClickListener() {
-
-            public void buttonClick(Button.ClickEvent event) {
-                getApplication().getMainWindow().addWindow(new SelectParagraphWindow((String) paragraphs.getValue(),
-                        (String) repository.getValue(), (String) path.getValue(), (String) nodeCollectionName.getValue(), (String) nodeName.getValue()));
-            }
-        }));
+        return grid;
     }
 
     private TextField createLongTextField(String value) {
