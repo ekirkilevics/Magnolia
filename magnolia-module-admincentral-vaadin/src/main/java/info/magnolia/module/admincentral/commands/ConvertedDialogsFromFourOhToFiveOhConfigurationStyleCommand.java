@@ -65,9 +65,9 @@ import info.magnolia.context.Context;
  * @version $Id:$
  *
  */
-public class ConvertDialogsCommand extends MgnlCommand {
+public class ConvertedDialogsFromFourOhToFiveOhConfigurationStyleCommand extends MgnlCommand {
 
-    private static final Logger log = LoggerFactory.getLogger(ConvertDialogsCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(ConvertedDialogsFromFourOhToFiveOhConfigurationStyleCommand.class);
 
     @Override
     public boolean execute(Context context) throws Exception {
