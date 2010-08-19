@@ -43,6 +43,8 @@ import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.tree.TreeController;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
@@ -51,10 +53,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -214,6 +218,21 @@ public class Menu extends Accordion{
                 if("configuration".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
                     mainContainer.addComponent(new TreeController().createTreeTable("config"));
+                }
+                //TODO do it the right way: this just for testing embedding an iframe
+                if("magnolia store".equalsIgnoreCase(tab.getCaption())) {
+                    URL url = null;
+                    try {
+                        url = new URL("http://localhost:8080/magnolia-empty-webapp/.magnolia/pages/allModulesList.html");
+                    } catch (MalformedURLException e) {
+                        getApplication().getMainWindow().showNotification("URL is not valid", e.getMessage(), Notification.TYPE_WARNING_MESSAGE);
+                        return;
+                    }
+                    mainContainer.removeAllComponents();
+                    Embedded iframe = new Embedded(null, new ExternalResource(url));
+                    iframe.setType(Embedded.TYPE_BROWSER);
+                    iframe.setSizeFull();
+                    mainContainer.addComponent(iframe);
                 }
 
                 //TODO remove this if block, it's here just for testing purposes
