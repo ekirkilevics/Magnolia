@@ -85,7 +85,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     private static final long serialVersionUID = 5773744599513735815L;
 
-    public static final String WINDOW_TITLE = "Magnolia AdminCentral";
+    //public static final String WINDOW_TITLE = "Magnolia AdminCentral";
 
     private Menu menu = createMenu();
 
@@ -147,10 +147,11 @@ public class AdminCentralVaadinApplication extends Application {
 
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
-        final Window mainWindow = new Window(WINDOW_TITLE, outerContainer);
+        final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
         setMainWindow(mainWindow);
         setLogoutURL(contextPath + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
 
+        // TODO: this layout is wrong!!! breaks completely on long user name or with different languages (eg spanish). It needs to be floating instead
         final AbsoluteLayout headerLayout = new AbsoluteLayout();
         headerLayout.setHeight("50px");
         headerLayout.setWidth("100%");
