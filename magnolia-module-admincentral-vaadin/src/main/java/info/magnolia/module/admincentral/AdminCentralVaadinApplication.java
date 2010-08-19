@@ -42,6 +42,7 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +88,8 @@ public class AdminCentralVaadinApplication extends Application {
 
     private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
 
+    private String contextPath;
+
     /**
      * TODO this is a sad little hack to get hold of this instance in classes that create and return
      * vaadin components (controllers). They need it in order to load icons with ClassResource.
@@ -112,9 +115,7 @@ public class AdminCentralVaadinApplication extends Application {
     @Override
     public void init() {
         application = this;
-        /**
-         * dan: simply remove next in order to get the default theme ("reindeer")
-         */
+        contextPath = "/"+ StringUtils.substringBetween(getURL().getPath(), "/");
         setTheme("runo");
         initLayout();
         restoreApplicationStatus();
@@ -136,11 +137,10 @@ public class AdminCentralVaadinApplication extends Application {
     void initLayout() {
 
         final VerticalLayout outerContainer = new VerticalLayout();
-        final Window mainWindow = new Window(WINDOW_TITLE, outerContainer);
         outerContainer.setSizeFull();
+        final Window mainWindow = new Window(WINDOW_TITLE, outerContainer);
         setMainWindow(mainWindow);
-        //FIXME how do I get the context path properly from within Vaadin?
-        setLogoutURL(getURL().getPath() + ".magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
+        setLogoutURL(contextPath + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
 
         final AbsoluteLayout headerLayout = new AbsoluteLayout();
         headerLayout.setHeight("50px");
@@ -153,9 +153,9 @@ public class AdminCentralVaadinApplication extends Application {
         magnoliaLogo.setHeight("36px");
         headerLayout.addComponent(magnoliaLogo, "left: 20px; top: 10px;");
 
-        final Label loggedUser = new Label(MgnlContext.getUser().getName());
+        final Label loggedUser = new Label("user: "+ MgnlContext.getUser().getName() + " |");
         loggedUser.setWidth("100px");
-        headerLayout.addComponent(loggedUser, "right: 40px; top: 10px;");
+        headerLayout.addComponent(loggedUser, "right: 50px; top: 10px;");
 
         final Button logout = new Button("logout");
         logout.setStyleName(BaseTheme.BUTTON_LINK);
@@ -164,7 +164,6 @@ public class AdminCentralVaadinApplication extends Application {
                 getMainWindow().getApplication().close();
             }
         });
-
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
 
         final VerticalLayout leftPaneLayout = new VerticalLayout();
@@ -173,7 +172,7 @@ public class AdminCentralVaadinApplication extends Application {
 
         // Set the startup page
         // TODO this should be the decision of navigation/menu;
-        TreeTable treeTable = new TreeController().createTreeTable("website");
+        final TreeTable treeTable = new TreeController().createTreeTable("website");
         mainContainer.addComponent(treeTable);
         bottomLeftCorner.setWidth("100%");
         mainContainer.addComponent(bottomLeftCorner);
@@ -208,7 +207,7 @@ public class AdminCentralVaadinApplication extends Application {
 
     /**
      * Tries to restore the menu status as it was saved i.e. by bookmarking the application URL.
-     * @param fragment - String
+     * @param fragment
      */
     void restoreSelectedMenuItemTabFromURIFragment(final String fragment) {
         for (Iterator<Component> iterator = menu.getComponentIterator(); iterator.hasNext();) {
