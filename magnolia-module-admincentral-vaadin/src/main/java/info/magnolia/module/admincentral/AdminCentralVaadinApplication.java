@@ -33,8 +33,14 @@
  */
 package info.magnolia.module.admincentral;
 
-
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
 import info.magnolia.module.admincentral.tree.TreeController;
 
@@ -67,7 +73,6 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
-
 /**
  * Magnolia's AdminCentral.
  *
@@ -99,6 +104,8 @@ public class AdminCentralVaadinApplication extends Application {
     //This is needed to make application bookmarkable. See http://vaadin.com/book/-/page/advanced.urifu.html
     private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
+    private Messages messages;
+
     private Menu createMenu() {
         Menu menu = null;
         try {
@@ -117,6 +124,8 @@ public class AdminCentralVaadinApplication extends Application {
         application = this;
         contextPath = "/"+ StringUtils.substringBetween(getURL().getPath(), "/");
         setTheme("runo");
+        //TODO: don't be lazy and make your own message bundle!
+        messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
         restoreApplicationStatus();
     }
@@ -153,9 +162,34 @@ public class AdminCentralVaadinApplication extends Application {
         magnoliaLogo.setHeight("36px");
         headerLayout.addComponent(magnoliaLogo, "left: 20px; top: 10px;");
 
-        final Label loggedUser = new Label("user: "+ MgnlContext.getUser().getName() + " |");
-        loggedUser.setWidth("100px");
-        headerLayout.addComponent(loggedUser, "right: 50px; top: 10px;");
+        final Label loggedUser = new Label(messages.get("central.user") + " ");
+        loggedUser.setWidth("35px");
+        headerLayout.addComponent(loggedUser, "right: 120px; top: 10px;");
+
+        final User user = MgnlContext.getUser();
+        final Button userPreferences = new Button(user.getName());
+        userPreferences.setStyleName(BaseTheme.BUTTON_LINK);
+        userPreferences.addListener(new Button.ClickListener () {
+            public void buttonClick(ClickEvent event) {
+                try {
+                    if (user instanceof MgnlUser) {
+                        Content userNode = ((MgnlUser) user).getUserNode();
+                        String handle = userNode.getHandle();
+                        String parent = StringUtils.substringBeforeLast(handle, "/");
+                        String nodeCollection = null;
+                        getMainWindow().addWindow(new EditParagraphWindow("userpreferences",
+                                ContentRepository.USERS, parent, nodeCollection, userNode.getName()));
+                    }
+                } catch (RepositoryException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        headerLayout.addComponent(userPreferences, "right: 65px; top: 10px;");
+
+        final Label divider = new Label(" |");
+        divider.setWidth("10px");
+        headerLayout.addComponent(divider, "right: 50px; top: 10px;");
 
         final Button logout = new Button("logout");
         logout.setStyleName(BaseTheme.BUTTON_LINK);
