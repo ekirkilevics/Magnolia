@@ -33,6 +33,8 @@
   <build>
     <plugins>
       <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
+
+      <!-- why are we useing 1.3-SNAPSHOT? this requires maven 2.1 but hudson uses 2.0 - will have to fix that
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
@@ -69,6 +71,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
       <plugin>
         <!-- TODO this is temporary ! Parent disables the validation due to amount of errors in the project, but this new module enables it explicitly. No more errors on new code !! -->
         <artifactId>maven-checkstyle-plugin</artifactId>
