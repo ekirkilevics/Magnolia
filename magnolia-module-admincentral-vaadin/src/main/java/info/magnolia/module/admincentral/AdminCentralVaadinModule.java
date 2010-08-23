@@ -57,21 +57,28 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
 
     private MenuConfiguration menu;
 
+    private boolean stopCalled;
+
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("mgnl50dialogs", ConfiguredDialogManager.getInstance());
 
-        // TODO: convert dialogs during upgrade process and not everytime on startup
-        try {
-            new ConvertedDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
-            new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
-        } catch (Exception e) {
-            log.error("Failed to convert dialog structure.", e);
+        // do not run import on every module restart
+        if (!this.stopCalled) {
+            try {
+                // TODO: convert dialogs during upgrade process and not everytime on startup, but not on restart
+                new ConvertedDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
+                new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
+            } catch (Exception e) {
+                log.error("Failed to convert dialog structure.", e);
+            }
+            this.stopCalled = false;
         }
 
         DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
     public void stop(ModuleLifecycleContext ctx) {
+        this.stopCalled = true;
     }
 
     public MenuConfiguration getMenu() {
@@ -81,4 +88,5 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
     public void setMenu(MenuConfiguration menu) {
         this.menu = menu;
     }
+
 }

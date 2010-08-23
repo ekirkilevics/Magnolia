@@ -59,7 +59,7 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
 
 
     private static final Logger log = LoggerFactory.getLogger(ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand.class);
-    private static final String NEW_MENU_LOCATION = "/modules/admin-central/config/menu";
+    private static final String NEW_MENNU_LOCATION = "/modules/admin-central/config/menu";
 
     @Override
     public boolean execute(Context context) throws Exception {
@@ -75,23 +75,25 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
     private void convertMenus(Context context) throws RepositoryException {
         HierarchyManager hm = context.getHierarchyManager(ContentRepository.CONFIG);
         Content menuFolder;
-        if (!hm.isExist(NEW_MENU_LOCATION)) {
-            menuFolder = ContentUtil.createPath(hm, NEW_MENU_LOCATION);
+        if (!hm.isExist(NEW_MENNU_LOCATION)) {
+            menuFolder = ContentUtil.createPath(hm, NEW_MENNU_LOCATION);
             // not saving here breaks copy ops later
             hm.save();
         } else {
-            menuFolder = hm.getContent(NEW_MENU_LOCATION);
+            menuFolder = hm.getContent(NEW_MENNU_LOCATION);
         }
         Collection<Content> menuItems = hm.getContent("/modules/adminInterface/config/menu").getChildren(ItemType.CONTENTNODE);
 
         for (Content menuItem : menuItems) {
-            String menuItemHandle = NEW_MENU_LOCATION + "/" + menuItem.getName();
+            String menuItemHandle = NEW_MENNU_LOCATION + "/" + menuItem.getName();
             if (menuItem.hasNodeData("importedTo50")) {
                 continue;
             }
-            hm.copyTo(menuItem.getHandle(), menuItemHandle);
+            if (!hm.isExist(menuItemHandle)) {
+                hm.copyTo(menuItem.getHandle(), menuItemHandle);
+                hm.save();
+            }
             Content newMenuItem = hm.getContent(menuItemHandle);
-            hm.save();
             transformSubmenus(hm, newMenuItem);
             menuItem.setNodeData("importedTo50", true);
         }
@@ -103,10 +105,24 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
         if (children.isEmpty()) {
             return;
         }
-        Content subMenus = menuItem.createContent("subMenus", ItemType.CONTENTNODE);
-        // yeah again ... there's move down the road
-        menuItem.save();
+
+        Content subMenus;
+        if (menuItem.hasContent("subMenus")) {
+            subMenus = menuItem.getContent("subMenus");
+        } else {
+            subMenus = menuItem.createContent("subMenus", ItemType.CONTENTNODE);
+            // yeah again ... there's move down the road
+            menuItem.save();
+        }
         for (Content sub : children) {
+            if (sub.getName().equals("subMenus")) {
+                // previous unsuccessful attempt?
+                continue;
+            }
+            if (subMenus.hasContent(sub.getName())) {
+                // skip, already done (or duplicate)
+                continue;
+            }
             // process submenus of the submenu (if any)
             transformSubmenus(hm, sub);
             hm.moveTo(sub.getHandle(), subMenus.getHandle() + "/" + sub.getName());
