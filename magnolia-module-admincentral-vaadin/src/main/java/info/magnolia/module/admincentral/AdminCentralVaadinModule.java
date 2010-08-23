@@ -39,10 +39,12 @@ import org.slf4j.LoggerFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.admincentral.commands.ConvertedDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.dialog.MockDialogProvider;
 import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
+import info.magnolia.module.admincentral.navigation.MenuConfiguration;
 
 /**
  * Magnolia's AdminCentral Module.
@@ -53,12 +55,15 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinModule.class);
 
+    private MenuConfiguration menu;
+
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("mgnl50dialogs", ConfiguredDialogManager.getInstance());
 
         // TODO: convert dialogs during upgrade process and not everytime on startup
         try {
             new ConvertedDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
+            new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
         } catch (Exception e) {
             log.error("Failed to convert dialog structure.", e);
         }
@@ -67,5 +72,13 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
     }
 
     public void stop(ModuleLifecycleContext ctx) {
+    }
+
+    public MenuConfiguration getMenu() {
+        return menu;
+    }
+
+    public void setMenu(MenuConfiguration menu) {
+        this.menu = menu;
     }
 }

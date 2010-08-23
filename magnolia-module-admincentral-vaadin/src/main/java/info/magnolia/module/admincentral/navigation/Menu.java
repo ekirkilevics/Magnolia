@@ -72,7 +72,7 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author fgrilli
  *
  */
-public class Menu extends Accordion{
+public class Menu extends Accordion {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
@@ -85,7 +85,7 @@ public class Menu extends Accordion{
     /**
      * @param path the path to the menu
      */
-    public Menu(final String path) throws RepositoryException{
+    public Menu(final String path) throws RepositoryException {
         node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
     }
     /**
@@ -110,7 +110,7 @@ public class Menu extends Accordion{
                     }
                 }
             }
-            if(gridLayout.getComponentIterator().hasNext()){
+            if (gridLayout.getComponentIterator().hasNext()) {
                 addTab(gridLayout, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             } else {
                 Label label = new Label();

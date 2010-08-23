@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
-  <name>genuine-vaadin-central</name>
+  <name>admin-central</name>
   <displayName>Magnolia GenUIne Vaadin Admin Interface</displayName>
   <description>New Magnolia Administration GUI</description>
   <class>info.magnolia.module.admincentral.AdminCentralVaadinModule</class>
