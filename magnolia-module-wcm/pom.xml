@@ -11,22 +11,19 @@
   <name>magnolia-module-wcm</name>
   <dependencies>
     <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.extjs</groupId>
-      <artifactId>gxt</artifactId>
-    </dependency>
-    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-admin-central</artifactId>
+      <artifactId>magnolia-module-admincentral-vaadin</artifactId>
       <version>5.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -35,37 +32,50 @@
   </dependencies>
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webResources>
-            <resource>
-              <!-- these are the resources copied by the remote-resources-plugin -->
-              <directory>${basedir}/target/maven-shared-archive-resources</directory>
-            </resource>
-          </webResources>
-        </configuration>
-      </plugin>
+      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
+        <version>1.3-SNAPSHOT</version>
         <executions>
           <execution>
+            <configuration>
+              <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
+              <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+              <runTarget>/AdminCentral/</runTarget>
+              <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
+              <noServer>true</noServer>
+              <port>8080</port>
+              <soyc>false</soyc>
+            </configuration>
             <goals>
-              <!--goal>compile</goal-->
-              <goal>generateAsync</goal>
               <goal>resources</goal>
+              <goal>compile</goal>
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <configuration>
+            </configuration>
+            <goals>
+              <goal>update-widgetset</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- TODO this is temporary ! Parent disables the validation due to amount of errors in the project, but this new module enables it explicitly. No more errors on new code !! -->
+        <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <module>info.magnolia.module.wcm.WCM</module>
-          <hostedWebapp>${basedir}/src/main/webapp</hostedWebapp>
-          <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
-          <inplace>true</inplace>
+          <failOnViolation>true</failOnViolation>
         </configuration>
       </plugin>
     </plugins>
-  </build>
+</build>
 </project>
