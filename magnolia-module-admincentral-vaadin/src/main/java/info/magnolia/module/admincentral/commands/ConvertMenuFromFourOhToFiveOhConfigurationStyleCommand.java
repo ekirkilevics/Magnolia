@@ -59,7 +59,7 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
 
 
     private static final Logger log = LoggerFactory.getLogger(ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand.class);
-    private static final String NEW_MENNU_LOCATION = "/modules/admin-central/config/menu";
+    private static final String NEW_MENU_LOCATION = "/modules/admin-central/config/menu";
 
     @Override
     public boolean execute(Context context) throws Exception {
@@ -75,17 +75,17 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
     private void convertMenus(Context context) throws RepositoryException {
         HierarchyManager hm = context.getHierarchyManager(ContentRepository.CONFIG);
         Content menuFolder;
-        if (!hm.isExist(NEW_MENNU_LOCATION)) {
-            menuFolder = ContentUtil.createPath(hm, NEW_MENNU_LOCATION);
+        if (!hm.isExist(NEW_MENU_LOCATION)) {
+            menuFolder = ContentUtil.createPath(hm, NEW_MENU_LOCATION);
             // not saving here breaks copy ops later
             hm.save();
         } else {
-            menuFolder = hm.getContent(NEW_MENNU_LOCATION);
+            menuFolder = hm.getContent(NEW_MENU_LOCATION);
         }
         Collection<Content> menuItems = hm.getContent("/modules/adminInterface/config/menu").getChildren(ItemType.CONTENTNODE);
 
         for (Content menuItem : menuItems) {
-            String menuItemHandle = NEW_MENNU_LOCATION + "/" + menuItem.getName();
+            String menuItemHandle = NEW_MENU_LOCATION + "/" + menuItem.getName();
             if (menuItem.hasNodeData("importedTo50")) {
                 continue;
             }
