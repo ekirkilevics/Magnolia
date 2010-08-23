@@ -80,7 +80,7 @@ public class MenuRegistry {
     }
 
     public Set<String> getMenuNames(){
-    	return Collections.unmodifiableSet(providers.keySet());
+        return Collections.unmodifiableSet(providers.keySet());
     }
 
     public static MenuRegistry getInstance() {
