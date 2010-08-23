@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>wcm</name>
+  <displayName>Magnolia Web Content Management</displayName>
+  <class>info.magnolia.module.wcm.WCMModule</class>
+  <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.0/*</version>
+    </dependency>
+    <dependency>
+      <name>templating</name>
+      <version>5.0/*</version>
+    </dependency>
+  </dependencies>
+
+  <servlets>
+    <servlet>
+      <name>PageEditor</name>
+      <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
+       <mappings>
+         <mapping>/PageEditor/*</mapping>
+      </mappings>
+       <params>
+         <param>
+           <name>application</name>
+           <value>info.magnolia.module.wcm.pageeditor.server.PageEditorApplication</value>
+         </param>
+         <param>
+           <name>widgetset</name>
+           <value>info.magnolia.module.admincentral.widgetset.AdminCentralWidgetset</value>
+         </param>
+       </params>
+    </servlet>
+  </servlets>
+</module>
