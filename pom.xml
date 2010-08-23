@@ -710,6 +710,7 @@ for Java Content Repositories (JCR).
     <module>magnolia-module-workflow</module>
     <module>magnolia-module-samples</module>
     <module>magnolia-module-store-client</module>
+    <module>magnolia-module-wcm</module>
     <module>magnolia-empty-webapp</module>
   </modules>
 </project>

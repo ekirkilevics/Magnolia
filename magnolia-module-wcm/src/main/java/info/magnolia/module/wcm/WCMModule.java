@@ -36,6 +36,12 @@ package info.magnolia.module.wcm;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
+/**
+ * Initializes the WCM module.
+ * @author pbaerfuss
+ * @version $Id$
+ *
+ */
 public class WCMModule  implements ModuleLifecycle {
 
     public void start(ModuleLifecycleContext ctx) {
@@ -44,6 +50,5 @@ public class WCMModule  implements ModuleLifecycle {
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
-
 
 }
