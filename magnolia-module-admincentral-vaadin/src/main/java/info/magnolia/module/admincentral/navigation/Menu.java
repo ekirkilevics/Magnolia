@@ -41,22 +41,22 @@ import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.AdminCentralVaadinModule;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.tree.TreeController;
+import info.magnolia.module.admincentral.views.ConfigurationTreeTableView;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.navigator.Navigator;
 
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
@@ -80,6 +80,7 @@ public class Menu extends Accordion {
     //getApplication() method does not return null.
     private ComponentContainer mainContainer = null;
     private UriFragmentUtility uriFragmentUtility = null;
+    private Navigator navigator = new Navigator();
 
 
     public Menu() throws RepositoryException {
@@ -110,7 +111,10 @@ public class Menu extends Accordion {
                 final Label label = new Label();
                 addTab(label, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
+
         }
+        //navigator needs to register views.
+        navigator.addView("test", ConfigurationTreeTableView.class);
 
         //TODO for testing only. To be removed.
         addTab(new Label("For testing dialogs"), "Dialogs", null);
@@ -128,6 +132,7 @@ public class Menu extends Accordion {
                 }
             }
     }
+
     /**
      * @param menuItem
      * @return
@@ -139,16 +144,6 @@ public class Menu extends Accordion {
     protected String getIconPath(MenuItemConfiguration menuItem){
         // TODO: why do we have to replace????
         return menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
-    }
-
-    protected Component getComponentByCaption(String caption){
-        for(Iterator<Component> iter = getApplication().getMainWindow().getComponentIterator(); iter.hasNext();){
-            Component component = iter.next();
-            if(caption.equalsIgnoreCase(component.getCaption())){
-                return component;
-            }
-        }
-        return null;
     }
 
     /**
@@ -183,13 +178,13 @@ public class Menu extends Accordion {
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
             setIcon(new ClassResource(getIconPath(item), getApplication()));
-            final String onClickAction = item.getOnClick().trim();
+            //final String onClickAction = item.getOnClick().trim();
             addListener(new Button.ClickListener () {
 
                 public void buttonClick(ClickEvent event) {
                     //ComponentContainer mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
                     //TODO add proper component here, for now just show onclick action
-                    getApplication().getMainWindow().showNotification("OnClick", onClickAction, Notification.TYPE_HUMANIZED_MESSAGE);
+                    getApplication().getMainWindow().showNotification("OnClick", item.getLocation(), Notification.TYPE_HUMANIZED_MESSAGE);
                 }
 
             });
@@ -209,7 +204,11 @@ public class Menu extends Accordion {
             TabSheet tabsheet = event.getTabSheet();
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
-                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
+                //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
+                //navigator.navigateTo(ConfigurationTreeTableView.class);
+                //mainContainer.removeAllComponents();
+                //mainContainer.addComponent(new ConfigurationTreeTableView());
+               getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
                 uriFragmentUtility.setFragment(tab.getCaption(), false);
 
                 if("website".equalsIgnoreCase(tab.getCaption())) {

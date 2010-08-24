@@ -31,19 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation;
+package info.magnolia.module.admincentral.views;
 
+import info.magnolia.module.admincentral.tree.TreeManager;
+
+import org.vaadin.navigator.Navigator;
+
+import com.vaadin.Application;
 /**
- * Action to be invoked by clicking on the menu.
- * @author had
- * @version $Id: $
+ * WebsiteTreeTableView.
+ * @author fgrilli
+ *
  */
-public class MenuAction {
-    //TODO this is needed by the menu. A View can either be an html file in classpath which will be embedded in an iframe
-    //or a the fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
-    private String view;
+public class WebsiteTreeTableView extends AbstractTreeTableView {
 
-    public String getView() {
-        return view;
+    private static final long serialVersionUID = 1L;
+
+    public WebsiteTreeTableView() {
+        setTreeDefinition(TreeManager.getInstance().getTree("website"));
+    }
+
+    public void init(Navigator navigator, Application application) {
+    }
+
+    public void navigateTo(String requestedDataId) {
+       System.out.println("requestedDataId is " +requestedDataId);
+
+    }
+
+    public String getWarningForNavigatingFrom() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
