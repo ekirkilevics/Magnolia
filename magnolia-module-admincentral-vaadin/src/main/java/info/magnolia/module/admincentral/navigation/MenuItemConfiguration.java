@@ -33,9 +33,17 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.terminal.ExternalResource;
+
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 /**
@@ -45,6 +53,8 @@ import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
  */
 public class MenuItemConfiguration extends I18nAwareComponent {
 
+    private Logger log = LoggerFactory.getLogger(MenuItemConfiguration.class);
+
     private String icon;
     private String label;
     private MenuAction action;
@@ -52,6 +62,7 @@ public class MenuItemConfiguration extends I18nAwareComponent {
     private MenuItemConfiguration parent;
     private String location;
     private String onClick;
+    private String actionClass;
 
 
     @Override
@@ -72,20 +83,48 @@ public class MenuItemConfiguration extends I18nAwareComponent {
         this.label = label;
     }
     public MenuAction getAction() {
+        if (this.action == null) {
+            try {
+                Class<? extends MenuAction> clazz = this.actionClass == null ? DefaultMenuAction.class : (Class<? extends MenuAction>) Class.forName(this.actionClass);
+
+                this.action = clazz.getConstructor(String.class).newInstance(getMessages().getWithDefault(getLabel(), getLabel()));
+                // this.action.setCaption("X" + );
+                if (this.getIcon() != null) {
+                    // TODO: might be too slow or chatty and we might want to swap it with ApplicationResource instead
+                    this.action.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + getIcon()));
+                }
+
+                if (this.getOnClick() != null) {
+                    ((DefaultMenuAction) this.action).setOnClick(this.getOnClick());
+                }
+                // TODO: transfer i18n as well ... or set this as a parent for i18n
+            } catch (Exception e) {
+                log.error("Failed to instantiate action " + actionClass, e);
+            }
+        }
         return action;
     }
     public void setAction(MenuAction action) {
         this.action = action;
     }
 
-    public Map<String, MenuItemConfiguration> getSubMenuItems() {
+    public void setActionClass(String className) {
+        this.action = null;
+        this.actionClass = className;
+    }
+
+    public String getActionClass() {
+        return this.actionClass;
+    }
+
+    public Map<String, MenuItemConfiguration> getMenuItems() {
         return subMenuItems;
     }
-    public void setSubMenuItems(Map<String, MenuItemConfiguration> subMenuItems) {
+    public void setMenuItems(Map<String, MenuItemConfiguration> subMenuItems) {
         this.subMenuItems = subMenuItems;
     }
 
-    public void addSubMenuItem(String name, MenuItemConfiguration subMenuItem) {
+    public void addMenuItem(String name, MenuItemConfiguration subMenuItem) {
         subMenuItem.setParent(this);
         subMenuItem.setLocation((this.getLocation() == null ? "" : this.getLocation())  +"/" + name);
         this.subMenuItems.put(name, subMenuItem);

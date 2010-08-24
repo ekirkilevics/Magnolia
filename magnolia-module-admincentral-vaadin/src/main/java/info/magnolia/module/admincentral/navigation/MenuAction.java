@@ -33,12 +33,22 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import com.vaadin.event.Action;
+import com.vaadin.terminal.Resource;
+
 /**
  * Action to be invoked by clicking on the menu.
  * @author had
  * @version $Id: $
  */
-public class MenuAction {
+public abstract class MenuAction extends Action implements Action.Listener {
+
+    public MenuAction(String label) {
+        super(label);
+    }
+
+    public abstract void handleAction(Object sender, Object target);
+
     //TODO this is needed by the menu. A View can either be an html file in classpath which will be embedded in an iframe
     //or a the fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
     private String view;
@@ -46,4 +56,5 @@ public class MenuAction {
     public String getView() {
         return view;
     }
+
 }

@@ -59,7 +59,8 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
 
 
     private static final Logger log = LoggerFactory.getLogger(ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand.class);
-    private static final String NEW_MENU_LOCATION = "/modules/admin-central/config/menuItems";
+    private static final String MENU_ITEMS = "menuItems";
+    private static final String NEW_MENU_LOCATION = "/modules/admin-central/config/" + MENU_ITEMS;
 
     @Override
     public boolean execute(Context context) throws Exception {
@@ -107,15 +108,15 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
         }
 
         Content subMenus;
-        if (menuItem.hasContent("subMenus")) {
-            subMenus = menuItem.getContent("subMenus");
+        if (menuItem.hasContent(MENU_ITEMS)) {
+            subMenus = menuItem.getContent(MENU_ITEMS);
         } else {
-            subMenus = menuItem.createContent("subMenus", ItemType.CONTENTNODE);
+            subMenus = menuItem.createContent(MENU_ITEMS, ItemType.CONTENTNODE);
             // yeah again ... there's move down the road
             menuItem.save();
         }
         for (Content sub : children) {
-            if (sub.getName().equals("subMenus")) {
+            if (sub.getName().equals(MENU_ITEMS)) {
                 // previous unsuccessful attempt?
                 continue;
             }

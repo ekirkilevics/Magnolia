@@ -45,6 +45,7 @@ import info.magnolia.module.admincentral.views.ConfigurationTreeTableView;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -53,10 +54,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
 
+import com.vaadin.event.Action;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
@@ -111,7 +114,6 @@ public class Menu extends Accordion {
                 final Label label = new Label();
                 addTab(label, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
-
         }
         //navigator needs to register views.
         navigator.addView("test", ConfigurationTreeTableView.class);
@@ -126,13 +128,13 @@ public class Menu extends Accordion {
 
     private void renderMenu(MenuItemConfiguration menuItem, GridLayout layout) {
             // sub menu items (2 levels only)
-            for (MenuItemConfiguration sub :  menuItem.getSubMenuItems().values()) {
+            for (MenuItemConfiguration sub :  menuItem.getMenuItems().values()) {
                 if (isMenuItemRenderable(sub)) {
                     layout.addComponent(new MenuItem(sub));
                 }
+                renderMenu(sub, layout);
             }
     }
-
     /**
      * @param menuItem
      * @return
@@ -143,10 +145,10 @@ public class Menu extends Accordion {
 
     protected String getIconPath(MenuItemConfiguration menuItem){
         // TODO: why do we have to replace????
-        return menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
+        return menuItem.getIcon() == null ? null : menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
     }
 
-    /**
+     /**
      * @param menuItem
      * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
      */
@@ -160,7 +162,7 @@ public class Menu extends Accordion {
      *
      */
     //TODO extract this as a top level class?
-    public class MenuItem extends Button{
+    public class MenuItem extends Button {
         private static final long serialVersionUID = 1L;
         private MenuItemConfiguration item;
 
@@ -174,20 +176,27 @@ public class Menu extends Accordion {
         @Override
         public void attach() {
             super.attach();
-            setCaption(getLabel(item));
+
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
-            setIcon(new ClassResource(getIconPath(item), getApplication()));
+
+            MenuAction action = item.getAction();
+            if (action != null) {
+                super.getActionManager().addAction(action);
+            } else {
+//                setCaption(getLabel(item));
+            //setIcon(new ClassResource(getIconPath(item), getApplication()));
             //final String onClickAction = item.getOnClick().trim();
-            addListener(new Button.ClickListener () {
-
-                public void buttonClick(ClickEvent event) {
-                    //ComponentContainer mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
-                    //TODO add proper component here, for now just show onclick action
-                    getApplication().getMainWindow().showNotification("OnClick", item.getLocation(), Notification.TYPE_HUMANIZED_MESSAGE);
-                }
-
-            });
+            //addListener(new Button.ClickListener () {
+            //
+            //    public void buttonClick(ClickEvent event) {
+            //        //ComponentContainer mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
+            //        //TODO add proper component here, for now just show onclick action
+            //        getApplication().getMainWindow().showNotification("OnClick", onClickAction, Notification.TYPE_HUMANIZED_MESSAGE);
+            //    }
+            //
+            //});
+            }
         }
     }
 
