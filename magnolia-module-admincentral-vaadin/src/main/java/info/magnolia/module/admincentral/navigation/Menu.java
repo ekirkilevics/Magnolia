@@ -42,11 +42,11 @@ import info.magnolia.module.admincentral.AdminCentralVaadinModule;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.tree.TreeController;
 import info.magnolia.module.admincentral.views.ConfigurationTreeTableView;
+import info.magnolia.module.admincentral.views.IFrameView;
+import info.magnolia.objectfactory.Classes;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.jcr.RepositoryException;
 
@@ -54,19 +54,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
 
-import com.vaadin.event.Action;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
 
@@ -81,12 +76,11 @@ public class Menu extends Accordion {
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
     //keep a reference to the Application's main container.The reference is initialized in the attach() method, so that we're sure the
     //getApplication() method does not return null.
-    private ComponentContainer mainContainer = null;
-    private UriFragmentUtility uriFragmentUtility = null;
-    private Navigator navigator = new Navigator();
+    private ComponentContainer mainContainer;
+    private Navigator navigator;
 
-
-    public Menu() throws RepositoryException {
+    public Menu(Navigator navigator) throws RepositoryException {
+        this.navigator = navigator;
     }
     /**
      * See {@link com.vaadin.ui.AbstractComponent#getApplication()} javadoc as to why we need to do most of the initialization here and not in the constructor.
@@ -97,7 +91,8 @@ public class Menu extends Accordion {
 
         final Map<String, MenuItemConfiguration> menuConfig = ((AdminCentralVaadinModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
 
-        for (MenuItemConfiguration menuItem : menuConfig.values()) {
+        for (Entry<String, MenuItemConfiguration> menuItemEntry : menuConfig.entrySet()) {
+            MenuItemConfiguration menuItem = menuItemEntry.getValue();
             // check permission
             if (!isMenuItemRenderable(menuItem)) {
                 continue;
@@ -114,16 +109,35 @@ public class Menu extends Accordion {
                 final Label label = new Label();
                 addTab(label, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
-        }
-        //navigator needs to register views.
-        navigator.addView("test", ConfigurationTreeTableView.class);
+            // navigator needs to register views.
+            registerView(navigator, menuItemEntry);
 
+        }
         //TODO for testing only. To be removed.
         addTab(new Label("For testing dialogs"), "Dialogs", null);
 
         addListener(new SelectedMenuItemTabChangeListener());
         mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
-        uriFragmentUtility = ((AdminCentralVaadinApplication)getApplication()).getUriFragmentUtility();
+    }
+
+    private void registerView(Navigator navigator, Entry<String, MenuItemConfiguration> entry){
+        if(entry.getValue().getAction() == null || entry.getValue().getAction().getView() == null ){
+            log.warn("MenuAction or view for '{}' is null, skipping it...", entry.getKey());
+            return;
+        }
+        String view = entry.getValue().getAction().getView();
+        Class viewClass = null;
+        if (view.endsWith(".html") || view.startsWith("http")) {
+           viewClass = IFrameView.class;
+        } else {
+            try {
+                viewClass = Classes.getClassFactory().forName(view);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            log.info("Registering navigator view ['{}', {}]",entry.getKey(), viewClass);
+            navigator.addView(entry.getKey(), viewClass);
+        }
     }
 
     private void renderMenu(MenuItemConfiguration menuItem, GridLayout layout) {
@@ -132,9 +146,9 @@ public class Menu extends Accordion {
                 if (isMenuItemRenderable(sub)) {
                     layout.addComponent(new MenuItem(sub));
                 }
-                renderMenu(sub, layout);
             }
-    }
+        }
+
     /**
      * @param menuItem
      * @return
@@ -145,10 +159,10 @@ public class Menu extends Accordion {
 
     protected String getIconPath(MenuItemConfiguration menuItem){
         // TODO: why do we have to replace????
-        return menuItem.getIcon() == null ? null : menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
+        return menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
     }
 
-     /**
+    /**
      * @param menuItem
      * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
      */
@@ -162,7 +176,7 @@ public class Menu extends Accordion {
      *
      */
     //TODO extract this as a top level class?
-    public class MenuItem extends Button {
+    public class MenuItem extends Button{
         private static final long serialVersionUID = 1L;
         private MenuItemConfiguration item;
 
@@ -176,7 +190,7 @@ public class Menu extends Accordion {
         @Override
         public void attach() {
             super.attach();
-
+            setCaption(getLabel(item));
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
 
@@ -184,7 +198,7 @@ public class Menu extends Accordion {
             if (action != null) {
                 super.getActionManager().addAction(action);
             } else {
-//                setCaption(getLabel(item));
+            //setCaption(getLabel(item));
             //setIcon(new ClassResource(getIconPath(item), getApplication()));
             //final String onClickAction = item.getOnClick().trim();
             //addListener(new Button.ClickListener () {
@@ -196,8 +210,8 @@ public class Menu extends Accordion {
             //    }
             //
             //});
-            }
-        }
+          }
+       }
     }
 
     /**
@@ -217,8 +231,7 @@ public class Menu extends Accordion {
                 //navigator.navigateTo(ConfigurationTreeTableView.class);
                 //mainContainer.removeAllComponents();
                 //mainContainer.addComponent(new ConfigurationTreeTableView());
-               getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
-                uriFragmentUtility.setFragment(tab.getCaption(), false);
+                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
 
                 if("website".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
@@ -227,22 +240,16 @@ public class Menu extends Accordion {
 
                 if("configuration".equalsIgnoreCase(tab.getCaption())) {
                     mainContainer.removeAllComponents();
-                    mainContainer.addComponent(new TreeController().createTreeTable("config"));
+                    mainContainer.addComponent(new ConfigurationTreeTableView());
+                    navigator.navigateTo(ConfigurationTreeTableView.class);
                 }
                 //TODO do it the right way: this just for testing embedding an iframe
                 if("magnolia store".equalsIgnoreCase(tab.getCaption())) {
-                    URL url = null;
-                    try {
-                        url = new URL("http://localhost:8080/magnolia-empty-webapp/.magnolia/pages/allModulesList.html");
-                    } catch (MalformedURLException e) {
-                        getApplication().getMainWindow().showNotification("URL is not valid", e.getMessage(), Notification.TYPE_WARNING_MESSAGE);
-                        return;
-                    }
                     mainContainer.removeAllComponents();
-                    Embedded iframe = new Embedded(null, new ExternalResource(url));
-                    iframe.setType(Embedded.TYPE_BROWSER);
-                    iframe.setSizeFull();
+                    IFrameView iframe = new IFrameView();
+                    iframe.setSource(new ExternalResource("http://localhost:8080/magnolia-empty-webapp/.magnolia/pages/allModulesList.html"));
                     mainContainer.addComponent(iframe);
+                    navigator.navigateTo(IFrameView.class);
                 }
 
                 //TODO remove this if block, it's here just for testing purposes

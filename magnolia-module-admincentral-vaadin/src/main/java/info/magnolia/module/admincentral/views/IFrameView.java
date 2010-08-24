@@ -31,29 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation;
+package info.magnolia.module.admincentral.views;
 
-import com.vaadin.event.Action;
+import org.vaadin.navigator.Navigator;
+import org.vaadin.navigator.Navigator.View;
+
+import com.vaadin.Application;
+import com.vaadin.ui.Embedded;
 
 /**
- * Action to be invoked by clicking on the menu.
- * @author had
- * @version $Id: $
+ * A {@link View} component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
+ * Before being usable (that is fully initialized), this object must explicitly set the source. E.g. in your code you need to call something like
+ * <pre>
+ *  IFrameView iframe = new IFrameView();
+ *  iframe.setSource(new ExternalResource("http://www.magnolia-cms.com"));
+ * </pre>
+ * @author fgrilli
+ *
  */
-public abstract class MenuAction extends Action implements Action.Listener {
+public class IFrameView extends Embedded implements View {
+    private static final long serialVersionUID = 1L;
 
-    public MenuAction(String label) {
-        super(label);
+    public IFrameView() {
+        setType(Embedded.TYPE_BROWSER);
+        setSizeFull();
+    }
+    public void init(Navigator navigator, Application application) {
+        // TODO Auto-generated method stub
+
     }
 
-    public abstract void handleAction(Object sender, Object target);
+    public void navigateTo(String requestedDataId) {
+        System.out.println("IFrameView requested data is " + requestedDataId );
 
-    //TODO this is needed by the menu. A View can either be an html file in classpath which will be embedded in an iframe
-    //or a the fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
-    private String view;
+    }
 
-    public String getView() {
-        return view;
+    public String getWarningForNavigatingFrom() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

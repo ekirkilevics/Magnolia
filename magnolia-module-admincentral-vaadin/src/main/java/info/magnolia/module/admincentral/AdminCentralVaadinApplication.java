@@ -51,25 +51,27 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vaadin.navigator.Navigator;
+import org.vaadin.navigator.Navigator.NavigableApplication;
 
 import com.vaadin.Application;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
-import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -79,15 +81,13 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author dan
  * @author fgrilli
  */
-public class AdminCentralVaadinApplication extends Application {
+public class AdminCentralVaadinApplication extends Application implements NavigableApplication{
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinApplication.class);
 
     private static final long serialVersionUID = 5773744599513735815L;
 
     //public static final String WINDOW_TITLE = "Magnolia AdminCentral";
-
-    private Menu menu = createMenu();
 
     private VerticalLayout mainContainer = new VerticalLayout();
 
@@ -106,10 +106,10 @@ public class AdminCentralVaadinApplication extends Application {
 
     private Messages messages;
 
-    private Menu createMenu() {
+    private Menu createMenu(Navigator navigator) {
         Menu menu = null;
         try {
-            menu = new Menu();
+            menu = new Menu(navigator);
             menu.setSizeFull();
         }
         catch (RepositoryException re) {
@@ -126,8 +126,8 @@ public class AdminCentralVaadinApplication extends Application {
         setTheme("runo");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
-        initLayout();
-        restoreApplicationStatus();
+        setMainWindow(createNewWindow());
+        //restoreApplicationStatus();
     }
 
     //TODO can this arise concurrency issues? Use ThreadLocal? Anyway, it should not be an issue, because as stated at
@@ -143,11 +143,13 @@ public class AdminCentralVaadinApplication extends Application {
     /**
      * package-private modifier is used for better testing possibilities...
      */
-    void initLayout() {
+    private Window initLayout() {
 
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
         final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
+        final Navigator navigator = new Navigator();
+        mainWindow.addComponent(navigator);
         setMainWindow(mainWindow);
         setLogoutURL(contextPath + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
 
@@ -202,6 +204,7 @@ public class AdminCentralVaadinApplication extends Application {
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
 
         final VerticalLayout leftPaneLayout = new VerticalLayout();
+        final Menu menu = createMenu(navigator);
         leftPaneLayout.addComponent(menu);
         leftPaneLayout.addComponent(uriFragmentUtility);
 
@@ -225,9 +228,11 @@ public class AdminCentralVaadinApplication extends Application {
         mainContainer.setExpandRatio(treeTable, 15.0f);
         mainContainer.setExpandRatio(bottomLeftCorner, 1.0f);
 
+        return mainWindow;
+
     }
 
-    void restoreApplicationStatus() {
+    /*void restoreApplicationStatus() {
         uriFragmentUtility.addListener(new FragmentChangedListener() {
 
             public void fragmentChanged(FragmentChangedEvent source) {
@@ -244,7 +249,7 @@ public class AdminCentralVaadinApplication extends Application {
      * Tries to restore the menu status as it was saved i.e. by bookmarking the application URL.
      * @param fragment
      */
-    void restoreSelectedMenuItemTabFromURIFragment(final String fragment) {
+    /*void restoreSelectedMenuItemTabFromURIFragment(final String fragment) {
         for (Iterator<Component> iterator = menu.getComponentIterator(); iterator.hasNext();) {
             Component tabContent = iterator.next();
             Tab tab = menu.getTab(tabContent);
@@ -254,5 +259,15 @@ public class AdminCentralVaadinApplication extends Application {
                 return;
             }
         }
+    }*/
+
+    @Override
+    public Window getWindow(String name) {
+        // Use navigator to manage multiple browser windows
+        return Navigator.getWindow(this, name, super.getWindow(name));
+    }
+
+    public Window createNewWindow() {
+        return initLayout();
     }
 }
