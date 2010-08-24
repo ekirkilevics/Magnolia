@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Represents a menu item.
  * @author fgrilli
- *
+ * @deprecated decide whether we need this or not
  */
 public class MenuDefinition {
     private String name;

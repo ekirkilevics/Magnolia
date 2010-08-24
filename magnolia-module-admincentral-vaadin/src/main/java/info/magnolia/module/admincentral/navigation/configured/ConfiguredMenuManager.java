@@ -49,6 +49,7 @@ import java.util.Set;
 
 /**
  * ObservedManager for menu items configured in repository.
+ * @deprecated decide whether we need this or not
  */
 public class ConfiguredMenuManager extends ObservedManager {
 

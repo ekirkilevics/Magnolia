@@ -44,6 +44,7 @@ import java.util.Set;
 
 /**
  * Maintains a registry of menu providers registered by name.
+ * @deprecated decide whether we need this or not
  */
 public class MenuRegistry {
 

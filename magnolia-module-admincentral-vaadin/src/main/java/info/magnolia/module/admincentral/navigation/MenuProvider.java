@@ -37,7 +37,7 @@ import javax.jcr.RepositoryException;
 /**
  * Provides a {@link MenuDefinition}.
  * @author fgrilli
- *
+ * @deprecated decide whether we need this or not
  */
 public interface MenuProvider {
     MenuDefinition getMenuDefinition() throws RepositoryException;
