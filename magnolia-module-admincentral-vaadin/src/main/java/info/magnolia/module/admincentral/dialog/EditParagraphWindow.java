@@ -44,6 +44,7 @@ import com.vaadin.ui.Window;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.control.StaticControl;
 
@@ -124,7 +125,9 @@ public class EditParagraphWindow extends Window {
             mainViewArea = sheet;
         }
 
-        Button cancel = new Button(dialog.getMessages().get("buttons.cancel"), new Button.ClickListener() {
+        final String key = "buttons.cancel";
+        final String label = dialog != null ? dialog.getMessages().get(key) : MessagesManager.getMessages().getWithDefault(key, key);
+        Button cancel = new Button(label, new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
                 closeWindow();
             }

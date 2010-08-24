@@ -91,7 +91,8 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
             String modulePath =  StringUtils.substringBefore(dialogHandle, "/dialogs/");
             String newDialogHandle = modulePath + "/mgnl50dialogs/" + StringUtils.substringAfter(dialogHandle, "/dialogs/");
             if (hm.isExist(newDialogHandle)) {
-                throw new RuntimeException("Failed to convert " + dialogHandle + " to " + newDialogHandle + " due to path conflict.");
+                log.error("Failed to convert " + dialogHandle + " to " + newDialogHandle + " due to path conflict.");
+                continue;
             } else {
                 // _copy_ dialog
                 String parentPath = StringUtils.substringBeforeLast(newDialogHandle, "/");
