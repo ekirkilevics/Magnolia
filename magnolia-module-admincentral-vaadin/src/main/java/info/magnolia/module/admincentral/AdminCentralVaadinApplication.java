@@ -109,7 +109,7 @@ public class AdminCentralVaadinApplication extends Application {
     private Menu createMenu() {
         Menu menu = null;
         try {
-            menu = new Menu("/modules/adminInterface/config/menu");
+            menu = new Menu();
             menu.setSizeFull();
         }
         catch (RepositoryException re) {
@@ -163,7 +163,7 @@ public class AdminCentralVaadinApplication extends Application {
         magnoliaLogo.setHeight("36px");
         headerLayout.addComponent(magnoliaLogo, "left: 20px; top: 10px;");
 
-        final Label loggedUser = new Label(messages.get("central.user") + " ");
+        final Label loggedUser = new Label(messages.get("central.user"));
         loggedUser.setWidth("35px");
         headerLayout.addComponent(loggedUser, "right: 120px; top: 10px;");
 

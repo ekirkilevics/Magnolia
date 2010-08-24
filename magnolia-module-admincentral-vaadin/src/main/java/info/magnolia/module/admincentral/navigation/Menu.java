@@ -34,7 +34,6 @@
 package info.magnolia.module.admincentral.navigation;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
@@ -77,17 +76,13 @@ public class Menu extends Accordion {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
-    private Content node = null;
     //keep a reference to the Application's main container.The reference is initialized in the attach() method, so that we're sure the
     //getApplication() method does not return null.
     private ComponentContainer mainContainer = null;
     private UriFragmentUtility uriFragmentUtility = null;
 
-    /**
-     * @param path the path to the menu
-     */
-    public Menu(final String path) throws RepositoryException {
-        node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(path);
+
+    public Menu() throws RepositoryException {
     }
     /**
      * See {@link com.vaadin.ui.AbstractComponent#getApplication()} javadoc as to why we need to do most of the initialization here and not in the constructor.
