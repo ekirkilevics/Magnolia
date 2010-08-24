@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admincentral;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +47,7 @@ import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFive
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.dialog.MockDialogProvider;
 import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
-import info.magnolia.module.admincentral.navigation.MenuConfiguration;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 
 /**
  * Magnolia's AdminCentral Module.
@@ -55,7 +58,7 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinModule.class);
 
-    private MenuConfiguration menu;
+    private Map<String, MenuItemConfiguration> menu = new LinkedHashMap<String, MenuItemConfiguration>();
 
     private boolean stopCalled;
 
@@ -81,12 +84,15 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
         this.stopCalled = true;
     }
 
-    public MenuConfiguration getMenu() {
+    public Map<String, MenuItemConfiguration> getMenuItems() {
         return menu;
     }
 
-    public void setMenu(MenuConfiguration menu) {
+    public void setMenuItems(Map<String, MenuItemConfiguration> menu) {
         this.menu = menu;
     }
 
+    public void addMenuItem(String name, MenuItemConfiguration menuItem) {
+        this.menu.put(name, menuItem);
+    }
 }

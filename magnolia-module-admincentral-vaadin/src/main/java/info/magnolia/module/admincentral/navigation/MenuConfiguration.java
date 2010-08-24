@@ -33,13 +33,15 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 
 /**
  * Stub for extending menu configuration with extra information. For now it is just a simple ordered list of items.
  * @author had
  * @version $Id: $
+ * @deprecated not used
  */
-public class MenuConfiguration extends ArrayList<MenuItemConfiguration> {
+public class MenuConfiguration extends LinkedHashMap<String, MenuItemConfiguration> {
 
 }

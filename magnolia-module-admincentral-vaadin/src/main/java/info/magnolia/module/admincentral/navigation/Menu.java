@@ -35,17 +35,18 @@ package info.magnolia.module.admincentral.navigation;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
+import info.magnolia.module.admincentral.AdminCentralVaadinModule;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.tree.TreeController;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
@@ -95,25 +96,23 @@ public class Menu extends Accordion {
     public void attach() {
         super.attach();
 
-        for (Iterator<Content> iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
-            Content menuItem = iter.next();
-            GridLayout gridLayout = new GridLayout(1,1);
+        final Map<String, MenuItemConfiguration> menuConfig = ((AdminCentralVaadinModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
+
+        for (MenuItemConfiguration menuItem : menuConfig.values()) {
+            // check permission
+            if (!isMenuItemRenderable(menuItem)) {
+                continue;
+            }
+
+            // layout
+            final GridLayout gridLayout = new GridLayout(1,1);
             gridLayout.setSpacing(true);
             gridLayout.setMargin(true);
-            // check permission
-            if (isMenuItemRenderable(menuItem)) {
-                // sub menu items (2 levels only)
-                for (Iterator<Content> iterator = menuItem.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
-                    Content sub = iterator.next();
-                    if (isMenuItemRenderable(sub)) {
-                        gridLayout.addComponent(new MenuItem(sub));
-                    }
-                }
-            }
+            renderMenu(menuItem, gridLayout);
             if (gridLayout.getComponentIterator().hasNext()) {
                 addTab(gridLayout, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             } else {
-                Label label = new Label();
+                final Label label = new Label();
                 addTab(label, getLabel(menuItem), new ClassResource(getIconPath(menuItem), getApplication()));
             }
         }
@@ -126,17 +125,25 @@ public class Menu extends Accordion {
         uriFragmentUtility = ((AdminCentralVaadinApplication)getApplication()).getUriFragmentUtility();
     }
 
+    private void renderMenu(MenuItemConfiguration menuItem, GridLayout layout) {
+            // sub menu items (2 levels only)
+            for (MenuItemConfiguration sub :  menuItem.getSubMenuItems().values()) {
+                if (isMenuItemRenderable(sub)) {
+                    layout.addComponent(new MenuItem(sub));
+                }
+            }
+    }
     /**
      * @param menuItem
      * @return
      */
-    protected String getLabel(Content menuItem) {
-        return NodeDataUtil.getI18NString(menuItem, "label");
+    protected String getLabel(MenuItemConfiguration menuItem) {
+        return menuItem.getMessages().getWithDefault(menuItem.getLabel(), menuItem.getLabel());
     }
 
-    protected String getIconPath(Content menuItem){
-        String iconPath = NodeDataUtil.getString(menuItem, "icon").trim();
-        return iconPath.replaceFirst(".resources/", "mgnl-resources/");
+    protected String getIconPath(MenuItemConfiguration menuItem){
+        // TODO: why do we have to replace????
+        return menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
     }
 
     protected Component getComponentByCaption(String caption){
@@ -153,8 +160,8 @@ public class Menu extends Accordion {
      * @param menuItem
      * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
      */
-    protected boolean isMenuItemRenderable(Content menuItem) {
-        return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(menuItem.getHandle(), Permission.READ);
+    protected boolean isMenuItemRenderable(MenuItemConfiguration menuItem) {
+        return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(menuItem.getLocation(), Permission.READ);
     }
 
     /**
@@ -165,10 +172,10 @@ public class Menu extends Accordion {
     //TODO extract this as a top level class?
     public class MenuItem extends Button{
         private static final long serialVersionUID = 1L;
-        private Content content;
+        private MenuItemConfiguration item;
 
-        public MenuItem(final Content content) {
-            this.content = content;
+        public MenuItem(final MenuItemConfiguration item) {
+            this.item = item;
         }
 
         /**
@@ -177,11 +184,11 @@ public class Menu extends Accordion {
         @Override
         public void attach() {
             super.attach();
-            setCaption(getLabel(content));
+            setCaption(getLabel(item));
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
-            setIcon(new ClassResource(getIconPath(content), getApplication()));
-            final String onClickAction = NodeDataUtil.getString(content, "onclick").trim();
+            setIcon(new ClassResource(getIconPath(item), getApplication()));
+            final String onClickAction = item.getOnClick().trim();
             addListener(new Button.ClickListener () {
 
                 public void buttonClick(ClickEvent event) {

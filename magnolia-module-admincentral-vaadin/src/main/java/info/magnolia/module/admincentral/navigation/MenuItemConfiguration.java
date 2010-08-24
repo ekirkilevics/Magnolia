@@ -33,7 +33,8 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
@@ -47,8 +48,16 @@ public class MenuItemConfiguration extends I18nAwareComponent {
     private String icon;
     private String label;
     private MenuAction action;
-    private List<MenuItemConfiguration> subMenuItems;
+    private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
     private MenuItemConfiguration parent;
+    private String location;
+    private String onClick;
+
+
+    @Override
+    public I18nAwareComponent getI18nAwareParent() {
+        return this.parent;
+    }
 
     public String getIcon() {
         return icon;
@@ -69,25 +78,36 @@ public class MenuItemConfiguration extends I18nAwareComponent {
         this.action = action;
     }
 
-    public List<MenuItemConfiguration> getSubMenuItems() {
+    public Map<String, MenuItemConfiguration> getSubMenuItems() {
         return subMenuItems;
     }
-    public void setSubMenuItems(List<MenuItemConfiguration> subMenuItems) {
+    public void setSubMenuItems(Map<String, MenuItemConfiguration> subMenuItems) {
         this.subMenuItems = subMenuItems;
     }
 
-    public void addSubMenuItem(MenuItemConfiguration subMenuItem) {
+    public void addSubMenuItem(String name, MenuItemConfiguration subMenuItem) {
         subMenuItem.setParent(this);
-        this.subMenuItems.add(subMenuItem);
+        subMenuItem.setLocation((this.getLocation() == null ? "" : this.getLocation())  +"/" + name);
+        this.subMenuItems.put(name, subMenuItem);
     }
 
     private void setParent(MenuItemConfiguration parent) {
         this.parent = parent;
     }
 
-    @Override
-    public I18nAwareComponent getI18nAwareParent() {
-        // no parent
-        return this.parent;
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getOnClick() {
+        return this.onClick;
+    }
+
+    public void setOnClick(String action) {
+        this.onClick = action;
     }
 }

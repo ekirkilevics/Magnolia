@@ -59,7 +59,7 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
 
 
     private static final Logger log = LoggerFactory.getLogger(ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand.class);
-    private static final String NEW_MENU_LOCATION = "/modules/admin-central/config/menu";
+    private static final String NEW_MENU_LOCATION = "/modules/admin-central/config/menuItems";
 
     @Override
     public boolean execute(Context context) throws Exception {
