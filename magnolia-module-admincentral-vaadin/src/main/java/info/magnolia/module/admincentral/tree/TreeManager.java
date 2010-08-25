@@ -36,6 +36,7 @@ package info.magnolia.module.admincentral.tree;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.objectfactory.Components;
 
 
@@ -68,7 +69,11 @@ public class TreeManager extends ObservedManager {
             tree.setFlatMode(false);
             tree.setRepository(ContentRepository.WEBSITE);
             tree.setPath("/");
-            tree.setIncludeNodeData(false);
+
+            TreeItemType a = new TreeItemType();
+            a.setItemType(ItemType.CONTENT.getSystemName());
+            a.setIcon("/mgnl-resources/icons/16/document_plain_earth.gif");
+            tree.addItemType(a);
 
             LabelColumn column1 = new LabelColumn();
             column1.setLabel("Page");
@@ -100,7 +105,21 @@ public class TreeManager extends ObservedManager {
             tree.setFlatMode(false);
             tree.setRepository(ContentRepository.CONFIG);
             tree.setPath("/");
-            tree.setIncludeNodeData(true);
+
+            TreeItemType a = new TreeItemType();
+            a.setItemType(ItemType.CONTENT.getSystemName());
+            a.setIcon("/mgnl-resources/icons/16/folder_cubes.gif");
+            tree.addItemType(a);
+
+            TreeItemType b = new TreeItemType();
+            b.setItemType(ItemType.CONTENTNODE.getSystemName());
+            b.setIcon("/mgnl-resources/icons/16/cubes.gif");
+            tree.addItemType(b);
+
+            TreeItemType type = new TreeItemType();
+            type.setItemType(TreeItemType.ITEM_TYPE_NODE_DATA);
+            type.setIcon("/mgnl-resources/icons/16/cube_green.gif");
+            tree.addItemType(type);
 
             LabelColumn column1 = new LabelColumn();
             column1.setLabel("");

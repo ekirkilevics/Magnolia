@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral;
 
+import com.vaadin.ui.Component;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
@@ -42,10 +43,10 @@ import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.tree.TreeController;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.views.WebsiteTreeTableView;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,6 @@ import org.vaadin.navigator.Navigator;
 import org.vaadin.navigator.Navigator.NavigableApplication;
 
 import com.vaadin.Application;
-import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
@@ -204,7 +204,7 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
 
         // Set the startup page
         // TODO this should be the decision of navigation/menu;
-        final TreeTable treeTable = new TreeController().createTreeTable("website");
+        final Component treeTable = new WebsiteTreeTableView();
         mainContainer.addComponent(treeTable);
         bottomLeftCorner.setWidth("100%");
         mainContainer.addComponent(bottomLeftCorner);

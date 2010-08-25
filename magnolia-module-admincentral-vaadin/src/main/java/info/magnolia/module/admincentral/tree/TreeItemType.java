@@ -31,42 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.views;
+package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.Application;
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
-import info.magnolia.module.admincentral.tree.TreeManager;
-import org.vaadin.navigator.Navigator;
 /**
- * ConfigurationTreeTableView.
+ * Configuration for inclusion of a certain item type in a tree.
  *
- * @author fgrilli
+ * @see info.magnolia.cms.core.ItemType
  */
-public class ConfigurationTreeTableView extends AbstractTreeTableView {
+public class TreeItemType {
 
-    private static final long serialVersionUID = 1L;
-    private Application application;
+    public static final String ITEM_TYPE_NODE_DATA = "nodeData";
 
-    public ConfigurationTreeTableView() {
-        setTreeDefinition(TreeManager.getInstance().getTree("config"));
-        getTreeTable().setContainerDataSource(getContainer());
+    /**
+     * The system name of the item type or 'nodeData' if it describes node data.
+     */
+    private String itemType;
+    private String icon;
+
+    public String getItemType() {
+        return itemType;
     }
 
-    public void init(Navigator navigator, Application application) {
-        this.application = application;
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
 
-    public void navigateTo(String requestedDataId) {
-        //TODO: why is id always null?
-       ComponentContainer mainContainer = ((AdminCentralVaadinApplication) application).getMainContainer();
-       mainContainer.removeAllComponents();
-       mainContainer.addComponent(this);
-
+    public String getIcon() {
+        return icon;
     }
 
-    public String getWarningForNavigatingFrom() {
-        // TODO Auto-generated method stub
-        return null;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

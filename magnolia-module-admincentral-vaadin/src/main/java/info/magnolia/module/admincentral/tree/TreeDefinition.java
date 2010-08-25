@@ -45,9 +45,6 @@ public class TreeDefinition {
     private String repository;
     private String path;
 
-    // TODO needs configuration for item types to include, for now only nodedata on/off is supported
-    private boolean includeNodeData;
-
     /**
      * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show their children. Used
      * in the security trees.
@@ -57,18 +54,22 @@ public class TreeDefinition {
     private List<TreeColumn> columns = new ArrayList<TreeColumn>();
     private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
     private List<MenuItem> contextMenu = new ArrayList<MenuItem>();
-    private List<String> itemTypes = new ArrayList<String>();
+    private List<TreeItemType> itemTypes = new ArrayList<TreeItemType>();
 
     public boolean isFlatMode() {
         return flatMode;
     }
 
-    public List<String> getItemTypes() {
+    public List<TreeItemType> getItemTypes() {
         return itemTypes;
     }
 
-    public void setItemTypes(List<String> itemTypes) {
+    public void setItemTypes(List<TreeItemType> itemTypes) {
         this.itemTypes = itemTypes;
+    }
+
+    public boolean addItemType(TreeItemType treeItemType) {
+        return itemTypes.add(treeItemType);
     }
 
     public void setFlatMode(boolean flatMode) {
@@ -125,13 +126,5 @@ public class TreeDefinition {
 
     public void setContextMenu(List<MenuItem> contextMenu) {
         this.contextMenu = contextMenu;
-    }
-
-    public boolean isIncludeNodeData() {
-        return includeNodeData;
-    }
-
-    public void setIncludeNodeData(boolean includeNodeData) {
-        this.includeNodeData = includeNodeData;
     }
 }
