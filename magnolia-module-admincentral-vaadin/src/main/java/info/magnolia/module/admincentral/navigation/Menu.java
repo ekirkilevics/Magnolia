@@ -159,7 +159,7 @@ public class Menu extends Accordion {
 
     protected String getIconPath(MenuItemConfiguration menuItem){
         // TODO: why do we have to replace????
-        return menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
+        return menuItem.getIcon() == null ? null : menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
     }
 
     /**
