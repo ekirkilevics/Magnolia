@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.dialog;
 
 import com.vaadin.data.Validator;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -119,6 +120,8 @@ public class EditParagraphWindow extends Window {
                         closeWindow();
                 }
             });
+            close.addStyleName("primary");
+            close.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
             buttons.addComponent(close);
             buttons.setComponentAlignment(close, "right");
 
@@ -132,6 +135,7 @@ public class EditParagraphWindow extends Window {
                 closeWindow();
             }
         });
+        cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
         buttons.addComponent(cancel);
         buttons.setComponentAlignment(cancel, "right");
 
