@@ -49,6 +49,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
 
     public WebsiteTreeTableView() {
         setTreeDefinition(TreeManager.getInstance().getTree("website"));
+        getTreeTable().setContainerDataSource(getWebsiteData());
     }
 
     public void init(Navigator navigator, Application application) {

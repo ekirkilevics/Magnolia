@@ -75,13 +75,10 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
 
     private void convertMenus(Context context) throws RepositoryException {
         HierarchyManager hm = context.getHierarchyManager(ContentRepository.CONFIG);
-        Content menuFolder;
         if (!hm.isExist(NEW_MENU_LOCATION)) {
-            menuFolder = ContentUtil.createPath(hm, NEW_MENU_LOCATION);
+            ContentUtil.createPath(hm, NEW_MENU_LOCATION);
             // not saving here breaks copy ops later
             hm.save();
-        } else {
-            menuFolder = hm.getContent(NEW_MENU_LOCATION);
         }
         Collection<Content> menuItems = hm.getContent("/modules/adminInterface/config/menu").getChildren(ItemType.CONTENTNODE);
 
@@ -96,6 +93,7 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
             }
             Content newMenuItem = hm.getContent(menuItemHandle);
             transformSubmenus(hm, newMenuItem);
+            //TODO: onClick => viewTarget
             menuItem.setNodeData("importedTo50", true);
         }
 

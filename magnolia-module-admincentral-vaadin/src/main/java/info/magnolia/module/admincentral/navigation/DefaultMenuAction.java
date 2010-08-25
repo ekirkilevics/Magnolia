@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.Application;
 import com.vaadin.ui.Window.Notification;
 
@@ -43,6 +46,8 @@ import com.vaadin.ui.Window.Notification;
  */
 public class DefaultMenuAction extends MenuAction {
 
+    private static final Logger log = LoggerFactory.getLogger(DefaultMenuAction.class);
+
     private String onClick;
 
     public DefaultMenuAction(String label) {
@@ -51,6 +56,7 @@ public class DefaultMenuAction extends MenuAction {
 
     @Override
     public void handleAction(Object sender, Object target) {
+        log.error("Navigating to {}. But should not this be handled by the 'Navigator' really?", onClick);
         ((Application) sender).getMainWindow().showNotification("OnClick", onClick, Notification.TYPE_HUMANIZED_MESSAGE);
     }
 

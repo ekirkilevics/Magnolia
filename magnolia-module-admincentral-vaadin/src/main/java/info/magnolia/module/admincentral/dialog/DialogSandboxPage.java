@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -48,11 +49,17 @@ import info.magnolia.module.templating.ParagraphManager;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vaadin.navigator.Navigator;
+import org.vaadin.navigator.Navigator.View;
 
 /**
  * AdminCentral Page/Section/View (main container content) for testing dialog stuff, temporary stuff.
  */
-public class DialogSandboxPage extends VerticalLayout {
+public class DialogSandboxPage extends VerticalLayout implements View {
+
+    private static final Logger log = LoggerFactory.getLogger(DialogSandboxPage.class);
 
     public DialogSandboxPage() {
 
@@ -160,5 +167,19 @@ public class DialogSandboxPage extends VerticalLayout {
         field.setWidth("300px");
         field.setValue(value);
         return field;
+    }
+
+    public String getWarningForNavigatingFrom() {
+        // nada
+        return null;
+    }
+
+    public void init(Navigator navigator, Application application) {
+        // nada
+
+    }
+
+    public void navigateTo(String requestedDataId) {
+        log.error("should navigate to {} but do not know how :(", requestedDataId);
     }
 }

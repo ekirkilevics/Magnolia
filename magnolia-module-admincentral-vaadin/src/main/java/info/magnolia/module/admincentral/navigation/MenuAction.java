@@ -48,12 +48,4 @@ public abstract class MenuAction extends Action implements Action.Listener {
 
     public abstract void handleAction(Object sender, Object target);
 
-    //TODO this is needed by the menu. A View can either be an html file in classpath which will be embedded in an iframe
-    //or a the fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
-    private String view;
-
-    public String getView() {
-        return view;
-    }
-
 }

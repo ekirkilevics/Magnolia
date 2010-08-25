@@ -43,6 +43,7 @@ import com.vaadin.terminal.ExternalResource;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+import info.magnolia.module.admincentral.views.IFrameView;
 
 /**
  * Bean representing stored configuration of the menu item.
@@ -59,8 +60,22 @@ public class MenuItemConfiguration extends I18nAwareComponent {
     private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
     private MenuItemConfiguration parent;
     private String location;
+    /**
+     * @deprecated use viewTarget instead
+     */
     private String onClick;
     private String actionClass;
+    /**
+     * The fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
+     */
+    // TODO: aren't we introducing strong dep on vaadin here?
+    private String view = IFrameView.class.getName();
+
+    /**
+     * A html file in classpath which will be embedded in an iframe.
+     */
+    private String viewTarget;
+
 
 
     @Override
@@ -84,7 +99,8 @@ public class MenuItemConfiguration extends I18nAwareComponent {
         if (this.action == null) {
             try {
                 Class<? extends MenuAction> clazz = this.actionClass == null ? DefaultMenuAction.class : (Class<? extends MenuAction>) Class.forName(this.actionClass);
-
+                // TODO: sucks action needs to have label set at the creation time :(
+                // TODO: refactor and make c2b friendly
                 this.action = clazz.getConstructor(String.class).newInstance(getMessages().getWithDefault(getLabel(), getLabel()));
                 // this.action.setCaption("X" + );
                 if (this.getIcon() != null) {
@@ -95,6 +111,7 @@ public class MenuItemConfiguration extends I18nAwareComponent {
                 if (this.getOnClick() != null) {
                     ((DefaultMenuAction) this.action).setOnClick(this.getOnClick());
                 }
+
                 // TODO: transfer i18n as well ... or set this as a parent for i18n
             } catch (Exception e) {
                 log.error("Failed to instantiate action " + actionClass, e);
@@ -140,11 +157,34 @@ public class MenuItemConfiguration extends I18nAwareComponent {
         this.location = location;
     }
 
+    /**
+     * @deprecated use viewTarget instead
+     */
     public String getOnClick() {
         return this.onClick;
     }
 
+    /**
+     * @deprecated use viewTarget instead
+     */
     public void setOnClick(String action) {
         this.onClick = action;
     }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
+
+    public String getViewTarget() {
+        return viewTarget;
+    }
+
+    public void setViewTarget(String viewTarget) {
+        this.viewTarget = viewTarget;
+    }
+
 }
