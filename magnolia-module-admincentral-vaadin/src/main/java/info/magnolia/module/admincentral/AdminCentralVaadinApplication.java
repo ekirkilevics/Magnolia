@@ -44,8 +44,6 @@ import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
 import info.magnolia.module.admincentral.tree.TreeController;
 
-import java.util.Iterator;
-
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -60,16 +58,12 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
