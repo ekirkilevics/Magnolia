@@ -33,11 +33,13 @@
  */
 package info.magnolia.module.admincentral.views;
 
+import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.tree.TreeManager;
 
 import org.vaadin.navigator.Navigator;
 
 import com.vaadin.Application;
+import com.vaadin.ui.ComponentContainer;
 /**
  * ConfigurationTreeTableView.
  * @author fgrilli
@@ -46,17 +48,21 @@ import com.vaadin.Application;
 public class ConfigurationTreeTableView extends AbstractTreeTableView {
 
     private static final long serialVersionUID = 1L;
+    private Application application;
 
     public ConfigurationTreeTableView() {
         setTreeDefinition(TreeManager.getInstance().getTree("config"));
         getTreeTable().setContainerDataSource(getWebsiteData());
     }
     public void init(Navigator navigator, Application application) {
-        System.out.println("hello from init");
+        this.application = application;
     }
 
     public void navigateTo(String requestedDataId) {
-       System.out.println("requestedDataId is " +requestedDataId);
+        //TODO: why is id always null?
+       ComponentContainer mainContainer = ((AdminCentralVaadinApplication) application).getMainContainer();
+       mainContainer.removeAllComponents();
+       mainContainer.addComponent(this);
 
     }
 

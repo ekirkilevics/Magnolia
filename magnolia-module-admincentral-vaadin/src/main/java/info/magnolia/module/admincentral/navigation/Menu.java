@@ -55,7 +55,6 @@ import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
 
 import com.vaadin.terminal.ClassResource;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
@@ -78,6 +77,7 @@ public class Menu extends Accordion {
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
     private Navigator navigator;
     private final Map<Tab, MenuItemConfiguration> menuItems = new HashMap<Tab, MenuItemConfiguration>();
+    private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
 
     public Menu(Navigator navigator) throws RepositoryException {
         this.navigator = navigator;
@@ -131,10 +131,11 @@ public class Menu extends Accordion {
         Component subMenu = addSubMenuItemsIntoLayout(menuItem);
         Tab tab = super.addTab(subMenu == null ? new Label() : subMenu, getLabel(menuItem), getIcon(menuItem));
         // store tab reference
-        this.menuItems .put(tab, menuItem);
+        this.menuItems.put(tab, menuItem);
+        this.menuItemKeys.put(tab, menuItemKey);
 
         // navigator needs to register views.
-        setupActionAndRegisterView(navigator, menuItemKey, menuItem);
+        setupAndRegisterView(navigator, menuItemKey, menuItem);
 
     }
 
@@ -154,7 +155,7 @@ public class Menu extends Accordion {
      * @param menuKey Unique menu item key.
      * @param menuItem Menu item configuration.
      */
-    private void setupActionAndRegisterView(Navigator navigator, String menuKey, MenuItemConfiguration menuItem){
+    private void setupAndRegisterView(Navigator navigator, String menuKey, MenuItemConfiguration menuItem){
         final String view = menuItem.getView();
         Class viewClass = null;
         // check if view is not a simple html redirect only
@@ -247,7 +248,7 @@ public class Menu extends Accordion {
             setCaption(getLabel(item));
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
-
+            log.info("Attaching menu action {}", getCaption());
 
             MenuAction action = item.getAction();
             if (action != null) {
@@ -295,32 +296,35 @@ public class Menu extends Accordion {
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
                 //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
-                //navigator.navigateTo(ConfigurationTreeTableView.class);
+                String key = menuItemKeys.get(tab);
+                navigator.navigateTo(key);
                 //mainContainer.removeAllComponents();
                 //mainContainer.addComponent(new ConfigurationTreeTableView());
+
                 getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
 
-                MenuItemConfiguration item = menuItems.get(tab);
-                String view = item.getView();
-                if (view != null) {
-                    Component viewInstance = null;
-                    // TODO: reflection on the EDT might be too expensive ... consider cloning
-                    try {
-                        // TODO: new instance every time might be too expensive
-                        viewInstance = (Component) Class.forName(view).newInstance();
-
-                        if (viewInstance instanceof IFrameView) {
-                            ((IFrameView) viewInstance).setSource(new ExternalResource(item.getViewTarget()));
-                        }
-
-                    } catch (Exception e) {
-                        log.error("Failed to instantiate view " + view, e);
-                    }
-                    if (viewInstance != null) {
-                        mainContainer.removeAllComponents();
-                        mainContainer.addComponent(viewInstance);
-                    }
-                }
+                // navigate by instantiating views ourselves:
+//                MenuItemConfiguration item = menuItems.get(tab);
+//                String view = item.getView();
+//                if (view != null) {
+//                    Component viewInstance = null;
+//                    // TODO: reflection on the EDT might be too expensive ... consider cloning
+//                    try {
+//                        // TODO: new instance every time might be too expensive
+//                        viewInstance = (Component) Class.forName(view).newInstance();
+//
+//                        if (viewInstance instanceof IFrameView) {
+//                            ((IFrameView) viewInstance).setSource(new ExternalResource(item.getViewTarget()));
+//                        }
+//
+//                    } catch (Exception e) {
+//                        log.error("Failed to instantiate view " + view, e);
+//                    }
+//                    if (viewInstance != null) {
+//                        mainContainer.removeAllComponents();
+//                        mainContainer.addComponent(viewInstance);
+//                    }
+//                }
 
 
 //                if("website".equalsIgnoreCase(tab.getCaption())) {

@@ -35,6 +35,8 @@ package info.magnolia.module.admincentral.views;
 
 import info.magnolia.module.admincentral.tree.TreeManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
 
 import com.vaadin.Application;
@@ -47,7 +49,10 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
 
     private static final long serialVersionUID = 1L;
 
+    private static final Logger log = LoggerFactory.getLogger(WebsiteTreeTableView.class);
+
     public WebsiteTreeTableView() {
+        new Exception().printStackTrace();
         setTreeDefinition(TreeManager.getInstance().getTree("website"));
         getTreeTable().setContainerDataSource(getWebsiteData());
     }
@@ -56,8 +61,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
     }
 
     public void navigateTo(String requestedDataId) {
-       System.out.println("requestedDataId is " +requestedDataId);
-
+       log.error("was asked to navigate to {}, but no one thought me how :(", requestedDataId);
     }
 
     public String getWarningForNavigatingFrom() {
