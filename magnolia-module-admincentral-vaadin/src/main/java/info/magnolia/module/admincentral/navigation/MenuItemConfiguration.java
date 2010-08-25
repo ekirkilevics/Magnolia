@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.terminal.ExternalResource;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 /**
