@@ -63,7 +63,6 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
     private static final Logger log = LoggerFactory.getLogger(WebsiteTreeTableView.class);
 
     public WebsiteTreeTableView() {
-        new Exception().printStackTrace();
         setTreeDefinition(TreeManager.getInstance().getTree("website"));
         getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
