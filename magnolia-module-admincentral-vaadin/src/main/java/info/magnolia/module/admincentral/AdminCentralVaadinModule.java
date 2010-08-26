@@ -93,6 +93,7 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
     }
 
     public void addMenuItem(String name, MenuItemConfiguration menuItem) {
+        menuItem.setLocation("/modules/admin-central/config/menu/" + name);
         this.menu.put(name, menuItem);
     }
 }

@@ -63,7 +63,7 @@ public class MenuItemConfiguration extends I18nAwareComponent {
     /**
      * @deprecated use viewTarget instead
      */
-    private String onClick;
+    private String onclick;
     private String actionClass;
     /**
      * The fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
@@ -76,6 +76,7 @@ public class MenuItemConfiguration extends I18nAwareComponent {
      */
     private String viewTarget;
 
+    private String name;
 
 
     @Override
@@ -104,12 +105,16 @@ public class MenuItemConfiguration extends I18nAwareComponent {
                 this.action = clazz.getConstructor(String.class).newInstance(getMessages().getWithDefault(getLabel(), getLabel()));
                 // this.action.setCaption("X" + );
                 if (this.getIcon() != null) {
-                    // TODO: might be too slow or chatty and we might want to swap it with ApplicationResource instead
-                    this.action.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + getIcon()));
+                    // TODO: might be too slow or chatty and we might want to swap it with ApplicationResource instead\
+                    String iconPath = getIcon();
+                    if (iconPath.startsWith("/")) {
+                        iconPath = iconPath.substring(1);
+                    }
+                    this.action.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + iconPath));
                 }
 
-                if (this.getOnClick() != null) {
-                    ((DefaultMenuAction) this.action).setOnClick(this.getOnClick());
+                if (this.getOnclick() != null) {
+                    ((DefaultMenuAction) this.action).setOnClick(this.getOnclick());
                 }
 
                 // TODO: transfer i18n as well ... or set this as a parent for i18n
@@ -141,15 +146,30 @@ public class MenuItemConfiguration extends I18nAwareComponent {
 
     public void addMenuItem(String name, MenuItemConfiguration subMenuItem) {
         subMenuItem.setParent(this);
-        subMenuItem.setLocation((this.getLocation() == null ? "" : this.getLocation())  +"/" + name);
+        subMenuItem.setName(name);
         this.subMenuItems.put(name, subMenuItem);
     }
 
-    private void setParent(MenuItemConfiguration parent) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setParent(MenuItemConfiguration parent) {
         this.parent = parent;
     }
 
     public String getLocation() {
+        if (this.location != null) {
+            return this.location;
+        }
+        String location = "/" + name;
+        if (this.parent != null) {
+            location = this.parent.getLocation() + location;
+        }
         return location;
     }
 
@@ -160,15 +180,15 @@ public class MenuItemConfiguration extends I18nAwareComponent {
     /**
      * @deprecated use viewTarget instead
      */
-    public String getOnClick() {
-        return this.onClick;
+    public String getOnclick() {
+        return this.onclick;
     }
 
     /**
      * @deprecated use viewTarget instead
      */
-    public void setOnClick(String action) {
-        this.onClick = action;
+    public void setOnclick(String action) {
+        this.onclick = action;
     }
 
     public String getView() {
