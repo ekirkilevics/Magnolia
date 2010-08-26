@@ -39,6 +39,6 @@ package info.magnolia.module.admincentral.control;
  * @version $Id: $
  * @deprecated reimplement to use real CK
  */
-public class FckEditControl extends RichTextControl {
+public class FckEditorControl extends RichTextControl {
 
 }

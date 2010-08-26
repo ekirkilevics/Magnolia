@@ -54,6 +54,9 @@ public class RichTextControl extends AbstractDialogControl {
         richTextArea.setRows(rows);
 
         layout.addComponent(richTextArea);
+        if (isFocus()) {
+            richTextArea.focus();
+        }
     }
 
     public void validate() {

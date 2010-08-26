@@ -78,6 +78,10 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
         horizontalLayout.addComponent(field);
         horizontalLayout.addComponent(button);
         layout.addComponent(horizontalLayout);
+
+        if (isFocus()) {
+            field.focus();
+        }
     }
 
     public void validate() {

@@ -72,6 +72,10 @@ public class DialogTab extends I18nAwareComponent {
             // TODO: review - do we really want to do this? (enables possibility to inherit configuration from the parent, but delegates control over such inheritance down to the field impl itself)
            ((AbstractDialogControl) dialogField).setParent(this);
         }
+        // automatically set focus on first field ... if other field request focus it can grab it as it will be rendered later
+        if (fields.isEmpty()) {
+            dialogField.setFocus(true);
+        }
         fields.add(dialogField);
     }
 

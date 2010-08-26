@@ -57,6 +57,9 @@ public class FileControl extends AbstractDialogControl {
         upload = new Upload();
         upload.setWidth("100%");
         layout.addComponent(upload);
+        if (isFocus()) {
+            upload.focus();
+        }
     }
 
     public void validate() {

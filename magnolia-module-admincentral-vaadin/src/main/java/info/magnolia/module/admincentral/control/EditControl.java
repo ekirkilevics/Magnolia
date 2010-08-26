@@ -75,6 +75,10 @@ public class EditControl extends AbstractDialogControl {
         if (storageNode != null) {
             field.setValue(storageNode.getNodeData(getName()).getString());
         }
+
+        if (isFocus()) {
+            field.focus();
+        }
     }
 
     public void validate() {

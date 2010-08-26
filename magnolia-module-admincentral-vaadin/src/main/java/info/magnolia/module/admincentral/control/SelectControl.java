@@ -78,6 +78,9 @@ public class SelectControl extends AbstractDialogControl {
             if (StringUtils.isNotEmpty(defaultValue))
                 comboBox.setValue(defaultValue);
         }
+        if (isFocus()) {
+            comboBox.focus();
+        }
     }
 
     public void validate() {

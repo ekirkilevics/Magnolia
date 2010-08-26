@@ -71,4 +71,14 @@ public class StaticControl implements DialogControl {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public void setFocus(boolean focus) {
+        // not supported
+    }
+
+    public boolean isFocus() {
+        // no way of focusing static comp.
+        return false;
+    }
+
 }

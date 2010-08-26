@@ -80,6 +80,9 @@ public class SliderControl extends AbstractDialogControl {
         horizontalLayout.setComponentAlignment(value, Alignment.BOTTOM_LEFT);
 
         layout.addComponent(horizontalLayout);
+        if (isFocus()) {
+            slider.focus();
+        }
     }
 
     public void validate() {

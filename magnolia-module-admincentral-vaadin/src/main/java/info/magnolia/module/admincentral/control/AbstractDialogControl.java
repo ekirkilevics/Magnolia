@@ -54,6 +54,7 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
     private String label;
     private String description;
     private DialogTab parent;
+    private boolean focus;
 
     public String getName() {
         return name;
@@ -113,4 +114,11 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
     public void save(Content storageNode) throws RepositoryException {
     }
 
+    public void setFocus(boolean focus) {
+        this.focus = focus;
+    }
+
+    public boolean isFocus() {
+        return this.focus;
+    }
 }

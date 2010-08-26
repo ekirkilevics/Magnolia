@@ -76,6 +76,10 @@ public class RadioControl extends AbstractDialogControl {
             if (StringUtils.isNotEmpty(value))
                 group.select(value);
         }
+
+        if (isFocus()) {
+            group.focus();
+        }
     }
 
     public void validate() {

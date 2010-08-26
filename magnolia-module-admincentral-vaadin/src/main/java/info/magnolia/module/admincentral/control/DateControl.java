@@ -56,6 +56,9 @@ public class DateControl extends AbstractDialogControl {
         dateField = new DateField();
         dateField.setResolution(time ? DateField.RESOLUTION_MIN : DateField.RESOLUTION_DAY);
         layout.addComponent(dateField);
+        if (isFocus()) {
+            dateField.focus();
+        }
     }
 
     public void validate() {

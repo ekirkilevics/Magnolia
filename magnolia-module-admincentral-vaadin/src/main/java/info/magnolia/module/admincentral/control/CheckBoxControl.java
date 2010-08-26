@@ -50,6 +50,9 @@ public class CheckBoxControl extends AbstractDialogControl {
 
         checkBox = new CheckBox();
         layout.addComponent(checkBox);
+        if (isFocus()) {
+            checkBox.focus();
+        }
     }
 
     public void validate() {

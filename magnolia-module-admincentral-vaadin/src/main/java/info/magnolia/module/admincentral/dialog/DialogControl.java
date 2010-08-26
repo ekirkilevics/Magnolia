@@ -49,4 +49,7 @@ public interface DialogControl {
 
     void save(Content storageNode) throws RepositoryException;
 
+    void setFocus(boolean focus);
+
+    boolean isFocus();
 }
