@@ -68,7 +68,7 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
             convertMenus(context);
             return true;
         } catch (RepositoryException e) {
-            log.error("Failed to convert dialogs for vaadin.", e);
+            log.error("Failed to convert menus for vaadin.", e);
         }
         return false;
     }
@@ -92,6 +92,12 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
                 hm.save();
             }
             Content newMenuItem = hm.getContent(menuItemHandle);
+            //TODO Remove me. This is just for releasing M1 so that we can show website and config tree
+            if("website".equals(newMenuItem.getName())){
+                newMenuItem.setNodeData("view", "info.magnolia.module.admincentral.views.WebsiteTreeTableView");
+            } else if("config".equals(newMenuItem.getName())){
+                newMenuItem.setNodeData("view", "info.magnolia.module.admincentral.views.ConfigurationTreeTableView");
+            }
             transformSubmenus(hm, newMenuItem);
             //TODO: onClick => viewTarget
             menuItem.setNodeData("importedTo50", true);

@@ -254,7 +254,11 @@ public class Menu extends Accordion {
             if (action != null) {
                 // TODO: do we really need to set it explicitly and not via action?
                 //setIcon(Menu.this.getIcon(item));
-                action.setIcon(Menu.this.getIcon(item));
+                //action.setIcon(Menu.this.getIcon(item));
+                //TODO this is just for the M1 release to get the icon and make the menu look prettier
+                if(StringUtils.isNotEmpty(item.getIcon())){
+                    setIcon(new ClassResource(item.getIcon().replaceFirst(".resources", "mgnl-resources"), getApplication()));
+                }
 
                 super.getActionManager().addAction(action);
             } else {
@@ -285,6 +289,7 @@ public class Menu extends Accordion {
 
         //keep a reference to the Application's main container.The reference is initialized in the attach() method, so that we're sure the
         //getApplication() method does not return null.
+        //TODO probably this is not needed anymore, as it's the navigator itself aware of the main container
         private ComponentContainer mainContainer;
 
         public SelectedMenuItemTabChangeListener(ComponentContainer mainContainer) {
@@ -295,62 +300,9 @@ public class Menu extends Accordion {
             TabSheet tabsheet = event.getTabSheet();
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
-                //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
+                //Just give the navigator the uri and it will know where to go and which View to instantiate
                 String key = menuItemKeys.get(tab);
                 navigator.navigateTo(key);
-                //mainContainer.removeAllComponents();
-                //mainContainer.addComponent(new ConfigurationTreeTableView());
-
-                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
-
-                // navigate by instantiating views ourselves:
-//                MenuItemConfiguration item = menuItems.get(tab);
-//                String view = item.getView();
-//                if (view != null) {
-//                    Component viewInstance = null;
-//                    // TODO: reflection on the EDT might be too expensive ... consider cloning
-//                    try {
-//                        // TODO: new instance every time might be too expensive
-//                        viewInstance = (Component) Class.forName(view).newInstance();
-//
-//                        if (viewInstance instanceof IFrameView) {
-//                            ((IFrameView) viewInstance).setSource(new ExternalResource(item.getViewTarget()));
-//                        }
-//
-//                    } catch (Exception e) {
-//                        log.error("Failed to instantiate view " + view, e);
-//                    }
-//                    if (viewInstance != null) {
-//                        mainContainer.removeAllComponents();
-//                        mainContainer.addComponent(viewInstance);
-//                    }
-//                }
-
-
-//                if("website".equalsIgnoreCase(tab.getCaption())) {
-//                    mainContainer.removeAllComponents();
-//                    mainContainer.addComponent(new TreeController().createTreeTable("website"));
-//                }
-//
-//                if("configuration".equalsIgnoreCase(tab.getCaption())) {
-//                    mainContainer.removeAllComponents();
-//                    mainContainer.addComponent(new ConfigurationTreeTableView());
-//                    navigator.navigateTo(ConfigurationTreeTableView.class);
-//                }
-//                //TODO do it the right way: this just for testing embedding an iframe
-//                if("magnolia store".equalsIgnoreCase(tab.getCaption())) {
-//                    mainContainer.removeAllComponents();
-//                    IFrameView iframe = new IFrameView();
-//                    iframe.setSource(new ExternalResource("http://localhost:8080/magnolia-empty-webapp/.magnolia/pages/allModulesList.html"));
-//                    mainContainer.addComponent(iframe);
-//                    navigator.navigateTo(IFrameView.class);
-//                }
-//
-//                //TODO remove this if block, it's here just for testing purposes
-//                if ("dialogs".equalsIgnoreCase(tab.getCaption())) {
-//                    mainContainer.removeAllComponents();
-//                    mainContainer.addComponent(new DialogSandboxPage());
-//                }
             }
         }
     }

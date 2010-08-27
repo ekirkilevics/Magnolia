@@ -75,7 +75,7 @@ import javax.jcr.RepositoryException;
  * To create a tree view for a particular repository, you need to get hold of an instance of  {@link info.magnolia.module.admincentral.tree.TreeManager} for that repo and typically populate container data source. Concretely, in your subclass constructor you need to do something along these lines
  * <pre>
  * setTreeDefinition(TreeManager.getInstance().getTree("config"));
- * getTreeTable().setContainerDataSource(getConfigRepoData());
+ * getTreeTable().setContainerDataSource(getContainer());
  * </pre>
  *
  * @author fgrilli

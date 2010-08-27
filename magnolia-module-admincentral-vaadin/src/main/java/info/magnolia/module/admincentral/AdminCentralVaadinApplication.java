@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admincentral;
 
-import com.vaadin.ui.Component;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
@@ -46,7 +45,6 @@ import info.magnolia.module.admincentral.navigation.Menu;
 
 import javax.jcr.RepositoryException;
 
-import info.magnolia.module.admincentral.views.WebsiteTreeTableView;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,7 +140,7 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
         final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
-        final Navigator navigator = new Navigator();
+        final Navigator navigator = new Navigator(mainContainer);
         mainWindow.addComponent(navigator);
         setMainWindow(mainWindow);
         setLogoutURL(contextPath + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
@@ -202,10 +200,6 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         leftPaneLayout.addComponent(menu);
         leftPaneLayout.addComponent(uriFragmentUtility);
 
-        // Set the startup page
-        // TODO this should be the decision of navigation/menu;
-        final Component treeTable = new WebsiteTreeTableView();
-        mainContainer.addComponent(treeTable);
         bottomLeftCorner.setWidth("100%");
         mainContainer.addComponent(bottomLeftCorner);
         mainContainer.setSizeFull();
@@ -218,9 +212,6 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         outerContainer.addComponent(headerLayout);
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);
-
-        mainContainer.setExpandRatio(treeTable, 15.0f);
-        mainContainer.setExpandRatio(bottomLeftCorner, 1.0f);
 
         return mainWindow;
 
