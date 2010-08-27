@@ -33,6 +33,8 @@
  */
 package org.vaadin.navigator;
 
+import info.magnolia.module.admincentral.views.IFrameView;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -40,6 +42,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -51,9 +54,14 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 
 /**
- * TODO remove this code from here and use dependency in Maven. Please notice that the Magnolia header is there only to make checkstyle happy.
- * Navigator addon.
+ * FIXME Reworking this to solve some shortcomings of the current Navigator addon.
+ * As of now, this component handles transparently the instancing of the {@link View}s implementations registered with the {@link Navigator#addView(String, Class)} method.
+ * It also handles transparently where to place and remove the views in the current layout.
+ * TODO: remove limitation concerning not being able to register the same View more than once.
+ * TODO: make Navigator aware of the menu so that it can restore its status both when browsing history and bookmarking.
+ * (Should a view be a composite of menu and other UI elements, instead of just the container where the main content is shown as it now?)
  *
+ *Please notice that the Magnolia header is there only to make checkstyle happy.
  */
 @SuppressWarnings("serial")
 public class Navigator extends CustomComponent {
@@ -64,10 +72,16 @@ public class Navigator extends CustomComponent {
     private String mainViewUri = null;
     private VerticalLayout layout = new VerticalLayout();
     private UriFragmentUtility uriFragmentUtil = new UriFragmentUtility();
+    private ComponentContainer mainViewContainer;
     private String currentFragment = "";
     private View currentView = null;
 
-    public Navigator() {
+    /**
+     * @param mainViewContainer an instance of {@link ComponentContainer} holding the main contents (e.g. trees, pages, etc.).
+     * In our current layout this is the right component of a split panel.
+     */
+    public Navigator(ComponentContainer mainViewContainer) {
+        this.mainViewContainer = mainViewContainer;
         layout.setSizeFull();
         setSizeFull();
         layout.addComponent(uriFragmentUtil);
@@ -143,11 +157,12 @@ public class Navigator extends CustomComponent {
 
     private View getOrCreateView(String uri) {
         Class newViewClass = uriToClass.get(uri);
-        if (!classToView.containsKey(newViewClass)) {
+        View view = null;
+        //if (!classToView.containsKey(newViewClass)) {
             try {
-                View view = (View) newViewClass.newInstance();
+                view = (View) newViewClass.newInstance();
                 view.init(this, getApplication());
-                classToView.put(newViewClass, view);
+                //classToView.put(newViewClass, view);
             } catch (InstantiationException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -155,9 +170,9 @@ public class Navigator extends CustomComponent {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
-        }
-        final View v = classToView.get(newViewClass);
-        return v;
+        //}
+
+        return view;
     }
 
     private void moveTo(View v, String requestedDataId,
@@ -170,18 +185,18 @@ public class Navigator extends CustomComponent {
                 && !currentFragment.equals(uriFragmentUtil.getFragment())) {
             uriFragmentUtil.setFragment(currentFragment, false);
         }
+        //TODO just a temporary hack for the M1 release as IFrameView currently does not work and would show an ugly gray page.
+        if(v instanceof IFrameView){
+            return;
+        }
         Component removeMe = null;
-        for (Iterator<Component> i = layout.getComponentIterator(); i.hasNext();) {
-            Component c = i.next();
-            if (c != uriFragmentUtil) {
-                removeMe = c;
-            }
+        for (Iterator<Component> i = mainViewContainer.getComponentIterator(); i.hasNext();) {
+            removeMe = i.next();
         }
         if (removeMe != null) {
-            layout.removeComponent(removeMe);
+            mainViewContainer.removeComponent(removeMe);
         }
-        layout.addComponent(v);
-        layout.setExpandRatio(v, 1.0F);
+        mainViewContainer.addComponent(v);
         v.navigateTo(requestedDataId);
         currentView = v;
     }
@@ -451,7 +466,7 @@ public class Navigator extends CustomComponent {
         }
 
         Window w = application.createNewWindow();
-        w.setName(name);
+        //w.setName(name);
         ((Application) application).addWindow(w);
         w.open(new ExternalResource(w.getURL()));
         return w;
