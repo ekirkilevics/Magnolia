@@ -31,25 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.pageeditor.server;
+package info.magnolia.module.wcm.pageeditor.client;
 
+import com.google.gwt.core.client.EntryPoint;
 
-import com.vaadin.Application;
-import com.vaadin.ui.Window;
 
 /**
- * The Vaadin application. Called by the embedded Vaadin EntryPoint.
+ * Currently exists test wise. So that we see when GWT is launched.
  * @author pbaerfuss
  * @version $Id$
  *
  */
-public class PageEditorApplication extends Application {
+public class PageEditorEntryPoint implements EntryPoint {
 
-    @Override
-    public void init() {
-        Window window = new Window();
-        window.setContent(new PageEditor());
-        setMainWindow(window);
+    public void onModuleLoad() {
     }
 
 }

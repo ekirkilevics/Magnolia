@@ -35,6 +35,8 @@ package info.magnolia.module.admincentral.dialog;
 
 import com.vaadin.data.Validator;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -116,8 +118,10 @@ public class EditParagraphWindow extends Window {
 
             Button close = new Button(dialog.getMessages().get("buttons.save"), new Button.ClickListener() {
                 public void buttonClick(Button.ClickEvent event) {
-                    if (save())
+                    if (save()){
+                        getApplication().getMainWindow().executeJavaScript("location.reload(true);");
                         closeWindow();
+                    }
                 }
             });
             close.addStyleName("primary");

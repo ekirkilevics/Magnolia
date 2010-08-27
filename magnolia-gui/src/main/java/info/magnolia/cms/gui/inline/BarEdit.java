@@ -40,6 +40,8 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.freemarker.FreemarkerUtil;
+
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +61,7 @@ public class BarEdit extends Bar {
     private Button buttonMove = new Button();
 
     private Button buttonDelete = new Button();
-    
+
     private String paragraph;
 
     /**
@@ -198,20 +200,21 @@ public class BarEdit extends Bar {
      * Draws the main bar (incl. all magnolia specific js and css sources).
      */
     public void drawHtml(Writer out) throws IOException {
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
-        boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
-        if (!aggregationState.isPreviewMode() && isGranted && ServerConfiguration.getInstance().isAdmin()) {
-            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
-            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
-            println(out, getHtml());
-        }
+        out.write(FreemarkerUtil.process(this));
+//        final AggregationState aggregationState = MgnlContext.getAggregationState();
+//        boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
+//        if (!aggregationState.isPreviewMode() && isGranted && ServerConfiguration.getInstance().isAdmin()) {
+//            this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//            this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
+//            this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
+//            println(out, getHtml());
+//        }
     }
-    
+
     public String getParagraph() {
         return this.paragraph;
     }
-    
+
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
     }
