@@ -61,15 +61,35 @@ public class FreemarkerUtil {
      * Used only in DialogMultiSelect - VersionCommentPopup - Inbox - SubPagesControl
      */
     public static String process(Object thisObj) {
-        return process(thisObj.getClass(), thisObj);
+        final Writer writer = new StringWriter();
+        process(thisObj, writer);
+        return writer.toString();
     }
 
-    // only used in DialogMultiSelect and ForumTree
+    /**
+     * @see #process(Object)
+     */
+    public static void process(Object thisObj, Writer out) {
+        process(thisObj.getClass(), thisObj, out);
+    }
+
+    /**
+     * Same as {@link #process(Object)} but adds the classifier and the extension to the template name.
+     */
     public static String process(Object thisObj, String classifier, String ext) {
+        final Writer writer = new StringWriter();
+        process(thisObj, classifier, ext, writer);
+        return writer.toString();
+    }
+
+    /**
+     * @see #process(Object, String, String)
+     */
+    public static void process(Object thisObj, String classifier, String ext, Writer out) {
         final Map data = new HashMap();
         data.put("this", thisObj);
         String template = createTemplateName(thisObj.getClass(), classifier, ext);
-        return process(template, data);
+        process(template, data, out);
     }
 
     /**
@@ -78,10 +98,19 @@ public class FreemarkerUtil {
      * Only used in AbstractSimpleSearchList and VersionsList.
      */
     public static String process(Class klass, Object thisObj) {
+        final Writer writer = new StringWriter();
+        process(klass, thisObj, writer);
+        return writer.toString();
+    }
+
+    /**
+     * @see #process(Class, Object)
+     */
+    public static void process(Class klass, Object thisObj, Writer out) {
         final Map data = new HashMap();
         data.put("this", thisObj);
         String template = createTemplateName(klass, "html");
-        return process(template, data);
+        process(template, data, out);
     }
 
     /**
@@ -111,10 +140,18 @@ public class FreemarkerUtil {
         }
     }
 
+    /**
+     * Creates a template name based on the class name and adds the extension.
+     * If the class is org.mydomain.TheClass the returned name is /org/mydomain/TheClass.html.
+     */
     public static String createTemplateName(Class klass, String ext) {
         return createTemplateName(klass, null, ext);
     }
 
+    /**
+     * Same as {@link #createTemplateName(Class, String)} but adds the classifier between
+     * the template name and the extension.
+     */
     public static String createTemplateName(Class klass, String classifier, String ext) {
         classifier = (classifier != null) ? StringUtils.capitalize(classifier) : "";
         return "/" + StringUtils.replace(klass.getName(), ".", "/") + classifier + "." + ext;
