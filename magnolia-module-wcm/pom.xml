@@ -25,6 +25,20 @@
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <!-- needed to run in dev mode -->
+    <!-- TODO should probably go into a profile -->
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -34,44 +48,28 @@
     <plugins>
       <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
 
-      <!-- why are we useing 1.3-SNAPSHOT? this requires maven 2.1 but hudson uses 2.0 - will have to fix that
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.2</version>
+        <configuration>
+          <!-- put the created resources on the classpath -->
+          <webappDirectory>target/classes/VAADIN/widgetsets</webappDirectory>
+          <!-- this is not a webapp -->
+          <noServer>true</noServer>
+          <module>info.magnolia.module.wcm.pageeditor.PageEditor</module>
+          <!--<draftCompile>true</draftCompile>-->
+          <!--<style>DETAILED</style>-->
+        </configuration>
         <executions>
           <execution>
-            <configuration>
-              <webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
-              <extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-              <runTarget>/AdminCentral/</runTarget>
-              <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
-              <noServer>true</noServer>
-              <port>8080</port>
-              <soyc>false</soyc>
-            </configuration>
             <goals>
               <goal>resources</goal>
               <goal>compile</goal>
-            </goals>
+             </goals>
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-maven-plugin</artifactId>
-        <version>1.0.0</version>
-        <executions>
-          <execution>
-            <configuration>
-            </configuration>
-            <goals>
-              <goal>update-widgetset</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      -->
       <plugin>
         <!-- TODO this is temporary ! Parent disables the validation due to amount of errors in the project, but this new module enables it explicitly. No more errors on new code !! -->
         <artifactId>maven-checkstyle-plugin</artifactId>
