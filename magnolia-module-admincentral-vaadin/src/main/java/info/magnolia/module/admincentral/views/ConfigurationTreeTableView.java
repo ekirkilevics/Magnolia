@@ -38,6 +38,7 @@ import com.vaadin.ui.ComponentContainer;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.tree.TreeManager;
 import org.vaadin.navigator.Navigator;
+
 /**
  * ConfigurationTreeTableView.
  *

@@ -77,11 +77,13 @@ public class TreeManager extends ObservedManager {
 
             LabelColumn column1 = new LabelColumn();
             column1.setLabel("Page");
+            column1.setEditable(true);
             tree.addColumn(column1);
 
             NodeDataColumn column2 = new NodeDataColumn();
             column2.setLabel("Title");
             column2.setNodeDataName("title");
+            column2.setEditable(true);
             tree.addColumn(column2);
 
             IconColumn column5 = new IconColumn();
@@ -123,10 +125,12 @@ public class TreeManager extends ObservedManager {
 
             LabelColumn column1 = new LabelColumn();
             column1.setLabel("");
+            column1.setEditable(true);
             tree.addColumn(column1);
 
             NodeDataValueColumn column2 = new NodeDataValueColumn();
             column2.setLabel("Value");
+            column2.setEditable(true);
             tree.addColumn(column2);
 
             NodeDataTypeColumn column4 = new NodeDataTypeColumn();

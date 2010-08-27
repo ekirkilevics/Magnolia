@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -42,6 +44,15 @@ import info.magnolia.cms.core.NodeData;
  */
 public class NodeDataValueColumn extends TreeColumn {
 
+    private boolean editable = false;
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     @Override
     public Class<?> getType() {
@@ -56,5 +67,12 @@ public class NodeDataValueColumn extends TreeColumn {
     @Override
     public Object getValue(Content content, NodeData nodeData) {
         return nodeData.getString();
+    }
+
+    @Override
+    public Field getEditField(Content content, NodeData nodeData) {
+        if (editable)
+            return new TextField();
+        return null;
     }
 }

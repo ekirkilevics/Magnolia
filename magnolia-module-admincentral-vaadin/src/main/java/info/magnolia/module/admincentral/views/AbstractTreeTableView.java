@@ -36,8 +36,10 @@ package info.magnolia.module.admincentral.views;
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -46,8 +48,11 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.ui.TableFieldFactory;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
@@ -55,6 +60,7 @@ import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeItemType;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator.View;
@@ -66,7 +72,7 @@ import javax.jcr.RepositoryException;
  * Subclasses need to implement the methods defined by the {@link View} interface. This should provide the basic infrastructure needed to handle history (browser's back button behaviour) and "bookmarkability".
  * It is the component/subclass responsibility to handle what should be done when users bookmark an application containing their component. E.g. a component may wish to
  * open the tree at exactly the same point where the user opened before bookmarking the application.
- * To create a tree view for a particular repository, you need to get hold of an instance of  {@link TreeManager} for that repo and typically populate container data source. Concretely, in your subclass constructor you need to do something along these lines
+ * To create a tree view for a particular repository, you need to get hold of an instance of  {@link info.magnolia.module.admincentral.tree.TreeManager} for that repo and typically populate container data source. Concretely, in your subclass constructor you need to do something along these lines
  * <pre>
  * setTreeDefinition(TreeManager.getInstance().getTree("config"));
  * getTreeTable().setContainerDataSource(getConfigRepoData());
@@ -92,6 +98,7 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
         treeTable.setColumnCollapsingAllowed(true);
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         treeTable.setColumnReorderingAllowed(true);
+        addEditingByDoubleClick();
         addDragAndDrop();
         setSizeFull();
     }
@@ -102,6 +109,10 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
 
     public void setTreeDefinition(TreeDefinition treeDefinition) {
         this.treeDefinition = treeDefinition;
+    }
+
+    public TreeDefinition getTreeDefinition() {
+        return treeDefinition;
     }
 
     /**
@@ -180,6 +191,71 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
         });
     }
 
+    private Object selectedItemId = null;
+    private Object selectedPropertyId = null;
+
+    void addEditingByDoubleClick() {
+
+        getTreeTable().setTableFieldFactory(new TableFieldFactory() {
+
+            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
+                if (selectedItemId != null) {
+                    if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
+
+                        try {
+
+                            for (TreeColumn column : treeDefinition.getColumns()) {
+
+                                if (column.getLabel().equals(propertyId)) {
+
+                                    String x = (String) itemId;
+                                    if (x.indexOf('@') == -1) {
+                                        Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(x);
+
+                                        Field field = column.getEditField(content);
+                                        if (field != null)
+                                            return field;
+
+                                    } else {
+                                        String uuid = StringUtils.substringBefore(x, "@");
+                                        String nodeDataName = StringUtils.substringAfter(x, "@");
+                                        Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(uuid);
+
+                                        NodeData nodeData = content.getNodeData(nodeDataName);
+
+                                        Field field = column.getEditField(content, nodeData);
+                                        if (field != null)
+                                            return field;
+                                    }
+                                }
+                            }
+                        } catch (RepositoryException e) {
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
+                    }
+                }
+                return null;
+            }
+        });
+
+        getTreeTable().addListener(new ItemClickEvent.ItemClickListener() {
+
+            public void itemClick(ItemClickEvent event) {
+                if (event.isDoubleClick()) {
+
+                    // TODO we need to unset these somehow...
+
+                    selectedItemId = event.getItemId();
+                    selectedPropertyId = event.getPropertyId();
+                    getTreeTable().setEditable(true);
+                } else if (getTreeTable().isEditable()) {
+                    getTreeTable().setEditable(false);
+                    getTreeTable().setValue(event.getItemId());
+                }
+            }
+        });
+    }
+
     public Container.Hierarchical getContainer() {
 
         Content parent = null;
@@ -228,7 +304,9 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
 
     private void addNodeDataToContainer(Container.Hierarchical container, Content parent, Object parentItemId, String nodeDataIcon) {
         for (NodeData nodeData : parent.getNodeDataCollection()) {
-            Object nodeDataItemId = container.addItem();
+
+            String nodeDataItemId = parent.getUUID() + "@" + nodeData.getName();
+            Item nodeDataItem = container.addItem(nodeDataItemId);
 
             treeTable.setItemIcon(nodeDataItemId, new ClassResource(nodeDataIcon, AdminCentralVaadinApplication.application));
             container.setChildrenAllowed(nodeDataItemId, false);
@@ -242,7 +320,9 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
 
     public void addChildrenOfType(Container.Hierarchical container, Content parent, Object parentItemId, String type, String pathToIcon) throws RepositoryException {
         for (Content content : parent.getChildren(type)) {
-            Object itemId = container.addItem();
+
+            String itemId = content.getUUID();
+            Item item = container.addItem(itemId);
 
             treeTable.setItemIcon(itemId, new ClassResource(pathToIcon, AdminCentralVaadinApplication.application));
 

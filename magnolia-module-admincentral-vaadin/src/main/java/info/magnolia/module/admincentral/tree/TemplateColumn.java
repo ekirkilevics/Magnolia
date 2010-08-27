@@ -33,18 +33,22 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.ui.Field;
+import com.vaadin.ui.Select;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A column that displays the currently selected template for a node and allows the editor to choose from a list of
  * available templates. Used in the website tree.
  */
 public class TemplateColumn extends TreeColumn {
-
-    // TODO this class needs to implement special on-click behaviour (and on click it will need to access the Content object)
 
     @Override
     public Class<?> getType() {
@@ -68,5 +72,33 @@ public class TemplateColumn extends TreeColumn {
     @Override
     public Object getValue(Content content, NodeData nodeData) {
         return "";
+    }
+
+    public Field getEditField(Content content) {
+
+        // TODO the actual item isn't selected, dont know why yet, also the cell gets filled in with the template name, not its label
+
+        Select select = new Select();
+        select.setNullSelectionAllowed(false);
+        select.setNewItemsAllowed(false);
+        Map<String, String> availableTemplates = getAvailableTemplates(content);
+        for (Map.Entry<String, String> entry : availableTemplates.entrySet()) {
+            select.addItem(entry.getKey());
+            select.setItemCaption(entry.getKey(), entry.getValue());
+        }
+        String template = content.getMetaData().getTemplate();
+        select.setValue(template);
+        return select;
+    }
+
+    private Map<String, String> getAvailableTemplates(Content content) {
+        TemplateManager templateManager = TemplateManager.getInstance();
+        Iterator<Template> templates = templateManager.getAvailableTemplates(content);
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        while (templates.hasNext()) {
+            Template template = templates.next();
+            map.put(template.getName(), template.getI18NTitle());
+        }
+        return map;
     }
 }

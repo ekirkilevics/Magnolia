@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -40,6 +42,16 @@ import info.magnolia.cms.core.NodeData;
  * Describes a column that contains the label of the item with an optional icon.
  */
 public class LabelColumn extends TreeColumn {
+
+    private boolean editable;
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     @Override
     public Class<?> getType() {
@@ -54,5 +66,19 @@ public class LabelColumn extends TreeColumn {
     @Override
     public Object getValue(Content content, NodeData nodeData) {
         return nodeData.getName();
+    }
+
+    @Override
+    public Field getEditField(Content content) {
+        if (editable)
+            return new TextField();
+        return null;
+    }
+
+    @Override
+    public Field getEditField(Content content, NodeData nodeData) {
+        if (editable)
+            return new TextField();
+        return null;
     }
 }

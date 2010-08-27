@@ -34,17 +34,11 @@
 package info.magnolia.module.admincentral.views;
 
 import com.vaadin.Application;
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DefaultFieldFactory;
-import com.vaadin.ui.Field;
 import info.magnolia.module.admincentral.tree.TreeManager;
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
@@ -66,14 +60,13 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
         setTreeDefinition(TreeManager.getInstance().getTree("website"));
         getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
-        addEditingByDoubleClick();
     }
 
     public void init(Navigator navigator, Application application) {
     }
 
     public void navigateTo(String requestedDataId) {
-       log.error("was asked to navigate to {}, but no one thought me how :(", requestedDataId);
+        log.error("was asked to navigate to {}, but no one thought me how :(", requestedDataId);
     }
 
     public String getWarningForNavigatingFrom() {
@@ -145,45 +138,6 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                     modDate.setValue(new Date());
                 } else if (action == ACTION_DELETE) {
                     getTreeTable().removeItem(target);
-                }
-            }
-        });
-    }
-
-    public static final String[] EDITABLE_FIELDS = {PAGE, TITLE, TEMPLATE};
-
-    private Object selectedItemId = null;
-    private Object selectedPropertyId = null;
-
-    void addEditingByDoubleClick() {
-
-        getTreeTable().setTableFieldFactory(new DefaultFieldFactory() {
-
-            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
-                if (selectedItemId != null) {
-                    if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                        if (ArrayUtils.contains(EDITABLE_FIELDS, propertyId)) {
-                            return super.createField(container, itemId, propertyId, uiContext);
-                        }
-                    }
-                }
-                return null;
-            }
-        });
-
-        getTreeTable().addListener(new ItemClickEvent.ItemClickListener() {
-
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-
-                    // TODO we need to unset these somehow...
-
-                    selectedItemId = event.getItemId();
-                    selectedPropertyId = event.getPropertyId();
-                    getTreeTable().setEditable(true);
-                } else if (getTreeTable().isEditable()) {
-                    getTreeTable().setEditable(false);
-                    getTreeTable().setValue(event.getItemId());
                 }
             }
         });

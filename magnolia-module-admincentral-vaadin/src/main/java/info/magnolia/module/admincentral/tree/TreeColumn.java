@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.ui.Field;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -65,4 +66,12 @@ public abstract class TreeColumn {
     public abstract Object getValue(Content content);
 
     public abstract Object getValue(Content content, NodeData nodeData);
+
+    public Field getEditField(Content content) {
+        return null;
+    }
+
+    public Field getEditField(Content content, NodeData nodeData) {
+        return null;
+    }
 }
