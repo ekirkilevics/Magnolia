@@ -35,8 +35,6 @@ package info.magnolia.module.admincentral.dialog;
 
 import com.vaadin.data.Validator;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
