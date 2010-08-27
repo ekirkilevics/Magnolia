@@ -86,7 +86,7 @@ public class TreeManager extends ObservedManager {
             column2.setEditable(true);
             tree.addColumn(column2);
 
-            IconColumn column5 = new IconColumn();
+            StatusColumn column5 = new StatusColumn();
             column5.setLabel("Status");
             tree.addColumn(column5);
 
@@ -137,8 +137,9 @@ public class TreeManager extends ObservedManager {
             column4.setLabel("Type");
             tree.addColumn(column4);
 
-            IconColumn column5 = new IconColumn();
+            StatusColumn column5 = new StatusColumn();
             column5.setLabel("Status");
+            column5.setPermissions(true);
             tree.addColumn(column5);
 
             MetaDataColumn column3 = new MetaDataColumn();

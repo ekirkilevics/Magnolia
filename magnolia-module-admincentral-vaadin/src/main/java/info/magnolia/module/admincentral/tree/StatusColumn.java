@@ -33,28 +33,71 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.MetaDataUtil;
+import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 
 /**
- * A column consisting of one or more icons. Used for permissions and activation status.
+ * A column that displays icons for permissions and activation status.
  */
-public class IconColumn extends TreeColumn {
+public class StatusColumn extends TreeColumn {
 
-    // TODO this column isnt a value column per se, it will need completely special rendering...
-    
+    private boolean activation = true;
+    private boolean permissions = false;
+
+    public boolean isActivation() {
+        return activation;
+    }
+
+    public void setActivation(boolean activation) {
+        this.activation = activation;
+    }
+
+    public boolean isPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(boolean permissions) {
+        this.permissions = permissions;
+    }
+
     @Override
     public Class<?> getType() {
-        return String.class;
+        return HorizontalLayout.class;
     }
 
     @Override
     public Object getValue(Content content) {
-        return "";
+
+        HorizontalLayout layout = new HorizontalLayout();
+
+        if (activation) {
+            layout.addComponent(createIcon("/mgnl-resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(content)));
+        }
+
+        if (permissions && !content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
+            layout.addComponent(createIcon("/mgnl-resources/icons/16/" + "pen_blue_canceled.gif"));
+        }
+
+        return layout;
+    }
+
+    private Component createIcon(String resource) {
+        Embedded embedded = new Embedded();
+        embedded.setType(Embedded.TYPE_IMAGE);
+        embedded.setSource(new ClassResource(resource, AdminCentralVaadinApplication.application));
+        embedded.setWidth("16px");
+        embedded.setHeight("16px");
+        return embedded;
     }
 
     @Override
     public Object getValue(Content content, NodeData nodeData) {
-        return "";
+        return null;
     }
 }
