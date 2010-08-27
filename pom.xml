@@ -21,6 +21,7 @@ for Java Content Repositories (JCR).
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
     <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
+    <gwtVersion>2.0.4</gwtVersion>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -264,7 +265,12 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
-        <version>2.0.4</version>
+        <version>${gwtVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-dev</artifactId>
+        <version>${gwtVersion}</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
