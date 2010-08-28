@@ -157,22 +157,21 @@ public class Navigator extends CustomComponent {
 
     private View getOrCreateView(String uri) {
         Class newViewClass = uriToClass.get(uri);
-        View view = null;
-        //if (!classToView.containsKey(newViewClass)) {
-            try {
-                view = (View) newViewClass.newInstance();
-                view.init(this, getApplication());
-                //classToView.put(newViewClass, view);
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        //}
-
-        return view;
+        if (!classToView.containsKey(newViewClass)) {
+        try {
+               View view = (View) newViewClass.newInstance();
+               view.init(this, getApplication());
+               classToView.put(newViewClass, view);
+             } catch (InstantiationException e) {
+               e.printStackTrace();
+               throw new RuntimeException(e);
+             } catch (IllegalAccessException e) {
+               e.printStackTrace();
+               throw new RuntimeException(e);
+             }               
+        }    
+        final View v = classToView.get(newViewClass);
+        return v;    
     }
 
     private void moveTo(View v, String requestedDataId,
@@ -466,7 +465,7 @@ public class Navigator extends CustomComponent {
         }
 
         Window w = application.createNewWindow();
-        //w.setName(name);
+        w.setName(name);
         ((Application) application).addWindow(w);
         w.open(new ExternalResource(w.getURL()));
         return w;
