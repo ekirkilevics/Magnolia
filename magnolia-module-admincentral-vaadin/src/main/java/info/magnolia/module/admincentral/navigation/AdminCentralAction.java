@@ -40,9 +40,9 @@ import com.vaadin.event.Action;
  * @author had
  * @version $Id: $
  */
-public abstract class MenuAction extends Action implements Action.Listener {
+public abstract class AdminCentralAction extends Action implements Action.Listener {
 
-    public MenuAction(String label) {
+    public AdminCentralAction(String label) {
         super(label);
     }
 

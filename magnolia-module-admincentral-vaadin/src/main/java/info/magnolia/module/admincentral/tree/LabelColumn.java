@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import info.magnolia.cms.core.Content;
@@ -41,7 +43,9 @@ import info.magnolia.cms.core.NodeData;
 /**
  * Describes a column that contains the label of the item with an optional icon.
  */
-public class LabelColumn extends TreeColumn {
+public class LabelColumn extends TreeColumn implements Serializable {
+
+    private static final long serialVersionUID = -3025969036157185421L;
 
     private boolean editable;
 

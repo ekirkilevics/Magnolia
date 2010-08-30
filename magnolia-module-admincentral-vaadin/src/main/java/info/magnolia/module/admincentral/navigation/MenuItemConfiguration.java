@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -50,13 +51,15 @@ import info.magnolia.module.admincentral.views.IFrameView;
  * @author had
  * @version $Id: $
  */
-public class MenuItemConfiguration extends I18nAwareComponent {
+public class MenuItemConfiguration extends I18nAwareComponent implements Serializable {
+
+    private static final long serialVersionUID = -1471102661627728596L;
 
     private Logger log = LoggerFactory.getLogger(MenuItemConfiguration.class);
 
     private String icon;
     private String label;
-    private MenuAction action;
+    private AdminCentralAction action;
     private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
     private MenuItemConfiguration parent;
     private String location;
@@ -96,10 +99,10 @@ public class MenuItemConfiguration extends I18nAwareComponent {
     public void setLabel(String label) {
         this.label = label;
     }
-    public MenuAction getAction() {
+    public AdminCentralAction getAction() {
         if (this.action == null) {
             try {
-                Class<? extends MenuAction> clazz = this.actionClass == null ? DefaultMenuAction.class : (Class<? extends MenuAction>) Class.forName(this.actionClass);
+                Class<? extends AdminCentralAction> clazz = this.actionClass == null ? DefaultMenuAction.class : (Class<? extends AdminCentralAction>) Class.forName(this.actionClass);
                 // TODO: sucks action needs to have label set at the creation time :(
                 // TODO: refactor and make c2b friendly
                 this.action = clazz.getConstructor(String.class).newInstance(getMessages().getWithDefault(getLabel(), getLabel()));
@@ -120,7 +123,7 @@ public class MenuItemConfiguration extends I18nAwareComponent {
         }
         return action;
     }
-    public void setAction(MenuAction action) {
+    public void setAction(AdminCentralAction action) {
         this.action = action;
     }
 

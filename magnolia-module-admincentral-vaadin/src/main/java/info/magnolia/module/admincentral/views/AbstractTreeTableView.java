@@ -275,6 +275,9 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
             container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
 
+        // would be nice to be able to do so, but stupid container insists on showing all props as columns
+        //container.addContainerProperty("handle", String.class, "");
+
         try {
             addChildrenToContainer(container, parent, null);
         }
@@ -318,6 +321,10 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
         }
     }
 
+
+    /**
+     * Extracts all relevant properties (handle + those specified by columns) from the content to the item representing piece of content in the tree table.
+     */
     public void addChildrenOfType(Container.Hierarchical container, Content parent, Object parentItemId, String type, String pathToIcon) throws RepositoryException {
         for (Content content : parent.getChildren(type)) {
 
@@ -333,6 +340,8 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
             for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
                 container.getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(content));
             }
+            // don't do this otherwise all handles become visible columns ... :(
+            //container.getContainerProperty(itemId, "handle").setValue(content.getHandle());
 
             addChildrenToContainer(container, content, itemId);
         }

@@ -38,14 +38,22 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.Action;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.navigation.AdminCentralAction;
 import info.magnolia.module.admincentral.tree.TreeManager;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
 
 import java.util.Date;
+
+import javax.jcr.RepositoryException;
 
 /**
  * WebsiteTreeTableView.
@@ -94,19 +102,62 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
     }
 
     private Action createAddAction() {
-        Action add = new Action("Add");
+        Action add = new AdminCentralAction("Add") {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                Object itemId = getTreeTable().addItem();
+                getTreeTable().setParent(itemId, target);
+
+                Item item = getTreeTable().getItem(itemId);
+                Property name = item.getItemProperty(PAGE);
+                name.setValue("untitled");
+                Property status = item.getItemProperty(STATUS);
+                status.setValue(0);
+                Property modDate = item.getItemProperty(MOD_DATE);
+                modDate.setValue(new Date());            }
+        };
         add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/document_plain_earth_add.gif"));
         return add;
     }
 
     private Action createDeleteAction() {
-        Action add = new Action("Delete");
+        Action add = new AdminCentralAction("Delete") {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                getTreeTable().removeItem(target);
+            }};
         add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/delete2.gif"));
         return add;
     }
 
     private Action createOpenAction() {
-        Action add = new Action("Open page");
+        Action add = new AdminCentralAction("Open page") {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                if (target == null || !(target instanceof String)) {
+                    return;
+                }
+                String id = StringUtils.substringBefore((String) target, "@");
+                if (StringUtils.isBlank(id)) {
+                    return;
+                }
+                try {
+                    String handle = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID(id).getHandle();
+                // we no longer store handle as part of tree container ...
+//                TreeTable tree = getTreeTable();
+//                Item item = tree.getItem(target);//item.getItemPropertyIds()
+//                Property handleProp = item.getItemProperty("handle");
+//                String handle = (String) handleProp.getValue();
+                    String uri = ServerConfiguration.getInstance().getDefaultBaseUrl() + handle.substring(1) + ".html";
+                    Window window = getApplication().getMainWindow();
+                    window.open(new ExternalResource(uri));
+                } catch (RepositoryException e) {
+                    log.error("Failed to retrieve page handle for " + target, e);
+                }
+            }};
         add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/document_plain_earth.gif"));
         return add;
     }
@@ -125,25 +176,15 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                 return template.endsWith("JSP") ? jspActions : ftlActions;
             }
 
-            /*
-             * Handle actions
-             */
             public void handleAction(Action action, Object sender, Object target) {
-                if (action == actionAdd) {
-                    Object itemId = getTreeTable().addItem();
-                    getTreeTable().setParent(itemId, target);
-
-                    Item item = getTreeTable().getItem(itemId);
-                    Property name = item.getItemProperty(PAGE);
-                    name.setValue("New Item");
-                    Property status = item.getItemProperty(STATUS);
-                    status.setValue(0);
-                    Property modDate = item.getItemProperty(MOD_DATE);
-                    modDate.setValue(new Date());
-                } else if (action == actionDelete) {
-                    getTreeTable().removeItem(target);
+                try {
+                    ((AdminCentralAction) action).handleAction(sender, target);
+                } catch (ClassCastException e) {
+                    // not our action
+                    log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());
                 }
             }
+
         });
     }
 }

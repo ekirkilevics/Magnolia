@@ -105,7 +105,7 @@ public class Menu extends Accordion {
         //TODO for testing only. To be removed.
         MenuItemConfiguration testDialogsMenu = new MenuItemConfiguration();
         testDialogsMenu.setLabel("Dialogs");
-        MenuAction testDialogMenuAction= new MenuAction("DialogsMA") {
+        AdminCentralAction testDialogMenuAction= new AdminCentralAction("DialogsMA") {
 
             @Override
             public void handleAction(Object sender, Object target) {
@@ -253,7 +253,7 @@ public class Menu extends Accordion {
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
 
-            MenuAction action = item.getAction();
+            AdminCentralAction action = item.getAction();
             log.info("Attaching action {} to menu {}", action != null ? action.getCaption() : "null", item.getLabel());
             if (action != null) {
                 log.info("Attached action {} to menu item {}", action.getCaption(), item.getLocation());

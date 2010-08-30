@@ -44,7 +44,7 @@ import com.vaadin.ui.Window.Notification;
  * @author had
  * @version $Id: $
  */
-public class DefaultMenuAction extends MenuAction {
+public class DefaultMenuAction extends AdminCentralAction {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultMenuAction.class);
 

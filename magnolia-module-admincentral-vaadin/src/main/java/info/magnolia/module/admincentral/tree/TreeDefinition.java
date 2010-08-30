@@ -33,13 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Definition of a tree.
  */
-public class TreeDefinition {
+public class TreeDefinition implements Serializable {
+
+    private static final long serialVersionUID = -4220598066437699852L;
 
     private String name;
     private String repository;
