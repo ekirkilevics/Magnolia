@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-project</artifactId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0-m1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -79,12 +78,12 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m1</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -104,7 +103,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m1</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
