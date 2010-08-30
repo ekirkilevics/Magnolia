@@ -36,12 +36,14 @@ package info.magnolia.module.admincentral.setup;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 
@@ -76,6 +78,8 @@ public class AdminCentralVaadinModuleVersionHandler extends DefaultModuleVersion
                 }
             }
         });
+        //TODO: remove this before final - needed for icons to work
+        tasks.add(new SetPropertyTask(ContentRepository.CONFIG, "/server", "defaultBaseUrl", "http://localhost:8080/magnolia-empty-webapp/"));
         return tasks;
     }
 }
