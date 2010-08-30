@@ -79,7 +79,7 @@ public class AdminCentralVaadinModuleVersionHandler extends DefaultModuleVersion
             }
         });
         //TODO: remove this before final - needed for icons to work
-        tasks.add(new SetPropertyTask(ContentRepository.CONFIG, "/server", "defaultBaseUrl", "http://localhost:8080/magnolia-empty-webapp/"));
+        tasks.add(new SetPropertyTask(ContentRepository.CONFIG, "/server", "defaultBaseUrl", "http://localhost:8080/magnolia-empty-webapp-5.0-m1/"));
         return tasks;
     }
 }
