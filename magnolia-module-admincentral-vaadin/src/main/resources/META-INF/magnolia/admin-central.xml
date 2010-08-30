@@ -5,6 +5,7 @@
   <displayName>Magnolia GenUIne Vaadin Admin Interface</displayName>
   <description>New Magnolia Administration GUI</description>
   <class>info.magnolia.module.admincentral.AdminCentralVaadinModule</class>
+  <versionHandler>info.magnolia.module.admincentral.setup.AdminCentralVaadinModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <dependencies>
@@ -19,6 +20,36 @@
     <!-- the dependency is just to ensure order of loading of modules -->
     <dependency>
       <name>adminInterface</name>
+      <version>5.0/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>samples</name>
+      <version>5.0/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>wcm</name>
+      <version>5.0/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>cache</name>
+      <version>5.0/*</version>
+      <optional>true</optional>
+    </dependency>
+      <dependency>
+      <name>groovy</name>
+      <version>5.0/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>dms</name>
+      <version>5.0/*</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <name>workflow</name>
       <version>5.0/*</version>
       <optional>true</optional>
     </dependency>

@@ -33,7 +33,17 @@
  */
 package info.magnolia.module.admincentral.setup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
+import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.TaskExecutionException;
 
 /**
  * Module's version handler.
@@ -42,4 +52,30 @@ import info.magnolia.module.DefaultModuleVersionHandler;
  */
 public class AdminCentralVaadinModuleVersionHandler extends DefaultModuleVersionHandler {
 
+    @Override
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
+        List tasks = new ArrayList();
+        tasks.addAll(super.getExtraInstallTasks(installContext));
+        tasks.add (new AbstractTask("Update dialogs", "Will update dialog structure from the old format into new one") {
+            public void execute(InstallContext installContext) throws TaskExecutionException {
+                try {
+                    new ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getSystemContext());
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                    installContext.warn("Failed to update dialogs, please restart the instance.");
+                }
+            }
+        });
+        tasks.add (new AbstractTask("Update menu", "Will update menu structure from the old format into new one") {
+            public void execute(InstallContext installContext) throws TaskExecutionException {
+                try {
+                    new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getSystemContext());
+                } catch (Exception e) {
+                    log.warn(e.getMessage(), e);
+                    installContext.warn("Failed to update menu, please restart the instance.");
+                }
+            }
+        });
+        return tasks;
+    }
 }
