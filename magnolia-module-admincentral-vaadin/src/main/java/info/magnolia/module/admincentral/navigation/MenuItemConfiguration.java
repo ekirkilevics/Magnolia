@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.terminal.ExternalResource;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 import info.magnolia.module.admincentral.views.IFrameView;
 
@@ -110,10 +110,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
                 if (this.getIcon() != null) {
                     // TODO: might be too slow or chatty and we might want to swap it with ApplicationResource instead\
                     String iconPath = getIcon();
-                    if (iconPath.startsWith("/")) {
-                        iconPath = iconPath.substring(1);
-                    }
-                    this.action.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + iconPath));
+                    this.action.setIcon(new ExternalResource(MgnlContext.getContextPath() + iconPath));
                 }
 
                 // TODO: transfer i18n as well ... or set this as a parent for i18n

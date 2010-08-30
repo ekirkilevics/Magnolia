@@ -41,7 +41,6 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Window;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.navigation.AdminCentralAction;
 import info.magnolia.module.admincentral.tree.TreeManager;
@@ -82,8 +81,8 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
     private final Action[] jspActions;
 
     public WebsiteTreeTableView() {
-        ftlActions = new Action[]{actionOpen, actionAdd, actionDelete};
-        jspActions = new Action[]{actionAdd, actionDelete};
+        ftlActions = new Action[]{actionAdd, actionDelete};
+        jspActions = new Action[]{actionOpen, actionAdd, actionDelete};
         setTreeDefinition(TreeManager.getInstance().getTree("website"));
         getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
@@ -117,7 +116,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                 Property modDate = item.getItemProperty(MOD_DATE);
                 modDate.setValue(new Date());            }
         };
-        add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/document_plain_earth_add.gif"));
+        add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth_add.gif"));
         return add;
     }
 
@@ -128,7 +127,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
             public void handleAction(Object sender, Object target) {
                 getTreeTable().removeItem(target);
             }};
-        add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/delete2.gif"));
+        add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/delete2.gif"));
         return add;
     }
 
@@ -151,14 +150,14 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
 //                Item item = tree.getItem(target);//item.getItemPropertyIds()
 //                Property handleProp = item.getItemProperty("handle");
 //                String handle = (String) handleProp.getValue();
-                    String uri = ServerConfiguration.getInstance().getDefaultBaseUrl() + handle.substring(1) + ".html";
+                    String uri = MgnlContext.getContextPath() + handle + ".html";
                     Window window = getApplication().getMainWindow();
                     window.open(new ExternalResource(uri));
                 } catch (RepositoryException e) {
                     log.error("Failed to retrieve page handle for " + target, e);
                 }
             }};
-        add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/document_plain_earth.gif"));
+        add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth.gif"));
         return add;
     }
 
@@ -173,7 +172,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                 }
                 // TODO: Just a dummy demo for creating different context menus depending on
                 // selected item...
-                return template.endsWith("JSP") ? jspActions : ftlActions;
+                return template.indexOf("JSP") != -1 ? jspActions : ftlActions;
             }
 
             public void handleAction(Action action, Object sender, Object target) {

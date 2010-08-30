@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import info.magnolia.cms.core.Content;
@@ -41,7 +43,9 @@ import info.magnolia.cms.core.NodeData;
 /**
  * A column that displays a NodeData value when viewing a content node. Used in the website tree for the 'Title' column.
  */
-public class NodeDataColumn extends TreeColumn {
+public class NodeDataColumn extends TreeColumn implements Serializable {
+
+    private static final long serialVersionUID = -8092078437662819344L;
 
     private String nodeDataName;
     private boolean editable = false;

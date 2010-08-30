@@ -33,12 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+
 /**
  * Configuration for inclusion of a certain item type in a tree.
  *
  * @see info.magnolia.cms.core.ItemType
  */
-public class TreeItemType {
+public class TreeItemType implements Serializable {
+
+    private static final long serialVersionUID = 815087827919184207L;
 
     public static final String ITEM_TYPE_NODE_DATA = "nodeData";
 

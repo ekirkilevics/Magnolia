@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
@@ -45,7 +47,9 @@ import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 /**
  * A column that displays icons for permissions and activation status.
  */
-public class StatusColumn extends TreeColumn {
+public class StatusColumn extends TreeColumn implements Serializable {
+
+    private static final long serialVersionUID = -2873717609262761331L;
 
     private boolean activation = true;
     private boolean permissions = false;

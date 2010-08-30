@@ -40,6 +40,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -48,7 +49,9 @@ import java.util.Map;
  * A column that displays the currently selected template for a node and allows the editor to choose from a list of
  * available templates. Used in the website tree.
  */
-public class TemplateColumn extends TreeColumn {
+public class TemplateColumn extends TreeColumn implements Serializable {
+
+    private static final long serialVersionUID = -2304821998680488800L;
 
     @Override
     public Class<?> getType() {
