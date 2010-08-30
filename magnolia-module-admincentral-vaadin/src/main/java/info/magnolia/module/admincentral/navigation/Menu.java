@@ -74,6 +74,8 @@ import com.vaadin.ui.themes.BaseTheme;
 public class Menu extends Accordion {
 
     private static final long serialVersionUID = 1L;
+    private static final String SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE = "Selected action is not available in Milestone 1";
+
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
     private Navigator navigator;
     private final Map<Tab, MenuItemConfiguration> menuItems = new HashMap<Tab, MenuItemConfiguration>();
@@ -248,17 +250,25 @@ public class Menu extends Accordion {
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption("X" + Menu.this.getLabel(item));
+            setCaption(Menu.this.getLabel(item));
             super.attach();
             setStyleName(BaseTheme.BUTTON_LINK);
-            setHeight(30f, Button.UNITS_PIXELS);
+            setHeight(20f, Button.UNITS_PIXELS);
 
-            AdminCentralAction action = item.getAction();
+            final AdminCentralAction action = item.getAction();
             log.info("Attaching action {} to menu {}", action != null ? action.getCaption() : "null", item.getLabel());
-            if (action != null) {
-                log.info("Attached action {} to menu item {}", action.getCaption(), item.getLocation());
-                super.getActionManager().addAction(action);
-            }
+            this.addListener(new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    if (action == null ) {
+                        return;
+                    }
+                    action.handleAction(SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE, getApplication());
+                }
+            });
+            // this ain't working
+            //super.getActionManager().addAction(action);
+
        }
     }
 
@@ -287,10 +297,19 @@ public class Menu extends Accordion {
                 //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
                 MenuItemConfiguration item = menuItems.get(tab);
 //                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
-                item.getAction().handleAction(event, getApplication());
-
                 //Just give the navigator the uri and it will know where to go and which View to instantiate
                 String key = menuItemKeys.get(tab);
+
+                Object message;
+                Class view = navigator.getViewClass(key);
+                if (view == null || IFrameView.class.equals(view)) {
+                    message = SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE;
+                } else {
+                    message = null;
+                }
+                item.getAction().handleAction(message, getApplication());
+
+
                 navigator.navigateTo(key);
 
             }

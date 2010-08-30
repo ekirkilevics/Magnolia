@@ -54,8 +54,14 @@ public class DefaultMenuAction extends AdminCentralAction {
 
     @Override
     public void handleAction(Object sender, Object target) {
-        log.error("show notification for {}", getCaption());
-        ((Application) target).getMainWindow().showNotification(getCaption(), Notification.TYPE_HUMANIZED_MESSAGE);
+        log.info("show notification for {}", getCaption());
+        String message;
+        if (sender instanceof String) {
+            message = (String) sender;
+        } else {
+            message = getCaption();
+        }
+        ((Application) target).getMainWindow().showNotification(message, Notification.TYPE_HUMANIZED_MESSAGE);
     }
 
 }

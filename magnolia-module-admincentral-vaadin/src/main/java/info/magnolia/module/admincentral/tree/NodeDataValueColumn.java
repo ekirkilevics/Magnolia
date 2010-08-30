@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import info.magnolia.cms.core.Content;
@@ -42,7 +44,9 @@ import info.magnolia.cms.core.NodeData;
  * Describes a column that displays the value of a NodeData. Used in the config tree when a row in the TreeTable is a
  * NodeData.
  */
-public class NodeDataValueColumn extends TreeColumn {
+public class NodeDataValueColumn extends TreeColumn implements Serializable {
+
+    private static final long serialVersionUID = -6032077132567486333L;
 
     private boolean editable = false;
 
