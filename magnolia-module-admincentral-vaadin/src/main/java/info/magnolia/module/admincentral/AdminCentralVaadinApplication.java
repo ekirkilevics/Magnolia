@@ -140,6 +140,7 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
         final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
+
         final Navigator navigator = new Navigator(mainContainer);
         mainWindow.addComponent(navigator);
         setMainWindow(mainWindow);
@@ -200,6 +201,10 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         leftPaneLayout.addComponent(menu);
         leftPaneLayout.addComponent(uriFragmentUtility);
 
+//        // Set the startup page
+//        // TODO this should be the decision of navigation/menu;
+//        final Component treeTable = new DialogSandboxPage();
+//        mainContainer.addComponent(treeTable);
         bottomLeftCorner.setWidth("100%");
         mainContainer.addComponent(bottomLeftCorner);
         mainContainer.setSizeFull();
@@ -213,38 +218,13 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);
 
+//        mainContainer.setExpandRatio(treeTable, 15.0f);
+//        mainContainer.setExpandRatio(bottomLeftCorner, 1.0f);
+
         return mainWindow;
 
     }
 
-    /*void restoreApplicationStatus() {
-        uriFragmentUtility.addListener(new FragmentChangedListener() {
-
-            public void fragmentChanged(FragmentChangedEvent source) {
-                String fragment = source.getUriFragmentUtility().getFragment();
-                log.debug("fragment is {}", fragment);
-                if (fragment != null) {
-                    restoreSelectedMenuItemTabFromURIFragment(fragment);
-                }
-            }
-        });
-    }
-
-    /**
-     * Tries to restore the menu status as it was saved i.e. by bookmarking the application URL.
-     * @param fragment
-     */
-    /*void restoreSelectedMenuItemTabFromURIFragment(final String fragment) {
-        for (Iterator<Component> iterator = menu.getComponentIterator(); iterator.hasNext();) {
-            Component tabContent = iterator.next();
-            Tab tab = menu.getTab(tabContent);
-            if (fragment.equalsIgnoreCase(tab.getCaption())) {
-                log.debug("restoring app status: opening menu tab with caption {}", fragment);
-                menu.setSelectedTab(tabContent);
-                return;
-            }
-        }
-    }*/
 
     @Override
     public Window getWindow(String name) {
