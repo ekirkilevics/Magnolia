@@ -38,6 +38,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.Action;
 import com.vaadin.terminal.ExternalResource;
+
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.module.admincentral.tree.TreeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +58,24 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
 
     private static final Logger log = LoggerFactory.getLogger(WebsiteTreeTableView.class);
 
+    // TODO static proof-of-concept hard coded stuff, needs to be replaced with generic configuration
+
+    public static final String PAGE = "Page";
+    public static final String TITLE = "Title";
+    public static final String STATUS = "Status";
+    public static final String TEMPLATE = "Template";
+    public static final String MOD_DATE = "Mod. Date";
+
+    private final Action actionAdd = createAddAction();
+    private final Action actionDelete = createDeleteAction();
+    private final Action actionOpen = createOpenAction();
+
+    private final Action[] ftlActions;
+    private final Action[] jspActions;
+
     public WebsiteTreeTableView() {
+        ftlActions = new Action[]{actionOpen, actionAdd, actionDelete};
+        jspActions = new Action[]{actionAdd, actionDelete};
         setTreeDefinition(TreeManager.getInstance().getTree("website"));
         getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
@@ -74,36 +93,21 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
         return null;
     }
 
-    // TODO static proof-of-concept hard coded stuff, needs to be replaced with generic configuration
-
-    public static final String PAGE = "Page";
-    public static final String TITLE = "Title";
-    public static final String STATUS = "Status";
-    public static final String TEMPLATE = "Template";
-    public static final String MOD_DATE = "Mod. Date";
-
-    private static final Action ACTION_ADD = createAddAction();
-    private static final Action ACTION_DELETE = createDeleteAction();
-    private static final Action ACTION_OTHER = createHelpAction();
-
-    private static final Action[] FTL_ACTIONS = new Action[]{ACTION_ADD, ACTION_OTHER};
-    private static final Action[] JSP_ACTIONS = new Action[]{ACTION_ADD, ACTION_DELETE};
-
-    private static Action createAddAction() {
+    private Action createAddAction() {
         Action add = new Action("Add");
-        add.setIcon(new ExternalResource("http://www.iconarchive.com/download/deleket/button/Button-Add.ico"));
+        add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/document_plain_earth_add.gif"));
         return add;
     }
 
-    private static Action createDeleteAction() {
+    private Action createDeleteAction() {
         Action add = new Action("Delete");
-        add.setIcon(new ExternalResource("http://www.iconarchive.com/download/deleket/button/Button-Delete.ico"));
+        add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/delete2.gif"));
         return add;
     }
 
-    private static Action createHelpAction() {
-        Action add = new Action("Other");
-        add.setIcon(new ExternalResource("http://www.iconarchive.com/download/deleket/button/Button-Help.ico"));
+    private Action createOpenAction() {
+        Action add = new Action("Open page");
+        add.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + ".resources/icons/16/document_plain_earth.gif"));
         return add;
     }
 
@@ -118,14 +122,14 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                 }
                 // TODO: Just a dummy demo for creating different context menus depending on
                 // selected item...
-                return template.endsWith("JSP") ? JSP_ACTIONS : FTL_ACTIONS;
+                return template.endsWith("JSP") ? jspActions : ftlActions;
             }
 
             /*
              * Handle actions
              */
             public void handleAction(Action action, Object sender, Object target) {
-                if (action == ACTION_ADD) {
+                if (action == actionAdd) {
                     Object itemId = getTreeTable().addItem();
                     getTreeTable().setParent(itemId, target);
 
@@ -136,7 +140,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                     status.setValue(0);
                     Property modDate = item.getItemProperty(MOD_DATE);
                     modDate.setValue(new Date());
-                } else if (action == ACTION_DELETE) {
+                } else if (action == actionDelete) {
                     getTreeTable().removeItem(target);
                 }
             }
