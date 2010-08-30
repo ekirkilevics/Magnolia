@@ -127,6 +127,9 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
             }
             // map old controls to new ones
             String controlTypeName = StringUtils.substringAfterLast(controlClass, ".Dialog");
+            if (controlClass.endsWith("FckEditorDialog")) {
+                controlTypeName = "FckEditor";
+            }
             String newControlClassName = "info.magnolia.module.admincentral.control." + controlTypeName + "Control";
             try {
                 Class<?> clazz = Class.forName(newControlClassName);
