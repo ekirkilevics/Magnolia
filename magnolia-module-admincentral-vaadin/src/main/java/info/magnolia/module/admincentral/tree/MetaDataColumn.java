@@ -37,13 +37,16 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Column that displays a property for a nodes MetaData. Used to display the modification date of content nodes.
  */
-public class MetaDataColumn extends TreeColumn {
+public class MetaDataColumn extends TreeColumn implements Serializable {
+
+    private static final long serialVersionUID = 5885358873124617444L;
 
     // TODO should have name of MetaData property, for now always returns the mod. date
 
