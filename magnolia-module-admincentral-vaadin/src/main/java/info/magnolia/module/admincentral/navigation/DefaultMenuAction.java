@@ -48,20 +48,14 @@ public class DefaultMenuAction extends MenuAction {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultMenuAction.class);
 
-    private String onClick;
-
     public DefaultMenuAction(String label) {
         super(label);
     }
 
     @Override
     public void handleAction(Object sender, Object target) {
-        log.error("Navigating to {}. But should not this be handled by the 'Navigator' really?", onClick);
-        ((Application) sender).getMainWindow().showNotification("OnClick", onClick, Notification.TYPE_HUMANIZED_MESSAGE);
-    }
-
-    public void setOnClick(String onClick) {
-        this.onClick = onClick;
+        log.error("show notification for {}", getCaption());
+        ((Application) target).getMainWindow().showNotification(getCaption(), Notification.TYPE_HUMANIZED_MESSAGE);
     }
 
 }

@@ -113,10 +113,6 @@ public class MenuItemConfiguration extends I18nAwareComponent {
                     this.action.setIcon(new ExternalResource(ServerConfiguration.getInstance().getDefaultBaseUrl() + iconPath));
                 }
 
-                if (this.getOnclick() != null) {
-                    ((DefaultMenuAction) this.action).setOnClick(this.getOnclick());
-                }
-
                 // TODO: transfer i18n as well ... or set this as a parent for i18n
             } catch (Exception e) {
                 log.error("Failed to instantiate action " + actionClass, e);

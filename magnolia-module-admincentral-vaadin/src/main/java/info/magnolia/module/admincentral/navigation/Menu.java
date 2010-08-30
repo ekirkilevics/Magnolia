@@ -116,7 +116,7 @@ public class Menu extends Accordion {
         testDialogsMenu.setAction(testDialogMenuAction);
         addTab("testDialogs", testDialogsMenu);
 
-        // register trigger for menu actions
+        // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
         addListener(new SelectedMenuItemTabChangeListener(((AdminCentralVaadinApplication)getApplication()).getMainContainer()));
     }
 
@@ -244,37 +244,21 @@ public class Menu extends Accordion {
          */
         @Override
         public void attach() {
+            Resource icon = Menu.this.getIcon(item);
+            if (icon != null) {
+                setIcon(icon);
+            }
+            setCaption("X" + Menu.this.getLabel(item));
             super.attach();
-            setCaption(getLabel(item));
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(30f, Button.UNITS_PIXELS);
-            log.info("Attaching menu action {}", getCaption());
 
             MenuAction action = item.getAction();
+            log.info("Attaching action {} to menu {}", action != null ? action.getCaption() : "null", item.getLabel());
             if (action != null) {
-                // TODO: do we really need to set it explicitly and not via action?
-                //setIcon(Menu.this.getIcon(item));
-                //action.setIcon(Menu.this.getIcon(item));
-                //TODO this is just for the M1 release to get the icon and make the menu look prettier
-                if(StringUtils.isNotEmpty(item.getIcon())){
-                    setIcon(new ClassResource(item.getIcon().replaceFirst(".resources", "mgnl-resources"), getApplication()));
-                }
-
+                log.info("Attached action {} to menu item {}", action.getCaption(), item.getLocation());
                 super.getActionManager().addAction(action);
-            } else {
-            //setCaption(getLabel(item));
-            //setIcon(new ClassResource(getIconPath(item), getApplication()));
-            //final String onClickAction = item.getOnClick().trim();
-            //addListener(new Button.ClickListener () {
-            //
-            //    public void buttonClick(ClickEvent event) {
-            //        //ComponentContainer mainContainer = ((AdminCentralVaadinApplication)getApplication()).getMainContainer();
-            //        //TODO add proper component here, for now just show onclick action
-            //        getApplication().getMainWindow().showNotification("OnClick", onClickAction, Notification.TYPE_HUMANIZED_MESSAGE);
-            //    }
-            //
-            //});
-          }
+            }
        }
     }
 
@@ -300,9 +284,15 @@ public class Menu extends Accordion {
             TabSheet tabsheet = event.getTabSheet();
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
+                //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
+                MenuItemConfiguration item = menuItems.get(tab);
+//                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
+                item.getAction().handleAction(event, getApplication());
+
                 //Just give the navigator the uri and it will know where to go and which View to instantiate
                 String key = menuItemKeys.get(tab);
                 navigator.navigateTo(key);
+
             }
         }
     }
