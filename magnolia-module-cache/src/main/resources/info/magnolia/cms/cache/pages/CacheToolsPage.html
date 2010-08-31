@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>Cache flushing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body id="mgnl">
+    [#if message?exists]
+      <pre>${message}</pre>
+      <hr />
+    [/#if]
+	
+	<!-- cache info -->
+    <form action="" method="post">
+      <input type="hidden" name="command" value="refresh"/>
+	    <div class="pageframe">
+	      <h3>Caches information</h3>
+		      	<div class="formelement">	
+		          <strong><label>cache</label>nr. of elements</strong>
+				</div>
+	          [#list this.cacheSizes?keys as key]
+		      	<div class="formelement">	
+		          <label>${key}</label>${this.cacheSizes[key]}
+				</div>
+	          [/#list]
+	         <div class="formelement">
+	           <input type="submit" class="mgnlControlButton" value="Refresh"/>
+	         </div>
+	     </div>
+    </form>
+
+	<!-- flush by uuid from cache -->
+    <form action="" method="post">
+      <input type="hidden" name="command" value="flushByUUID"/>
+      <div class="pageframe">
+        <h3>Flush from caches by UUID</h3>
+        <div class="formelement">
+          <label for="uu-id">UUID</label>
+          <input type="text" name="uuid" id="uu-id" value="" class="text" />
+        </div>
+          <div class="formelement">
+            <label for="repository">Repository</label>
+            <select name="repository" id="repository">
+              [#list this.repositories as item]
+              <option>${item}</option>
+              [/#list]
+            </select>
+          </div>
+        <div class="formelement">
+          <input type="submit" class="mgnlControlButton" value="Flush uuid"/>
+        </div>
+      </div>
+    </form>
+
+	<!-- flush cache by name -->
+    <form action="" method="post">
+      <input type="hidden" name="command" value="flushNamedCache"/>
+      <div class="pageframe">
+        <h3>Flush a cache by name</h3>
+        <div class="formelement">
+          <label for="cache-name">Caches</label>
+          <select name="cacheName" id="cache-name">
+            [#list this.cacheSizes?keys as item]
+            <option>${item}</option>
+            [/#list]
+          </select>
+        </div>
+        <div class="formelement">
+          <input type="submit" class="mgnlControlButton" value="Flush cache"/>
+        </div>
+      </div>
+    </form>
+
+	<!-- flush all caches -->
+    <form action="" method="post">
+      <input type="hidden" name="command" value="flushAllCaches"/>
+      <div class="pageframe">
+        <h3>Flush all caches</h3>
+        <div class="formelement">
+          <input type="submit" class="mgnlControlButton" value="Flush all caches"/>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>

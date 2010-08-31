@@ -43,6 +43,7 @@ import info.magnolia.module.cache.RegisterWorkspaceForCacheFlushingTask;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
+import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
@@ -158,7 +159,13 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new WarnTask("Warning", "Server side re-caching of requests with no-cache header (shift reload) were disabled. This can be changed at /modules/cache/config/configurations/default/cachePolicy/refreshOnNoCacheRequests"))
                 );
         register(DeltaBuilder.update("4.3.2", "Make waiting for cache entry configurable")
-                .addTask(new NewPropertyTask("Set cache new entry timeout", "Makes sure incoming requests are not waiting for cache entries to be created longer then specified timeout", ContentRepository.CONFIG, "/modules/cache/config/cacheFactory", "blockingTimeout", "4000")));
+                .addTask(new NewPropertyTask("Set cache new entry timeout", "Makes sure incoming requests are not waiting for cache entries to be created longer then specified timeout", ContentRepository.CONFIG, "/modules/cache/config/cacheFactory", "blockingTimeout", "4000"))
+                );
+        register(DeltaBuilder.update("4.3.7", "Adds cache tools")
+                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushNamedCache.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))                
+                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/admincentral/config.modules.adminInterface.config.menu.tools.cacheTools.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
+                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.pages.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
+                );
     }
 
     private List<Task> getTasksFor364() {
