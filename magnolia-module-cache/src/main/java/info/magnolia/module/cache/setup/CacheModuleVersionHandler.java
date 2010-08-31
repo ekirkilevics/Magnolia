@@ -162,9 +162,9 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new NewPropertyTask("Set cache new entry timeout", "Makes sure incoming requests are not waiting for cache entries to be created longer then specified timeout", ContentRepository.CONFIG, "/modules/cache/config/cacheFactory", "blockingTimeout", "4000"))
                 );
         register(DeltaBuilder.update("4.3.7", "Adds cache tools")
-                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushNamedCache.xml", new WarnTask("Cache tools", "Already bootstraped")))                
-                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/admincentral/config.modules.adminInterface.config.menu.tools.cacheTools.xml", new WarnTask("Cache tools", "Already bootstraped")))
-                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.pages.xml", new WarnTask("Cache tools", "Already bootstraped")))
+                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.commands.cache.flushNamedCache.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))                
+                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/admincentral/config.modules.adminInterface.config.menu.tools.cacheTools.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
+                .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.pages.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
                 );
     }
 
