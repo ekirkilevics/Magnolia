@@ -209,7 +209,6 @@ public class Menu extends Accordion {
 //        // TODO: why isn't external resource working? Urls?
 //        return menuItem.getAction().getIcon();
 
-        // TODO: why do we have to replace ==> because we do not go via filter chain here
         if (menuItem.getIcon() == null) {
             return null;
         }
