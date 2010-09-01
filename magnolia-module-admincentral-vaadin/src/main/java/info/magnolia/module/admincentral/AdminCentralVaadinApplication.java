@@ -56,12 +56,10 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
-import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
@@ -79,22 +77,11 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
 
     private static final long serialVersionUID = 5773744599513735815L;
 
-    //public static final String WINDOW_TITLE = "Magnolia AdminCentral";
-
-    private VerticalLayout mainContainer = new VerticalLayout();
-
-    private HorizontalLayout bottomLeftCorner = new HorizontalLayout();
-
-    private String contextPath;
-
     /**
      * TODO this is a sad little hack to get hold of this instance in classes that create and return
      * vaadin components (controllers). They need it in order to load icons with ClassResource.
      */
     public static AdminCentralVaadinApplication application;
-
-    //This is needed to make application bookmarkable. See http://vaadin.com/book/-/page/advanced.urifu.html
-    private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
     private Messages messages;
 
@@ -114,37 +101,27 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
     @Override
     public void init() {
         application = this;
-        contextPath = "/"+ StringUtils.substringBetween(getURL().getPath(), "/");
         setTheme("runo");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
         setMainWindow(createNewWindow());
-        //restoreApplicationStatus();
-    }
-
-    //TODO can this arise concurrency issues? Use ThreadLocal? Anyway, it should not be an issue, because as stated at
-    //http://vaadin.com/book/-/page/architecture.server-side.html "... [Vaadin] associates an Application instance with each session."
-    public ComponentContainer getMainContainer(){
-        return mainContainer;
-    }
-
-    public UriFragmentUtility getUriFragmentUtility(){
-        return uriFragmentUtility;
+        //TODO logout and redirect to new AdminCentral
+        setLogoutURL(MgnlContext.getContextPath() + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
     }
 
     /**
-     * package-private modifier is used for better testing possibilities...
+     * Creates the application layout and UI elements.
      */
     private Window initLayout() {
 
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
+
         final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
 
+        final VerticalLayout mainContainer = new VerticalLayout();
         final Navigator navigator = new Navigator(mainContainer);
         mainWindow.addComponent(navigator);
-        setMainWindow(mainWindow);
-        setLogoutURL(contextPath + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
 
         // TODO: this layout is wrong!!! breaks completely on long user name or with different languages (eg spanish). It needs to be floating instead
         final AbsoluteLayout headerLayout = new AbsoluteLayout();
@@ -187,7 +164,7 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         divider.setWidth("10px");
         headerLayout.addComponent(divider, "right: 50px; top: 10px;");
 
-        final Button logout = new Button("logout");
+        final Button logout = new Button(messages.get("central.logout"));
         logout.setStyleName(BaseTheme.BUTTON_LINK);
         logout.addListener(new Button.ClickListener () {
             public void buttonClick(ClickEvent event) {
@@ -199,12 +176,8 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         final VerticalLayout leftPaneLayout = new VerticalLayout();
         final Menu menu = createMenu(navigator);
         leftPaneLayout.addComponent(menu);
-        leftPaneLayout.addComponent(uriFragmentUtility);
 
-//        // Set the startup page
-//        // TODO this should be the decision of navigation/menu;
-//        final Component treeTable = new DialogSandboxPage();
-//        mainContainer.addComponent(treeTable);
+        final  HorizontalLayout bottomLeftCorner = new HorizontalLayout();
         bottomLeftCorner.setWidth("100%");
         mainContainer.addComponent(bottomLeftCorner);
         mainContainer.setSizeFull();
@@ -217,9 +190,6 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         outerContainer.addComponent(headerLayout);
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);
-
-//        mainContainer.setExpandRatio(treeTable, 15.0f);
-//        mainContainer.setExpandRatio(bottomLeftCorner, 1.0f);
 
         return mainWindow;
 

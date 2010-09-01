@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.AdminCentralVaadinModule;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.views.IFrameView;
@@ -54,12 +53,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vaadin.navigator.Navigator;
 
-import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -119,7 +117,7 @@ public class Menu extends Accordion {
         addTab("testDialogs", testDialogsMenu);
 
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
-        addListener(new SelectedMenuItemTabChangeListener(((AdminCentralVaadinApplication)getApplication()).getMainContainer()));
+        addListener(new SelectedMenuItemTabChangeListener());
     }
 
 
@@ -215,8 +213,7 @@ public class Menu extends Accordion {
         if (menuItem.getIcon() == null) {
             return null;
         }
-        String path = menuItem.getIcon().replaceFirst(".resources/", "mgnl-resources/");
-        return new ClassResource(path, getApplication());
+        return new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon());
     }
 
     /**
@@ -281,13 +278,7 @@ public class Menu extends Accordion {
 
         private static final long serialVersionUID = 1L;
 
-        //keep a reference to the Application's main container.The reference is initialized in the attach() method, so that we're sure the
-        //getApplication() method does not return null.
-        //TODO probably this is not needed anymore, as it's the navigator itself aware of the main container
-        private ComponentContainer mainContainer;
-
-        public SelectedMenuItemTabChangeListener(ComponentContainer mainContainer) {
-            this.mainContainer = mainContainer;
+        public SelectedMenuItemTabChangeListener() {
         }
 
         public void selectedTabChange(SelectedTabChangeEvent event) {
@@ -296,12 +287,11 @@ public class Menu extends Accordion {
             if (tab != null) {
                 //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
                 MenuItemConfiguration item = menuItems.get(tab);
-//                getApplication().getMainWindow().showNotification("Selected tab: " + tab.getCaption());
-                //Just give the navigator the uri and it will know where to go and which View to instantiate
-                String key = menuItemKeys.get(tab);
+                //Just give the navigator the uri fragment and it will know where to go and which View to instantiate
+                String uriFragment = menuItemKeys.get(tab);
 
                 Object message;
-                Class view = navigator.getViewClass(key);
+                Class view = navigator.getViewClass(uriFragment);
                 if (view == null || IFrameView.class.equals(view)) {
                     message = SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE;
                 } else {
@@ -309,8 +299,7 @@ public class Menu extends Accordion {
                 }
                 item.getAction().handleAction(message, getApplication());
 
-
-                navigator.navigateTo(key);
+                navigator.navigateTo(uriFragment);
 
             }
         }
