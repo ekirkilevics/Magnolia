@@ -34,8 +34,6 @@
 package info.magnolia.module.admincentral.views;
 
 import com.vaadin.Application;
-import com.vaadin.ui.ComponentContainer;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 import info.magnolia.module.admincentral.tree.TreeManager;
 import org.vaadin.navigator.Navigator;
 
@@ -59,15 +57,12 @@ public class ConfigurationTreeTableView extends AbstractTreeTableView {
     }
 
     public void navigateTo(String requestedDataId) {
-        //TODO: why is id always null?
-       ComponentContainer mainContainer = ((AdminCentralVaadinApplication) application).getMainContainer();
-       mainContainer.removeAllComponents();
-       mainContainer.addComponent(this);
+        System.out.println("ConfigTreeView "+ requestedDataId);
 
     }
 
     public String getWarningForNavigatingFrom() {
-        // TODO Auto-generated method stub
+        System.out.println("leaving ConfigTreeView "+ getTreeTable().getValue());
         return null;
     }
 }
