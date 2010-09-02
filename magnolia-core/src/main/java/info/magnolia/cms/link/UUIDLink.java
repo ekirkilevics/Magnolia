@@ -54,8 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author philipp
- * @version $Id$
+ * Deprecated.
  * @deprecated since 4.0 use {@link info.magnolia.link.Link} instead
  */
 public class UUIDLink {
@@ -73,7 +72,7 @@ public class UUIDLink {
     private String parameters;
 
     /**
-     * Pattern to find a magnolia formatted link
+     * Pattern to find a magnolia formatted link.
      */
     public static Pattern UUID_PATTERN = Pattern.compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\}," // the
                                                                                                // uuid
@@ -107,7 +106,7 @@ public class UUIDLink {
     private static Logger log = LoggerFactory.getLogger(UUIDLink.class);
 
     /**
-     * Use parseUUIDLink() or parseLink() to initialize the link object
+     * Use parseUUIDLink() or parseLink() to initialize the link object.
      */
     public UUIDLink() {
     }

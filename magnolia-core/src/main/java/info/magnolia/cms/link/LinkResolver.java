@@ -36,7 +36,7 @@ package info.magnolia.cms.link;
 import info.magnolia.objectfactory.Components;
 
 /**
- * Use to transform links
+ * Deprecated. Used to transform links
  * <ul>
  * <li> uuid pattern --> absolute links
  * <li> uuid pattern --> relative links
@@ -53,13 +53,14 @@ import info.magnolia.objectfactory.Components;
  * The absolute links are the links used for the request including all transformations like adding context, i18n content support, repository to uri mapping, ...
  * </p>
  *
- * @author philipp
- * @version $Id$
  * @deprecated since 4.0 use {@link LinkHelper} instead
  *
  */
 public interface LinkResolver {
-
+    /**
+     * Deprecated.
+     * @deprecated since 4.0
+     */
     public static class Factory{
         public static LinkResolver getInstance(){
             return Components.getSingleton(LinkResolver.class);
@@ -78,7 +79,7 @@ public interface LinkResolver {
     public String convertToAbsoluteLinks(String str, boolean addContextPath);
 
     /**
-     * Used to render links usable from external (like sending an email, ...)
+     * Used to render links usable from external (like sending an email, ...).
      */
     public String convertToExternalLinks(String str);
 

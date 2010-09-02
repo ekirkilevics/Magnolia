@@ -34,8 +34,7 @@
 package info.magnolia.cms.link;
 
 /**
- * @author philipp
- * @version $Id$
+ * Deprecated.
  * @deprecated since 4.0 use {@link info.magnolia.link.LinkException} instead
  */
 public class UUIDLinkException extends info.magnolia.link.LinkException {
@@ -55,5 +54,5 @@ public class UUIDLinkException extends info.magnolia.link.LinkException {
     public UUIDLinkException(Throwable arg0) {
         super(arg0);
     }
-    
+
 }

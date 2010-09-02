@@ -37,12 +37,11 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 
 /**
+ * Deprecated.
  * @deprecated since 4.0 use {@link info.magnolia.link.RelativePathTransformer} instead
- * @author had
- * @version $Id$
  */
 public class RelativePathTransformer extends AbsolutePathTransformer {
-    
+
     protected String absolutePath;
 
     public RelativePathTransformer(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {

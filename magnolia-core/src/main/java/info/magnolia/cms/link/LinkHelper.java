@@ -37,8 +37,7 @@ import info.magnolia.link.LinkUtil;
 import info.magnolia.link.LinkException;
 
 /**
- * @author philipp
- * @version $Id$
+ * Deprecated.
  * @deprecated since 4.0 use {@link LinkUtil instead}
  */
 public class LinkHelper extends LinkUtil {
@@ -51,7 +50,7 @@ public class LinkHelper extends LinkUtil {
     /**
      * Converts provided path to an uuid.
      * @param path path to the page
-     * @return the uuid 
+     * @return the uuid
      * @throws LinkException When node described by provided path doesn't exists or can't be retrieved.
      * @deprecated use {@link info.magnolia.link.LinkFactory#parseLink(String)}.getUUID() instead
      */
