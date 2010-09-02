@@ -50,7 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Sameer Charles
+ * Performs a login operation. Calls all {@link LoginHandler login handlers} until one can handle the request.
  * $Id$
  */
 public class LoginFilter extends AbstractMgnlFilter {
@@ -59,9 +59,6 @@ public class LoginFilter extends AbstractMgnlFilter {
 
     private Collection<LoginHandler> loginHandlers = new ArrayList<LoginHandler>();
 
-    /**
-     * todo - temporary fix
-     * */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         for (LoginHandler handler : this.getLoginHandlers()) {
             LoginResult loginResult = handler.handle(request, response);

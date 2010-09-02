@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This Filter protects URI as defined by ROLE(s)/GROUP(s) ACL
+ * This Filter protects URI as defined by ROLE(s)/GROUP(s) ACL.
  * @author Sameer Charles
  */
 public class URISecurityFilter extends BaseSecurityFilter {
@@ -83,8 +83,8 @@ public class URISecurityFilter extends BaseSecurityFilter {
     }
 
     /**
-     * validates user permissions on URI
-     * */
+     * Validates user permissions on URI.
+     */
     protected boolean isAuthorized(AccessManager accessManager, HttpServletRequest request) {
         if (null == accessManager) return false;
         long permission;

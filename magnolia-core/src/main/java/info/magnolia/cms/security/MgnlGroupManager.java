@@ -49,18 +49,12 @@ import javax.jcr.PathNotFoundException;
 
 
 /**
+ * Manages groups stored in the {@link ContentRepository#USER_GROUPS} workspace.
  * @author Sameer Charles $Id$
  */
 public class MgnlGroupManager implements GroupManager {
     private static final Logger log = LoggerFactory.getLogger(MgnlGroupManager.class);
 
-    /**
-     * Create a group
-     * @param name
-     * @return newly created group
-     * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if logged in repository user does not sufficient rights
-     */
     public Group createGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
         try {
             Content node = getHierarchyManager().createContent("/", name, ItemType.GROUP.getSystemName());
@@ -73,13 +67,6 @@ public class MgnlGroupManager implements GroupManager {
         }
     }
 
-    /**
-     * Get group by the given name
-     * @param name
-     * @return group
-     * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if logged in repository user does not sufficient rights
-     */
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
         try {
             return newGroupInstance(getHierarchyManager().getContent(name));
@@ -95,9 +82,6 @@ public class MgnlGroupManager implements GroupManager {
         return null;
     }
 
-    /**
-     * All groups
-     */
     public Collection<Group> getAllGroups() {
         Collection<Group> groups = new ArrayList<Group>();
         try {
@@ -117,7 +101,7 @@ public class MgnlGroupManager implements GroupManager {
     }
 
     /**
-     * return the groups HierarchyManager (through the system context)
+     * Returns the HierarchyManager (through the system context).
      */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);

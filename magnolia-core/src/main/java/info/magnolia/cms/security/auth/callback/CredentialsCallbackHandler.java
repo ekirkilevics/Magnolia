@@ -49,36 +49,26 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Plain text callback handler
- * @author Sameer Charles
+ * A JAAS {@link CallbackHandler} using plain text passwords.
  * @version $Id$
  */
 public class CredentialsCallbackHandler implements CallbackHandler {
 
-    /**
-     * Logger
-     */
     protected static Logger log = LoggerFactory.getLogger(CredentialsCallbackHandler.class);
 
-    /**
-     * user id
-     */
     protected String name;
 
-    /**
-     * password
-     */
     protected char[] pswd;
 
     /**
-     * The realm to which we login
+     * The realm to which we login.
      */
     protected String realm;
 
     protected User user;
 
     /**
-     * default constructor required by java security framework
+     * Default constructor required by java security framework.
      */
     public CredentialsCallbackHandler() {
         // do not instanciate with this constructor
@@ -95,7 +85,7 @@ public class CredentialsCallbackHandler implements CallbackHandler {
     }
 
     /**
-     * handle name and password callback which must be set while constructing this handler
+     * Handle name and password callbacks called during the JAAS login processing.
      */
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         for (int i = 0; i < callbacks.length; i++) {
@@ -134,7 +124,7 @@ public class CredentialsCallbackHandler implements CallbackHandler {
         }
     }
 
-    
+
     public User getUser() {
         return this.user;
     }

@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Sameer Charles
+ * Uses HTTP basic authentication mechanism to tell the client that he has to login.
  * $Id$
  */
 public class BasicClientCallback extends AbstractHttpClientCallback {

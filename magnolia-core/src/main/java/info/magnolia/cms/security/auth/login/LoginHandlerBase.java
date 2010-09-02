@@ -38,7 +38,7 @@ import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 
 
 /**
- * @author philipp
+ * Uses {@link SecuritySupport#authenticate(CredentialsCallbackHandler, String)} to authenticate.
  * @version $Id$
  */
 public abstract class LoginHandlerBase implements LoginHandler {

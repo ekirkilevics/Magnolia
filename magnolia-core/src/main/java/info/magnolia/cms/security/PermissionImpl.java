@@ -41,6 +41,7 @@ import java.util.Map;
 
 
 /**
+ * Concrete implementation of {@link Permission} using {@link UrlPattern} to match pathes.
  * @author Sameer Charles
  */
 public class PermissionImpl implements Permission, Serializable {

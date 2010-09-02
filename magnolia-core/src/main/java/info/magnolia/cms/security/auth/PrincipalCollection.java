@@ -39,58 +39,32 @@ import java.util.Collection;
 
 
 /**
+ * A collection of {@link Principal principals}.
  * @author Sameer Charles $Id$
  */
 public interface PrincipalCollection extends Principal, Serializable {
 
     public String getName();
 
-    /**
-     * Set this principal name
-     */
     public void setName(String name);
 
-    /**
-     * Set collection
-     * @param collection
-     */
     public void set(Collection collection);
 
-    /**
-     * Add to collection
-     * @param principal to be added to the collection
-     */
     public void add(Principal principal);
 
-    /**
-     * Remove from the collection
-     * @param principal to be removed from the collection
-     */
     public void remove(Principal principal);
 
-    /**
-     * Clear collection
-     */
     public void clearAll();
 
-    /**
-     * Check if this collection contains specified object
-     * @param principal
-     * @return true if the specified object exist in the collection
-     */
     public boolean contains(Principal principal);
 
     /**
-     * Checks if this collection contains object with the specified name
-     * @param name
-     * @return true if the collection contains the principal by the specified name
+     * Checks if this collection contains object with the specified name.
      */
     public boolean contains(String name);
 
     /**
-     * Get principal associated to the specified name from the collection
-     * @param name
-     * @return principal object associated to the specified name
+     * Get principal associated to the specified name from the collection.
      */
     public Principal get(String name);
 

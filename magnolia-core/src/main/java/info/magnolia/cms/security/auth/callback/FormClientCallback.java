@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.ClassUtils;
 
 /**
+ * Sends a login form.
  * @author Sameer Charles
  * $Id$
  */

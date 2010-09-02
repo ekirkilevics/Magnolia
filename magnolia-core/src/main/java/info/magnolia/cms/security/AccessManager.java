@@ -38,6 +38,7 @@ import java.util.List;
 
 
 /**
+ * Handles ACL checks and knows the users permissions.
  * @author Sameer Charles
  * @version $Revision:2558 $ ($Author:scharles $)
  */
@@ -59,7 +60,7 @@ public interface AccessManager extends Serializable {
     void setPermissionList(List<Permission> permissions);
 
     /**
-     * Get permission list assigned to this access manager
+     * Get permission list assigned to this access manager.
      */
     List<Permission> getPermissionList();
 

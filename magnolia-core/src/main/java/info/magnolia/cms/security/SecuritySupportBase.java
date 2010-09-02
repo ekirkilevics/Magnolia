@@ -46,13 +46,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
+ * Base implementation of {@link SecuritySupport} using JAAS for authentication.
  * @version $Id$
  *
  */
 public abstract class SecuritySupportBase implements SecuritySupport {
     private static final Logger log = LoggerFactory.getLogger(SecuritySupportBase.class);
-    
+
     public LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String customLoginModule) {
         Subject subject;
         try {
@@ -76,7 +76,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
     /**
      * Logs plain LoginException in error level, but subclasses in debug, since they
      * are specifically thrown when a known error occurs (wrong password, blocked account,
-     * etc.)
+     * etc.).
      */
     private void logLoginException(LoginException e) {
         if (e.getClass().equals(LoginException.class)) {

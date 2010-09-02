@@ -50,25 +50,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wraps a role jcr-node.
- * @author philipp
  * @version $Revision$ ($Author$)
  */
 public class MgnlRole implements Role {
     private static final Logger log = LoggerFactory.getLogger(MgnlRole.class);
 
-    /**
-     * Add or remove any permission
-     */
     public static long PERMISSION_ANY = -1;
 
-    /**
-     * the content object
-     */
     private final Content roleNode;
 
-    /**
-     * @param roleNode the Content object representing this role
-     */
     protected MgnlRole(Content roleNode) {
         this.roleNode = roleNode;
     }
@@ -103,7 +93,7 @@ public class MgnlRole implements Role {
             Content aclNode = getAclNode(repository);
             Collection<Content> children = aclNode.getChildren();
             for (Content child : children) {
-                if (child.getNodeData("path").getString().equals(path)) {    
+                if (child.getNodeData("path").getString().equals(path)) {
                     if (permission == MgnlRole.PERMISSION_ANY
                         || child.getNodeData("permissions").getLong() == permission) {
                         child.delete();
@@ -118,12 +108,7 @@ public class MgnlRole implements Role {
     }
 
     /**
-     * Get the acl node for the current role node
-     * @param repository
-     * @return
-     * @throws RepositoryException
-     * @throws PathNotFoundException
-     * @throws AccessDeniedException
+     * Get the ACL node for the current role node.
      */
     private Content getAclNode(String repository) throws RepositoryException, PathNotFoundException,
         AccessDeniedException {
@@ -139,9 +124,6 @@ public class MgnlRole implements Role {
 
     /**
      * Does this permission exist?
-     * @param aclNode
-     * @param path
-     * @param permission
      */
     private boolean existsPermission(Content aclNode, String path, long permission) {
         Collection<Content> children = aclNode.getChildren();

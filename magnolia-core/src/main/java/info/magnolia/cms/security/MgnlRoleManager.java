@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Manages the users stored in magnolia itself.
+ * Manages the users stored in the {@link ContentRepository#USER_ROLES} workspace.
  * @author philipp
  * @version $Revision$ ($Author$)
  */
@@ -83,9 +83,6 @@ public class MgnlRoleManager implements RoleManager {
         return new MgnlRole(node);
     }
 
-    /**
-     * return the role HierarchyManager (through the current context)
-     */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
     }

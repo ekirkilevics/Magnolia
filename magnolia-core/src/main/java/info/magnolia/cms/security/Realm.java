@@ -34,29 +34,29 @@
 package info.magnolia.cms.security;
 
 /**
- * Provides the name for the default realm.
+ * Provides the name for the default realm. A realm is a independent set of users.
  * @author philipp
  * @version $Id$
  */
 public interface Realm {
 
     /**
-     * The realm for the admin interface
+     * The realm for the admin interface.
      */
     public static final String REALM_ADMIN = "admin";
 
     /**
-     * No realm --> all users
+     * No realm --> all users.
      */
     public static final String REALM_ALL = "all";
 
     /**
-     * Contains not removable system users: anonymous, superuser
+     * Contains not removable system users: anonymous, superuser.
      */
     public static final String REALM_SYSTEM = "system";
 
     /**
-     * The default realm is REALM_ADMIN
+     * The default realm is {@link Realm#REALM_ALL}.
      */
     public static final String DEFAULT_REALM = REALM_ALL;
 

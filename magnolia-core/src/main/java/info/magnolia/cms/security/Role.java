@@ -36,8 +36,7 @@ package info.magnolia.cms.security;
 import java.io.Serializable;
 
 /**
- * @author philipp
- * @version $Revision:2558 $ ($Author:scharles $)
+ * A role is a collection of ACLs (permissions).
  */
 public interface Role extends Serializable {
 

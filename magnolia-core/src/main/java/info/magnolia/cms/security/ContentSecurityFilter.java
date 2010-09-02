@@ -42,6 +42,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
 /**
+ * Used to check if the user can read the requested content. This filter normally resides behind the cache filter.
  * @author Sameer Charles
  * $Id: ContentSecurityFilter.java 9391 2007-05-11 15:48:02Z scharles $
  */
@@ -55,9 +56,9 @@ public class ContentSecurityFilter extends BaseSecurityFilter {
     }
 
     /**
-     * check for read permissions of the aggregated handle
+     * Check for read permissions of the aggregated handle.
      * @deprecated since 4.3 when overriding this method, override isAllowed() instead
-     * */
+     */
     @Deprecated
     protected boolean isAuthorized(AccessManager accessManager) {
         String handle = MgnlContext.getAggregationState().getHandle();

@@ -37,8 +37,10 @@ import javax.security.auth.Subject;
 import java.util.Collection;
 import java.util.Map;
 
+
 /**
- *
+ * A {@link UserManager} delegating to a set of user managers. The first user manager which does not
+ * through an {@link UnsupportedOperationException} will be used.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

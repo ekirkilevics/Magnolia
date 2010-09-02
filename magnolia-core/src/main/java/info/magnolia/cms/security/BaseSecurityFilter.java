@@ -43,18 +43,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Provides basic infrastructure to authenticate request using form or basic realm
+ * Provides basic infrastructure to authenticate request using form or basic realm.
  *
  * @author Sameer Charles
  * $Id$
  */
 public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
 
+    /**
+     * Used to tell the client that he has to login: serve a login page, set http headers or redirect.
+     */
     private HttpClientCallback clientCallback;
 
     /**
-     * Continue with the magnolia defined filter chain if isAllowed returns true
-     * else send an authentication request to the client as configured
+     * Continue with the Magnolia defined filter chain if isAllowed returns true
+     * else send an authentication request to the client as configured.
      */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (isAllowed(request, response)) {
@@ -68,7 +71,7 @@ public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
 
     /**
      * In most cases this will provide a standard login mechanism, override this to support
-     * other login strategies
+     * other login strategies.
      */
     protected void doAuthenticate(HttpServletRequest request, HttpServletResponse response) {
         /*

@@ -44,11 +44,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Sameer Charles
+ * Uses the the {@value #PARAMETER_USER_ID} and  {@value #PARAMETER_PSWD} parameters to login.
  * $Id$
  */
-public class FormLogin extends 
-LoginHandlerBase implements LoginHandler {
+public class FormLogin extends LoginHandlerBase implements LoginHandler {
 
     private static final Logger log = LoggerFactory.getLogger(FormLogin.class);
 

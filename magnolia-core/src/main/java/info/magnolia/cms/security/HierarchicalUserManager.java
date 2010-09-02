@@ -41,8 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.jcr.RepositoryException;
 
 /**
- *
- * @author gjoseph
+ * A variation of a {@link MgnlUserManager} which stores users hierarchically using the following structure: {@literal /<realm>/<first letter of user name>/<first two letters of user name>}.
  * @version $Revision: $ ($Author: $)
  */
 public class HierarchicalUserManager extends MgnlUserManager {

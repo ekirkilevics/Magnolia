@@ -34,6 +34,7 @@
 package info.magnolia.cms.security;
 
 /**
+ * Magnolia's counterpart to {@link javax.jcr.AccessDeniedException}.
  * @author Sameer Charles
  * @version 2.01
  */

@@ -41,59 +41,47 @@ import java.util.List;
 
 
 /**
+ * A concrete ACL (workspace, path and permissions). Also implements the JAAS {@link Principal}.
  * @author Sameer Charles $Id$
  */
 public interface ACL extends Principal, Serializable {
 
-    /**
-     * Get name given to this principal
-     * @return name
-     */
     public String getName();
 
-    /**
-     * Set this principal name
-     */
     public void setName(String name);
 
     /**
-     * Get repository ID for which this ACL has been constructed
-     * @return repository ID
+     * Get repository ID for which this ACL has been constructed.
      */
     public String getRepository();
 
     /**
-     * Set repository ID for which this ACL will be constructed
-     * @param repository
+     * Set repository ID for which this ACL will be constructed.
      */
     public void setRepository(String repository);
 
     /**
-     * Get workspace ID for which this ACL has been contructed
-     * @return workspace ID
+     * Get workspace ID for which this ACL has been constructed.
      */
     public String getWorkspace();
 
     /**
-     * Set workspace ID for which this ACL will be constructed
-     * @param workspace
+     * Set workspace ID for which this ACL will be constructed.
      */
     public void setWorkspace(String workspace);
 
     /**
-     * add permission in to an existing list
-     * @param permission
+     * Add permission in to an existing list.
      */
     public void addPermission(Object permission);
 
     /**
      * Initialize access control list with provided permissions it will overwrite any existing permissions set before.
-     * @param list
      */
     public void setList(List<Permission> list);
 
     /**
-     * Returns list of permissions for this principal
+     * Returns list of permissions for this principal.
      */
     public List<Permission> getList();
 

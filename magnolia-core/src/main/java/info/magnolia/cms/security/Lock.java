@@ -44,30 +44,26 @@ import info.magnolia.context.MgnlContext;
 
 
 /**
- * This class is a utility class and does not impose any security rules Its a responsibility of the caller to set and
- * check for lock to meet specific needs
- * @author Sameer Charles
+ * Used to lock a session or the system. Currently checked in the {@link URISecurityFilter}. Should
+ * only be used with care.
  * @version $Revision$ ($Author$)
  */
 public final class Lock {
 
-    /**
-     * Logger
-     */
     private static Logger log = LoggerFactory.getLogger(Lock.class);
 
     /**
-     * Session lock attribute
+     * Session lock attribute.
      */
     private static final String SESSION_LOCK = "mgnlSessionLock"; //$NON-NLS-1$
 
     /**
-     * System wide lock
+     * System wide lock.
      */
     private static boolean isSystemLocked;
 
     /**
-     * System wide lock creation time
+     * System wide lock creation time.
      */
     private static Date lockSetDate;
 
@@ -79,7 +75,7 @@ public final class Lock {
     }
 
     /**
-     * Set session based lock
+     * Set session based lock.
      * @param request
      */
     public static void setSessionLock(HttpServletRequest request) {
@@ -93,7 +89,7 @@ public final class Lock {
     }
 
     /**
-     * returns true if this session is locked
+     * Returns true if this session is locked.
      * @param request
      * @return a boolean
      */
@@ -106,7 +102,7 @@ public final class Lock {
     }
 
     /**
-     * reset session lock
+     * Reset session lock.
      * @param request
      */
     public static void resetSessionLock(HttpServletRequest request) {
@@ -127,7 +123,7 @@ public final class Lock {
     }
 
     /**
-     * Set system wide lock
+     * Set system wide lock.
      */
     public static void setSystemLock() {
         if (Lock.isSystemLocked()) {
@@ -145,7 +141,7 @@ public final class Lock {
     }
 
     /**
-     * Reset system wide lock
+     * Reset system wide lock.
      */
     public static void resetSystemLock() {
         if (!Lock.isSystemLocked()) {
@@ -160,7 +156,7 @@ public final class Lock {
     }
 
     /**
-     * Return true if system is locked
+     * Return true if system is locked.
      * @return a boolean
      */
     public static boolean isSystemLocked() {

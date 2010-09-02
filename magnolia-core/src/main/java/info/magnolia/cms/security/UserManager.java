@@ -39,24 +39,23 @@ import javax.security.auth.Subject;
 
 
 /**
- * Used to get the current or other User objects.
- * @author philipp
+ * Manages users.
  * @version $Revision$ ($Author$)
  */
 public interface UserManager {
 
     /**
-     * Magnolia system user.
+     * Magnolia system user name.
      */
     public static final String SYSTEM_USER = "superuser";
 
     /**
-     * Magnolia system default password
+     * Magnolia system default password.
      */
     public static final String SYSTEM_PSWD = "superuser";
 
     /**
-     * Anonymous user
+     * Anonymous user name.
      */
     public static final String ANONYMOUS_USER = "anonymous";
 
@@ -68,40 +67,40 @@ public interface UserManager {
     public User getUser(String name) throws UnsupportedOperationException;
 
     /**
-     * Initialize new user using JAAS authenticated/authorized subject
-     * @param subject
-     * @throws UnsupportedOperationException
+     * Initialize new user using JAAS authenticated/authorized subject.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
     public User getUser(Subject subject) throws UnsupportedOperationException;
 
     /**
      * Get system user, this user must always exist in magnolia repository.
-     * @return system user
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
     public User getSystemUser() throws UnsupportedOperationException;
 
     /**
      * Get Anonymous user, this user must always exist in magnolia repository.
-     * @return anonymous user
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
     public User getAnonymousUser() throws UnsupportedOperationException;
 
     /**
      * Get all users.
      * @return collection of User objects
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
     public Collection<User> getAllUsers() throws UnsupportedOperationException;
 
     /**
-     * Creates a user without security restrictions
-     * @param name user name
-     * @param pw password
-     * @return the new user object
-     * @throws UnsupportedOperationException
+     * Creates a user without security restrictions.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
     public User createUser(String name, String pw) throws UnsupportedOperationException;
 
+    /**
+     * Sets a new password.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
     public void changePassword(User user, String newPassword) throws UnsupportedOperationException;
 
 }

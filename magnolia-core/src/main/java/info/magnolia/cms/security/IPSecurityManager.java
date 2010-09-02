@@ -38,7 +38,7 @@ import info.magnolia.objectfactory.Components;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Used to check if a client has access based on his IP address.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -47,6 +47,9 @@ public interface IPSecurityManager {
 
     boolean isAllowed(HttpServletRequest req);
 
+   /**
+    * Factory to get the singleton instance.
+    */
     public final static class Factory {
         public static IPSecurityManager getInstance() {
             return Components.getSingleton(IPSecurityManager.class);

@@ -40,23 +40,29 @@ import javax.security.auth.login.LoginException;
 
 
 /**
- * @author philipp
+ * The result of a login operation.
  * @version $Id$
  */
 public class LoginResult {
-    
+
     public static final int STATUS_NO_LOGIN = 0;
 
+    /**
+     * Returned if a login handler is not able to perform the operation.
+     */
     public static LoginResult NOT_HANDLED = new LoginResult(LoginResult.STATUS_NOT_HANDLED);
 
+    /**
+     * Returned if a login handler was able to perform the operation but the authentication failed.
+     */
     public static LoginResult NO_LOGIN = new LoginResult(STATUS_NO_LOGIN);
 
     /**
-     * request attribute holding the login exception
+     * Request attribute holding the current login exception. Used to render login error messages.
      */
     private static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
-    
+
     private int status;
 
     private User user;
@@ -88,20 +94,20 @@ public class LoginResult {
     public int getStatus() {
         return this.status;
     }
-    
+
     public User getUser() {
         return this.user;
     }
 
     /**
-     * @return an instance of {@link LoginException}. Warning: it can be null. 
+     * @return an instance of {@link LoginException}. Warning: it can be null.
      */
     public LoginException getLoginException() {
         return this.loginException;
     }
 
     /**
-     * Used by the login filter to depose the login result
+     * Used by the login filter to depose the login result.
      */
     public static void setCurrentLoginResult(LoginResult loginResult) {
         MgnlContext.setAttribute(ATTRIBUTE_LOGINERROR, loginResult);

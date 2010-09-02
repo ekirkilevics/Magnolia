@@ -36,30 +36,23 @@ package info.magnolia.cms.security;
 import java.util.Collection;
 
 /**
+ * Manages the groups.
  * @author Sameer Charles $Id$
  */
 public interface GroupManager {
 
     /**
-     * Create a group
-     * @param name
-     * @return newly created group
      * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if logged in repository user does not sufficient rights
      */
     public Group createGroup(String name) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
-     * Get group by the given name
-     * @param name
-     * @return group
      * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if logged in repository user does not sufficient rights
      */
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
-     * Get all groups defined in the system
+     * Get all groups defined in the system.
      */
     public Collection<Group> getAllGroups() throws UnsupportedOperationException;
 

@@ -37,8 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
- * @author gjoseph
+ * Default {@link SecuritySupport}.
  * @version $Revision: $ ($Author: $)
  */
 public class SecuritySupportImpl extends SecuritySupportBase {
