@@ -50,7 +50,7 @@ import java.util.Map;
 
 
 /**
- * User: sameercharles Date: Nov 5, 2003 Time: 4:18:59 PM
+ * Extracts license information from the info/magnolia/cms/license/license.xml file.
  * @author Sameer Charles
  * @version 1.1
  */
@@ -140,7 +140,7 @@ public class LicenseFileExtractor {
     }
 
     /**
-     * load meta element
+     * Load meta element.
      */
     private void load(Document document) {
         Element metaElement = document.getRootElement().getChild(ELEMENT_META);
@@ -162,7 +162,7 @@ public class LicenseFileExtractor {
     }
 
     /**
-     * Print version info to System.out
+     * Print version info to System.out.
      */
     public void printVersionInfo() {
         System.out.println("---------------------------------------------"); //$NON-NLS-1$
