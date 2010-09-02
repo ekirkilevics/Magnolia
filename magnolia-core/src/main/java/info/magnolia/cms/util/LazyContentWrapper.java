@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
+ * Stores an uuid and will re-fetch the node in {@link #getWrappedContent()} if the session is closed.
  * @version $Id$
  *
  */

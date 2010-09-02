@@ -47,15 +47,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
+ * Util to register MBeans.
  * @version $Id$
  *
  */
 public class MBeanUtil {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(MBeanUtil.class);
 
     public static void registerMBean(String name, Object mbean) {

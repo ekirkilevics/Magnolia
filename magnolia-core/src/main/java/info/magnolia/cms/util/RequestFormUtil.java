@@ -48,7 +48,6 @@ import java.util.Map;
 /**
  * Sometimes one get the parameters via form (multipart-post) and via request (get, normal post). Using this Util you
  * have not to care.
- * @author philipp
  * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped. To access uploaded documents, use {@link info.magnolia.cms.beans.runtime.MultipartForm}.
  */
 public class RequestFormUtil {
@@ -81,11 +80,7 @@ public class RequestFormUtil {
     }
 
     /**
-     * returns the value found in the form or the request
-     * @param request
-     * @param form
-     * @param name
-     * @return
+     * Returns the value found in the form or the request.
      */
     public static String getParameter(HttpServletRequest request, MultipartForm from, String name) {
         String param = null;
@@ -113,10 +108,7 @@ public class RequestFormUtil {
     }
 
     /**
-     * returns the defaultValue if the parameter is not found in the request or form
-     * @param string
-     * @param repository
-     * @return
+     * Returns the defaultValue if the parameter is not found in the request or form.
      */
     public static String getParameter(HttpServletRequest request, MultipartForm from, String name, String defaultValue) {
         String param = getParameter(request, from, name);
@@ -151,7 +143,7 @@ public class RequestFormUtil {
     }
 
     /**
-     * Extract and decodes parameters from a query string
+     * Extract and decodes parameters from a query string.
      * @param queryString query string
      * @param charset charset (e.g UTF-8)
      */

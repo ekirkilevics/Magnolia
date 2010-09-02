@@ -51,7 +51,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -64,6 +63,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Util to work with {@link NodeData}.
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -71,7 +71,7 @@ public class NodeDataUtil {
     private static final Logger log = LoggerFactory.getLogger(NodeDataUtil.class);
 
     /**
-     * Same as getValueString(nd, dateFormat) but using the users short date format
+     * Same as getValueString(nd, dateFormat) but using the users short date format.
      */
     public static String getValueString(NodeData nodeData) {
         String dateFormat = null;
@@ -116,10 +116,7 @@ public class NodeDataUtil {
     }
 
     /**
-     * Same as value.getString(), but using custom date format
-     * @param value
-     * @param dateFormat
-     * @return
+     * Same as value.getString(), but using custom date format.
      */
     public static String getValueString(Value value, String dateFormat) {
         try{
@@ -231,7 +228,7 @@ public class NodeDataUtil {
         }
         return null;
     }
-    
+
     /**
      * Calls the correct setValue method based on object type. If the value is null an empty string is set.
      */
@@ -268,41 +265,31 @@ public class NodeDataUtil {
         }
         return nodeData;
     }
-    
+
 
     /**
-     * String representation of the jcr property type
+     * String representation of the jcr property type.
      */
     public static String getTypeName(NodeData nd) {
         return PropertyType.nameFromValue(nd.getType());
     }
 
     /**
-     * Simple method to get strings like configuration informations
-     * @param repository
-     * @param path
-     * @return
+     * Simple method to get strings like configuration informations.
      */
     public static String getString(String repository, String path) {
         return getString(repository, path, null);
     }
 
     /**
-     * Get the string or the empty string if not existing
-     * @param node
-     * @param name
-     * @return a string
+     * Get the string or the empty string if not existing.
      */
     public static String getString(Content node, String name) {
         return getString(node, name, "");
     }
 
     /**
-     * You can define a default value if not found
-     * @param repository
-     * @param path
-     * @param defaultValue
-     * @return the string
+     * You can define a default value if not found.
      */
     public static String getString(String repository, String path, String defaultValue) {
         try {
@@ -317,11 +304,7 @@ public class NodeDataUtil {
     }
 
     /**
-     * You can define a default value if not found
-     * @param node
-     * @param name
-     * @param defaultValue
-     * @return the string
+     * You can define a default value if not found.
      */
     public static String getString(Content node, String name, String defaultValue) {
         try {
@@ -465,7 +448,7 @@ public class NodeDataUtil {
     }
 
     /**
-     * Uses the i18n mechanism to translate the message if the resulting string is a key
+     * Uses the i18n mechanism to translate the message if the resulting string is a key.
      */
     public static String getI18NString(Content node, String str, String basename) {
         String key = getString(node, str);
@@ -473,11 +456,7 @@ public class NodeDataUtil {
     }
 
     /**
-     * Uses the default value factory
-     * @param valueStr
-     * @param type
-     * @return
-     * @throws RepositoryException
+     * Uses the default value factory.
      */
     public static Value createValue(String valueStr, int type) throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
@@ -507,11 +486,7 @@ public class NodeDataUtil {
     }
 
     /**
-     * Transforms a string to a jcr value object
-     * @param valueStr
-     * @param type
-     * @param valueFactory
-     * @return the value
+     * Transforms a string to a jcr value object.
      */
     public static Value createValue(String valueStr, int type, ValueFactory valueFactory) {
         Value value = null;

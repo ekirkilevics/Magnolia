@@ -68,9 +68,7 @@ public class AlertUtil {
     }
 
     /**
-     * create a message containing the exception message
-     * @param msg
-     * @param e
+     * Creates a message containing the exception message.
      */
     public static void setMessage(String msg, Exception e) {
         setMessage(msg, e, MgnlContext.getInstance());
@@ -90,11 +88,8 @@ public class AlertUtil {
     }
 
     /**
-     * Checks if there is a message set
-     * @param request
-     * @return true if set
+     * Checks if a message is set.
      */
-
     public static boolean isMessageSet() {
         return isMessageSet(MgnlContext.getInstance());
     }
@@ -119,8 +114,7 @@ public class AlertUtil {
     }
 
     /**
-     * Checks if there is a message set
-     * @return true if set
+     * Checks if an exception is set.
      */
     public static boolean isExceptionSet() {
         return isExceptionSet(MgnlContext.getInstance());
@@ -131,9 +125,7 @@ public class AlertUtil {
     }
 
     /**
-     * Returns the current set message
-     * @param request
-     * @return the message
+     * Returns the currently set message.
      */
     public static String getMessage() {
         return getMessage(MgnlContext.getInstance());

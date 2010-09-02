@@ -42,16 +42,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Refetches
- * @author philipp
+ * A lazy content wrapper reading from the node using the {@link LifeTimeJCRSessionUtil}.
  * @version $Id$
  *
  */
 public class SystemContentWrapper extends LazyContentWrapper {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(SystemContentWrapper.class);
 
     public SystemContentWrapper(String repository, String uuid) {

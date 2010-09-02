@@ -82,6 +82,9 @@ public class UnicodeNormalizer {
         */
     }
 
+    /**
+     * Used to normalize a String.
+     */
     public interface Normalizer {
         String normalizeNFC(String in);
     }
@@ -123,18 +126,27 @@ public class UnicodeNormalizer {
         }
     }
 
+    /**
+     * Uses {@link com.ibm.icu.text.Normalizer} to normalize the string.
+     */
     public static final class ICUNormalizer implements UnicodeNormalizer.Normalizer {
         public String normalizeNFC(String in) {
             return com.ibm.icu.text.Normalizer.normalize(in, com.ibm.icu.text.Normalizer.NFC);
         }
     }
 
+    /**
+     * Returns the original value unchanged.
+     */
     public static final class NonNormalizer implements UnicodeNormalizer.Normalizer {
         public String normalizeNFC(String in) {
             return in;
         }
     }
 
+    /**
+     * Tries to load the normalizer dynamically and respects the property {@link SystemProperty#MAGNOLIA_UTF8_ENABLED}.
+     */
     public static final class AutoDetectNormalizer implements Normalizer {
         private final Normalizer delegate;
 

@@ -37,6 +37,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Content.ContentFilter;
 
+/**
+ * A {@link ContentFilter} filtering on node types.
+ */
 public class NodeTypeFilter implements ContentFilter {
 
     private String systemName;

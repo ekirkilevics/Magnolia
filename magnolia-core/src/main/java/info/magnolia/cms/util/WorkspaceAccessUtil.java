@@ -58,7 +58,7 @@ import java.util.ArrayList;
 
 
 /**
- * This class replaces SessionStore and provide generic methods to create magnolia specific JCR-workspace access objects:
+ * This class replaces SessionStore and provide generic methods to create Magnolia specific JCR-workspace access objects.
  * @see HierarchyManager
  * @see javax.jcr.Session
  * @see AccessManager
@@ -83,7 +83,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Login to the specified repository/default workspace using given credentials
+     * Login to the specified repository/default workspace using given credentials.
      * @param credentials
      * @param repositoryName
      * @return newly created JCR session
@@ -96,7 +96,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Login to the specified repository/workspace using given credentials
+     * Login to the specified repository/workspace using given credentials.
      * @param credentials
      * @param repositoryName
      * @param workspaceName
@@ -110,7 +110,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Login to the specified repository/workspace using given credentials
+     * Login to the specified repository/workspace using given credentials.
      * @param credentials
      * @param repository
      * @param workspaceName
@@ -124,7 +124,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Create access manager of jaas authorized subject
+     * Create access manager of jaas authorized subject.
      * @param subject
      * @param repositoryName
      * @return newly created accessmanager
@@ -134,7 +134,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Create access manager of jaas authorized subject
+     * Create access manager of jaas authorized subject.
      * @param subject
      * @param repositoryName
      * @param workspaceName
@@ -155,7 +155,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Create access manager for the given permission list
+     * Create access manager for the given permission list.
      * @param permissions
      * */
     public AccessManager createAccessManager(List<Permission> permissions, String repositoryName, String workspaceName) {
@@ -165,7 +165,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Create new access controlled magnolia query manager
+     * Create new access controlled magnolia query manager.
      * @param jcrSession
      * @param accessManager
      * */
@@ -176,7 +176,7 @@ public class WorkspaceAccessUtil {
     }
 
     /**
-     * Create new instance of DefaultHierarchyManager for the given session
+     * Create new instance of DefaultHierarchyManager for the given session.
      * @param userId this is used in MetaData of objects created via this HierarchyManager instance
      * @param jcrSession
      * @param accessManager

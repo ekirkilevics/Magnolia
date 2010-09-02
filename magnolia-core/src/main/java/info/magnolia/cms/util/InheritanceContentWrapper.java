@@ -75,28 +75,32 @@ public class InheritanceContentWrapper extends ContentWrapper {
     private static Logger log = LoggerFactory.getLogger(InheritanceContentWrapper.class);
 
     /**
-     * True if this node were achieved through inheritance
+     * True if this node were achieved through inheritance.
      */
     private boolean inherited;
 
+    /**
+     * Used if in the {@link #wrap(Content)} method.
+     * @param wrappedContent
+     * @param inherited true if this node is in the chain of inheritance.
+     */
     public InheritanceContentWrapper(Content wrappedContent, boolean inherited) {
         super(wrappedContent);
         this.inherited = inherited;
     }
 
     /**
-     * Starts inheritance for 
-     * @param node
+     * Starts the inheritance.
      */
     public InheritanceContentWrapper(Content node) {
         this(node, false);
     }
-    
+
     @Override
     public boolean hasContent(String name) throws RepositoryException {
         return getContentSafely(name) != null;
     }
-    
+
     @Override
     public Content getContent(String name) throws RepositoryException {
         Content inherited = getContentSafely(name);
@@ -120,13 +124,13 @@ public class InheritanceContentWrapper extends ContentWrapper {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't inherit children from " + getWrappedContent(), e);
         }
-        
+
         // add direct children
         children.addAll(((AbstractContent)getWrappedContent()).getChildren(filter, namePattern, orderCriteria));
         if(orderCriteria != null){
             Collections.sort(children, orderCriteria);
         }
-        
+
         return wrapContentNodes(children);
     }
 
@@ -153,10 +157,10 @@ public class InheritanceContentWrapper extends ContentWrapper {
         if(getWrappedContent().hasContent(name)){
             return super.getContent(name);
         }
-        
+
         String innerPath = resolveInnerPath() + "/" + name;
         innerPath = StringUtils.removeStart(innerPath,"/");
-        
+
         Content inherited = getContentSafely(findNextAnchor(), innerPath);
         return inherited;
     }
@@ -171,7 +175,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
         if(StringUtils.isEmpty(path)){
             return anchor;
         }
-        return anchor.getContentSafely(path);        
+        return anchor.getContentSafely(path);
     }
 
     /**
@@ -187,7 +191,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
         // until the current node is the anchor
         return ((InheritanceContentWrapper)getParent()).findAnchor();
     }
-    
+
     /**
      * Find next anchor.
      */
@@ -205,7 +209,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
     protected boolean isAnchor() {
         return isNodeType(ItemType.CONTENT.getSystemName());
     }
-    
+
     public NodeData getNodeData(String name) {
         try {
             if (getWrappedContent().hasNodeData(name)) {
@@ -238,7 +242,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
     }
 
     /**
-     * True if the current node is an ancestor of node 
+     * True if the current node is an ancestor of node.
      */
     protected boolean isSubNode(Content node) {
         return node.getHandle().startsWith(getWrappedContent().getHandle());

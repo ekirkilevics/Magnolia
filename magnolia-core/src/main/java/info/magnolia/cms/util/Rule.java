@@ -43,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * This class defines the rules to be used by the activation content aggregator this is simply a collection of node
- * types
+ * types.
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -55,23 +55,20 @@ public class Rule implements Serializable {
     private static final long serialVersionUID = 222L;
 
     /**
-     * list of node types allowed
+     * list of node types allowed.
      */
     private String[] allowedTypes = new String[0];
 
     /**
-     * reverse rule
+     * reverse rule.
      */
     private boolean reverse = false;
 
-    /**
-     * Default
-     */
     public Rule() {
     }
 
     /**
-     * generate list from string array
+     * Generate list from string array.
      * @param allowedTypes
      */
     public Rule(String[] allowedTypes) {
@@ -81,7 +78,7 @@ public class Rule implements Serializable {
     }
 
     /**
-     * generate list from the string
+     * Generate list from the string.
      * @param allowedTypes
      * @param separator
      */
@@ -93,7 +90,7 @@ public class Rule implements Serializable {
     }
 
     /**
-     * add to allow list
+     * Add to allow list.
      * @param nodeType
      */
     public void addAllowType(String nodeType) {
@@ -103,7 +100,7 @@ public class Rule implements Serializable {
     }
 
     /**
-     * remove from allow list
+     * Remove from allow list.
      * @param nodeType
      */
     public void removeAllowType(String nodeType) {
@@ -118,9 +115,7 @@ public class Rule implements Serializable {
     }
 
     /**
-     * is allowed
-     * @param nodeType
-     * @return true if given nodeType is allowed
+     * True if given nodeType is allowed.
      */
     public boolean isAllowed(String nodeType) {
         boolean allowed = ArrayUtils.contains(allowedTypes, nodeType);
@@ -133,7 +128,7 @@ public class Rule implements Serializable {
     }
 
     /**
-     * get a string representation of this rule
+     * Get a string representation of this rule.
      * @return string representation
      */
     public String toString() {
@@ -147,7 +142,7 @@ public class Rule implements Serializable {
     }
 
     /**
-     * set reverse
+     * Set reverse.
      */
     public void reverse() {
         this.reverse = true;

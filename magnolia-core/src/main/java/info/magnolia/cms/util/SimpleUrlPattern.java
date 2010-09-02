@@ -42,8 +42,8 @@ import org.apache.commons.lang.StringUtils;
  * An implementation of URLPattern which matches strings using simple <code>*</code> or <code>?</code> wildcards.
  * @author Sameer Charles
  * @author Fabrizio Giustina
- * @todo rewrite this class using ant-style path comparison and avoiding regexp. See
- * org.springframework.util.AntPathMatcher in spring 1.2 for a nice implementation
+ * TODO rewrite this class using ant-style path comparison and avoiding regexp. See
+ * org.springframework.util.AntPathMatcher in spring 1.2 for a nice implementation.
  * @version $Revision $ ($Author $)
  */
 public final class SimpleUrlPattern implements UrlPattern {

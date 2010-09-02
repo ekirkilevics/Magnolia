@@ -45,8 +45,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 
 /**
- *
- * @author gjoseph
+ * A {@link HierarchyManager} wrapping an other hierarchy manager. Subclassed to manipulate the hierarchy.
  * @version $Revision: $ ($Author: $)
  */
 public abstract class HierarchyManagerWrapper implements HierarchyManager {
@@ -79,7 +78,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
 
 
     /**
-     * Override this method to have hierarchy manager wrap every piece of content it returns
+     * Override this method to have hierarchy manager wrap every piece of content it returns.
      * @param content unwrapped content
      * @return wrapped content (or content passed in if not overriden)
      */
@@ -88,7 +87,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     }
 
     /**
-     * Override this method to have hierarchy manager wrap every piece of node data it returns
+     * Override this method to have hierarchy manager wrap every piece of node data it returns.
      * @param nodeData unwrapped node data
      * @return wrapped node data (or node data passed in if not overriden)
      */
