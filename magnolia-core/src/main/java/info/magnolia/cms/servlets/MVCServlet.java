@@ -44,12 +44,13 @@ import java.io.IOException;
 
 
 /**
- * The servlet gets a MVCHandler with the method getHandler. The method getCommand of this returned handler is called to
- * map the request parameters to a command. Then execute() is called which uses reflection to call a method. Each method
- * returns a string defining the view. After that, renderHtml is called.
+ * The servlet gets a {@link MVCServletHandler} with the method
+ * {@link #getHandler(HttpServletRequest, HttpServletResponse)}.
+ * {@link MVCServletHandler#getCommand()} is called and the returned command name is passed to the
+ * {@link MVCServletHandler#execute(String)} method wich returns the view name. Finally it calls
+ * {@link MVCServletHandler#renderHtml(String)} passing the view name.
  * <p>
  * Make a subclass to provide you own handler(s).
- * @author Philipp Bracher
  * @version $Id$
  */
 public abstract class MVCServlet extends HttpServlet {

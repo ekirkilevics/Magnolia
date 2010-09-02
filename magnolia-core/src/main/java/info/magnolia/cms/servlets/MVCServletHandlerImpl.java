@@ -58,12 +58,9 @@ import org.slf4j.LoggerFactory;
 public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
     protected static final String VIEW_ERROR = "error"; //$NON-NLS-1$
-    
+
     protected static final String VIEW_SUCCESS = "success"; //$NON-NLS-1$
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(MVCServletHandlerImpl.class);
 
     protected HttpServletRequest request;
@@ -109,9 +106,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     }
 
     /**
-     * Call the method through reflection
-     * @param command
-     * @return the name of the view to show (used in renderHtml)
+     * Call the method through reflection.
      */
     public String execute(String command) {
         String view = VIEW_ERROR;
@@ -185,8 +180,7 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     }
 
     /**
-     * Returns the stacktrace from the exception as a String
-     * @return
+     * Returns the stacktrace from the exception as a String.
      */
     public String getExceptionStackTrace() {
         if (this.exception == null) {

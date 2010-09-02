@@ -60,8 +60,8 @@ import org.slf4j.LoggerFactory;
  * will be used), and the following variables will be used:
  * </p>
  * <ul>
- * <li><code>${servername}</code>: name of the server where the webapp is running, lowercase</li>
- * <li><code>${webapp}</code>: the latest token in the webapp path (e.g. <code>magnoliaPublic</code> for a webapp
+ * <li><b><code>${servername}</code></b>: name of the server where the webapp is running, lowercase</li>
+ * <li><b><code>${webapp}</code></b>: the latest token in the webapp path (e.g. <code>magnoliaPublic</code> for a webapp
  * deployed ad <code>tomcat/webapps/magnoliaPublic</code>)</li>
  * </ul>
  * <p>
@@ -95,34 +95,34 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * The following parameters are needed in the properties file:
- * <dl>
- * <dt>magnolia.cache.startdir</dt>
- * <dd>directory used for cached pages</dd>
- * <dt>magnolia.upload.tmpdir</dt>
- * <dd>tmp directory for uploaded files</dd>
- * <dt>magnolia.exchange.history</dt>
- * <dd>history directory used for activation</dd>
- * <dt>magnolia.repositories.config</dt>
- * <dd>repositories configuration</dd>
- * <dt>log4j.config</dt>
- * <dd>Name of a log4j config file. Can be a .properties or .xml file. The value can be:
+ * <ul>
+ * <li><b>magnolia.cache.startdir</b>:<br/>
+ * directory used for cached pages</li>
+ * <li><b>magnolia.upload.tmpdir</b>:<br/>
+ * tmp directory for uploaded files</li>
+ * <li><b>magnolia.exchange.history</b>:<br/>
+ * history directory used for activation</li>
+ * <li><b>magnolia.repositories.config</b>:<br/>
+ * repositories configuration</li>
+ * <li><b>log4j.config</b>:<br/>
+ * Name of a log4j config file. Can be a .properties or .xml file. The value can be:
  * <ul>
  * <li>a full path</li>
  * <li>a path relative to the webapp root</li>
  * <li>a file name which will be loaded from the classpath</li>
  * </ul>
- * </dd>
- * <dt>magnolia.root.sysproperty</dt>
- * <dd>Name of a system variable which will be set to the webapp root. You can use this property in log4j configuration
+ * </li>
+ * <li><b>magnolia.root.sysproperty</b>:<br/>
+ * Name of a system variable which will be set to the webapp root. You can use this property in log4j configuration
  * files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>.
  * <strong>Important</strong>: if you drop multiple magnolia wars in a container which doesn't isolate system properties
  * (e.g. tomcat) you will need to change the name of the <code>magnolia.root.sysproperty</code> variable in web.xml and
- * in log4j configuration files.</dd>
- * <dt>magnolia.bootstrap.dir</dt>
- * <dd>Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
+ * in log4j configuration files.</li>
+ * <li><b>magnolia.bootstrap.dir</b>:<br/>
+ * Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
  * the repository, they are initialized importing xml files found in this folder. If you don't want to let magnolia
- * automatically initialize repositories simply remove this parameter.</dd>
- * </dl>
+ * automatically initialize repositories simply remove this parameter.</li>
+ * </ul>
  * <h3>Advance use: deployment service</h3>
  * <p>
  * Using the <code>${servername}</code> and <code>${webapp}</code> properties you can easily bundle in the same webapp
