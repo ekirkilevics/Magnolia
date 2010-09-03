@@ -34,7 +34,11 @@
 package info.magnolia.nodebuilder.task;
 
 /**
- *
+ * A shortcut enum for tasks, selecting either of these error handling styles.
+ * @see info.magnolia.nodebuilder.task.TaskLogErrorHandler
+ * @see info.magnolia.nodebuilder.StrictErrorHandler
+ * @see AbstractNodeBuilderTask
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

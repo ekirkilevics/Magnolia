@@ -46,6 +46,7 @@ import info.magnolia.nodebuilder.StrictErrorHandler;
 import javax.jcr.RepositoryException;
 
 /**
+ * Base class for {@link info.magnolia.module.delta.Task}s using the node builder API.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

@@ -180,7 +180,7 @@ public abstract class Ops {
     }
 
     /**
-     * Moves the node defined by the name parameter in the session 
+     * Moves the node defined by the name parameter in the session.
      */
     public static NodeOperation moveNode(final String name, final String dest) {
         return new AbstractOp() {
@@ -241,6 +241,10 @@ public abstract class Ops {
         };
     }
 
+    /**
+     * Abstract implementation of NodeOperation.
+     * TODO: extract and make public ?
+     */
     abstract static class AbstractOp implements NodeOperation {
         private NodeOperation[] childrenOps = {};
 
