@@ -48,7 +48,7 @@ classDef("mgnl.workflow.WorkflowWebsiteTree",
         },
 
         submitActivation: function(form){
-			var nodeToReload=this.tree.selectedNode.getParent();
+            var nodeToReload=this.tree.selectedNode.getParent();
 
             var params=new Object();
             params.forceReload=true;
@@ -56,13 +56,15 @@ classDef("mgnl.workflow.WorkflowWebsiteTree",
             params.pathSelected=this.tree.selectedNode.id;
             if (this.recursive) params.recursive=this.recursive;
 
-			// iterate over fields of the form
-			for ( var i = 0; i < form.elements.length; i++) {
-				var element = form.elements[i];
-				if(element.type != "hidden"){
-		            params[element.name] = element.value;
-				}
-			}
+            // iterate over fields of the form
+            for (var i = 0; i < form.elements.length; i++) {
+                var element = form.elements[i];
+                // ignores mgnlSaveInfo and _saveHandler and _configNode elements
+                // unfortunately also ignores checkbox fields ... 
+                if (element.type != "hidden") {
+                    params[element.name] = element.value;
+                }
+            }
 
             nodeToReload.expand(params);
         }
