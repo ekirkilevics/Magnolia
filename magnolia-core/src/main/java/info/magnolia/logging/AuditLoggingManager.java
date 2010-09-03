@@ -43,9 +43,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class for auditory logging, it's optional to define it, configured in mgnl-beans.properties
- * @author tmiyar
+ * Class for auditory logging, it's optional to define it, configured in mgnl-beans.properties.
  *
+ * @author tmiyar
  */
 public class AuditLoggingManager {
 

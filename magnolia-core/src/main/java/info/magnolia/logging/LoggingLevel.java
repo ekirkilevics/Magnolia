@@ -36,9 +36,9 @@ package info.magnolia.logging;
 import org.apache.log4j.Level;
 
 /**
- * Defines custom logging level for auditory data
- * @author tmiyar
+ * Defines custom logging level for auditory data.
  *
+ * @author tmiyar
  */
 public class LoggingLevel extends Level{
 
@@ -48,7 +48,6 @@ public class LoggingLevel extends Level{
 
     protected LoggingLevel(int level, String levelStr, int syslogEquivalent) {
         super(level, levelStr, syslogEquivalent);
-
     }
 
     public static Level toLevel(String sArg) {
