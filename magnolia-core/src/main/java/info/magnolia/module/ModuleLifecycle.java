@@ -34,7 +34,7 @@
 package info.magnolia.module;
 
 /**
- * Manages the  of an installed instance of a Magnolia Module. Implementing this interface is optional.
+ * Manages the lifecycle of an installed instance of a Magnolia Module. Implementing this interface is optional.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
