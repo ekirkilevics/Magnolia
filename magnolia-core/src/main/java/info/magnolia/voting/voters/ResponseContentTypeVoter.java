@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A voter which checks the content type set on the <strong>response<strong>
+ * A voter which checks the content type set on the <strong>response</strong>
  * object against a list of allowed and/or rejected content types.
  *
  * @author gjoseph

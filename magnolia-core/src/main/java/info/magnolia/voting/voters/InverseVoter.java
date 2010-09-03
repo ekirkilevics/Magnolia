@@ -36,9 +36,9 @@ package info.magnolia.voting.voters;
 import info.magnolia.voting.Voter;
 
 /**
- * Inverses the returned value of the wrapped voter ( 5 --> -5)
- * @author pbracher
+ * Inverses the returned value of the wrapped voter. ( 5 --> -5)
  *
+ * @author pbracher
  */
 public class InverseVoter extends BaseVoterImpl {
 

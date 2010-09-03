@@ -36,10 +36,10 @@ package info.magnolia.voting.voters;
 
 
 /**
- * Used to set a default not 0 outcome value
+ * Used to set a default not 0 outcome value.
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class TrueVoter extends AbstractBoolVoter {
     protected boolean boolVote(Object value) {

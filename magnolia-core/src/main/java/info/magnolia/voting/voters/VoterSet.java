@@ -47,12 +47,12 @@ import org.apache.commons.lang.ArrayUtils;
  */
 public class VoterSet extends BaseVoterImpl {
     /**
-     * If 0 the outcome of the voting is use
+     * If 0 the outcome of the voting is use.
      */
     int level;
 
     /**
-     * Outcome will be inverse if true
+     * Outcome will be inverse if true.
      */
     boolean not = false;
 
