@@ -50,6 +50,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -69,7 +70,6 @@ import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -260,7 +260,7 @@ public class MockContent extends AbstractContent {
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         MockContent movedNode = children.get(srcName);
         List<MockContent> newOrder = new ArrayList<MockContent>();
-        
+
         for (MockContent child : children.values()) {
             if(child.getName().equals(srcName)){
                 // will be added before the beforeName
@@ -273,7 +273,7 @@ public class MockContent extends AbstractContent {
                 newOrder.add(child);
             }
         }
-        
+
         children.clear();
         for (MockContent child : newOrder) {
             children.put(child.getName(), child);
@@ -334,14 +334,14 @@ public class MockContent extends AbstractContent {
         }
         return ancestor;
     }
-    
+
     public MockHierarchyManager getHierarchyManager() {
         if (this.hierarchyManager == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
         }
         return (MockHierarchyManager) this.hierarchyManager;
     }
-    
+
     public String getUUID() {
         return this.uuid;
     }
@@ -409,7 +409,7 @@ public class MockContent extends AbstractContent {
     public ItemType getItemType() throws RepositoryException {
         return new ItemType(getNodeTypeName());
     }
-    
+
     public Node getJCRNode() {
         return node;
     }
@@ -417,7 +417,7 @@ public class MockContent extends AbstractContent {
     public boolean hasMetaData() {
         return true;
     }
-    
+
     public void addMixin(String type) throws RepositoryException {
         throw new UnsupportedOperationException("Not Implemented");
     }
@@ -539,6 +539,15 @@ public class MockContent extends AbstractContent {
         } else {
             throw new IllegalStateException("Unsupported object type: " + object.getClass());
         }
-        return ChildrenCollectorFilter.matches(name, namePattern);
+        StringTokenizer st = new StringTokenizer(namePattern, "|", false);
+        // "pattern" in JR terms mean * as a wildcard 0..n chars and [\d] index is optional
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken().trim();
+            token = token.replaceAll("\\*", ".*") + "(\\[\\d\\])?";
+            if (name.matches(token)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
