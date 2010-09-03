@@ -41,7 +41,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 
 /**
- * this filter converts frozen nodes to mimic actual state of a node, this is only meant to be used while activation
+ * This filter converts frozen nodes to mimic actual state of a node, this is only meant to be used while activating versioned content.
  * Taken from:
  * @see info.magnolia.importexport.filters.VersionFilter $Id$
  */
@@ -53,7 +53,7 @@ class FrozenElementFilter extends VersionFilter {
     private int inVersionElement;
 
     /**
-     * original node name
+     * Original node name.
      */
     private String nodeName;
 
@@ -112,7 +112,7 @@ class FrozenElementFilter extends VersionFilter {
                     || "jcr:isCheckedOut".equals(attName)
                     || "jcr:created".equals(attName)
                     || "mgnl:sequenceposition".equals(attName)
-                    || "jcr:versionHistory" //$NON-NLS-1$ 
+                    || "jcr:versionHistory" //$NON-NLS-1$
                     .equals(attName)) {
                     inVersionElement++;
                     return;

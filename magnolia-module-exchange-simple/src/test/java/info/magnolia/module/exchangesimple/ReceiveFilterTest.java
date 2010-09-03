@@ -63,6 +63,7 @@ import java.util.Collections;
 import java.util.zip.GZIPInputStream;
 
 /**
+ * Basic test for receiving end of the activation.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -510,6 +511,9 @@ public class ReceiveFilterTest extends TestCase {
         }
     }
 
+    /**
+     * Callback for test.
+     */
     public abstract class AbstractTestCallBack implements TestCallBack {
         private final Content parentNode = createMock(Content.class); // TODO this should maybe be strict
 

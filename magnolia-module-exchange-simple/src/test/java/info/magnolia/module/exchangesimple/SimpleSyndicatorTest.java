@@ -65,6 +65,7 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 /**
+ * Basic test for checking the sending end of the activation.
  * @author had
  * @version $Id:$
  */

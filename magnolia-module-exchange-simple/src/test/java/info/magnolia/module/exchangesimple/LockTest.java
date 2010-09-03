@@ -52,6 +52,7 @@ import info.magnolia.test.mock.MockUtil;
 import static org.easymock.EasyMock.*;
 
 /**
+ * Test to verify releasing of locks on activation.
  * @author had
  * @version $Id:$
  */
@@ -61,6 +62,7 @@ public class LockTest extends RepositoryTestCase {
     private static final Logger log = LoggerFactory.getLogger(LockTest.class);
 
     /**
+     * Lock check task.
      * @author had
      * @version $Id:$
      */
@@ -111,6 +113,10 @@ public class LockTest extends RepositoryTestCase {
 
     }
 
+
+    /**
+     * Lock check task for the receive filter.
+     */
     public class ReceiveFilterLockCheck implements Runnable {
 
         private boolean locked;

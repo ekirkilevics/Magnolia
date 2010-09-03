@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * Bean holder for subscriber configuration.
  * @author Sameer Charles
  * $Id$
  */

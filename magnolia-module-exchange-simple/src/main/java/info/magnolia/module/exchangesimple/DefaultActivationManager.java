@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * Observed bean holding current configuration of subscribers described at <code>/server/activation/subscribers</code>.
  * @author Sameer Charles
  * $Id$
  */

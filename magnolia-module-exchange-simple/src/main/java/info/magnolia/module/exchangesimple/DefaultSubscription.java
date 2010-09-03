@@ -36,6 +36,7 @@ package info.magnolia.module.exchangesimple;
 import info.magnolia.cms.exchange.Subscription;
 
 /**
+ * Bean holder for the default subscription information.
  * @author Sameer Charles
  * $Id$
  */
@@ -81,7 +82,7 @@ public class DefaultSubscription implements Subscription {
     }
 
     /**
-     * Checks if we are subscribed to the given path
+     * Checks if we are subscribed to the given path.
      * @param value path to check
      * @return the length of the fromURI
      * */

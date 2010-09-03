@@ -83,14 +83,15 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import EDU.oswego.cs.dl.util.concurrent.Sync;
 
 /**
+ * Default implementation of {@link Syndicator}. Activates all the content to a subscriber configured on the server.
  * @author Sameer Charles
- * $Id$
+ * $Id: $
  */
 public abstract class BaseSyndicatorImpl implements Syndicator {
      private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
 
     /**
-      * URI used for activation
+      * URI used for activation.
       */
      public static final String DEFAULT_HANDLER = ".magnolia/activation"; //$NON-NLS-1$
 
@@ -99,7 +100,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public static final String MAPPED_PARENT_PATH = "mgnlExchangeMappedParent";
 
      /**
-      * activated/deactivated path
+      * Path to be activated or deactivated.
       */
      public static final String PATH = "mgnlExchangePath";
 
@@ -112,14 +113,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public static final String VERSION_NAME = "mgnlExchangeVersionName";
 
      /**
-      * resource reading sequence
+      * Mane of the resource containing reading sequence for importing the data in activation target.
       */
      public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
 
      /**
-      * resource file, Siblings element
-      * siblings element will contain all siglings of the same node type which are "before"
-      * this node
+      * Name of the element in the resource file describing siblings of activated node.
+      * Siblings element will contain all siblings of the same node type which are "before"
+      * this node.
       */
      public static final String SIBLINGS_ROOT_ELEMENT = "NodeSiblings";
 
@@ -332,16 +333,12 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
 
      /**
-      * Send activation request if subscribed to the activated URI
-      * @param subscriber
-      * @param activationContent
-      * @throws ExchangeException
+      * Send request of activation of activationContent to the subscriber. Subscriber might choose not to react if it is not subscribed to the URI under which activationContent exists.
       */
      public abstract String activate(Subscriber subscriber, ActivationContent activationContent) throws ExchangeException;
 
      /**
-      * cleans temporary store
-      * @param activationContent
+      * Cleans up temporary file store after activation.
       */
      protected void cleanTemporaryStore(ActivationContent activationContent) {
          if (activationContent == null) {
@@ -367,7 +364,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
     /**
-     * @param node , to deactivate
+     * @param node to deactivate
      * @throws RepositoryException
      * @throws ExchangeException
      */
@@ -397,14 +394,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public abstract void doDeactivate() throws ExchangeException;
 
      /**
-      * deactivate from a specified subscriber
+      * Deactivate content from specified subscriber.
       * @param subscriber
       * @throws ExchangeException
       */
      public abstract String doDeactivate(Subscriber subscriber) throws ExchangeException;
 
      /**
-      * get deactivation URL
+      * Return URI set for deactivation.
       * @param subscriberInfo
       */
      protected String getDeactivationURL(Subscriber subscriberInfo) {
@@ -412,7 +409,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * add deactivation request header fields
+      * Adds header fields describing deactivation request.
       * @param connection
       */
      protected void addDeactivationHeaders(URLConnection connection) {
@@ -423,9 +420,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * Get activation URL
-      * @param subscriberInfo
-      * @return activation handle
+      * Retrieves URL subscriber is listening on for (de)activation requests.
       */
      protected String getActivationURL(Subscriber subscriberInfo) {
          final String url = subscriberInfo.getURL();
@@ -436,9 +431,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * add request headers needed for this activation
-      * @param connection
-      * @param activationContent
+      * Adds headers fields describing activation request.
       */
      protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
          Iterator headerKeys = activationContent.getProperties().keySet().iterator();
@@ -458,8 +451,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * Update activation meta data
-      * @throws RepositoryException
+      * Updates current content activation meta data with the timestamp and user details of the activation.
       */
      protected void updateActivationDetails() throws RepositoryException {
          // page activated already use system context to ensure metadata is activated even if activating user has no rights to the activated page children
@@ -470,8 +462,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * Update de-activation meta data
-      * @throws RepositoryException
+      * Updates current content activation meta data with the timestamp and user details of the deactivation.
       */
      protected void updateDeactivationDetails() throws RepositoryException {
          // page deactivated already use system context to ensure metadata is activated even if activating user has no rights to the activated page children
@@ -525,7 +516,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * Collect Activation content
+      * Collects all information about activated content and its children (those that are set to be activated with the parent by filter rules).
       * @throws Exception
       */
      protected ActivationContent collect(Content node, List orderBefore) throws Exception {
@@ -559,10 +550,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * add ordering info to the resource file mapping
+      * Adds ordering information to the resource mapping file.
       * @param root element of the resource file under which ordering info must be added
       * @param orderBefore
-      * */
+      */
      protected void addOrderingInfo(Element root, List orderBefore) {
          //do not use magnolia Content class since these objects are only meant for a single use to read UUID
          Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
@@ -577,15 +568,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
      }
 
-     /**
-      * @param resourceElement
-      * @param session
-      * @param content
-      * @param filter
-      * @param activationContent
-      * @throws IOException
-      * @throws RepositoryException
-      */
      protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
          File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
          GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
@@ -628,13 +610,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
      }
 
-     /**
-      * @param session
-      * @param content
-      * @param elementfilter
-      * @param os
-      * @param noRecurse
-      * */
      protected void exportAndParse(Session session, Content content, XMLReader elementfilter, OutputStream os, boolean noRecurse) throws Exception {
          File tempFile = File.createTempFile("Frozen_"+content.getName(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
          OutputStream tmpFileOutStream = null;
