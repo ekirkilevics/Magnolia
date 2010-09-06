@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 
 /**
@@ -47,16 +49,16 @@ public class RichTextControl extends AbstractDialogControl {
     private boolean wordwrap = true;
     private int rows = 0;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
 
         richTextArea = new RichTextArea();
         richTextArea.setWordwrap(wordwrap);
         richTextArea.setRows(rows);
 
-        layout.addComponent(richTextArea);
         if (isFocus()) {
             richTextArea.focus();
         }
+        return richTextArea;
     }
 
     public void validate() {

@@ -34,7 +34,9 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 import org.apache.commons.lang.StringUtils;
 
@@ -55,7 +57,7 @@ public class SelectControl extends AbstractDialogControl {
     private String inputPrompt;
     private Map<String, String> options;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
 
         comboBox = new ComboBox();
         comboBox.setNullSelectionAllowed(nullSelectionAllowed);
@@ -68,8 +70,6 @@ public class SelectControl extends AbstractDialogControl {
             comboBox.setItemCaption(entry.getKey(), entry.getValue());
         }
 
-        layout.addComponent(comboBox);
-
         if (storageNode != null) {
             String value = storageNode.getNodeData(getName()).getString();
             if (StringUtils.isNotEmpty(value))
@@ -81,6 +81,8 @@ public class SelectControl extends AbstractDialogControl {
         if (isFocus()) {
             comboBox.focus();
         }
+
+        return comboBox;
     }
 
     public void validate() {

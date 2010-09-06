@@ -33,9 +33,12 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogControl;
 import info.magnolia.module.admincentral.dialog.DialogTab;
@@ -98,7 +101,8 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
 
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        addControl(storageNode, verticalLayout);
+        Window window = grid.getApplication() == null ? null : grid.getApplication().getMainWindow();
+        verticalLayout.addComponent(getControl(storageNode, window));
 
         if (description != null)
             verticalLayout.addComponent(new Label(description));
@@ -106,7 +110,7 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
         grid.addComponent(verticalLayout);
     }
 
-    protected abstract void addControl(Content storageNode, VerticalLayout layout);
+    protected abstract Component getControl(Content storageNode, Window mainWindow);
 
     public void validate() {
     }

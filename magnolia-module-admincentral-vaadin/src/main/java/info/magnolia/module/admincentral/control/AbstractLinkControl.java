@@ -34,9 +34,9 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import info.magnolia.cms.core.Content;
 
@@ -54,7 +54,7 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
 
     private TextField field;
 
-    public void addControl(Content storageNode, final VerticalLayout layout) {
+    public Component getControl(Content storageNode, final Window mainWindow) {
 
 
         field = new TextField();
@@ -70,18 +70,19 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
                 window.setModal(true);
                 window.setClosable(true);
 
-                layout.getApplication().getMainWindow().addWindow(window);
+                mainWindow.addWindow(window);
             }
         });
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.addComponent(field);
         horizontalLayout.addComponent(button);
-        layout.addComponent(horizontalLayout);
 
         if (isFocus()) {
             field.focus();
         }
+
+        return horizontalLayout;
     }
 
     public void validate() {

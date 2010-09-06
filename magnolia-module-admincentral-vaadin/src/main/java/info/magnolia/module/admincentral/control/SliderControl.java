@@ -35,10 +35,12 @@ package info.magnolia.module.admincentral.control;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
@@ -54,7 +56,7 @@ public class SliderControl extends AbstractDialogControl {
 
     private Slider slider;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 
@@ -79,10 +81,10 @@ public class SliderControl extends AbstractDialogControl {
         horizontalLayout.addComponent(value);
         horizontalLayout.setComponentAlignment(value, Alignment.BOTTOM_LEFT);
 
-        layout.addComponent(horizontalLayout);
         if (isFocus()) {
             slider.focus();
         }
+        return horizontalLayout;
     }
 
     public void validate() {

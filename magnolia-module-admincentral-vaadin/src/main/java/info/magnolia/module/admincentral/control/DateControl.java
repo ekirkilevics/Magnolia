@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 
 /**
@@ -52,13 +54,14 @@ public class DateControl extends AbstractDialogControl {
 
     private DateField dateField;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
         dateField = new DateField();
         dateField.setResolution(time ? DateField.RESOLUTION_MIN : DateField.RESOLUTION_DAY);
-        layout.addComponent(dateField);
         if (isFocus()) {
             dateField.focus();
         }
+
+        return dateField;
     }
 
     public void validate() {

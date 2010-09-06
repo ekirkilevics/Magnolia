@@ -34,8 +34,10 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 import org.apache.commons.lang.StringUtils;
 
@@ -58,7 +60,7 @@ public class EditControl extends AbstractDialogControl {
     private String validationPattern;
     private String validationMessage;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
 
         field = new TextField();
         field.setRequired(required);
@@ -70,7 +72,6 @@ public class EditControl extends AbstractDialogControl {
         field.setSecret(secret);
         if (StringUtils.isNotEmpty(validationPattern))
             field.addValidator(new RegexpValidator(validationPattern, validationMessage));
-        layout.addComponent(field);
 
         if (storageNode != null) {
             field.setValue(storageNode.getNodeData(getName()).getString());
@@ -79,6 +80,8 @@ public class EditControl extends AbstractDialogControl {
         if (isFocus()) {
             field.focus();
         }
+
+        return field;
     }
 
     public void validate() {

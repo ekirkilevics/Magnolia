@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
@@ -53,13 +55,13 @@ public class FileControl extends AbstractDialogControl {
 
     private Upload upload;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
         upload = new Upload();
         upload.setWidth("100%");
-        layout.addComponent(upload);
         if (isFocus()) {
             upload.focus();
         }
+        return upload;
     }
 
     public void validate() {

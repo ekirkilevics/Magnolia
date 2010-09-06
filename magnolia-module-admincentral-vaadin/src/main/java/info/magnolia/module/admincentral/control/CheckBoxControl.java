@@ -34,7 +34,9 @@
 package info.magnolia.module.admincentral.control;
 
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
@@ -46,13 +48,14 @@ public class CheckBoxControl extends AbstractDialogControl {
 
     private CheckBox checkBox;
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
 
         checkBox = new CheckBox();
-        layout.addComponent(checkBox);
         if (isFocus()) {
             checkBox.focus();
         }
+
+        return checkBox;
     }
 
     public void validate() {

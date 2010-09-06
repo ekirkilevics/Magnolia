@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+
 import info.magnolia.cms.core.Content;
 import org.apache.commons.lang.StringUtils;
 
@@ -55,7 +57,7 @@ public class RadioControl extends AbstractDialogControl {
 
     // TODO needs configuration for reading in options from separate node
 
-    public void addControl(Content storageNode, VerticalLayout layout) {
+    public Component getControl(Content storageNode, Window mainWindow) {
 
         group = new OptionGroup();
         group.setNullSelectionAllowed(nullSelectionAllowed);
@@ -69,7 +71,6 @@ public class RadioControl extends AbstractDialogControl {
 
         group.setNullSelectionAllowed(false);
 
-        layout.addComponent(group);
 
         if (storageNode != null) {
             String value = storageNode.getNodeData(getName()).getString();
@@ -80,6 +81,8 @@ public class RadioControl extends AbstractDialogControl {
         if (isFocus()) {
             group.focus();
         }
+
+        return group;
     }
 
     public void validate() {
