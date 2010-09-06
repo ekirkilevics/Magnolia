@@ -31,23 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.views;
+package info.magnolia.module.admincentral.components;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Embedded;
+import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 
 /**
- * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
- *
+ * The interface for all Magnolia UI components that want to manage their own state: e.g. history management (browser back button) and application state bookmarking.
+ * For example, a tree component might want to provide such features as being able to bookmark a page containing it and (re)open it showing the tree collapsed at the same
+ * node where it was, when it was bookmarked. <br/>
+ * Concrete classes need to implement the {@link FragmentChangedListener#fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent)} method to
+ * handle what to do when the URI fragment portion changes (that is the part after the <code>#</code> sign, e.g. http://mysite.com/mypage<strong>#myproduct</strong>).
+ * <br/>
+ * <br/>
+ *<strong>This way of managing application state is experimental and likely to change in the future.</strong>
  * @author fgrilli
  *
  */
-public class IFrameView extends Embedded {
-    private static final long serialVersionUID = 1L;
+public interface MagnoliaComponent extends FragmentChangedListener {
 
-    public IFrameView(String url){
-        setSource(new ExternalResource(url));
-        setType(Embedded.TYPE_BROWSER);
-        setSizeFull();
-    }
+    UriFragmentUtility getUriFragmentUtility();
+    void addListener(FragmentChangedListener fragmentChangedListener);
 }

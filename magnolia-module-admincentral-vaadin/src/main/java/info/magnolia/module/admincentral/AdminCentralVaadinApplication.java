@@ -48,8 +48,6 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.navigator.Navigator;
-import org.vaadin.navigator.Navigator.NavigableApplication;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ClassResource;
@@ -71,7 +69,7 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author dan
  * @author fgrilli
  */
-public class AdminCentralVaadinApplication extends Application implements NavigableApplication{
+public class AdminCentralVaadinApplication extends Application {
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinApplication.class);
 
@@ -85,10 +83,15 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
 
     private Messages messages;
 
-    private Menu createMenu(Navigator navigator) {
+    private VerticalLayout mainContainer = new VerticalLayout();
+
+    public VerticalLayout getMainContainer() {
+        return mainContainer;
+    }
+    private Menu createMenu() {
         Menu menu = null;
         try {
-            menu = new Menu(navigator);
+            menu = new Menu();
             menu.setSizeFull();
         }
         catch (RepositoryException re) {
@@ -104,7 +107,7 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         setTheme("runo");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
-        setMainWindow(createNewWindow());
+        initLayout();
         //TODO logout and redirect to new AdminCentral
         setLogoutURL(MgnlContext.getContextPath() + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
     }
@@ -112,17 +115,13 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
     /**
      * Creates the application layout and UI elements.
      */
-    private Window initLayout() {
+    private void initLayout() {
 
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
 
         final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
-
-        final VerticalLayout mainContainer = new VerticalLayout();
-        final Navigator navigator = new Navigator(mainContainer);
-        mainWindow.addComponent(navigator);
-
+        setMainWindow(mainWindow);
         // TODO: this layout is wrong!!! breaks completely on long user name or with different languages (eg spanish). It needs to be floating instead
         final AbsoluteLayout headerLayout = new AbsoluteLayout();
         headerLayout.setHeight("50px");
@@ -174,7 +173,7 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
 
         final VerticalLayout leftPaneLayout = new VerticalLayout();
-        final Menu menu = createMenu(navigator);
+        final Menu menu = createMenu();
         leftPaneLayout.addComponent(menu);
 
         final  HorizontalLayout bottomLeftCorner = new HorizontalLayout();
@@ -191,18 +190,5 @@ public class AdminCentralVaadinApplication extends Application implements Naviga
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);
 
-        return mainWindow;
-
-    }
-
-
-    @Override
-    public Window getWindow(String name) {
-        // Use navigator to manage multiple browser windows
-        return Navigator.getWindow(this, name, super.getWindow(name));
-    }
-
-    public Window createNewWindow() {
-        return initLayout();
     }
 }

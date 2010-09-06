@@ -31,38 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.views;
+package info.magnolia.module.admincentral.components;
 
-import com.vaadin.Application;
-import info.magnolia.module.admincentral.tree.TreeManager;
-import org.vaadin.navigator.Navigator;
-
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 /**
- * ConfigurationTreeTableView.
- *
+ * The base UI component which subclasses need to extend. It provides support for state management. Internally uses {@link UriFragmentUtility}.
  * @author fgrilli
+ *
  */
-public class ConfigurationTreeTableView extends AbstractTreeTableView {
+public abstract class MagnoliaBaseComponent extends CustomComponent implements MagnoliaComponent {
 
     private static final long serialVersionUID = 1L;
-    private Application application;
 
-    public ConfigurationTreeTableView() {
-        setTreeDefinition(TreeManager.getInstance().getTree("config"));
-        getTreeTable().setContainerDataSource(getContainer());
-    }
+    private UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
-    public void init(Navigator navigator, Application application) {
-        this.application = application;
-    }
-
-    public void navigateTo(String requestedDataId) {
-        System.out.println("ConfigTreeView "+ requestedDataId);
+    public MagnoliaBaseComponent() {
+        setCompositionRoot(uriFragmentUtility);
+        addListener(this);
 
     }
 
-    public String getWarningForNavigatingFrom() {
-        System.out.println("leaving ConfigTreeView "+ getTreeTable().getValue());
-        return null;
+    public final UriFragmentUtility getUriFragmentUtility() {
+        return uriFragmentUtility;
+    }
+
+    public final void addListener(FragmentChangedListener fragmentChangedListener) {
+        uriFragmentUtility.addListener(fragmentChangedListener);
+
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+        //In order to work, UriFragmentUtility MUST be attached to the application main window
+        getApplication().getMainWindow().addComponent(uriFragmentUtility);
     }
 }

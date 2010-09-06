@@ -38,11 +38,11 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admincentral.AdminCentralVaadinModule;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -51,7 +51,6 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.navigator.Navigator;
 
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
@@ -61,6 +60,11 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
+import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
 
@@ -69,26 +73,19 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author fgrilli
  *
  */
-public class Menu extends Accordion {
+public class Menu extends MagnoliaBaseComponent {
 
     private static final long serialVersionUID = 1L;
     private static final String SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE = "Selected action is not available in Milestone 1";
 
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
-    private Navigator navigator;
     private final Map<Tab, MenuItemConfiguration> menuItems = new HashMap<Tab, MenuItemConfiguration>();
     private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
 
-    public Menu(Navigator navigator) throws RepositoryException {
-        this.navigator = navigator;
-    }
-    /**
-     * See {@link com.vaadin.ui.AbstractComponent#getApplication()} javadoc as to why we need to do most of the initialization here and not in the constructor.
-     */
-    @Override
-    public void attach() {
-        super.attach();
+    private Accordion accordion = new Accordion();
 
+    public Menu() throws RepositoryException {
+        setCompositionRoot(accordion);
         final Map<String, MenuItemConfiguration> menuConfig = ((AdminCentralVaadinModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
 
         for (Entry<String, MenuItemConfiguration> menuItemEntry : menuConfig.entrySet()) {
@@ -105,19 +102,12 @@ public class Menu extends Accordion {
         //TODO for testing only. To be removed.
         MenuItemConfiguration testDialogsMenu = new MenuItemConfiguration();
         testDialogsMenu.setLabel("Dialogs");
-        AdminCentralAction testDialogMenuAction= new AdminCentralAction("DialogsMA") {
-
-            @Override
-            public void handleAction(Object sender, Object target) {
-                log.error("Supposed to handle something from {} to {}, but have been told to do nothing :(", sender, target);
-            }
-        };
         testDialogsMenu.setView(DialogSandboxPage.class.getName());
-        testDialogsMenu.setAction(testDialogMenuAction);
+        testDialogsMenu.setAction(new OpenMainViewMenuAction("testDialogs"));
         addTab("testDialogs", testDialogsMenu);
 
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
-        addListener(new SelectedMenuItemTabChangeListener());
+        accordion.addListener(new SelectedMenuItemTabChangeListener());
     }
 
 
@@ -129,52 +119,10 @@ public class Menu extends Accordion {
     public void addTab(String menuItemKey, MenuItemConfiguration menuItem) {
         // layout for sub menu entries
         Component subMenu = addSubMenuItemsIntoLayout(menuItem);
-        Tab tab = super.addTab(subMenu == null ? new Label() : subMenu, getLabel(menuItem), getIcon(menuItem));
+        Tab tab = accordion.addTab(subMenu == null ? new Label() : subMenu, getLabel(menuItem), getIcon(menuItem));
         // store tab reference
         this.menuItems.put(tab, menuItem);
         this.menuItemKeys.put(tab, menuItemKey);
-
-        // navigator needs to register views.
-        setupAndRegisterView(navigator, menuItemKey, menuItem);
-
-    }
-
-    @Override
-    public Tab addTab(Component c) {
-        throw new UnsupportedOperationException("Use addTab(String, MenuItemConfiguration) instead.");
-    };
-
-    @Override
-    public Tab addTab(Component c, String caption, Resource icon) {
-        throw new UnsupportedOperationException("Use addTab(String, MenuItemConfiguration) instead.");
-    }
-
-    /**
-     * Binds the given key with the view devised from menu item configuration.
-     * @param navigator Bindings manager.
-     * @param menuKey Unique menu item key.
-     * @param menuItem Menu item configuration.
-     */
-    private void setupAndRegisterView(Navigator navigator, String menuKey, MenuItemConfiguration menuItem){
-        final String view = menuItem.getView();
-        Class viewClass = null;
-        // check if view is not a simple html redirect only
-        if (!StringUtils.isBlank(menuItem.getViewTarget())) {
-           viewClass = IFrameView.class;
-        } else {
-            try {
-                // custom view class
-                viewClass = Classes.getClassFactory().forName(view);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            log.info("Registering navigator view ['{}', {}]",menuKey, viewClass);
-            try {
-                navigator.addView(menuKey, viewClass);
-            } catch (IllegalArgumentException e) {
-                log.error("Failed to register view for " + menuKey + ". View class " + viewClass + " is already registered.");
-            }
-        }
     }
 
     /**
@@ -228,7 +176,6 @@ public class Menu extends Accordion {
      * @author fgrilli
      *
      */
-    //TODO extract this as a top level class?
     public class MenuItem extends Button{
         private static final long serialVersionUID = 1L;
         private MenuItemConfiguration item;
@@ -242,12 +189,13 @@ public class Menu extends Accordion {
          */
         @Override
         public void attach() {
+            super.attach();
             Resource icon = Menu.this.getIcon(item);
             if (icon != null) {
                 setIcon(icon);
             }
             setCaption(Menu.this.getLabel(item));
-            super.attach();
+
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
 
@@ -269,6 +217,33 @@ public class Menu extends Accordion {
     }
 
     /**
+     * Analyzes uri fragment and select the appropriate menu tab.
+     *
+     */
+    public void fragmentChanged(FragmentChangedEvent source) {
+        String fragment = source.getUriFragmentUtility().getFragment();
+
+        if (fragment != null) {
+            String[] tokens = fragment.split(";");
+
+            if(tokens.length == 2) {
+                fragment = tokens[0];
+            }
+            //TODO find a less convoluted way to achieve this.
+            for(Iterator<Component> iter = accordion.getComponentIterator(); iter.hasNext();){
+                Component tabContent = iter.next();
+                Tab tab = accordion.getTab(tabContent);
+                String value = menuItemKeys.get(tab);
+                if(value.equals(fragment)){
+                    accordion.setSelectedTab(tabContent);
+                    return;
+                }
+            }
+        }
+    }
+
+
+    /**
      * Trigger for all menu actions.
      * @author fgrilli
      *
@@ -282,27 +257,33 @@ public class Menu extends Accordion {
 
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();
+
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
-                //TODO this is possibly how we will wire up navigator into our menu. Just need to know how to retrieve the correct view based on the clicked item.
                 MenuItemConfiguration item = menuItems.get(tab);
-                //Just give the navigator the uri fragment and it will know where to go and which View to instantiate
-                String uriFragment = menuItemKeys.get(tab);
+                String menuUriFragment = menuItemKeys.get(tab);
+                setUriFragmentOnSelectTabChange(menuUriFragment);
 
-                Object message;
-                Class view = navigator.getViewClass(uriFragment);
-                if (view == null || IFrameView.class.equals(view)) {
-                    message = SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE;
-                } else {
-                    message = null;
+                try {
+                    item.getAction().handleAction(item, getApplication());
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                    getApplication().getMainWindow().showNotification("Something bad happened. Please look at the application logs.<br/>", e.toString(), Notification.TYPE_ERROR_MESSAGE);
                 }
-                item.getAction().handleAction(message, getApplication());
-
-                navigator.navigateTo(uriFragment);
 
             }
         }
+
+        private void setUriFragmentOnSelectTabChange(String menuUriFragment) {
+            String currentUriFragment = getUriFragmentUtility().getFragment();
+            if(StringUtils.isNotEmpty(currentUriFragment)){
+                currentUriFragment = menuUriFragment + ";" + currentUriFragment;
+            } else {
+                currentUriFragment = menuUriFragment;
+            }
+
+            log.info("currentUriFragment is {}", menuUriFragment);
+            getUriFragmentUtility().setFragment(menuUriFragment, false);
+        }
     }
 }
-
-

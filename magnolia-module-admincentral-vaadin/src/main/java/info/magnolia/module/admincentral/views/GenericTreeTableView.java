@@ -33,12 +33,9 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import com.vaadin.Application;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.event.Action;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Window;
+import java.util.Date;
+
+import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
@@ -48,25 +45,25 @@ import info.magnolia.module.admincentral.tree.TreeManager;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.navigator.Navigator;
 
-import java.util.Date;
-
-import javax.jcr.RepositoryException;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.event.Action;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
 
 /**
- * WebsiteTreeTableView.
- *
+ * A generic tree table view which can show data from any repository.
+ * TODO remove bunch of hardcoded stuff for context menu.
  * @author fgrilli
+ *
  */
-public class WebsiteTreeTableView extends AbstractTreeTableView {
+public class GenericTreeTableView extends AbstractTreeTableView {
 
+    private static final Logger log = LoggerFactory.getLogger(GenericTreeTableView.class);
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = LoggerFactory.getLogger(WebsiteTreeTableView.class);
-
     // TODO static proof-of-concept hard coded stuff, needs to be replaced with generic configuration
-
     public static final String PAGE = "Page";
     public static final String TITLE = "Title";
     public static final String STATUS = "Status";
@@ -80,24 +77,12 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
     private final Action[] ftlActions;
     private final Action[] jspActions;
 
-    public WebsiteTreeTableView() {
+    public GenericTreeTableView(String repo) {
+        treeDefinition = TreeManager.getInstance().getTree(repo);
+        treeTable.setContainerDataSource(getContainer());
         ftlActions = new Action[]{actionAdd, actionDelete};
         jspActions = new Action[]{actionOpen, actionAdd, actionDelete};
-        setTreeDefinition(TreeManager.getInstance().getTree("website"));
-        getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
-    }
-
-    public void init(Navigator navigator, Application application) {
-    }
-
-    public void navigateTo(String requestedDataId) {
-        log.error("was asked to navigate to {}, but no one thought me how :(", requestedDataId);
-    }
-
-    public String getWarningForNavigatingFrom() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     private Action createAddAction() {
@@ -105,16 +90,17 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                Object itemId = getTreeTable().addItem();
-                getTreeTable().setParent(itemId, target);
+                Object itemId = treeTable.addItem();
+                treeTable.setParent(itemId, target);
 
-                Item item = getTreeTable().getItem(itemId);
+                Item item = treeTable.getItem(itemId);
                 Property name = item.getItemProperty(PAGE);
                 name.setValue("untitled");
                 Property status = item.getItemProperty(STATUS);
                 status.setValue(0);
                 Property modDate = item.getItemProperty(MOD_DATE);
-                modDate.setValue(new Date());            }
+                modDate.setValue(new Date());
+                }
         };
         add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth_add.gif"));
         return add;
@@ -125,7 +111,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
 
             @Override
             public void handleAction(Object sender, Object target) {
-                getTreeTable().removeItem(target);
+                treeTable.removeItem(target);
             }};
         add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/delete2.gif"));
         return add;
@@ -146,7 +132,7 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
                 try {
                     String handle = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID(id).getHandle();
                 // we no longer store handle as part of tree container ...
-//                TreeTable tree = getTreeTable();
+//                TreeTable tree = treeTable;
 //                Item item = tree.getItem(target);//item.getItemPropertyIds()
 //                Property handleProp = item.getItemProperty("handle");
 //                String handle = (String) handleProp.getValue();
@@ -162,10 +148,10 @@ public class WebsiteTreeTableView extends AbstractTreeTableView {
     }
 
     void addContextMenu() {
-        getTreeTable().addActionHandler(new Action.Handler() {
+        treeTable.addActionHandler(new Action.Handler() {
 
             public Action[] getActions(Object target, Object sender) {
-                Item selection = getTreeTable().getItem(target);
+                Item selection = treeTable.getItem(target);
                 String template = (String) selection.getItemProperty(TEMPLATE).getValue();
                 if (template == null) {
                     return new Action[0];

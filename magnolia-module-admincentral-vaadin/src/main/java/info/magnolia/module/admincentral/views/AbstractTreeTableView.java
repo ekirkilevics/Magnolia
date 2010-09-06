@@ -33,6 +33,21 @@
  */
 package info.magnolia.module.admincentral.views;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -49,46 +64,25 @@ import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TableFieldFactory;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vaadin.navigator.Navigator.View;
-
-import javax.jcr.RepositoryException;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 
 /**
- * A {@link CustomComponent} base class to create view components based on {@link TreeTable}. To obtain the contained tree table use {@link AbstractTreeTableView#getTreeTable()}.
- * Subclasses need to implement the methods defined by the {@link View} interface. This should provide the basic infrastructure needed to handle history (browser's back button behaviour) and "bookmarkability".
- * It is the component/subclass responsibility to handle what should be done when users bookmark an application containing their component. E.g. a component may wish to
- * open the tree at exactly the same point where the user opened before bookmarking the application.
- * To create a tree view for a particular repository, you need to get hold of an instance of  {@link info.magnolia.module.admincentral.tree.TreeManager} for that repo and typically populate container data source. Concretely, in your subclass constructor you need to do something along these lines
- * <pre>
- * setTreeDefinition(TreeManager.getInstance().getTree("config"));
- * getTreeTable().setContainerDataSource(getContainer());
- * </pre>
+ * A {@link MagnoliaBaseComponent} implementation to create view components based on {@link TreeTable}. To obtain the contained tree table use {@link AbstractTreeTableView#getTreeTable()}.
  *
  * @author fgrilli
  */
-abstract class AbstractTreeTableView extends CustomComponent implements View {
+abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
 
     private static final long serialVersionUID = 1L;
 
     private static Logger log = LoggerFactory.getLogger(AbstractTreeTableView.class);
 
-    private TreeDefinition treeDefinition;
+    protected TreeDefinition treeDefinition;
 
-    private TreeTable treeTable = new TreeTable();
+    protected TreeTable treeTable = new TreeTable();
 
     public AbstractTreeTableView() {
         setCompositionRoot(treeTable);
@@ -105,14 +99,6 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
 
     public TreeTable getTreeTable() {
         return treeTable;
-    }
-
-    public void setTreeDefinition(TreeDefinition treeDefinition) {
-        this.treeDefinition = treeDefinition;
-    }
-
-    public TreeDefinition getTreeDefinition() {
-        return treeDefinition;
     }
 
     /**
@@ -196,7 +182,7 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
 
     void addEditingByDoubleClick() {
 
-        getTreeTable().setTableFieldFactory(new TableFieldFactory() {
+        treeTable.setTableFieldFactory(new TableFieldFactory() {
 
             public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
                 if (selectedItemId != null) {
@@ -238,20 +224,39 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
             }
         });
 
-        getTreeTable().addListener(new ItemClickEvent.ItemClickListener() {
+
+        treeTable.addListener(new ItemClickEvent.ItemClickListener() {
+
+            private static final long serialVersionUID = 1L;
 
             public void itemClick(ItemClickEvent event) {
+                setUriFragmentOnItemClickEvent(event);
                 if (event.isDoubleClick()) {
 
                     // TODO we need to unset these somehow...
-
                     selectedItemId = event.getItemId();
                     selectedPropertyId = event.getPropertyId();
+
                     getTreeTable().setEditable(true);
                 } else if (getTreeTable().isEditable()) {
                     getTreeTable().setEditable(false);
                     getTreeTable().setValue(event.getItemId());
                 }
+            }
+
+            private void setUriFragmentOnItemClickEvent(ItemClickEvent event) {
+                String currentUriFragment = getUriFragmentUtility().getFragment();
+                if(StringUtils.isNotEmpty(currentUriFragment)){
+                    String[] tokens = currentUriFragment.split(";");
+                    //we already have an item id in the uri fragment, replace it
+                    if(tokens.length == 2) {
+                        currentUriFragment = tokens[0];
+                    }
+                    currentUriFragment = currentUriFragment + ";" + (String) event.getItemId();
+                }
+
+                log.info("currentUriFragment is {}", currentUriFragment);
+                getUriFragmentUtility().setFragment(currentUriFragment, false);
             }
         });
     }
@@ -321,7 +326,6 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
         }
     }
 
-
     /**
      * Extracts all relevant properties (handle + those specified by columns) from the content to the item representing piece of content in the tree table.
      */
@@ -344,6 +348,21 @@ abstract class AbstractTreeTableView extends CustomComponent implements View {
             //container.getContainerProperty(itemId, "handle").setValue(content.getHandle());
 
             addChildrenToContainer(container, content, itemId);
+        }
+    }
+
+    /**
+     * Selects the tree node to open based on the uri fragment value.
+     */
+    public void fragmentChanged(FragmentChangedEvent source) {
+        final String fragment = source.getUriFragmentUtility().getFragment();
+        if (fragment != null) {
+            final String[] uriFragmentTokens = fragment.split(";");
+            if(uriFragmentTokens.length <=1 ) return;
+            final String treeItemToOpenId = uriFragmentTokens[1];
+            log.info("before: is selected? {}",treeTable.isSelected(treeItemToOpenId));
+            treeTable.select(treeItemToOpenId);
+            log.info("after: is selected? {}",treeTable.isSelected(treeItemToOpenId));
         }
     }
 }

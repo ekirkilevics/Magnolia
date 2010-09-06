@@ -44,7 +44,6 @@ import com.vaadin.terminal.ExternalResource;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
-import info.magnolia.module.admincentral.views.IFrameView;
 
 /**
  * Bean representing stored configuration of the menu item.
@@ -71,8 +70,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     /**
      * The fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
      */
-    // TODO: aren't we introducing strong dep on vaadin here?
-    private String view = IFrameView.class.getName();
+    private String view;
 
     /**
      * A html file in classpath which will be embedded in an iframe.
@@ -80,6 +78,8 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     private String viewTarget;
 
     private String name;
+
+    private String repo;
 
 
     @Override
@@ -201,6 +201,14 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
 
     public void setViewTarget(String viewTarget) {
         this.viewTarget = viewTarget;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
+    }
+
+    public String getRepo() {
+        return repo;
     }
 
 }

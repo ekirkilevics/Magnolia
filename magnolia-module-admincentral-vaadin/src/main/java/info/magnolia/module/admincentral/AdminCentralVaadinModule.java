@@ -33,21 +33,19 @@
  */
 package info.magnolia.module.admincentral;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
+import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
+import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
-import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
-import info.magnolia.module.admincentral.dialog.DialogRegistry;
-import info.magnolia.module.admincentral.dialog.MockDialogProvider;
-import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 
 /**
  * Magnolia's AdminCentral Module.
@@ -77,7 +75,7 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
             this.stopCalled = false;
         }
 
-        DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
+       // DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
     public void stop(ModuleLifecycleContext ctx) {
