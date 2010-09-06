@@ -33,15 +33,39 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.module.InstallContext;
+
 /**
  * A task to add a role to a user, using {@link info.magnolia.cms.security.UserManager}.
- * @deprecated since 4.3.7, use {@link info.magnolia.module.delta.AddRoleToUserTask}.
+ *
  * @version $Revision: $ ($Author: $)
  */
-public class AddUserToRoleTask extends AddRoleToUserTask {
+public class AddRoleToUserTask extends AbstractTask {
+    private final String username;
+    private final String rolename;
 
-    public AddUserToRoleTask(String taskName, String username, String rolename) {
-        super(taskName, username, rolename);
+    public AddRoleToUserTask(String taskName, String username, String rolename) {
+        super(taskName, "Adding user \"" + username + "\" to role \"" + rolename + "\"");
+        this.username = username;
+        this.rolename = rolename;
     }
 
+    public void execute(InstallContext ctx) throws TaskExecutionException {
+        final UserManager userManager = SecuritySupport.Factory.getInstance().getUserManager();
+        final User user = userManager.getUser(username);
+        if (user == null) {
+            ctx.warn("User \"" + username + "\" not found, can't add the \"" + rolename + "\" role.");
+        } else {
+            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
+            try{
+                user.addRole(rolename);
+            }
+            catch (UnsupportedOperationException e) {
+                ctx.warn("Can't add the user \"" + username + "\" to the \"" + rolename + "\" role due to an unsupported operation exception. This is most likely the case if the users are managed externaly.");
+            }
+        }
+    }
 }
