@@ -178,7 +178,7 @@ public final class Bootstrapper {
     }
 
     /**
-     * Return the standard bootstrap dirs defined in the <code>magnolia.properies</code> file.
+     * Return the standard bootstrap dirs defined in the <code>magnolia.properties</code> file.
      * @return Array of directory names
      */
     public static String[] getBootstrapDirs() {
