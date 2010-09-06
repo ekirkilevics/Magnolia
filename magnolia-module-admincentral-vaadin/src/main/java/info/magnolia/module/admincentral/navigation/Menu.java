@@ -172,7 +172,7 @@ public class Menu extends MagnoliaBaseComponent {
     private void openViewOnFirstAccess() {
         MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
         menuItemConfiguration.setRepo("website");
-        //TODO why this is not set at app startup?
+        //FIXME this actually does not work at this point (does not set the uri fragment) although it correctly fires the event.
         getUriFragmentUtility().setFragment("website");
         new OpenMainViewMenuAction("").handleAction(menuItemConfiguration, getApplication());
     }
