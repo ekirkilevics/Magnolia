@@ -48,7 +48,6 @@ import java.util.Map.Entry;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +104,6 @@ public class Menu extends MagnoliaBaseComponent {
         testDialogsMenu.setView(DialogSandboxPage.class.getName());
         testDialogsMenu.setAction(new OpenMainViewMenuAction("testDialogs"));
         addTab("testDialogs", testDialogsMenu);
-
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
         accordion.addListener(new SelectedMenuItemTabChangeListener());
     }
@@ -161,6 +159,22 @@ public class Menu extends MagnoliaBaseComponent {
             return null;
         }
         return new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon());
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+        openViewOnFirstAccess();
+
+    }
+
+    //open website view by default TODO make it configurable
+    private void openViewOnFirstAccess() {
+        MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
+        menuItemConfiguration.setRepo("website");
+        //TODO why this is not set at app startup?
+        getUriFragmentUtility().setFragment("website");
+        new OpenMainViewMenuAction("").handleAction(menuItemConfiguration, getApplication());
     }
 
     /**
@@ -252,9 +266,6 @@ public class Menu extends MagnoliaBaseComponent {
 
         private static final long serialVersionUID = 1L;
 
-        public SelectedMenuItemTabChangeListener() {
-        }
-
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();
 
@@ -275,14 +286,6 @@ public class Menu extends MagnoliaBaseComponent {
         }
 
         private void setUriFragmentOnSelectTabChange(String menuUriFragment) {
-            String currentUriFragment = getUriFragmentUtility().getFragment();
-            if(StringUtils.isNotEmpty(currentUriFragment)){
-                currentUriFragment = menuUriFragment + ";" + currentUriFragment;
-            } else {
-                currentUriFragment = menuUriFragment;
-            }
-
-            log.info("currentUriFragment is {}", menuUriFragment);
             getUriFragmentUtility().setFragment(menuUriFragment, false);
         }
     }

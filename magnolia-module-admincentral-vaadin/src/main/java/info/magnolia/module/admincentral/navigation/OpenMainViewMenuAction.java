@@ -70,7 +70,10 @@ public class OpenMainViewMenuAction extends AdminCentralAction {
     @Override
     public void handleAction(Object sender, Object target) {
         if(sender == null || !(sender instanceof MenuItemConfiguration)){
-            throw new IllegalArgumentException("sender cannot be null and must be a MenuItemConfiguration");
+            throw new IllegalArgumentException("sender cannot be null and must be of type MenuItemConfiguration");
+        }
+        if(target == null || !(target instanceof AdminCentralVaadinApplication)){
+            throw new IllegalArgumentException("target cannot be null and must be of type AdminCentralVaadinApplication");
         }
         final MenuItemConfiguration menuConfig = (MenuItemConfiguration) sender;
         final ComponentContainer main = ((AdminCentralVaadinApplication) target).getMainContainer();
@@ -79,17 +82,17 @@ public class OpenMainViewMenuAction extends AdminCentralAction {
         try {
             if(menuConfig.getRepo() != null){
                 viewName = menuConfig.getView() != null? menuConfig.getView() : defaultTreeClassName;
-                log.info("opening view class {}, repository is {} ", viewName, menuConfig.getRepo());
+                log.info("view class is {}, repository is {} ", viewName, menuConfig.getRepo());
                 main.addComponent((Component) Classes.newInstance(viewName, menuConfig.getRepo()));
             } else if(menuConfig.getViewTarget() != null) {
                 viewName = menuConfig.getView() != null? menuConfig.getView() : defaultIFrameClassName;
-                log.info("opening view class {}, viewTarget is {} ", viewName, menuConfig.getViewTarget());
+                log.info("view class is {}, viewTarget is {} ", viewName, menuConfig.getViewTarget());
                 main.addComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + menuConfig.getViewTarget()));
             }else {
-                if( StringUtils.isEmpty(menuConfig.getView())){
+                if(StringUtils.isEmpty(menuConfig.getView())){
                     throw new IllegalStateException("No valid action configuration was found. You either have to specify a valid view class or a valid repository or view target (e.g. an html page in the application classpath which will be embedded in an iframe )");
                 }
-                log.info("opening view class {}", menuConfig.getView());
+                log.info("view class is {}", menuConfig.getView());
                 main.addComponent((Component) Classes.newInstance(menuConfig.getView()));
             }
         } catch (ClassNotFoundException e) {
