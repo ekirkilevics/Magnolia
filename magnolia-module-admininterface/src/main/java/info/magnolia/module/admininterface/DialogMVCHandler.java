@@ -243,16 +243,23 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     }
 
     protected boolean validate() {
-        if (!this.getDialog().validate()) {
-            return false;
-        }
+        boolean passed = this.getDialog().validate();
+
         SaveHandler saveHandler = this.getSaveHandler();
         if (saveHandler instanceof ValidatingSaveHandler) {
-            if (!((ValidatingSaveHandler) saveHandler).validate()) {
-                return false;
+            passed = ((ValidatingSaveHandler) saveHandler).validate();
+        }
+
+        if (!passed) {
+            // after failing validation on creation of the paragraph, the paragraph info would get lost
+            if (StringUtils.isEmpty(this.dialog.getConfigValue("paragraph"))) {
+                // make sure paragraph name is set even after reloading the dialog due to failed validation
+                String paragraphName = params.getParameter("mgnlParagraph");
+                this.dialog.setConfig("paragraph", paragraphName);
             }
         }
-        return true;
+
+        return passed;
     }
 
     /**
@@ -453,11 +460,6 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
                 log.error("can't create dialog", e);
             }
             configureDialog(this.dialog);
-        }
-        if (StringUtils.isEmpty(this.dialog.getConfigValue("paragraph"))) {
-            // make sure paragraph name is set even after reloading the dialog due to failed validation
-            String paragraphName = params.getParameter("mgnlParagraph");
-            this.dialog.setConfig("paragraph", paragraphName);
         }
         return this.dialog;
     }
