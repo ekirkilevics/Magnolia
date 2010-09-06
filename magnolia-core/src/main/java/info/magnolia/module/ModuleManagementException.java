@@ -34,6 +34,8 @@
 package info.magnolia.module;
 
 /**
+ * Thrown by {@link ModuleManager} and {@link info.magnolia.module.model.reader.ModuleDefinitionReader} when
+ * module definitions can't be loaded.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

@@ -36,7 +36,9 @@ package info.magnolia.module.files;
 import info.magnolia.cms.core.HierarchyManager;
 
 /**
- *
+ * A {@link FileExtractor} which performs an MD5 check on the extracted files.
+ * @see info.magnolia.module.files.MD5CheckingFileExtractorOperation
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

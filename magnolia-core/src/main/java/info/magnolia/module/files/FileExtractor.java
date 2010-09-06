@@ -36,6 +36,7 @@ package info.magnolia.module.files;
 import java.io.IOException;
 
 /**
+ * A component to extract files from modules.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -60,7 +61,12 @@ public interface FileExtractor {
      */
     void extractFiles(Transformer transformer) throws IOException;
 
-    // TODO : find better name !
+    /**
+     * Transforms a resource path into a file system path. (i.e where the resource is extracted)
+     * Returns null if the resource should not be extracted. 
+     *
+     * TODO : find better name !
+     */
     interface Transformer {
         /**
          * A filter in the same vein as java.io.FileFilter and such, except this

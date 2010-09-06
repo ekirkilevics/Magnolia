@@ -208,7 +208,11 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         return Collections.emptyList();
     }
 
-    // TODO : make this mandatory and "hidden" ?
+    /**
+     * The task which modifies the "version" property to the version being <strong>installed</strong>.
+     * (from module descriptor)
+     * TODO : make this mandatory and "hidden" ?
+     */
     public class ModuleVersionToLatestTask extends AbstractRepositoryTask {
         protected ModuleVersionToLatestTask() {
             super("Version number", "Sets installed module version number.");
@@ -231,6 +235,9 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
     }
 
+    /**
+     * The task which modifies the "version" property to the version we're <strong>updating</strong> to.
+     */
     public class ModuleVersionUpdateTask extends ModuleVersionToLatestTask {
         private final Version toVersion;
 

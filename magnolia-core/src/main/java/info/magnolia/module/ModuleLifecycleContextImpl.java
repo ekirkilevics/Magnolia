@@ -43,13 +43,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * This default implementation of ModuleLifecycleContext allows the ModuleManager
+ * to set the current "phase" of installation; other ModuleLifecycleContext clients
+ * have read-only access to the phase. 
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
     /**
-     * A Map&lt;String,ObservedManager%gt;, mapping nodenames to components
+     * A Map&lt;String,ObservedManager%gt;, mapping nodenames to components.
      */
     private final Map<String, ObservedManager> components;
 

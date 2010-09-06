@@ -38,7 +38,11 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 import java.io.IOException;
 
 /**
+ * Basic file extractor; does not do any check but provides the actual file extraction mechanisms,
+ * via {@link info.magnolia.module.files.FileExtractorOperation}s.
  *
+ * @see FileExtractorOperation
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

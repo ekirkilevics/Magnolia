@@ -34,7 +34,8 @@
 package info.magnolia.module.files;
 
 /**
- *
+ * A callback-type interface used by clients of {@link info.magnolia.module.files.FileExtractor} to be informed about errors.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

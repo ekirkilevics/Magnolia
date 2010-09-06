@@ -37,9 +37,12 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.InstallContext;
 
 /**
+ * A Task which delegates depending on the magnolia.bootstrap.samples property.
+ *
+ * @see SystemProperty#MAGNOLIA_BOOTSTRAP_SAMPLES
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class IsInstallSamplesTask extends ConditionalDelegateTask {
 

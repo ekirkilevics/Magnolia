@@ -36,7 +36,7 @@ package info.magnolia.module.files;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 
 /**
- * A ClasspathResourcesUtil.Filter which delegates to a FileExtractor.Transformer
+ * A {@link ClasspathResourcesUtil.Filter} which delegates to a {@link FileExtractor.Transformer}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

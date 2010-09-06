@@ -40,8 +40,14 @@ import info.magnolia.module.delta.TaskExecutionException;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * A Task used by the webapp module's version handler to bootstrap files under WEB-INF/bootstrap
+ * (i.e directories defined by the magnolia.bootstrap.dir property)
+ *
  * TODO : exception handling...
  *
+ * @see Bootstrapper#getBootstrapDirs()
+ * @see info.magnolia.cms.core.SystemProperty#MAGNOLIA_BOOTSTRAP_ROOTDIR
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

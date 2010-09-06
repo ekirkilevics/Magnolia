@@ -41,6 +41,7 @@ import info.magnolia.module.InstallContext;
 import javax.jcr.RepositoryException;
 
 /**
+ * A task to nest a group inside another, using {@link info.magnolia.cms.security.GroupManager}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

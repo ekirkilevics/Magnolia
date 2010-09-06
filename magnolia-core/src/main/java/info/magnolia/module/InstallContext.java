@@ -44,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The {@link info.magnolia.module.InstallContext} provides {@link info.magnolia.module.delta.Task}s
+ * and install/update UI with methods to log, get content and status.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -91,6 +93,9 @@ public interface InstallContext {
 
     boolean isModuleRegistered(String moduleName);
 
+    /**
+     * Log messages kept in the InstallContext.
+     */
     public static final class Message {
         private final Date timestamp;
         private final String message;
@@ -129,6 +134,9 @@ public interface InstallContext {
         }
     }
 
+    /**
+     * Priority for {@link info.magnolia.module.InstallContext.Message}s.
+     */
     public enum MessagePriority {
         info, warning, error, restartNeeded
     }

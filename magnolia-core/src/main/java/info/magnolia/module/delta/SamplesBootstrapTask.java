@@ -36,9 +36,11 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 
 /**
+ * A task which bootstraps the module's content under /mgnl-bootstrap-samples/ if
+ * the magnolia.bootstrap.samples property is set the true.
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class SamplesBootstrapTask extends IsInstallSamplesTask {
 

@@ -43,6 +43,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * A hard-coded {@link Delta} for the webapp module.
+ * @see info.magnolia.module.webapp.WebappVersionHandler
+ * @see info.magnolia.module.webapp.WebappBootstrap
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

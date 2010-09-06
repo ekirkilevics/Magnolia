@@ -35,10 +35,10 @@ package info.magnolia.module.delta;
 
 
 /**
- * Adds a URI permission to a role 
+ * Adds a URI permission to a role.
+ *
  * @author vsteller
  * @version $Id$
- *
  */
 public class AddURIPermissionTask extends AddPermissionTask {
     public final static int DENY = 0;

@@ -39,9 +39,10 @@ import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.module.InstallContext;
 
 /**
+ * A task to add a permission to a role, using {@link info.magnolia.cms.security.RoleManager}.
+ *
  * @author pbaerfuss
  * @version $Id$
- *
  */
 public class AddPermissionTask extends AbstractTask {
 

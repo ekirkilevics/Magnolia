@@ -36,6 +36,7 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 
 /**
+ * A Task which bootstraps a single file.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
