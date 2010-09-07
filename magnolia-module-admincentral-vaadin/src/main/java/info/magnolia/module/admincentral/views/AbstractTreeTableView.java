@@ -252,7 +252,7 @@ abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                     if(tokens.length == 2) {
                         currentUriFragment = tokens[0];
                     }
-                    currentUriFragment = currentUriFragment + ";" + (String) event.getItemId();
+                    currentUriFragment = currentUriFragment + ";" + event.getItemId();
                 }
 
                 log.info("currentUriFragment is {}", currentUriFragment);
@@ -360,9 +360,9 @@ abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
             final String[] uriFragmentTokens = fragment.split(";");
             if(uriFragmentTokens.length <=1 ) return;
             final String treeItemToOpenId = uriFragmentTokens[1];
-            log.info("before: is selected? {}",treeTable.isSelected(treeItemToOpenId));
+            log.debug("before: is selected? {}",treeTable.isSelected(treeItemToOpenId));
             treeTable.select(treeItemToOpenId);
-            log.info("after: is selected? {}",treeTable.isSelected(treeItemToOpenId));
+            log.debug("after: is selected? {}",treeTable.isSelected(treeItemToOpenId));
         }
     }
 }
