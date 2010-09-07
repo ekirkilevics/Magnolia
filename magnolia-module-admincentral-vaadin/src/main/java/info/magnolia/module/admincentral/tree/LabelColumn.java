@@ -47,7 +47,7 @@ public class LabelColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 
-    private boolean editable;
+    private boolean editable = false;
 
     public boolean isEditable() {
         return editable;
@@ -74,15 +74,11 @@ public class LabelColumn extends TreeColumn implements Serializable {
 
     @Override
     public Field getEditField(Content content) {
-        if (editable)
-            return new TextField();
-        return null;
+        return (editable) ? new TextField() : null;
     }
 
     @Override
     public Field getEditField(Content content, NodeData nodeData) {
-        if (editable)
-            return new TextField();
-        return null;
+        return getEditField(content);
     }
 }
