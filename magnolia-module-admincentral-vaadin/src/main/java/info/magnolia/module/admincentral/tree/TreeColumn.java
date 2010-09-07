@@ -61,6 +61,10 @@ public abstract class TreeColumn {
         this.width = width;
     }
 
+    /**
+     * Type of the column: Subclasses have to make sure the getValue methods return instances of this type!
+     * TODO dlipp: can surely be resolved with proper usage of generics (e.g. TreeColum<T>)
+     */
     public abstract Class<?> getType();
 
     public abstract Object getValue(Content content);
