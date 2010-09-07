@@ -33,16 +33,18 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import java.io.Serializable;
-
-import com.vaadin.terminal.ClassResource;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.HorizontalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.ui.Embedded;
+
 
 /**
  * A column that displays icons for permissions and activation status.
@@ -51,7 +53,10 @@ public class StatusColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
+    private static final Map<String, ClassResource> resources = new HashMap<String, ClassResource>();
+
     private boolean activation = true;
+
     private boolean permissions = false;
 
     public boolean isActivation() {
@@ -71,30 +76,32 @@ public class StatusColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Class<?> getType() {
-        return HorizontalLayout.class;
+    public Class< ? > getType() {
+        return Embedded.class;
     }
 
     @Override
     public Object getValue(Content content) {
-
-        HorizontalLayout layout = new HorizontalLayout();
-
+        Embedded icon = null;
         if (activation) {
-            layout.addComponent(createIcon("/mgnl-resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(content)));
+            icon =
+            createIcon("/mgnl-resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(content));
         }
-
         if (permissions && !content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-            layout.addComponent(createIcon("/mgnl-resources/icons/16/" + "pen_blue_canceled.gif"));
+           icon = createIcon("/mgnl-resources/icons/16/" + "pen_blue_canceled.gif");
         }
 
-        return layout;
+        return icon;
     }
 
-    private Component createIcon(String resource) {
+    private Embedded createIcon(String resource) {
         Embedded embedded = new Embedded();
         embedded.setType(Embedded.TYPE_IMAGE);
-        embedded.setSource(new ClassResource(resource, AdminCentralVaadinApplication.application));
+        //there's only a few different Icon resources used here, so we keep them in a map rather than creating a new one for each an every request.
+        if (!resources.containsKey(resource)) {
+            resources.put(resource, new ClassResource(resource, AdminCentralVaadinApplication.application));
+        }
+        embedded.setSource(resources.get(resource));
         embedded.setWidth("16px");
         embedded.setHeight("16px");
         return embedded;
