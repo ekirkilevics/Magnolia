@@ -50,7 +50,6 @@ public abstract class MagnoliaBaseComponent extends CustomComponent implements M
     public MagnoliaBaseComponent() {
         setCompositionRoot(uriFragmentUtility);
         addListener(this);
-
     }
 
     public final UriFragmentUtility getUriFragmentUtility() {
@@ -59,7 +58,16 @@ public abstract class MagnoliaBaseComponent extends CustomComponent implements M
 
     public final void addListener(FragmentChangedListener fragmentChangedListener) {
         uriFragmentUtility.addListener(fragmentChangedListener);
+    }
 
+    public void removeListener(FragmentChangedListener fragmentChangedListener) {
+        uriFragmentUtility.removeListener(fragmentChangedListener);
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        removeListener(this);
     }
 
     @Override

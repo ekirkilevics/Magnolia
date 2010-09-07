@@ -52,4 +52,5 @@ public interface MagnoliaComponent extends FragmentChangedListener {
 
     UriFragmentUtility getUriFragmentUtility();
     void addListener(FragmentChangedListener fragmentChangedListener);
+    void removeListener(FragmentChangedListener fragmentChangedListener);
 }
