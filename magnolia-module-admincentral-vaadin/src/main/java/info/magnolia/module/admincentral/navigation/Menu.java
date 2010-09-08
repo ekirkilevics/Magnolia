@@ -40,6 +40,7 @@ import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admincentral.AdminCentralVaadinModule;
 import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
+import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,6 +105,12 @@ public class Menu extends MagnoliaBaseComponent {
         testDialogsMenu.setView(DialogSandboxPage.class.getName());
         testDialogsMenu.setAction(new OpenMainViewMenuAction("testDialogs"));
         addTab("testDialogs", testDialogsMenu);
+        MenuItemConfiguration testDialogEditorMenu = new MenuItemConfiguration();
+        testDialogEditorMenu.setLabel("Dialog Editor");
+        testDialogEditorMenu.setView(DraftDialogEditorPage.class.getName());
+        testDialogEditorMenu.setAction(new OpenMainViewMenuAction("testDialogEditor"));
+        addTab("testDialogEditor", testDialogEditorMenu);
+
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
         accordion.addListener(new SelectedMenuItemTabChangeListener());
     }
