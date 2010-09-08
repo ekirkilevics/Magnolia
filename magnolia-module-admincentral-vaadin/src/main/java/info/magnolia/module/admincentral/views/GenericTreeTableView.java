@@ -33,49 +33,30 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import java.util.Date;
-
-import javax.jcr.RepositoryException;
-
-import info.magnolia.cms.beans.config.ContentRepository;
+import com.vaadin.event.Action;
+import com.vaadin.terminal.ExternalResource;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.navigation.AdminCentralAction;
+import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
-
+import info.magnolia.module.admincentral.tree.action.TreeAction;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.event.Action;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Window;
+import javax.jcr.RepositoryException;
+import java.util.ArrayList;
 
 /**
  * A generic tree table view which can show data from any repository.
- * TODO remove bunch of hardcoded stuff for context menu.
- * @author fgrilli
  *
+ * @author fgrilli
  */
 public class GenericTreeTableView extends AbstractTreeTableView {
 
     private static final Logger log = LoggerFactory.getLogger(GenericTreeTableView.class);
     private static final long serialVersionUID = 1L;
-
-    // TODO static proof-of-concept hard coded stuff, needs to be replaced with generic configuration
-    public static final String PAGE = "Page";
-    public static final String TITLE = "Title";
-    public static final String STATUS = "Status";
-    public static final String TEMPLATE = "Template";
-    public static final String MOD_DATE = "Mod. Date";
-
-    private final Action actionAdd = createAddAction();
-    private final Action actionDelete = createDeleteAction();
-    private final Action actionOpen = createOpenAction();
-
-    private final Action[] ftlActions;
-    private final Action[] jspActions;
 
     public GenericTreeTableView(String treeName) {
         try {
@@ -85,96 +66,59 @@ public class GenericTreeTableView extends AbstractTreeTableView {
             log.error(e.getMessage(), e);
         }
         treeTable.setContainerDataSource(getContainer());
-        ftlActions = new Action[]{actionAdd, actionDelete};
-        jspActions = new Action[]{actionOpen, actionAdd, actionDelete};
         addContextMenu();
     }
 
-    private Action createAddAction() {
-        Action add = new AdminCentralAction("Add") {
-
-            @Override
-            public void handleAction(Object sender, Object target) {
-                Object itemId = treeTable.addItem();
-                treeTable.setParent(itemId, target);
-
-                Item item = treeTable.getItem(itemId);
-                Property name = item.getItemProperty(PAGE);
-                name.setValue("untitled");
-                Property status = item.getItemProperty(STATUS);
-                status.setValue(0);
-                Property modDate = item.getItemProperty(MOD_DATE);
-                modDate.setValue(new Date());
-                }
-        };
-        add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth_add.gif"));
-        return add;
-    }
-
-    private Action createDeleteAction() {
-        Action add = new AdminCentralAction("Delete") {
-
-            @Override
-            public void handleAction(Object sender, Object target) {
-                treeTable.removeItem(target);
-            }};
-        add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/delete2.gif"));
-        return add;
-    }
-
-    private Action createOpenAction() {
-        Action add = new AdminCentralAction("Open page") {
-
-            @Override
-            public void handleAction(Object sender, Object target) {
-                if (target == null || !(target instanceof String)) {
-                    return;
-                }
-                String id = StringUtils.substringBefore((String) target, "@");
-                if (StringUtils.isBlank(id)) {
-                    return;
-                }
-                try {
-                    String handle = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID(id).getHandle();
-                // we no longer store handle as part of tree container ...
-//                TreeTable tree = treeTable;
-//                Item item = tree.getItem(target);//item.getItemPropertyIds()
-//                Property handleProp = item.getItemProperty("handle");
-//                String handle = (String) handleProp.getValue();
-                    String uri = MgnlContext.getContextPath() + handle + ".html";
-                    Window window = getApplication().getMainWindow();
-                    window.open(new ExternalResource(uri));
-                } catch (RepositoryException e) {
-                    log.error("Failed to retrieve page handle for " + target, e);
-                }
-            }};
-        add.setIcon(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth.gif"));
-        return add;
-    }
-
     void addContextMenu() {
+
         treeTable.addActionHandler(new Action.Handler() {
 
             public Action[] getActions(Object target, Object sender) {
-                Item selection = treeTable.getItem(target);
-                String template = (String) selection.getItemProperty(TEMPLATE).getValue();
-                if (template == null) {
-                    return new Action[0];
+
+                ArrayList<Action> actions = new ArrayList<Action>();
+                for (MenuItem mi : treeDefinition.getContextMenuItems()) {
+
+                    try {
+
+                        TreeAction action = mi.getAction();
+
+                        String itemId = (String) target;
+
+                        if (itemId.indexOf('@') == -1) {
+                            Content content = MgnlContext.getInstance().getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(itemId);
+                            if (!action.isAvailable(content, null))
+                                continue;
+                        } else {
+                            String uuid = StringUtils.substringBefore(itemId, "@");
+                            String nodeDataName = StringUtils.substringAfter(itemId, "@");
+                            Content content = MgnlContext.getInstance().getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(uuid);
+                            NodeData nodeData = content.getNodeData(nodeDataName);
+                            if (!action.isAvailable(content, nodeData))
+                                continue;
+                        }
+
+                        action.setCaption(mi.getLabel());
+                        action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
+                        actions.add(action);
+
+                    } catch (RepositoryException e) {
+                        log.error(e.getMessage(), e);
+                    }
                 }
-                // TODO: Just a dummy demo for creating different context menus depending on
-                // selected item...
-                return template.indexOf("JSP") != -1 ? jspActions : ftlActions;
+
+                return actions.toArray(new Action[actions.size()]);
             }
 
             public void handleAction(Action action, Object sender, Object target) {
                 try {
-                    ((AdminCentralAction) action).handleAction(sender, target);
+                    ((TreeAction) action).handleAction(GenericTreeTableView.this, treeDefinition, sender, target);
                 } catch (ClassCastException e) {
                     // not our action
                     log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());
+                } catch (RepositoryException e) {
+                    log.error(e.getMessage(), e);
                 }
             }
-
         });
     }
 }

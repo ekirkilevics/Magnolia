@@ -31,49 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
+package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.module.admincentral.tree.action.TreeAction;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.module.admincentral.views.AbstractTreeTableView;
 
 /**
- * Describes an item on either a function menu or a context menu.
+ *  Action for adding a new folder.
  */
-public class MenuItem {
+public class NewFolderAction extends TreeAction {
 
-    private String name;
-    private String label;
-    private String icon;
-    private TreeAction action;
+    @Override
+    public boolean isAvailable(Content content, NodeData nodeData) {
 
-    public TreeAction getAction() {
-        return action;
+        // This action is not available for NodeData
+
+        return nodeData == null;
     }
 
-    public void setAction(TreeAction action) {
-        this.action = action;
-    }
+    @Override
+    protected void handleAction(AbstractTreeTableView treeTable, Content content) {
 
-    public String getName() {
-        return name;
-    }
+        
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
     }
 }

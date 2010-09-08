@@ -31,49 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
+package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.module.admincentral.tree.action.TreeAction;
+import com.vaadin.addon.treetable.TreeTable;
+import com.vaadin.data.Item;
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.views.AbstractTreeTableView;
+import org.apache.commons.lang.RandomStringUtils;
+
+import java.util.Date;
 
 /**
- * Describes an item on either a function menu or a context menu.
+ * Tree action for adding a page to the website repository.
+ *
+ * TODO this class is a mock up that only adds an item to the tree table. It will need to be changed into accessing the JCR.
  */
-public class MenuItem {
+public class AddAction extends TreeAction {
 
-    private String name;
-    private String label;
-    private String icon;
-    private TreeAction action;
+    @Override
+    protected void handleAction(AbstractTreeTableView treeTableView, Content content) {
 
-    public TreeAction getAction() {
-        return action;
-    }
+        TreeTable treeTable = treeTableView.getTreeTable();
 
-    public void setAction(TreeAction action) {
-        this.action = action;
-    }
+        String bogusUuid = "65f2b584-30bb-41ea-9720-" + RandomStringUtils.randomNumeric(12);
 
-    public String getName() {
-        return name;
-    }
+        Item item = treeTable.addItem(bogusUuid);
+        treeTable.setParent(bogusUuid, content.getUUID());
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+        item.getItemProperty("Page").setValue("untitled");
+        item.getItemProperty("Status").setValue(0);
+        item.getItemProperty("Mod. date").setValue(new Date());
     }
 }

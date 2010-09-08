@@ -56,7 +56,7 @@ public class TreeDefinition implements Serializable {
 
     private List<TreeColumn> columns = new ArrayList<TreeColumn>();
     private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
-    private List<MenuItem> contextMenu = new ArrayList<MenuItem>();
+    private List<MenuItem> contextMenuItems = new ArrayList<MenuItem>();
     private List<TreeItemType> itemTypes = new ArrayList<TreeItemType>();
 
     public boolean isFlatMode() {
@@ -123,11 +123,15 @@ public class TreeDefinition implements Serializable {
         this.functionMenu = functionMenu;
     }
 
-    public List<MenuItem> getContextMenu() {
-        return contextMenu;
+    public List<MenuItem> getContextMenuItems() {
+        return contextMenuItems;
     }
 
-    public void setContextMenu(List<MenuItem> contextMenu) {
-        this.contextMenu = contextMenu;
+    public void setContextMenuItems(List<MenuItem> contextMenuItems) {
+        this.contextMenuItems = contextMenuItems;
+    }
+
+    public boolean addContextMenuItem(MenuItem menuItem) {
+        return contextMenuItems.add(menuItem);
     }
 }

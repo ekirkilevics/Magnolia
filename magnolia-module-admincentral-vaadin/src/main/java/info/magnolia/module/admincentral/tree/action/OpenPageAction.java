@@ -31,49 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
+package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.module.admincentral.tree.action.TreeAction;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.views.AbstractTreeTableView;
 
 /**
- * Describes an item on either a function menu or a context menu.
+ * Opens the selected page for page editing.
  */
-public class MenuItem {
+public class OpenPageAction extends TreeAction {
 
-    private String name;
-    private String label;
-    private String icon;
-    private TreeAction action;
-
-    public TreeAction getAction() {
-        return action;
-    }
-
-    public void setAction(TreeAction action) {
-        this.action = action;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+    @Override
+    protected void handleAction(AbstractTreeTableView treeTable, Content content) {
+        String uri = MgnlContext.getContextPath() + content.getHandle() + ".html";
+        Window window = treeTable.getApplication().getMainWindow();
+        window.open(new ExternalResource(uri));
     }
 }

@@ -76,7 +76,7 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
  *
  * @author fgrilli
  */
-abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
+public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
 
     private static final long serialVersionUID = 1L;
 
