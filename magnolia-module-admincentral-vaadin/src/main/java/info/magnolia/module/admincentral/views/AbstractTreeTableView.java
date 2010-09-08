@@ -33,24 +33,6 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
-import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -64,12 +46,27 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.TableFieldFactory;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * A {@link MagnoliaBaseComponent} implementation to create view components based on {@link TreeTable}. To obtain the contained tree table use {@link AbstractTreeTableView#getTreeTable()}.
@@ -85,7 +82,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
     /**
      * Keeps already used ClassResource in order to save resources/not create new ClassResource for every item.
      */
-    private static Map<String, ClassResource> itemIcons = new HashMap<String, ClassResource> ();
+    private static ConcurrentMap<String, ClassResource> itemIcons = new ConcurrentHashMap<String, ClassResource>();
 
     protected TreeDefinition treeDefinition;
 
