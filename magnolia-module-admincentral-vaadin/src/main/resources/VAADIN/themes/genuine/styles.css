@@ -1,0 +1,5 @@
+@import "../runo/styles.css";
+
+.v-table-row, .v-table-row-odd {
+   height: 30px; /* a fix for TreeTable row jittering */
+}
