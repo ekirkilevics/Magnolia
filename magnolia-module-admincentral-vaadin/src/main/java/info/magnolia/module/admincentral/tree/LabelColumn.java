@@ -41,7 +41,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
 /**
- * Describes a column that contains the label of the item with an optional icon.
+ * Describes a column that contains the label of the item.
  */
 public class LabelColumn extends TreeColumn implements Serializable {
 
