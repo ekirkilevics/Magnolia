@@ -64,7 +64,7 @@
         <sv:value>9b87e4cd-3fdd-44d8-8573-0b78eb72439e</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/mgnl-resources/icons/16/document_plain_earth.gif</sv:value>
+        <sv:value>.resources/icons/16/document_plain_earth.gif</sv:value>
       </sv:property>
       <sv:property sv:name="itemType" sv:type="String">
         <sv:value>mgnl:content</sv:value>

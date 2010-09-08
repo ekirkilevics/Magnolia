@@ -70,7 +70,7 @@
         <sv:value>4fa79a2d-5d42-408d-a2f0-6de3474a16b1</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/mgnl-resources/icons/16/folder_cubes.gif</sv:value>
+        <sv:value>.resources/icons/16/folder_cubes.gif</sv:value>
       </sv:property>
       <sv:property sv:name="itemType" sv:type="String">
         <sv:value>mgnl:content</sv:value>
@@ -104,7 +104,7 @@
         <sv:value>994fcf4e-6a95-4691-a9d2-bcf1e94840b2</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/mgnl-resources/icons/16/cubes.gif</sv:value>
+        <sv:value>.resources/icons/16/cubes.gif</sv:value>
       </sv:property>
       <sv:property sv:name="itemType" sv:type="String">
         <sv:value>mgnl:contentNode</sv:value>
@@ -138,7 +138,7 @@
         <sv:value>0ae3a6ed-feb0-432b-a4f7-a9d3b0f1ab43</sv:value>
       </sv:property>
       <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/mgnl-resources/icons/16/cube_green.gif</sv:value>
+        <sv:value>.resources/icons/16/cube_green.gif</sv:value>
       </sv:property>
       <sv:property sv:name="itemType" sv:type="String">
         <sv:value>nodeData</sv:value>
