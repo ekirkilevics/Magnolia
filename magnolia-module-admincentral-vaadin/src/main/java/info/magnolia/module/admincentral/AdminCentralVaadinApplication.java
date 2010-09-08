@@ -50,7 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -122,7 +122,7 @@ public class AdminCentralVaadinApplication extends Application {
 
         final Embedded magnoliaLogo = new Embedded();
         magnoliaLogo.setType(Embedded.TYPE_IMAGE);
-        magnoliaLogo.setSource(new ClassResource("/mgnl-resources/admin-images/magnoliaLogo.gif", this));
+        magnoliaLogo.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/admin-images/magnoliaLogo.gif"));
         magnoliaLogo.setWidth("294px");
         magnoliaLogo.setHeight("36px");
         headerLayout.addComponent(magnoliaLogo, "left: 20px; top: 10px;");
