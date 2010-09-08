@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Embedded;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MetaDataUtil;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
+import info.magnolia.context.MgnlContext;
 
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +52,7 @@ public class StatusColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
-    private static final ConcurrentMap<String, ClassResource> resources = new ConcurrentHashMap<String, ClassResource>();
+    private static final ConcurrentMap<String, Resource> resources = new ConcurrentHashMap<String, Resource>();
 
     private boolean activation = true;
 
@@ -83,10 +84,10 @@ public class StatusColumn extends TreeColumn implements Serializable {
         Embedded icon = null;
         if (activation) {
             icon =
-            createIcon("/mgnl-resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(content));
+            createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(content));
         }
         if (permissions && !content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-           icon = createIcon("/mgnl-resources/icons/16/" + "pen_blue_canceled.gif");
+           icon = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
         }
 
         return icon;
@@ -97,7 +98,7 @@ public class StatusColumn extends TreeColumn implements Serializable {
         embedded.setType(Embedded.TYPE_IMAGE);
         //there's only a few different Icon resources used here, so we keep them in a map rather than creating a new one for each an every request.
         if (!resources.containsKey(resource)) {
-            resources.put(resource, new ClassResource(resource, AdminCentralVaadinApplication.application));
+            resources.put(resource, new ExternalResource(resource));
         }
         embedded.setSource(resources.get(resource));
         embedded.setWidth("16px");

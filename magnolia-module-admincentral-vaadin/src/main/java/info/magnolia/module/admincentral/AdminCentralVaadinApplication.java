@@ -75,12 +75,6 @@ public class AdminCentralVaadinApplication extends Application {
 
     private static final long serialVersionUID = 5773744599513735815L;
 
-    /**
-     * TODO this is a sad little hack to get hold of this instance in classes that create and return
-     * vaadin components (controllers). They need it in order to load icons with ClassResource.
-     */
-    public static AdminCentralVaadinApplication application;
-
     private Messages messages;
 
     private VerticalLayout mainContainer = new VerticalLayout();
@@ -103,7 +97,6 @@ public class AdminCentralVaadinApplication extends Application {
 
     @Override
     public void init() {
-        application = this;
         setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
