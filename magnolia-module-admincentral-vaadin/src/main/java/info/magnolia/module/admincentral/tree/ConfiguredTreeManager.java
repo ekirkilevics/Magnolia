@@ -71,7 +71,7 @@ public class ConfiguredTreeManager extends ObservedManager {
 
                     TreeProvider tree = new ConfiguredTreeProvider(treeNode);
 
-                    TreeManager.getInstance().registerTree(name, tree);
+                    TreeRegistry.getInstance().registerTree(name, tree);
                     this.registeredTrees.add(name);
                 } catch (IllegalStateException e) {
                     log.error("Unable to register tree [" + name + "]", e);
@@ -84,7 +84,7 @@ public class ConfiguredTreeManager extends ObservedManager {
     protected void onClear() {
         synchronized (registeredTrees) {
             for (String treeName : registeredTrees) {
-                TreeManager.getInstance().unregisterTree(treeName);
+                TreeRegistry.getInstance().unregisterTree(treeName);
             }
             this.registeredTrees.clear();
         }

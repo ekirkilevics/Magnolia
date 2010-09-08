@@ -40,9 +40,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Maintains a registry of configured tree definitions.
+ * Maintains a registry of configured tree providers by name.
  */
-public class TreeManager {
+public class TreeRegistry {
 
     private final Map<String, TreeProvider> providers = new HashMap<String, TreeProvider>();
 
@@ -72,7 +72,7 @@ public class TreeManager {
         return treeProvider.getTreeDefinition();
     }
 
-    public static TreeManager getInstance() {
-        return Components.getSingleton(TreeManager.class);
+    public static TreeRegistry getInstance() {
+        return Components.getSingleton(TreeRegistry.class);
     }
 }

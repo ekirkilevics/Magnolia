@@ -40,7 +40,7 @@ import javax.jcr.RepositoryException;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.navigation.AdminCentralAction;
-import info.magnolia.module.admincentral.tree.TreeManager;
+import info.magnolia.module.admincentral.tree.TreeRegistry;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public class GenericTreeTableView extends AbstractTreeTableView {
 
     public GenericTreeTableView(String treeName) {
         try {
-            treeDefinition = TreeManager.getInstance().getTree(treeName);
+            treeDefinition = TreeRegistry.getInstance().getTree(treeName);
         } catch (RepositoryException e) {
             // TODO: we need to somehow properly handle this
             log.error(e.getMessage(), e);
