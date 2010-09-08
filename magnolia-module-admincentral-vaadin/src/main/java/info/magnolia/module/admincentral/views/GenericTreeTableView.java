@@ -60,23 +60,23 @@ public class GenericTreeTableView extends AbstractTreeTableView {
 
     public GenericTreeTableView(String treeName) {
         try {
-            treeDefinition = TreeRegistry.getInstance().getTree(treeName);
+            setTreeDefinition(TreeRegistry.getInstance().getTree(treeName));
         } catch (RepositoryException e) {
             // TODO: we need to somehow properly handle this
             log.error(e.getMessage(), e);
         }
-        treeTable.setContainerDataSource(getContainer());
+        getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
     }
 
     void addContextMenu() {
 
-        treeTable.addActionHandler(new Action.Handler() {
+        getTreeTable().addActionHandler(new Action.Handler() {
 
             public Action[] getActions(Object target, Object sender) {
 
                 ArrayList<Action> actions = new ArrayList<Action>();
-                for (MenuItem mi : treeDefinition.getContextMenuItems()) {
+                for (MenuItem mi : getTreeDefinition().getContextMenuItems()) {
 
                     try {
 
@@ -85,13 +85,13 @@ public class GenericTreeTableView extends AbstractTreeTableView {
                         String itemId = (String) target;
 
                         if (itemId.indexOf('@') == -1) {
-                            Content content = MgnlContext.getInstance().getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(itemId);
+                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(itemId);
                             if (!action.isAvailable(content, null))
                                 continue;
                         } else {
                             String uuid = StringUtils.substringBefore(itemId, "@");
                             String nodeDataName = StringUtils.substringAfter(itemId, "@");
-                            Content content = MgnlContext.getInstance().getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(uuid);
+                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(uuid);
                             NodeData nodeData = content.getNodeData(nodeDataName);
                             if (!action.isAvailable(content, nodeData))
                                 continue;
@@ -111,7 +111,7 @@ public class GenericTreeTableView extends AbstractTreeTableView {
 
             public void handleAction(Action action, Object sender, Object target) {
                 try {
-                    ((TreeAction) action).handleAction(GenericTreeTableView.this, treeDefinition, sender, target);
+                    ((TreeAction) action).handleAction(GenericTreeTableView.this, getTreeDefinition(), sender, target);
                 } catch (ClassCastException e) {
                     // not our action
                     log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());

@@ -33,6 +33,22 @@
  */
 package info.magnolia.module.admincentral.views;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
+
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -44,32 +60,19 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
-import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * A {@link MagnoliaBaseComponent} implementation to create view components based on {@link TreeTable}. To obtain the contained tree table use {@link AbstractTreeTableView#getTreeTable()}.
+ * To get or set the contained {@link TreeDefinition} use {@link AbstractTreeTableView#getTreeDefinition()} and {@link AbstractTreeTableView#setTreeDefinition(TreeDefinition)}, respectively.
  *
  * @author fgrilli
  */
@@ -80,13 +83,13 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
     private static Logger log = LoggerFactory.getLogger(AbstractTreeTableView.class);
 
     /**
-     * Keeps already used ClassResource in order to save resources/not create new ClassResource for every item.
+     * Keeps already used Resource in order to save resources/not create new Resource for every item.
      */
-    private static ConcurrentMap<String, ClassResource> itemIcons = new ConcurrentHashMap<String, ClassResource>();
+    private static ConcurrentHashMap<String, Resource> itemIcons = new ConcurrentHashMap<String, Resource> ();
 
-    protected TreeDefinition treeDefinition;
+    private TreeDefinition treeDefinition;
 
-    protected TreeTable treeTable = new TreeTable();
+    private TreeTable treeTable = new TreeTable();
 
     public AbstractTreeTableView() {
         setCompositionRoot(treeTable);
@@ -103,6 +106,14 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
 
     public TreeTable getTreeTable() {
         return treeTable;
+    }
+
+    public TreeDefinition getTreeDefinition() {
+        return treeDefinition;
+    }
+
+    public void setTreeDefinition(TreeDefinition treeDefinition) {
+        this.treeDefinition = treeDefinition;
     }
 
     /**
@@ -241,10 +252,10 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                     selectedItemId = event.getItemId();
                     selectedPropertyId = event.getPropertyId();
 
-                    getTreeTable().setEditable(true);
-                } else if (getTreeTable().isEditable()) {
-                    getTreeTable().setEditable(false);
-                    getTreeTable().setValue(event.getItemId());
+                    treeTable.setEditable(true);
+                } else if (treeTable.isEditable()) {
+                    treeTable.setEditable(false);
+                    treeTable.setValue(event.getItemId());
                 }
             }
 
@@ -355,9 +366,11 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         }
     }
 
-    private ClassResource getItemIconFor(String pathToIcon) {
+    private Resource getItemIconFor(String pathToIcon) {
         if (!itemIcons.containsKey(pathToIcon)) {
-            itemIcons.put(pathToIcon, new ClassResource(pathToIcon, AdminCentralVaadinApplication.application));
+            //check if this path starts or not with a /
+            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith("/") ?  "/" + pathToIcon: pathToIcon);
+            itemIcons.put(pathToIcon, new ExternalResource(tmp));
         }
         return itemIcons.get(pathToIcon);
     }
