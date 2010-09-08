@@ -110,7 +110,7 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
         grid.addComponent(verticalLayout);
     }
 
-    protected abstract Component getControl(Content storageNode, Window mainWindow);
+    public abstract Component getControl(Content storageNode, Window mainWindow);
 
     public void validate() {
     }

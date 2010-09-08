@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * Control for selecting one of a set of options from a drop down select box.
  */
-public class SelectControl extends AbstractDialogControl {
+public class SelectControl extends AbstractOptionGroupControl {
 
     private ComboBox comboBox;
 
@@ -55,8 +55,7 @@ public class SelectControl extends AbstractDialogControl {
     private boolean required = false;
     private String requiredErrorMessage;
     private String inputPrompt;
-    private Map<String, String> options;
-
+    
     public Component getControl(Content storageNode, Window mainWindow) {
 
         comboBox = new ComboBox();
@@ -91,14 +90,6 @@ public class SelectControl extends AbstractDialogControl {
 
     public void save(Content storageNode) throws RepositoryException {
         storageNode.setNodeData(getName(), (String)comboBox.getValue());
-    }
-
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(Map<String, String> options) {
-        this.options = options;
     }
 
     public String getInputPrompt() {

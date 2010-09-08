@@ -41,18 +41,17 @@ import info.magnolia.cms.core.Content;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
+
 import java.util.Map;
 
 /**
  * Radio control for selecting one of several options.
  */
-public class RadioControl extends AbstractDialogControl {
+public class RadioControl extends AbstractOptionGroupControl {
 
     private boolean required;
     private String requiredErrorMessage;
     private boolean nullSelectionAllowed;
-    private Map<String, String> options;
-
     private OptionGroup group;
 
     // TODO needs configuration for reading in options from separate node
@@ -91,14 +90,6 @@ public class RadioControl extends AbstractDialogControl {
 
     public void save(Content storageNode) throws RepositoryException {
         storageNode.setNodeData(getName(), (String)group.getValue());
-    }
-
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(Map<String, String> options) {
-        this.options = options;
     }
 
     public boolean isRequired() {
