@@ -33,18 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.ui.Embedded;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.module.admincentral.AdminCentralVaadinApplication;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.vaadin.terminal.ClassResource;
-import com.vaadin.ui.Embedded;
-
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * A column that displays icons for permissions and activation status.
@@ -53,7 +51,7 @@ public class StatusColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
-    private static final Map<String, ClassResource> resources = new HashMap<String, ClassResource>();
+    private static final ConcurrentMap<String, ClassResource> resources = new ConcurrentHashMap<String, ClassResource>();
 
     private boolean activation = true;
 
