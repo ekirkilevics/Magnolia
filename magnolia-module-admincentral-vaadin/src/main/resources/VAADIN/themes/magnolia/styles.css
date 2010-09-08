@@ -1,5 +1,15 @@
 @import "../runo/styles.css";
 
-.v-table-row, .v-table-row-odd {
-   height: 25px; /* a fix for TreeTable row jittering */
+.v-table-row,.v-table-row-odd {
+  height: 25px; /* a fix for TreeTable row jittering */
+}
+
+.v-loading-indicator,.v-loading-indicator-delay,.v-loading-indicator-wait
+  {
+  background: transparent url(img/loading-indicator.gif) no-repeat center;
+  position: fixed !important;
+  width: 66px;
+  height: 66px;
+  top: 50%;
+  left: 50%;
 }
