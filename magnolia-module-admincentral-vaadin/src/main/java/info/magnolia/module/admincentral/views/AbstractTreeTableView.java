@@ -42,6 +42,9 @@ import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeItemType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +54,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
-import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
@@ -62,11 +64,11 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TableFieldFactory;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 
 /**
@@ -79,6 +81,11 @@ abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
     private static final long serialVersionUID = 1L;
 
     private static Logger log = LoggerFactory.getLogger(AbstractTreeTableView.class);
+
+    /**
+     * Keeps already used ClassResource in order to save resources/not create new ClassResource for every item.
+     */
+    private static Map<String, ClassResource> itemIcons = new HashMap<String, ClassResource> ();
 
     protected TreeDefinition treeDefinition;
 
@@ -314,9 +321,9 @@ abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         for (NodeData nodeData : parent.getNodeDataCollection()) {
 
             String nodeDataItemId = parent.getUUID() + "@" + nodeData.getName();
-            Item nodeDataItem = container.addItem(nodeDataItemId);
+            container.addItem(nodeDataItemId);
 
-            treeTable.setItemIcon(nodeDataItemId, new ClassResource(nodeDataIcon, AdminCentralVaadinApplication.application));
+            treeTable.setItemIcon(nodeDataItemId, getItemIconFor(nodeDataIcon));
             container.setChildrenAllowed(nodeDataItemId, false);
 
             for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
@@ -333,9 +340,9 @@ abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         for (Content content : parent.getChildren(type)) {
 
             String itemId = content.getUUID();
-            Item item = container.addItem(itemId);
+            container.addItem(itemId);
 
-            treeTable.setItemIcon(itemId, new ClassResource(pathToIcon, AdminCentralVaadinApplication.application));
+            treeTable.setItemIcon(itemId, getItemIconFor(pathToIcon));
 
             if (parentItemId != null) {
                 container.setParent(itemId, parentItemId);
@@ -349,6 +356,13 @@ abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
 
             addChildrenToContainer(container, content, itemId);
         }
+    }
+
+    private ClassResource getItemIconFor(String pathToIcon) {
+        if (!itemIcons.containsKey(pathToIcon)) {
+            itemIcons.put(pathToIcon, new ClassResource(pathToIcon, AdminCentralVaadinApplication.application));
+        }
+        return itemIcons.get(pathToIcon);
     }
 
     /**
