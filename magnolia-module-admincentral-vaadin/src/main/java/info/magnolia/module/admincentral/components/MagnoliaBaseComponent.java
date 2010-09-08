@@ -37,7 +37,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 /**
- * The base UI component which subclasses need to extend. It provides support for state management. Internally uses {@link UriFragmentUtility}.
+ * A base implementation for {@link MagnoliaComponent}. Subclasses need only to implement {@link MagnoliaComponent#fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent)}
  * @author fgrilli
  *
  */
@@ -60,7 +60,7 @@ public abstract class MagnoliaBaseComponent extends CustomComponent implements M
         uriFragmentUtility.addListener(fragmentChangedListener);
     }
 
-    public void removeListener(FragmentChangedListener fragmentChangedListener) {
+    public final void removeListener(FragmentChangedListener fragmentChangedListener) {
         uriFragmentUtility.removeListener(fragmentChangedListener);
     }
 

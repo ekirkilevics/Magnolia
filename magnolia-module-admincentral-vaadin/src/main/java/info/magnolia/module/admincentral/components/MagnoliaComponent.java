@@ -39,12 +39,12 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 /**
  * The interface for all Magnolia UI components that want to manage their own state: e.g. history management (browser back button) and application state bookmarking.
  * For example, a tree component might want to provide such features as being able to bookmark a page containing it and (re)open it showing the tree collapsed at the same
- * node where it was, when it was bookmarked. <br/>
+ * node where it was when it was bookmarked. <br/>
  * Concrete classes need to implement the {@link FragmentChangedListener#fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent)} method to
- * handle what to do when the URI fragment portion changes (that is the part after the <code>#</code> sign, e.g. http://mysite.com/mypage<strong>#myproduct</strong>).
+ * provide the desired behavior when the URI fragment portion changes (that is the part after the <code>#</code> sign, e.g. http://mysite.com/mypage<strong>#myproduct</strong>).
  * <br/>
  * <br/>
- *<strong>This way of managing application state is experimental and likely to change in the future.</strong>
+ *<strong>This way of managing the application state is experimental and likely to change in the future.</strong>
  * @author fgrilli
  *
  */

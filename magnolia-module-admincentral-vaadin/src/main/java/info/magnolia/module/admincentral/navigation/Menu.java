@@ -70,6 +70,8 @@ import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * The Application accordion Menu.
+ * TODO rewrite it from the ground up as it's getting more and more messy and ugly?
+ * TODO Add simple animation to make it look nicer.
  * @author fgrilli
  *
  */
@@ -83,6 +85,12 @@ public class Menu extends MagnoliaBaseComponent {
     private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
 
     private Accordion accordion = new Accordion();
+    /*
+     * TODO an ugly (temporary?) trick to make app bookmarking work. This variable's value is checked to execute a one-time code which will set the fragment uri correctly when
+     * entering the application via a bookmark. See SelectedMenuItemTabChangeListener.setUriFragmentOnSelectTabChange. The problem I was not able to solve in a more
+     * elegant way is that, dont'know how or why, when using a bookmark the uri fragment part after the semicolon disappears.
+     */
+    private boolean isMenuBeingAttachedToApp;
 
     public Menu() throws RepositoryException {
         setCompositionRoot(accordion);
@@ -159,9 +167,8 @@ public class Menu extends MagnoliaBaseComponent {
     }
 
     protected Resource getIcon(MenuItemConfiguration menuItem){
-//        // TODO: why isn't external resource working? Urls?
-//        return menuItem.getAction().getIcon();
-
+        // TODO: why isn't external resource working? Urls?
+        //return menuItem.getAction().getIcon();
         if (menuItem.getIcon() == null) {
             return null;
         }
@@ -171,11 +178,11 @@ public class Menu extends MagnoliaBaseComponent {
     @Override
     public void attach() {
         super.attach();
+        isMenuBeingAttachedToApp = true;
         openViewOnFirstAccess();
-
     }
 
-    //open website view by default TODO make it configurable
+    //open website view by default. TODO make it configurable
     private void openViewOnFirstAccess() {
         MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
         menuItemConfiguration.setRepo("website");
@@ -293,6 +300,14 @@ public class Menu extends MagnoliaBaseComponent {
         }
 
         private void setUriFragmentOnSelectTabChange(String menuUriFragment) {
+            if(isMenuBeingAttachedToApp){
+                String fragment = getUriFragmentUtility().getFragment();
+                String[] tokens = fragment.split(";");
+                if(tokens.length == 2){
+                    menuUriFragment = fragment;
+                }
+                isMenuBeingAttachedToApp = false;
+            }
             getUriFragmentUtility().setFragment(menuUriFragment, false);
         }
     }
