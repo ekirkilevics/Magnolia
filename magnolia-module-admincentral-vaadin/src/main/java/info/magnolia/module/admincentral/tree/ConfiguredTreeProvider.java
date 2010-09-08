@@ -33,46 +33,29 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.objectfactory.Components;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 
 import javax.jcr.RepositoryException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Maintains a registry of configured tree definitions.
+ * Provides the tree definition for a tree configured in the repository.
  */
-public class TreeManager {
+public class ConfiguredTreeProvider implements TreeProvider {
 
-    private final Map<String, TreeProvider> providers = new HashMap<String, TreeProvider>();
+    private Content configNode;
 
-    public void registerTree(String treeName, TreeProvider provider) {
-        synchronized (providers) {
-            if (providers.containsKey(treeName))
-                throw new IllegalStateException("Tree already registered for name [" + treeName + "]");
-            providers.put(treeName, provider);
-        }
+    public ConfiguredTreeProvider(Content content) {
+        this.configNode = new LazyContentWrapper(content);
     }
 
-    public void unregisterTree(String treeName) {
-        synchronized (providers) {
-            providers.remove(treeName);
+    public TreeDefinition getTreeDefinition() throws RepositoryException {
+        try {
+            return (TreeDefinition) Content2BeanUtil.toBean(configNode, true, TreeDefinition.class);
+        } catch (Content2BeanException e) {
+            throw new RepositoryException(e);
         }
-    }
-
-    public TreeDefinition getTree(String name) throws RepositoryException {
-
-        TreeProvider treeProvider;
-        synchronized (providers) {
-            treeProvider = providers.get(name);
-        }
-        if (treeProvider == null) {
-            return null;
-        }
-        return treeProvider.getTreeDefinition();
-    }
-
-    public static TreeManager getInstance() {
-        return Components.getSingleton(TreeManager.class);
     }
 }

@@ -40,19 +40,19 @@ import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFive
 import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.tree.ConfiguredTreeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Magnolia's AdminCentral Module.
  *
  * @author fgrilli
  */
-public class AdminCentralVaadinModule implements ModuleLifecycle{
+public class AdminCentralVaadinModule implements ModuleLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralVaadinModule.class);
 
@@ -62,6 +62,7 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
 
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("mgnl50dialogs", ConfiguredDialogManager.getInstance());
+        ctx.registerModuleObservingComponent("mgnl50trees", ConfiguredTreeManager.getInstance());
 
         // do not run import on every module restart
         if (!this.stopCalled) {
@@ -75,7 +76,7 @@ public class AdminCentralVaadinModule implements ModuleLifecycle{
             this.stopCalled = false;
         }
 
-       // DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
+        // DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
     public void stop(ModuleLifecycleContext ctx) {

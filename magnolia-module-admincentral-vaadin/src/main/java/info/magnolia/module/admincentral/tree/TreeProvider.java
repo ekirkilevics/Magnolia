@@ -33,46 +33,12 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.objectfactory.Components;
-
 import javax.jcr.RepositoryException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Maintains a registry of configured tree definitions.
+ * Provides a tree definition.
  */
-public class TreeManager {
+public interface TreeProvider {
 
-    private final Map<String, TreeProvider> providers = new HashMap<String, TreeProvider>();
-
-    public void registerTree(String treeName, TreeProvider provider) {
-        synchronized (providers) {
-            if (providers.containsKey(treeName))
-                throw new IllegalStateException("Tree already registered for name [" + treeName + "]");
-            providers.put(treeName, provider);
-        }
-    }
-
-    public void unregisterTree(String treeName) {
-        synchronized (providers) {
-            providers.remove(treeName);
-        }
-    }
-
-    public TreeDefinition getTree(String name) throws RepositoryException {
-
-        TreeProvider treeProvider;
-        synchronized (providers) {
-            treeProvider = providers.get(name);
-        }
-        if (treeProvider == null) {
-            return null;
-        }
-        return treeProvider.getTreeDefinition();
-    }
-
-    public static TreeManager getInstance() {
-        return Components.getSingleton(TreeManager.class);
-    }
+    TreeDefinition getTreeDefinition() throws RepositoryException;
 }

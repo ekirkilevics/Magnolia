@@ -77,8 +77,13 @@ public class GenericTreeTableView extends AbstractTreeTableView {
     private final Action[] ftlActions;
     private final Action[] jspActions;
 
-    public GenericTreeTableView(String repo) {
-        treeDefinition = TreeManager.getInstance().getTree(repo);
+    public GenericTreeTableView(String treeName) {
+        try {
+            treeDefinition = TreeManager.getInstance().getTree(treeName);
+        } catch (RepositoryException e) {
+            // TODO: we need to somehow properly handle this
+            log.error(e.getMessage(), e);
+        }
         treeTable.setContainerDataSource(getContainer());
         ftlActions = new Action[]{actionAdd, actionDelete};
         jspActions = new Action[]{actionOpen, actionAdd, actionDelete};

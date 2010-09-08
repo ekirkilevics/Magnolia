@@ -52,7 +52,7 @@ public class TreeDefinition implements Serializable {
      * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show their children. Used
      * in the security trees.
      */
-    private boolean flatMode;
+    private boolean flatMode = false;
 
     private List<TreeColumn> columns = new ArrayList<TreeColumn>();
     private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
