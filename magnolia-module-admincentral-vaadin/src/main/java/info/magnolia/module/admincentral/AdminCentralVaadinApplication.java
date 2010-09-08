@@ -104,7 +104,7 @@ public class AdminCentralVaadinApplication extends Application {
     @Override
     public void init() {
         application = this;
-        setTheme("genuine");
+        setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
