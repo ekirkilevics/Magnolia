@@ -54,7 +54,7 @@ public class AdminCentralVaadinModuleVersionHandler extends DefaultModuleVersion
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
-        List tasks = new ArrayList();
+        List<Task> tasks = new ArrayList<Task>();
         tasks.addAll(super.getExtraInstallTasks(installContext));
         tasks.add (new AbstractTask("Update dialogs", "Will update dialog structure from the old format into new one") {
             public void execute(InstallContext installContext) throws TaskExecutionException {
