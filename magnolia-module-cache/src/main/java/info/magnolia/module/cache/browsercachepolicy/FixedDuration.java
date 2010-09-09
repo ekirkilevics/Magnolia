@@ -40,7 +40,6 @@ import info.magnolia.module.cache.CachePolicyResult;
 /**
  * Uses a fix expiration time (in minutes). Default to 30 minutes.
  *
- * @author pbracher
  * @version $Revision$ ($Author$)
  */
 public class FixedDuration implements BrowserCachePolicy {
@@ -49,7 +48,9 @@ public class FixedDuration implements BrowserCachePolicy {
     private int expirationMinutes = 30;
 
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
-        return new BrowserCachePolicyResult(System.currentTimeMillis() + this.getExpirationMinutes() * MINUTE_IN_MILLIS);
+        // cast to long as the operation might exceed the int range
+        long expirationInMilliseconds = (long) this.getExpirationMinutes() * MINUTE_IN_MILLIS;
+        return new BrowserCachePolicyResult(System.currentTimeMillis() + expirationInMilliseconds);
     }
 
     public int getExpirationMinutes() {
