@@ -58,8 +58,10 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.SplitPanel.SplitterClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.SplitPanel.SplitterClickEvent;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -82,18 +84,6 @@ public class AdminCentralVaadinApplication extends Application {
     public VerticalLayout getMainContainer() {
         return mainContainer;
     }
-    private Menu createMenu() {
-        Menu menu = null;
-        try {
-            menu = new Menu();
-            menu.setSizeFull();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-            getMainWindow().showNotification("Application menu could not be created.", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
-        }
-        return menu;
-    }
 
     @Override
     public void init() {
@@ -103,6 +93,37 @@ public class AdminCentralVaadinApplication extends Application {
         initLayout();
         //TODO logout and redirect to new AdminCentral
         setLogoutURL(MgnlContext.getContextPath() + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
+    }
+
+    @Override
+    public Window getWindow(String name) {
+       // If we already have the requested window, use it
+        Window w = super.getWindow(name);
+        if (w == null) {
+            // If no window found, create it
+            w = new Window(name);
+            // set windows name to the one requested
+            w.setName(name);
+            // add it to this application
+            addWindow(w);
+            // add some content
+            Window modal = new Window();
+            modal.setModal(true);
+            Label  label = new Label("Sorry, multitabs for Magnolia AdminCentral are not yet supported. Please close this browser's tab.");
+            modal.setHeight("200px");
+            modal.setWidth("300px");
+            modal.setCaption("Info message");
+            modal.setClosable(false);
+            modal.setDraggable(false);
+            modal.setResizable(false);
+            modal.center();
+            modal.addComponent(label);
+            // ensure use of window specific url
+            w.open(new ExternalResource(w.getURL().toString()));
+            w.addWindow(modal);
+        }
+        return w;
+
     }
 
     /**
@@ -166,7 +187,16 @@ public class AdminCentralVaadinApplication extends Application {
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
 
         final VerticalLayout leftPaneLayout = new VerticalLayout();
-        final Menu menu = createMenu();
+        Menu menu = null;
+        try {
+            menu = new Menu();
+        } catch (RepositoryException re) {
+            re.printStackTrace();
+            getMainWindow().showNotification("Application menu could not be created. Please contact site administrator. If you are the administrator, please consult the logs. If you are the logs, well...,<br/>", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+            //don't go any further.
+            return;
+        }
+        menu.setSizeFull();
         leftPaneLayout.addComponent(menu);
 
         final  HorizontalLayout bottomLeftCorner = new HorizontalLayout();
@@ -176,6 +206,19 @@ public class AdminCentralVaadinApplication extends Application {
 
         final SplitPanel splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         splitPanel.setSplitPosition(15);
+        splitPanel.addListener(new SplitterClickListener() {
+
+            public void splitterClick(SplitterClickEvent event) {
+                if(event.isDoubleClick()){
+                    SplitPanel panel = (SplitPanel)event.getSource();
+                    if(panel.getSplitPosition() > 0){
+                        panel.setSplitPosition(0);
+                    }else {
+                        panel.setSplitPosition(15);
+                    }
+                }
+            }
+        });
         splitPanel.addComponent(leftPaneLayout);
         splitPanel.addComponent(mainContainer);
 
