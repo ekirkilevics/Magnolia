@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
+import info.magnolia.cms.gui.dialog.DialogLine;
 import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class DialogBox extends DialogControlImpl {
         }
         out.write("<tr>"); //$NON-NLS-1$
         if (this.getBoxType() == BOXTYPE_2COLS) {
-            out.write("<td style=\"width:1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<td style=\"width:1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\"><label for= \""+ this.getName()+ "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             // write the label
             out.write(this.getMessage(this.getLabel()));
             if (this.isRequired()) {
@@ -86,7 +88,7 @@ public class DialogBox extends DialogControlImpl {
                 desc = this.getMessage(desc);
                 out.write("<div class=\"" + CssConstants.CSSCLASS_DESCRIPTION + "\">" + desc + "</div>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
-            out.write("</td>"); //$NON-NLS-1$
+            out.write("</label></td>"); //$NON-NLS-1$
             String cssClass = CssConstants.CSSCLASS_BOXINPUT;
             if (this.getClass().getName().indexOf("DialogStatic") != -1 //$NON-NLS-1$
                 || this.getClass().getName().indexOf("DialogButton") != -1) { //$NON-NLS-1$
@@ -95,22 +97,23 @@ public class DialogBox extends DialogControlImpl {
             out.write("<td style=\"width:100%\" class=\"" + cssClass + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
+        	
             out.write("<td style=\"width:100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             if (StringUtils.isNotEmpty(this.getLabel())) {
                 out.write("<div class=\"" //$NON-NLS-1$
                     + CssConstants.CSSCLASS_BOXLABEL
-                    + "\">" //$NON-NLS-1$
+                    + "\"><label for= \""+ this.getName()+ "\">" //$NON-NLS-1$
                     + this.getMessage(this.getLabel())
                     + (this.isRequired() ? "(*)" : "")
-                    + "</div>"); //$NON-NLS-1$
+                    + "</div></label>"); //$NON-NLS-1$
             }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
                     + CssConstants.CSSCLASS_DESCRIPTION
-                    + "\">" //$NON-NLS-1$
+                    + "\"><label for= \""+ this.getName()+ "\">" //$NON-NLS-1$
                     + this.getMessage(desc)
-                    + "</div>"); //$NON-NLS-1$
+                    + "</div></label>"); //$NON-NLS-1$
             }
         }
     }
