@@ -49,7 +49,9 @@ public class FixedDuration implements BrowserCachePolicy {
     private int expirationMinutes = 30;
 
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
-        return new BrowserCachePolicyResult(System.currentTimeMillis() + this.getExpirationMinutes() * MINUTE_IN_MILLIS);
+        // cast to long as the operation might exceed the int range
+        long expirationInMilliseconds = (long) this.getExpirationMinutes() * MINUTE_IN_MILLIS;
+        return new BrowserCachePolicyResult(System.currentTimeMillis() + expirationInMilliseconds);
     }
 
     public int getExpirationMinutes() {
