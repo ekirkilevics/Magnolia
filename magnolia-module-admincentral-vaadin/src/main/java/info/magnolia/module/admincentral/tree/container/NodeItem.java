@@ -36,6 +36,7 @@ package info.magnolia.module.admincentral.tree.container;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,10 +55,12 @@ import com.vaadin.data.Property;
 public class NodeItem extends LazyContentWrapper implements Item {
 
     private static final long serialVersionUID = -6540682899828148456L;
+    private TreeDefinition definition;
 
-    public NodeItem(Content node)
+    public NodeItem(Content node, TreeDefinition definition)
             throws RepositoryException {
         super(node);
+        this.definition = definition;
     }
 
     public boolean addItemProperty(Object id, Property property)
@@ -90,7 +93,7 @@ public class NodeItem extends LazyContentWrapper implements Item {
 
     public Property getItemProperty(Object id) {
         assertIdIsString(id);
-        return new NodeProperty(this, (String) id);
+        return new NodeProperty(this, (String) id, definition);
     }
 
     public Collection< ? > getItemPropertyIds() {
