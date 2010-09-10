@@ -20,10 +20,11 @@
   <servlets>
     <servlet>
       <name>PageEditor</name>
-      <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
+      <class>info.magnolia.module.admincentral.vaadin.MagnoliaResoucesAwareApplicationServlet</class>
        <mappings>
-         <mapping>/PageEditor/*</mapping>
-      </mappings>
+         <mapping>/.magnolia/page-editor</mapping>
+         <mapping>/.magnolia/page-editor/*</mapping>
+       </mappings>
        <params>
          <param>
            <name>application</name>
