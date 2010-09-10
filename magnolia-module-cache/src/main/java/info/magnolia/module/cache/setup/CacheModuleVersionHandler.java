@@ -166,6 +166,9 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/admincentral/config.modules.adminInterface.config.menu.tools.cacheTools.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
                 .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.pages.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
                 );
+        
+        register(DeltaBuilder.update("5.0", "Better browser caching").
+            addTask(new WarnTask("Update browser caching configuration", "")));
     }
 
     private List<Task> getTasksFor364() {

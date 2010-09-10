@@ -36,22 +36,51 @@ package info.magnolia.module.cache.browsercachepolicy;
 import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.voting.Voter;
+import info.magnolia.voting.voters.FalseVoter;
+import info.magnolia.voting.voters.TrueVoter;
+
 
 /**
- * Uses a fix expiration time (in minutes). Default to 30 minutes.
+ * Uses a fix expiration time (in minutes) if {@link #voter} votes positive or sets a far future
+ * expiration - more than a year - if {@link #farFutureVoter} votes true. Default to 30 minutes.
  *
  * @author pbracher
  * @version $Revision$ ($Author$)
  */
 public class FixedDuration implements BrowserCachePolicy {
+
+    /**
+     * Far future expiration is a year.
+     */
+    private static final long ONE_YEAR_IN_MILLISECONDS = 365L * 24 * 60 * 60 *  1000;
+
     private static final int MINUTE_IN_MILLIS = 60 * 1000;
+
+    /**
+     * Used to test if the request should be cached by the browser. Default {@link TrueVoter}.
+     */
+    private Voter voter = new TrueVoter();
+
+    /**
+     * Used to test if the request should be cache for ever. Default {@link FalseVoter}.
+     */
+    private Voter farFutureVoter = new FalseVoter();
 
     private int expirationMinutes = 30;
 
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
-        // cast to long as the operation might exceed the int range
-        long expirationInMilliseconds = (long) this.getExpirationMinutes() * MINUTE_IN_MILLIS;
-        return new BrowserCachePolicyResult(System.currentTimeMillis() + expirationInMilliseconds);
+        if(farFutureVoter.vote(cachePolicyResult)>0){
+            return new BrowserCachePolicyResult(System.currentTimeMillis() + ONE_YEAR_IN_MILLISECONDS);
+        }
+        else if(voter.vote(cachePolicyResult)>0){
+            // cast to long as the operation might exceed the int range
+            long expirationInMilliseconds = (long) this.getExpirationMinutes() * MINUTE_IN_MILLIS;
+            return new BrowserCachePolicyResult(System.currentTimeMillis() + expirationInMilliseconds);
+        }
+        else{
+            return BrowserCachePolicyResult.NO_CACHE;
+        }
     }
 
     public int getExpirationMinutes() {
@@ -60,6 +89,22 @@ public class FixedDuration implements BrowserCachePolicy {
 
     public void setExpirationMinutes(int expirationMinutes) {
         this.expirationMinutes = expirationMinutes;
+    }
+
+    public Voter getVoter() {
+        return voter;
+    }
+
+    public void setVoter(Voter voter) {
+        this.voter = voter;
+    }
+
+    public Voter getFarFutureVoter() {
+        return farFutureVoter;
+    }
+
+    public void setFarFutureVoter(Voter farFutureVoter) {
+        this.farFutureVoter = farFutureVoter;
     }
 
 }
