@@ -1,16 +1,24 @@
 <script type="text/javascript">
 //<![CDATA[
+// used for performance test in the PageEditorEntryPoint
+window.startTime = new Date().getTime();
+
+window.onload = function(){
+	window.onLoadEventTime = new Date().getTime();
+}
+
 if(!vaadin || !vaadin.vaadinConfigurations) {
  if(!vaadin) { var vaadin = {}}
 vaadin.vaadinConfigurations = {};
 if (!vaadin.themesLoaded) { vaadin.themesLoaded = {}; }
 vaadin.debug = true;
 document.write('<iframe tabIndex="-1" id="__gwt_historyFrame" style="position:absolute;width:0;height:0;border:0;overflow:hidden;" src="javascript:false"></iframe>');
-document.write("<script language='javascript' src='${contextPath}/VAADIN/widgetsets/info.magnolia.module.wcm.pageeditor.PageEditor/info.magnolia.module.wcm.pageeditor.PageEditor.nocache.js?1282646070105'><\/script>");
+document.write("<script type='text/javascript' src='${contextPath}/.resources/VAADIN/widgetsets/info.magnolia.module.wcm.pageeditor.PageEditor/info.magnolia.module.wcm.pageeditor.PageEditor.nocache.js?1282646070105'><\/script>");
 }
-vaadin.vaadinConfigurations["editor"] = {appUri:'${contextPath}/PageEditor', pathInfo: '/', themeUri:'${contextPath}/VAADIN/themes/runo', versionInfo : {vaadinVersion:"6.4.2",applicationVersion:"NONVERSIONED"},"comErrMsg": {"caption":"Communication problem","message" : "Take note of any unsaved data, and <u>click here</u> to continue.","url" : null},"authErrMsg": {"caption":"Authentication problem","message" : "Take note of any unsaved data, and <u>click here</u> to continue.","url" : null}};
+vaadin.vaadinConfigurations["editor"] = {appUri:'${contextPath}/.magnolia/page-editor', pathInfo: '/', themeUri:'${contextPath}/.resources/VAADIN/themes/magnolia', versionInfo : {vaadinVersion:"6.4.2",applicationVersion:"NONVERSIONED"},"comErrMsg": {"caption":"Communication problem","message" : "Take note of any unsaved data, and <u>click here</u> to continue.","url" : null},"authErrMsg": {"caption":"Authentication problem","message" : "Take note of any unsaved data, and <u>click here</u> to continue.","url" : null}};
 //]]>
 </script>
+
 
 <script type="text/javascript">
 	document.write("<div id='editor' style='display:none'></div>");
@@ -22,14 +30,14 @@ if(!vaadin.themesLoaded['reindeer']) {
 var stylesheet = document.createElement('link');
 stylesheet.setAttribute('rel', 'stylesheet');
 stylesheet.setAttribute('type', 'text/css');
-stylesheet.setAttribute('href', '${contextPath}/VAADIN/themes/runo/styles.css');
+stylesheet.setAttribute('href', '${contextPath}/.resources/VAADIN/themes/magnolia/styles.css');
 document.getElementsByTagName('head')[0].appendChild(stylesheet);
-vaadin.themesLoaded['runo'] = true;
+vaadin.themesLoaded['magnolia'] = true;
 }
 //]]>
 </script>
 <script type="text/javascript">
 //<![CDATA[
-setTimeout('if (typeof info_magnolia_module_wcm_pageeditor_PageEditor == "undefined") {alert("Failed to load the widgetset: /${contextPath}/VAADIN/widgetsets/info.magnolia.module.wcm.pageeditor.PageEditor/info.magnolia.module.wcm.pageeditor.PageEditor.nocache.js?1282646070105")};',15000);
+setTimeout('if (typeof info_magnolia_module_wcm_pageeditor_PageEditor == "undefined") {alert("Failed to load the widgetset: /${contextPath}/.resources/VAADIN/widgetsets/info.magnolia.module.wcm.pageeditor.PageEditor/info.magnolia.module.wcm.pageeditor.PageEditor.nocache.js?1282646070105")};',15000);
 //]]>
 </script>
