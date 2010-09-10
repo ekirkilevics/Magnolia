@@ -33,7 +33,12 @@
  */
 package info.magnolia.module.wcm.pageeditor.client;
 
+
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 
 
 /**
@@ -44,7 +49,58 @@ import com.google.gwt.core.client.EntryPoint;
  */
 public class PageEditorEntryPoint implements EntryPoint {
 
+    // can get set by a patched ApplicationConfigugration to make performance tests
+    public static long startTime = -1;
+
     public void onModuleLoad() {
+
+        if(Window.Location.getParameter("performanceTest") != null){
+            // if not yet set
+            if(startTime == -1){
+                // window.startTime
+                startTime = (long)getStartTime();
+                if(startTime == -1){
+                    startTime = System.currentTimeMillis();
+                }
+            }
+            performanceTest();
+        }
     }
+
+    private void performanceTest() {
+        StopWatch.sample("entry point");
+        new Timer() {
+
+            @Override
+            public void run() {
+                StopWatch.sample("start", (long) getStartTime());
+                StopWatch.sample("onload", (long)getOnLoadEvent());
+
+                String str = StopWatch.getReport(startTime);
+                String[] lines = str.split("\n");
+                StringBuffer table = new StringBuffer();
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i];
+                    table.append("<tr><td>").append(line.replace(":","</td><td>")).append("</td></tr>");
+                }
+                HTML report = new HTML("<table>" + table + "</table>");
+                DialogBox popup = new DialogBox();
+                popup.setModal(false);
+                popup.setText("Report");
+                popup.add(report);
+                popup.setPopupPosition(300, 300);
+                popup.show();
+            }
+        }.schedule(5000);
+    }
+
+    native double getStartTime() /*-{
+        return $wnd.startTime?$wnd.stopWatchBase:-1;
+    }-*/;
+
+    native double getOnLoadEvent() /*-{
+        return $wnd.onLoadEventTime?$wnd.onLoadEvent:-1;
+    }-*/;
+
 
 }
