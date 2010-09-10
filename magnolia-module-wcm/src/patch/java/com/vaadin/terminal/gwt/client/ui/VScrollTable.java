@@ -1977,9 +1977,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             case Event.ONMOUSEUP:
                 isResizing = false;
                 DOM.releaseCapture(getElement());
-                // readjust undefined width columns
-                lazyAdjustColumnWidths.cancel();
-                lazyAdjustColumnWidths.schedule(1);
                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
                 break;
             case Event.ONMOUSEMOVE:

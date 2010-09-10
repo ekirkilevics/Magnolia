@@ -1,0 +1,14 @@
+Index: src/com/vaadin/terminal/gwt/client/ui/VScrollTable.java
+===================================================================
+--- src/com/vaadin/terminal/gwt/client/ui/VScrollTable.java	(revision 14812)
++++ src/com/vaadin/terminal/gwt/client/ui/VScrollTable.java	(working copy)
+@@ -2014,9 +2014,6 @@
+             case Event.ONMOUSEUP:
+                 isResizing = false;
+                 DOM.releaseCapture(getElement());
+-                // readjust undefined width columns
+-                lazyAdjustColumnWidths.cancel();
+-                lazyAdjustColumnWidths.schedule(1);
+                 fireColumnResizeEvent(cid, originalWidth, getColWidth(cid));
+                 break;
+             case Event.ONMOUSEMOVE:
