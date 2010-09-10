@@ -46,20 +46,21 @@
   </dependencies>
   <build>
     <plugins>
-      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
 
+      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <version>1.2</version>
+        <!-- http://jira.codehaus.org/browse/MGWT-183 -->
+        <version>1.3-SNAPSHOT</version>
         <configuration>
           <!-- put the created resources on the classpath -->
-          <webappDirectory>target/classes/VAADIN/widgetsets</webappDirectory>
+          <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
           <!-- this is not a webapp -->
           <noServer>true</noServer>
           <module>info.magnolia.module.wcm.pageeditor.PageEditor</module>
-          <!--<draftCompile>true</draftCompile>-->
-          <!--<style>DETAILED</style>-->
+          <!-- <draftCompile>true</draftCompile> -->
+          <!-- <style>PRETTY</style> -->
         </configuration>
         <executions>
           <execution>
