@@ -14,7 +14,7 @@
     <sv:value>info.magnolia.cms.beans.config.DefaultVirtualURIMapping</sv:value>
   </sv:property>
   <sv:property sv:name="toURI" sv:type="String">
-    <sv:value>redirect:/.magnolia/pages/adminCentral.html</sv:value>
+    <sv:value>redirect:/.magnolia/admin-central</sv:value>
   </sv:property>
   <sv:property sv:name="fromURI" sv:type="String">
     <sv:value>/</sv:value>
