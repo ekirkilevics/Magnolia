@@ -33,12 +33,14 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeDataUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventObject;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.data.Property;
@@ -75,7 +77,7 @@ public class NodeProperty implements Property,
 
     private ArrayList<com.vaadin.data.Property.ValueChangeListener> listeners = new ArrayList<com.vaadin.data.Property.ValueChangeListener>();
 
-    private Node node;
+    private Content node;
 
     private String propertyId;
 
@@ -87,7 +89,7 @@ public class NodeProperty implements Property,
      * @param parentNode - the source Node
      * @param propId - the name of the property
      */
-    public NodeProperty(Node parentNode, String propId) {
+    public NodeProperty(Content parentNode, String propId) {
         super();
         propertyId = propId;
         node = parentNode;
@@ -112,7 +114,7 @@ public class NodeProperty implements Property,
 
     public Class< ? > getType() {
         try {
-            return PropertyMapper.getType(node.getProperty(propertyId));
+            return NodeDataUtil.getValueObject(node.getNodeData(propertyId)).getClass();
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -120,12 +122,7 @@ public class NodeProperty implements Property,
     }
 
     public Object getValue() {
-        try {
-            return PropertyMapper.getValue(node.getProperty(propertyId));
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
+        return NodeDataUtil.getValueObject(node.getNodeData(propertyId));
     }
 
     public boolean isReadOnly() {
@@ -146,7 +143,7 @@ public class NodeProperty implements Property,
             throw new ReadOnlyException();
         }
         try {
-            PropertyMapper.setValue(node, propertyId, newValue);
+            node.setNodeData(propertyId, newValue);
             fireValueChange();
         }
         catch (RepositoryException e) {

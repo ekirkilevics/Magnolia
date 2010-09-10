@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
-import info.magnolia.context.MgnlContext;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -61,7 +61,8 @@ public class SessionProviderImpl implements JcrSessionProvider {
     }
 
     public Session getSession() throws RepositoryException {
-        return MgnlContext.getHierarchyManager(getRepository()).getWorkspace().getSession();
+        // TODO dlipp: we shouldn't use a LifeTime Session here: consider implementation using MgnlContext
+        return LifeTimeJCRSessionUtil.getHierarchyManager(getRepository()).getWorkspace().getSession();
     }
 
     public void setRepository(String repository) {

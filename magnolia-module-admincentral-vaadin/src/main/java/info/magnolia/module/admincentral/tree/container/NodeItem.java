@@ -33,11 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.LazyContentWrapper;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.jcr.Node;
-import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.data.Item;
@@ -49,21 +51,20 @@ import com.vaadin.data.Property;
  * @author daniellipp
  * @version $Id$
  */
-public class NodeItem extends NodeProxy implements Item {
+public class NodeItem extends LazyContentWrapper implements Item {
 
     private static final long serialVersionUID = -6540682899828148456L;
 
-    public NodeItem(Node node, JcrSessionProvider provider)
+    public NodeItem(Content node)
             throws RepositoryException {
-        super(node, provider);
+        super(node);
     }
 
     public boolean addItemProperty(Object id, Property property)
             throws UnsupportedOperationException {
         assertIdIsString(id);
         try {
-            PropertyMapper
-                    .setValue(getNode(), (String) id, property.getValue());
+            this.setNodeData((String) id, property.getValue());
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
@@ -84,7 +85,7 @@ public class NodeItem extends NodeProxy implements Item {
      * @throws RepositoryException
      */
     public String getItemId() throws RepositoryException {
-        return getPath();
+        return node.getHandle();
     }
 
     public Property getItemProperty(Object id) {
@@ -94,15 +95,8 @@ public class NodeItem extends NodeProxy implements Item {
 
     public Collection< ? > getItemPropertyIds() {
         ArrayList<String> idlist = new ArrayList<String>();
-        try {
-            PropertyIterator iter = getProperties();
-            while (iter.hasNext()) {
-                javax.jcr.Property jcrprop = iter.nextProperty();
-                idlist.add(jcrprop.getName());
-            }
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
+        for (NodeData nd : getNodeDataCollection()) {
+            idlist.add(nd.getName());
         }
         return idlist;
     }
@@ -111,7 +105,7 @@ public class NodeItem extends NodeProxy implements Item {
             throws UnsupportedOperationException {
         assertIdIsString(id);
         try {
-            getNode().getProperty((String) id).remove();
+            getNodeData((String) id).delete();
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
