@@ -1,17 +1,5 @@
 /*
- * Copyright 2010 IT Mill Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+@ITMillApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.widgetsetutils;
 
@@ -62,7 +50,7 @@ import com.vaadin.ui.ClientWidget;
  * appropriate monkey code for gwt directly in annotation processor and get rid
  * of {@link WidgetMapGenerator}. Using annotation processor might be a good
  * idea when dropping Java 1.5 support (integrated to javac in 6).
- *
+ * 
  */
 public class ClassPathExplorer {
 
@@ -105,10 +93,10 @@ public class ClassPathExplorer {
     /**
      * Finds server side widgets with {@link ClientWidget} annotation on the
      * class path (entries that can contain widgets/widgetsets - see {@link #getRawClasspathEntries()}).
-     *
+     * 
      * As a side effect, also accept criteria are searched under the same class
      * path entries and added into the acceptCriterion collection.
-     *
+     * 
      * @return a collection of {@link Paintable} classes
      */
     public static Collection<Class<? extends Paintable>> getPaintablesHavingWidgetAnnotation() {
@@ -125,7 +113,7 @@ public class ClassPathExplorer {
     /**
      * Finds all accept criteria having client side counterparts (classes with
      * the {@link ClientCriterion} annotation).
-     *
+     * 
      * @return Collection of AcceptCriterion classes
      */
     public static Collection<Class<? extends AcceptCriterion>> getCriterion() {
@@ -139,7 +127,7 @@ public class ClassPathExplorer {
 
     /**
      * Finds the names and locations of widgetsets available on the class path.
-     *
+     * 
      * @return map from widgetset classname to widgetset location URL
      */
     public static Map<String, URL> getAvailableWidgetSets() {
@@ -163,13 +151,13 @@ public class ClassPathExplorer {
 
     /**
      * Finds all GWT modules / Vaadin widgetsets in a valid location.
-     *
+     * 
      * If the location is a directory, all GWT modules (files with the
      * ".gwt.xml" extension) are added to widgetsets.
-     *
+     * 
      * If the location is a JAR file, the comma-separated values of the
      * "Vaadin-Widgetsets" attribute in its manifest are added to widgetsets.
-     *
+     * 
      * @param locationString
      *            an entry in {@link #classpathLocations}
      * @param widgetsets
@@ -251,9 +239,9 @@ public class ClassPathExplorer {
     /**
      * Splits the current class path into entries, and filters them accepting
      * directories, Vaadin add-on JARs with widgetsets and Vaadin JARs.
-     *
+     * 
      * Some other non-JAR entries may also be included in the result.
-     *
+     * 
      * @return filtered list of class path entries
      */
     private final static List<String> getRawClasspathEntries() {
@@ -286,9 +274,9 @@ public class ClassPathExplorer {
     /**
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
-     *
+     * 
      * See {@link #classpathLocations} for information on output format.
-     *
+     * 
      * @param rawClasspathEntries
      *            raw class path entries as split from the Java class path
      *            string
@@ -308,14 +296,14 @@ public class ClassPathExplorer {
     /**
      * Checks a class path entry to see whether it can contain widgets and
      * widgetsets.
-     *
+     * 
      * All directories are automatically accepted. JARs are accepted if they
      * have the "Vaadin-Widgetsets" attribute in their manifest or the JAR file
      * name contains "vaadin-" or ".vaadin.".
-     *
+     * 
      * Also other non-JAR entries may be accepted, the caller should be prepared
      * to handle them.
-     *
+     * 
      * @param classpathEntry
      *            class path entry string as given in the Java class path
      * @return true if the entry should be considered when looking for widgets
@@ -365,7 +353,7 @@ public class ClassPathExplorer {
     /**
      * Recursively add subdirectories and jar files to locations - see
      * {@link #classpathLocations}.
-     *
+     * 
      * @param name
      * @param file
      * @param locations
@@ -412,7 +400,7 @@ public class ClassPathExplorer {
 
     /**
      * Add a jar file to locations - see {@link #classpathLocations}.
-     *
+     * 
      * @param name
      * @param locations
      */
@@ -436,11 +424,11 @@ public class ClassPathExplorer {
     /**
      * Searches for all paintable classes and accept criteria under a location
      * based on {@link ClientWidget} and {@link ClientCriterion} annotations.
-     *
+     * 
      * Note that client criteria are updated directly to the
      * {@link #acceptCriterion} field, whereas paintables are added to the
      * paintables map given as a parameter.
-     *
+     * 
      * @param location
      * @param locationString
      * @param paintables
@@ -504,7 +492,7 @@ public class ClassPathExplorer {
 
     /**
      * A print stream that ignores all output.
-     *
+     * 
      * This is used to hide error messages from static initializers of classes
      * being inspected.
      */
@@ -525,7 +513,7 @@ public class ClassPathExplorer {
     /**
      * Checks a class for the {@link ClientWidget} and {@link ClientCriterion}
      * annotations, and adds it to the appropriate collection if it has either.
-     *
+     * 
      * @param fullclassName
      * @param paintables
      *            the collection to which to add server side classes with
@@ -533,14 +521,16 @@ public class ClassPathExplorer {
      */
     private static void tryToAdd(final String fullclassName,
             Collection<Class<? extends Paintable>> paintables) {
-
-        PrintStream out = System.out;
-        PrintStream err = System.err;
         try {
+            PrintStream out = System.out;
+            PrintStream err = System.err;
             System.setErr(devnull);
             System.setOut(devnull);
 
             Class<?> c = Class.forName(fullclassName);
+
+            System.setErr(err);
+            System.setOut(out);
 
             if (c.getAnnotation(ClientWidget.class) != null) {
                 paintables.add((Class<? extends Paintable>) c);
@@ -552,26 +542,21 @@ public class ClassPathExplorer {
         } catch (ClassNotFoundException e) {
             // e.printStackTrace();
         } catch (LinkageError e) {
-            e.printStackTrace();
             // NOP
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally{
-            System.setErr(err);
-            System.setOut(out);
         }
     }
 
     /**
      * Find and return the default source directory where to create new
      * widgetsets.
-     *
+     * 
      * Return the first directory (not a JAR file etc.) on the classpath by
      * default.
-     *
+     * 
      * TODO this could be done better...
-     *
+     * 
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {

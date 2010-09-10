@@ -1,17 +1,5 @@
-/*
- * Copyright 2010 IT Mill Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+/* 
+@ITMillApache2LicenseForJavaFiles@
  */
 
 package com.vaadin.terminal.gwt.client.ui;
@@ -48,9 +36,9 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
 
 /**
  * "Sub window" component.
- *
+ * 
  * TODO update position / scroll position / size to client
- *
+ * 
  * @author IT Mill Ltd
  */
 public class VWindow extends VOverlay implements Container, ScrollListener,
@@ -207,7 +195,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
     /**
      * Returns true if window is the topmost window
-     *
+     * 
      * @return
      */
     private boolean isActive() {
@@ -454,15 +442,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
         }
 
-        if(uidl.hasVariable("scrollTop")){
-            // setting scrollposition must happen after children is rendered
-            contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
-        }
-
-        if(uidl.hasVariable("scrollLeft")){
-            contentPanel.setHorizontalScrollPosition(uidl
-                    .getIntVariable("scrollLeft"));
-        }
+        // setting scrollposition must happen after children is rendered
+        contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
+        contentPanel.setHorizontalScrollPosition(uidl
+                .getIntVariable("scrollLeft"));
 
         // Center this window on screen if requested
         // This has to be here because we might not know the content size before
@@ -617,7 +600,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
     /**
      * Sets the closable state of the window. Additionally hides/shows the close
      * button according to the new state.
-     *
+     * 
      * @param closable
      *            true if the window can be closed by the user
      */
@@ -639,7 +622,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
      * Returns the closable state of the sub window. If the sub window is
      * closable a decoration (typically an X) is shown to the user. By clicking
      * on the X the user can close the window.
-     *
+     * 
      * @return true if the sub window is closable
      */
     protected boolean isClosable() {
@@ -670,10 +653,10 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
     /**
      * Fix "missing cursor" browser bug workaround for FF2 in Windows and Linux.
-     *
+     * 
      * Calling this method has no effect on other browsers than the ones based
      * on Gecko 1.8
-     *
+     * 
      * @param enable
      */
     private void setFF2CaretFixEnabled(boolean enable) {
@@ -933,11 +916,11 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
     /**
      * Checks if the cursor was inside the browser content area when the event
      * happened.
-     *
+     * 
      * @param event
      *            The event to be checked
      * @return true, if the cursor is inside the browser content area
-     *
+     * 
      *         false, otherwise
      */
     private boolean cursorInsideBrowserContentArea(Event event) {
@@ -992,7 +975,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
     @Override
     /*
      * Width is set to the out-most element (v-window).
-     *
+     * 
      * This function should never be called with percentage values (it will
      * throw an exception)
      */
@@ -1053,7 +1036,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
     @Override
     /*
      * Height is set to the out-most element (v-window).
-     *
+     * 
      * This function should never be called with percentage values (it will
      * throw an exception)
      */
