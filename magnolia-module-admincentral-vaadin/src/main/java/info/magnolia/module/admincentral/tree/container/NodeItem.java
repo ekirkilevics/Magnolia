@@ -34,14 +34,19 @@
 package info.magnolia.module.admincentral.tree.container;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.ContentWrapper;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -52,14 +57,23 @@ import com.vaadin.data.Property;
  * @author daniellipp
  * @version $Id$
  */
-public class NodeItem extends LazyContentWrapper implements Item {
+public class NodeItem extends ContentWrapper implements Item {
 
     private static final long serialVersionUID = -6540682899828148456L;
+
+    private static Logger log = LoggerFactory.getLogger(NodeItem.class);
+
     private TreeDefinition definition;
+
+    Content node;
+
+    String handle;
 
     public NodeItem(Content node, TreeDefinition definition)
             throws RepositoryException {
         super(node);
+        this.handle = node.getHandle();
+        this.node = node;
         this.definition = definition;
     }
 
@@ -88,7 +102,7 @@ public class NodeItem extends LazyContentWrapper implements Item {
      * @throws RepositoryException
      */
     public String getItemId() throws RepositoryException {
-        return node.getHandle();
+        return getHandle();
     }
 
     public Property getItemProperty(Object id) {
@@ -114,5 +128,21 @@ public class NodeItem extends LazyContentWrapper implements Item {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    public synchronized Content getWrappedContent() {
+        try {
+            if( node == null || !node.getJCRNode().getSession().isLive()){
+                node = getHierarchyManager().getContent(getHandle());
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("can't reinitialize node " + getHandle(), e);
+        }
+        return node;
+    }
+
+    public HierarchyManager getHierarchyManager() {
+        return MgnlContext.getSystemContext().getHierarchyManager(definition.getRepository());
     }
 }
