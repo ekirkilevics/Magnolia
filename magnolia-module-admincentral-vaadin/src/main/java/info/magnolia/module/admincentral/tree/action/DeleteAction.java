@@ -45,6 +45,6 @@ public class DeleteAction extends TreeAction {
 
     @Override
     protected void handleAction(AbstractTreeTableView treeTable, Content content) {
-        treeTable.getTreeTable().removeItem(content.getUUID());
+        treeTable.getTreeTable().removeItem(content.getHandle());
     }
 }

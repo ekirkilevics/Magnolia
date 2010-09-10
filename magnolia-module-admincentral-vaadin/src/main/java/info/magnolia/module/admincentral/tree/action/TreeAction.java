@@ -63,7 +63,7 @@ public abstract class TreeAction extends Action {
         // TODO what about itemId==null ?
 
         if (itemId.indexOf('@') == -1) {
-            Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(itemId);
+            Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContent(itemId);
 
             handleAction(treeTable, content);
 

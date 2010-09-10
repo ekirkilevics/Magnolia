@@ -33,13 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Item;
 import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.tree.container.NodeItem;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
-import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.Date;
+
+import org.apache.commons.lang.RandomStringUtils;
+
+import com.vaadin.addon.treetable.TreeTable;
+import com.vaadin.data.Item;
 
 /**
  * Tree action for adding a page to the website repository.
@@ -53,10 +56,10 @@ public class AddAction extends TreeAction {
 
         TreeTable treeTable = treeTableView.getTreeTable();
 
-        String bogusUuid = "65f2b584-30bb-41ea-9720-" + RandomStringUtils.randomNumeric(12);
+        String bogusUuid = "/someNewPath" + RandomStringUtils.randomNumeric(12);
 
         Item item = treeTable.addItem(bogusUuid);
-        treeTable.setParent(bogusUuid, content.getUUID());
+        treeTable.setParent(((NodeItem)item).getWrappedContent().getHandle(), content.getHandle());
 
         item.getItemProperty("Page").setValue("untitled");
         item.getItemProperty("Status").setValue(0);
