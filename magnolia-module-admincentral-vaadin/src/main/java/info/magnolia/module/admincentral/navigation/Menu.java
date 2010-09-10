@@ -49,6 +49,7 @@ import java.util.Map.Entry;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +78,7 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class Menu extends MagnoliaBaseComponent {
 
+    private static final String STARTUP_URI_FRAGMENT = "___startup___";
     private static final long serialVersionUID = 1L;
     private static final String SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE = "Selected action is not available in Milestone 1";
 
@@ -90,7 +92,7 @@ public class Menu extends MagnoliaBaseComponent {
      * entering the application via a bookmark. See SelectedMenuItemTabChangeListener.setUriFragmentOnSelectTabChange. The problem I was not able to solve in a more
      * elegant way is that, dont'know how or why, when using a bookmark the uri fragment part after the semicolon disappears.
      */
-    private boolean isMenuBeingAttachedToApp;
+    private boolean isMenuBeingAttachedToApp = false;
 
     public Menu() throws RepositoryException {
         setCompositionRoot(accordion);
@@ -179,15 +181,14 @@ public class Menu extends MagnoliaBaseComponent {
     public void attach() {
         super.attach();
         isMenuBeingAttachedToApp = true;
-        openViewOnFirstAccess();
+        //fire an fragmentChangedEvent. This is needed when normally entering the app (e.g. not via a bookmark), so that we can set the initial fragment.
+        getUriFragmentUtility().setFragment(STARTUP_URI_FRAGMENT);
     }
 
     //open website view by default. TODO make it configurable
     private void openViewOnFirstAccess() {
         MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
         menuItemConfiguration.setRepo("website");
-        //FIXME this actually does not work at this point (does not set the uri fragment) although it correctly fires the event.
-        getUriFragmentUtility().setFragment("website");
         new OpenMainViewMenuAction("").handleAction(menuItemConfiguration, getApplication());
     }
 
@@ -252,10 +253,21 @@ public class Menu extends MagnoliaBaseComponent {
         String fragment = source.getUriFragmentUtility().getFragment();
 
         if (fragment != null) {
-            String[] tokens = fragment.split(";");
-
+            if(isMenuBeingAttachedToApp && STARTUP_URI_FRAGMENT.equals(fragment)){
+                //the very first fragment, ignore
+                return;
+            }
+            final String[] tokens = fragment.split(";");
+            //do we have semicolon separated values in uri fragment? Then assume the first one is the tab name we want to select.
             if(tokens.length == 2) {
                 fragment = tokens[0];
+            } else {
+                //this is likely first app entering and not via a bookmark.
+                if(isMenuBeingAttachedToApp){
+                    source.getUriFragmentUtility().setFragment("website", false);
+                    openViewOnFirstAccess();
+                    isMenuBeingAttachedToApp = false;
+                }
             }
             //TODO find a less convoluted way to achieve this.
             for(Iterator<Component> iter = accordion.getComponentIterator(); iter.hasNext();){
@@ -302,9 +314,11 @@ public class Menu extends MagnoliaBaseComponent {
         private void setUriFragmentOnSelectTabChange(String menuUriFragment) {
             if(isMenuBeingAttachedToApp){
                 String fragment = getUriFragmentUtility().getFragment();
-                String[] tokens = fragment.split(";");
-                if(tokens.length == 2){
-                    menuUriFragment = fragment;
+                if(StringUtils.isNotEmpty(fragment)){
+                    String[] tokens = fragment.split(";");
+                    if(tokens.length == 2){
+                        menuUriFragment = fragment;
+                    }
                 }
                 isMenuBeingAttachedToApp = false;
             }

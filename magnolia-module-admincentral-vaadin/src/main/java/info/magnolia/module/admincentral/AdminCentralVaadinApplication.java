@@ -89,7 +89,7 @@ public class AdminCentralVaadinApplication extends Application {
     public void init() {
         setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
-        messages = MessagesManager.getInstance().getMessages("info.magnolia.module.admininterface.messages");
+        messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
         //TODO logout and redirect to new AdminCentral
         setLogoutURL(MgnlContext.getContextPath() + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
@@ -100,7 +100,7 @@ public class AdminCentralVaadinApplication extends Application {
        // If we already have the requested window, use it
         Window w = super.getWindow(name);
         if (w == null) {
-            // If no window found, create it
+            // If no window found, create it. This happens e.g. when opening the app on a new browser tab (multitabs).
             w = new Window(name);
             // set windows name to the one requested
             w.setName(name);
@@ -192,7 +192,7 @@ public class AdminCentralVaadinApplication extends Application {
             menu = new Menu();
         } catch (RepositoryException re) {
             re.printStackTrace();
-            getMainWindow().showNotification("Application menu could not be created. Please contact site administrator. If you are the administrator, please consult the logs. If you are the logs, well...,<br/>", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+            getMainWindow().showNotification("Application menu could not be created. Please contact site administrator.<br/>", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
             //don't go any further.
             return;
         }
