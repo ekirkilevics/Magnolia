@@ -63,10 +63,10 @@
   <servlets>
     <servlet>
       <name>AdminCentral</name>
-      <class>com.vaadin.terminal.gwt.server.ApplicationServlet</class>
+      <class>info.magnolia.module.admincentral.vaadin.MagnoliaResoucesAwareApplicationServlet</class>
        <mappings>
-         <mapping>/AdminCentral/*</mapping>
-         <mapping>/VAADIN/*</mapping>
+         <mapping>/.magnolia/admin-central</mapping>
+         <mapping>/.magnolia/admin-central/*</mapping>
       </mappings>
        <params>
          <param>
