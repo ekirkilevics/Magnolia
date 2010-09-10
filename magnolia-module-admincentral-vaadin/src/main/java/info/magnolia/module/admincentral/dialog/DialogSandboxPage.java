@@ -70,6 +70,7 @@ public class DialogSandboxPage extends VerticalLayout {
         field.setMaxLength(500);
         field.setInputPrompt("paragraph handle");
         field.setRows(1);
+        field.setValue("/howTo-jsp/main/0");
         addComponent(field);
 
 

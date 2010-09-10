@@ -36,8 +36,6 @@ package info.magnolia.module.admincentral.dialog.editor;
 import java.util.Iterator;
 
 import com.vaadin.event.Transferable;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
@@ -50,39 +48,33 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Label;
 
 /**
- * Custom container with support for reordering components.
+ * Custom container with support for reordering, addition and removal of components using D&D.
  * @author had
  * @version $Id: $
  */
-public class SortableLayout extends CustomComponent {
+public class DragAndDropContainer extends CustomComponent {
     private final AbstractOrderedLayout layout;
     private final DropHandler dropHandler;
     private final Component defaultComponent;
-    protected DialogEditorField lastSelectedDEF;
-    private FormLayout fieldEditingTarget;
 
-    public SortableLayout(AbstractOrderedLayout layout, final Component defaultComponent) {
-        this.defaultComponent = defaultComponent;
+    public DragAndDropContainer(AbstractOrderedLayout layout, final Component defaultComponent) {
+        this(layout, defaultComponent, null);
+    }
+
+    public DragAndDropContainer(AbstractOrderedLayout layout,  final Component defaultComponent, FieldEditingHandler handler) {
         this.layout = layout;
-        dropHandler = new ReorderLayoutDropHandler(layout, defaultComponent);
+        this.defaultComponent = defaultComponent;
+        dropHandler = new ReorderLayoutDropHandler(layout, defaultComponent, handler);
 
         DragAndDropWrapper pane = new DragAndDropWrapper(layout);
         setCompositionRoot(pane);
     }
 
-    public SortableLayout(AbstractOrderedLayout layout, Label dropFieldsLabel, FormLayout fieldEditingTarget) {
-        this(layout, dropFieldsLabel);
-        this.fieldEditingTarget = fieldEditingTarget;
-    }
-
     @Override
     public void addComponent(Component component) {
-        DraggableComponent wrapper = new DraggableComponent(component,
-                dropHandler);
+        DraggableComponent wrapper = new DraggableComponent(component, dropHandler);
         wrapper.setSizeUndefined();
 
         // we support only vertical drops
@@ -92,19 +84,53 @@ public class SortableLayout extends CustomComponent {
         layout.addComponent(wrapper);
     }
 
+    public void addComponent(DialogEditorField component, int index) {
+        DraggableComponent wrapper = new DraggableComponent(component, dropHandler);
+        wrapper.setSizeUndefined();
+
+        // we support only vertical drops
+        component.setWidth("100%");
+        wrapper.setWidth("100%");
+
+        layout.addComponent(wrapper, index);
+    }
+
+    public Iterator<Component> getInnerComponentIterator() {
+        return layout.getComponentIterator();
+    }
+
+    @Override
+    public void removeAllComponents() {
+        layout.removeAllComponents();
+    }
+
     public DropHandler getDropHandler() {
        return dropHandler;
     }
 
+    /**
+     * Will mark inner component provided as parameter as selected or reset selection when parameter is null.
+     */
+    public void setSelected(DialogEditorField selectedComponent) {
+        for (Iterator<Component> iter = getInnerComponentIterator(); iter.hasNext();) {
+            DialogEditorField tc = (DialogEditorField) ((DraggableComponent) iter.next()).getTransferredComponent();
+            if (selectedComponent != tc)  {
+                tc.setSelected(false);
+            }
+            tc.requestRepaint();
+        }
+    };
 
     private static class ReorderLayoutDropHandler implements DropHandler {
 
-        private AbstractOrderedLayout targetLayout;
-        private Component defaultComponent;
+        private final AbstractOrderedLayout targetLayout;
+        private final Component defaultComponent;
+        private final FieldEditingHandler fieldEditingHandler;
 
-        public ReorderLayoutDropHandler(AbstractOrderedLayout layout, Component defaultComponent) {
+        public ReorderLayoutDropHandler(AbstractOrderedLayout layout, Component defaultComponent, FieldEditingHandler fieldEditingHandler) {
             this.targetLayout = layout;
             this.defaultComponent = defaultComponent;
+            this.fieldEditingHandler = fieldEditingHandler;
         }
 
         public AcceptCriterion getAcceptCriterion() {
@@ -162,31 +188,12 @@ public class SortableLayout extends CustomComponent {
                     TemplateControl template = (TemplateControl) wrappedSource.getTransferredComponent();
 
                     // comps are in Vertical (or horizontal) Layout that is wrapped by D&DWrapper wrapped by SortableLayout ... how ugly is that?
-                    final SortableLayout targetTopLayout = (SortableLayout) targetLayout.getParent().getParent();
+                    final DragAndDropContainer targetTopLayout = (DragAndDropContainer) targetLayout.getParent().getParent();
 
-                    final DialogEditorField controlComponent = template.getControlComponent(targetLayout.getWindow());
-
-                    controlComponent.addListener(new LayoutClickListener() {
-
-                        public void layoutClick(LayoutClickEvent event) {
-                            System.out.println("Clicked on " + controlComponent.getCaption());
-
-                            controlComponent.setSelected(true);
-                            controlComponent.getOriginalTemplate().configureIn(controlComponent, targetTopLayout.fieldEditingTarget);
-                            // TODO: why this doesn't repaint ALL children?
-                            //DialogEditorField.this.getParent().getParent().requestRepaint();
-                            for (Iterator<Component> iter = targetLayout.getComponentIterator(); iter.hasNext();) {
-                                DialogEditorField tc = (DialogEditorField) ((DraggableComponent) iter.next()).getTransferredComponent();
-                                if (controlComponent != tc)  {
-                                    tc.setSelected(false);
-                                }
-                                tc.requestRepaint();
-                            }
-                        }
-                    });
+                    final DialogEditorField controlComponent = fieldEditingHandler.getElementInstanceFromTemplate(template, targetTopLayout);
 
                     // the drop handler have to be that associated with the target not the one associated with the source !!!!
-                    targetLayout.addComponent(new DraggableComponent(controlComponent, targetTopLayout.getDropHandler()), index);
+                    targetTopLayout.addComponent(controlComponent, index);
                     if (defaultComponent != null && defaultComponent.getParent() != null) {
                         // this is the default component of the target which is not needed once we have other components in
                         targetLayout.removeComponent(defaultComponent.getParent());
@@ -197,7 +204,7 @@ public class SortableLayout extends CustomComponent {
                     // already instantiated component ... either it is moved within same container or it is actually removed from the container
                     AbstractOrderedLayout sourceLayout = ((AbstractOrderedLayout) sourceComponent.getParent());
                     // comps are in Vertical (or horizontal) Layout that is wrapped by D&DWrapper wrapped by SortableLayout
-                    SortableLayout topLayout = (SortableLayout) sourceLayout.getParent().getParent();
+                    DragAndDropContainer topLayout = (DragAndDropContainer) sourceLayout.getParent().getParent();
 
                     // do not remove default placeholder component
                     if (((DraggableComponent) sourceComponent).getTransferredComponent() != topLayout.defaultComponent) {
@@ -214,5 +221,6 @@ public class SortableLayout extends CustomComponent {
                 }
             }
         }
-    };
+
+    }
 }

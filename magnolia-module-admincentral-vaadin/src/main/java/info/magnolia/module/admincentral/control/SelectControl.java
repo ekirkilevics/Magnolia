@@ -55,8 +55,17 @@ public class SelectControl extends AbstractOptionGroupControl {
     private boolean required = false;
     private String requiredErrorMessage;
     private String inputPrompt;
-    
-    public Component getControl(Content storageNode, Window mainWindow) {
+
+    @Override
+    protected Component getFieldComponent() {
+        return comboBox;
+    }
+
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+        if (comboBox != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
 
         comboBox = new ComboBox();
         comboBox.setNullSelectionAllowed(nullSelectionAllowed);

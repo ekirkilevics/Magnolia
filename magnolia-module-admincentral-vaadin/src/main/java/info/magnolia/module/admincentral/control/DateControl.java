@@ -54,7 +54,16 @@ public class DateControl extends AbstractDialogControl {
 
     private DateField dateField;
 
-    public Component getControl(Content storageNode, Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return dateField;
+    }
+
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+        if (dateField != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
         dateField = new DateField();
         dateField.setResolution(time ? DateField.RESOLUTION_MIN : DateField.RESOLUTION_DAY);
         if (isFocus()) {

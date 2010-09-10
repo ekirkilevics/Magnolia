@@ -31,46 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.control;
+package info.magnolia.module.admincentral.dialog.editor;
 
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Window;
-
-import info.magnolia.cms.core.Content;
-
-import javax.jcr.RepositoryException;
+import com.vaadin.ui.FormLayout;
 
 /**
- * Control for setting a value to true or false.
+ * Contract for editing dialog fields.
+ * @author had
+ * @version $Id: $
  */
-public class CheckBoxControl extends AbstractDialogControl {
+public interface FieldEditingHandler {
 
-    private CheckBox checkBox;
+    FormLayout getEditForm();
 
-    @Override
-    protected Component getFieldComponent() {
-        return checkBox;
-    }
+    public DialogEditorField getElementInstanceFromTemplate(TemplateControl template, final DragAndDropContainer sortableLayout);
 
-    @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
-        if (checkBox != null) {
-            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
-        }
-
-        checkBox = new CheckBox();
-        if (isFocus()) {
-            checkBox.focus();
-        }
-
-        return checkBox;
-    }
-
-    public void validate() {
-        checkBox.validate();
-    }
-
-    public void save(Content storageNode) throws RepositoryException {
-    }
 }

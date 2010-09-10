@@ -47,6 +47,8 @@ import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Abstract base class for controls that have a label displayed to the left and a description placed below any
  * components that the implementing class wants to add.
@@ -58,6 +60,27 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
     private String description;
     private DialogTab parent;
     private boolean focus;
+
+    private String width;
+    private String height;
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        System.out.println("ADO: setWidth(" + width + ")");
+        this.width = width;
+        getFieldComponent().setWidth(width);
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
 
     public String getName() {
         return name;
@@ -102,7 +125,7 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
         VerticalLayout verticalLayout = new VerticalLayout();
 
         Window window = grid.getApplication() == null ? null : grid.getApplication().getMainWindow();
-        verticalLayout.addComponent(getControl(storageNode, window));
+        verticalLayout.addComponent(createField(storageNode, window));
 
         if (description != null)
             verticalLayout.addComponent(new Label(description));
@@ -110,7 +133,26 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
         grid.addComponent(verticalLayout);
     }
 
-    public abstract Component getControl(Content storageNode, Window mainWindow);
+    /**
+     * Creates new component representing element field. Implementing classes should ensure that call to this method returns always new component or fails when called multiple times and creating of multiple instances is not supported.
+     */
+    protected abstract Component createFieldComponent(Content storageNode, Window mainWindow);
+
+    /**
+     * Gets an existing component representing element field or null if such component was not yet created.
+     */
+    protected abstract Component getFieldComponent();
+
+    public Component createField(Content storageNode, Window mainWindow) {
+        Component field = createFieldComponent(storageNode, mainWindow);
+        if (!StringUtils.isBlank(getWidth())) {
+            field.setWidth(getWidth() +"px");
+        }
+        if (!StringUtils.isBlank(getHeight())) {
+            field.setWidth(getHeight() +"px");
+        }
+        return field;
+    }
 
     public void validate() {
     }

@@ -55,7 +55,16 @@ public class FileControl extends AbstractDialogControl {
 
     private Upload upload;
 
-    public Component getControl(Content storageNode, Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return upload;
+    }
+
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+        if (upload != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
         upload = new Upload();
         upload.setWidth("100%");
         if (isFocus()) {

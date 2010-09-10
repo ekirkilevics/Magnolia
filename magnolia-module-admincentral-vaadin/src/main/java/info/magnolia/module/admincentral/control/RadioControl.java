@@ -56,8 +56,17 @@ public class RadioControl extends AbstractOptionGroupControl {
 
     // TODO needs configuration for reading in options from separate node
 
-    public Component getControl(Content storageNode, Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return group;
+    }
 
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+
+        if (group != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
         group = new OptionGroup();
         group.setNullSelectionAllowed(nullSelectionAllowed);
         group.setRequired(required);

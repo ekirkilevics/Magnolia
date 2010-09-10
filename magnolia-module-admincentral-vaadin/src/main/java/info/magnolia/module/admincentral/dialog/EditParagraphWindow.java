@@ -48,8 +48,11 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.control.StaticControl;
+import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 
@@ -58,13 +61,14 @@ import javax.jcr.RepositoryException;
  */
 public class EditParagraphWindow extends Window {
 
+    private static final Logger log = LoggerFactory.getLogger(EditParagraphWindow.class);
     private String repository;
     private String path;
     private String nodeCollection;
     private String nodeName;
     private DialogDefinition dialog;
 
-    public EditParagraphWindow(String dialogName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
+    public EditParagraphWindow(final String dialogName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
 
         // TODO For now takes dialogName directly, it should take a paragraph name instead and then use the dialog configured for it
 
@@ -114,7 +118,16 @@ public class EditParagraphWindow extends Window {
                 sheet.addTab(grid, dialogTab.getLabel(), null);
             }
 
-            Button close = new Button(dialog.getMessages().get("buttons.save"), new Button.ClickListener() {
+            Button editDialogConfiguration = new Button(MessagesManager.getMessages("info.magnolia.module.admincentral.messages").getWithDefault("buttons.editDialogConfiguration", "buttons.editDialogConfiguration"), new Button.ClickListener() {
+                public void buttonClick(Button.ClickEvent event) {
+                    getApplication().getMainWindow().addWindow(new EditDialogWindow(dialogName));
+                }
+            });
+            editDialogConfiguration.setClickShortcut(ShortcutAction.KeyCode.D, ShortcutAction.ModifierKey.CTRL);
+            buttons.addComponent(editDialogConfiguration);
+            buttons.setComponentAlignment(editDialogConfiguration, "right");
+
+            Button save = new Button(dialog.getMessages().get("buttons.save"), new Button.ClickListener() {
                 public void buttonClick(Button.ClickEvent event) {
                     if (save()){
                         getApplication().getMainWindow().executeJavaScript("location.reload(true);");
@@ -122,10 +135,10 @@ public class EditParagraphWindow extends Window {
                     }
                 }
             });
-            close.addStyleName("primary");
-            close.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
-            buttons.addComponent(close);
-            buttons.setComponentAlignment(close, "right");
+            save.addStyleName("primary");
+            save.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
+            buttons.addComponent(save);
+            buttons.setComponentAlignment(save, "right");
 
             mainViewArea = sheet;
         }

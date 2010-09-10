@@ -49,7 +49,16 @@ public class RichTextControl extends AbstractDialogControl {
     private boolean wordwrap = true;
     private int rows = 0;
 
-    public Component getControl(Content storageNode, Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return richTextArea;
+    }
+
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+        if (richTextArea != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
 
         richTextArea = new RichTextArea();
         richTextArea.setWordwrap(wordwrap);

@@ -38,8 +38,6 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,11 +77,7 @@ public class DraftDialogEditorPage extends FormLayout {
         addComponent(new Button("New dialog", new Button.ClickListener() {
 
             public void buttonClick(Button.ClickEvent event) {
-                try {
-                    getApplication().getMainWindow().addWindow(new EditDialogWindow((String) dialogName.getValue(), (String) parentModule.getValue()));
-                } catch (RepositoryException e) {
-                    e.printStackTrace();
-                }
+                getApplication().getMainWindow().addWindow(new EditDialogWindow((String) dialogName.getValue(), (String) parentModule.getValue()));
             }
 
         }));

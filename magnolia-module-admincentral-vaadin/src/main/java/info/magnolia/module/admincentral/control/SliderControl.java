@@ -56,7 +56,16 @@ public class SliderControl extends AbstractDialogControl {
 
     private Slider slider;
 
-    public Component getControl(Content storageNode, Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return slider;
+    }
+
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+        if (slider != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
 

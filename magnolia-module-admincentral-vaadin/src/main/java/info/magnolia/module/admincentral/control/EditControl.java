@@ -50,7 +50,7 @@ public class EditControl extends AbstractDialogControl {
 
     private TextField field;
 
-    private int rows = 0;
+    private int rows = 1;
     private boolean wordwrap = true;
     private boolean secret = false;
     private boolean required = false;
@@ -60,8 +60,16 @@ public class EditControl extends AbstractDialogControl {
     private String validationPattern;
     private String validationMessage;
 
-    public Component getControl(Content storageNode, Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return field;
+    }
 
+    @Override
+    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+        if (field != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
         field = new TextField();
         field.setRequired(required);
         field.setRequiredError(requiredErrorMessage);
@@ -97,6 +105,9 @@ public class EditControl extends AbstractDialogControl {
     }
 
     public void setRows(int rows) {
+        if (field != null) {
+            field.setRows(rows);
+        }
         this.rows = rows;
     }
 
@@ -163,4 +174,5 @@ public class EditControl extends AbstractDialogControl {
     public void setValidationMessage(String validationMessage) {
         this.validationMessage = validationMessage;
     }
+
 }

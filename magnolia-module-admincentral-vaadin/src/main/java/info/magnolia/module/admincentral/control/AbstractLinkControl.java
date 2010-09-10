@@ -54,8 +54,17 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
 
     private TextField field;
 
-    public Component getControl(Content storageNode, final Window mainWindow) {
+    @Override
+    protected Component getFieldComponent() {
+        return field;
+    }
 
+    @Override
+    public Component createFieldComponent(Content storageNode, final Window mainWindow) {
+
+        if (field != null) {
+            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+        }
 
         field = new TextField();
         field.setRequired(required);

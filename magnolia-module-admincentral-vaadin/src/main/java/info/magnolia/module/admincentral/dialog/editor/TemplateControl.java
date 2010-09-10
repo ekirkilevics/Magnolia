@@ -33,12 +33,16 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.magnolia.module.admincentral.control.AbstractDialogControl;
 
+import com.vaadin.data.Property;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
@@ -53,6 +57,7 @@ import com.vaadin.ui.Window;
  */
 public class TemplateControl extends Label {
 
+    private static final Logger log = LoggerFactory.getLogger(TemplateControl.class);
     private AbstractDialogControl control;
 
     public TemplateControl(String string, AbstractDialogControl control) {
@@ -61,30 +66,64 @@ public class TemplateControl extends Label {
     }
 
     public DialogEditorField getControlComponent(Window window) {
-        final Component comp = this.control.getControl(null, window);
+        final Component comp = this.control.createField(null, window);
         final String caption = StringUtils.isBlank(comp.getCaption()) ? (super.getValue() + ": ") : comp.getCaption();
 
         return new DialogEditorField(caption, comp, this);
     }
 
-    public void configureIn(DialogEditorField fieldInstance, FormLayout fieldEditingTarget) {
+    public void configureIn(final DialogEditorField fieldInstance, FormLayout fieldEditingTarget) {
         fieldEditingTarget.removeAllComponents();
-        fieldEditingTarget.addComponent(new Label("Set Properties for <b>" + fieldInstance.getCaption() + "</b>", Label.CONTENT_XHTML));
-        //List<Method> setters = new ArrayList<Method>();
-        for (Method m :control.getClass().getMethods()) {
+        for (final Method m :control.getClass().getMethods()) {
             if ("setParent".equals(m.getName()) || "setFocus".equals(m.getName()) || "setSecret".equals(m.getName())) {
                 // skip some props
                 continue;
             }
             if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
-                //setters.add(m);
-                String name = StringUtils.uncapitalize(StringUtils.substringAfter(m.getName(), "set") + ":");
+                final Class parameterType = m.getParameterTypes()[0];
+                //list all setters to populate configuration form
+                final String name = StringUtils.uncapitalize(StringUtils.substringAfter(m.getName(), "set") + ":");
                 Component comp;
-                if (boolean.class.equals(m.getParameterTypes()[0])) {
+                if (boolean.class.equals(parameterType)) {
                     comp = new CheckBox(name);
                 } else {
-                    comp = new TextField(name);
-                    comp.setWidth("200px");
+                    TextField tf = new TextField(name);
+                    tf.setWidth("150px");
+                    try {
+                        // invoke getter on the control instance to preset current value
+                        Object val = control.getClass().getMethod("g" + m.getName().substring(1)).invoke(control);
+                        // set only not null (already set or existing) values
+                        if (val != null) {
+                            tf.setValue(val);
+                        }
+                    } catch (Exception e) {
+                        // TODO: deal with the situation when we fail to set value
+                    }
+                    tf.addListener(new Property.ValueChangeListener() {
+                        public void valueChange(Property.ValueChangeEvent event) {
+                            try {
+                                System.out.println("applying change to field value " + event);
+                                Object val = event.getProperty().getValue();
+                                if (int.class.equals(parameterType)) {
+                                    val = Integer.parseInt("" + val);
+                                } else if (long.class.equals(parameterType)) {
+                                    val = Long.parseLong("" + val);
+                                }
+                                m.invoke(control, val);
+                                System.out.println("applied change to field value " + event);
+                            } catch (IllegalArgumentException e) {
+                                log.error("Field " + name + " in " + control + " can't be set to value " + event.getProperty().getValue() + " of type " + event.getProperty().getValue().getClass() + ". Required value type is " +parameterType, e);
+                            } catch (IllegalAccessException e) {
+                                // should not happen
+                                throw new RuntimeException(e);
+                            } catch (InvocationTargetException e) {
+                                log.error("Failed to set value of the field " + name + " in " + control + " to " + event.getProperty().getValue() + " of type " + event.getProperty().getValue().getClass() + ". Required value type is " + parameterType, e);
+                            }
+                        }
+                    });
+                    // FYI: we need to react on the change of text field value immediately, otherwise visual effect doesn't work
+                    tf.setImmediate(true);
+                    comp = tf;
                 }
                 fieldEditingTarget.addComponent(comp);
             }

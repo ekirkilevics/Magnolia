@@ -40,6 +40,7 @@ import com.vaadin.ui.Label;
 
 /**
  * Special container used by the dialog editor to visualize controls.
+ * FIXME: solve highlighting on select by other means then by usage of CssLayout
  * @author had
  * @version $Id: $
  */
@@ -62,8 +63,6 @@ public class DialogEditorField extends CssLayout {
         //comp.setCaption(caption);
         innerLayout.addComponent(label);
         innerLayout.setExpandRatio(label, 0);
-        // disable 100%
-        comp.setWidth("200px");
         //container.set
         innerLayout.addComponent(comp);
         innerLayout.setSpacing(true);
@@ -75,11 +74,9 @@ public class DialogEditorField extends CssLayout {
     @Override
     protected String getCss(Component c) {
         if (selected) {
-            System.out.println(getCaption() + " is going color");
             //colorize
             return "background: #DDDDDD;";
         } else {
-            System.out.println(getCaption() + " is going white");
             // white
             return "background: #FFFFFF;";
         }
@@ -92,4 +89,5 @@ public class DialogEditorField extends CssLayout {
     public TemplateControl getOriginalTemplate() {
         return originalTemplate;
     }
+
 }
