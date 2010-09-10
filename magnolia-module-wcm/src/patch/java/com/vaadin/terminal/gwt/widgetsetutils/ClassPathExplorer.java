@@ -521,16 +521,14 @@ public class ClassPathExplorer {
      */
     private static void tryToAdd(final String fullclassName,
             Collection<Class<? extends Paintable>> paintables) {
+
+        PrintStream out = System.out;
+        PrintStream err = System.err;
         try {
-            PrintStream out = System.out;
-            PrintStream err = System.err;
             System.setErr(devnull);
             System.setOut(devnull);
 
             Class<?> c = Class.forName(fullclassName);
-
-            System.setErr(err);
-            System.setOut(out);
 
             if (c.getAnnotation(ClientWidget.class) != null) {
                 paintables.add((Class<? extends Paintable>) c);
@@ -545,6 +543,10 @@ public class ClassPathExplorer {
             // NOP
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally{
+            System.setErr(err);
+            System.setOut(out);
         }
     }
 

@@ -1,0 +1,22 @@
+Index: src/patch/java/com/vaadin/terminal/gwt/client/ui/VWindow.java
+===================================================================
+--- src/patch/java/com/vaadin/terminal/gwt/client/ui/VWindow.java	(revision 37132)
++++ src/patch/java/com/vaadin/terminal/gwt/client/ui/VWindow.java	(working copy)
+@@ -443,10 +443,13 @@
+         }
+ 
+         // setting scrollposition must happen after children is rendered
+-        contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
+-        contentPanel.setHorizontalScrollPosition(uidl
+-                .getIntVariable("scrollLeft"));
+-
++        if(uidl.hasVariable("scrollTop"))){
++            contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
++        }
++        if(uidl.hasVariable("scrollLeft")){
++            contentPanel.setHorizontalScrollPosition(uidl.getIntVariable("scrollLeft"));
++        }
++        
+         // Center this window on screen if requested
+         // This has to be here because we might not know the content size before
+         // everything is painted into the window
