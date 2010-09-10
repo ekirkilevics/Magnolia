@@ -71,6 +71,11 @@ import com.vaadin.data.Validator.InvalidValueException;
  */
 public class JcrContainer implements Serializable, Container.Hierarchical, Buffered {
 
+    /**
+     *
+     */
+    public static final String PATH_SEPARATOR = "/";
+
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
 
     private static final long serialVersionUID = 240035255907683559L;
@@ -284,11 +289,10 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
 
     protected String getRelativePathToRoot(Object itemId) {
         String path = (String) itemId;
-        String slash = "/";
-        if (!path.startsWith(slash)) {
+        if (!path.startsWith(PATH_SEPARATOR)) {
             throw new IllegalArgumentException("path not relative to target");
         }
-        return path.substring(slash.length());
+        return path.substring(PATH_SEPARATOR.length());
     }
 
     public Class< ? > getType(Object propertyId) {
@@ -382,11 +386,10 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
             throws UnsupportedOperationException {
         try {
             NodeItem item = getNodeItem(itemId);
-            NodeItem newparent = getNodeItem(itemId);
-            String newid = newparent.getHandle() + item.getName();
+            String newid = (String)newParentId + itemId;
             nodeItems.remove(itemId);
             removeChildItems(item);
-            getHierarchyManager().moveTo(item.getHandle(), newid);
+            getHierarchyManager().moveTo((String)itemId, newid);
             getNodeItem(newid);
         }
         catch (RepositoryException e) {
