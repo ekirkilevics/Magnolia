@@ -46,6 +46,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Store for all virtual URI to template/page mapping.
@@ -55,6 +57,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class VirtualURIManager extends ObservedManager {
 
+	private static final Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
+	
     public static final String FROM_URI_NODEDATANAME = "fromURI";
 
     public static final String TO_URI_NODEDATANAME = "toURI";
@@ -80,11 +84,15 @@ public final class VirtualURIManager extends ObservedManager {
         String mappedURI = StringUtils.EMPTY;
         int lastMatchedLevel = 0;
         while (e.hasNext()) {
-            VirtualURIMapping vm = (VirtualURIMapping) e.next();
-            VirtualURIMapping.MappingResult result = vm.mapURI(uri);
-            if (result != null && lastMatchedLevel < result.getLevel()) {
-                lastMatchedLevel = result.getLevel();
-                mappedURI = result.getToURI();
+            try{
+                VirtualURIMapping vm = (VirtualURIMapping) e.next();
+                VirtualURIMapping.MappingResult result = vm.mapURI(uri);
+                if (result != null && lastMatchedLevel < result.getLevel()) {
+                    lastMatchedLevel = result.getLevel();
+                    mappedURI = result.getToURI();
+                }
+            }catch(ClassCastException ex){
+                log.error("Virtual URI configuration error, mapping rule is skipped: " + ex.getMessage(), ex);
             }
         }
         return mappedURI;
