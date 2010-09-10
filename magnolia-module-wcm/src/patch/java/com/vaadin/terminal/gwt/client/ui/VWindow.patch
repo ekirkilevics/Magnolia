@@ -10,7 +10,7 @@ Index: src/patch/java/com/vaadin/terminal/gwt/client/ui/VWindow.java
 -        contentPanel.setHorizontalScrollPosition(uidl
 -                .getIntVariable("scrollLeft"));
 -
-+        if(uidl.hasVariable("scrollTop"))){
++        if(uidl.hasVariable("scrollTop")){
 +            contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
 +        }
 +        if(uidl.hasVariable("scrollLeft")){
