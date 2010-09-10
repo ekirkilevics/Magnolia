@@ -79,6 +79,7 @@ if (MgnlFCKConfig.styles != '' || MgnlFCKConfig.templates != '' || MgnlFCKConfig
 
     if (MgnlFCKConfig.styles != '') {
         toolbar[2].push('Style');
+        FCKConfig.CustomStyles = {};
         FCKConfig.StylesXmlPath = MgnlFCKConfig.contextPath + MgnlFCKConfig.styles;
     }
 
