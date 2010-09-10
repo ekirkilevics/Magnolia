@@ -443,7 +443,7 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         }
 
         // setting scrollposition must happen after children is rendered
-        if(uidl.hasVariable("scrollTop"))){
+        if(uidl.hasVariable("scrollTop")){
             contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
         }
         if(uidl.hasVariable("scrollLeft")){
