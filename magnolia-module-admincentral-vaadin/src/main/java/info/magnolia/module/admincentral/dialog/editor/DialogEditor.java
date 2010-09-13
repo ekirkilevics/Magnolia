@@ -159,7 +159,7 @@ public class DialogEditor extends VerticalLayout implements FieldEditingHandler 
                         reset = true;
                     }
                     final AbstractDialogControl element = (AbstractDialogControl) entry;
-                    final DialogEditorField controlComponent = getElementInstanceFromTemplate(new TemplateControl(element.getName(), element), parentLayout);
+                    final DialogEditorField controlComponent = createElementInstanceFromTemplate(new TemplateControl(element.getName(), element), parentLayout);
                     parentLayout.addComponent(controlComponent);
                 }
             } catch (Content2BeanException e) {
@@ -195,7 +195,11 @@ public class DialogEditor extends VerticalLayout implements FieldEditingHandler 
     }
 
     public DialogEditorField getElementInstanceFromTemplate(TemplateControl template, final DragAndDropContainer sortableLayout) {
-        final DialogEditorField controlComponent = template.getControlComponent(sortableLayout.getWindow());
+        return createElementInstanceFromTemplate(template, sortableLayout);
+    }
+
+    public DialogEditorField createElementInstanceFromTemplate(TemplateControl template, final DragAndDropContainer sortableLayout) {
+        final DialogEditorField controlComponent = template.createControlComponent(sortableLayout.getWindow());
 
         controlComponent.addListener(new LayoutClickListener() {
 
@@ -203,7 +207,7 @@ public class DialogEditor extends VerticalLayout implements FieldEditingHandler 
                 FormLayout form = getEditForm();
                 ((Accordion) form.getParent()).setSelectedTab(form);
                 controlComponent.setSelected(true);
-                controlComponent.getOriginalTemplate().configureIn(controlComponent, form);
+                TemplateControl.configureIn(controlComponent, form);
                 // FYI: this doesn't repaint ALL children, due to caching of pre-rendered content. Changing css underneath doesn't invalidate the parent
                 //sortableLayout.requestRepaint();
                 sortableLayout.setSelected(controlComponent);

@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
+import info.magnolia.module.admincentral.control.AbstractDialogControl;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -47,13 +49,13 @@ import com.vaadin.ui.Label;
 public class DialogEditorField extends CssLayout {
 
     private boolean selected;
-    private TemplateControl originalTemplate;
 
+    private AbstractDialogControl fieldInstance;
 
     // TODO: using extra layout just to be able to change colors dynamically is overkill, but the only other way is writing own theme and setting custom style names
-    public DialogEditorField(String caption, Component comp, TemplateControl originalTemplate) {
+    public DialogEditorField(String caption, Component comp, AbstractDialogControl fieldInstance) {
         this.setCaption(caption);
-        this.originalTemplate = originalTemplate;
+        this.fieldInstance = fieldInstance;
 
         final HorizontalLayout innerLayout = new HorizontalLayout();
         innerLayout.setSizeUndefined();
@@ -71,6 +73,11 @@ public class DialogEditorField extends CssLayout {
         setWidth("100%");
     }
 
+
+    public AbstractDialogControl getFieldInstance() {
+        return fieldInstance;
+    }
+
     @Override
     protected String getCss(Component c) {
         if (selected) {
@@ -85,9 +92,4 @@ public class DialogEditorField extends CssLayout {
     public void setSelected(boolean b) {
         this.selected = b;
     }
-
-    public TemplateControl getOriginalTemplate() {
-        return originalTemplate;
-    }
-
 }

@@ -53,7 +53,7 @@ import org.apache.commons.lang.StringUtils;
  * Abstract base class for controls that have a label displayed to the left and a description placed below any
  * components that the implementing class wants to add.
  */
-public abstract class AbstractDialogControl extends I18nAwareComponent implements DialogControl {
+public abstract class AbstractDialogControl extends I18nAwareComponent implements DialogControl, Cloneable {
 
     private String name;
     private String label;
@@ -69,7 +69,6 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
     }
 
     public void setWidth(String width) {
-        System.out.println("ADO: setWidth(" + width + ")");
         this.width = width;
         getFieldComponent().setWidth(width);
     }
@@ -166,5 +165,14 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
 
     public boolean isFocus() {
         return this.focus;
+    }
+
+    public AbstractDialogControl clone() {
+        try {
+            return (AbstractDialogControl) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // this should never ever happen here
+            throw new RuntimeException(e);
+        }
     }
 }

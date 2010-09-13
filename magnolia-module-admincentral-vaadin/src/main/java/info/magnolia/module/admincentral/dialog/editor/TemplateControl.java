@@ -58,22 +58,24 @@ import com.vaadin.ui.Window;
 public class TemplateControl extends Label {
 
     private static final Logger log = LoggerFactory.getLogger(TemplateControl.class);
-    private AbstractDialogControl control;
+    private AbstractDialogControl controlTemplate;
 
     public TemplateControl(String string, AbstractDialogControl control) {
         super(string);
-        this.control = control;
+        this.controlTemplate = control;
     }
 
-    public DialogEditorField getControlComponent(Window window) {
-        final Component comp = this.control.createField(null, window);
+    public DialogEditorField createControlComponent(Window window) {
+        AbstractDialogControl actualControl = this.controlTemplate.clone();
+        final Component comp = actualControl.createField(null, window);
         final String caption = StringUtils.isBlank(comp.getCaption()) ? (super.getValue() + ": ") : comp.getCaption();
 
-        return new DialogEditorField(caption, comp, this);
+        return new DialogEditorField(caption, comp, actualControl);
     }
 
-    public void configureIn(final DialogEditorField fieldInstance, FormLayout fieldEditingTarget) {
-        fieldEditingTarget.removeAllComponents();
+    public static void configureIn(final DialogEditorField dragableEditorComponentRepresentingFieldWithLabelInTheEditor, FormLayout formForRenderingConfigurableFieldProperties) {
+        formForRenderingConfigurableFieldProperties.removeAllComponents();
+        final AbstractDialogControl control = dragableEditorComponentRepresentingFieldWithLabelInTheEditor.getFieldInstance();
         for (final Method m :control.getClass().getMethods()) {
             if ("setParent".equals(m.getName()) || "setFocus".equals(m.getName()) || "setSecret".equals(m.getName())) {
                 // skip some props
@@ -102,7 +104,6 @@ public class TemplateControl extends Label {
                     tf.addListener(new Property.ValueChangeListener() {
                         public void valueChange(Property.ValueChangeEvent event) {
                             try {
-                                System.out.println("applying change to field value " + event);
                                 Object val = event.getProperty().getValue();
                                 if (int.class.equals(parameterType)) {
                                     val = Integer.parseInt("" + val);
@@ -110,7 +111,6 @@ public class TemplateControl extends Label {
                                     val = Long.parseLong("" + val);
                                 }
                                 m.invoke(control, val);
-                                System.out.println("applied change to field value " + event);
                             } catch (IllegalArgumentException e) {
                                 log.error("Field " + name + " in " + control + " can't be set to value " + event.getProperty().getValue() + " of type " + event.getProperty().getValue().getClass() + ". Required value type is " +parameterType, e);
                             } catch (IllegalAccessException e) {
@@ -125,7 +125,7 @@ public class TemplateControl extends Label {
                     tf.setImmediate(true);
                     comp = tf;
                 }
-                fieldEditingTarget.addComponent(comp);
+                formForRenderingConfigurableFieldProperties.addComponent(comp);
             }
         }
 
