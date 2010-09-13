@@ -30,3 +30,29 @@
     min-height: 300px;
 }
 
+/**
+ * TODO: Does this really belong to the main theme, should it go into an extra style shee?
+ */
+.editBar{
+	height: 20px;
+}
+.editBar .v-panel-deco, .editBar .v-panel-captionwrap{
+	display: none;
+}
+
+.editBar .v-panel-content{
+    border-top: 1px solid #ADC97B ;
+    border-left: 1px solid #ADC97B;
+    border-bottom: 1px solid #396101 ;
+    border-right: 1px solid #396101;
+    background-color: transparent;
+    background-repeat: repeat;
+    background-image: url("../../../admin-images/mgnl-bar.png");
+}
+
+.editBar .v-button-wrap{
+	background: transparent;
+	color: white;
+	border-color: #A8D556;
+	text-shadow: none;
+}

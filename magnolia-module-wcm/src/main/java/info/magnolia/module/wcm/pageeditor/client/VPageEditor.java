@@ -33,11 +33,12 @@
  */
 package info.magnolia.module.wcm.pageeditor.client;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -59,11 +60,11 @@ public class VPageEditor extends ComplexPanel implements Container {
 
     private ApplicationConnection client;
 
-    private Map<String, Element> editBarDivs;
+    private Map<String, Element> editBarDivs = new HashMap<String, Element>();
+
+    private Map<String, VEditBar> editBars = new HashMap<String, VEditBar>();
 
     private String pid;
-
-    private boolean barsAdded = false;
 
     public VPageEditor() {
         // ApplicationConnection.registerPaintable(String, Paintable) expects that the widget has an element assigned
@@ -71,11 +72,10 @@ public class VPageEditor extends ComplexPanel implements Container {
         div.getStyle().setProperty("visibility", "hidden");
         this.setElement(div);
 
-        editBarDivs = findDivs("editBar");
+        editBarDivs = findDivs();
     }
 
-    private Map<String, Element> findDivs(String string) {
-        HashMap<String, Element> editBarDivs = new HashMap<String, Element>();
+    private Map<String, Element> findDivs() {
         // TODO use something link gquery
         NodeList<Element> divs = Document.get().getElementsByTagName("div");
         for (int i = 0; i < divs.getLength(); i++) {
@@ -102,34 +102,36 @@ public class VPageEditor extends ComplexPanel implements Container {
            return;
         }
 
-        // send the found uuids to the server if he doesn't know them
-        if(uidl.getStringArrayVariable("uuids").length != editBarDivs.size()){
+        // test if the server has the correct state
+        HashSet<String> uuidsAtTheServer = new HashSet<String>();
+        uuidsAtTheServer.addAll(Arrays.asList(uidl.getStringArrayVariable("uuids")));
+        
+        boolean serverIsUpToDate = uuidsAtTheServer.equals(editBarDivs.keySet());
+
+        if(!serverIsUpToDate){
             updateServer();
         }
+        // the server is up to date, are we up to date too?
+        else {
+            for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
+                final UIDL childUIDL = (UIDL) it.next();
+                final VEditBar editBar = (VEditBar) client.getPaintable(childUIDL);
+                if(!editBars.containsValue(editBar)){
+                    // updateFromUIDL was not yet called so we have to read the attribute manualy
+                    String uuid = childUIDL.getStringAttribute("uuid");
+                    Element editBarDiv = editBarDivs.get(uuid);
 
-        // we add the edit bar only once and not on every other change
-        boolean addBarsNow = false;
-
-        if(!barsAdded && uidl.getChildCount()>0){
-            addBarsNow = true;
-            barsAdded = true;
-        }
-
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL childUIDL = (UIDL) it.next();
-            final Paintable editBar = client.getPaintable(childUIDL);
-            if(addBarsNow){
-
-                String uuid = childUIDL.getStringAttribute("uuid");
-
-                Element editBarDiv = editBarDivs.get(uuid);
-                // we have first to wire the widget sets, otherwise Vaadin will make them of size 0:0
-                add((Widget) editBar, (com.google.gwt.user.client.Element)editBarDiv.cast());
+                    // we have first to wire the widget sets, otherwise Vaadin will make them of size 0:0
+                    add((Widget) editBar, (com.google.gwt.user.client.Element)editBarDiv.cast());
+                    
+                    editBars.put(uuid, editBar);
+                }
+                
+                // now update the edit bars, this will set the attributes
+                editBar.updateFromUIDL(childUIDL, client);
             }
-
-            // now update the edit bars, this will set
-            editBar.updateFromUIDL(childUIDL, client);
         }
+        
     }
 
     private void updateServer() {

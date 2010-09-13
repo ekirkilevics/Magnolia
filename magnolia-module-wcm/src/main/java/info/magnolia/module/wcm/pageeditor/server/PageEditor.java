@@ -35,7 +35,9 @@ package info.magnolia.module.wcm.pageeditor.server;
 
 import info.magnolia.module.wcm.pageeditor.client.VPageEditor;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -50,23 +52,40 @@ import com.vaadin.ui.Component;
  */
 @ClientWidget(VPageEditor.class)
 public class PageEditor extends AbstractComponentContainer {
-    String [] uuids = new String[]{};
-
-    Map<String, Component> editBars = new HashMap<String, Component>();
+    private Map<String, Component> editBars = new HashMap<String, Component>();
+    
+    private ToolBox toolBox = new ToolBox();
+    
+    @Override
+    public void attach() {
+        toolBox.show(getWindow());
+    }
 
     public void replaceComponent(Component oldComponent, Component newComponent) {
         throw new UnsupportedOperationException("not implemented");
     }
 
     public void changeVariables(Object source, Map<String, Object> variables) {
-        if(editBars.isEmpty() && variables.containsKey("uuids")){
-            uuids = (String[]) variables.get("uuids");
-            for (int i = 0; i < uuids.length; i++) {
-                String uuid = uuids[i];
-
-                Component editBar = new EditBar(uuid);
-                editBars.put(uuid, editBar);
-                addComponent(editBar);
+        HashSet<String> uuidsAtTheClient = new HashSet<String>();
+        uuidsAtTheClient.addAll(Arrays.asList((String[]) variables.get("uuids")));
+        
+        boolean serverIsUpToDate = editBars.keySet().equals(uuidsAtTheClient);
+        
+        if(!serverIsUpToDate){
+            // delete old bars
+            for (String uuid : editBars.keySet()) {
+                if(!uuidsAtTheClient.contains(uuid)){
+                    removeComponent(editBars.get(uuid));
+                    editBars.remove(uuid);
+                }
+            }
+            // create new bars
+            for (String uuid : uuidsAtTheClient) {
+                if(!editBars.containsKey(uuid)){
+                    Component editBar = new EditBar(uuid);
+                    editBars.put(uuid, editBar);
+                    addComponent(editBar);
+                }
             }
         }
     }
@@ -76,11 +95,15 @@ public class PageEditor extends AbstractComponentContainer {
         for (Component editBar : editBars.values()) {
             editBar.paint(target);
         }
-        target.addVariable(this, "uuids", uuids);
+        target.addVariable(this, "uuids", editBars.keySet().toArray(new String[editBars.size()]));
     }
 
     public Iterator<Component> getComponentIterator() {
         return editBars.values().iterator();
+    }
+
+    public void showParagraphInfo(String uuid) {
+        toolBox.showParagraphInfo(getWindow(), uuid);
     }
 
 }

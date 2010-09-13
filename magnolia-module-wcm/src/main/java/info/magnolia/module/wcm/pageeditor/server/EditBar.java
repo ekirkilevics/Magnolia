@@ -33,21 +33,27 @@
  */
 package info.magnolia.module.wcm.pageeditor.server;
 
+import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
+import info.magnolia.module.wcm.pageeditor.client.VEditBar;
+
 import javax.jcr.RepositoryException;
 
-import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
-
+import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window.Notification;
 
 /**
  * The edit bar. Knows the uuid it is assigned to.
  */
+@ClientWidget(VEditBar.class)
 public class EditBar extends CustomComponent {
     private String uuid;
 
@@ -55,9 +61,11 @@ public class EditBar extends CustomComponent {
         super();
 
         this.uuid = uuid;
-
-        VerticalLayout layout = new VerticalLayout();
+        //setStyleName("editBar");
+        
+        GridLayout layout = new GridLayout(2, 1);
         Button editButton = new Button("Edit");
+        editButton.setStyleName("small");
         editButton.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 try {
@@ -72,9 +80,26 @@ public class EditBar extends CustomComponent {
 
             }
         });
-        layout.addComponent(editButton);
+        
+        layout.setWidth("100%");
+        layout.addComponent(editButton,0,0);
+        layout.setColumnExpandRatio(0, 1);
+        
+        Button deleteButton = new Button("Delete");
+        deleteButton.setStyleName("small");
+        layout.addComponent(deleteButton,1,0);
+        layout.setColumnExpandRatio(1, 0);
+        
+        layout.setComponentAlignment(deleteButton, Alignment.MIDDLE_LEFT);
 
-        setCompositionRoot(layout);
+        Panel panel = new Panel(layout);
+        panel.addListener(new ClickListener() {
+            public void click(com.vaadin.event.MouseEvents.ClickEvent event) {
+                PageEditor pageEditor = (PageEditor)getParent();
+                pageEditor.showParagraphInfo(uuid);
+            }
+        });
+        setCompositionRoot(panel);
     }
 
     @Override
