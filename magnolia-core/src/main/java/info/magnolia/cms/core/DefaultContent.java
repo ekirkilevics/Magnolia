@@ -203,7 +203,7 @@ public class DefaultContent extends AbstractContent {
             return true;
         }
         else { // check for mgnl:resource node
-            if (this.node.hasNode(name) && this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE)) {
+        	if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
                 return true;
             }
         }
@@ -243,7 +243,7 @@ public class DefaultContent extends AbstractContent {
                 return this.node.getProperty(name).getType();
             }
             else { // check for mgnl:resource node
-                if (this.node.hasNode(name) && this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE)) {
+            	if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.getNode(name).hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
                     return PropertyType.BINARY;
                 }
             }
@@ -621,3 +621,4 @@ public class DefaultContent extends AbstractContent {
     }
 
 }
+
