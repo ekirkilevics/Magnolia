@@ -62,7 +62,7 @@ public class EditBar extends CustomComponent {
 
         this.uuid = uuid;
         //setStyleName("editBar");
-        
+
         GridLayout layout = new GridLayout(2, 1);
         Button editButton = new Button("Edit");
         editButton.setStyleName("small");
@@ -80,23 +80,23 @@ public class EditBar extends CustomComponent {
 
             }
         });
-        
+
         layout.setWidth("100%");
         layout.addComponent(editButton,0,0);
         layout.setColumnExpandRatio(0, 1);
-        
+
         Button deleteButton = new Button("Delete");
         deleteButton.setStyleName("small");
         layout.addComponent(deleteButton,1,0);
         layout.setColumnExpandRatio(1, 0);
-        
+
         layout.setComponentAlignment(deleteButton, Alignment.MIDDLE_LEFT);
 
         Panel panel = new Panel(layout);
         panel.addListener(new ClickListener() {
             public void click(com.vaadin.event.MouseEvents.ClickEvent event) {
                 PageEditor pageEditor = (PageEditor)getParent();
-                pageEditor.showParagraphInfo(uuid);
+                pageEditor.showParagraphInfo(uuid, event);
             }
         });
         setCompositionRoot(panel);

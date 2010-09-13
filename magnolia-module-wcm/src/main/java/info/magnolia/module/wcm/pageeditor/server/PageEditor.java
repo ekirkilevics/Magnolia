@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponentContainer;
@@ -53,9 +54,9 @@ import com.vaadin.ui.Component;
 @ClientWidget(VPageEditor.class)
 public class PageEditor extends AbstractComponentContainer {
     private Map<String, Component> editBars = new HashMap<String, Component>();
-    
+
     private ToolBox toolBox = new ToolBox();
-    
+
     @Override
     public void attach() {
         toolBox.show(getWindow());
@@ -68,9 +69,9 @@ public class PageEditor extends AbstractComponentContainer {
     public void changeVariables(Object source, Map<String, Object> variables) {
         HashSet<String> uuidsAtTheClient = new HashSet<String>();
         uuidsAtTheClient.addAll(Arrays.asList((String[]) variables.get("uuids")));
-        
+
         boolean serverIsUpToDate = editBars.keySet().equals(uuidsAtTheClient);
-        
+
         if(!serverIsUpToDate){
             // delete old bars
             for (String uuid : editBars.keySet()) {
@@ -102,7 +103,9 @@ public class PageEditor extends AbstractComponentContainer {
         return editBars.values().iterator();
     }
 
-    public void showParagraphInfo(String uuid) {
+    public void showParagraphInfo(final String uuid, final ClickEvent event) {
+        toolBox.setPositionX(event.getClientX());
+        toolBox.setPositionY(event.getClientY());
         toolBox.showParagraphInfo(getWindow(), uuid);
     }
 
