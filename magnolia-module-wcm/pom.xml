@@ -56,6 +56,8 @@
         <configuration>
           <!-- put the created resources on the classpath -->
           <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
+          <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resouce folder-->
+          <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
           <!-- this is not a webapp -->
           <noServer>true</noServer>
           <module>info.magnolia.module.wcm.pageeditor.PageEditor</module>
