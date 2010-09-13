@@ -55,6 +55,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.Workspace;
@@ -633,5 +634,38 @@ public class ContentVersion extends DefaultContent {
     public Workspace getWorkspace() throws RepositoryException {
         return this.base.getWorkspace();
     }
+    
+    @Override
+    public boolean hasNodeData(String name) throws RepositoryException {
+        if (this.node.hasProperty(name)) {
+            return true;
+        }
+        else { // check for mgnl:resource node
+            if (this.node.hasNode(name) && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected int determineNodeDataType(String name) {
+        // FIXME: maybe delegate to NodeDataImplementations?
+        try {
+            if (this.node.hasProperty(name)) {
+                return this.node.getProperty(name).getType();
+            }
+            else { // check for mgnl:resource node
+                if (this.node.hasNode(name) && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)) {
+                    return PropertyType.BINARY;
+                }
+            }
+        }
+        catch (RepositoryException e) {
+            throw new IllegalStateException("Can't determine property type of [" + getHandle() + "/" + name + "]", e);
+        }
+        return PropertyType.UNDEFINED;
+    }
+
 
 }
