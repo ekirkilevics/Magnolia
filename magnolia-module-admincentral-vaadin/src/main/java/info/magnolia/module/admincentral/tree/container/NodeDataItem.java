@@ -33,14 +33,10 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentWrapper;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.NodeDataWrapper;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.jcr.RepositoryException;
@@ -50,43 +46,33 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.ObjectProperty;
 
 
 /**
- * NodeItem.
+ * Vaadin Item wrapping a NodeData.
+ *
  * @author daniellipp
  * @version $Id$
  */
-public class NodeItem extends ContentWrapper implements Item {
+public class NodeDataItem extends NodeDataWrapper implements Item {
 
-    private static final long serialVersionUID = -6540682899828148456L;
+    private static final long serialVersionUID = 2758187921120400527L;
 
-    private static Logger log = LoggerFactory.getLogger(NodeItem.class);
+    private static Logger log = LoggerFactory.getLogger(NodeDataItem.class);
 
     private TreeDefinition definition;
 
-    Content node;
+    NodeData node;
 
     String handle;
 
-    public NodeItem(Content node, TreeDefinition definition)
+    public NodeDataItem(NodeData data, TreeDefinition definition)
             throws RepositoryException {
-        super(node);
-        this.handle = node.getHandle();
-        this.node = node;
+        super(data);
+        this.handle = data.getHandle();
+        this.node = data;
         this.definition = definition;
-    }
-
-    public boolean addItemProperty(Object id, Property property)
-            throws UnsupportedOperationException {
-        assertIdIsString(id);
-        try {
-            this.setNodeData((String) id, property.getValue());
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-        return true;
     }
 
     protected void assertIdIsString(Object id) {
@@ -107,42 +93,29 @@ public class NodeItem extends ContentWrapper implements Item {
 
     public Property getItemProperty(Object id) {
         assertIdIsString(id);
-        return new NodeProperty(this, (String) id, definition);
+        return new ObjectProperty(id);
     }
 
-    public Collection< ? > getItemPropertyIds() {
-        ArrayList<String> idlist = new ArrayList<String>();
-        for (NodeData nd : getNodeDataCollection()) {
-            idlist.add(nd.getName());
-        }
-        return idlist;
-    }
-
-    public boolean removeItemProperty(Object id)
-            throws UnsupportedOperationException {
-        assertIdIsString(id);
+    public Collection<String> getItemPropertyIds() {
         try {
-            getNodeData((String) id).delete();
+            return getAttributeNames();
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
-        return true;
     }
 
-    public synchronized Content getWrappedContent() {
-        try {
-            if( node == null || !node.getJCRNode().getSession().isLive()){
-                node = getHierarchyManager().getContent(getHandle());
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("can't reinitialize node " + getHandle(), e);
-        }
+    public boolean removeItemProperty(Object id)
+            throws UnsupportedOperationException {
+            return false;
+    }
+
+    public synchronized NodeData getWrappedNodeData() {
         return node;
     }
 
-    public HierarchyManager getHierarchyManager() {
-        return MgnlContext.getSystemContext().getHierarchyManager(definition.getRepository());
+    public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
+        return false;
     }
+
 }

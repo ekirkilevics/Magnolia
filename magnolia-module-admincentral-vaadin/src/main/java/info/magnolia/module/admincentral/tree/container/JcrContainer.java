@@ -36,8 +36,10 @@ package info.magnolia.module.admincentral.tree.container;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,17 +50,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Resource;
 
 
 /**
@@ -84,24 +90,28 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
 
     private final TreeDefinition definition;
 
-    protected HashMap<String, NodeItem> nodeItems = new HashMap<String, NodeItem>();
+    protected HashMap<String, ContentItem> nodeItems = new HashMap<String, ContentItem>();
 
     private final String[] roots;
 
+    private TreeTable tree;
+
     /**
-     * Create JCR container with provided definition and root.
-     * Note that in this case (a single root) this root will not be added to the container on level 0 but its children.
+     * Create JCR container with provided definition and root. Note that in this case (a single
+     * root) this root will not be added to the container on level 0 but its children.
      *
+     * @param tree TreeTable to set itemIcon on (can only be set on TreeTable)
      * @param definition the definition of the tree
      * @param root the single root
      */
-    public JcrContainer(TreeDefinition definition, String root) {
-        this(definition, new String[]{root});
+    public JcrContainer(TreeTable tree, TreeDefinition definition, String root) {
+        this(tree, definition, new String[]{root});
     }
 
-    public JcrContainer(TreeDefinition definition, String[] roots) {
+    public JcrContainer(TreeTable tree, TreeDefinition definition, String[] roots) {
         this.definition = definition;
         this.roots = roots;
+        this.tree = tree;
     }
 
     public boolean addContainerProperty(Object propertyId, Class< ? > type,
@@ -166,12 +176,16 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         // TODO Not sure how to revert
     }
 
-    public Collection<String> getChildren(Object itemId) {
+    public Collection<String> getChildren(Object parentId) {
         ArrayList<String> children = new ArrayList<String>();
         try {
-            for (Content node : getNodeItem(itemId).getChildren()) {
-                children.add(getNodeItem(node.getHandle()).getItemId());
+            ContentItem parent = getNodeItem(parentId);
+            for (TreeItemType type : definition.getItemTypes()) {
+                for (Content node : parent.getChildren(type.getItemType())) {
+                    children.add(getNodeItem(node.getHandle()).getItemId());
+                }
             }
+            children.addAll(parent.getItemPropertyIds());
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
@@ -205,19 +219,33 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
 
     }
 
+    /**
+     * Keeps already used Resource in order to save resources/not create new Resource for every
+     * item.
+     */
+    private static ConcurrentHashMap<String, Resource> itemIcons = new ConcurrentHashMap<String, Resource>();
+
+    private Resource getItemIconFor(String pathToIcon) {
+        if (!itemIcons.containsKey(pathToIcon)) {
+            // check if this path starts or not with a /
+            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith("/") ? "/" + pathToIcon : pathToIcon);
+            itemIcons.put(pathToIcon, new ExternalResource(tmp));
+        }
+        return itemIcons.get(pathToIcon);
+    }
+
     public Item getItem(Object itemId) {
         assertIsString(itemId);
-        NodeItem item;
+        ContentItem item;
         try {
             if (nodeItems.containsKey(itemId)) {
-                log.debug("found in nodeitems");
                 item = nodeItems.get(itemId);
             }
             else if (getHierarchyManager().isExist((String) itemId)) {
-                log.info("Found item with id {} in repository.", itemId);
+                log.info("Retrieving item with id {} from repository.", itemId);
 
                 Content content = getHierarchyManager().getContent((String) itemId);
-                item = new NodeItem(content, definition);
+                item = new ContentItem(content, definition);
 
                 // load all the parents
                 if (item.getLevel() > 1) {
@@ -226,6 +254,13 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
                     getItem(item.getParent().getHandle());
                 }
                 nodeItems.put((String) itemId, item);
+                // TODO: simplify!
+                for (TreeItemType type : definition.getItemTypes()) {
+                    if (item.isNodeType(type.getItemType())) {
+                        log.info("Item has ItemType {}", type.getItemType());
+                        tree.setItemIcon(itemId, getItemIconFor(type.getIcon()));
+                    }
+                }
             }
             else {
                 throw new IllegalArgumentException("itemId not found");
@@ -234,7 +269,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
-        return item;
+         return item;
     }
 
     public Collection<String> getItemIds() {
@@ -261,8 +296,8 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
      * @param itemId
      * @return NodeItem
      */
-    public NodeItem getNodeItem(Object itemId) {
-        return (NodeItem) getItem(itemId);
+    public ContentItem getNodeItem(Object itemId) {
+        return (ContentItem) getItem(itemId);
     }
 
     /*
@@ -273,7 +308,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     }
 
     public Object getParentId(Object itemId) {
-        NodeItem item = getNodeItem(itemId);
+        ContentItem item = getNodeItem(itemId);
         try {
             if (item.getLevel() > 0) {
                 return item.getParent().getHandle();
@@ -337,9 +372,9 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
                 "Use removeItem() at the Node level");
     }
 
-    protected void removeChildItems(NodeItem item) throws RepositoryException {
+    protected void removeChildItems(ContentItem item) throws RepositoryException {
         for (String childId : nodeItems.keySet()) {
-            NodeItem child = nodeItems.get(childId);
+            ContentItem child = nodeItems.get(childId);
             for (int depth = 1; depth < child.getLevel(); depth++) {
                 if (child.getAncestor(depth).equals(item)) {
                     nodeItems.remove(childId);
@@ -385,11 +420,11 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     public boolean setParent(Object itemId, Object newParentId)
             throws UnsupportedOperationException {
         try {
-            NodeItem item = getNodeItem(itemId);
-            String newid = (String)newParentId + itemId;
+            ContentItem item = getNodeItem(itemId);
+            String newid = (String) newParentId + itemId;
             nodeItems.remove(itemId);
             removeChildItems(item);
-            getHierarchyManager().moveTo((String)itemId, newid);
+            getHierarchyManager().moveTo((String) itemId, newid);
             getNodeItem(newid);
         }
         catch (RepositoryException e) {
