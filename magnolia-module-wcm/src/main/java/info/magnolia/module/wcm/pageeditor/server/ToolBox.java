@@ -33,9 +33,23 @@
  */
 package info.magnolia.module.wcm.pageeditor.server;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
+
+import java.util.Calendar;
+import java.util.Iterator;
+
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Resource;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Form;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseListener;
@@ -46,68 +60,121 @@ import com.vaadin.ui.themes.BaseTheme;
  * @version $Id$
  */
 public class ToolBox extends Window implements CloseListener {
-    
-    private Form actionTab;
-    private Form infoTab;
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Resource ACTION_ICON = new ExternalResource(MgnlContext.getContextPath()+ "/.resources/icons/24/gears.gif");
+    private static final Resource INFO_ICON = new ExternalResource(MgnlContext.getContextPath()+ "/.resources/icons/24/view.gif");
+    private Accordion accordion = new Accordion();
+    private Tab actionTab;
+    private Tab infoTab;
 
     public ToolBox() {
         super("ToolBox", new VerticalLayout());
-        
+
         setVisible(false);
         addListener((CloseListener)this);
-        
+
         setHeight("400px");
+        setWidth("400px");
         setPositionX(600);
         setPositionY(100);
 
-        actionTab = createActionTab();
-        addComponent(actionTab);
-        
-        infoTab = createInfoTab();
-        addComponent(infoTab);
+       actionTab  = createActionTab();
+       infoTab = createInfoTab(null);
+       this.addComponent(accordion);
     }
 
-    private Form createInfoTab() {
-        Form form = new Form();
-        form.setCaption("Info");
-        Label name = new Label("Som indo");
-        name.setCaption("caption");
-        name.setDescription("description");
-        form.getLayout().addComponent(name);
-        return form;
-        
+    private Tab createInfoTab(Content info) {
+        if(info == null){
+            final Label infoLabel = new Label("Please, click on a paragraph bar to get info about it.");
+            return accordion.addTab(infoLabel, "Info", INFO_ICON);
+        }
+
+        final GridLayout layout = new GridLayout(2,4);
+        layout.setSpacing(true);
+        layout.setMargin(true);
+        layout.setWidth("100%");
+        layout.setColumnExpandRatio(0, 5.0f);
+        layout.setColumnExpandRatio(1, 10.0f);
+        final Label name = new Label("Title");
+        layout.addComponent(name, 0, 0);
+        layout.addComponent(new Label(info.getTitle()), 1, 0);
+
+        final MetaData metaData = info.getMetaData();
+
+        final int activationStatus = metaData.getActivationStatus();
+        final Label activationStatusLabel = new Label("Status");
+        layout.addComponent(activationStatusLabel, 0, 1);
+        final Embedded statusIcon = new Embedded();
+        statusIcon.setType(Embedded.TYPE_IMAGE);
+
+        switch(activationStatus){
+            case MetaData.ACTIVATION_STATUS_ACTIVATED:
+                statusIcon.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/indicator_green.gif"));
+                break;
+            case MetaData.ACTIVATION_STATUS_MODIFIED:
+                statusIcon.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/indicator_yellow.gif"));
+                break;
+            case MetaData.ACTIVATION_STATUS_NOT_ACTIVATED:
+                statusIcon.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/indicator_red.gif"));
+                break;
+            default:
+                    //TODO Raise exception?
+        }
+        layout.addComponent(statusIcon, 1, 1);
+
+        final Label author = new Label("Author");
+        final String authorId = metaData.getAuthorId();
+        layout.addComponent(author, 0, 2);
+        layout.addComponent(new Label(authorId), 1, 2);
+
+        final Calendar modificationDate = metaData.getModificationDate();
+        final Label modificationDateLabel = new Label("Mod. Date");
+        layout.addComponent(modificationDateLabel, 0, 3);
+        layout.addComponent(new Label(modificationDate.getTime().toString()), 1, 3);
+
+        return accordion.addTab(layout, "Info", INFO_ICON);
     }
 
-    private Form createActionTab() {
-        Form form = new Form();
-        form.setCaption("Actions");
-        
-        form.getLayout().addComponent(createLink("Activate"));
-        form.getLayout().addComponent(createLink("Move"));
-        form.getLayout().addComponent(createLink("Create Subpage"));
-        return form;
+    private Tab createActionTab() {
+        final GridLayout layout = new GridLayout(1,1);
+        layout.setSpacing(true);
+        layout.setMargin(true);
+        layout.addComponent(createLink("Activate", new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/arrow_right_green.gif")));
+        layout.addComponent(createLink("Move", new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/up_down.gif")));
+        layout.addComponent(createLink("Create Subpage", new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth_add.gif")));
+        return accordion.addTab(layout, "Actions", ACTION_ICON);
     }
 
-    private Button createLink(String caption) {
+    private Button createLink(String caption, Resource icon) {
         Button link = new Button(caption);
         link.setStyleName(BaseTheme.BUTTON_LINK);
+        link.setIcon(icon);
         return link;
     }
-    
+
     public void showParagraphInfo(Window window, String uuid){
-        infoTab.getLayout().removeAllComponents();
-        Label name = new Label(uuid);
-        name.setCaption("caption");
-        name.setDescription("description");
-        infoTab.getLayout().addComponent(name);
-        
-        // paragraph name
-        
-        // from metadata
-        // modification date
-        // user
+        accordion.removeComponent(getComponentByTab(infoTab));
+        Content content = ContentUtil.getContentByUUID("website", uuid);
+        if(content == null){
+            getApplication().getMainWindow().showNotification("No content returned for this paragraph", "Tried to retrieve content from website with uuid "+uuid, Notification.TYPE_WARNING_MESSAGE);
+            return;
+        }
+        infoTab = createInfoTab(content);
+        accordion.setSelectedTab(getComponentByTab(infoTab));
         show(window);
-        
+    }
+
+    private Component getComponentByTab(Tab tab) {
+        for(Iterator<Component> iter= accordion.getComponentIterator(); iter.hasNext();){
+            final Component comp = iter.next();
+            final Tab tmp = accordion.getTab(comp);
+            if(tmp==tab){
+                return comp;
+            }
+        }
+        return null;
     }
 
     public void show(Window window) {
@@ -120,6 +187,4 @@ public class ToolBox extends Window implements CloseListener {
     public void windowClose(CloseEvent e) {
         this.setVisible(false);
     }
-    
-    
 }
