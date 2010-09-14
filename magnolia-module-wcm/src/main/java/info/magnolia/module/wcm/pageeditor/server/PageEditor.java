@@ -41,7 +41,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.ui.AbstractComponentContainer;
@@ -56,7 +55,7 @@ public class PageEditor extends AbstractComponentContainer {
     private Map<String, Component> editBars = new HashMap<String, Component>();
 
     private ToolBox toolBox = new ToolBox();
-    
+
     /**
      * Set if a paragraph has to be updated after saving.
      */
@@ -66,6 +65,8 @@ public class PageEditor extends AbstractComponentContainer {
 
     @Override
     public void attach() {
+        toolBox.setPositionX((int)(getWindow().getWidth() - toolBox.getWidth() - 30));
+        toolBox.setPositionY(50);
         toolBox.show(getWindow());
     }
 
@@ -104,7 +105,7 @@ public class PageEditor extends AbstractComponentContainer {
             editBar.paint(target);
         }
         target.addVariable(this, "uuids", editBars.keySet().toArray(new String[editBars.size()]));
-        
+
         // inform about the updated paragraph
         if(paragraphUUID != null){
             target.addVariable(this, "paragraphUUID", paragraphUUID);
@@ -121,9 +122,9 @@ public class PageEditor extends AbstractComponentContainer {
     /**
      * Shows detail information about the paragraph in the toolbox.
      */
-    public void showParagraphInfo(final String uuid, final ClickEvent event) {
-        toolBox.setPositionX(event.getClientX());
-        toolBox.setPositionY(event.getClientY());
+    public void showParagraphInfo(final String uuid) {
+        toolBox.setPositionX((int)(getWindow().getWidth() - toolBox.getWidth() - 30));
+        toolBox.setPositionY(50);
         toolBox.showParagraphInfo(getWindow(), uuid);
     }
 

@@ -15,9 +15,9 @@
 }
 
 .drop-field-label {
-	text-align: center;
-	padding-top: 90px;
-	height: 200px;
+  text-align: center;
+  padding-top: 90px;
+  height: 200px;
 }
 
 .dialog-editor-trash {
@@ -34,7 +34,7 @@
  * TODO: Does this really belong to the main theme, should it go into an extra style shee?
  */
 .editBar{
-	height: 20px;
+  height: 20px;
     border-top: 1px solid #ADC97B ;
     border-left: 1px solid #ADC97B;
     border-bottom: 1px solid #396101 ;
@@ -45,7 +45,7 @@
 }
 
 .editBar .v-panel-deco, .editBar .v-panel-captionwrap{
-	display: none;
+  display: none;
 }
 
 .editBar .v-panel-content{
@@ -53,12 +53,23 @@
 }
 
 .editBar .v-button-wrap{
-	background: transparent;
-	color: white;
-	border-color: #A8D556;
-	text-shadow: none;
+  background: transparent;
+  color: white;
+  border-color: #A8D556;
+  text-shadow: none;
 }
 
 .paragraphMarker{
-	display: none;
+  display: none;
+}
+
+/**
+* Used e.g. for the toolbox
+*/
+.v-window-fixed {
+  position: fixed !important;
+}
+
+.v-shadow-window-fixed {
+  position: fixed !important;
 }

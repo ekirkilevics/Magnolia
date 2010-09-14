@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.wcm.pageeditor.server;
 
+import java.io.StringWriter;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
 import info.magnolia.module.templating.MagnoliaTemplatingUtilities;
 import info.magnolia.module.wcm.pageeditor.client.VEditBar;
-
-import java.io.StringWriter;
 
 import javax.jcr.RepositoryException;
 
@@ -81,7 +81,7 @@ public class EditBar extends CustomComponent {
                                 StringWriter out = new StringWriter();
                                 new MagnoliaTemplatingUtilities().renderParagraph(paragraphNode, out);
                                 String paragraphContent = out.toString();
-                                getPageEditor().updateParagraph(uuid, paragraphContent); 
+                                getPageEditor().updateParagraph(uuid, paragraphContent);
                             }
                             catch (Exception e) {
                                 throw new RuntimeException(e);
@@ -114,7 +114,7 @@ public class EditBar extends CustomComponent {
         Panel panel = new Panel(layout);
         panel.addListener(new ClickListener() {
             public void click(com.vaadin.event.MouseEvents.ClickEvent event) {
-                getPageEditor().showParagraphInfo(uuid, event);
+                getPageEditor().showParagraphInfo(uuid);
             }
         });
         setCompositionRoot(panel);

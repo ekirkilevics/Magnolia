@@ -49,9 +49,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -61,28 +61,29 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class ToolBox extends Window implements CloseListener {
 
+    private static final String CONTEXT_PATH = MgnlContext.getContextPath();
+
     private static final long serialVersionUID = 1L;
 
-    private static final Resource ACTION_ICON = new ExternalResource(MgnlContext.getContextPath()+ "/.resources/icons/24/gears.gif");
-    private static final Resource INFO_ICON = new ExternalResource(MgnlContext.getContextPath()+ "/.resources/icons/24/view.gif");
+    private static final Resource ACTION_ICON = new ExternalResource(CONTEXT_PATH+ "/.resources/icons/24/gears.gif");
+    private static final Resource INFO_ICON = new ExternalResource(CONTEXT_PATH+ "/.resources/icons/24/view.gif");
     private Accordion accordion = new Accordion();
     private Tab actionTab;
     private Tab infoTab;
 
     public ToolBox() {
         super("ToolBox", new VerticalLayout());
-
+        setScrollable(true);
         setVisible(false);
         addListener((CloseListener)this);
 
         setHeight("400px");
-        setWidth("400px");
-        setPositionX(600);
-        setPositionY(100);
+        setWidth("300px");
+        addStyleName("v-window-fixed");
 
-       actionTab  = createActionTab();
-       infoTab = createInfoTab(null);
-       this.addComponent(accordion);
+        actionTab  = createActionTab();
+        infoTab = createInfoTab(null);
+        this.addComponent(accordion);
     }
 
     private Tab createInfoTab(Content info) {
@@ -111,13 +112,13 @@ public class ToolBox extends Window implements CloseListener {
 
         switch(activationStatus){
             case MetaData.ACTIVATION_STATUS_ACTIVATED:
-                statusIcon.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/indicator_green.gif"));
+                statusIcon.setSource(new ExternalResource(CONTEXT_PATH + "/.resources/icons/16/indicator_green.gif"));
                 break;
             case MetaData.ACTIVATION_STATUS_MODIFIED:
-                statusIcon.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/indicator_yellow.gif"));
+                statusIcon.setSource(new ExternalResource(CONTEXT_PATH + "/.resources/icons/16/indicator_yellow.gif"));
                 break;
             case MetaData.ACTIVATION_STATUS_NOT_ACTIVATED:
-                statusIcon.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/indicator_red.gif"));
+                statusIcon.setSource(new ExternalResource(CONTEXT_PATH + "/.resources/icons/16/indicator_red.gif"));
                 break;
             default:
                     //TODO Raise exception?
@@ -141,9 +142,9 @@ public class ToolBox extends Window implements CloseListener {
         final GridLayout layout = new GridLayout(1,1);
         layout.setSpacing(true);
         layout.setMargin(true);
-        layout.addComponent(createLink("Activate", new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/arrow_right_green.gif")));
-        layout.addComponent(createLink("Move", new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/up_down.gif")));
-        layout.addComponent(createLink("Create Subpage", new ExternalResource(MgnlContext.getContextPath() + "/.resources/icons/16/document_plain_earth_add.gif")));
+        layout.addComponent(createLink("Activate", new ExternalResource(CONTEXT_PATH + "/.resources/icons/16/arrow_right_green.gif")));
+        layout.addComponent(createLink("Move", new ExternalResource(CONTEXT_PATH + "/.resources/icons/16/up_down.gif")));
+        layout.addComponent(createLink("Create Subpage", new ExternalResource(CONTEXT_PATH + "/.resources/icons/16/document_plain_earth_add.gif")));
         return accordion.addTab(layout, "Actions", ACTION_ICON);
     }
 
