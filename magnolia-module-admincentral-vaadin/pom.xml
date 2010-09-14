@@ -2,7 +2,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-project</artifactId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0-m2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -49,7 +49,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <!-- http://jira.codehaus.org/browse/MGWT-183 -->
-        <version>1.3-SNAPSHOT</version>
+        <version>1.3-20100615.193834-6</version>
         <configuration>
           <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resouce folder-->
           <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
@@ -90,17 +90,17 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m2</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m2</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-cache</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m2</version>
       </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -120,7 +120,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-m2</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
