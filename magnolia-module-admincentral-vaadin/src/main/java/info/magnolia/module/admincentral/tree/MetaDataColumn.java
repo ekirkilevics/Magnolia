@@ -48,7 +48,7 @@ public class MetaDataColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = 5885358873124617444L;
 
-    // TODO should have name of MetaData property, for now always returns the mod. date
+    // TODO should have name of MetaData property, for now always returns the mod. date (or be renamed to LastModificationColumn)
 
     @Override
     public Class<?> getType() {
