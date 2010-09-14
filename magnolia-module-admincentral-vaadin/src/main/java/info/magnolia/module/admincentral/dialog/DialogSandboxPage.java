@@ -101,7 +101,7 @@ public class DialogSandboxPage extends VerticalLayout {
                         nodeCollection = null;
                     }
 
-                    getApplication().getMainWindow().addWindow(new EditParagraphWindow(paragraphDef.getDialog(),
+                    getApplication().getMainWindow().addWindow(new EditParagraphWindow(paragraphDef.getName(),
                             ContentRepository.WEBSITE, pageHandle, nodeCollection, paragraph.getName()));
                 } catch (RepositoryException e) {
                     e.printStackTrace();
