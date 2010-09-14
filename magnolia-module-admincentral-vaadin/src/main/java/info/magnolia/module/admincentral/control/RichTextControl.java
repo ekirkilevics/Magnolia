@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import javax.jcr.RepositoryException;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Window;
@@ -63,7 +65,10 @@ public class RichTextControl extends AbstractDialogControl {
         richTextArea = new RichTextArea();
         richTextArea.setWordwrap(wordwrap);
         richTextArea.setRows(rows);
-
+        if (storageNode != null) {
+            richTextArea.setValue(storageNode.getNodeData(getName()).getString());
+        }
+        
         if (isFocus()) {
             richTextArea.focus();
         }
@@ -74,7 +79,8 @@ public class RichTextControl extends AbstractDialogControl {
         richTextArea.validate();
     }
 
-    public void save(Content storageNode) {
+    public void save(Content storageNode) throws RepositoryException {
+        storageNode.setNodeData(getName(), (String) richTextArea.getValue());
     }
 
     public boolean isWordwrap() {
