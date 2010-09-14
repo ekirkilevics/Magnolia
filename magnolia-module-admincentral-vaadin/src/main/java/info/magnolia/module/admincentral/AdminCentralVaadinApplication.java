@@ -43,7 +43,6 @@ import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +78,6 @@ public class AdminCentralVaadinApplication extends Application {
 
     private Messages messages;
 
-    private HttpServletRequest request;
-
     private VerticalLayout mainContainer = new VerticalLayout();
 
     public VerticalLayout getMainContainer() {
@@ -93,7 +90,7 @@ public class AdminCentralVaadinApplication extends Application {
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
-        setLogoutURL(MgnlContext.getContextPath());
+        setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
     }
 
     @Override
