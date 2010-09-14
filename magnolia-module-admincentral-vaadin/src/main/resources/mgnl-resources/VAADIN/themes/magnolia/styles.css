@@ -1,7 +1,7 @@
 @import "../runo/styles.css";
 
 .v-table-row,.v-table-row-odd {
-  height: 25px; /* a fix for TreeTable row jittering */
+  height: 30px; /* a fix for TreeTable row jittering */
 }
 
 .v-loading-indicator,.v-loading-indicator-delay,.v-loading-indicator-wait
@@ -73,3 +73,11 @@
 .v-shadow-window-fixed {
   position: fixed !important;
 }
+
+/**
+ * Demo only, to overwrite a STK table definition
+ */
+.v-formlayout table{
+	font-size: 13px;
+}
+ 
