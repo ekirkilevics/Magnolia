@@ -73,13 +73,31 @@ public class ContextFilter extends AbstractMgnlFilter {
             MgnlContext.initAsWebContext(request, response, servletContext);
             contextSet = true;
             try {
-                MDC.put("requesturi", request.getRequestURI());
-                // FIXME: Performance: following line of code forces creation of "users", "userroles" and "usergroups" JCR workspace sessions on _every_ request no matter if the user is logged in or not!
-                MDC.put("userid", MgnlContext.getUser().getName());
-
-                MDC.put("Referer", request.getHeader("Referer"));
-                MDC.put("User-Agent", request.getHeader("User-Agent"));
-                MDC.put("Remote-Host", request.getRemoteHost());
+                String uri = request.getRequestURI();
+                if (uri != null) {
+                    MDC.put("requesturi", uri);
+                }
+                
+                String userName = MgnlContext.getUser().getName();
+                if (userName != null) {
+                    // FIXME: Performance: following line of code forces creation of "users", "userroles" and "usergroups" JCR workspace sessions on _every_ request no matter if the user is logged in or not!
+                    MDC.put("userid", userName);
+            	}
+                
+                String referer = request.getHeader("Referer");
+                if (referer != null) {
+                    MDC.put("Referer", referer);
+                }
+                
+                String userAgent = request.getHeader("User-Agent");
+                if (userAgent != null) {
+                    MDC.put("User-Agent", userAgent);
+                }
+                
+                String remoteHost = request.getRemoteHost();
+                if (remoteHost != null) {
+                    MDC.put("Remote-Host", remoteHost);
+                }
 
                 HttpSession session = request.getSession(false);
                 if (session != null) {
