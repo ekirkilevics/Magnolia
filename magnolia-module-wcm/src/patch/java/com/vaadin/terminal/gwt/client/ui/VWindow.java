@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -17,6 +20,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.impl.DOMImpl;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -872,6 +876,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         if (resizable) {
             switch (event.getTypeInt()) {
             case Event.ONMOUSEDOWN:
+                // hide scroll bars while moving 
+                ((Element) contents.getFirstChild()).getStyle().setOverflow(Overflow.HIDDEN);
                 if (!isActive()) {
                     bringToFront();
                 }
@@ -888,6 +894,8 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 event.preventDefault();
                 break;
             case Event.ONMOUSEUP:
+                // re-add the scroll bars
+                ((Element) contents.getFirstChild()).getStyle().setOverflow(Overflow.AUTO);
                 showDraggingCurtain(false);
                 if (BrowserInfo.get().isIE()) {
                     DOM.setStyleAttribute(resizeBox, "visibility", "");
@@ -968,8 +976,11 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
 
         // Update child widget dimensions
         if (client != null) {
-            client.handleComponentRelativeSize((Widget) layout);
-            client.runDescendentsLayout((HasWidgets) layout);
+            // don't update the children to avoid flickering until we think it worth informing the server
+            if(updateVariables == true){
+                client.handleComponentRelativeSize((Widget) layout);
+                client.runDescendentsLayout((HasWidgets) layout);
+            }
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
@@ -1086,6 +1097,14 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
                 startY = DOM.eventGetScreenY(event);
                 origX = DOM.getAbsoluteLeft(getElement());
                 origY = DOM.getAbsoluteTop(getElement());
+                
+                // we are not able to use the computed style
+                // element.getStyle().getPosition() returns absolute
+                // had to use something like gquery
+                if(isPositionFixed()){
+                    GWT.log(Document.get().getScrollTop() + ":" +  origY);
+                    origY = origY - Document.get().getScrollTop();
+                }
                 DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event);
             }
@@ -1114,6 +1133,13 @@ public class VWindow extends VOverlay implements Container, ScrollListener,
         default:
             break;
         }
+    }
+
+    /**
+     * A hackish approach to test if the div has fixed position. Should use computed style like gquery. 
+     */
+    private boolean isPositionFixed() {
+        return getElement().getClassName().contains("fixed");
     }
 
     @Override
