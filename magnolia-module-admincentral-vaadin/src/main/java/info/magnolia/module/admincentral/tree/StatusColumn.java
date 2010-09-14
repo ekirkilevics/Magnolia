@@ -52,8 +52,6 @@ public class StatusColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
-    private static final ConcurrentMap<String, Resource> resources = new ConcurrentHashMap<String, Resource>();
-
     private boolean activation = true;
 
     private boolean permissions = false;
@@ -96,11 +94,7 @@ public class StatusColumn extends TreeColumn implements Serializable {
     private Embedded createIcon(String resource) {
         Embedded embedded = new Embedded();
         embedded.setType(Embedded.TYPE_IMAGE);
-        //there's only a few different Icon resources used here, so we keep them in a map rather than creating a new one for each an every request.
-        if (!resources.containsKey(resource)) {
-            resources.put(resource, new ExternalResource(resource));
-        }
-        embedded.setSource(resources.get(resource));
+        embedded.setSource(new ExternalResource(resource));
         embedded.setWidth("16px");
         embedded.setHeight("16px");
         return embedded;
