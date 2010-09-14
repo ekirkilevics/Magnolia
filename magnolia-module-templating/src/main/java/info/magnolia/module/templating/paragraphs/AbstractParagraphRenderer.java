@@ -61,9 +61,9 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
 
     public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
         try {
-            out.write("<div id='" + content.getUUID() + "-start\' class='paragraphMarker'></div>\n");
+            out.write("<div id='" + PARAGRAPH_BOUNDARY + "-begin-" + content.getUUID() + "' class='"+PARAGRAPH_BOUNDARY+"'></div>\n");
             render(content, (RenderableDefinition) paragraph, out);
-            out.write("<div id='" + content.getUUID() + "-end\' class='paragraphMarker'></div>\n");
+            out.write("<div id='" + PARAGRAPH_BOUNDARY + "-end-" + content.getUUID() + "' class='"+PARAGRAPH_BOUNDARY+"'></div>\n");
         } finally{
             out.flush();
         }
