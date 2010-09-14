@@ -34,7 +34,6 @@
 package info.magnolia.module.admincentral.tree;
 
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Embedded;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -42,8 +41,6 @@ import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * A column that displays icons for permissions and activation status.
