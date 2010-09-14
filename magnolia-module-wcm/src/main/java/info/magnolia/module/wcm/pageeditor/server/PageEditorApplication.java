@@ -34,7 +34,10 @@
 package info.magnolia.module.wcm.pageeditor.server;
 
 
+import info.magnolia.context.MgnlContext;
+
 import com.vaadin.Application;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Window;
 
 /**
@@ -48,8 +51,15 @@ public class PageEditorApplication extends Application {
     @Override
     public void init() {
         Window window = new Window();
-        window.setContent(new PageEditor());
+        
+        if(MgnlContext.hasAttribute("cw")){
+            int width = Integer.parseInt((String) MgnlContext.getAttribute("cw"));
+            // this is the screen width, not the browser width
+            // width = ((WebApplicationContext)getContext()).getBrowser().getScreenWidth();
+            window.setWidth(width, Sizeable.UNITS_PIXELS);
+        }
         setMainWindow(window);
+        window.setContent(new PageEditor());
     }
 
 }

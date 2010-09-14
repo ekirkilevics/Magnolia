@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.wcm.pageeditor.server;
 
-import java.io.StringWriter;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
 import info.magnolia.module.templating.MagnoliaTemplatingUtilities;
 import info.magnolia.module.wcm.pageeditor.client.VEditBar;
+
+import java.io.StringWriter;
 
 import javax.jcr.RepositoryException;
 

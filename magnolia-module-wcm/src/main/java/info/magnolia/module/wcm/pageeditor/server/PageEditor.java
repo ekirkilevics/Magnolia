@@ -65,8 +65,6 @@ public class PageEditor extends AbstractComponentContainer {
 
     @Override
     public void attach() {
-        toolBox.setPositionX((int)(getWindow().getWidth() - toolBox.getWidth() - 30));
-        toolBox.setPositionY(50);
         toolBox.show(getWindow());
     }
 
@@ -123,8 +121,6 @@ public class PageEditor extends AbstractComponentContainer {
      * Shows detail information about the paragraph in the toolbox.
      */
     public void showParagraphInfo(final String uuid) {
-        toolBox.setPositionX((int)(getWindow().getWidth() - toolBox.getWidth() - 30));
-        toolBox.setPositionY(50);
         toolBox.showParagraphInfo(getWindow(), uuid);
     }
 

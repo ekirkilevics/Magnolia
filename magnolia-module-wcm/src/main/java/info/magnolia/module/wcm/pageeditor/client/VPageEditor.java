@@ -59,6 +59,8 @@ import com.vaadin.terminal.gwt.client.Util;
  * The page editor widget which scans for edit bar placeholder divs. Sends the found uuids back to the server.
  */
 public class VPageEditor extends ComplexPanel implements Container {
+    
+    public static final String PARAGRAPH_BOUNDARY = "paragraphMarker";
 
     private ApplicationConnection client;
 
@@ -83,7 +85,7 @@ public class VPageEditor extends ComplexPanel implements Container {
         for (int i = 0; i < divs.getLength(); i++) {
             Element div = divs.getItem(i);
             if(div.getClassName().equals("editBar")){
-                String uuid = div.getAttribute("data-uuid");
+                String uuid = div.getId().substring("editBar-".length());
                 editBarDivs.put(uuid, div);
             }
         }
@@ -148,8 +150,8 @@ public class VPageEditor extends ComplexPanel implements Container {
      */
     private void updateParagraph(String paragraphUUID, String paragraphContent) {
         // find the boundary
-        Element startDiv = Document.get().getElementById(paragraphUUID + "-start");
-        Element endDiv = Document.get().getElementById(paragraphUUID + "-end");
+        Element startDiv = Document.get().getElementById(PARAGRAPH_BOUNDARY + "-begin-" + paragraphUUID);
+        Element endDiv = Document.get().getElementById(PARAGRAPH_BOUNDARY + "-end-" + paragraphUUID);
 
         // create the dom tree of the content inside the non-visible div
         startDiv.setInnerHTML(paragraphContent);
@@ -171,12 +173,8 @@ public class VPageEditor extends ComplexPanel implements Container {
             node.removeFromParent();
             if(Element.is(node)){
                 Element element = node.cast();
-                // use the existing edit bar
-                if(element.getClassName().equals("editBar")){
-                    node = editBarDivs.get(paragraphUUID);
-                }
                 // don't copy the boundary, its already there
-                if(element.getClassName().equals("paragraphMarker")){
+                if(element.getClassName().equals(PARAGRAPH_BOUNDARY)){
                     continue;
                 }
             }
@@ -184,6 +182,9 @@ public class VPageEditor extends ComplexPanel implements Container {
             startDiv.getParentElement().insertBefore(node, endDiv);            
         }
         
+        // replace the editBar
+        Element newEditBar = Document.get().getElementById("editBar-" + paragraphUUID);
+        newEditBar.getParentElement().replaceChild(editBarDivs.get(paragraphUUID), newEditBar);
     }
 
     private void updateServer() {

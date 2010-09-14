@@ -49,9 +49,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -61,35 +61,33 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class ToolBox extends Window implements CloseListener {
 
-    private static final String CONTEXT_PATH = MgnlContext.getContextPath();
+    private static  String CONTEXT_PATH;
 
     private static final long serialVersionUID = 1L;
 
-    private static final Resource ACTION_ICON = new ExternalResource(CONTEXT_PATH+ "/.resources/icons/24/gears.gif");
-    private static final Resource INFO_ICON = new ExternalResource(CONTEXT_PATH+ "/.resources/icons/24/view.gif");
+    private static Resource ACTION_ICON ;
+    private static Resource INFO_ICON;
     private Accordion accordion = new Accordion();
     private Tab actionTab;
     private Tab infoTab;
 
     public ToolBox() {
         super("ToolBox", new VerticalLayout());
+        
+        CONTEXT_PATH = MgnlContext.getContextPath();
+        ACTION_ICON = new ExternalResource(CONTEXT_PATH+ "/.resources/icons/24/gears.gif");
+        INFO_ICON = new ExternalResource(CONTEXT_PATH+ "/.resources/icons/24/view.gif");
+        
         setScrollable(true);
         setVisible(false);
         addListener((CloseListener)this);
 
         setHeight("400px");
         setWidth("300px");
-        addStyleName("v-window-fixed");
-
+        addStyleName("fixed");
         actionTab  = createActionTab();
         infoTab = createInfoTab(null);
         this.addComponent(accordion);
-    }
-
-    @Override
-    public void attach() {
-        // TODO Auto-generated method stub
-        super.attach();
     }
 
     private Tab createInfoTab(Content info) {
@@ -142,7 +140,6 @@ public class ToolBox extends Window implements CloseListener {
             layout.addComponent(modificationDateLabel, 0, 3);
             layout.addComponent(new Label(modificationDate.getTime().toString()), 1, 3);
         }
-
         return accordion.addTab(layout, "Info", INFO_ICON);
     }
 
@@ -188,6 +185,9 @@ public class ToolBox extends Window implements CloseListener {
 
     public void show(Window window) {
         if(!isVisible()){
+            setPositionX((int)(window.getWidth() - getWidth() - 30));
+            setPositionY(50);
+
             setVisible(true);
             window.addWindow(this);
         }
