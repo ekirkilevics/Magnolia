@@ -119,7 +119,7 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
 
     public final void create(Content storageNode, GridLayout grid) {
 
-        grid.addComponent(new Label(getMessages().get(label)));
+        grid.addComponent(new Label(getMessages().getWithDefault(label, label)));
 
         VerticalLayout verticalLayout = new VerticalLayout();
 
