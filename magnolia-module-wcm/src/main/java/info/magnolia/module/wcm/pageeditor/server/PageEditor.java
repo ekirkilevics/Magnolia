@@ -56,6 +56,13 @@ public class PageEditor extends AbstractComponentContainer {
     private Map<String, Component> editBars = new HashMap<String, Component>();
 
     private ToolBox toolBox = new ToolBox();
+    
+    /**
+     * Set if a paragraph has to be updated after saving.
+     */
+    private String paragraphUUID;
+
+    private String paragraphContent;
 
     @Override
     public void attach() {
@@ -97,16 +104,37 @@ public class PageEditor extends AbstractComponentContainer {
             editBar.paint(target);
         }
         target.addVariable(this, "uuids", editBars.keySet().toArray(new String[editBars.size()]));
+        
+        // inform about the updated paragraph
+        if(paragraphUUID != null){
+            target.addVariable(this, "paragraphUUID", paragraphUUID);
+            target.addVariable(this, "paragraphContent", paragraphContent);
+            paragraphUUID = null;
+            paragraphContent = null;
+        }
     }
 
     public Iterator<Component> getComponentIterator() {
         return editBars.values().iterator();
     }
 
+    /**
+     * Shows detail information about the paragraph in the toolbox.
+     */
     public void showParagraphInfo(final String uuid, final ClickEvent event) {
         toolBox.setPositionX(event.getClientX());
         toolBox.setPositionY(event.getClientY());
         toolBox.showParagraphInfo(getWindow(), uuid);
+    }
+
+    /**
+     * Will inform the client side editor about the new paragraph content. The editor will update the HTML page.
+     */
+    public void updateParagraph(String uuid, String paragraphContent) {
+        this.paragraphUUID = uuid;
+        this.paragraphContent = paragraphContent;
+        // to make sure paintContent(..) is called
+        requestRepaint();
     }
 
 }

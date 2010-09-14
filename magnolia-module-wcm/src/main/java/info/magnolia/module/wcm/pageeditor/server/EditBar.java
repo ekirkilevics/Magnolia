@@ -33,8 +33,12 @@
  */
 package info.magnolia.module.wcm.pageeditor.server;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
+import info.magnolia.module.templating.MagnoliaTemplatingUtilities;
 import info.magnolia.module.wcm.pageeditor.client.VEditBar;
+
+import java.io.StringWriter;
 
 import javax.jcr.RepositoryException;
 
@@ -70,6 +74,21 @@ public class EditBar extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 try {
                     EditParagraphWindow dialog = Hacks.getDialogWindow(uuid);
+                    // render the new paragraph content after saving and inform the editor
+                    dialog.setPostSaveListener(new EditParagraphWindow.PostSaveListener() {
+                        public void postSave(Content paragraphNode) {
+                            try {
+                                StringWriter out = new StringWriter();
+                                new MagnoliaTemplatingUtilities().renderParagraph(paragraphNode, out);
+                                String paragraphContent = out.toString();
+                                getPageEditor().updateParagraph(uuid, paragraphContent); 
+                            }
+                            catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            //getApplication().getMainWindow().executeJavaScript("location.reload(true);");
+                        }
+                    });
                     getApplication().getMainWindow().addWindow(dialog);
 
                 }
@@ -95,8 +114,7 @@ public class EditBar extends CustomComponent {
         Panel panel = new Panel(layout);
         panel.addListener(new ClickListener() {
             public void click(com.vaadin.event.MouseEvents.ClickEvent event) {
-                PageEditor pageEditor = (PageEditor)getParent();
-                pageEditor.showParagraphInfo(uuid, event);
+                getPageEditor().showParagraphInfo(uuid, event);
             }
         });
         setCompositionRoot(panel);
@@ -106,6 +124,10 @@ public class EditBar extends CustomComponent {
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("uuid", uuid);
         super.paintContent(target);
+    }
+
+    private PageEditor getPageEditor() {
+        return (PageEditor)getParent();
     }
 
 }

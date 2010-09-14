@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.wcm.pageeditor.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -130,6 +132,56 @@ public class VPageEditor extends ComplexPanel implements Container {
                 // now update the edit bars, this will set the attributes
                 editBar.updateFromUIDL(childUIDL, client);
             }
+        }
+        
+        if(uidl.hasVariable("paragraphContent")){
+            // we received new content, lets replace the existing
+            String paragraphUUID = uidl.getStringVariable("paragraphUUID");
+            String paragraphContent = uidl.getStringVariable("paragraphContent");
+            updateParagraph(paragraphUUID, paragraphContent);
+        }
+        
+    }
+
+    /**
+     * Replace the existing paragraph content. Finds the boundary divs.
+     */
+    private void updateParagraph(String paragraphUUID, String paragraphContent) {
+        // find the boundary
+        Element startDiv = Document.get().getElementById(paragraphUUID + "-start");
+        Element endDiv = Document.get().getElementById(paragraphUUID + "-end");
+
+        // create the dom tree of the content inside the non-visible div
+        startDiv.setInnerHTML(paragraphContent);
+        
+        // delete old content
+        for(Element next = startDiv.getNextSiblingElement();next!=endDiv;next = startDiv.getNextSiblingElement()){
+            next.removeFromParent();
+        }
+        
+        // copy the DOM list as we are going to manipulate it
+        NodeList<Node> childNodes = startDiv.getChildNodes();
+        ArrayList<Node> nodeList = new ArrayList<Node>();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            nodeList.add(childNodes.getItem(i));
+        }
+        
+        // move new elements out of the hidden div into the boundary
+        for (Node node : nodeList) {
+            node.removeFromParent();
+            if(Element.is(node)){
+                Element element = node.cast();
+                // use the existing edit bar
+                if(element.getClassName().equals("editBar")){
+                    node = editBarDivs.get(paragraphUUID);
+                }
+                // don't copy the boundary, its already there
+                if(element.getClassName().equals("paragraphMarker")){
+                    continue;
+                }
+            }
+            // insert the elements before the end boundary
+            startDiv.getParentElement().insertBefore(node, endDiv);            
         }
         
     }
