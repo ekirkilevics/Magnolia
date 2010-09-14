@@ -2,7 +2,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-project</artifactId>
-    <version>5.0-m2</version>
+    <version>5.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -90,17 +90,17 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-m2</version>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>5.0-m2</version>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-cache</artifactId>
-      <version>5.0-m2</version>
+      <version>5.0-SNAPSHOT</version>
       </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -120,7 +120,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-m2</version>
+      <version>5.0-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
