@@ -33,20 +33,24 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import com.vaadin.event.Action;
-import com.vaadin.terminal.ExternalResource;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
+
+import java.util.ArrayList;
+
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
-import java.util.ArrayList;
+import com.vaadin.event.Action;
+import com.vaadin.terminal.ExternalResource;
+
 
 /**
  * A generic tree table view which can show data from any repository.
@@ -55,16 +59,21 @@ import java.util.ArrayList;
  */
 public class GenericTreeTableView extends AbstractTreeTableView {
 
+    private static final long serialVersionUID = 1704972467182396882L;
+
     private static final Logger log = LoggerFactory.getLogger(GenericTreeTableView.class);
-    private static final long serialVersionUID = 1L;
 
     public GenericTreeTableView(String treeName) {
         try {
             setTreeDefinition(TreeRegistry.getInstance().getTree(treeName));
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             // TODO: we need to somehow properly handle this
             log.error(e.getMessage(), e);
         }
+        // JcrContainer...
+        // getTreeTable().setContainerDataSource(getContainer(getTreeTable()));
+        // old container
         getTreeTable().setContainerDataSource(getContainer());
         addContextMenu();
     }
@@ -72,6 +81,8 @@ public class GenericTreeTableView extends AbstractTreeTableView {
     void addContextMenu() {
 
         getTreeTable().addActionHandler(new Action.Handler() {
+
+            private static final long serialVersionUID = 4311121075528949148L;
 
             public Action[] getActions(Object target, Object sender) {
 
@@ -83,15 +94,21 @@ public class GenericTreeTableView extends AbstractTreeTableView {
                         TreeAction action = mi.getAction();
 
                         String itemId = (String) target;
+                        // when working with path instead of UUID:
+                        // Content content =
+                        // MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContent(itemId);
 
                         if (itemId.indexOf('@') == -1) {
-                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(itemId);
+                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(
+                                itemId);
                             if (!action.isAvailable(content, null))
                                 continue;
-                        } else {
+                        }
+                        else {
                             String uuid = StringUtils.substringBefore(itemId, "@");
                             String nodeDataName = StringUtils.substringAfter(itemId, "@");
-                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(uuid);
+                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(
+                                uuid);
                             NodeData nodeData = content.getNodeData(nodeDataName);
                             if (!action.isAvailable(content, nodeData))
                                 continue;
@@ -101,7 +118,8 @@ public class GenericTreeTableView extends AbstractTreeTableView {
                         action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
                         actions.add(action);
 
-                    } catch (RepositoryException e) {
+                    }
+                    catch (RepositoryException e) {
                         log.error(e.getMessage(), e);
                     }
                 }
@@ -112,10 +130,12 @@ public class GenericTreeTableView extends AbstractTreeTableView {
             public void handleAction(Action action, Object sender, Object target) {
                 try {
                     ((TreeAction) action).handleAction(GenericTreeTableView.this, getTreeDefinition(), sender, target);
-                } catch (ClassCastException e) {
+                }
+                catch (ClassCastException e) {
                     // not our action
                     log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());
-                } catch (RepositoryException e) {
+                }
+                catch (RepositoryException e) {
                     log.error(e.getMessage(), e);
                 }
             }
