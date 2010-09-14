@@ -42,6 +42,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -61,12 +63,21 @@ import javax.jcr.RepositoryException;
  */
 public class EditParagraphWindow extends Window {
 
-    private static final Logger log = LoggerFactory.getLogger(EditParagraphWindow.class);
+    /**
+     * Called after saving and before closing the window.
+     */
+    public interface PostSaveListener {
+
+        void postSave(Content orCreateContentNode);
+
+    }
+
     private String repository;
     private String path;
     private String nodeCollection;
     private String nodeName;
     private DialogDefinition dialog;
+    private PostSaveListener postSaveListener;
 
     public EditParagraphWindow(final String dialogName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
 
@@ -79,6 +90,8 @@ public class EditParagraphWindow extends Window {
         this.dialog = DialogRegistry.getInstance().getDialog(dialogName);
 
         HorizontalLayout buttons = new HorizontalLayout();
+        buttons.setSpacing(true);
+
         Component mainViewArea;
 
         if (dialog == null) {
@@ -124,13 +137,21 @@ public class EditParagraphWindow extends Window {
                 }
             });
             editDialogConfiguration.setClickShortcut(ShortcutAction.KeyCode.D, ShortcutAction.ModifierKey.CTRL);
+            editDialogConfiguration.setStyleName(BaseTheme.BUTTON_LINK);
             buttons.addComponent(editDialogConfiguration);
             buttons.setComponentAlignment(editDialogConfiguration, "right");
 
             Button save = new Button(dialog.getMessages().get("buttons.save"), new Button.ClickListener() {
                 public void buttonClick(Button.ClickEvent event) {
                     if (save()){
-                        getApplication().getMainWindow().executeJavaScript("location.reload(true);");
+                        if(postSaveListener != null){
+                            try {
+                                postSaveListener.postSave(getOrCreateContentNode());
+                            }
+                            catch (RepositoryException e) {
+                                throw new RuntimeException("Error after saving.", e);
+                            }
+                        }
                         closeWindow();
                     }
                 }
@@ -160,6 +181,10 @@ public class EditParagraphWindow extends Window {
         layout.addComponent(mainViewArea);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, "right");
+    }
+
+    public void setPostSaveListener(PostSaveListener postSaveListener) {
+        this.postSaveListener = postSaveListener;
     }
 
     private void closeWindow() {
