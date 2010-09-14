@@ -88,7 +88,7 @@ public class SelectParagraphWindow extends Window {
                 String selected = (String) group.getValue();
                 if (selected != null) {
                     try {
-                        openEditDialog();
+                        openEditDialog(selected);
                     } catch (RepositoryException e) {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
@@ -118,13 +118,9 @@ public class SelectParagraphWindow extends Window {
         layout.setComponentAlignment(buttons, "right");
     }
 
-    private void openEditDialog() throws RepositoryException {
-
-        // TODO for now hard-coded to use the mock dialog
-
-        EditParagraphWindow editParagraphWindow = new EditParagraphWindow("mock", repository, path, nodeCollection, nodeName);
-
-        this.getApplication().getMainWindow().addWindow(editParagraphWindow);
+    private void openEditDialog(String selectedParagraph) throws RepositoryException {
+        Window window = new EditParagraphWindow(selectedParagraph, repository, path, nodeCollection, nodeName);
+        this.getApplication().getMainWindow().addWindow(window);
     }
 
     private void closeWindow() {

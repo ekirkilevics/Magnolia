@@ -33,20 +33,18 @@
  */
 package info.magnolia.module.admincentral;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
+import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,11 +161,7 @@ public class AdminCentralVaadinApplication extends Application {
                 try {
                     if (user instanceof MgnlUser) {
                         Content userNode = ((MgnlUser) user).getUserNode();
-                        String handle = userNode.getHandle();
-                        String parent = StringUtils.substringBeforeLast(handle, "/");
-                        String nodeCollection = null;
-                        getMainWindow().addWindow(new EditParagraphWindow("userpreferences",
-                                ContentRepository.USERS, parent, nodeCollection, userNode.getName()));
+                        getMainWindow().addWindow(new DialogWindow("userpreferences", userNode));
                     }
                 } catch (RepositoryException e) {
                     e.printStackTrace();

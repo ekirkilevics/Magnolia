@@ -38,13 +38,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * Collection of hacks just done for the PoC.
@@ -58,16 +53,8 @@ public class Hacks {
     public static EditParagraphWindow getDialogWindow(final String uuid) throws RepositoryException {
         Content paragraph = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID(uuid);
         String paragraphTemplate = paragraph.getMetaData().getTemplate();
-        Paragraph paragraphDef = ParagraphManager.getInstance().getParagraphDefinition(paragraphTemplate);
-        String pageHandle = getPageHandle(paragraph);
-        String nodeCollection = StringUtils.substringBeforeLast(StringUtils.substringAfter(paragraph.getHandle(), pageHandle + "/"), "/" + paragraph.getName());
-        if ("/".equals(nodeCollection)) {
-            // no collection at all
-            nodeCollection = null;
-        }
 
-        EditParagraphWindow dialog = new EditParagraphWindow(paragraphDef.getDialog(),
-            ContentRepository.WEBSITE, pageHandle, nodeCollection, paragraph.getName());
+        EditParagraphWindow dialog = new EditParagraphWindow(paragraphTemplate, paragraph);
         dialog.setScrollable(true);
         return dialog;
     }

@@ -33,25 +33,9 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import com.vaadin.data.Validator;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.BaseTheme;
-
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.control.StaticControl;
-import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
-
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -59,220 +43,34 @@ import javax.jcr.RepositoryException;
 /**
  * Dialog for creating or editing a paragraph. Uses the paragraphs dialog to find a dialog definition from DialogRegistry.
  */
-public class EditParagraphWindow extends Window {
+public class EditParagraphWindow extends DialogWindow {
 
-    /**
-     * Called after saving and before closing the window.
-     */
-    public interface PostSaveListener {
-
-        void postSave(Content orCreateContentNode);
-
+    public EditParagraphWindow(String paragraphName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
+        super(getDialogUsedByParagraph(paragraphName), repository, path, nodeCollectionName, nodeName);
     }
 
-    private String repository;
-    private String path;
-    private String nodeCollection;
-    private String nodeName;
-    private DialogDefinition dialog;
-    private PostSaveListener postSaveListener;
+    public EditParagraphWindow(String paragraphName, String repository, String path) throws RepositoryException {
+        super(getDialogUsedByParagraph(paragraphName), repository, path);
+    }
 
-    public EditParagraphWindow(final String dialogName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
+    public EditParagraphWindow(String paragraphName, Content content) throws RepositoryException {
+        super(getDialogUsedByParagraph(paragraphName), content);
+    }
 
-        // TODO For now takes dialogName directly, it should take a paragraph name instead and then use the dialog configured for it
-
-        this.repository = repository;
-        this.path = path;
-        this.nodeCollection = nodeCollectionName;
-        this.nodeName = nodeName;
-        this.dialog = DialogRegistry.getInstance().getDialog(dialogName);
-
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.setSpacing(true);
-
-        Component mainViewArea;
-
-        if (dialog == null) {
-            GridLayout grid = new GridLayout(2, 1);
-            grid.setSpacing(true);
-            grid.setMargin(true);
-            StaticControl warning = new StaticControl();
-            warning.setLabel("Dialog \"" + dialogName + "\" for this paragraph cannot be found. Please contact system administrator.");
-            warning.create(null, grid);
-            mainViewArea = grid;
+    private static String getDialogUsedByParagraph(String paragraphName) {
+        if (StringUtils.isEmpty(paragraphName)) {
+            throw new IllegalStateException("No paragraph selected.");
+        }
+        final Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraphName);
+        if (para == null) {
+            throw new IllegalStateException("No paragraph registered with name " + paragraphName);
+        }
+        final String dialogName;
+        if (para.getDialog() != null) {
+            dialogName = para.getDialog();
         } else {
-
-            Content storageNode = getContentNode();
-
-            setModal(true);
-            setResizable(true);
-            setScrollable(false);
-            setClosable(false);
-            setWidth("800px");
-            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
-
-            TabSheet sheet = new TabSheet();
-
-            for (DialogTab dialogTab : dialog.getTabs()) {
-
-                GridLayout grid = new GridLayout(2, 1);
-                grid.setSpacing(true);
-                grid.setMargin(true);
-
-                for (DialogControl dialogItem : dialogTab.getFields()) {
-
-                    dialogItem.create(storageNode, grid);
-
-                    grid.newLine();
-                }
-
-                sheet.addTab(grid, dialogTab.getLabel(), null);
-            }
-
-            Button editDialogConfiguration = new Button(MessagesManager.getMessages("info.magnolia.module.admincentral.messages").getWithDefault("buttons.editDialogConfiguration", "buttons.editDialogConfiguration"), new Button.ClickListener() {
-                public void buttonClick(Button.ClickEvent event) {
-                    getApplication().getMainWindow().addWindow(new EditDialogWindow(dialogName));
-                }
-            });
-            editDialogConfiguration.setClickShortcut(ShortcutAction.KeyCode.D, ShortcutAction.ModifierKey.CTRL);
-            editDialogConfiguration.setStyleName(BaseTheme.BUTTON_LINK);
-            buttons.addComponent(editDialogConfiguration);
-            buttons.setComponentAlignment(editDialogConfiguration, "right");
-
-            Button save = new Button(dialog.getMessages().get("buttons.save"), new Button.ClickListener() {
-                public void buttonClick(Button.ClickEvent event) {
-                    if (save()){
-                        if(postSaveListener != null){
-                            try {
-                                postSaveListener.postSave(getOrCreateContentNode());
-                            }
-                            catch (RepositoryException e) {
-                                throw new RuntimeException("Error after saving.", e);
-                            }
-                        }
-                        closeWindow();
-                    }
-                }
-            });
-            save.addStyleName("primary");
-            save.setClickShortcut(ShortcutAction.KeyCode.ENTER, ShortcutAction.ModifierKey.CTRL);
-            buttons.addComponent(save);
-            buttons.setComponentAlignment(save, "right");
-
-            mainViewArea = sheet;
+            dialogName = para.getName();
         }
-
-        final String key = "buttons.cancel";
-        final String label = dialog != null ? dialog.getMessages().get(key) : MessagesManager.getMessages().getWithDefault(key, key);
-        Button cancel = new Button(label, new Button.ClickListener() {
-            public void buttonClick(Button.ClickEvent event) {
-                closeWindow();
-            }
-        });
-        cancel.setClickShortcut(ShortcutAction.KeyCode.ESCAPE);
-        buttons.addComponent(cancel);
-        buttons.setComponentAlignment(cancel, "right");
-
-        VerticalLayout layout = (VerticalLayout) getContent();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-        layout.addComponent(mainViewArea);
-        layout.addComponent(buttons);
-        layout.setComponentAlignment(buttons, "right");
-    }
-
-    public void setPostSaveListener(PostSaveListener postSaveListener) {
-        this.postSaveListener = postSaveListener;
-    }
-
-    private void closeWindow() {
-        // close the window by removing it from the parent window
-        ((Window) getParent()).removeWindow(this);
-    }
-
-    private boolean save() {
-        try {
-
-            Content storageNode = getOrCreateContentNode();
-
-            // Validate
-            for (DialogTab dialogTab : dialog.getTabs()) {
-                for (DialogControl control : dialogTab.getFields()) {
-                    try {
-                        control.validate();
-                    } catch (Validator.InvalidValueException e) {
-                        getParent().showNotification(e.getMessage(), Notification.TYPE_WARNING_MESSAGE);
-                        return false;
-                    }
-                }
-            }
-
-            // Save
-            for (DialogTab dialogTab : dialog.getTabs()) {
-                for (DialogControl control : dialogTab.getFields()) {
-                    control.save(storageNode);
-                }
-            }
-
-            saveContent(storageNode);
-
-        } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return true;
-    }
-
-    /**
-     * Steps up the node hierarchy to find the node at which level we need to perform save on.
-     */
-    private void saveContent(Content content) throws RepositoryException {
-        while (content.getJCRNode().isNew())
-            content = content.getParent();
-        content.save();
-    }
-
-    private Content getContentNode() throws RepositoryException {
-
-        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-
-        Content content = hm.getContent(path);
-
-        if (StringUtils.isNotEmpty(nodeCollection)) {
-            if (!content.hasContent(nodeCollection))
-                return null;
-            content = content.getContent(nodeCollection);
-        }
-
-        if (StringUtils.isNotEmpty(nodeName)) {
-            if (!content.hasContent(nodeName))
-                return null;
-            content = content.getContent(nodeName);
-        }
-
-        return content;
-    }
-
-    private Content getOrCreateContentNode() throws RepositoryException {
-
-        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-
-        Content content = hm.getContent(path);
-
-        if (StringUtils.isNotEmpty(nodeCollection)) {
-            if (!content.hasContent(nodeCollection))
-                content = content.createContent(nodeCollection, ItemType.CONTENTNODE);
-            else
-                content = content.getContent(nodeCollection);
-        }
-
-        if (StringUtils.isNotEmpty(nodeName)) {
-            if (!content.hasContent(nodeName))
-                content = content.createContent(nodeName, ItemType.CONTENTNODE);
-            else
-                content = content.getContent(nodeName);
-        }
-
-        return content;
+        return dialogName;
     }
 }
