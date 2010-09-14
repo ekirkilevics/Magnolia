@@ -44,6 +44,7 @@ import info.magnolia.module.admincentral.dialog.EditParagraphWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
 
 import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -58,10 +60,10 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.SplitPanel.SplitterClickEvent;
 import com.vaadin.ui.SplitPanel.SplitterClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.SplitPanel.SplitterClickEvent;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -79,6 +81,8 @@ public class AdminCentralVaadinApplication extends Application {
 
     private Messages messages;
 
+    private HttpServletRequest request;
+
     private VerticalLayout mainContainer = new VerticalLayout();
 
     public VerticalLayout getMainContainer() {
@@ -91,8 +95,7 @@ public class AdminCentralVaadinApplication extends Application {
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
-        //TODO logout and redirect to new AdminCentral
-        setLogoutURL(MgnlContext.getContextPath() + "/.magnolia/pages/adminCentral.html?logout=true&mgnlLogout=true");
+        setLogoutURL(MgnlContext.getContextPath());
     }
 
     @Override
@@ -181,7 +184,9 @@ public class AdminCentralVaadinApplication extends Application {
         logout.setStyleName(BaseTheme.BUTTON_LINK);
         logout.addListener(new Button.ClickListener () {
             public void buttonClick(ClickEvent event) {
+                ((WebApplicationContext)getContext()).getHttpSession().invalidate();
                 getMainWindow().getApplication().close();
+
             }
         });
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
@@ -225,6 +230,5 @@ public class AdminCentralVaadinApplication extends Application {
         outerContainer.addComponent(headerLayout);
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);
-
     }
 }
