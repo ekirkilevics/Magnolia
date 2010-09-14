@@ -86,6 +86,12 @@ public class ToolBox extends Window implements CloseListener {
         this.addComponent(accordion);
     }
 
+    @Override
+    public void attach() {
+        // TODO Auto-generated method stub
+        super.attach();
+    }
+
     private Tab createInfoTab(Content info) {
         if(info == null){
             final Label infoLabel = new Label("Please, click on a paragraph bar to get info about it.");
@@ -131,9 +137,11 @@ public class ToolBox extends Window implements CloseListener {
         layout.addComponent(new Label(authorId), 1, 2);
 
         final Calendar modificationDate = metaData.getModificationDate();
-        final Label modificationDateLabel = new Label("Mod. Date");
-        layout.addComponent(modificationDateLabel, 0, 3);
-        layout.addComponent(new Label(modificationDate.getTime().toString()), 1, 3);
+        if(modificationDate != null){
+            final Label modificationDateLabel = new Label("Mod. Date");
+            layout.addComponent(modificationDateLabel, 0, 3);
+            layout.addComponent(new Label(modificationDate.getTime().toString()), 1, 3);
+        }
 
         return accordion.addTab(layout, "Info", INFO_ICON);
     }
