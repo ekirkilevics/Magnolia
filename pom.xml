@@ -72,6 +72,27 @@ for Java Content Repositories (JCR).
       <timezone>+1</timezone>
     </developer>
     <developer>
+      <id>fgrilli</id>
+      <name>Federico Grilli</name>
+      <email>federico.grilli(at)magnolia-cms.com</email>
+      <organization>Magnolia International Ltd.</organization>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>dlipp</id>
+      <name>Daniel Lipp</name>
+      <email>daniel.lipp(at)magnolia-cms.com</email>
+      <organization>Magnolia International Ltd.</organization>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>tmattsson</id>
+      <name>Tobias Mattsson</name>
+      <email>tobias.mattsson(at)magnolia-cms.com</email>
+      <organization>Magnolia International Ltd.</organization>
+      <timezone>+1</timezone>
+    </developer>
+    <developer>
       <id>scharles</id>
       <name>Sameer Charles</name>
       <email>sameer.charles(at)magnolia-cms.com</email>
