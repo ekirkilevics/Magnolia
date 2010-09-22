@@ -341,7 +341,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
-        <version>1.6.2</version>
+        <version>2.1.1</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
@@ -469,7 +469,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>javax.jcr</groupId>
         <artifactId>jcr</artifactId>
-        <version>1.0</version>
+        <version>2.0</version>
       </dependency>
       <dependency>
         <groupId>commons-lang</groupId>

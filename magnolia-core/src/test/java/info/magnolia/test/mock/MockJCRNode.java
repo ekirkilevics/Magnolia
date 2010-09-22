@@ -34,10 +34,13 @@
 package info.magnolia.test.mock;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
+import javax.jcr.Binary;
 import javax.jcr.InvalidItemStateException;
+import javax.jcr.InvalidLifecycleTransitionException;
 import javax.jcr.Item;
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -203,7 +206,7 @@ public class MockJCRNode implements Node {
     }
 
     public boolean isCheckedOut() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");    
+        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
     }
 
     public boolean isLocked() throws RepositoryException {
@@ -215,7 +218,7 @@ public class MockJCRNode implements Node {
     }
 
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class."); 
+        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
     }
 
     public NodeIterator merge(String srcWorkspace, boolean bestEffort) throws NoSuchWorkspaceException, AccessDeniedException, MergeException, LockException, InvalidItemStateException, RepositoryException {
@@ -363,5 +366,57 @@ public class MockJCRNode implements Node {
 
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
         mockContent.save();
+    }
+
+    public void followLifecycleTransition(String transition) throws UnsupportedRepositoryOperationException, InvalidLifecycleTransitionException, RepositoryException {
+    }
+
+    public String[] getAllowedLifecycleTransistions() throws UnsupportedRepositoryOperationException, RepositoryException {
+        return null;
+    }
+
+    public String getIdentifier() throws RepositoryException {
+        return null;
+    }
+
+    public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
+        return null;
+    }
+
+    public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
+        return null;
+    }
+
+    public PropertyIterator getReferences(String name) throws RepositoryException {
+        return null;
+    }
+
+    public NodeIterator getSharedSet() throws RepositoryException {
+        return null;
+    }
+
+    public PropertyIterator getWeakReferences() throws RepositoryException {
+        return null;
+    }
+
+    public PropertyIterator getWeakReferences(String name) throws RepositoryException {
+        return null;
+    }
+
+    public void removeShare() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
+    }
+
+    public void removeSharedSet() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
+    }
+
+    public void setPrimaryType(String nodeTypeName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
+    }
+
+    public Property setProperty(String name, Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return null;
+    }
+
+    public Property setProperty(String name, BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return null;
     }
 }
