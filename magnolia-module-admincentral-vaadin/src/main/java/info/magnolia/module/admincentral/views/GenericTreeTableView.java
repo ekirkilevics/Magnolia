@@ -59,9 +59,9 @@ import com.vaadin.terminal.ExternalResource;
  */
 public class GenericTreeTableView extends AbstractTreeTableView {
 
-    private static final long serialVersionUID = 1704972467182396882L;
-
     private static final Logger log = LoggerFactory.getLogger(GenericTreeTableView.class);
+
+    private static final long serialVersionUID = 1704972467182396882L;
 
     public GenericTreeTableView(String treeName) {
         try {
@@ -71,10 +71,7 @@ public class GenericTreeTableView extends AbstractTreeTableView {
             // TODO: we need to somehow properly handle this
             log.error(e.getMessage(), e);
         }
-        // JcrContainer...
-        // getTreeTable().setContainerDataSource(getContainer(getTreeTable()));
-        // old container
-        getTreeTable().setContainerDataSource(getContainer());
+        getTreeTable().setContainerDataSource(getContainer(getTreeTable()));
         addContextMenu();
     }
 
@@ -87,6 +84,9 @@ public class GenericTreeTableView extends AbstractTreeTableView {
             public Action[] getActions(Object target, Object sender) {
 
                 ArrayList<Action> actions = new ArrayList<Action>();
+
+                if(true) return actions.toArray(new Action[actions.size()]);
+
                 for (MenuItem mi : getTreeDefinition().getContextMenuItems()) {
 
                     try {

@@ -33,12 +33,15 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 import java.io.Serializable;
+
+import javax.jcr.Node;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 
 /**
  * Describes a column that displays the value of a NodeData. Used in the config tree when a row in the TreeTable is a
@@ -64,12 +67,12 @@ public class NodeDataValueColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Content content) {
+    public Object getValue(Node node) {
         return "";
     }
 
     @Override
-    public Object getValue(Content content, NodeData nodeData) {
+    public Object getValue(Node content, NodeData nodeData) {
         return nodeData.getString();
     }
 

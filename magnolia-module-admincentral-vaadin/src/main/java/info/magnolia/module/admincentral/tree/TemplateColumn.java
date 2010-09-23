@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.ui.Field;
-import com.vaadin.ui.Select;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.templating.Template;
@@ -44,6 +42,13 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Field;
+import com.vaadin.ui.Select;
 
 /**
  * A column that displays the currently selected template for a node and allows the editor to choose from a list of
@@ -59,12 +64,12 @@ public class TemplateColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Content content) {
+    public Object getValue(Node node) throws RepositoryException {
 
-        String template = content.getMetaData().getTemplate();
+        Property template = node.getProperty("template");
 
         TemplateManager templateManager = TemplateManager.getInstance();
-        Template definition = templateManager.getTemplateDefinition(template);
+        Template definition = templateManager.getTemplateDefinition(template.getName());
         if (definition != null) {
             return definition.getI18NTitle();
         }
@@ -73,30 +78,30 @@ public class TemplateColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Content content, NodeData nodeData) {
+    public Object getValue(Node node, NodeData nodeData) {
         return "";
     }
 
-    public Field getEditField(Content content) {
+    public Field getEditField(Content node) {
 
         // TODO the actual item isn't selected, dont know why yet, also the cell gets filled in with the template name, not its label
 
         Select select = new Select();
         select.setNullSelectionAllowed(false);
         select.setNewItemsAllowed(false);
-        Map<String, String> availableTemplates = getAvailableTemplates(content);
+        Map<String, String> availableTemplates = getAvailableTemplates(node);
         for (Map.Entry<String, String> entry : availableTemplates.entrySet()) {
             select.addItem(entry.getKey());
             select.setItemCaption(entry.getKey(), entry.getValue());
         }
-        String template = content.getMetaData().getTemplate();
+        String template = node.getMetaData().getTemplate();
         select.setValue(template);
         return select;
     }
 
-    private Map<String, String> getAvailableTemplates(Content content) {
+    private Map<String, String> getAvailableTemplates(Content node) {
         TemplateManager templateManager = TemplateManager.getInstance();
-        Iterator<Template> templates = templateManager.getAvailableTemplates(content);
+        Iterator<Template> templates = templateManager.getAvailableTemplates(node);
         Map<String, String> map = new LinkedHashMap<String, String>();
         while (templates.hasNext()) {
             Template template = templates.next();

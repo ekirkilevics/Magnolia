@@ -33,9 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.ui.Field;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Field;
 
 /**
  * Base class for tree columns.
@@ -45,20 +49,16 @@ public abstract class TreeColumn {
     private String label;
     private int width = 1;
 
+    public Field getEditField(Content node) {
+        return null;
+    }
+
+    public Field getEditField(Content node, NodeData nodeData) {
+        return null;
+    }
+
     public String getLabel() {
         return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     /**
@@ -67,15 +67,19 @@ public abstract class TreeColumn {
      */
     public abstract Class<?> getType();
 
-    public abstract Object getValue(Content content);
+    public abstract Object getValue(Node node) throws RepositoryException;
 
-    public abstract Object getValue(Content content, NodeData nodeData);
+    public abstract Object getValue(Node node, NodeData nodeData);
 
-    public Field getEditField(Content content) {
-        return null;
+    public int getWidth() {
+        return width;
     }
 
-    public Field getEditField(Content content, NodeData nodeData) {
-        return null;
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 }

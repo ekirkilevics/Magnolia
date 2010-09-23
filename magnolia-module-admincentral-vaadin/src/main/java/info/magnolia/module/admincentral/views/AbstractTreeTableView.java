@@ -39,10 +39,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
 import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
 import info.magnolia.module.admincentral.tree.container.JcrContainer;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.RepositoryException;
 
@@ -53,16 +50,12 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.addon.treetable.HieararchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
@@ -83,15 +76,13 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
  */
 public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
 
-    private static final long serialVersionUID = 1L;
-
     private static Logger log = LoggerFactory.getLogger(AbstractTreeTableView.class);
 
-    /**
-     * Keeps already used Resource in order to save resources/not create new Resource for every
-     * item.
-     */
-    private static ConcurrentHashMap<String, Resource> itemIcons = new ConcurrentHashMap<String, Resource>();
+    private static final long serialVersionUID = -1135599469729524071L;
+
+    private Object selectedItemId = null;
+
+    private Object selectedPropertyId = null;
 
     private TreeDefinition treeDefinition;
 
@@ -110,24 +101,14 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         setSizeFull();
     }
 
-    public TreeTable getTreeTable() {
-        return treeTable;
-    }
-
-    public TreeDefinition getTreeDefinition() {
-        return treeDefinition;
-    }
-
-    public void setTreeDefinition(TreeDefinition treeDefinition) {
-        this.treeDefinition = treeDefinition;
-    }
-
     /**
      * Add Drag and Drop functionality to the provided TreeTable.
      */
     void addDragAndDrop() {
         treeTable.setDragMode(TableDragMode.ROW);
         treeTable.setDropHandler(new DropHandler() {
+
+            private static final long serialVersionUID = 1108084327834238921L;
 
             /*
              * @seecom.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.
@@ -198,13 +179,11 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         });
     }
 
-    private Object selectedItemId = null;
-
-    private Object selectedPropertyId = null;
-
     void addEditingByDoubleClick() {
 
         treeTable.setTableFieldFactory(new TableFieldFactory() {
+
+            private static final long serialVersionUID = 1656067341998458083L;
 
             public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
                 if (selectedItemId != null) {
@@ -241,7 +220,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                         }
                         catch (RepositoryException e) {
                             e.printStackTrace(); // To change body of catch statement use File |
-                                                 // Settings | File Templates.
+                            // Settings | File Templates.
                         }
                     }
                 }
@@ -286,113 +265,6 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         });
     }
 
-    public Container.Hierarchical getContainer() {
-        Content parent = null;
-        try {
-            parent = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContent(treeDefinition.getPath());
-        }
-        catch (RepositoryException e) {
-            /**
-             * TODO: proper ExceptionHandling
-             */
-            throw new RuntimeException(e);
-        }
-
-        Container.Hierarchical container = new HieararchicalContainerOrderedWrapper(new ContainerHierarchicalWrapper(new IndexedContainer()));
-        for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
-            container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
-        }
-
-        // would be nice to be able to do so, but stupid container insists on showing all props as
-        // columns
-        // container.addContainerProperty("handle", String.class, "");
-
-        try {
-            addChildrenToContainer(container, parent, null);
-        }
-        catch (RepositoryException e) {
-            // TODO proper exception handling (maybe logging the vaadin exception handler is enough)
-            throw new RuntimeException(e);
-        }
-        return container;
-    }
-
-    // Preparation for using proper JcrContainer...
-    public Container.Hierarchical getContainer(TreeTable tree) {
-        Container.Hierarchical container = new JcrContainer(tree, treeDefinition, "/");
-        for (TreeColumn treeColumn : treeDefinition.getColumns()) {
-            container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
-        }
-        return container;
-    }
-
-    /**
-     * Recursively add Children of passed parent to the provided container.
-     */
-    private Container.Hierarchical addChildrenToContainer(Container.Hierarchical container, Content parent, Object parentItemId) throws RepositoryException {
-
-        for (TreeItemType itemType : this.treeDefinition.getItemTypes()) {
-
-            if (itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA))
-                addNodeDataToContainer(container, parent, parentItemId, itemType.getIcon());
-
-            addChildrenOfType(container, parent, parentItemId, itemType.getItemType(), itemType.getIcon());
-        }
-
-        return container;
-    }
-
-    private void addNodeDataToContainer(Container.Hierarchical container, Content parent, Object parentItemId, String nodeDataIcon) {
-        for (NodeData nodeData : parent.getNodeDataCollection()) {
-
-            String nodeDataItemId = parent.getUUID() + "@" + nodeData.getName();
-            container.addItem(nodeDataItemId);
-
-            treeTable.setItemIcon(nodeDataItemId, getItemIconFor(nodeDataIcon));
-            container.setChildrenAllowed(nodeDataItemId, false);
-
-            for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
-                container.getContainerProperty(nodeDataItemId, treeColumn.getLabel()).setValue(treeColumn.getValue(parent, nodeData));
-            }
-            container.setParent(nodeDataItemId, parentItemId);
-        }
-    }
-
-    /**
-     * Extracts all relevant properties (handle + those specified by columns) from the content to
-     * the item representing piece of content in the tree table.
-     */
-    public void addChildrenOfType(Container.Hierarchical container, Content parent, Object parentItemId, String type, String pathToIcon) throws RepositoryException {
-        for (Content content : parent.getChildren(type)) {
-
-            String itemId = content.getUUID();
-            container.addItem(itemId);
-
-            treeTable.setItemIcon(itemId, getItemIconFor(pathToIcon));
-
-            if (parentItemId != null) {
-                container.setParent(itemId, parentItemId);
-            }
-
-            for (TreeColumn treeColumn : this.treeDefinition.getColumns()) {
-                container.getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(content));
-            }
-            // don't do this otherwise all handles become visible columns ... :(
-            // container.getContainerProperty(itemId, "handle").setValue(content.getHandle());
-
-            addChildrenToContainer(container, content, itemId);
-        }
-    }
-
-    private Resource getItemIconFor(String pathToIcon) {
-        if (!itemIcons.containsKey(pathToIcon)) {
-            // check if this path starts or not with a /
-            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith("/") ? "/" + pathToIcon : pathToIcon);
-            itemIcons.put(pathToIcon, new ExternalResource(tmp));
-        }
-        return itemIcons.get(pathToIcon);
-    }
-
     /**
      * Selects the tree node to open based on the uri fragment value.
      */
@@ -407,5 +279,26 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
             treeTable.select(treeItemToOpenId);
             log.debug("after: is selected? {}", treeTable.isSelected(treeItemToOpenId));
         }
+    }
+
+    public Container.Hierarchical getContainer(TreeTable tree) {
+        Container.Hierarchical container = new JcrContainer(tree, treeDefinition, "/");
+        for (TreeColumn treeColumn : treeDefinition.getColumns()) {
+            container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
+        }
+//        Container.Hierarchical container = new FilesystemContainer(new File("/Users/daniellipp/Public"));
+        return container;
+    }
+
+    public TreeDefinition getTreeDefinition() {
+        return treeDefinition;
+    }
+
+    public TreeTable getTreeTable() {
+        return treeTable;
+    }
+
+    public void setTreeDefinition(TreeDefinition treeDefinition) {
+        this.treeDefinition = treeDefinition;
     }
 }

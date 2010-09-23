@@ -33,12 +33,17 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 import java.io.Serializable;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+
 
 /**
  * Describes a column that contains the label of the item.
@@ -58,17 +63,17 @@ public class LabelColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
     @Override
-    public Object getValue(Content content) {
+    public Object getValue(Node content) throws RepositoryException {
         return content.getName();
     }
 
     @Override
-    public Object getValue(Content content, NodeData nodeData) {
+    public Object getValue(Node node, NodeData nodeData) {
         return nodeData.getName();
     }
 

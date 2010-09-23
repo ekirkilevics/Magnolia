@@ -33,39 +33,34 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventObject;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.data.Property;
 
-
 /**
- * Mgnl <code>Content</code> backed implementation of Vaadin <code>Property</code>.
+ * JCR <code>Node</code> Backed implementation of Vaadin <code>Property</code>.
  *
- * @author daniellipp
- * @version $Id$ *
+ * @author lance
+ *
  */
 public class NodeProperty implements Property,
         Property.ValueChangeNotifier, Serializable {
 
     /**
-     * ValueChangeEvent.
+     * Event for changes of values.
      */
-    protected static class ValueChangeEvent extends EventObject implements
+    protected class ValueChangeEvent extends EventObject implements
             Property.ValueChangeEvent {
 
-        private static final long serialVersionUID = 1547153927026681707L;
+        private static final long serialVersionUID = 348981570885096308L;
 
-        private ValueChangeEvent(Property source) {
+        private ValueChangeEvent(com.vaadin.data.Property source) {
             super(source);
         }
 
@@ -73,14 +68,10 @@ public class NodeProperty implements Property,
             return (Property) getSource();
         }
     }
-
     private static final long serialVersionUID = -6410776877324535766L;
-
-    private TreeDefinition definition;
-
     private ArrayList<Property.ValueChangeListener> listeners = new ArrayList<Property.ValueChangeListener>();
 
-    private Content node;
+    private Node node;
 
     private String propertyId;
 
@@ -89,14 +80,15 @@ public class NodeProperty implements Property,
     /**
      * Create a Node backed Vaadin Property.
      *
-     * @param parentNode - the source Node
-     * @param propId - the name of the property
+     * @param parentNode
+     *            - the source Node
+     * @param propId
+     *            - the name of the property
      */
-    public NodeProperty(Content parentNode, String propId, TreeDefinition definition) {
+    public NodeProperty(Node parentNode, String propId) {
         super();
         propertyId = propId;
         node = parentNode;
-        this.definition = definition;
     }
 
     public void addListener(ValueChangeListener listener) {
@@ -104,7 +96,7 @@ public class NodeProperty implements Property,
     }
 
     protected void fireValueChange() {
-        final Property.ValueChangeEvent event = new ValueChangeEvent(
+        final com.vaadin.data.Property.ValueChangeEvent event = new ValueChangeEvent(
                 this);
         for (ValueChangeListener listener : Collections
                 .unmodifiableList(listeners)) {
@@ -116,23 +108,21 @@ public class NodeProperty implements Property,
         return propertyId;
     }
 
-    public Class< ? > getType() {
+    public Class<?> getType() {
         try {
-            return NodeDataUtil.getValueObject(node.getNodeData(propertyId)).getClass();
-        }
-        catch (Exception e) {
+            return PropertyMapper.getType(node.getProperty(propertyId));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public Object getValue() {
-        // make use of treeColumns - they know how to retrieve property values...
-        for (TreeColumn column : definition.getColumns()) {
-            if (column.getLabel().equals(propertyId)) {
-                   return column.getValue(node);
-            }
+        try {
+            return PropertyMapper.getValue(node.getProperty(propertyId));
+        } catch (RepositoryException e) {
+//            throw new RuntimeException(e);
+            return "<UNKOWN>";
         }
-        return null;
     }
 
     public boolean isReadOnly() {
@@ -147,26 +137,17 @@ public class NodeProperty implements Property,
         readOnly = newStatus;
     }
 
-    /**
-     * TODO: will not work like that - compare with getValue()...
-     */
     public void setValue(Object newValue) throws ReadOnlyException,
             ConversionException {
         if (readOnly) {
             throw new ReadOnlyException();
         }
         try {
-            node.setNodeData(propertyId, newValue);
+            PropertyMapper.setValue(node, propertyId, newValue);
             fireValueChange();
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new ConversionException(e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "" + getValue();
     }
 
 }

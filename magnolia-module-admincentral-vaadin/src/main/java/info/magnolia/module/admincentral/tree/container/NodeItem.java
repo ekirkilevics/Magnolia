@@ -33,54 +33,39 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentWrapper;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.jcr.Node;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 
 
 /**
- * Wraps Content/ContentNodes for usage in a Vaadin container.
+ * Wrapper around JCR Node for usage in a Vaadin Container.
  *
  * @author daniellipp
  * @version $Id$
  */
-public class ContentItem extends ContentWrapper implements Item {
+
+public class NodeItem extends NodeProxy implements Item {
 
     private static final long serialVersionUID = -6540682899828148456L;
 
-    private static Logger log = LoggerFactory.getLogger(ContentItem.class);
-
-    private TreeDefinition definition;
-
-    Content node;
-
-    String handle;
-
-    public ContentItem(Content node, TreeDefinition definition)
+    public NodeItem(Node node, JcrSessionProvider provider)
             throws RepositoryException {
-        super(node);
-        this.handle = node.getHandle();
-        this.node = node;
-        this.definition = definition;
+        super(node, provider);
     }
 
     public boolean addItemProperty(Object id, Property property)
             throws UnsupportedOperationException {
         assertIdIsString(id);
         try {
-            this.setNodeData((String) id, property.getValue());
+            PropertyMapper
+                    .setValue(getNode(), (String) id, property.getValue());
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
@@ -101,18 +86,25 @@ public class ContentItem extends ContentWrapper implements Item {
      * @throws RepositoryException
      */
     public String getItemId() throws RepositoryException {
-        return getHandle();
+        return getPath();
     }
 
     public Property getItemProperty(Object id) {
         assertIdIsString(id);
-        return new NodeProperty(this, (String) id, definition);
+        return new NodeProperty(this, (String) id);
     }
 
     public Collection<String> getItemPropertyIds() {
         ArrayList<String> idlist = new ArrayList<String>();
-        for (NodeData nd : getNodeDataCollection()) {
-            idlist.add(nd.getName());
+        try {
+            PropertyIterator iter = getProperties();
+            while (iter.hasNext()) {
+                javax.jcr.Property jcrprop = iter.nextProperty();
+                idlist.add(jcrprop.getName());
+            }
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
         return idlist;
     }
@@ -121,24 +113,11 @@ public class ContentItem extends ContentWrapper implements Item {
             throws UnsupportedOperationException {
         assertIdIsString(id);
         try {
-            getNodeData((String) id).delete();
+            getNode().getProperty((String) id).remove();
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
         return true;
     }
-
-    public synchronized Content getWrappedContent() {
-        try {
-            if (node == null || !node.getJCRNode().getSession().isLive()) {
-                node = getHierarchyManager().getContent(getHandle());
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("can't reinitialize node " + getHandle(), e);
-        }
-        return node;
-    }
-
 }

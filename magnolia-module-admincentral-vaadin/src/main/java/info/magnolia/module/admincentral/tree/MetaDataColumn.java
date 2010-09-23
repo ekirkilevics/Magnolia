@@ -33,39 +33,44 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+
+
 /**
- * Column that displays a property for a nodes MetaData. Used to display the modification date of content nodes.
+ * Column that displays a property for a nodes MetaData. Used to display the modification date of
+ * content nodes.
  */
 public class MetaDataColumn extends TreeColumn implements Serializable {
 
     private static final long serialVersionUID = 5885358873124617444L;
 
-    // TODO should have name of MetaData property, for now always returns the mod. date (or be renamed to LastModificationColumn)
+    // TODO should have name of MetaData property, for now always returns the mod. date (or be
+    // renamed to LastModificationColumn)
 
     @Override
-    public Class<?> getType() {
+    public Class< Date > getType() {
         return Date.class;
     }
 
     @Override
-    public Object getValue(Content content) {
-        MetaData metaData = content.getMetaData();
-        Calendar date = metaData.getModificationDate();
+    public Object getValue(Node content) throws RepositoryException {
+        Property metaData = content.getProperty("MetaData");
+        Calendar date = metaData.getDate();
         if (date != null)
             return date.getTime();
         return null;
     }
 
     @Override
-    public Object getValue(Content content, NodeData nodeData) {
+    public Object getValue(Node content, NodeData nodeData) {
         return null;
     }
 }

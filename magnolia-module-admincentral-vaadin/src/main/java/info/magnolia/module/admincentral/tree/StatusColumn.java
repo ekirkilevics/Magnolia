@@ -33,14 +33,14 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Embedded;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.MetaDataUtil;
-import info.magnolia.context.MgnlContext;
 
 import java.io.Serializable;
+
+import javax.jcr.Node;
+
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Embedded;
 
 /**
  * A column that displays icons for permissions and activation status.
@@ -75,15 +75,17 @@ public class StatusColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Content content) {
+    public Object getValue(Node node) {
         Embedded icon = null;
-        if (activation) {
-            icon =
-            createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(content));
-        }
-        if (permissions && !content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-           icon = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
-        }
+
+        // TODO: fix it!
+//        if (activation) {
+//            icon =
+//            createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(node));
+//        }
+//        if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
+//           icon = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
+//        }
 
         return icon;
     }
@@ -98,7 +100,7 @@ public class StatusColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Content content, NodeData nodeData) {
+    public Object getValue(Node node, NodeData nodeData) {
         return null;
     }
 }

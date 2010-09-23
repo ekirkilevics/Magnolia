@@ -33,11 +33,12 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.core.NodeData;
+
 import java.io.Serializable;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.NodeDataUtil;
+import javax.jcr.Node;
+import javax.jcr.PropertyType;
 
 /**
  * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable is a NodeData.
@@ -54,12 +55,12 @@ public class NodeDataTypeColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Content content) {
+    public Object getValue(Node node) {
         return "";
     }
 
     @Override
-    public Object getValue(Content content, NodeData nodeData) {
-        return NodeDataUtil.getTypeName(nodeData);
+    public Object getValue(Node node, NodeData nodeData) {
+        return PropertyType.nameFromValue(nodeData.getType());
     }
 }
