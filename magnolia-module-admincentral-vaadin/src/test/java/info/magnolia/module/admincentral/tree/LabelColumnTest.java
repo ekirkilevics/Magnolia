@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2010 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,54 +33,46 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import javax.jcr.Node;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
+
 import javax.jcr.RepositoryException;
+
+import org.junit.Test;
 
 import com.vaadin.ui.Field;
 
 
 /**
- * Base class for tree columns.
+ * Tests LabelColumn.
  *
- * @param <E> type of the hosted values of this column.
+ * @author daniellipp
+ * @version $Id$
  */
-public abstract class TreeColumn<E> {
+public class LabelColumnTest {
 
-    private String label;
-
-    private int width = 1;
-
-    /**
-     * @return Field used when editing this column. Defaults to null.
-     */
-    public Field getEditField(Node node) {
-        return null;
+    @Test
+    public void testGetValue() throws RepositoryException {
+        MockNode mock = new MockNode();
+        String original = "Beckenbauer";
+        mock.setName(original);
+        mock.setProperty("name", original);
+        LabelColumn column = new LabelColumn();
+        Object result = column.getValue(mock);
+        assertEquals(original, result);
     }
 
-    public String getLabel() {
-        return label;
-    }
+    @Test
+    public void testGetEditField() {
+        LabelColumn column = new LabelColumn();
+        boolean editableFlag = true;
+        column.setEditable(editableFlag);
+        assertEquals(editableFlag, column.isEditable());
+        assertTrue(column.getEditField(null) instanceof Field);
 
-    /**
-     * Type of the column: Subclasses have to make sure the getValue methods return instances of
-     * this type!
-     */
-    public abstract Class<E> getType();
-
-    /**
-     * @return value to be displayed in the corresponding column (from the provided Node)
-     */
-    public abstract Object getValue(Node node) throws RepositoryException;
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
+        editableFlag = false;
+        column.setEditable(editableFlag);
+        assertNull(column.getEditField(null));
     }
 }

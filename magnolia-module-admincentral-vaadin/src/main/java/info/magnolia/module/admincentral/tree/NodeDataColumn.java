@@ -33,25 +33,26 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-
 import java.io.Serializable;
 
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
+
 /**
- * A column that displays a NodeData value when viewing a content node. Used in the website tree for the 'Title' column.
+ * A column that displays a NodeData value when viewing a content node. Used in the website tree for
+ * the 'Title' column.
  */
-public class NodeDataColumn extends TreeColumn implements Serializable {
+public class NodeDataColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -8092078437662819344L;
 
     private String nodeDataName;
+
     private boolean editable = false;
 
     public boolean isEditable() {
@@ -71,24 +72,20 @@ public class NodeDataColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException{
-        return node.getName();
+    public Object getValue(Node node) throws RepositoryException {
+        Property title = node.getProperty("title");
+        return title.getString();
     }
 
     @Override
-    public Object getValue(Node node, NodeData nodeData) {
-        return "";
-    }
-
-    @Override
-    public Field getEditField(Content content) {
-        if (editable)
-            return new TextField();
-        return null;
+    public Field getEditField(Node unusedt) {
+        // TODO dlipp: check whether this editable flag makes sense. One has to define editing on
+        // the TreeTable level already...
+        return (editable) ? new TextField() : null;
     }
 }

@@ -128,7 +128,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
             else {
                 Node root = getSession().getRootNode();
                 NodeIterator iter = root.getNodes();
-                addToNodeItems(roots[0], new NodeItem(root, provider));
+ //               addToNodeItems(roots[0], new NodeItem(root, provider));
                 while (iter.hasNext()) {
                     Node next = iter.nextNode();
                     addToNodeItems(next.getPath(), new NodeItem(next, provider));
@@ -231,7 +231,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         assertIsString(itemId);
         assertIsString(propertyId);
         try {
-            return new NodeProperty(getSession().getNode((String) itemId),
+            return new NodeProperty(getSession().getNode((String) itemId), definition,
                     (String) propertyId);
         }
         catch (RepositoryException e) {
@@ -248,27 +248,33 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         NodeItem item;
         log.debug("getItem() itemId=" + itemId);
         try {
-            if (nodeItems.containsKey(itemId)) {
-                log.debug("found in nodeitems");
-                item = nodeItems.get(itemId);
-            }
-            else if (getSession().nodeExists((String) itemId)) {
-                log.debug("found in repo");
 
-                String relativePath = getRelativePathToRoot(itemId);
-                item = new NodeItem(getSession().getRootNode().getNode(
-                        relativePath), provider);
-                // load all the parents
-                if (item.getDepth() > 1) {
-                    log.debug("parent check: depth=" + item.getDepth()
-                            + " parentpath=" + item.getParent().getPath());
-                    getItem(item.getParent().getPath());
-                }
-                tree.setItemIcon(itemId, getItemIconFor(item.getName()));
-                addToNodeItems((String) itemId, item);
+            if (PATH_SEPARATOR.equals(itemId)) {
+                item = new NodeItem(getSession().getRootNode(), provider);
             }
             else {
-                throw new IllegalArgumentException("itemId not found");
+                if (nodeItems.containsKey(itemId)) {
+                    log.debug("found in nodeitems");
+                    item = nodeItems.get(itemId);
+                }
+                else if (getSession().nodeExists((String) itemId)) {
+                    log.debug("found in repo");
+
+                    String relativePath = getRelativePathToRoot(itemId);
+                    item = new NodeItem(getSession().getRootNode().getNode(
+                        relativePath), provider);
+                    // load all the parents
+                    if (item.getDepth() > 1) {
+                        log.debug("parent check: depth=" + item.getDepth()
+                            + " parentpath=" + item.getParent().getPath());
+                        getItem(item.getParent().getPath());
+                    }
+                    tree.setItemIcon(itemId, getItemIconFor(item.getName()));
+                    addToNodeItems((String) itemId, item);
+                }
+                else {
+                    throw new IllegalArgumentException("itemId not found");
+                }
             }
         }
         catch (RepositoryException e) {
@@ -280,13 +286,14 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     private Resource getItemIconFor(String pathToIcon) {
         if (!itemIcons.containsKey(pathToIcon)) {
             // check if this path starts or not with a /
-            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith("/") ? "/" + pathToIcon : pathToIcon);
+            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith(PATH_SEPARATOR) ? PATH_SEPARATOR + pathToIcon : pathToIcon);
             itemIcons.put(pathToIcon, new ExternalResource(tmp));
         }
         return itemIcons.get(pathToIcon);
     }
 
     public Collection<String> getItemIds() {
+        log.info("Returning {} nodeItems", nodeItems.keySet().size());
         return nodeItems.keySet();
     }
 

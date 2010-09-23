@@ -33,13 +33,12 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -50,42 +49,33 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Select;
 
+
 /**
- * A column that displays the currently selected template for a node and allows the editor to choose from a list of
- * available templates. Used in the website tree.
+ * A column that displays the currently selected template for a node and allows the editor to choose
+ * from a list of available templates. Used in the website tree.
  */
-public class TemplateColumn extends TreeColumn implements Serializable {
+public class TemplateColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -2304821998680488800L;
 
+    private static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":template";
+
     @Override
-    public Class<?> getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
     @Override
     public Object getValue(Node node) throws RepositoryException {
-
-        Property template = node.getProperty("template");
-
+        Property template = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
         TemplateManager templateManager = TemplateManager.getInstance();
-        Template definition = templateManager.getTemplateDefinition(template.getName());
-        if (definition != null) {
-            return definition.getI18NTitle();
-        }
-
-        return "";
+        Template definition = templateManager.getTemplateDefinition(template.getString());
+        return (definition != null) ? definition.getI18NTitle() : "";
     }
 
-    @Override
-    public Object getValue(Node node, NodeData nodeData) {
-        return "";
-    }
-
-    public Field getEditField(Content node) {
-
-        // TODO the actual item isn't selected, dont know why yet, also the cell gets filled in with the template name, not its label
-
+    public Field getEditField(Node node) {
+        // TODO the actual item isn't selected, dont know why yet, also the cell gets filled in with
+        // the template name, not its label
         Select select = new Select();
         select.setNullSelectionAllowed(false);
         select.setNewItemsAllowed(false);
@@ -94,19 +84,26 @@ public class TemplateColumn extends TreeColumn implements Serializable {
             select.addItem(entry.getKey());
             select.setItemCaption(entry.getKey(), entry.getValue());
         }
-        String template = node.getMetaData().getTemplate();
-        select.setValue(template);
+        try {
+            Property template = JCRMetadataUtil.getMetaDataProperty(node, JCRMetadataUtil.TEMPLATE);
+            select.setValue(template.getString());
+        }
+        catch (RepositoryException e) {
+            select = null;
+        }
         return select;
     }
 
-    private Map<String, String> getAvailableTemplates(Content node) {
-        TemplateManager templateManager = TemplateManager.getInstance();
-        Iterator<Template> templates = templateManager.getAvailableTemplates(node);
+    private Map<String, String> getAvailableTemplates(Node node) {
         Map<String, String> map = new LinkedHashMap<String, String>();
-        while (templates.hasNext()) {
-            Template template = templates.next();
-            map.put(template.getName(), template.getI18NTitle());
-        }
+        // TODO: pimp TemplateManager to provided availableTemplates for a certain Node - not
+        // Content!
+        // TemplateManager templateManager = TemplateManager.getInstance();
+        // Iterator<Template> templates = templateManager.getAvailableTemplates(node);
+        // while (templates.hasNext()) {
+        // Template template = templates.next();
+        // map.put(template.getName(), template.getI18NTitle());
+        // }
         return map;
     }
 }

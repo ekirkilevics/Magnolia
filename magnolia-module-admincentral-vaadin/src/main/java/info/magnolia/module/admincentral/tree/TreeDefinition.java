@@ -35,7 +35,10 @@ package info.magnolia.module.admincentral.tree;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Definition of a tree.
@@ -54,7 +57,7 @@ public class TreeDefinition implements Serializable {
      */
     private boolean flatMode = false;
 
-    private List<TreeColumn> columns = new ArrayList<TreeColumn>();
+    private Map<String, TreeColumn> columns = new LinkedHashMap<String, TreeColumn>();
     private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
     private List<MenuItem> contextMenuItems = new ArrayList<MenuItem>();
     private List<TreeItemType> itemTypes = new ArrayList<TreeItemType>();
@@ -103,16 +106,17 @@ public class TreeDefinition implements Serializable {
         this.name = name;
     }
 
-    public List<TreeColumn> getColumns() {
-        return columns;
+    public TreeColumn getColumn(String columnId) {
+        return columns.get(columnId);
     }
 
-    public void setColumns(List<TreeColumn> columns) {
-        this.columns = columns;
+    public Collection<TreeColumn> getColumns() {
+        return columns.values();
     }
 
-    public boolean addColumn(TreeColumn treeColumn) {
-        return columns.add(treeColumn);
+
+    public void addColumn(TreeColumn treeColumn) {
+        columns.put(treeColumn.getLabel(),treeColumn);
     }
 
     public List<MenuItem> getFunctionMenu() {

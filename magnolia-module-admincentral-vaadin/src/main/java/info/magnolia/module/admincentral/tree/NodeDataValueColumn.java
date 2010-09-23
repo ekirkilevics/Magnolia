@@ -33,21 +33,23 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 import java.io.Serializable;
 
 import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
+
 /**
- * Describes a column that displays the value of a NodeData. Used in the config tree when a row in the TreeTable is a
- * NodeData.
+ * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
+ * the TreeTable is a NodeData.
  */
-public class NodeDataValueColumn extends TreeColumn implements Serializable {
+public class NodeDataValueColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -6032077132567486333L;
 
@@ -62,24 +64,19 @@ public class NodeDataValueColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Class<?> getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
     @Override
-    public Object getValue(Node node) {
-        return "";
+    public Object getValue(Node node) throws RepositoryException {
+        // TODO: find out what value to retrieve here...
+        Property value = JCRMetadataUtil.getMetaDataProperty(node, "value");
+        return value.getString();
     }
 
     @Override
-    public Object getValue(Node content, NodeData nodeData) {
-        return nodeData.getString();
-    }
-
-    @Override
-    public Field getEditField(Content content, NodeData nodeData) {
-        if (editable)
-            return new TextField();
-        return null;
+    public Field getEditField(Node ignored) {
+        return (editable) ? new TextField() : null;
     }
 }

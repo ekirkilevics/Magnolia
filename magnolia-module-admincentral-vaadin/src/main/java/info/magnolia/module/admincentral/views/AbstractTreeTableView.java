@@ -194,12 +194,11 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                             for (TreeColumn column : treeDefinition.getColumns()) {
 
                                 if (column.getLabel().equals(propertyId)) {
-
+                                    // TODO: get rid of using the Content API here!
                                     String x = (String) itemId;
                                     if (x.indexOf('@') == -1) {
                                         Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(x);
-
-                                        Field field = column.getEditField(content);
+                                        Field field = column.getEditField(content.getJCRNode());
                                         if (field != null)
                                             return field;
 
@@ -210,8 +209,8 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                                         Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(uuid);
 
                                         NodeData nodeData = content.getNodeData(nodeDataName);
-
-                                        Field field = column.getEditField(content, nodeData);
+                                        // TODO: get rid of using the Content API here!
+                                        Field field = column.getEditField(content.getJCRNode());
                                         if (field != null)
                                             return field;
                                     }
@@ -219,8 +218,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                             }
                         }
                         catch (RepositoryException e) {
-                            e.printStackTrace(); // To change body of catch statement use File |
-                            // Settings | File Templates.
+                            log.warn(e.getMessage());
                         }
                     }
                 }
@@ -286,7 +284,8 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         for (TreeColumn treeColumn : treeDefinition.getColumns()) {
             container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
-//        Container.Hierarchical container = new FilesystemContainer(new File("/Users/daniellipp/Public"));
+        // Container.Hierarchical container = new FilesystemContainer(new
+        // File("/Users/daniellipp/Public"));
         return container;
     }
 

@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-
 import java.io.Serializable;
 
 import javax.jcr.Node;
@@ -48,10 +45,12 @@ import com.vaadin.ui.TextField;
 /**
  * Describes a column that contains the label of the item.
  */
-public class LabelColumn extends TreeColumn implements Serializable {
+public class LabelColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 
+    // TODO dlipp: to be decided whether this should be kept (currently configured via Content2Bean)
+    // Beeing editable or not is also steered on the TreeTable level... Redundancy???
     private boolean editable = false;
 
     public boolean isEditable() {
@@ -68,22 +67,13 @@ public class LabelColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Object getValue(Node content) throws RepositoryException {
-        return content.getName();
+    public Object getValue(Node node) throws RepositoryException {
+        return node.getName();
     }
 
     @Override
-    public Object getValue(Node node, NodeData nodeData) {
-        return nodeData.getName();
-    }
-
-    @Override
-    public Field getEditField(Content content) {
+    public Field getEditField(Node ignored) {
         return (editable) ? new TextField() : null;
     }
 
-    @Override
-    public Field getEditField(Content content, NodeData nodeData) {
-        return getEditField(content);
-    }
 }

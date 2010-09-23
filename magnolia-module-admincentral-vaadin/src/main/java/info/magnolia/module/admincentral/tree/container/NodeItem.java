@@ -91,7 +91,9 @@ public class NodeItem extends NodeProxy implements Item {
 
     public Property getItemProperty(Object id) {
         assertIdIsString(id);
-        return new NodeProperty(this, (String) id);
+        // TODO dlipp: check whether we have to provide the TreeDefinition to the NodeItem as
+        // well...
+        return new NodeProperty(this, null, (String) id);
     }
 
     public Collection<String> getItemPropertyIds() {

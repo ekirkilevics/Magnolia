@@ -33,19 +33,26 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 import java.io.Serializable;
+import java.security.AccessControlException;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
+
 
 /**
  * A column that displays icons for permissions and activation status.
  */
-public class StatusColumn extends TreeColumn implements Serializable {
+public class StatusColumn extends TreeColumn<Embedded> implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
@@ -70,24 +77,36 @@ public class StatusColumn extends TreeColumn implements Serializable {
     }
 
     @Override
-    public Class< ? > getType() {
+    public Class<Embedded> getType() {
         return Embedded.class;
     }
 
     @Override
-    public Object getValue(Node node) {
-        Embedded icon = null;
+    public Object getValue(Node node) throws RepositoryException {
+        Component component = null;
+        if (activation) {
+            component =
+                createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + JCRMetadataUtil.getActivationStatusIcon(node));
+        }
 
-        // TODO: fix it!
-//        if (activation) {
-//            icon =
-//            createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + MetaDataUtil.getActivationStatusIcon(node));
-//        }
-//        if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-//           icon = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
-//        }
+        if (permissions) {
+            try {
+                // TODO dlipp: verify, this shows the same behaviour as old Content-API based
+                // implementation:
+                // if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE))
+                node.getSession().checkPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
 
-        return icon;
+            }
+            catch (AccessControlException e) {
+                // does not have permission to set properties - in that case will return two Icons
+                // in a layout for being displayed...
+                HorizontalLayout horizontal = new HorizontalLayout();
+                horizontal.addComponent(component);
+                component = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
+                horizontal.addComponent(component);
+            }
+        }
+        return component;
     }
 
     private Embedded createIcon(String resource) {
@@ -97,10 +116,5 @@ public class StatusColumn extends TreeColumn implements Serializable {
         embedded.setWidth("16px");
         embedded.setHeight("16px");
         return embedded;
-    }
-
-    @Override
-    public Object getValue(Node node, NodeData nodeData) {
-        return null;
     }
 }

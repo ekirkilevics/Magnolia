@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +45,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.data.Property;
+
 
 /**
  * JCR <code>Node</code> Backed implementation of Vaadin <code>Property</code>.
@@ -68,7 +72,9 @@ public class NodeProperty implements Property,
             return (Property) getSource();
         }
     }
+
     private static final long serialVersionUID = -6410776877324535766L;
+
     private ArrayList<Property.ValueChangeListener> listeners = new ArrayList<Property.ValueChangeListener>();
 
     private Node node;
@@ -77,18 +83,19 @@ public class NodeProperty implements Property,
 
     private boolean readOnly;
 
+    private TreeDefinition definition;
+
     /**
      * Create a Node backed Vaadin Property.
      *
-     * @param parentNode
-     *            - the source Node
-     * @param propId
-     *            - the name of the property
+     * @param parentNode - the source Node
+     * @param propId - the name of the property
      */
-    public NodeProperty(Node parentNode, String propId) {
+    public NodeProperty(Node parentNode, TreeDefinition definition, String propId) {
         super();
-        propertyId = propId;
-        node = parentNode;
+        this.propertyId = propId;
+        this.node = parentNode;
+        this.definition = definition;
     }
 
     public void addListener(ValueChangeListener listener) {
@@ -108,21 +115,37 @@ public class NodeProperty implements Property,
         return propertyId;
     }
 
-    public Class<?> getType() {
+    public Class< ? > getType() {
         try {
             return PropertyMapper.getType(node.getProperty(propertyId));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public Object getValue() {
-        try {
-            return PropertyMapper.getValue(node.getProperty(propertyId));
-        } catch (RepositoryException e) {
-//            throw new RuntimeException(e);
-            return "<UNKOWN>";
+        Object value = "";
+        TreeColumn column = definition.getColumn(propertyId);
+        if (column != null) {
+            try {
+                value = column.getValue(node);
+            }
+            catch (RepositoryException e) {
+                // value is not there - return empty String...
+            }
         }
+        return value;
+        // String propertyIdToLookFor = propertyId;
+        // if (propertyId.equals("Title")) {
+        // propertyIdToLookFor = "title";
+        // }
+        // if (propertyId.equals("Page")) {
+        // propertyIdToLookFor = "text";
+        // }
+        // try {
+        // return PropertyMapper.getValue(node.getProperty(propertyIdToLookFor));
+        // }
     }
 
     public boolean isReadOnly() {
@@ -145,9 +168,15 @@ public class NodeProperty implements Property,
         try {
             PropertyMapper.setValue(node, propertyId, newValue);
             fireValueChange();
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new ConversionException(e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return getValue().toString();
     }
 
 }

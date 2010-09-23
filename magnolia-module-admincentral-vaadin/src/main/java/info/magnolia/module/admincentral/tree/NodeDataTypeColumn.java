@@ -33,34 +33,27 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.core.NodeData;
-
 import java.io.Serializable;
 
 import javax.jcr.Node;
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 /**
  * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable is a NodeData.
  */
-public class NodeDataTypeColumn extends TreeColumn implements Serializable {
+public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = 6999184983422375459L;
 
     // TODO not in use until we have support for nodedatas in the tree
-
     @Override
-    public Class<?> getType() {
+    public Class<String> getType() {
         return String.class;
     }
 
     @Override
-    public Object getValue(Node node) {
-        return "";
-    }
-
-    @Override
-    public Object getValue(Node node, NodeData nodeData) {
-        return PropertyType.nameFromValue(nodeData.getType());
+    public Object getValue(Node node) throws RepositoryException {
+        return PropertyType.nameFromValue(node.getProperty("name").getType());
     }
 }
