@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.tree.container;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeItemType;
@@ -83,8 +84,6 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     private static ConcurrentHashMap<String, Resource> itemIcons = new ConcurrentHashMap<String, Resource>();
 
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
-
-    public static final String PATH_SEPARATOR = "/";
 
     private static final long serialVersionUID = 240035255907683559L;
 
@@ -137,7 +136,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         try {
             if (!containsId(itemId)
                     && !getSession().nodeExists((String) itemId)) {
-                String relativePath = getRelativePathToRoot(itemId);
+                String relativePath = JCRUtil.getRelativePathToRoot(itemId);
                 Node content = getSession().getRootNode().addNode(relativePath);
 
                 // not sure whether this is needed like that...
@@ -185,7 +184,8 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         log.info("Now retrieving children id's for {}", parentId);
         ArrayList<String> children = new ArrayList<String>();
         try {
-            NodeIterator iterator = getNodeItem(parentId).getNodes();
+            NodeItem parent = getNodeItem(parentId);
+            NodeIterator iterator = parent.getNodes();
             Node node = null;
             while (iterator.hasNext()) {
                 node = iterator.nextNode();
@@ -253,7 +253,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     private Resource getItemIconFor(String pathToIcon) {
         if (!itemIcons.containsKey(pathToIcon)) {
             // check if this path starts or not with a /
-            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith(PATH_SEPARATOR) ? PATH_SEPARATOR + pathToIcon : pathToIcon);
+            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + pathToIcon : pathToIcon);
             itemIcons.put(pathToIcon, new ExternalResource(tmp));
         }
         return itemIcons.get(pathToIcon);
@@ -300,14 +300,6 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    protected String getRelativePathToRoot(Object itemId) {
-        String path = (String) itemId;
-        if (!path.startsWith(PATH_SEPARATOR)) {
-            throw new IllegalArgumentException("path not relative to target");
-        }
-        return path.substring(PATH_SEPARATOR.length());
     }
 
     /**
@@ -412,14 +404,17 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
                 "Cannot override Node Definition");
     }
 
-    public boolean setParent(Object itemId, Object newParentId)
+    public boolean setParent(Object absoluteItemPath, Object newRelativePath)
             throws UnsupportedOperationException {
         try {
-            NodeItem item = getNodeItem(itemId);
-            String newid = (String) newParentId + itemId;
-            nodeItems.remove(itemId);
-            removeChildItems(item);
-            getSession().move((String) itemId, newid);
+            // next line is just required to get the itemIcon properly set...
+            // getNodeItem(absoluteItemPath);
+            String newid = (String) newRelativePath + JCRUtil.PATH_SEPARATOR + JCRUtil.getItemIdWithoutPath(absoluteItemPath);
+            nodeItems.remove(absoluteItemPath);
+            
+            //TODO: all child paths have to be adapted!
+            //removeChildItems(item);
+            getSession().move((String) absoluteItemPath, newid);
             getNodeItem(newid);
         }
         catch (RepositoryException e) {

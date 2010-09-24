@@ -166,7 +166,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
             private void forceRefreshOfTreeTable() {
                 // TODO replace this hack - get Table to be refreshed the proper
                 // way (Hack from Vaadin Demo-Sources... - TreeTableWorkLog)
-                Object tempId = treeTable.getContainerDataSource().addItem();
+                Object tempId = treeTable.getContainerDataSource().addItem("/tempId");
                 treeTable.removeItem(tempId);
             }
 

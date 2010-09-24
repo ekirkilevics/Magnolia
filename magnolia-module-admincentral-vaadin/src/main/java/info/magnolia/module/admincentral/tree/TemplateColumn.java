@@ -36,7 +36,7 @@ package info.magnolia.module.admincentral.tree;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.module.admincentral.jcr.TemporaryHackUtility;
+import info.magnolia.module.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
@@ -69,7 +69,7 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
         TemplateManager templateManager = TemplateManager.getInstance();
 
         // Temp: as long as TemplateManager cannot operate on pure JCR
-        Content content = TemporaryHackUtility.createHackContentFrom(node);
+        Content content = TemporaryHackUtil.createHackContentFrom(node);
 
         Iterator<Template> templates = templateManager.getAvailableTemplates(content);
         while (templates.hasNext()) {
