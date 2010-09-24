@@ -36,6 +36,8 @@ package info.magnolia.module.admincentral.tree;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
@@ -71,17 +73,24 @@ import javax.jcr.version.VersionHistory;
 
 
 /**
- * Mock Implementation of a Node.
+ * Mock Implementation of a Node. Work in progress...
+ *
  * @author daniellipp
  * @version $Id$
  */
 public class MockNode implements Node {
 
+    private Map<String, Node> nodes = new HashMap<String, Node>();
+
+    private Map<String, Property> properties = new HashMap<String, Property>();
+
     public void addMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
     }
 
     public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        return null;
+        Node newNode = new MockNode();
+        nodes.put(relPath, newNode);
+        return newNode;
     }
 
     public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException {
@@ -141,7 +150,7 @@ public class MockNode implements Node {
     }
 
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        return null;
+        return nodes.get(relPath);
     }
 
     public NodeIterator getNodes() throws RepositoryException {
@@ -177,7 +186,7 @@ public class MockNode implements Node {
     }
 
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        return null;
+        return properties.get(relPath);
     }
 
     public PropertyIterator getReferences() throws RepositoryException {
@@ -316,7 +325,13 @@ public class MockNode implements Node {
     }
 
     public Property setProperty(String name, Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return null;
+        Property prop = properties.get(name);
+        if (prop == null) {
+            prop = new MockProperty();
+            properties.put(name, prop);
+        }
+        prop.setValue(value);
+        return prop;
     }
 
     public Property setProperty(String name, Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {

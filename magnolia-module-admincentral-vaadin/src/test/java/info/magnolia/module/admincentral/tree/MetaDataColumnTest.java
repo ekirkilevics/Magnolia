@@ -34,55 +34,43 @@
 package info.magnolia.module.admincentral.tree;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
+import java.util.Calendar;
+
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
-import com.vaadin.ui.Field;
-
 
 /**
- * Tests LabelColumn.
+ * Tests MetaDataColumn.
  *
  * @author daniellipp
  * @version $Id$
  */
-public class LabelColumnTest {
+public class MetaDataColumnTest {
 
     @Test
     public void testGetValue() throws RepositoryException {
-        MockNode mock = new MockNode();
-        String original = "Beckenbauer";
-        mock.setName(original);
-        mock.setProperty("name", original);
-        LabelColumn column = new LabelColumn();
-        Object result = column.getValue(mock);
-        assertEquals(original, result);
+        Node node = new MockNode();
+        Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
+        Calendar cal = Calendar.getInstance();
+        metaData.setProperty(MetaDataColumn.PROPERTY_NAME, cal);
+        MetaDataColumn column = new MetaDataColumn();
+        Object result = column.getValue(node);
+        assertEquals(cal, result);
     }
 
     @Test
     public void testSetValue() throws RepositoryException {
-        MockNode mock = new MockNode();
-        LabelColumn column = new LabelColumn();
-        String newValue = "Netzer";
-        // TODO: uncomment as soon as setValue is properly implemented on that Column.
-        // column.setValue(mock, "newValue");
-        // assertEquals(column.getValue(mock), newValue);
-    }
-
-    @Test
-    public void testGetEditField() {
-        LabelColumn column = new LabelColumn();
-        boolean editableFlag = true;
-        column.setEditable(editableFlag);
-        assertEquals(editableFlag, column.isEditable());
-        assertTrue(column.getEditField(null) instanceof Field);
-
-        editableFlag = false;
-        column.setEditable(editableFlag);
-        assertNull(column.getEditField(null));
+        Node node = new MockNode();
+        Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
+        metaData.setProperty(MetaDataColumn.PROPERTY_NAME, (Calendar) null);
+        TreeColumn< ? > column = new MetaDataColumn();
+        Calendar cal = Calendar.getInstance();
+        column.setValue(node, cal);
+        assertEquals(metaData.getProperty(MetaDataColumn.PROPERTY_NAME).getDate(), cal);
     }
 }
