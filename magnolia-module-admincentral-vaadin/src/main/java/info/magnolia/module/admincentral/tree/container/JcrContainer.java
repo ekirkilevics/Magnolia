@@ -67,14 +67,13 @@ import com.vaadin.terminal.Resource;
 
 /**
  * Implementation of a JCR backed Vaadin <code>Container</code>.
- *
+ * 
  * All ID's must be Strings to comply with JCR identifiers.
- *
+ * 
  * @author daniellipp
  * @version $Id$
  */
 public class JcrContainer implements Serializable, Container.Hierarchical, Buffered {
-
     /**
      * Keeps already used Resource in order to save resources/not create new Resource for every
      * item.
@@ -104,7 +103,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     /**
      * Create JCR container with provided definition and root. Note that in this case (a single
      * root) this root will not be added to the container on level 0 but its children.
-     *
+     * 
      * @param tree TreeTable to set itemIcon on (can only be set on TreeTable)
      * @param definition the definition of the tree
      * @param root the single root
@@ -128,7 +127,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
             else {
                 Node root = getSession().getRootNode();
                 NodeIterator iter = root.getNodes();
- //               addToNodeItems(roots[0], new NodeItem(root, provider));
+                addToNodeItems(roots[0], new NodeItem(root, provider));
                 while (iter.hasNext()) {
                     Node next = iter.nextNode();
                     addToNodeItems(next.getPath(), new NodeItem(next, provider));
@@ -167,7 +166,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
                 Node node = getSession().getRootNode().addNode(relativePath);
 
                 // not sure whether this is needed like that...
-                for (TreeColumn treeColumn : this.definition.getColumns()) {
+                for (TreeColumn<?> treeColumn : this.definition.getColumns()) {
                     getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(node));
                 }
             }
@@ -299,7 +298,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
 
     /**
      * Casts the getItem() call to return a NodeItem.
-     *
+     * 
      * @param itemId
      * @return NodeItem
      */
@@ -329,7 +328,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     }
 
     /**
-     *
+     * 
      * @return the Session associated with this container.
      * @throws RepositoryException
      */
@@ -438,7 +437,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
             NodeItem item = getNodeItem(itemId);
             NodeItem newparent = getNodeItem(itemId);
             String newid = newparent.getPath() + item.getName();
-            nodeItems.remove(item);
+            nodeItems.remove(itemId);
             removeChildItems(item);
             getSession().move(item.getPath(), newid);
             getNodeItem(newid);
