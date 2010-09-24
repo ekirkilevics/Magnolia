@@ -182,6 +182,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     }
 
     public Collection<String> getChildren(Object parentId) {
+        log.info("Now retrieving children id's for {}", parentId);
         ArrayList<String> children = new ArrayList<String>();
         try {
             NodeIterator iterator = getNodeItem(parentId).getNodes();
@@ -294,12 +295,7 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     public Object getParentId(Object itemId) {
         NodeItem item = getNodeItem(itemId);
         try {
-            if (item.getDepth() > 0) {
-                return item.getParent().getPath();
-            }
-            else {
-                return null;
-            }
+            return (item.getDepth() > 0) ? item.getParent().getPath() : null;
         }
         catch (RepositoryException e) {
             throw new RuntimeException(e);
