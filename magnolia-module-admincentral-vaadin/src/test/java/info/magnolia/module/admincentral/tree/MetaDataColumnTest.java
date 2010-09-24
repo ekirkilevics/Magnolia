@@ -37,6 +37,7 @@ import static org.junit.Assert.assertEquals;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -57,20 +58,22 @@ public class MetaDataColumnTest {
         Node node = new MockNode();
         Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
         Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
         metaData.setProperty(MetaDataColumn.PROPERTY_NAME, cal);
         MetaDataColumn column = new MetaDataColumn();
         Object result = column.getValue(node);
-        assertEquals(cal, result);
+        assertEquals(now, result);
     }
 
     @Test
     public void testSetValue() throws RepositoryException {
         Node node = new MockNode();
         Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
-        metaData.setProperty(MetaDataColumn.PROPERTY_NAME, (Calendar) null);
-        TreeColumn< ? > column = new MetaDataColumn();
         Calendar cal = Calendar.getInstance();
-        column.setValue(node, cal);
+        metaData.setProperty(MetaDataColumn.PROPERTY_NAME, cal);
+        TreeColumn< ? > column = new MetaDataColumn();
+        column.setValue(node, cal.getTime());
         assertEquals(metaData.getProperty(MetaDataColumn.PROPERTY_NAME).getDate(), cal);
     }
 }

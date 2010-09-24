@@ -67,13 +67,15 @@ public class MetaDataColumn extends TreeColumn<Date> implements Serializable {
         Node metaData = node.getNode(JCRMetadataUtil.META_DATA_NODE_NAME);
         Property creation = metaData.getProperty(PROPERTY_NAME);
         Calendar date = creation.getDate();
-        return date;
+        return date.getTime();
     }
 
     @Override
     public void setValue(Node node, Object newValue) throws RepositoryException {
         Node metaData = node.getNode(JCRMetadataUtil.META_DATA_NODE_NAME);
         Property creation = metaData.getProperty(PROPERTY_NAME);
-        creation.setValue((Calendar) newValue);
+        Calendar date = creation.getDate();
+        date.setTime((Date) newValue);
+        creation.setValue(date);
     }
 }
