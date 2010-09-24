@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,10 +51,9 @@ import javax.jcr.RepositoryException;
  */
 public class MetaDataColumn extends TreeColumn<Date> implements Serializable {
 
-    private static final long serialVersionUID = 5885358873124617444L;
+    public static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":creationdate";
 
-    // TODO should have name of MetaData property, for now always returns the mod. date (or be
-    // renamed to LastModificationColumn)
+    private static final long serialVersionUID = -2788490588550009503L;
 
     @Override
     public Class<Date> getType() {
@@ -62,11 +64,16 @@ public class MetaDataColumn extends TreeColumn<Date> implements Serializable {
     public Object getValue(Node node) throws RepositoryException {
         // TODO dlipp: discuss whether we want to use the creationdate from the MetaData node or
         // directly the jcr:created value on the node itself.
-        Node metaData = node.getNode("MetaData");
-        Property creation = metaData.getProperty("mgnl:creationdate");
+        Node metaData = node.getNode(JCRMetadataUtil.META_DATA_NODE_NAME);
+        Property creation = metaData.getProperty(PROPERTY_NAME);
         Calendar date = creation.getDate();
-        if (date != null)
-            return date.getTime();
-        return null;
+        return date;
+    }
+
+    @Override
+    public void setValue(Node node, Object newValue) throws RepositoryException {
+        Node metaData = node.getNode(JCRMetadataUtil.META_DATA_NODE_NAME);
+        Property creation = metaData.getProperty(PROPERTY_NAME);
+        creation.setValue((Calendar) newValue);
     }
 }

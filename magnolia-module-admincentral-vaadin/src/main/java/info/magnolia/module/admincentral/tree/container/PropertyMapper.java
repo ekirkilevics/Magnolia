@@ -71,7 +71,7 @@ public class PropertyMapper {
      * @throws ValueFormatException
      * @throws RepositoryException
      */
-    public static Object getValue(Property prop) throws ValueFormatException,
+    public static Object getValue_noLongerUsed(Property prop) throws ValueFormatException,
             RepositoryException {
         Object retval = null;
         if (prop.getType() == PropertyType.BINARY) {

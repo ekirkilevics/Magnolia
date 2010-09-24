@@ -39,14 +39,17 @@ import javax.jcr.Node;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
+
 /**
- * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable is a NodeData.
+ * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
+ * is a NodeData.
  */
 public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
 
-    private static final long serialVersionUID = 6999184983422375459L;
+    public static final String PROPERTY_NAME = "name";
 
-    // TODO not in use until we have support for nodedatas in the tree
+    private static final long serialVersionUID = -2594102704173600906L;
+
     @Override
     public Class<String> getType() {
         return String.class;
@@ -54,6 +57,11 @@ public class NodeDataTypeColumn extends TreeColumn<String> implements Serializab
 
     @Override
     public Object getValue(Node node) throws RepositoryException {
-        return PropertyType.nameFromValue(node.getProperty("name").getType());
+        return PropertyType.nameFromValue(node.getProperty(PROPERTY_NAME).getType());
+    }
+
+    @Override
+    public void setValue(Node node, Object newValue) throws RepositoryException {
+        node.getProperty(PROPERTY_NAME).setValue(PropertyType.valueFromName((String) newValue));
     }
 }

@@ -39,6 +39,7 @@ import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -53,29 +54,27 @@ import com.vaadin.ui.Select;
 /**
  * A column that displays the currently selected template for a node and allows the editor to choose
  * from a list of available templates. Used in the website tree.
+ * Be aware that the value displayed in the Widget is the I18NTitle - the value stored is the templates name.
  */
 public class TemplateColumn extends TreeColumn<String> implements Serializable {
 
-    private static final long serialVersionUID = -2304821998680488800L;
+    public static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":template";
+    private static final long serialVersionUID = -4658046121169661806L;
 
-    private static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":template";
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public Object getValue(Node node) throws RepositoryException {
-        Property template = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
+    private Map<String, String> getAvailableTemplates(Node node) {
+        Map<String, String> map = new LinkedHashMap<String, String>();
         TemplateManager templateManager = TemplateManager.getInstance();
-        Template definition = templateManager.getTemplateDefinition(template.getString());
-        return (definition != null) ? definition.getI18NTitle() : "";
+        // TODO: pimp TemplateManager to provided availableTemplates for a certain Node - not
+        // just all of them
+        Iterator<Template> templates = templateManager.getAvailableTemplates();
+        while (templates.hasNext()) {
+            Template template = templates.next();
+            map.put(template.getName(), template.getI18NTitle());
+        }
+        return map;
     }
 
     public Field getEditField(Node node) {
-        // TODO the actual item isn't selected, dont know why yet, also the cell gets filled in with
-        // the template name, not its label
         Select select = new Select();
         select.setNullSelectionAllowed(false);
         select.setNewItemsAllowed(false);
@@ -94,16 +93,32 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
         return select;
     }
 
-    private Map<String, String> getAvailableTemplates(Node node) {
-        Map<String, String> map = new LinkedHashMap<String, String>();
-        // TODO: pimp TemplateManager to provided availableTemplates for a certain Node - not
-        // Content!
-        // TemplateManager templateManager = TemplateManager.getInstance();
-        // Iterator<Template> templates = templateManager.getAvailableTemplates(node);
-        // while (templates.hasNext()) {
-        // Template template = templates.next();
-        // map.put(template.getName(), template.getI18NTitle());
-        // }
-        return map;
+    @Override
+    public Class<String> getType() {
+        return String.class;
+    }
+
+    @Override
+    public Object getValue(Node node) throws RepositoryException {
+        Property template = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
+        TemplateManager templateManager = TemplateManager.getInstance();
+        Template definition = templateManager.getTemplateDefinition(template.getString());
+        return (definition != null) ? definition.getI18NTitle() : "";
+    }
+
+    @Override
+    public void setValue(Node node, Object newValue) throws RepositoryException {
+        Property prop = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
+        TemplateManager templateManager = TemplateManager.getInstance();
+        Iterator<Template> templates = templateManager.getAvailableTemplates();
+        Template current;
+        while (templates.hasNext()) {
+            current = templates.next();
+            if (current.getI18NTitle().equals(newValue)) {
+                prop.setValue(current.getName());
+                break;
+            }
+
+        }
     }
 }

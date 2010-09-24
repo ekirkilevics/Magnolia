@@ -126,7 +126,7 @@ public class NodeProperty implements Property,
 
     public Object getValue() {
         Object value = "";
-        TreeColumn column = definition.getColumn(propertyId);
+        TreeColumn<?> column = definition.getColumn(propertyId);
         if (column != null) {
             try {
                 value = column.getValue(node);
@@ -166,7 +166,8 @@ public class NodeProperty implements Property,
             throw new ReadOnlyException();
         }
         try {
-            PropertyMapper.setValue(node, propertyId, newValue);
+            TreeColumn<?> column = definition.getColumn(propertyId);
+            column.setValue(node, newValue);
             fireValueChange();
         }
         catch (RepositoryException e) {

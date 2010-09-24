@@ -91,7 +91,7 @@ public class StatusColumn extends TreeColumn<Embedded> implements Serializable {
 
         if (permissions) {
             try {
-                // TODO dlipp: verify, this shows the same behaviour as old Content-API based
+                // TODO dlipp: verify, this shows the same behavior as old Content-API based
                 // implementation:
                 // if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE))
                 node.getSession().checkPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
@@ -116,5 +116,10 @@ public class StatusColumn extends TreeColumn<Embedded> implements Serializable {
         embedded.setWidth("16px");
         embedded.setHeight("16px");
         return embedded;
+    }
+
+    @Override
+    public void setValue(Node node, Object newValue) throws RepositoryException {
+        // do nothing - we don't want to set the status directly....
     }
 }

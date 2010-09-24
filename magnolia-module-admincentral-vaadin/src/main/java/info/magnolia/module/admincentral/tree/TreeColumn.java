@@ -80,7 +80,16 @@ public abstract class TreeColumn<E> {
         this.label = label;
     }
 
+    /**
+     * Set value of Property for the provided node to the new value.
+     *
+     * @param node node to set property for
+     * @param newValue value to set
+     */
+    public abstract void setValue(Node node, Object newValue) throws RepositoryException;
+
     public void setWidth(int width) {
         this.width = width;
     }
+
 }

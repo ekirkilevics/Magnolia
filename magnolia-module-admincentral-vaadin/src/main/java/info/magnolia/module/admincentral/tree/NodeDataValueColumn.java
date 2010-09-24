@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.tree;
 
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.tree.container.PropertyMapper;
 
 import java.io.Serializable;
 
@@ -50,6 +51,8 @@ import com.vaadin.ui.TextField;
  * the TreeTable is a NodeData.
  */
 public class NodeDataValueColumn extends TreeColumn<String> implements Serializable {
+
+    public static final String PROPERTY_NAME = "value";
 
     private static final long serialVersionUID = -6032077132567486333L;
 
@@ -71,12 +74,18 @@ public class NodeDataValueColumn extends TreeColumn<String> implements Serializa
     @Override
     public Object getValue(Node node) throws RepositoryException {
         // TODO: find out what value to retrieve here...
-        Property value = JCRMetadataUtil.getMetaDataProperty(node, "value");
+        Property value = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
         return value.getString();
     }
 
     @Override
     public Field getEditField(Node ignored) {
         return (editable) ? new TextField() : null;
+    }
+
+    @Override
+    public void setValue(Node node, Object newValue) throws RepositoryException {
+        Node metaData = JCRMetadataUtil.getMetaData(node);
+        PropertyMapper.setValue(metaData, PROPERTY_NAME, newValue);
     }
 }

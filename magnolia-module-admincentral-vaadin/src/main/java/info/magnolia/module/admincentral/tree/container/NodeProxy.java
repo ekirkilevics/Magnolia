@@ -132,27 +132,23 @@ public class NodeProxy implements Serializable, Node {
         return getNode().canAddMixin(mixinName);
     }
 
-    @SuppressWarnings("deprecation")
     public void cancelMerge(Version version) throws VersionException,
             InvalidItemStateException, UnsupportedRepositoryOperationException,
             RepositoryException {
         getNode().cancelMerge(version);
     }
 
-    @SuppressWarnings("deprecation")
     public Version checkin() throws VersionException,
             UnsupportedRepositoryOperationException, InvalidItemStateException,
             LockException, RepositoryException {
         return getNode().checkin();
     }
 
-    @SuppressWarnings("deprecation")
     public void checkout() throws UnsupportedRepositoryOperationException,
             LockException, ActivityViolationException, RepositoryException {
         getNode().checkout();
     }
 
-    @SuppressWarnings("deprecation")
     public void doneMerge(Version version) throws VersionException,
             InvalidItemStateException, UnsupportedRepositoryOperationException,
             RepositoryException {

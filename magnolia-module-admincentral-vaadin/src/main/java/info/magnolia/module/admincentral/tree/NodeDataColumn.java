@@ -49,22 +49,19 @@ import com.vaadin.ui.TextField;
  */
 public class NodeDataColumn extends TreeColumn<String> implements Serializable {
 
-    private static final long serialVersionUID = -8092078437662819344L;
+    public static final String PROPERTY_NAME = "title";
 
-    private String nodeDataName;
+    private static final long serialVersionUID = 979787074349524725L;
 
     private boolean editable = false;
 
-    public boolean isEditable() {
-        return editable;
-    }
+    private String nodeDataName;
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
-
-    public void setNodeDataName(String nodeDataName) {
-        this.nodeDataName = nodeDataName;
+    @Override
+    public Field getEditField(Node unusedt) {
+        // TODO dlipp: check whether this editable flag makes sense. One has to define editing on
+        // the TreeTable level already...
+        return (editable) ? new TextField() : null;
     }
 
     public String getNodeDataName() {
@@ -78,14 +75,25 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
 
     @Override
     public Object getValue(Node node) throws RepositoryException {
-        Property title = node.getProperty("title");
+        Property title = node.getProperty(PROPERTY_NAME);
         return title.getString();
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public void setNodeDataName(String nodeDataName) {
+        this.nodeDataName = nodeDataName;
+    }
+
     @Override
-    public Field getEditField(Node unusedt) {
-        // TODO dlipp: check whether this editable flag makes sense. One has to define editing on
-        // the TreeTable level already...
-        return (editable) ? new TextField() : null;
+    public void setValue(Node node, Object newValue) throws RepositoryException {
+        Property title = node.getProperty(PROPERTY_NAME);
+        title.setValue((String) newValue);
     }
 }
