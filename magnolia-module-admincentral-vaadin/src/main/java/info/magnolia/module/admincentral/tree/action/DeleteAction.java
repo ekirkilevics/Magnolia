@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Deletes a node from the repository.
@@ -43,8 +45,15 @@ import info.magnolia.module.admincentral.views.AbstractTreeTableView;
  */
 public class DeleteAction extends TreeAction {
 
+     private static final long serialVersionUID = -4485698706375056385L;
+
     @Override
-    protected void handleAction(AbstractTreeTableView treeTable, Content content) {
-        treeTable.getTreeTable().removeItem(content.getUUID());
+    protected void handleAction(AbstractTreeTableView treeTable, Node node) throws RepositoryException{
+  
+        // TODO_ shouldn't this be implemented calling the JcrContainers methodes (if so - how to access the JcrContainer?)?
+        // Remove from JCR
+        treeTable.getTreeTable().removeItem(node.getPath());
+        // and from widget...
+        node.remove();
     }
 }

@@ -33,26 +33,31 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import com.vaadin.event.Action;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
-import org.apache.commons.lang.StringUtils;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import com.vaadin.event.Action;
+
 
 /**
  * Base class for all tree actions.
  */
 public abstract class TreeAction extends Action {
 
+    private static final long serialVersionUID = -4170116352082513835L;
+
     public TreeAction() {
         super(null);
     }
 
-    public boolean isAvailable(Content content, NodeData nodeData) {
+    // TODO: Second param to be converted (e.g. in Property?) as we do no longer use the Content-API
+    public boolean isAvailable(Node content, NodeData nodeData) {
         return true;
     }
 
@@ -60,29 +65,12 @@ public abstract class TreeAction extends Action {
 
         String itemId = (String) target;
 
-        // TODO what about itemId==null ?
-
-        if (itemId.indexOf('@') == -1) {
-            Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(itemId);
-
-            handleAction(treeTable, content);
-
-        } else {
-            String uuid = StringUtils.substringBefore(itemId, "@");
-            String nodeDataName = StringUtils.substringAfter(itemId, "@");
-            Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(uuid);
-
-            NodeData nodeData = content.getNodeData(nodeDataName);
-
-            handleAction(treeTable, content, nodeData);
-        }
+        Session session = LifeTimeJCRSessionUtil.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
+        Node node = session.getNode(itemId);
+        handleAction(treeTable, node);
     }
 
-    protected void handleAction(AbstractTreeTableView treeTable, Content content, NodeData nodeData) {
-        System.out.println(content.getHandle() + " @ " + nodeData.getName());
-    }
-
-    protected void handleAction(AbstractTreeTableView treeTable, Content content) {
-        System.out.println(content.getHandle());
+    protected void handleAction(AbstractTreeTableView treeTable, Node content) throws RepositoryException {
+        System.out.println(content.getPath());
     }
 }

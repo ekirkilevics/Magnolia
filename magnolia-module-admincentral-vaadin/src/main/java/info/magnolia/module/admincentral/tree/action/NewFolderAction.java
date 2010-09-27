@@ -33,27 +33,27 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
 
+import javax.jcr.Node;
+
+
 /**
- *  Action for adding a new folder.
+ * Action for adding a new folder.
  */
 public class NewFolderAction extends TreeAction {
 
+    private static final long serialVersionUID = -7658689118638162334L;
+
     @Override
-    public boolean isAvailable(Content content, NodeData nodeData) {
-
+    public boolean isAvailable(Node node, NodeData nodeData) {
         // This action is not available for NodeData
-
         return nodeData == null;
     }
 
     @Override
-    protected void handleAction(AbstractTreeTableView treeTable, Content content) {
-
-        
+    protected void handleAction(AbstractTreeTableView treeTable, Node node) {
 
     }
 }

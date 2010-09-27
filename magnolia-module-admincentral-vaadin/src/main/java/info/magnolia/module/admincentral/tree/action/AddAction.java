@@ -33,33 +33,30 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Item;
-import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
-import org.apache.commons.lang.RandomStringUtils;
 
-import java.util.Date;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 
 /**
  * Tree action for adding a page to the website repository.
- *
- * TODO this class is a mock up that only adds an item to the tree table. It will need to be changed into accessing the JCR.
+ * 
+ * TODO this class is a mock up that only adds an item to the tree table. It will need to be changed
+ * into accessing the JCR.
  */
 public class AddAction extends TreeAction {
 
+    private static final long serialVersionUID = 7745378363506148188L;
+
     @Override
-    protected void handleAction(AbstractTreeTableView treeTableView, Content content) {
-
-        TreeTable treeTable = treeTableView.getTreeTable();
-
-        String bogusUuid = "65f2b584-30bb-41ea-9720-" + RandomStringUtils.randomNumeric(12);
-
-        Item item = treeTable.addItem(bogusUuid);
-        treeTable.setParent(bogusUuid, content.getUUID());
-
-        item.getItemProperty("Page").setValue("untitled");
-        item.getItemProperty("Status").setValue(0);
-        item.getItemProperty("Mod. date").setValue(new Date());
+    protected void handleAction(AbstractTreeTableView treeTableView, Node node) throws RepositoryException {
+        // TODO_ shouldn't this be implemented calling the JcrContainers methodes (if so - how to
+        // access the JcrContainer?)?
+        // add to JCR
+        Node newChild = node.addNode(node.getPath() + "/untitled2");
+        // force reading and therefore realizing there's a new Node - eventually better implemented
+        // by using treeTable.addItem(String)
+        treeTableView.getTreeTable().getItem(newChild.getPath());
     }
 }

@@ -33,20 +33,26 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Window;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
+
 
 /**
  * Opens the selected page for page editing.
  */
 public class OpenPageAction extends TreeAction {
 
+    private static final long serialVersionUID = 751955514356448616L;
+
     @Override
-    protected void handleAction(AbstractTreeTableView treeTable, Content content) {
-        String uri = MgnlContext.getContextPath() + content.getHandle() + ".html";
+    protected void handleAction(AbstractTreeTableView treeTable, Node node) throws RepositoryException {
+        String uri = MgnlContext.getContextPath() + node.getPath() + ".html";
         Window window = treeTable.getApplication().getMainWindow();
         window.open(new ExternalResource(uri));
     }
