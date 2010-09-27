@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
@@ -42,9 +41,10 @@ import info.magnolia.module.admincentral.tree.action.TreeAction;
 
 import java.util.ArrayList;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +54,7 @@ import com.vaadin.terminal.ExternalResource;
 
 /**
  * A generic tree table view which can show data from any repository.
- *
+ * 
  * @author fgrilli
  */
 public class GenericTreeTableView extends AbstractTreeTableView {
@@ -71,7 +71,7 @@ public class GenericTreeTableView extends AbstractTreeTableView {
             // TODO: we need to somehow properly handle this
             log.error(e.getMessage(), e);
         }
-        getTreeTable().setContainerDataSource(getContainer(getTreeTable()));
+        getTreeTable().setContainerDataSource(createContainer(getTreeTable()));
         addContextMenu();
     }
 
@@ -84,44 +84,25 @@ public class GenericTreeTableView extends AbstractTreeTableView {
             public Action[] getActions(Object target, Object sender) {
 
                 ArrayList<Action> actions = new ArrayList<Action>();
+                try {
+                    String itemId = (String) target;
+                    Session session = LifeTimeJCRSessionUtil.getHierarchyManager(getTreeDefinition().getRepository()).getWorkspace().getSession();
+                    Node node = session.getNode(itemId);
 
-                if(true) return actions.toArray(new Action[actions.size()]);
-
-                for (MenuItem mi : getTreeDefinition().getContextMenuItems()) {
-
-                    try {
-
+                    for (MenuItem mi : getTreeDefinition().getContextMenuItems()) {
                         TreeAction action = mi.getAction();
 
-                        String itemId = (String) target;
-                        // when working with path instead of UUID:
-                        // Content content =
-                        // MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContent(itemId);
-
-                        if (itemId.indexOf('@') == -1) {
-                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(
-                                itemId);
-                            if (!action.isAvailable(content, null))
-                                continue;
-                        }
-                        else {
-                            String uuid = StringUtils.substringBefore(itemId, "@");
-                            String nodeDataName = StringUtils.substringAfter(itemId, "@");
-                            Content content = MgnlContext.getInstance().getHierarchyManager(getTreeDefinition().getRepository()).getContentByUUID(
-                                uuid);
-                            NodeData nodeData = content.getNodeData(nodeDataName);
-                            if (!action.isAvailable(content, nodeData))
-                                continue;
-                        }
+                        if (!action.isAvailable(node, null))
+                            continue;
 
                         action.setCaption(mi.getLabel());
                         action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
                         actions.add(action);
 
                     }
-                    catch (RepositoryException e) {
-                        log.error(e.getMessage(), e);
-                    }
+                }
+                catch (RepositoryException e) {
+                    log.error(e.getMessage(), e);
                 }
 
                 return actions.toArray(new Action[actions.size()]);

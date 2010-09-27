@@ -33,13 +33,11 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
 import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.container.JcrContainer;
+import info.magnolia.module.admincentral.tree.container.NodeItem;
 
 import javax.jcr.RepositoryException;
 
@@ -57,11 +55,11 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.TableFieldFactory;
-import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Table.TableDragMode;
+import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 
 
@@ -188,32 +186,16 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
             public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
                 if (selectedItemId != null) {
                     if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-
                         try {
-
-                            for (TreeColumn column : treeDefinition.getColumns()) {
-
+                            for (TreeColumn< ? > column : treeDefinition.getColumns()) {
                                 if (column.getLabel().equals(propertyId)) {
                                     // TODO: get rid of using the Content API here!
                                     String x = (String) itemId;
-                                    if (x.indexOf('@') == -1) {
-                                        Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(x);
-                                        Field field = column.getEditField(content.getJCRNode());
+                                    NodeItem nodeItem = (NodeItem) treeTable.getItem(itemId);
+                                        Field field = column.getEditField(nodeItem.getNode());
                                         if (field != null)
                                             return field;
 
-                                    }
-                                    else {
-                                        String uuid = StringUtils.substringBefore(x, "@");
-                                        String nodeDataName = StringUtils.substringAfter(x, "@");
-                                        Content content = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getContentByUUID(uuid);
-
-                                        NodeData nodeData = content.getNodeData(nodeDataName);
-                                        // TODO: get rid of using the Content API here!
-                                        Field field = column.getEditField(content.getJCRNode());
-                                        if (field != null)
-                                            return field;
-                                    }
                                 }
                             }
                         }
@@ -301,7 +283,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         setExpanded(parent, false);
     }
 
-    public Container.Hierarchical getContainer(TreeTable tree) {
+    public Container.Hierarchical createContainer(TreeTable tree) {
         Container.Hierarchical container = new JcrContainer(tree, treeDefinition, "/");
         for (TreeColumn treeColumn : treeDefinition.getColumns()) {
             container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
