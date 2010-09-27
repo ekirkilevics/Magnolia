@@ -78,7 +78,8 @@ public class LabelColumn extends TreeColumn<String> implements Serializable {
 
     @Override
     public void setValue(Node node, Object value) throws RepositoryException {
-        throw new RepositoryException("Do not yet know how to change Name of a node :-(");
+        //throw new RepositoryException("Do not yet know how to change Name of a node :-(");
+        System.out.println("WARN: Setting Label for Node " + node.getPath() + " to value " + value + " ignored for now..." );
     }
 
 }

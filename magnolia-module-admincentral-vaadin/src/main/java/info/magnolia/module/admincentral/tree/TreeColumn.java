@@ -41,7 +41,7 @@ import com.vaadin.ui.Field;
 
 /**
  * Base class for tree columns.
- *
+ * 
  * @param <E> type of the hosted values of this column.
  */
 public abstract class TreeColumn<E> {
@@ -54,6 +54,8 @@ public abstract class TreeColumn<E> {
      * @return Field used when editing this column. Defaults to null.
      */
     public Field getEditField(Node node) {
+        // TODO: has to operate on vaadin's Item rather than on JCR-Node. Table could also contain
+        // e.g. NodePropertyItems...
         return null;
     }
 
@@ -82,7 +84,7 @@ public abstract class TreeColumn<E> {
 
     /**
      * Set value of Property for the provided node to the new value.
-     *
+     * 
      * @param node node to set property for
      * @param newValue value to set
      */

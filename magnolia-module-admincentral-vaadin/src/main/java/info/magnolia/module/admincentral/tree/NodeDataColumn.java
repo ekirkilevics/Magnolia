@@ -95,5 +95,7 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
     public void setValue(Node node, Object newValue) throws RepositoryException {
         Property title = node.getProperty(PROPERTY_NAME);
         title.setValue((String) newValue);
+        // TODO: verify that this is desired
+        node.getSession().save();
     }
 }

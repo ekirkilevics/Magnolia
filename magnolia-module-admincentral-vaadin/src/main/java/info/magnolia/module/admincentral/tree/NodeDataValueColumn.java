@@ -86,6 +86,7 @@ public class NodeDataValueColumn extends TreeColumn<String> implements Serializa
     @Override
     public void setValue(Node node, Object newValue) throws RepositoryException {
         Node metaData = JCRMetadataUtil.getMetaData(node);
+        node.getSession().save();
         PropertyMapper.setValue(metaData, PROPERTY_NAME, newValue);
     }
 }

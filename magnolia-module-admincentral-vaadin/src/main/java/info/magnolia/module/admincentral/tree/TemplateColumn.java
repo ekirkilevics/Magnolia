@@ -90,14 +90,14 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
             select.setItemCaption(key, availableTemplates.get(key));
         }
 
-        try {
-            Property template = JCRMetadataUtil.getMetaDataProperty(node, JCRMetadataUtil.TEMPLATE);
-            select.setValue(template.getString());
-        }
-        catch (RepositoryException e) {
-            select = null;
-        }
-        return select;
+//        try {
+//            Property template = JCRMetadataUtil.getMetaDataProperty(node, JCRMetadataUtil.TEMPLATE);
+//            select.setValue(template.getString());
+//        }
+//        catch (RepositoryException e) {
+//            select = null;
+//        }
+       return select;
     }
 
     @Override
