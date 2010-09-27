@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -133,15 +134,18 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
 
     public Item addItem(Object itemId) {
         assertIsString(itemId);
+        String fullPath = (String) itemId;
         try {
             if (!containsId(itemId)
-                    && !getSession().nodeExists((String) itemId)) {
-                String relativePath = JCRUtil.getRelativePathToRoot(itemId);
-                Node content = getSession().getRootNode().addNode(relativePath);
-
+                    && !getSession().nodeExists(fullPath)) {
+                String itemPath = JCRUtil.getItemIdWithoutPath(fullPath);
+                String parentPath = JCRUtil.getPathWithoutItemId(fullPath);
+                Node parent = getSession().getNode(parentPath);
+                
+                Node newNode = parent.addNode(itemPath);
                 // not sure whether this is needed like that...
                 for (TreeColumn< ? > treeColumn : this.definition.getColumns()) {
-                    getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(content));
+                    getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(newNode));
                 }
 
             }
@@ -152,8 +156,9 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         }
     }
 
+    // is used to indicate in the TreeTable whether there're children or not
     public boolean areChildrenAllowed(Object itemId) {
-        return true;
+        return hasChildren(itemId);
     }
 
     protected void assertIsString(Object itemId) {
@@ -190,6 +195,15 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
             while (iterator.hasNext()) {
                 node = iterator.nextNode();
                 children.add(getNodeItem(node.getPath()).getItemId());
+            }
+
+            PropertyIterator properties = parent.getProperties();
+            javax.jcr.Property property;
+            while (properties.hasNext()) {
+                property = (javax.jcr.Property) properties.next();
+                log.info("Found " + property.toString());
+                // TODO: treat properties as well!
+            //    children.add(getNodePropertyItem())
             }
         }
         catch (RepositoryException e) {
@@ -253,7 +267,8 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
     private Resource getItemIconFor(String pathToIcon) {
         if (!itemIcons.containsKey(pathToIcon)) {
             // check if this path starts or not with a /
-            String tmp = MgnlContext.getContextPath() + (!pathToIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + pathToIcon : pathToIcon);
+            String tmp = MgnlContext.getContextPath()
+                + (!pathToIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + pathToIcon : pathToIcon);
             itemIcons.put(pathToIcon, new ExternalResource(tmp));
         }
         return itemIcons.get(pathToIcon);
@@ -409,11 +424,11 @@ public class JcrContainer implements Serializable, Container.Hierarchical, Buffe
         try {
             // next line is just required to get the itemIcon properly set...
             // getNodeItem(absoluteItemPath);
-            String newid = (String) newRelativePath + JCRUtil.PATH_SEPARATOR + JCRUtil.getItemIdWithoutPath(absoluteItemPath);
+            String newid = (String) newRelativePath + JCRUtil.PATH_SEPARATOR + JCRUtil.getItemIdWithoutPath((String)absoluteItemPath);
             nodeItems.remove(absoluteItemPath);
-            
-            //TODO: all child paths have to be adapted!
-            //removeChildItems(item);
+
+            // TODO: all child paths have to be adapted!
+            // removeChildItems(item);
             getSession().move((String) absoluteItemPath, newid);
             getNodeItem(newid);
         }
