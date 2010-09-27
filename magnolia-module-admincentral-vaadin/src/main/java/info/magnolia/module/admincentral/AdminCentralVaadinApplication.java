@@ -154,6 +154,8 @@ public class AdminCentralVaadinApplication extends Application {
         final Button userPreferences = new Button(user.getName());
         userPreferences.setStyleName(BaseTheme.BUTTON_LINK);
         userPreferences.addListener(new Button.ClickListener () {
+            private static final long serialVersionUID = 7477646576639532112L;
+
             public void buttonClick(ClickEvent event) {
                 try {
                     if (user instanceof MgnlUser) {
@@ -174,6 +176,8 @@ public class AdminCentralVaadinApplication extends Application {
         final Button logout = new Button(messages.get("central.logout"));
         logout.setStyleName(BaseTheme.BUTTON_LINK);
         logout.addListener(new Button.ClickListener () {
+            private static final long serialVersionUID = 6067826137675410483L;
+
             public void buttonClick(ClickEvent event) {
                 ((WebApplicationContext)getContext()).getHttpSession().invalidate();
                 getMainWindow().getApplication().close();
@@ -203,6 +207,7 @@ public class AdminCentralVaadinApplication extends Application {
         final SplitPanel splitPanel = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         splitPanel.setSplitPosition(15);
         splitPanel.addListener(new SplitterClickListener() {
+            private static final long serialVersionUID = 4837023553542505515L;
 
             public void splitterClick(SplitterClickEvent event) {
                 if(event.isDoubleClick()){

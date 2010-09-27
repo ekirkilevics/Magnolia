@@ -59,7 +59,7 @@ public class NodeProperty implements Property,
     /**
      * Event for changes of values.
      */
-    protected class ValueChangeEvent extends EventObject implements
+    protected static class ValueChangeEvent extends EventObject implements
             Property.ValueChangeEvent {
 
         private static final long serialVersionUID = 348981570885096308L;

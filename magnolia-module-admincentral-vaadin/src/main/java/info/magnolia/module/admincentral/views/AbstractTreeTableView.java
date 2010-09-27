@@ -189,8 +189,6 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                         try {
                             for (TreeColumn< ? > column : treeDefinition.getColumns()) {
                                 if (column.getLabel().equals(propertyId)) {
-                                    // TODO: get rid of using the Content API here!
-                                    String x = (String) itemId;
                                     NodeItem nodeItem = (NodeItem) treeTable.getItem(itemId);
                                         Field field = column.getEditField(nodeItem.getNode());
                                         if (field != null)

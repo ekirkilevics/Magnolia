@@ -80,10 +80,10 @@ import javax.jcr.version.VersionHistory;
  * <p>
  * Lazy loading, serializable JCR Node.
  * </p>
- *
+ * TODO: replace calls to deprecated methods
+ * 
  * @author Lance Weber, Alfheim Studios LLC <lance@alfheimstudios.com>
  * @version 1.0.0
- *
  */
 public class NodeProxy implements Serializable, Node {
 

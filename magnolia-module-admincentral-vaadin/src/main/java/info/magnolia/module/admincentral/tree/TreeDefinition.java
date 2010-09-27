@@ -40,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Definition of a tree.
  */
@@ -48,18 +49,23 @@ public class TreeDefinition implements Serializable {
     private static final long serialVersionUID = -4220598066437699852L;
 
     private String name;
+
     private String repository;
+
     private String path;
 
     /**
-     * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show their children. Used
-     * in the security trees.
+     * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show
+     * their children. Used in the security trees.
      */
     private boolean flatMode = false;
 
-    private Map<String, TreeColumn> columns = new LinkedHashMap<String, TreeColumn>();
+    private Map<String, TreeColumn< ? >> columns = new LinkedHashMap<String, TreeColumn< ? >>();
+
     private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
+
     private List<MenuItem> contextMenuItems = new ArrayList<MenuItem>();
+
     private List<TreeItemType> itemTypes = new ArrayList<TreeItemType>();
 
     public boolean isFlatMode() {
@@ -106,17 +112,16 @@ public class TreeDefinition implements Serializable {
         this.name = name;
     }
 
-    public TreeColumn getColumn(String columnId) {
+    public TreeColumn< ? > getColumn(String columnId) {
         return columns.get(columnId);
     }
 
-    public Collection<TreeColumn> getColumns() {
+    public Collection<TreeColumn< ? >> getColumns() {
         return columns.values();
     }
 
-
-    public void addColumn(TreeColumn treeColumn) {
-        columns.put(treeColumn.getLabel(),treeColumn);
+    public void addColumn(TreeColumn< ? > treeColumn) {
+        columns.put(treeColumn.getLabel(), treeColumn);
     }
 
     public List<MenuItem> getFunctionMenu() {
