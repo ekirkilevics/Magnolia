@@ -87,6 +87,8 @@ import javax.jcr.version.VersionHistory;
  */
 public class NodeProxy implements Serializable, Node {
 
+    private static final long serialVersionUID = 4235488890260086120L;
+
     private transient Node node;
 
     private String nodepath;
@@ -100,7 +102,7 @@ public class NodeProxy implements Serializable, Node {
         this.provider = provider;
     }
 
-    protected Node getNode() throws RepositoryException {
+    public Node getNode() throws RepositoryException {
         if (node == null) {
             node = provider.getSession().getNode(nodepath);
         }
