@@ -44,19 +44,24 @@ public class JCRUtil {
 
     public static final String PATH_SEPARATOR = "/";
 
-    public static String getRelativePathToRoot(Object itemId) {
-        String path = (String) itemId;
-        if (!path.startsWith(PATH_SEPARATOR)) {
+    public static String getRelativePathToRoot(String fullPath) {
+        if (!fullPath.startsWith(PATH_SEPARATOR)) {
             throw new IllegalArgumentException("path not relative to target");
         }
-        return path.substring(PATH_SEPARATOR.length());
+        return fullPath.substring(PATH_SEPARATOR.length());
     }
 
-    public static String getItemIdWithoutPath(Object itemPath) {
-        String path = (String) itemPath;
-        if (!path.startsWith(PATH_SEPARATOR)) {
+    public static String getItemIdWithoutPath(String fullPath) {
+        if (!fullPath.startsWith(PATH_SEPARATOR)) {
             throw new IllegalArgumentException("path not relative to target");
         }
-        return path.substring(path.lastIndexOf(PATH_SEPARATOR) + 1, path.length());
+        return fullPath.substring(fullPath.lastIndexOf(PATH_SEPARATOR) + 1, fullPath.length());
+    }
+
+    public static String getPathWithoutItemId(String fullPath) {
+        if (!fullPath.startsWith(PATH_SEPARATOR)) {
+            throw new IllegalArgumentException("path not relative to target");
+        }
+        return fullPath.substring(fullPath.lastIndexOf(PATH_SEPARATOR));
     }
 }
