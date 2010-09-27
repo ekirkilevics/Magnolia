@@ -285,7 +285,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
 
     public Container.Hierarchical createContainer(TreeTable tree) {
         Container.Hierarchical container = new JcrContainer(tree, treeDefinition, "/");
-        for (TreeColumn treeColumn : treeDefinition.getColumns()) {
+        for (TreeColumn<?> treeColumn : treeDefinition.getColumns()) {
             container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
         // Container.Hierarchical container = new FilesystemContainer(new
