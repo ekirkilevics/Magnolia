@@ -274,16 +274,16 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                 return;
             final String path = uriFragmentTokens[1];
             //leaf is expanded and selected
-            expandAll(path, true);
+            setExpanded(path, true);
         }
     }
     /**
-     * Helper method to recursively expand a tree from the leaf we want to show up to the root. Expanding the single leaf won't suffice to show it
-     * as it will be hidden by the collapsed parents.
-     * @param path the path to expand.
-     * @param select if true will select the corresponding row in the table.
+     * Expand a tree from the node we want to show, up to the root. Expanding the single node won't suffice to show it
+     * as it will be hidden by the collapsed ancestors.
+     * @param path the path to the node to expand.
+     * @param select if true will also select the corresponding row in the table.
      */
-    private void expandAll(String path, boolean select) {
+    protected void setExpanded(String path, boolean select) {
         log.debug("expanding {}...", path);
 
         if(StringUtils.isBlank(path) || treeTable.getParent(path)==null){
@@ -298,7 +298,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
         log.debug("{} is expanded? {} and selected? {}", new Object[]{path, !treeTable.isCollapsed(path), treeTable.isSelected(path)});
 
         final String parent = StringUtils.substringBeforeLast(path, "/");
-        expandAll(parent, false);
+        setExpanded(parent, false);
     }
 
     public Container.Hierarchical getContainer(TreeTable tree) {
