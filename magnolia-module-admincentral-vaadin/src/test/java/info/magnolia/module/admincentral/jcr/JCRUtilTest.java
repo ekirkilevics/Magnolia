@@ -48,12 +48,16 @@ public class JCRUtilTest {
 
     @Test
     public void testGetRelativPath() {
-        assertEquals("itemId", JCRUtil.getItemIdWithoutPath("/itemId"));
         assertEquals("d", JCRUtil.getItemIdWithoutPath("/a/b/c/d"));
     }
 
     @Test
     public void testGetRelativePathToRoot() {
         assertEquals("relativePath", JCRUtil.getRelativePathToRoot("/relativePath"));
+    }
+    
+    @Test
+    public void testGetPathWithoutItemId() {
+        assertEquals("/thisIsTheParentsPath", JCRUtil.getPathWithoutItemId("/thisIsTheParentsPath/childsPath"));
     }
 }
