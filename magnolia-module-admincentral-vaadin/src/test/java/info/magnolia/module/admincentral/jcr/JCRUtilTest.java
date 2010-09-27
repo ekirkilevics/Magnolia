@@ -58,6 +58,6 @@ public class JCRUtilTest {
     
     @Test
     public void testGetPathWithoutItemId() {
-        assertEquals("/thisIsTheParentsPath", JCRUtil.getPathWithoutItemId("/thisIsTheParentsPath/childsPath"));
+        assertEquals("/childsPath", JCRUtil.getPathWithoutItemId("/thisIsTheParentsPath/childsPath"));
     }
 }
