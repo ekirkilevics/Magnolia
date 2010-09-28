@@ -3,13 +3,13 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>16</version>
+    <version>17</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>4.3.7-SNAPSHOT</version>
+  <version>4.4-SNAPSHOT</version>
   <description>
 Magnolia is an open-source enterprise class Content Management System
 developed by Magnolia International Ltd., based on the standard API
