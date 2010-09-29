@@ -55,7 +55,7 @@
       TODO needed for ParagraphSelectDialog - but currently circular, so see note in info.magnolia.module.templatingcomponentsomponents.EditBar
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>4.3-SNAPSHOT</version>
+      <version>4.4-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency-->
     <dependency>
