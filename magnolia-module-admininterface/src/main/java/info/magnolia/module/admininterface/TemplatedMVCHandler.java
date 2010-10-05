@@ -47,8 +47,8 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * A default page (hander) using a freemarker template to render. The default templat name is following the class name.
- * You can overwrite the getTemplateName() method wich can return a template per view.
+ * A default page (handler) using a freemarker template to render. The default template name is following the class name.
+ * You can overwrite the getTemplateName() method which can return a template per view.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -88,7 +88,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
         if(StringUtils.isEmpty(view)){
             return;
         }
-        
+
         String template = this.getTemplateName(view);
         if (template != null) {
 
