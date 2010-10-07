@@ -74,7 +74,11 @@ public interface SoftLockingSupport {
      * @throws AccessDeniedException
      */
     boolean isLocked(Content content) throws AccessDeniedException, RepositoryException;
-
+    /**
+     * Used to obtain a singleton of this obejct.
+     * @author fgrilli
+     *
+     */
     static class Factory{
         public static SoftLockingSupport getInstance(){
             return Components.getSingleton(SoftLockingSupport.class);
