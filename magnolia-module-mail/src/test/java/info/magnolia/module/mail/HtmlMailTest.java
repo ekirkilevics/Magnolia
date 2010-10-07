@@ -43,6 +43,7 @@ import java.util.Iterator;
 
 
 /**
+ * HtmlMailTest.
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class HtmlMailTest extends AbstractMailTest {

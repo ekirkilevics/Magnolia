@@ -40,6 +40,7 @@ import java.io.InputStream;
 
 
 /**
+ * Repository provider. This interface is intended to be implemented by all repository implementations that can be used by Magnolia.
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Id$
@@ -102,13 +103,13 @@ public interface Provider {
     void registerNodeTypes(InputStream stream) throws RepositoryException;
 
     /**
-     * Register a new workspace in the current repository
+     * Register a new workspace in the current repository.
      * @param workspaceName workspace name
      * @return <code>true</code> true if the workspace is registered now of <code>false</code> if it was already
      * registered
      * @throws RepositoryException if any exception occours during registration
      */
     boolean registerWorkspace(String workspaceName) throws RepositoryException;
-    
+
     void shutdownRepository();
 }

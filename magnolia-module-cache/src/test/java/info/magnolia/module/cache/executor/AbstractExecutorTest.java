@@ -45,6 +45,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+/**
+ * Basic test for the common cache executor functionality.
+ * @author had
+ * @version $Id: $
+ */
 public class AbstractExecutorTest extends TestCase {
     private final static long ONE_SECOND_IN_MSECS = 1000L;
 
@@ -101,8 +106,8 @@ public class AbstractExecutorTest extends TestCase {
         assertFalse("Request if-modified-since is the same as modification time - should have returned false", modifiedSince);
     }
 
-    /*
-    No-op implementation purely here so we can test abstract methods
+    /**
+     * No-op implementation purely here so we can test abstract methods.
      */
     class TestExecutor extends AbstractExecutor {
 

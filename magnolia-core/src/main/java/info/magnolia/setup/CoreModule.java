@@ -40,7 +40,7 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
 /**
- *
+ * Core module life cycle class. Ensures registration of observation necessary for correct initialization of Magnolia.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  *

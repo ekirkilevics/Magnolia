@@ -39,6 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
+ * FCKEditor Module.
  * @author vsteller
  * @version $Id$
  *
@@ -60,7 +61,9 @@ public class FCKEditorModule {
     public void addBrowsableRepository(BrowsableRepository repository) {
         browsableRepositories.add(repository);
     }
-
+    /**
+     * BrowsableRepository.
+     */
     public static class BrowsableRepository extends BaseConfiguration {
 
     }

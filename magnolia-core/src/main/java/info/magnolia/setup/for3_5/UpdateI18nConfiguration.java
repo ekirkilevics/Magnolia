@@ -50,7 +50,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
+ * Updates pre 3.5 internationalization configuration to the format used since 3.5.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -63,6 +63,9 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
                 "config", I18N_NODEPATH, new UpdateFrom30(), new BootstrapI18nConfig());
     }
 
+    /**
+     * Bootstrap task for loading new i18n configuration.
+     */
     final static class BootstrapI18nConfig extends BootstrapResourcesTask {
         BootstrapI18nConfig() {
             super(null, null);
@@ -76,6 +79,9 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
         }
     }
 
+    /**
+     * Update task for bootstrapping new configuration and then merging it with existing configuration in the upgraded instance.
+     */
     static class UpdateFrom30 extends AbstractRepositoryTask {
         UpdateFrom30() {
             super(null, null);

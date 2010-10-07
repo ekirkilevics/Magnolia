@@ -46,6 +46,7 @@ import org.apache.velocity.app.Velocity;
 
 
 /**
+ * Sends an email using a velocity template.
  * Date: Mar 30, 2006 Time: 1:13:33 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */

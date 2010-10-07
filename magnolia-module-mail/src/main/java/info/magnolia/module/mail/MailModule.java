@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Mail module.
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MailModule implements ModuleLifecycle {

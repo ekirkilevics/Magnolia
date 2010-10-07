@@ -53,8 +53,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-
 /**
+ * Removes <code>mix:versionable</code> from all bootstrap files.
  * @author philipp
  * @version $Id$
  *

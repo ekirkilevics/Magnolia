@@ -54,9 +54,10 @@ import org.apache.jackrabbit.value.StringValue;
 
 
 /**
+ * A {@link info.magnolia.module.delta.Task} which updates the default activation workflow definition, if it still the default from previous versions.
+ *
  * @author vsteller
  * @version $Id$
- *
  */
 public class CheckAndUpdateDefaultWorkflowDefinition extends AbstractTask {
 

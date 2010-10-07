@@ -37,20 +37,23 @@ import info.magnolia.module.mail.templates.MgnlEmail;
 
 
 /**
+ * The interface to implement for sending emails with Magnolia.
  * Date: Mar 30, 2006 Time: 1:06:23 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
+ * @see SimpleMailHandler
+ * @see ThreadedMailHandler
  */
 public interface MgnlMailHandler {
 
     /**
-     * Prepare the email (format it) and send it
+     * Prepare the email (format it) and send it.
      * @param email the email to send
      * @throws Exception if fails
      */
     void prepareAndSendMail(MgnlEmail email) throws Exception;
 
     /**
-     * Send the email as is, without touching it
+     * Send the email as is, without touching it.
      * @param email the email to send
      * @throws Exception if fails
      */

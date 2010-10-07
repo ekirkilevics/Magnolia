@@ -63,44 +63,38 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * The {@link info.magnolia.module.admininterface.lists.AbstractList} responsible for displaying a user's inbox, i.e current work items.
  * @author Philipp Bracher
  * @version $Revision:3416 $ ($Author:philipp $)
  */
 public class Inbox extends AbstractList {
 
     /**
-     * The id of the workitem on which we called the command
+     * The id of the workitem on which we called the command.
      */
     private String flowItemId;
 
     /**
-     * The comment the user entered by proceeding or rejecting
+     * The comment the user entered by proceeding or rejecting.
      */
     private String comment;
 
     /**
-     * Show all the values of the workitem if true
+     * Show all the values of the workitem if true.
      */
     private boolean debug = false;
 
     protected Messages msgs = MessagesManager.getMessages("info.magnolia.module.workflow.messages");
 
-    /**
-     * @param name
-     * @param request
-     * @param response
-     */
     public Inbox(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
 
-    /**
-     * @see info.magnolia.module.admininterface.lists.AbstractList#getModel()
-     */
     public ListModel getModel() {
         return new InboxListModel(MgnlContext.getUser().getName());
     }
 
+    @Override
     public String getSortBy() {
         if(StringUtils.isEmpty(super.getSortBy())){
             setSortBy("lastModified");
@@ -109,7 +103,7 @@ public class Inbox extends AbstractList {
     }
 
     /**
-     * Sets the select js code and defines the columns
+     * Sets the select js code and defines the columns.
      */
     public void configureList(ListControl list) {
 
@@ -246,7 +240,7 @@ public class Inbox extends AbstractList {
     }
 
     /**
-     * Same as the context menu
+     * Same as the context menu.
      */
     public void configureFunctionBar(FunctionBar bar) {
         ContextMenu menu = this.getContextMenu();
@@ -268,7 +262,7 @@ public class Inbox extends AbstractList {
     }
 
     /**
-     * Proceed the item
+     * Proceed the item.
      */
     public String proceed() {
         try {
@@ -281,7 +275,7 @@ public class Inbox extends AbstractList {
     }
 
     /**
-     * Reject the item (adds a comment)
+     * Reject the item (adds a comment).
      */
     public String reject() {
         try {
@@ -306,44 +300,26 @@ public class Inbox extends AbstractList {
         return this.show();
     }
 
-    /**
-     * @return Returns the flowItemId.
-     */
     public String getFlowItemId() {
         return this.flowItemId;
     }
 
-    /**
-     * @param flowItemId The flowItemId to set.
-     */
     public void setFlowItemId(String flowItemId) {
         this.flowItemId = flowItemId;
     }
 
-    /**
-     * @return Returns the comment.
-     */
     public String getComment() {
         return this.comment;
     }
 
-    /**
-     * @param comment The comment to set.
-     */
     public void setComment(String comment) {
         this.comment = comment;
     }
 
-    /**
-     * @return Returns the debug.
-     */
     public boolean isDebug() {
         return this.debug;
     }
 
-    /**
-     * @param debug The debug to set.
-     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }

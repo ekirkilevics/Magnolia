@@ -74,7 +74,8 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * The {@link info.magnolia.module.ModuleVersionHandler} for the workflow module.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

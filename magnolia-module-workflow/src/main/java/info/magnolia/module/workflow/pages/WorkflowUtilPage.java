@@ -58,27 +58,16 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
+ * A {@link TemplatedMVCHandler} providing utility/test functions for workflows.
  */
 public class WorkflowUtilPage extends TemplatedMVCHandler {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(WorkflowUtilPage.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkflowUtilPage.class);
 
     protected FlowDefinitionManager fdm = WorkflowModule.getFlowDefinitionManager();
 
-    /**
-     * @param name
-     * @param request
-     * @param response
-     */
     public WorkflowUtilPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
@@ -103,122 +92,62 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
 
     private String flow = "<!-- the name of the definition will get used as the upload name-->";
 
-    /**
-     * Getter for <code>flow</code>.
-     * @return Returns the flow.
-     */
     public String getFlow() {
         return this.flow;
     }
 
-    /**
-     * Setter for <code>flow</code>.
-     * @param flow The flow to set.
-     */
     public void setFlow(String flow) {
         this.flow = flow;
     }
 
-    /**
-     * Getter for <code>flowName</code>.
-     * @return Returns the flowName.
-     */
     public String getFlowName() {
         return this.flowName;
     }
 
-    /**
-     * Setter for <code>flowName</code>.
-     * @param flowName The flowName to set.
-     */
     public void setFlowName(String flowName) {
         this.flowName = flowName;
     }
 
-    /**
-     * Getter for <code>path</code>.
-     * @return Returns the path.
-     */
     public String getPath() {
         return this.path;
     }
 
-    /**
-     * Setter for <code>path</code>.
-     * @param path The path to set.
-     */
     public void setPath(String path) {
         this.path = path;
     }
 
-    /**
-     * Getter for <code>query</code>.
-     * @return Returns the query.
-     */
     public String getQuery() {
         return this.query;
     }
 
-    /**
-     * Setter for <code>query</code>.
-     * @param query The query to set.
-     */
     public void setQuery(String query) {
         this.query = query;
     }
 
-    /**
-     * Getter for <code>repository</code>.
-     * @return Returns the repository.
-     */
     public String getRepository() {
         return this.repository;
     }
 
-    /**
-     * Setter for <code>repository</code>.
-     * @param repository The repository to set.
-     */
     public void setRepository(String repository) {
         this.repository = repository;
     }
 
-    /**
-     * Getter for <code>startDate</code>.
-     * @return Returns the startDate.
-     */
     public String getStartDate() {
         return this.startDate;
     }
 
-    /**
-     * Setter for <code>startDate</code>.
-     * @param startDate The startDate to set.
-     */
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    /**
-     * Getter for <code>stopDate</code>.
-     * @return Returns the stopDate.
-     */
     public String getStopDate() {
         return this.stopDate;
     }
 
-    /**
-     * Setter for <code>stopDate</code>.
-     * @param stopDate The stopDate to set.
-     */
     public void setStopDate(String stopDate) {
         this.stopDate = stopDate;
     }
 
-    /**
-     * Getter for <code>result</code>.
-     * @return Returns the result.
-     */
     public String getResult() {
         return this.result;
     }

@@ -73,6 +73,7 @@ import java.util.Map;
 
 
 /**
+ * MgnlPageEmail.
  * Date: Apr 6, 2006 Time: 9:24:29 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  *
@@ -388,7 +389,11 @@ public class MgnlPageEmail extends FreemarkerEmail {
         return response;
     }
 
-   static class ContentFilter implements Filter {
+    /**
+     * Content filter.
+     *
+     */
+    static class ContentFilter implements Filter {
 
 
         private static final long serialVersionUID = 1L;

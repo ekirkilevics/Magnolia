@@ -51,14 +51,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Store for all virtual URI to template/page mapping.
- * 
+ *
  * @author Sameer Charles
  * @version 2.0
  */
 public final class VirtualURIManager extends ObservedManager {
 
-	private static final Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
-	
+    private static final Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
+
     public static final String FROM_URI_NODEDATANAME = "fromURI";
 
     public static final String TO_URI_NODEDATANAME = "toURI";

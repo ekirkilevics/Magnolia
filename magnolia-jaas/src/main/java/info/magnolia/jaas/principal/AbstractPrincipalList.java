@@ -43,7 +43,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
+ * Implementation of the <code>PrincipalList</code> providing most common functionality.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -52,7 +52,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     private String name;
 
     /**
-     * list of names
+     * List of role names assigned to a principal.
      */
     private Collection list;
 
@@ -61,7 +61,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     }
 
     /**
-     * Get name given to this principal
+     * Gets name given to this principal.
      * @return name
      */
     public String getName() {
@@ -74,7 +74,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     abstract String getDefaultName();
 
     /**
-     * Set principal name
+     * Sets principal name.
      * @param name
      */
     public void setName(String name) {
@@ -82,7 +82,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     }
 
     /**
-     * Add a name to the list
+     * Adds a name to the list.
      * @param name
      */
     public void add(String name) {
@@ -90,7 +90,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     }
 
     /**
-     * Gets list of roles as string
+     * Gets list of roles as string.
      * @return roles
      */
     public Collection getList() {
@@ -98,7 +98,7 @@ public abstract class AbstractPrincipalList implements PrincipalList {
     }
 
     /**
-     * Checks if the name exist in this list
+     * Checks if the role name exist in this list.
      * @param name
      */
     public boolean has(String name) {

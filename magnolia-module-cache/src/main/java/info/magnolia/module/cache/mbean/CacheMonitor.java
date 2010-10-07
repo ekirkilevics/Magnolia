@@ -51,6 +51,7 @@ import java.util.Map;
 import org.apache.commons.chain.Command;
 
 /**
+ * <code>MBean</code> implementation for the cache status.
  * @author had
  * @version $Id:$
  */

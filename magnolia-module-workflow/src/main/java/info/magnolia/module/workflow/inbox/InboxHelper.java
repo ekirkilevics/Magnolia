@@ -42,16 +42,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Utiities for {@link Inbox} and {@link SubPagesList}.
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class InboxHelper {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(InboxHelper.class);
+    private static final Logger log = LoggerFactory.getLogger(InboxHelper.class);
 
     protected static String getIcon(String repository, String path) {
         if (StringUtils.equals(repository, "website")) {

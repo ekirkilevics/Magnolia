@@ -37,6 +37,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * Default cache key implementation. Key is based on the URI, server name, parameters and request headers. Since the server name is likely to change from server to server, copying cached items around will most likely not help to avoid generating cache entries.
+ *
  * @author had
  * @version $Id:$
  */

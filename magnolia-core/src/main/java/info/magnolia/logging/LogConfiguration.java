@@ -33,7 +33,6 @@
  */
 package info.magnolia.logging;
 
-
 /**
  * Defines action based log configurations.
  *

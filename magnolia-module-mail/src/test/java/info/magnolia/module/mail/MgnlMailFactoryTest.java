@@ -40,7 +40,7 @@ import org.subethamail.wiser.WiserMessage;
 import java.util.Iterator;
 
 /**
- *
+ * MgnlMailFactoryTest.
  * Date: Mar 31, 2006
  * Time: 9:14:00 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>

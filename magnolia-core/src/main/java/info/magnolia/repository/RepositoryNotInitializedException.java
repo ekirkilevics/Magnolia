@@ -37,6 +37,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
+ * Exception thrown when repository can't be initialized and thus also accessed by Magnolia.
  * @author Sameer Charles
  * @version 2.1
  */

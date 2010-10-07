@@ -68,9 +68,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Read and store flows in the repositories
+ * Read and store flows in the repositories.
  * @author philipp
- *
  */
 public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
 
@@ -125,7 +124,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
     }
 
     /**
-     * find one flow node by flow name
+     * find one flow node by flow name.
      * @return Content node in JCR store for specified flow definition
      */
     public Content getDefinitionNode(String name) throws RepositoryException {

@@ -39,7 +39,7 @@ import junit.framework.TestCase;
 import java.io.IOException;
 
 /**
- *
+ * Basic test for the cached page functionality.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

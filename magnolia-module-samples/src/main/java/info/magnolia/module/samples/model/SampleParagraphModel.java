@@ -41,10 +41,10 @@ import info.magnolia.module.templating.RenderingModel;
 
 /**
  * This model class is defined in the paragraph definition in the configuration
- * (modules/samples/paragraphs/name-of-paragraph/modelClass)
- * To be accessed in the template file by def.method-name
+ * <code>(modules/samples/paragraphs/name-of-paragraph/modelClass)</code>.
+ * To be accessed in the template file by <code>def.method-name</code>.
  *
- * paragraph models can also be defined in the paragraph definitions
+ * Paragraph models can also be defined in the paragraph definitions.
  * @author tmiyar
  *
  */

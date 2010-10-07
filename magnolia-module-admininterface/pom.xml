@@ -113,4 +113,15 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <!-- This module is at the end of its lifecycle and will be removed or deprecated in 5.0, so let's not waste too much energy making checkstyle happy here ... -->
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

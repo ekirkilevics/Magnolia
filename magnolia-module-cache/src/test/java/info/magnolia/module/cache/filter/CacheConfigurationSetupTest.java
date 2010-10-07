@@ -57,8 +57,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Test for common cache configuration setup.
  * @author pbracher
- *
  */
 public class CacheConfigurationSetupTest extends RepositoryTestCase {
 

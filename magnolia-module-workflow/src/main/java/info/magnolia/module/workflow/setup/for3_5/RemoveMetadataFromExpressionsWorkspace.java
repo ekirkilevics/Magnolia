@@ -43,6 +43,7 @@ import info.magnolia.module.delta.TaskExecutionException;
 import javax.jcr.RepositoryException;
 
 /**
+ * A {@link info.magnolia.module.delta.Task} to remove MetaData nodes from the Expressions workspace.
  * TODO : depending on how we handle the gui, this might be a non-mandatory step.
  *
  * @author gjoseph

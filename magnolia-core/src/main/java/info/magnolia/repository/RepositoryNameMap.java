@@ -34,6 +34,7 @@
 package info.magnolia.repository;
 
 /**
+ * Mapping storing location of the available workspaces in existing repositories.
  * @author Sameer Charles
  * $Id$
  */

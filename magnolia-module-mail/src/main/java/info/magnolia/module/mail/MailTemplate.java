@@ -49,6 +49,10 @@ import javax.mail.Session;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * Mail template used to send emails with Magnolia.
+ *
+ */
 public class MailTemplate {
 
     public static String MAIL_CONTENT_TYPE = "contentType";

@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 
 /**
- *
+ * Base class for mail tests.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -118,7 +118,7 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
     }
 
     /**
-     * this test will fail when subject is not US-ASCII TODO: replace with mail parser or handle encoding and improve
+     * This test will fail when subject is not US-ASCII. TODO: replace with mail parser or handle encoding and improve
      * pattern
      * @param message
      * @param subject

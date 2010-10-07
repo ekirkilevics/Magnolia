@@ -34,6 +34,7 @@
 package info.magnolia.voting;
 
 /**
+ * Contract for decision making rules based on the voting.
  * @author philipp
  * @version $Id$
  *

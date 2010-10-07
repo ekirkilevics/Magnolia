@@ -44,7 +44,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
- * This class represents access control list as a principal
+ * This class represents access control list as a principal.
  * @author Sameer Charles $Id$
  */
 public class ACLImpl implements ACL {
@@ -56,9 +56,6 @@ public class ACLImpl implements ACL {
 
     private static final String NAME = "acl";
 
-    /**
-     * properties
-     */
     private String name;
 
     private List list;
@@ -67,15 +64,12 @@ public class ACLImpl implements ACL {
 
     private String workspace;
 
-    /**
-     * Constructor
-     */
     public ACLImpl() {
         this.list = new ArrayList();
     }
 
     /**
-     * Get name given to this principal
+     * Get name given to this principal.
      * @return name
      */
     public String getName() {
@@ -86,14 +80,14 @@ public class ACLImpl implements ACL {
     }
 
     /**
-     * Set this principal name
+     * Set this principal name.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Get repository ID for which this ACL has been constructed
+     * Get repository ID for which this ACL has been constructed.
      * @return repository ID
      */
     public String getRepository() {
@@ -101,7 +95,7 @@ public class ACLImpl implements ACL {
     }
 
     /**
-     * Set repository ID for which this ACL will be constructed
+     * Set repository ID for which this ACL will be constructed.
      * @param repository
      */
     public void setRepository(String repository) {
@@ -109,7 +103,7 @@ public class ACLImpl implements ACL {
     }
 
     /**
-     * Get workspace ID for which this ACL has been contructed
+     * Get workspace ID for which this ACL has been constructed.
      * @return workspace ID
      */
     public String getWorkspace() {
@@ -117,7 +111,7 @@ public class ACLImpl implements ACL {
     }
 
     /**
-     * Set workspace ID for which this ACL will be constructed
+     * Set workspace ID for which this ACL will be constructed.
      * @param workspace
      */
     public void setWorkspace(String workspace) {
@@ -125,7 +119,7 @@ public class ACLImpl implements ACL {
     }
 
     /**
-     * add permission in to an existing list
+     * Adds permission in to the list of permissions for this principal.
      * @param permission
      */
     public void addPermission(Object permission) {
@@ -142,7 +136,7 @@ public class ACLImpl implements ACL {
     }
 
     /**
-     * Returns list of permissions for this principal
+     * Returns list of permissions for this principal. Returned list is not a copy and should be treated as read only!
      */
     public List getList() {
         return this.list;

@@ -51,9 +51,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleMailHandler implements MgnlMailHandler {
 
-    /**
-     * Logger
-     */
     private static Logger log = LoggerFactory.getLogger(SimpleMailHandler.class);
 
     public synchronized void prepareAndSendMail(MgnlEmail email) throws Exception {

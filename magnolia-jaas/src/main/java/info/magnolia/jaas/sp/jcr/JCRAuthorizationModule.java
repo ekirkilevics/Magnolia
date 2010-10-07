@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This is a default login module for magnolia, it uses initialized repository as defined by the provider interface
+ * This is a default login module for magnolia, it uses initialized repository as defined by the provider interface.
  * @author Sameer Charles
  * @version $Id$
  */
@@ -79,9 +79,6 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     public void validateUser() throws LoginException {
     }
 
-    /**
-     * Logger
-     */
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
     // do nothing here, we are only responsible for authorization, not authentication!
@@ -93,7 +90,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     }
 
     /**
-     * set access control list from the user, roles and groups
+     * Sets access control list from the user, roles and groups.
      */
     public void setACL() {
         String[] roles = (String[]) getRoleNames().toArray(new String[getRoleNames().size()]);
@@ -139,7 +136,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     public void setEntity() {}
 
     /**
-     * Set the list of groups, info.magnolia.jaas.principal.GroupList.
+     * Sets the list of groups, <code>info.magnolia.jaas.principal.GroupList</code>.
      * @param groups array of group names
      */
     protected void addGroups(String[] groups) {
@@ -152,7 +149,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     }
 
     /**
-     * Set the list of roles, info.magnolia.jaas.principal.RoleList.
+     * Sets the list of roles, <code>info.magnolia.jaas.principal.RoleList</code>.
      * @param roles array of role names
      */
     protected void addRoles(String[] roles) {
@@ -165,7 +162,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     }
 
     /**
-     * Looks for rolee configured in magnolia repository with the given name, and configures ACLs for it.
+     * Looks for role configured in magnolia repository with the given name, and configures ACLs for it.
      * @param roles array of role names.
      * @param principalList PrincipalCollection
      */
@@ -210,7 +207,7 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     }
 
     /**
-     * set access control list from a list of roles under the provided content object
+     * Sets access control list from a list of roles under the provided content object.
      * @param node under which roles and ACL are defined
      */
     private void setACL(Content node, PrincipalCollection principalList) {
@@ -264,5 +261,4 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     public boolean release() {
         return true;
     }
-
 }

@@ -61,7 +61,7 @@ public class WorkflowModule implements ModuleLifecycle {
     private static WorkflowModule instance;
 
     /**
-     * The current used engine
+     * The current used engine.
      */
     private JCRPersistedEngine wfEngine;
 
@@ -73,7 +73,7 @@ public class WorkflowModule implements ModuleLifecycle {
     private boolean backupWorkItems = false;
 
     /**
-     * Use life time jcr sessions or a session per operation
+     * Use life time jcr sessions or a session per operation.
      */
     private boolean useLifeTimeJCRSession = true;
     
@@ -102,7 +102,7 @@ public class WorkflowModule implements ModuleLifecycle {
     }
 
     /**
-     * Cleanup empty parent nodes (for expressions, workitems)
+     * Cleanup empty parent nodes (for expressions, workitems).
      */
     private boolean cleanup = true;
 
@@ -130,14 +130,14 @@ public class WorkflowModule implements ModuleLifecycle {
     }
 
     /**
-     * return the global work flow engine
+     * return the global work flow engine.
      */
     static public JCRPersistedEngine getEngine() {
         return instance.wfEngine;
     }
 
     /**
-     * return the global work flow engine
+     * return the global work flow engine.
      */
     static public JCRWorkItemStore getWorkItemStore() {
         return instance.workItemStore;

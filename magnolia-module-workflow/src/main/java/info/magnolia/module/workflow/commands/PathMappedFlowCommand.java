@@ -114,7 +114,7 @@ public class PathMappedFlowCommand extends FlowCommand {
     }
 
     /**
-     * Used to definen the mappings
+     * Used to define the mappings.
      */
     public static class Mapping {
 

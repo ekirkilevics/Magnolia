@@ -80,6 +80,7 @@ import java.util.Map;
 
 
 /**
+ * Provider implementation for Apache JackRabbit JCR repository.
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Id$
@@ -129,7 +130,7 @@ public class ProviderImpl implements Provider {
     private static final String sysRepositoryHomes = System.getProperty("repository.homes");
 
     /**
-     * Find the physical path to the repository folder
+     * Finds the physical path to the repository folder.
      * @param repositoryHome the property set in the repository.xml file
      * @return the full path resolved to the repository dir
      */
@@ -482,7 +483,7 @@ public class ProviderImpl implements Provider {
     }
 
     /**
-     * checks if all workspaces are present according to the repository mapping, creates any missing workspace
+     * Checks if all workspaces are present according to the repository mapping, creates any missing workspace.
      */
     private void validateWorkspaces() throws RepositoryException {
         Iterator<String> configuredNames = repositoryMapping.getWorkspaces().iterator();

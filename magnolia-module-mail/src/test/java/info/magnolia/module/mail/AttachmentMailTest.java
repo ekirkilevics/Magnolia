@@ -39,7 +39,7 @@ import java.io.File;
 import java.net.URL;
 
 /**
- *
+ * AttachmentMailTest.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */

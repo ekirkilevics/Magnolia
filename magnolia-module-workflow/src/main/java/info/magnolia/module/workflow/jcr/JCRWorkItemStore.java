@@ -105,9 +105,6 @@ public class JCRWorkItemStore {
         }
     }
 
-    /**
-     * @return
-     */
     protected HierarchyManager getHierarchyManager() {
         if(useLifeTimeJCRSession){
             return LifeTimeJCRSessionUtil.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
@@ -149,7 +146,8 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * retrieve work item by
+     * retrieve work item by FlowExpressionId.
+     *
      * @param storeName TODO : this parameter is not used ...
      * @param fei
      * @return
@@ -176,7 +174,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * load a work item from a JCR content
+     * load a work item from a JCR content.
      * @param ct the content node
      * @return
      * @throws Exception
@@ -187,7 +185,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * retrieve a work item by participant name
+     * retrieve a work item by participant name.
      * @param participant the full participant name (for example, user-superuser)
      */
     public Content getWorkItemByParticipant(String participant) {
@@ -204,7 +202,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * get work item by id
+     * get work item by id.
      * @param fei
      */
     public Content getWorkItemById(FlowExpressionId fei) {
@@ -219,7 +217,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * check whether the specified work item exists
+     * check whether the specified work item exists.
      * @param fei expression id of work item
      * @return true if exist, false if not
      */
@@ -232,7 +230,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * check if the content contains the right work Item with same id
+     * check if the content contains the right work Item with same id.
      * @param ct JCR content
      * @param eid id of work item
      */
@@ -246,7 +244,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * convert the name to valid path
+     * convert the name to valid path.
      * @param id
      */
     public final String convertPath(String id) {
@@ -257,7 +255,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * create the jcr node path for work Item by its id
+     * create the jcr node path for work Item by its id.
      * @param eid
      */
     public String createPathFromId(FlowExpressionId eid) {
@@ -281,6 +279,7 @@ public class JCRWorkItemStore {
     }
 
     /**
+     * Stores a workitem.
      * @param arg0 TODO : this parameter is not used ...
      * @param wi   the work item to be stored
      */
@@ -335,7 +334,7 @@ public class JCRWorkItemStore {
     }
 
     /**
-     * execute the xPath Query
+     * execute the xPath Query.
      */
     public List doQuery(String queryString) {
         return doQuery(queryString, Query.XPATH);

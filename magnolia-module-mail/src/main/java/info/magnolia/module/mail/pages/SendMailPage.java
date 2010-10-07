@@ -50,7 +50,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+/**
+ * A simple page to send emails.
+ *
+ */
 public class SendMailPage extends TemplatedMVCHandler {
     private static final Logger log = LoggerFactory.getLogger(SendMailPage.class);
 

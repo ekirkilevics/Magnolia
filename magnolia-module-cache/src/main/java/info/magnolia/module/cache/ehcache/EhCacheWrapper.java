@@ -44,7 +44,7 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 /**
- *
+ * Magnolia cache wrapper for underlying ehCache implementation.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

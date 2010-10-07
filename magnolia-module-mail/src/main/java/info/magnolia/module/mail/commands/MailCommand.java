@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * the command for sending mail
+ * the command for sending mail.
  * @author jackie
  * @author niko
  */

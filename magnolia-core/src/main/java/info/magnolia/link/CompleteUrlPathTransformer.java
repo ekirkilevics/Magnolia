@@ -36,7 +36,7 @@ package info.magnolia.link;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 
 /**
- * Constructs URLs by prefixing the path with Server..getDefaultBaseUrl()
+ * Constructs URLs by prefixing the path with <code>Server.getDefaultBaseUrl()</code>.
  *
  * @see info.magnolia.cms.beans.config.ServerConfiguration
  *

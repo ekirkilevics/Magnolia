@@ -1,0 +1,11 @@
+svn merge --accept postpone -c 37516 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37520 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37524 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37526 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37527 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37528 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37529 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37530 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37531 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37622 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/
+svn merge --accept postpone -c 37623 http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.3/

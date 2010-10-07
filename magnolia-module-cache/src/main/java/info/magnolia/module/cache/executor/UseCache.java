@@ -128,7 +128,7 @@ public class UseCache extends AbstractExecutor {
     }
 
     /**
-     * Set the headers in the response object
+     * Sets headers in the response object.
      */
     protected void addHeaders(final CachedPage cachedEntry, final boolean acceptsGzipEncoding, final HttpServletResponse response) {
         final MultiMap headers = cachedEntry.getHeaders();

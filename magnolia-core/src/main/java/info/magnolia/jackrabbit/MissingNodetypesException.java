@@ -34,6 +34,7 @@
 package info.magnolia.jackrabbit;
 
 /**
+ * Exception thrown when node type used for creation of new content is not registered in given repository.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */

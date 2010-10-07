@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Representation of the link to a content in Magnolia CMS. The target for the link might be a content (page, paragraph) or the node data (binary file).
  * @author had
  *
  */

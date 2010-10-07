@@ -88,7 +88,7 @@ public class EhCacheFactoryTest extends TestCase {
     }
 
     /**
-     * Simple test for serial access to the cache
+     * Simple test for serial access to the cache.
      */
     public void testSerialAccess() throws Exception {
         final Cache ehCache = factory.getCache("test1");
@@ -98,7 +98,7 @@ public class EhCacheFactoryTest extends TestCase {
     }
 
     /**
-     * Simple test of item eviction
+     * Simple test of item eviction.
      */
     public void testAddMoreThanMaxSize() throws Exception {
         // make sure there's only one item allowed

@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * FCKEditor Module Version Handler.
  * @author vsteller
  */
 public class FCKEditorModuleVersionHandler extends DefaultModuleVersionHandler {

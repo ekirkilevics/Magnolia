@@ -58,7 +58,7 @@ import info.magnolia.objectfactory.Components;
  */
 public interface LinkResolver {
     /**
-     * Deprecated.
+     * This class is deprecated.
      * @deprecated since 4.0
      */
     public static class Factory{
@@ -79,7 +79,7 @@ public interface LinkResolver {
     public String convertToAbsoluteLinks(String str, boolean addContextPath);
 
     /**
-     * Used to render links usable from external (like sending an email, ...).
+     * Used to render links usable from external (like sending an email, etc.).
      */
     public String convertToExternalLinks(String str);
 

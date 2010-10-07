@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Lists all installed modules.
  * @author dschivo
  */
 public class InstalledModulesListPage extends TemplatedMVCHandler {
@@ -61,7 +62,7 @@ public class InstalledModulesListPage extends TemplatedMVCHandler {
     private List<ModuleDefinition> installedModules = new ArrayList<ModuleDefinition>();
 
     /**
-     * 
+     *
      */
     public InstalledModulesListPage(String name, HttpServletRequest request, HttpServletResponse response) {
 

@@ -69,7 +69,7 @@ public class WorkflowUtil {
     private final static Logger log = LoggerFactory.getLogger(WorkflowUtil.class.getName());
 
     /**
-     * Util: don't instantiate
+     * Util: don't instantiate.
      */
     private WorkflowUtil() {
     }
@@ -90,7 +90,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * Simply launch a flow for the specified node
+     * Simply launch a flow for the specified node.
      */
     public static void launchFlow(String repository, String path, String flowName) throws Exception {
         try {
@@ -113,7 +113,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * Start a flow
+     * Start a flow.
      * @param li the prepared lunchItem
      * @param flowName the flow to start
      * @throws FlowDefinitionException
@@ -126,9 +126,6 @@ public class WorkflowUtil {
         launchFlow(li);
     }
 
-    /**
-     * @param id
-     */
     public static void proceed(String id) {
         proceed(id, WorkflowConstants.ACTION_PROCEED);
     }
@@ -169,7 +166,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * Proceed this item
+     * Proceed this item.
      * @param wi
      */
     public static void proceed(InFlowWorkItem wi) {
@@ -185,6 +182,7 @@ public class WorkflowUtil {
     }
 
     /**
+     * Retrieves a workitem by id.
      * @param id identifier for the workitem as stored in the engine
      * @return <code>InFlowWorkItem</code> corresponding to the workitem
      */
@@ -204,7 +202,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * get all work items for the user
+     * get all work items for the user.
      */
     public static List getWorkItems(String userName) throws Exception {
         if (log.isDebugEnabled()) {
@@ -259,7 +257,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * assign work item to a user, if userName = "", then assignment for the workItem will be deleted
+     * assign work item to a user, if userName = "", then assignment for the workItem will be deleted.
      */
     public static void assignWorkItemToUser(String id, String userName) {
         if (id == null || id.length() == 0) {
@@ -281,7 +279,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * assign work item to a user, if userName = "", then assignment for the workItem will be deleted
+     * assign work item to a user, if userName = "", then assignment for the workItem will be deleted.
      */
     public static void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
         if (userName == null) {
@@ -300,14 +298,14 @@ public class WorkflowUtil {
     }
 
     /**
-     * return a list of workItem for one usre
+     * return a list of workItem for one user.
      */
     public static List getUserInbox(String userName) throws Exception {
         return getWorkItems(userName);
     }
 
     /**
-     * return a list of workItem for one group
+     * return a list of workItem for one group.
      */
     public static List getGroupInbox(String GroupName) throws Exception {
         if (log.isDebugEnabled()) {
@@ -328,7 +326,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * return a list of workItem for one role
+     * return a list of workItem for one role.
      */
     public static List getRoleInbox(String roleName) throws Exception {
         if (log.isDebugEnabled()) {
@@ -348,7 +346,7 @@ public class WorkflowUtil {
     }
 
     /**
-     * remove one work item by id
+     * remove one work item by id.
      */
     private static void removeWorkItem(InFlowWorkItem wi) {
         try {

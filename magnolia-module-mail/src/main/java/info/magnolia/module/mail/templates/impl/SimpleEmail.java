@@ -38,6 +38,7 @@ import info.magnolia.module.mail.templates.MgnlMultipartEmail;
 
 
 /**
+ * Simple mail with attachments.
  * Date: Mar 30, 2006 Time: 1:01:01 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  *

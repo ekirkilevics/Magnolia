@@ -46,8 +46,11 @@ import static org.easymock.EasyMock.*;
 
 import junit.framework.TestCase;
 
+/**
+ * Tests for the settings of expiration headers cache executor.
+ */
 public class SetExpirationHeadersTest extends TestCase {
-    
+
     public void testProcessCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
@@ -57,11 +60,11 @@ public class SetExpirationHeadersTest extends TestCase {
         final FixedDuration fixed = new FixedDuration();
         fixed.setExpirationMinutes(30);
         cacheConfig.setBrowserCachePolicy(fixed);
-        
+
         response.setHeader("Pragma", "");
         response.setHeader("Cache-Control", "max-age=1800, public");
         response.setDateHeader(eq("Expires"), anyLong());
-        
+
         replay(request, response, chain, cache);
         SetExpirationHeaders executor = new SetExpirationHeaders();
         executor.setCacheConfiguration(cacheConfig);
@@ -77,11 +80,11 @@ public class SetExpirationHeadersTest extends TestCase {
         final CacheConfiguration cacheConfig = new CacheConfiguration();
         final Never fixed = new Never();
         cacheConfig.setBrowserCachePolicy(fixed);
-        
+
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
         response.setDateHeader("Expires", 0L);
-        
+
         replay(request, response, chain, cache);
         SetExpirationHeaders executor = new SetExpirationHeaders();
         executor.setCacheConfiguration(cacheConfig);

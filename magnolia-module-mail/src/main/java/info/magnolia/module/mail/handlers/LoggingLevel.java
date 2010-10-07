@@ -36,7 +36,7 @@ package info.magnolia.module.mail.handlers;
 import org.apache.log4j.Level;
 
 /**
- * Defines custom logging level for forms data
+ * Defines custom logging level for forms data.
  * @author tmiyar
  *
  */

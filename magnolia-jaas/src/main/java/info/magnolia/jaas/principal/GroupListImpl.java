@@ -36,6 +36,7 @@ package info.magnolia.jaas.principal;
 import info.magnolia.cms.security.auth.GroupList;
 
 /**
+ * <code>PrincipalList</code> implementation for the groups.
  * @author Sameer Charles $Id$
  */
 public class GroupListImpl extends AbstractPrincipalList implements GroupList {
@@ -45,7 +46,7 @@ public class GroupListImpl extends AbstractPrincipalList implements GroupList {
     private static final long serialVersionUID = 222L;
 
     /**
-     * default name for this principal
+     * The default name for this principal.
      */
     private static final String DEFAULT_NAME = "groups";
 

@@ -36,6 +36,7 @@ package info.magnolia.jaas.principal;
 import info.magnolia.cms.security.auth.RoleList;
 
 /**
+ * <code>PrincipalList</code> implementation for roles.
  * @author Sameer Charles $Id$
  */
 public class RoleListImpl extends AbstractPrincipalList implements RoleList {
@@ -46,7 +47,7 @@ public class RoleListImpl extends AbstractPrincipalList implements RoleList {
     private static final long serialVersionUID = 222L;
 
     /**
-     * default name for this principal
+     * Default name for this principal.
      */
     private static final String DEFAULT_NAME = "roles";
 

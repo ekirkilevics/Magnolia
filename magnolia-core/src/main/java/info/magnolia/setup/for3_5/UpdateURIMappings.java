@@ -47,6 +47,7 @@ import javax.jcr.RepositoryException;
 
 
 /**
+ * Updates virtualURIMappings to the format suitable for c2b.
  * @author vsteller
  */
 public class UpdateURIMappings extends AllModulesNodeOperation {

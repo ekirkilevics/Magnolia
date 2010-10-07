@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default, JCR-based, implementation of {@link Content}.
- * 
+ *
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
  */
@@ -203,13 +203,13 @@ public class DefaultContent extends AbstractContent {
             return true;
         }
         else { // check for mgnl:resource node
-        	if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
+            if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         try {
             Access.isGranted(getAccessManager(), Path.getAbsolutePath(getHandle(), name), Permission.READ);
@@ -223,7 +223,7 @@ public class DefaultContent extends AbstractContent {
         if(!hasNodeData(name) && !createIfNotExisting){
             return new NonExistingNodeData(this, name);
         }
-        
+
         if(type == PropertyType.UNDEFINED){
             type = determineNodeDataType(name);
         }
@@ -243,7 +243,7 @@ public class DefaultContent extends AbstractContent {
                 return this.node.getProperty(name).getType();
             }
             else { // check for mgnl:resource node
-            	if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.getNode(name).hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
+                if (this.node.hasNode(name) && (this.node.getNode(name).isNodeType(ItemType.NT_RESOURCE) || (this.node.getNode(name).hasProperty("jcr:frozenPrimaryType") && this.node.getNode(name).getProperty("jcr:frozenPrimaryType").getValue().getString().equals(ItemType.NT_RESOURCE)))) {
                     return PropertyType.BINARY;
                 }
             }
@@ -253,7 +253,7 @@ public class DefaultContent extends AbstractContent {
         }
         return PropertyType.UNDEFINED;
     }
-    
+
 
     public MetaData getMetaData() {
         if (this.metaData == null) {
@@ -311,7 +311,7 @@ public class DefaultContent extends AbstractContent {
 
         return children;
     }
-    
+
     public Collection<NodeData> getNodeDataCollection(String namePattern) {
         final ArrayList<NodeData> all = new ArrayList<NodeData>();
         try {

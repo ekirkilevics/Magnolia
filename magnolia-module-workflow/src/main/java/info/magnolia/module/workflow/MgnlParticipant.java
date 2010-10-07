@@ -55,11 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author John Mettraux
  */
 public class MgnlParticipant extends AbstractEmbeddedParticipant {
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(AbstractEmbeddedParticipant.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractEmbeddedParticipant.class);
 
     public MgnlParticipant() throws Exception {
         super();
@@ -94,9 +90,6 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         }
     }
 
-    /**
-     * @see openwfe.org.embed.engine.EmbeddedParticipant#consume(openwfe.org.engine.workitem.WorkItem)
-     */
     public void consume(WorkItem wi) throws Exception {
 
         // get participant name

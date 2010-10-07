@@ -36,6 +36,7 @@ package info.magnolia.link;
 import info.magnolia.cms.core.Content;
 
 /**
+ * Transformer creating links relative to provided path.
  * @author had
  * @version $Id:$
  */

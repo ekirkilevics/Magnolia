@@ -42,7 +42,7 @@ import info.magnolia.module.delta.TaskExecutionException;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * Rename renderers to mach name used since 3.5.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

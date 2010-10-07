@@ -36,15 +36,19 @@ package info.magnolia.voting;
 import info.magnolia.objectfactory.Components;
 
 /**
+ * Contract for decision maker (i.e. class executing set of voters and providing combined output).
  * @author philipp
  * @version $Id$
- * 
+ *
  * @content2bean
  */
 public interface Voting {
 
     int vote(Voter[] voters, Object value);
 
+    /**
+     * Factory for instantiation of the <code>Voting</code> implementation.
+     */
     static class Factory {
         public static Voting getDefaultVoting() {
             return Components.getSingleton(Voting.class);

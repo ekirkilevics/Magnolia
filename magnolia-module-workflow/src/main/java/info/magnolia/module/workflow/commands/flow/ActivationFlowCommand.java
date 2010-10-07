@@ -37,15 +37,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe.
  * @deprecated since 3.0 - please use info.magnolia.module.workflow.commands.ActivationFlowCommand instead.
  */
 public class ActivationFlowCommand extends info.magnolia.module.workflow.commands.ActivationFlowCommand  {
 
     private static final Logger log = LoggerFactory.getLogger(ActivationFlowCommand.class);
 
-    /**
-     * Warn about the deprecation
-     */
     public ActivationFlowCommand() {
         log.warn("you are using the deprecated class {} where you should use {}", ActivationFlowCommand.class.getName(), info.magnolia.module.workflow.commands.ActivationFlowCommand.class.getName());
     }

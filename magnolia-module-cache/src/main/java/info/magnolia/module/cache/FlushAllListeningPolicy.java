@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Simple flush policy that will empty whole cache in case of updates.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -45,7 +45,7 @@ import static info.magnolia.test.TestUtil.enumeration;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
+ * Basic test for the gzip filter deployed without cache filter.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

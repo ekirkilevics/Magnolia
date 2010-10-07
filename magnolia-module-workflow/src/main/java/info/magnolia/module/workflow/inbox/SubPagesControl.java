@@ -46,15 +46,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Control used to display the list of sub pages in a workitem.
+ * 
  * @author philipp
  * @version $Id$
  */
 public class SubPagesControl extends DialogBox {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SubPagesControl.class);
+    private static final Logger log = LoggerFactory.getLogger(SubPagesControl.class);
 
     public void drawHtml(Writer out) throws IOException {
         try {

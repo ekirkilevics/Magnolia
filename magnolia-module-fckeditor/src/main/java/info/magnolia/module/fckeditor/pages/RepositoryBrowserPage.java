@@ -50,6 +50,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * Repository browser page.
  * @author vsteller
  * @version $Id$
  *
@@ -93,7 +94,7 @@ public class RepositoryBrowserPage extends TemplatedMVCHandler {
 
     public String select() {
         final URI2RepositoryManager manager = URI2RepositoryManager.getInstance();
-        
+
         if (StringUtils.isNotEmpty(absoluteURI)) {
             final String repository = manager.getRepository(absoluteURI);
             final String path = manager.getHandle(absoluteURI);
@@ -131,7 +132,7 @@ public class RepositoryBrowserPage extends TemplatedMVCHandler {
     public String getAbsoluteURI() {
         return absoluteURI;
     }
-    
+
     public void setAbsoluteURI(String absoluteURI) {
         this.absoluteURI = absoluteURI;
     }

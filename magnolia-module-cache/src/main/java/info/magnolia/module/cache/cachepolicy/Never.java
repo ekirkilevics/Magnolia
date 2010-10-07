@@ -40,7 +40,7 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.FlushPolicy;
 
 /**
- *
+ * Cache policy instructing cache not to store the generated content.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

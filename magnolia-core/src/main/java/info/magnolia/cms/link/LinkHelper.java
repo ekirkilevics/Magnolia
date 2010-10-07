@@ -37,7 +37,8 @@ import info.magnolia.link.LinkUtil;
 import info.magnolia.link.LinkException;
 
 /**
- * Deprecated.
+ * This class is deprecated.
+ *
  * @deprecated since 4.0 use {@link LinkUtil instead}
  */
 public class LinkHelper extends LinkUtil {

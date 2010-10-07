@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * Represents a mail attachment.
  * Date: Apr 1, 2006 Time: 8:38:07 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */

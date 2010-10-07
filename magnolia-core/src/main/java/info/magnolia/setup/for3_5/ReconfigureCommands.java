@@ -50,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Updates command configuration to make them suitable for loading by c2b.
  * @author philipp
  * @version $Id$
  *
