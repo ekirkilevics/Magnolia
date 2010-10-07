@@ -36,7 +36,6 @@ package info.magnolia.module.templating.locking;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.AccessDeniedException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
@@ -51,11 +50,6 @@ public class DummySoftLockingSupport implements SoftLockingSupport {
 
     public void lock(Content content) {
         //do nothing
-        List<String> list = new ArrayList<String>();
-        for(String s:list){
-            System.out.println(s);
-        }
-
     }
 
     public void unlock(Content content) {
