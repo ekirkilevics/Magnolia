@@ -27,6 +27,10 @@
       <name>info.magnolia.module.templating.TemplateRendererManager</name>
       <value>info.magnolia.module.templating.TemplateRendererManager</value>
     </property>
+    <property>
+      <name>info.magnolia.module.templating.locking.SoftLockingSupport</name>
+      <value>/server/rendering/locking</value>
+    </property>
   </properties>
   <dependencies>
     <dependency>

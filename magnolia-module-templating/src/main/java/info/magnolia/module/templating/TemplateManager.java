@@ -227,6 +227,9 @@ public class TemplateManager extends ObservedManager {
         return visibleTemplates.iterator();
     }
 
+    /**
+     * Get the Template that could be used for the provided Content as a default.
+     */
     public Template getDefaultTemplate(Content node) {
         Template tmpl;
         try {
