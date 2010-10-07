@@ -105,7 +105,7 @@ public class DialogBox extends DialogControlImpl {
                     + "\"><label for= \""+ this.getName()+ "\">" //$NON-NLS-1$
                     + this.getMessage(this.getLabel())
                     + (this.isRequired() ? "(*)" : "")
-                    + "</div></label>"); //$NON-NLS-1$
+                    + "</label></div>"); //$NON-NLS-1$
             }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
                 String desc = this.getConfigValue("labelDescription"); //$NON-NLS-1$
@@ -113,7 +113,7 @@ public class DialogBox extends DialogControlImpl {
                     + CssConstants.CSSCLASS_DESCRIPTION
                     + "\"><label for= \""+ this.getName()+ "\">" //$NON-NLS-1$
                     + this.getMessage(desc)
-                    + "</div></label>"); //$NON-NLS-1$
+                    + "</label></div>"); //$NON-NLS-1$
             }
         }
     }
