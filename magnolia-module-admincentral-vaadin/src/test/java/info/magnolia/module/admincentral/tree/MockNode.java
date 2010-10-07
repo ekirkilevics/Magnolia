@@ -74,9 +74,12 @@ import javax.jcr.version.VersionHistory;
 
 /**
  * Mock Implementation of a Node. Work in progress...
- *
+ * 
  * @author daniellipp
  * @version $Id$
+ * 
+ * TODO: check how this implementation can/should be merged with or replaced by MockJCRNode from
+ * magnolia-core.
  */
 public class MockNode implements Node {
 
