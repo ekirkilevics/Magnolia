@@ -111,7 +111,11 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
 
         register(DeltaBuilder.update("4.3", "")
-            .addTask(new BootstrapSingleModuleResource("Rendering Engine", "Add configuration for the new rendering engine", "config.server.rendering.engine.xml"))
+            .addTask(new BootstrapSingleModuleResource("Rendering Engine", "Add configuration for the new rendering engine.", "config.server.rendering.engine.xml"))
+        );
+
+        register(DeltaBuilder.update("4.4", "")
+            .addTask(new BootstrapSingleModuleResource("Soft Locking Configuration", "Add configuration for the soft locking support.", "config.server.rendering.locking.xml"))
         );
     }
 
