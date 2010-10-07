@@ -42,8 +42,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
+ * Command outputting the value of "message" property into current log file. Used to monitor execution of workflow or other sorts of command chains.
  * @author pbracher
  * @version $Id$
  */

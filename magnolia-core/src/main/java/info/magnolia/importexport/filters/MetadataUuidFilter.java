@@ -39,7 +39,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
-
 /**
  * A simple filter that strips jcr:uuid properties in MetaData nodes. Needed due to MAGNOLIA-1650 uuids in MetaData
  * nodes are changed during import. It also supports removal of non-standards namespaces, by setting the
@@ -74,7 +73,7 @@ public class MetadataUuidFilter extends XMLFilterImpl {
     /**
      * Instantiates a new MetadataUuidFilter filter.
      * @param parent wrapped XMLReader
-     * @param removeUnwantedNamespaces if set, non standard jcr namespaces will be removed
+     * @param removeUnwantedNamespaces if set, non standard JCR name spaces will be removed
      */
     public MetadataUuidFilter(XMLReader parent, boolean removeUnwantedNamespaces) {
         super(parent);
@@ -93,7 +92,7 @@ public class MetadataUuidFilter extends XMLFilterImpl {
     }
 
     /**
-     * Skip unwanted namespaces, see MAGNOLIA-2756
+     * Skip unwanted name spaces, see MAGNOLIA-2756.
      */
     public void startPrefixMapping(String prefix, String uri) throws SAXException {
         if (!removeUnwantedNamespaces || ArrayUtils.contains(validNs, prefix)) {

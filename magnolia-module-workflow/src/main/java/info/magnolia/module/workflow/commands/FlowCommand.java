@@ -42,7 +42,6 @@ import info.magnolia.module.workflow.flows.FlowDefinitionException;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,17 +58,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Base command class for starting workflows.
+ */
 public class FlowCommand extends MgnlCommand {
-
-    private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(FlowCommand.class);
 
     /**
-     * The name of the workflow to start
+     * The name of the workflow to start.
      */
     private String workflowName = WorkflowConstants.DEFAULT_WORKFLOW;
 
     /**
-     * The dialog used in the inbox
+     * The dialog used in the inbox.
      */
     private String dialogName = WorkflowConstants.DEFAULT_EDIT_DIALOG;
 

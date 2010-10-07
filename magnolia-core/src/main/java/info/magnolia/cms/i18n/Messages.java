@@ -38,6 +38,7 @@ import java.util.Locale;
 
 
 /**
+ * Storage of messages - key value pairs.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -76,7 +77,7 @@ public interface Messages {
     public String getWithDefault(String key, String defaultMsg);
 
     /**
-     * With default value and replacement strings
+     * With default value and replacement strings.
      * @param key key
      * @param args replacement strings
      * @param defaultMsg default message
@@ -85,13 +86,13 @@ public interface Messages {
     public String getWithDefault(String key, Object[] args, String defaultMsg);
 
     /**
-     * Iterate over the keys
+     * Iterate over the keys.
      * @return iterator
      */
     public Iterator keys();
 
     /**
-     * Reload the messages
+     * Reload the messages.
      * @throws Exception
      */
     public void reload() throws Exception;

@@ -119,7 +119,7 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * node containing the link information
+     * node containing the link information.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeDataName(String name) {

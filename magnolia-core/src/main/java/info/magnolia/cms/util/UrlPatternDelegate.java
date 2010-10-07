@@ -59,15 +59,14 @@ public class UrlPatternDelegate implements PatternDelegate {
     private Object delegate;
 
     /**
-     * The configured Url
-     * @return the configured Url
+     * Returns the configured Url.
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     * Sets the Url pattern (using {@link SimpleUrlPattern} internally)
+     * Sets the Url pattern (using {@link SimpleUrlPattern} internally).
      * @param pattern url pattern
      */
     public void setUrl(String pattern) {
@@ -75,16 +74,12 @@ public class UrlPatternDelegate implements PatternDelegate {
         this.urlPattern = new SimpleUrlPattern(pattern);
     }
 
-    /**
-     * The configured host
-     * @return the configured host
-     */
     public String getHost() {
         return host;
     }
 
     /**
-     * Sets the host pattern (using {@link SimpleUrlPattern} internally)
+     * Sets the host pattern (using {@link SimpleUrlPattern} internally).
      * @param host host pattern
      */
     public void setHost(String host) {
@@ -93,8 +88,7 @@ public class UrlPatternDelegate implements PatternDelegate {
     }
 
     /**
-     * Compares the reques with the url and host patterns
-     * @param request HttpServletRequest
+     * Compares the reques with the url and host patterns.
      * @return <code>true</code> if the pattern matches the configured host (if set) and url (if set)
      */
     public boolean match(HttpServletRequest request) {

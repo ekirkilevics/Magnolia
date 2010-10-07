@@ -51,7 +51,7 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 
 /**
- *
+ * Basic tests for gzip filter.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -71,7 +71,7 @@ public interface TransformationState {
     public Content peekContent(int pos);
 
     /**
-     * Is the value of the biggest stack size
+     * @return the value of the biggest stack size
      */
     public int getLevel();
 

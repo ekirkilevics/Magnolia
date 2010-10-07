@@ -76,6 +76,9 @@ public class CachePolicyResult {
                 '}';
     }
 
+    /**
+     * Descriptor of the cache policy behavior used by this cache policy result.
+     */
     public final static class CachePolicyBehaviour {
         private final String name;
 

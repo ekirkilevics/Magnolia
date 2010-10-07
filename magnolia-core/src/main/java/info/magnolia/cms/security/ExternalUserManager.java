@@ -56,7 +56,7 @@ public class ExternalUserManager implements UserManager {
     }
 
     /**
-     * Initialize new user using JAAS authenticated/authorized subject
+     * Initialize new user using JAAS authenticated/authorized subject.
      * @param subject
      * @throws UnsupportedOperationException
      */

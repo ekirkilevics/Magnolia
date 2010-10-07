@@ -38,12 +38,14 @@ import info.magnolia.cms.security.User;
 
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.LocaleUtils;
 
+/**
+ * User aware context implementation able to release and discard all kept info upon user logout. Also changes the locale from default one to the one prefered by the logged in user.
+ * @author had
+ * @version $Id: $
+ */
 public class UserContextImpl extends AbstractContext implements UserContext {
-    private static final Logger log = LoggerFactory.getLogger(UserContextImpl.class);
 
     private static final long serialVersionUID = 222L;
 

@@ -38,18 +38,17 @@ import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
-import info.magnolia.nodebuilder.Ops.AbstractOp;
 
 import javax.jcr.RepositoryException;
 
 /**
  * Visits the hierarchy recursively and executes the operations on all nodes matching the filter. The recursion does not stop if a node does not match!
  * The class has some static methods to build recursive operations easily.
+ *
  * @author pbracher
  * @version $Id$
- *
  */
-public class RecursiveOp extends AbstractOp {
+public class RecursiveOp extends Ops.AbstractOp {
 
     /**
      * Visits the hierarchy recursively and executes the operations on all nodes excluding meta data and jcr base nodes. The recursion does not stop if a node does not match!

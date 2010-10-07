@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Magnolia Store Module.
  * @author dschivo
  */
 public class MagnoliaStoreModule {

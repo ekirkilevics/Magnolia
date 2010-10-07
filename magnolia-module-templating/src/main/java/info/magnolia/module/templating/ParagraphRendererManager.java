@@ -48,6 +48,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Manages the paragraph renderers on the system. Modules can register the nodes where
+ * the paragraph renderers are defined.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

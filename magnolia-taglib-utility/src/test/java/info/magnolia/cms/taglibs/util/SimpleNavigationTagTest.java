@@ -46,7 +46,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
-import javax.jcr.query.InvalidQueryException;
 import javax.servlet.jsp.PageContext;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;

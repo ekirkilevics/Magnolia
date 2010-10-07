@@ -89,7 +89,7 @@ public interface I18nContentSupport {
     public NodeData getNodeData(Content node, String name);
 
     /**
-     * Available locales
+     * Returns the available locales.
      */
     public Collection<Locale> getLocales();
 

@@ -34,6 +34,7 @@
 package info.magnolia.module.mail;
 
 /**
+ * Useful constants for mail.
  * Date: Mar 30, 2006 Time: 1:19:45 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */

@@ -50,26 +50,24 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
- * @author philipp
- * @author Sameer Charles
+ * A user which is not stored in Magnolia. For instance a user stored in LDAP or AD.
  * @version $Revision:2558 $ ($Author:scharles $)
  */
 public class ExternalUser extends AbstractUser implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(ExternalUser.class);
 
     /**
-     * user properties
+     * User properties.
      */
     private Entity userDetails;
 
     /**
-     * user roles
+     * User roles.
      */
     private RoleList roleList;
 
     /**
-     * user groups
+     * User groups.
      */
     private GroupList groupList;
 
@@ -143,10 +141,6 @@ public class ExternalUser extends AbstractUser implements Serializable {
         return (String) this.userDetails.getProperty(Entity.NAME);
     }
 
-    /**
-     * get user password
-     * @return password string
-     */
     public String getPassword() {
         return (String) this.userDetails.getProperty(Entity.PASSWORD);
     }

@@ -42,9 +42,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.UserContext;
 
 /**
- * Should be used to log 'auditory actions'
- * @author tmiyar
+ * Utilities class used to log 'auditory actions'.
  *
+ * @author tmiyar
  */
 public class AuditLoggingUtil {
 
@@ -59,28 +59,28 @@ public class AuditLoggingUtil {
     public static final String ACTION_LOGOUT = "logout";
 
     /**
-     * log create, modify, activate, deactivate, delete incl. node type
+     * log create, modify, activate, deactivate, delete incl. node type.
      */
     public static void log(String action, String workspaceName, ItemType nodeType, String nodePath) {
         AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodeType == null ? "" : nodeType.getSystemName(), nodePath});
     }
 
     /**
-     * log copy, move
+     * Log copy, move.
      */
     public static void log(String action, String workspaceName, String nodePathFrom, String nodePathTo ) {
         AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodePathFrom, nodePathTo});
     }
 
     /**
-     * log user logout
+     * Log user logout.
      */
     public static void log(final UserContext userContext ) {
         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGOUT, null, (String) null, null);
     }
 
     /**
-     * log user login
+     * Log user login.
      */
     public static void log(final LoginResult loginResult, final HttpServletRequest request ) {
         String userid = "";

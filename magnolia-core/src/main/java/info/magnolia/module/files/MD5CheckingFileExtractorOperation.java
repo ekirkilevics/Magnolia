@@ -142,7 +142,7 @@ class MD5CheckingFileExtractorOperation extends BasicFileExtractorOperation {
     }
 
     /**
-     * Returns the path to the node that has the property with this resource's md5
+     * Returns the path to the node that has the property with this resource's MD5.
      * TODO : implement properly + test
      */
     protected String getRepositoryPath(String resourcePath) {
@@ -150,7 +150,7 @@ class MD5CheckingFileExtractorOperation extends BasicFileExtractorOperation {
     }
 
     /**
-     * Completely reads an InputStream and returns its MD5
+     * Completely reads an InputStream and returns its MD5.
      * TODO : should we close it?
      */
     protected String calculateMD5(InputStream stream) throws IOException {

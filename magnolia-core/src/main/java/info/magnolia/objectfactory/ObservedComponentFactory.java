@@ -55,6 +55,7 @@ import java.util.Map;
 
 /**
  * Generic observed singleton factory.
+ * @param <T> the type of component this factory instantiates.
  *
  * @author philipp
  * @version $Id: $

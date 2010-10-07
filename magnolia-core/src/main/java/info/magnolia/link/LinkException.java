@@ -34,15 +34,16 @@
 package info.magnolia.link;
 
 /**
- * @author had
+ * Exception thrown when an error during link creation or retrieval.
  *
+ * @author had
  */
 public class LinkException extends Exception {
 
     private static final long serialVersionUID = 8583028261528429020L;
 
     /**
-     * 
+     *
      */
     public LinkException() {
     }

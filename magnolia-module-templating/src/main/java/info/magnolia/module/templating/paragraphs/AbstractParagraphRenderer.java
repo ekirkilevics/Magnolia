@@ -47,6 +47,7 @@ import java.io.Writer;
 
 
 /**
+ * Base class for implementing {@link ParagraphRenderer}s.
  * @author pbracher
  * @version $Id$
  *

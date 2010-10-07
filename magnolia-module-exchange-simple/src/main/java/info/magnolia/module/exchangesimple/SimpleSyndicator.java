@@ -61,7 +61,7 @@ import EDU.oswego.cs.dl.util.concurrent.Sync;
 
 
 /**
- *
+ * Implementation of syndicator that simply sends all activated content over http connection specified in the subscriber.
  * @author Sameer Charles $Id$
  */
 public class SimpleSyndicator extends BaseSyndicatorImpl {
@@ -314,7 +314,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     }
 
     /**
-     * path should be without trailing slash
+     * Gets target path to which the current path is mapped in given subscription. Provided path should be without trailing slash.
      */
     protected String getMappedPath(String path, Subscription subscription) {
         String toURI = subscription.getToURI();

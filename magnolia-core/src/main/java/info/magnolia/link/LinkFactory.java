@@ -256,7 +256,7 @@ public class LinkFactory {
     }
 
     /**
-     * Pattern to find a magnolia formatted uuid link
+     * Pattern to find a magnolia formatted uuid link.
      */
     public static Pattern UUID_PATTERN = Pattern.compile(
         "\\$\\{link:\\{uuid:\\{([^\\}]*)\\}," // the uuid of the node
@@ -271,7 +271,7 @@ public class LinkFactory {
 
 
     /**
-     * Pattern to find a link
+     * Pattern to find a link.
      */
     public static final Pattern LINK_PATTERN = Pattern.compile(
         "(/[^\\.\"#\\?]*)" + // the handle

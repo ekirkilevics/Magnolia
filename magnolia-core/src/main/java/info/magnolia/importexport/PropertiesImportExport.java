@@ -72,7 +72,7 @@ public class PropertiesImportExport {
         properties.load(propertiesStream);
 
         properties = keysToInnerFormat(properties);
-        
+
         for (Object o : properties.keySet()) {
             String key = (String) o;
             String valueStr = properties.getProperty(key);
@@ -94,17 +94,17 @@ public class PropertiesImportExport {
     }
 
     /**
-     * Transforms the keys to the following inner notation: some/path/node.prop or some/path/node.@type 
+     * Transforms the keys to the following inner notation: <code>some/path/node.prop</code> or <code>some/path/node.@type</code>.
      */
     private Properties keysToInnerFormat(Properties properties) {
         Properties cleaned = new OrderedProperties();
-        
+
         for (Object o : properties.keySet()) {
             String orgKey = (String) o;
 
             //if this is a node definition (no property)
             String newKey = orgKey;
-            
+
             // make sure we have a dot as a property separator
             newKey = StringUtils.replace(newKey, "@", ".@");
             // avoid double dots

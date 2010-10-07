@@ -39,6 +39,7 @@ import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
 
 /**
+ * Checks the value of <code>magnolia.develop</code> property.
  * @author pbracher
  * @version $Id$
  */

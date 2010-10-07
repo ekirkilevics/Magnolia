@@ -39,18 +39,19 @@ import java.util.Collection;
 
 
 /**
+ * Equivalent to {@link javax.jcr.query.QueryResult} but working with {@link Content} objects.
  * @author Sameer Charles
  * @author Fabrizio Giustina
  */
 public interface QueryResult {
 
     /**
-     * Gets a collection of Content objects for mgnl:content NodeType
+     * Gets a collection of Content objects for mgnl:content NodeType.
      */
     Collection<Content> getContent();
 
     /**
-     * Gets a collection of Content objects for specified NodeType
+     * Gets a collection of Content objects for specified NodeType.
      */
     Collection<Content> getContent(String nodeType);
 

@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 /**
  * This implementation tries first to get a command form it's command catalogue. If none is found it will call the
  * execute method of the default MVCServletHandlerImpl, which tries to execute through reflection a related method.
- * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImpl {
@@ -65,17 +64,14 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
     }
 
     /**
-     * Try to get the command from this catalogue
+     * Try to get the command from this catalog.
      */
     private String catalogueName;
 
-    /**
-     * The logger use in this class
-     */
     private static Logger log = LoggerFactory.getLogger(CommandBasedMVCServletHandler.class);
 
     /**
-     * Try to get the command from the catalogue
+     * Try to get the command from the catalog.
      */
     public String execute(String commandName) {
         // get command from command map in JCR repository
@@ -106,9 +102,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
     }
 
     /**
-     * Default implemenation returns the commandName itself
-     * @param commandName
-     * @param ctx
+     * Default implementation returns the commandName itself.
      * @return the view name returned by this execution
      */
     protected String getViewNameAfterExecution(String commandName, Context ctx) {
@@ -116,8 +110,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
     }
 
     /**
-     * Used to get the command object
-     * @param commandName
+     * Used to get the command object.
      * @return the callable command object
      */
     protected Command findCommand(String commandName) {
@@ -125,7 +118,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
     }
 
     /**
-     * The default implementation returns the current context
+     * The default implementation returns the current context.
      * @param commandName the name of the command to be called
      * @return the context to pass to the command
      */

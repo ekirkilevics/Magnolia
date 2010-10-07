@@ -39,6 +39,7 @@ import java.io.File;
 import java.util.Comparator;
 
 /**
+ * Comparator implementation used to ensure bootstrap files are imported according to the name length (shortest first).
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

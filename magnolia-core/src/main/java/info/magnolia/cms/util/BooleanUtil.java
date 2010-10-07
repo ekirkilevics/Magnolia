@@ -36,8 +36,7 @@ package info.magnolia.cms.util;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
- *
- * @author gjoseph
+ * Util to convert strings to booleans.
  * @version $Revision: $ ($Author: $)
  */
 public class BooleanUtil {

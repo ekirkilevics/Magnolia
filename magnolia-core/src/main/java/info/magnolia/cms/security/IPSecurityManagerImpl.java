@@ -49,13 +49,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+
 /**
- *
+ * A very limited implementation of {@link IPSecurityManager}. On can either limit the IP addresses
+ * (no patterns), or grant access for all IPs.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class IPSecurityManagerImpl implements IPSecurityManager {
     private static final String ALL = "*";
+
+    /**
+     * The key is the IP.
+     */
     private Map<String, Rule> rules;
 
     public IPSecurityManagerImpl() {
@@ -91,6 +97,9 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         rules.put(name, rule);
     }
 
+    /**
+     * Provides a custom transformer as the current configuration is not c2b friendly.
+     */
     public static final class InstanceFactory extends ObservedComponentFactory<IPSecurityManager> {
         public InstanceFactory() {
             super(ContentRepository.CONFIG, "/server/IPConfig", IPSecurityManager.class);
@@ -101,6 +110,9 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         }
     }
 
+    /**
+     * Transformer which uses the IP value of the rule as the key.
+     */
     public static final class IPSecurityManagerTransformer extends Content2BeanTransformerImpl {
 
         public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
@@ -127,6 +139,9 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
 
     }
 
+    /**
+     * Basic rule. Does not support patterns.
+     */
     public static final class Rule {
         private String name;
         private String ip;

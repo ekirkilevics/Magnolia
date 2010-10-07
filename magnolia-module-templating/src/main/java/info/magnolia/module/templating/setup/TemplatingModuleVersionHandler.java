@@ -56,6 +56,7 @@ import java.util.List;
 
 
 /**
+ * Module's version handler.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -108,7 +109,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         register(DeltaBuilder.update("4.1.1", "")
                 .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
         );
-        
+
         register(DeltaBuilder.update("4.3", "")
             .addTask(new BootstrapSingleModuleResource("Rendering Engine", "Add configuration for the new rendering engine", "config.server.rendering.engine.xml"))
         );

@@ -47,10 +47,12 @@ import javax.servlet.jsp.PageContext;
  *
  * @jsp.tag name="setNode" body-content="empty"
  * @jsp.tag-example
- * <cms:setNode var="currentNode"/>
- * <c:if test="${!empty currentNode.title}">
- *   <c:out value="${currentNode.title}"/>
- * </c:if>
+ * <pre>
+ * &lt;cms:setNode var="currentNode"/&gt;
+ * &lt;c:if test="${!empty currentNode.title}"&gt;
+ *   &lt;c:out value="${currentNode.title}"/&gt;
+ * &lt;/c:if&gt;
+ *</pre>
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -120,7 +122,7 @@ public class SetNode extends BaseContentTag {
         Content contentNode = getFirstMatchingNode();
 
         // set attribute
-        if (contentNode != null) { 
+        if (contentNode != null) {
             Content mainContent = MgnlContext.getAggregationState().getMainContent();
             if (mainContent == null) {
                 mainContent = contentNode;
@@ -128,7 +130,7 @@ public class SetNode extends BaseContentTag {
             info.magnolia.cms.util.NodeMapWrapper nmw = new info.magnolia.cms.util.NodeMapWrapper(
                 new I18nContentWrapper(contentNode),
                 mainContent.getHandle());
-            
+
             pageContext.setAttribute(this.var, nmw, this.scope);
         }
         else {

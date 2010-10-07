@@ -86,7 +86,7 @@ public class Include extends BodyTagSupport {
     private String contentNodeName;
 
     /**
-     * Set to true if the content should not be rendered in edit mode (edit bars, ...)
+     * Set to true if the content should not be rendered in edit mode (edit bars, ...).
      */
     private boolean noEditBars = false;
 
@@ -137,7 +137,7 @@ public class Include extends BodyTagSupport {
     }
 
     /**
-     * Set to true if the content should not be rendered in edit mode (edit bars, ...)
+     * Set to true if the content should not be rendered in edit mode (edit bars, ...).
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setNoEditBars(boolean noEditBars) {

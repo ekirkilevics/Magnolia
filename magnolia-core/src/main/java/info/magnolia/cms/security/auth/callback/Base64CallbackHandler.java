@@ -38,14 +38,11 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Base 64 callback handler supporting Basic authentication
+ * Base 64 callback handler supporting Basic authentication.
  * @author Sameer Charles $Id$
  */
 public class Base64CallbackHandler extends CredentialsCallbackHandler {
 
-    /**
-     * default
-     */
     public Base64CallbackHandler() {
         // do not instanciate with this constructor
     }

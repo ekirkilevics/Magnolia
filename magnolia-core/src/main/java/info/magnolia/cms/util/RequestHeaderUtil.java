@@ -38,6 +38,9 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Util to work with HTTP headers.
+ */
 public class RequestHeaderUtil {
 
     public static boolean acceptsGzipEncoding(HttpServletRequest request) {

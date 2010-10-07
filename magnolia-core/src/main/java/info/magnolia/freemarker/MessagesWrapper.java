@@ -45,11 +45,11 @@ import java.util.Locale;
  * from a freemarker template to a message string using the square bracket
  * syntax (e.g. ${i18n.get('message', ['param1', 'param2']}). There are
  * convenience methods which allow selecting the message bundle directly
- * from within the template as well (by passing the basename parameter).
+ * from within the template as well (by passing the basename parameter), but using those methods removed fallback to default message bundles so they should be used only when such custom bundle contains all messages requested in given context.
  *
- * @see {info.magnolia.freemarker.FreemarkerHelperTest for more syntax details.
+ * @see {@link info.magnolia.freemarker.FreemarkerHelperTest} for more syntax details.
  * @author vsteller
- * @version $Revision: $ ($Author: $)
+ * @version $Id: $
  */
 public class MessagesWrapper {
     private final Messages messages;

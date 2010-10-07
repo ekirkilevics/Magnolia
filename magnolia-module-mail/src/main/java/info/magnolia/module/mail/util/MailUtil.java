@@ -67,6 +67,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Provides static utility methods to work with emails in Magnolia.
+ *
+ */
 public class MailUtil {
 
     public static Logger log = LoggerFactory.getLogger(MailUtil.class);
@@ -89,7 +93,7 @@ public class MailUtil {
     }
 
     /**
-     * Creates a list with the documents uploaded in the form
+     * Creates a list with the documents uploaded in the form.
      * @return
      */
     public static List<MailAttachment> createAttachmentList() {
@@ -137,7 +141,7 @@ public class MailUtil {
 
 
     /**
-     * convert email address mapping<br>
+     * convert email address mapping<br>.
      * <code>user-</code> will be replace by the email address of the user as stored in the user repository
      * <code>group-</code> will
      */

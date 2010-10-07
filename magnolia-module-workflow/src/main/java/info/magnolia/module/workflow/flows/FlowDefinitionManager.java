@@ -38,7 +38,7 @@ import java.util.List;
 import openwfe.org.engine.workitem.LaunchItem;
 
 /**
- * Manages flow definitions.Configures the item to use a specifig flow.
+ * Manages flow definitions.Configures the item to use a specific flow.
  * @author philipp
  * @version $Id$
  *
@@ -46,7 +46,7 @@ import openwfe.org.engine.workitem.LaunchItem;
 public interface FlowDefinitionManager {
 
     /**
-     * Configure the launchItem, so that it will use the workflow
+     * Configure the launchItem, so that it will use the workflow.
      */
     void configure(LaunchItem launchItem, String workflowName) throws FlowDefinitionException;
     
@@ -57,12 +57,12 @@ public interface FlowDefinitionManager {
     void saveDefinition(String definition) throws FlowDefinitionException;
     
     /**
-     * Read the workflow definition stored with this name
+     * Read the workflow definition stored with this name.
      */
     String readDefinition(String workflowName) throws FlowDefinitionException;
 
     /**
-     * List all available workflow names
+     * List all available workflow names.
      */
     List getDefinitionNames() throws FlowDefinitionException;
 }

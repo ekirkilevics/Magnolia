@@ -47,7 +47,7 @@ import static info.magnolia.module.mail.setup.MailModuleVersionHandler.COMMAND_I
 import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMMAND_CLASS_PRIOR_TO_4_0;
 
 /**
- *
+ * MailModuleVersionHandlerTest.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

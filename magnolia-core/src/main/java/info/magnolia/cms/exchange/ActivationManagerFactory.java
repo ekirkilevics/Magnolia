@@ -36,11 +36,15 @@ package info.magnolia.cms.exchange;
 import info.magnolia.objectfactory.Components;
 
 /**
+ * Factory for creation of activation (subscriber) manager instances.
  * @author Sameer Charles
  * $Id$
  */
 public class ActivationManagerFactory {
 
+    /**
+     * @return singleton instance of <code>ActivationManager</code>.
+     */
     public static ActivationManager getActivationManager() {
         return Components.getSingleton(ActivationManager.class);
     }

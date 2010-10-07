@@ -56,7 +56,7 @@ public class SimpleContext extends AbstractMapBasedContext {
     private Context ctx;
 
     /**
-     * Using the threads local context for getting hierarchy managers or similar
+     * Uses current instance of <code>MgnlContext</code> at the time of creation as it's internal reference context.
      */
     public SimpleContext() {
         this(MgnlContext.getInstance());
@@ -75,28 +75,28 @@ public class SimpleContext extends AbstractMapBasedContext {
     }
 
     /**
-     * Delegate to the inner context
+     * Delegate to the inner context.
      */
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return this.ctx.getAccessManager(repositoryId, workspaceId);
     }
 
     /**
-     * Delegate to the inner context
+     * Delegate to the inner context.
      */
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return this.ctx.getHierarchyManager(repositoryId, workspaceId);
     }
 
     /**
-     * Delegate to the inner context
+     * Delegate to the inner context.
      */
     public User getUser() {
         return this.ctx.getUser();
     }
 
     /**
-     * Delegate to the inner context
+     * Delegate to the inner context.
      */
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.ctx.getQueryManager(repositoryId, workspaceId);

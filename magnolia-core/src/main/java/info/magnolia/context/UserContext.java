@@ -35,6 +35,11 @@ package info.magnolia.context;
 
 import info.magnolia.cms.security.User;
 
+/**
+ * User aware context.
+ * @author had
+ * @version $Id: $
+ */
 public interface UserContext extends Context {
     void login(User user);
     void logout();

@@ -34,6 +34,7 @@
 package info.magnolia.module.delta;
 
 /**
+ * Base for {@link Condition}s, providing name and description.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

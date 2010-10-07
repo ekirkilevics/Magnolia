@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Collects and provides information about number of JCR sessions used by this instance of Magnolia.
+ *
  * @author philipp
  * @version $Id$
  *

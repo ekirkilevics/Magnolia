@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Module's version handler.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

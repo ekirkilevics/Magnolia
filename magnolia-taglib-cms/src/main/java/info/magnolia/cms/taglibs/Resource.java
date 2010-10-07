@@ -42,10 +42,11 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * A utility class.
  * @author Sameer Charles
  * @version 1.1
- *
- * @deprecated since 4.0 - should not be used. AggregationState should be useable as a replacement in most cases.
+
+ * @deprecated since 4.0 - should not be used. AggregationState should be usable as a replacement in most cases.
  */
 public class Resource {
 
@@ -69,7 +70,7 @@ public class Resource {
 
     /**
      * <p>
-     * get Content object as requested from the URI
+     * get Content object as requested from the URI.
      * </p>
      * @return currently active page, as requested from the URI
      *
@@ -81,7 +82,7 @@ public class Resource {
 
     /**
      * <p>
-     * get Content object as requested from the URI
+     * get Content object as requested from the URI.
      * </p>
      * @return currently active page, as requested from the URI
      */
@@ -95,7 +96,7 @@ public class Resource {
 
     /**
      * <p>
-     * get ContentNode object as set by the "set" tag
+     * get ContentNode object as set by the "set" tag.
      * </p>
      * @return ContentNode , global container specific to the current JSP/Servlet page
      */
@@ -110,7 +111,7 @@ public class Resource {
 
     /**
      * <p>
-     * get ContentNode object as passed to the include tag
+     * get ContentNode object as passed to the include tag.
      * </p>
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
@@ -132,7 +133,7 @@ public class Resource {
 
     /**
      * <p>
-     * this only works for forms which uses enctype=multipart/form-data
+     * this only works for forms which uses enctype=multipart/form-data.
      * </p>
      * @return initialised multipart form object with the posted data
      * @deprecated since 4.0 - use WebContext.getPostedForm()
@@ -167,7 +168,7 @@ public class Resource {
 
     /**
      * <p>
-     * removes ContentNode object in resources , scope:page
+     * removes ContentNode object in resources , scope:page.
      * </p>
      *
      * @deprecated not used
@@ -177,7 +178,7 @@ public class Resource {
     }
 
     /**
-     * removes ContentNode object in resources , scope:TAG
+     * removes ContentNode object in resources , scope:TAG.
      */
     public static void removeLocalContentNode() {
         MgnlContext.getAggregationState().setCurrentContent(null);
@@ -198,7 +199,7 @@ public class Resource {
     }
 
     /**
-     * Set the request's <code>actpage</code> attribute to <code>page</code>
+     * Set the request's <code>actpage</code> attribute to <code>page</code>.
      * @deprecated since 4.0 - use AggregationState.
      */
     public static void setCurrentActivePage(Content page) {
@@ -207,7 +208,7 @@ public class Resource {
 
     /**
      * <p>
-     * set ContentNode object in resources, scope:page
+     * set ContentNode object in resources, scope:page.
      * </p>
      * @param node to be set
      */
@@ -217,7 +218,7 @@ public class Resource {
 
     /**
      * <p>
-     * set ContentNode object in resources , scope:TAG
+     * set ContentNode object in resources , scope:TAG.
      * </p>
      * @param node to be set
      */

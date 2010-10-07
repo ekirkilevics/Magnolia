@@ -61,7 +61,10 @@ import info.magnolia.module.templating.TemplateRendererManager;
  *
  */
 public class DefaultRenderingEngine implements RenderingEngine {
-
+    /**
+     * A helper enumeration usable by subclasses.
+     *
+     */
     protected enum RenderingHelper {
         PARAGRAPH {
 

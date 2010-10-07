@@ -41,7 +41,8 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * Sets the specified property with a new value or creates the property with the new value
+ * Sets the specified property with a new value or creates the property with the new value.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

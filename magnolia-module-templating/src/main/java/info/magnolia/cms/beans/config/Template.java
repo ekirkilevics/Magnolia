@@ -34,6 +34,7 @@
 package info.magnolia.cms.beans.config;
 
 /**
+ * Represents a template definition.
  * @deprecated since 4.0 - moved to info.magnolia.module.templating.Template
  */
 public class Template extends info.magnolia.module.templating.Template {

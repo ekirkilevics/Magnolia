@@ -39,61 +39,59 @@ import info.magnolia.objectfactory.Components;
 import java.util.Collection;
 import java.util.Map;
 
-
 /**
- * Used to create beans
+ * Contract for transformation from content to java beans.
  * @author philipp
  * @version $Id$
  */
 public interface Content2BeanTransformer {
+
     /**
-     * Create a state object to share the state between the processor and transformer
+     * Create a state object to share the state between the processor and transformer.
      */
     public TransformationState newState();
 
     /**
-     * Resolves the class to use for the current node
+     * Resolves the class to use for the current node.
      */
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
 
     /**
-     * Returns the children of the node to be transformed. Those are normally the direct children but might differ
+     * Returns the children of the node to be transformed. Those are normally the direct children but might differ.
      */
     public Collection<Content> getChildren(Content node);
 
     /**
-     * Instantiates the bean
+     * Instantiates the bean.
      */
     public Object newBeanInstance(TransformationState state, Map values) throws Content2BeanException;
 
     /**
-     * Called after all properties are set
+     * Called after all properties are set.
      */
     public void initBean(TransformationState state, Map values) throws Content2BeanException;
 
     /**
-     * Set this property on that bean. Allows excluding of properties
+     * Set this property on that bean. Allows excluding of properties.
      */
     public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values);
 
     /**
-     * Transforms the simple basic jcr property value objects to more complex properties
+     * Transforms the simple basic jcr property value objects to more complex properties.
      */
     public Object convertPropertyValue(Class<?> propertyType, Object value) throws Content2BeanException;
 
     /**
-     * The mapping to use
+     * The mapping to use.
      */
     public TypeMapping getTypeMapping();
 
     /**
-     * Get your instance here
+     * Creates singleton instance of content2bean transformer.
      */
     class Factory {
         public static Content2BeanTransformer getDefaultTransformer() {
             return Components.getSingleton(Content2BeanTransformer.class);
         }
     }
-
-
 }

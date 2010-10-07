@@ -36,10 +36,10 @@ package info.magnolia.module.workflow.setup.for4_0;
 import info.magnolia.module.delta.AddUserToGroupTask;
 
 /**
+ * A task to add a user to a group, using {@link info.magnolia.cms.security.UserManager}.
  *
  * @author tmiyar
  * @deprecated since 4.2 use {@link AddUserToGroupTask} instead
- *
  */
 public class AddSystemUserToGroupTask extends AddUserToGroupTask {
 

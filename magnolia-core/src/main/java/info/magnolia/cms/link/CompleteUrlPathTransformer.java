@@ -34,11 +34,10 @@
 package info.magnolia.cms.link;
 
 /**
- * Constructs URLs by prefixing the path with Server..getDefaultBaseUrl()
+ * This class is deprecated. Constructs URLs by prefixing the path with <code>Server.getDefaultBaseUrl()</code>.
  *
  * @see info.magnolia.cms.beans.config.ServerConfiguration
  *
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  * @deprecated since 4.0 use {@link info.magnolia.link.CompleteUrlPathTransformer} instead
  */

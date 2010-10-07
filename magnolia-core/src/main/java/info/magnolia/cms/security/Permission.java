@@ -39,14 +39,12 @@ import info.magnolia.cms.util.UrlPattern;
 
 
 /**
- * Date: Jan 5, 2005 Time: 11:32:36 AM
- * @author Sameer Charles
+ * A permission is a collection of rights and can match paths. Defines various permission constants which can be used to build right bitsets.
  */
 public interface Permission extends Serializable {
 
-    /**
-     * All possible permissions
-     */
+    // list of permissions
+
     long NONE = 0;
 
     long ADD = 1;
@@ -80,10 +78,13 @@ public interface Permission extends Serializable {
     String PERMISSION_NAME_WRITE = "(Add, Set, Read)"; //$NON-NLS-1$
 
     /**
-     * permissions used via admin central module
+     * All permissions combined.
      */
     long ALL = ADD | REMOVE | SET | READ | EXECUTE | SYNDICATE;
 
+    /**
+     * All write permissions.
+     */
     long WRITE = ADD | SET | READ;
 
     void setPattern(UrlPattern value);
@@ -94,5 +95,8 @@ public interface Permission extends Serializable {
 
     long getPermissions();
 
+    /**
+     * True if this permission matches the path.
+     */
     boolean match(String path);
 }

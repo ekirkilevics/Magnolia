@@ -80,7 +80,7 @@ import org.slf4j.Logger;
  * <br />
  *
  * @jsp.tag name="scaleImage" body-content="empty"
- * 
+ *
  * @author Patrick Janssen
  * @author Fabrizio Giustina
  * @version 1.0
@@ -99,15 +99,15 @@ public class ScaleImageTag extends BaseImageTag {
     private static final String PROPERTIES_EXTENSION_VALUE = "PNG";
 
     /**
-     * Attribute: Image maximum height
+     * Attribute: Image maximum height.
      */
     private int maxHeight = 0;
 
     /**
-     * Attribute: Image maximum width
+     * Attribute: Image maximum width.
      */
     private int maxWidth = 0;
-    
+
     /**
      * Attribute: Allow resizing images beyond their original dimensions.
      * Enabled by default for backwards compatibility but keep in mind this can
@@ -116,7 +116,7 @@ public class ScaleImageTag extends BaseImageTag {
     private boolean allowOversize = true;
 
     /**
-     * Attribute: The name of the new content node to create
+     * Attribute: The name of the new content node to create.
      */
     private String imageContentNodeName;
 
@@ -140,7 +140,7 @@ public class ScaleImageTag extends BaseImageTag {
     public void setMaxWidth(int maxWidth) {
         this.maxWidth = maxWidth;
     }
-    
+
     /**
      * Allow resizing images beyond their original dimensions?
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
@@ -173,9 +173,6 @@ public class ScaleImageTag extends BaseImageTag {
         this.imageContentNodeName = imageContentNodeName;
     }
 
-    /**
-     * Do thia tag
-     */
     public void doTag() throws JspException {
         // initialize everything
         Content parentContentNode;
@@ -267,7 +264,7 @@ public class ScaleImageTag extends BaseImageTag {
     }
 
     /**
-     * Set objects to null
+     * Set objects to null.
      */
     public void cleanUp() {
         this.parentNodeDataName = null;
@@ -277,7 +274,7 @@ public class ScaleImageTag extends BaseImageTag {
     }
 
     /**
-     * Create an image file that is a scaled version of the original image
+     * Create an image file that is a scaled version of the original image.
      * @param image node
      */
     private void createImageNodeData(Content parentContentNode, Content imageContentNode) throws PathNotFoundException,
@@ -299,7 +296,7 @@ public class ScaleImageTag extends BaseImageTag {
     }
 
     /**
-     * Create an image file that is a scaled version of the original image
+     * Create an image file that is a scaled version of the original image.
      * @param the original image file
      * @return the new image file
      */
@@ -330,9 +327,9 @@ public class ScaleImageTag extends BaseImageTag {
     }
 
     /**
-     * Calculate the scale factor for the image
-     * @param the image width
-     * @param the image height
+     * Calculate the scale factor for the image.
+     * @param originalWidth the image width
+     * @param originalHeight the image height
      * @return the scale factor
      */
     private double scaleFactor(int originalWidth, int originalHeight) {
@@ -340,12 +337,12 @@ public class ScaleImageTag extends BaseImageTag {
 
         int scaleWidth = this.maxWidth;
         int scaleHeight = this.maxHeight;
-        
+
         if (!this.allowOversize) {
             scaleWidth = Math.min(this.maxWidth, originalWidth);
             scaleHeight = Math.min(this.maxHeight, originalHeight);
         }
-        
+
         if (scaleWidth <= 0 && scaleHeight <= 0) {
             // may a copy at the same size
             scaleFactor = 1;

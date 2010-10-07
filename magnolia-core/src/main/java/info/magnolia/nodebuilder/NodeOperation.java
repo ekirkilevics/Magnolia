@@ -36,13 +36,17 @@ package info.magnolia.nodebuilder;
 import info.magnolia.cms.core.Content;
 
 /**
+ * A NodeOperation instance describes an "atomic" operation to apply to a node ("context").
+ * Instances of this are executed via {@link NodeBuilder}, can be nested (via {@link #then(NodeOperation...)}).
+ * @see Ops
+ * @see RecursiveOp
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public interface NodeOperation {
     // return this
-    // TODO - differentiate between operations that can be chained or not - i.e setProperty shouldnt be chainable
+    // TODO - differentiate between operations that can be chained or not - i.e setProperty shouldn't be chainable
     NodeOperation then(NodeOperation... childrenOps);
 
     // TODO exec should not appear in public interface

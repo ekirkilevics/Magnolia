@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * Command to transform old "impl" reference to implementing class to new "class" node data name for references.
 * @author gjoseph
 * @version $Revision: $ ($Author: $)
 */

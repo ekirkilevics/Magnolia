@@ -45,7 +45,7 @@ import java.util.Map;
 public abstract class AbstractMapBasedContext extends AbstractContext {
 
     /**
-     * The map containing the values
+     * The map containing the values.
      */
     private Map<String, Object> map = new HashMap<String, Object>();
 
@@ -59,35 +59,35 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
     }
 
     /**
-     * Use the Map.put()
+     * Use the <code>Map.put()</code>.
      */
     public void setAttribute(String name, Object value, int scope) {
         this.map.put(name, value);
     }
 
     /**
-     * Use the Map.get()
+     * Use the <code>Map.get()</code>.
      */
     public Object getAttribute(String name, int scope) {
         return this.map.get(name);
     }
 
     /**
-     * use the Map.remove()
+     * use the <code>Map.remove()</code>.
      */
     public void removeAttribute(String name, int scope) {
         this.map.remove(name);
     }
 
     /**
-     * Ignore scope and return the inner map
+     * Ignore scope and return the inner map.
      */
     public Map<String, Object> getAttributes(int scope) {
         return this.getAttributes();
     }
 
     /**
-     * Returns the inner map
+     * Returns the inner map.
      */
     public Map<String, Object> getAttributes() {
         return this.map;

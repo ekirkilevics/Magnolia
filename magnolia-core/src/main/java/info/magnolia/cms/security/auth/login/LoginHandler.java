@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
+ * Called by the {@link LoginFilter}.
  * @author Sameer Charles
  * $Id$
  *
@@ -46,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface LoginHandler {
 
     /**
-     * Returns true if the handler login succeeds
+     * Returns a login result or {@link LoginResult#NOT_HANDLED} if the handler can't handle the request.
      * */
     public LoginResult handle(HttpServletRequest request, HttpServletResponse response);
 

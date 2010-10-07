@@ -66,13 +66,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Some easy to use methods to handle with Content objects.
- * @author philipp
  */
 public class ContentUtil {
     private final static Logger log = LoggerFactory.getLogger(ContentUtil.class);
 
     /**
-     * Content filter accepting everything
+     * Content filter accepting everything.
      */
     public static ContentFilter ALL_NODES_CONTENT_FILTER = new ContentFilter() {
 
@@ -82,7 +81,7 @@ public class ContentUtil {
     };
 
     /**
-     * Content filter accepting everything exept nodes with namespace jcr (version and system store)
+     * Content filter accepting everything exept nodes with namespace jcr (version and system store).
      */
     public static ContentFilter ALL_NODES_EXCEPT_JCR_CONTENT_FILTER = new ContentFilter() {
 
@@ -92,7 +91,7 @@ public class ContentUtil {
     };
 
     /**
-     * Content filter accepting everything except meta data and jcr:
+     * Content filter accepting everything except meta data and jcr types.
      */
     public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
         public boolean accept(Content content) {
@@ -101,7 +100,7 @@ public class ContentUtil {
     };
 
     /**
-     * Content filter accepting all nodes with a nodetype of namespace mgnl
+     * Content filter accepting all nodes with a nodetype of namespace mgnl.
      */
     public static ContentFilter MAGNOLIA_FILTER = new ContentFilter() {
         public boolean accept(Content content) {
@@ -119,14 +118,17 @@ public class ContentUtil {
     };
 
     /**
-     * @author Philipp Bracher
+     * Used in {@link #visit(Content)} to visit the hierarchy.
      * @version $Id$
-     *
-     */ // TODO : throws RepositoryException or none, but not Exception !?
+     */
+    // TODO : throws RepositoryException or none, but not Exception !?
     public static interface Visitor {
         void visit(Content node) throws Exception;
     }
 
+    /**
+     * Used in {@link #visit(Content)} if the visitor wants to use post order.
+     */
     public static interface PostVisitor extends Visitor {
         void postVisit(Content node) throws Exception;
     }
@@ -134,8 +136,6 @@ public class ContentUtil {
 
     /**
      * Returns a Content object of the named repository or null if not existing.
-     * @param repository
-     * @param path
      * @return null if not found
      */
     public static Content getContent(String repository, String path) {
@@ -161,7 +161,7 @@ public class ContentUtil {
 
 
     /**
-     * Get the node or null if not exists
+     * Get the node or null if not exists.
      * @param node
      * @param name
      * @return the sub node
@@ -220,7 +220,7 @@ public class ContentUtil {
     }
 
     /**
-     * Get all children recursively (content and contentnode)
+     * Get all children recursively (content and contentnode).
      */
     public static List<Content> collectAllChildren(Content node) {
         List<Content> nodes = new ArrayList<Content>();
@@ -228,7 +228,7 @@ public class ContentUtil {
     }
 
     /**
-     * Get all children using a filter
+     * Get all children using a filter.
      * @param node
      * @param filter
      * @return list of all found nodes
@@ -239,11 +239,8 @@ public class ContentUtil {
     }
 
     /**
-     * Get the children using a filter
+     * Get the children using a filter.
      * @param nodes collection of already found nodes
-     * @param node
-     * @param filter the filter to use
-     * @return
      */
     private static List<Content> collectAllChildren(List<Content> nodes, Content node, ContentFilter filter) {
         // get filtered sub nodes first
@@ -264,10 +261,7 @@ public class ContentUtil {
     }
 
     /**
-     * Get all children of a particular type
-     * @param node
-     * @param type
-     * @return
+     * Get all children of a particular type.
      */
     public static List<Content> collectAllChildren(Content node, ItemType type) {
         List<Content> nodes = new ArrayList<Content>();
@@ -275,24 +269,21 @@ public class ContentUtil {
     }
 
     /**
-     * Returns all children (not recursively) independent of there type
+     * Returns all children (not recursively) independent of there type.
      */
     public static Collection<Content> getAllChildren(Content node){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
     }
 
     /**
-     * Returns all children (not recursively) independent of there type
+     * Returns all children (not recursively) independent of there type.
      */
     public static Collection<Content> getAllChildren(Content node, Comparator<Content> comp){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER, comp);
     }
 
     /**
-     * Get all children of a particular type
-     * @param node
-     * @param types
-     * @return
+     * Get all children of a particular type.
      */
     public static List<Content> collectAllChildren(Content node, ItemType[] types) {
         List<Content> nodes = new ArrayList<Content>();
@@ -301,10 +292,6 @@ public class ContentUtil {
 
     /**
      * Get all subnodes recursively and add them to the nodes collection.
-     * @param nodes
-     * @param node
-     * @param types
-     * @return the list
      */
     private static List<Content> collectAllChildren(List<Content> nodes, Content node, ItemType[] types) {
         for (int i = 0; i < types.length; i++) {
@@ -355,8 +342,7 @@ public class ContentUtil {
     }
 
     /**
-     * Uses the passed comparator to create the jcr ordering of the children
-     * @throws RepositoryException
+     * Uses the passed comparator to create the jcr ordering of the children.
      */
     public static void orderNodes(Content node, Comparator<Content> comparator) throws RepositoryException {
         Collection<Content> children = ContentUtil.getAllChildren(node, comparator);

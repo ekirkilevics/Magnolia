@@ -42,31 +42,24 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author Sameer Charles
+ * A {@link ContentFilter} using a {@link Rule}.
  * @version $Revision$ ($Author$)
  */
 public class RuleBasedContentFilter implements Content.ContentFilter {
 
-    /**
-     * Logger
-     */
     private static Logger log = LoggerFactory.getLogger(RuleBasedContentFilter.class);
 
     /**
-     * Rule on which this filter works
+     * Rule on which this filter works.
      */
     private Rule rule;
 
-    /**
-     * @param rule
-     */
     public RuleBasedContentFilter(Rule rule) {
         this.rule = rule;
     }
 
     /**
-     * Test if this content should be included in a resultant collection
-     * @param content
+     * Test if this content should be included in a resultant collection.
      * @return if true this will be a part of collection
      */
     public boolean accept(Content content) {

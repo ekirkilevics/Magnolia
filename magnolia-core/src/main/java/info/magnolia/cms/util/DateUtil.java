@@ -48,7 +48,7 @@ import java.util.TimeZone;
 
 
 /**
- * @author Sameer Charles
+ * Util to format and parse dates.
  * @version $Revision$ ($Author$)
  */
 public class DateUtil {
@@ -83,18 +83,18 @@ public class DateUtil {
     public static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
     /**
-     * This is a util
+     * This is a util.
      */
     private DateUtil() {
     }
 
     /**
-     * Supports implicit formats like: date, date long, datetime, dateime long, time and time long
+     * Supports implicit formats like: date, date long, datetime, dateime long, time and time long.
      */
     public static String format(Date date, String formatPattern) {
         return format(date, formatPattern, Locale.getDefault());
     }
-        
+
     public static String format(Date date, String formatPattern, Locale locale) {
         if(date == null){
             return StringUtils.EMPTY;
@@ -103,7 +103,7 @@ public class DateUtil {
         if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
-        
+
         if(FORMAT_DATE_SHORT.equals(formatPattern)){
             return SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, locale).format(date);
         }
@@ -137,7 +137,7 @@ public class DateUtil {
     }
 
     /**
-     * Uses the current locale (user) to format the date and time
+     * Uses the current locale (user) to format the date and time.
      * @param val Date or Calendar
      * @return the String
      */
@@ -153,7 +153,7 @@ public class DateUtil {
     }
 
     /**
-     * Uses the current locale (user) to format the date
+     * Uses the current locale (user) to format the date.
      * @param val Date or Calendar
      * @return the String
      */
@@ -168,7 +168,7 @@ public class DateUtil {
     }
 
     /**
-     * Uses the current locale (user) to parse the date and time
+     * Uses the current locale (user) to parse the date and time.
      * @param val Date or Calendar
      * @return the String
      * @throws ParseException
@@ -182,7 +182,7 @@ public class DateUtil {
     }
 
     /**
-     * Uses the current locale (user) to parse the date
+     * Uses the current locale (user) to parse the date.
      * @param val Date or Calendar
      * @return the String
      * @throws ParseException
@@ -195,7 +195,7 @@ public class DateUtil {
     }
 
     /**
-     * Get the equivalent UTC calendar to a local calendar
+     * Get the equivalent UTC calendar to a local calendar.
      */
     public static Calendar getLocalCalendarFromUTC(Calendar utc) {
         Date valueDate = utc.getTime();
@@ -205,7 +205,7 @@ public class DateUtil {
     }
 
     /**
-     * Convert a string date from a dialog date to a UTC calendar ready to be stored in the repository
+     * Convert a string date from a dialog date to a UTC calendar ready to be stored in the repository.
      */
     public static Calendar getUTCCalendarFromDialogString(String dateString) throws ParseException {
         SimpleDateFormat sdf = (dateString.length() > YYYY_MM_DD.length())
@@ -215,7 +215,7 @@ public class DateUtil {
     }
 
     /**
-     * Convert a local date time to a UTC calendar
+     * Convert a local date time to a UTC calendar.
      */
     public static Calendar getUTCCalendarFromLocalDate(Date date) {
         Calendar instance = getCurrentUTCCalendar();
@@ -224,7 +224,7 @@ public class DateUtil {
     }
 
     /**
-     * Get UTC Calendar for current time
+     * Get UTC Calendar for current time.
      */
     public static Calendar getCurrentUTCCalendar() {
         return Calendar.getInstance(UTC_TIME_ZONE);

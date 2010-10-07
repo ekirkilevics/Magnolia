@@ -36,9 +36,10 @@ package info.magnolia.module.delta;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * Bootstrap a single file, and places the bootstrapped node.
+ * 
  * @author philipp
  * @version $Id$
- *
  */
 public class BootstrapSingleResourceAndOrderBefore extends ArrayDelegateTask {
 

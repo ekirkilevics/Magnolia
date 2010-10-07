@@ -47,9 +47,9 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *
+ * A freemarker directive for the edit bar UI component.
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class EditBarDirective extends AbstractDirective {
 

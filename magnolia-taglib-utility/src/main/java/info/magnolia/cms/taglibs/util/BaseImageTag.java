@@ -68,6 +68,7 @@ import java.util.TimeZone;
 
 
 /**
+ * A base class for image related tags e.g. {@link ScaleImageTag}.
  * @author Fabrizio Giustina
  */
 public abstract class BaseImageTag extends SimpleTagSupport {
@@ -297,7 +298,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         imageFile.delete();
 
         // update modification date and save the new image node
-        imageNode.getMetaData().setModificationDate();        
+        imageNode.getMetaData().setModificationDate();
         imageNode.getParent().save();
     }
 }

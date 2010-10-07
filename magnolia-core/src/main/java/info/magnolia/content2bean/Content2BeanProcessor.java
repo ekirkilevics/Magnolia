@@ -45,18 +45,18 @@ import info.magnolia.objectfactory.Components;
 public interface Content2BeanProcessor {
 
     /**
-     * Transforms the node to a bean using the passed transformer
+     * Transforms the node to a bean using the passed transformer.
      */
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer)
         throws Content2BeanException;
 
     /**
-     * Similar to <code>toBean()</code> but uses a passed bean as the root bean
+     * Similar to <code>toBean()</code> but uses a passed bean as the root bean.
      */
     public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException;
 
     /**
-     * Get your instance here
+     * Creates a singleton instance of the content2bean processor.
      */
     class Factory {
         public static Content2BeanProcessor getProcessor() {

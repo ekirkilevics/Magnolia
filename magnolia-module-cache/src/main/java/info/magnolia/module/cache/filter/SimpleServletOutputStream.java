@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- *
+ * Servlet output stream implementation. Doesn't provide any additional functionality.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

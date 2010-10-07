@@ -77,7 +77,7 @@ public class PropertiesInitializer {
     private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
 
     /**
-     * Placeholder prefix: "${"-
+     * Placeholder prefix: "${".
      */
     public static final String PLACEHOLDER_PREFIX = "${";
 

@@ -140,12 +140,12 @@ public class FckEditorDialog extends DialogBox {
     private static final Logger log = LoggerFactory.getLogger(FckEditorDialog.class);
 
     /**
-     * The new .BasePath of the editor
+     * The new .BasePath of the editor.
      */
     public static final String FCKEDIT_PATH = "/.resources/fckeditor/"; //$NON-NLS-1$
 
     /**
-     * Used to make sure that the javascript files are loaded only once
+     * Used to make sure that the javascript files are loaded only once.
      */
     private static final String ATTRIBUTE_FCKED_LOADED = "info.magnolia.cms.gui.dialog.fckedit.loaded";
 
@@ -155,7 +155,7 @@ public class FckEditorDialog extends DialogBox {
     public static final String PARAM_JS_INIT_FILE = "jsInitFile"; //$NON-NLS-1$
 
     /**
-     * This parameter defines the configuration script
+     * This parameter defines the configuration script.
      */
     public static final String PARAM_CUSTOM_CONFIGURATION_PATH = "jsConfigFile"; //$NON-NLS-1$
 
@@ -190,7 +190,7 @@ public class FckEditorDialog extends DialogBox {
     private static final String PARAM_SHIFT_ENTER_MODE = "shiftEnterMode";
 
     /**
-     * Default values
+     * Default values.
      */
     public static final String PARAM_JS_INIT_FILE_DEFAULT = "/.resources/fckeditor/custom/init/magnoliaStandard.js"; //$NON-NLS-1$
 

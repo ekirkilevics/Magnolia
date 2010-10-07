@@ -50,8 +50,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 
 
 /**
- *
- * @author pbracher
+ * Wraps a {@link NodeData} to which it delegates. Used to manipulate node datas.
  * @version $Id$
  */
 public abstract class NodeDataWrapper implements NodeData {
@@ -225,7 +224,7 @@ public abstract class NodeDataWrapper implements NodeData {
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }
-    
+
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
         getWrappedNodeData().setValue(value);
     }

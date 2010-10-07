@@ -64,7 +64,6 @@ import org.xml.sax.SAXException;
 
 /**
  * Util used to process config files.
- * @author Philipp Bracher
  * @version $Id$
  *
  */
@@ -72,8 +71,7 @@ public class ConfigUtil {
     private static final Logger log = LoggerFactory.getLogger(ConfigUtil.class);
 
     /**
-     * EntityResolver using a Map to resources
-     * @author Philipp Bracher
+     * EntityResolver using a Map to resources.
      * @version $Id$
      *
      */

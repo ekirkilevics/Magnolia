@@ -54,5 +54,16 @@
       <artifactId>scannotation</artifactId>
     </dependency>
   </dependencies>
+  <build>
+  	<plugins>
+  	  <plugin>
+        <!-- FIXME this is temporary ! Checkstyle is now applied to the trunk but not yet for this module -->
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <failOnViolation>false</failOnViolation>
+        </configuration>
+      </plugin>
+  	</plugins>
+  </build>
 </project>
 

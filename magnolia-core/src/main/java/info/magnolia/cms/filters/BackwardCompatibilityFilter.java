@@ -47,7 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * Used to support the deprecated ${actpage} expression in jsps
+ * Used to support the deprecated ${actpage} expression in jsps.
+ * @deprecated since 4.3
  * @author philipp
  * @version $Id$
  */

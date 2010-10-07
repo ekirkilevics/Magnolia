@@ -46,7 +46,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- *
+ * Updates pre 3.5 IP configuration rules to the format used since 3.5.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -58,6 +58,7 @@ public class IPConfigRulesUpdate extends AllChildrenNodesOperation {
     }
 
     /**
+     * Update made for each subnode.
      *  old configuration:
      *  rule-name (p) IP
      *            (n) Access

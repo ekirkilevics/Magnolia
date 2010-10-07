@@ -51,8 +51,8 @@ import java.util.Map;
 
 
 /**
- * This class enables to get the current Request without passing the request around the world. A ThreadLocal is used to
- * manage this.
+ * This class allows obtaining of the current Request without passing the request around the world. A ThreadLocal variable is used to
+ * manage the request and to make sure it doesn't escape to another processing.
  * <p>
  * In a later version this class should not depend on servlets. The core should use the context to get and set
  * attributes instead of using the request or session object directly. Magnolia could run then in a neutral and
@@ -65,7 +65,7 @@ public class MgnlContext {
     private static final Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
     /**
-     * The thread local variable holding the current context
+     * The thread local variable holding the current context.
      */
     private static ThreadLocal<Context> localContext = new ThreadLocal<Context>();
 
@@ -91,7 +91,7 @@ public class MgnlContext {
     }
 
     /**
-     * Get the contexts locale object
+     * Get the context's locale object.
      * @return the current locale
      */
     public static Locale getLocale() {
@@ -153,7 +153,7 @@ public class MgnlContext {
     }
 
     /**
-     * Get form object assembled by <code>MultipartRequestFilter</code>
+     * Get form object assembled by <code>MultipartRequestFilter</code>.
      * @return multipart form object
      * TODO - move to getAggregationState() ?
      */
@@ -404,6 +404,7 @@ public class MgnlContext {
     }
 
     /**
+     * Deprecated.
      * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
      * @see info.magnolia.context.MgnlContext.Op
      * @see info.magnolia.context.MgnlContext.VoidOp
@@ -463,8 +464,7 @@ public class MgnlContext {
     }
 
     /**
-     * Releases the current thread (if not a system context) and calls the releaseThread() method of the system context
-     *
+     * Releases the current thread (if not a system context) and calls the releaseThread() method of the system context.
      */
     public static void release() {
         if(hasInstance() && !(getInstance() instanceof SystemContext)){

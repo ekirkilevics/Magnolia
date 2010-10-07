@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Base class to send emails using Magnolia.
  * Date: Mar 30, 2006 Time: 1:01:37 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */

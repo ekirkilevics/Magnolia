@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Util to work with {@link MetaData}.
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */

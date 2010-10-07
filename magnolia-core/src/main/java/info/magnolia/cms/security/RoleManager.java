@@ -34,25 +34,19 @@
 package info.magnolia.cms.security;
 
 /**
- * @author philipp
- * @version $Revision$ ($Author$)
+ * Manages roles.
  */
 public interface RoleManager {
 
     /**
-     * Create a role withour any security restrictions.
-     * @param name
-     * @return the new role
-     * @throws UnsupportedOperationException
-     * @throws Exception
+     * Create a role without any security restrictions.
+     * @throws UnsupportedOperationException in case the role manager does not support this operation
      */
     public Role createRole(String name) throws UnsupportedOperationException, Exception;
 
     /**
-     * Get the specifig role without any security restrictions
-     * @param name
-     * @return the role object
-     * @throws UnsupportedOperationException
+     * Get the specific role without any security restrictions.
+     * @throws UnsupportedOperationException in case the role manager does not support this operation
      */
     public Role getRole(String name) throws UnsupportedOperationException;
 

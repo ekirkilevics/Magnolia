@@ -44,14 +44,14 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * {@link info.magnolia.cms.gui.controlx.list.ValueProvider} used by {@link Inbox}.
+ *
  * @author Philipp Bracher
  * @version $Revision:3416 $ ($Author:philipp $)
  */
 public class InboxValueProvider extends DefaultValueProvider {
 
-    /**
-     * @see info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl#getValue(java.lang.String, java.lang.Object)
-     */
+    @Override
     public Object getValue(String name, Object obj) {
         InFlowItem item = (InFlowItem) obj;
         if (name.equalsIgnoreCase("name")){

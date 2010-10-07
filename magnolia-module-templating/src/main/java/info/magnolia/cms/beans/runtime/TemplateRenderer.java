@@ -34,6 +34,9 @@
 package info.magnolia.cms.beans.runtime;
 
 /**
+ * A TemplateRenderer implementation is responsible for generating the actual response from request data and a
+ * template. A typical jsp implementation will simply forward the request to the jsp through request dispatcher, but
+ * anybody is free to bind a specific implementation to a template type.
  * @deprecated since 4.0 - moved to info.magnolia.module.templating.TemplateRenderer
  */
 public interface TemplateRenderer extends info.magnolia.module.templating.TemplateRenderer {

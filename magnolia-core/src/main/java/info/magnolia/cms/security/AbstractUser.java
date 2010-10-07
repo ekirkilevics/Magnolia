@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
+ * Handles the {@linkplain Subject subject}.
  * @version $Id$
  *
  */
@@ -50,15 +50,15 @@ public abstract class AbstractUser implements User {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(AbstractUser.class);
-    
+
     protected Subject subject;
 
-    
+
     public Subject getSubject() {
         return this.subject;
     }
 
-    
+
     public void setSubject(Subject subject) {
         this.subject = subject;
     }

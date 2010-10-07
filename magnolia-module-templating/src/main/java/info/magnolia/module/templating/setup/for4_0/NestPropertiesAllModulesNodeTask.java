@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Moves property nodes to new nodetype inside like templates/x will be templates/newnode/x
+ * Moves property nodes to new nodetype inside like <code>templates/x</code> will be <code>templates/newnode/x</code>.
  * @author tmiyar
  *
  */

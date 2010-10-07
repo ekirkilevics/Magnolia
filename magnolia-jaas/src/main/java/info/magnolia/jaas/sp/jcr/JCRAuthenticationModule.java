@@ -51,6 +51,7 @@ import java.util.Iterator;
 
 
 /**
+ * Authentication module implementation using JCR to retrieve the users.
  * @author Sameer Charles $Id$
  */
 public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule {

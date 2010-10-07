@@ -34,16 +34,14 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.i18n.AbstractI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.link.LinkTransformer;
 
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Creates links with the absolute path. Alternatively can prefix links with the webapp context path as well. 
- * Transformer is also capable of applying URI2Repository mapping and i18n (mapping links to different path 
+ * Creates links with the absolute path. Alternatively can prefix links with the webapp context path as well.
+ * Transformer is also capable of applying URI2Repository mapping and i18n (mapping links to different path
  * based on the current locale value). See {@link AbstractI18nContentSupport} for details.
  * @author had
  * @version $Id:$
@@ -99,7 +97,7 @@ public class AbsolutePathTransformer implements LinkTransformer {
     }
 
     /**
-     * URI after the path
+     * Gets reminder of the URI after the path (i.e. anchor and parameters).
      */
     public String getURISuffix(Link uuidLink) {
         String anchor = uuidLink.getAnchor();

@@ -37,6 +37,7 @@ import info.magnolia.cms.gui.control.Button;
 
 
 /**
+ * Interface for bar tags.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */

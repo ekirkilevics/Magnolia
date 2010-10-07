@@ -53,8 +53,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * @author Sameer Charles
- * @author Fabrizio Giustina $Id$
+ * Performing the logout operation if the parameter {@value #PARAMETER_LOGOUT} is present.
  */
 public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(LogoutFilter.class);

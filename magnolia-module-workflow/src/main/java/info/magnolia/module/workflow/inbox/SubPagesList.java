@@ -71,15 +71,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * The {@link info.magnolia.module.admininterface.lists.AbstractList} responsible for displaying sub pages included in an activation workitem.
+ *
  * @author philipp
  * @version $Id$
  */
 public class SubPagesList extends AbstractList {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SubPagesList.class);
+    private static final Logger log = LoggerFactory.getLogger(SubPagesList.class);
 
     private String workItemId;
 
@@ -195,6 +193,9 @@ public class SubPagesList extends AbstractList {
         this.workItemId = workItemId;
     }
 
+    /**
+     * Simple model bean for displayed subpages included in an activation workitem.
+     */
     public class SubPage {
 
         private String version;

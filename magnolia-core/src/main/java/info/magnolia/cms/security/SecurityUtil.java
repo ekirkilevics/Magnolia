@@ -36,7 +36,7 @@ package info.magnolia.cms.security;
 import info.magnolia.context.MgnlContext;
 
 /**
- * @author vsteller
+ * Util class to test if a user is logged in.
  * @version $Id$
  */
 public class SecurityUtil {
@@ -48,7 +48,7 @@ public class SecurityUtil {
         User user = MgnlContext.getUser();
         return (user != null && UserManager.ANONYMOUS_USER.equals(user.getName()));
     }
-    
+
     public static boolean isAuthenticated() {
         User user = MgnlContext.getUser();
         return (user != null && !UserManager.ANONYMOUS_USER.equals(user.getName()));

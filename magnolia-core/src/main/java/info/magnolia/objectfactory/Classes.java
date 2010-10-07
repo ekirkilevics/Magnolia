@@ -62,7 +62,8 @@ public class Classes {
 
     /**
      * Convenience/shortcut for {@link #newInstance(String, Object...)}, returning null both in case
-     * of a ClassNotFoundException or if the class could not be instantiated (which could be related to the parameters, etc)
+     * of a ClassNotFoundException or if the class could not be instantiated.
+     * (which could be related to the parameters, etc)
      */
     public static <T> T quietNewInstance(String className, Object... params) {
         try {

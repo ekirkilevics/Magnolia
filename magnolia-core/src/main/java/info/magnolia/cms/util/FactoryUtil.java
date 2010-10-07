@@ -40,7 +40,8 @@ import info.magnolia.objectfactory.DefaultComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
 /**
- * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}
+ * Deprecated.
+ * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.Components#getComponentProvider()}.
  *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
@@ -136,13 +137,14 @@ public class FactoryUtil {
     }
 
     /**
+     * Deprecated.
      * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ComponentFactory}
      */
     public interface InstanceFactory extends ComponentFactory {
     }
 
     /**
-     * @author philipp
+     * Deprecated.
      * @version $Id$
      * @deprecated since 4.3 - use {@link info.magnolia.objectfactory.ObservedComponentFactory}
      */

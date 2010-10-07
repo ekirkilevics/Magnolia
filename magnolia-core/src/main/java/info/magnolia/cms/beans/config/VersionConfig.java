@@ -37,6 +37,7 @@ import info.magnolia.objectfactory.Components;
 
 
 /**
+ * Versioning configuration. Defines if versions are created and how many version are kept.
  * @author Sameer Charles
  * $Id$
  */

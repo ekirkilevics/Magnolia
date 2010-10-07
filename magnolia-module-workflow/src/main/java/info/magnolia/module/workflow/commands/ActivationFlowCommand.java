@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe
+ * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe.
  * @author jackie
  */
 public class ActivationFlowCommand extends PathMappedFlowCommand {
@@ -62,7 +62,7 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
     private boolean recursive;
 
     /**
-     * Set the start and end date for this page
+     * Set the start and end date for this page.
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         super.prepareLaunchItem(context, launchItem);

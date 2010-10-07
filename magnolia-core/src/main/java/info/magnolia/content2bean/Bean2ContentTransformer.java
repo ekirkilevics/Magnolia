@@ -44,12 +44,12 @@ import info.magnolia.cms.core.ItemType;
 public interface Bean2ContentTransformer {
 
     /**
-     * The item type of the node
+     * The item type of the node.
      */
     public ItemType resolveItemType(TransformationState state);
 
     /**
-     * The content name to use
+     * The content name to use.
      */
     public ItemType resolveName(TransformationState state);
 
@@ -59,7 +59,7 @@ public interface Bean2ContentTransformer {
     public ItemType prepareContent(TransformationState state);
 
     /**
-     * Called after the nodedatas and child content is set.
+     * Called after the node data and child content is set.
      */
     public ItemType finishContent(TransformationState state);
 
@@ -74,12 +74,12 @@ public interface Bean2ContentTransformer {
     public boolean isProperty(TransformationState state, String propertyName, Object value);
 
     /**
-     * Create/set the node data of the node
+     * Create/set the node data of the node.
      */
     public void setNodeData(TransformationState state, String name, Object value);
 
     /**
-     * Convert complex vlues to the basic supported types (int, boolean, .. String)
+     * Convert complex values to the basic supported types (int, boolean, .. String)
      */
     public Object convertNodeDataValue(TransformationState state, String name, Object value);
 }

@@ -40,62 +40,47 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * This class holds all content needed to be activated
+ * Container for all information about activated (to be) content.
  * @author Sameer Charles $Id$
  */
 public class ActivationContent implements Cloneable {
 
     private static final Logger log = LoggerFactory.getLogger(ActivationContent.class);
     /**
-     * File list
+     * Collection of files to be transfered during activation.
      */
     private Map fileList = new HashMap();
 
     /**
-     * properties
+     * Collection of properties describing activated content (path, repo, etc). Supported property keys are listed in {@link BaseSyndicatorImpl}.
      */
     private Map properties = new HashMap();
 
     /**
-     * add file
-     * @param resourceId
-     * @param file
+     * Adds resource to the list of files for transfer.
      */
     public void addFile(String resourceId, File file) {
         this.fileList.put(resourceId, file);
     }
 
-    /**
-     * get file
-     * @param resourceId
-     * @return file
-     */
     public File getFile(String resourceId) {
         return (File) this.fileList.get(resourceId);
     }
 
-    /**
-     * remove file
-     * @param resourceId
-     */
     public void removeFile(String resourceId) {
         this.fileList.remove(resourceId);
     }
 
     /**
-     * get all files
-     * @return file list
+     * Cats collection of all files. This collection is not a copy, but a reference to internal collection!
      */
     public Map getFiles() {
         return this.fileList;
     }
 
     /**
-     * add property
-     * @param key
-     * @param value
+     * Adds property to the list of properties. Null values are automatically converted to empty strings. If the key already exists, existing value will be replaced with the one provided to this method.
      */
     public void addProperty(String key, String value) {
         if (value == null) {
@@ -105,9 +90,7 @@ public class ActivationContent implements Cloneable {
     }
 
     /**
-     * set property
-     * @param key
-     * @param value
+     * @see #setProperty(String, String)
      */
     public void setProperty(String key, String value) {
         if (value == null) {
@@ -118,25 +101,18 @@ public class ActivationContent implements Cloneable {
     }
 
     /**
-     * get property
-     * @param key
-     * @return property value
+     * Gets value of property with specified key or null if such property was not set.
      */
     public String getproperty(String key) {
         return (String) this.properties.get(key);
     }
 
-    /**
-     * remove property
-     * @param key
-     */
     public void removeProperty(String key) {
         this.properties.remove(key);
     }
 
     /**
-     * get property list
-     * @return all properties
+     * Gets collection of all properties. Such collection is not a copy, but the reference to internal collection!
      */
     public Map getProperties() {
         return this.properties;

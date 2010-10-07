@@ -52,7 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Implemenation of the <code>FlushPolicy</code> providing functionality for triggering flush operation based on changes in observed repositories.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -156,6 +156,9 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
             // we are done here
     }
 
+    /**
+     * Event listener triggering the cleanup of the cache.
+     */
     protected class CacheCleaner implements EventListener {
         private final Cache cache;
         private final String repository;

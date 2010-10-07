@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Jsp tag which renders a new bar UI component.
  * @jsp.tag name="new" body-content="empty"
  *
  * @author gjoseph

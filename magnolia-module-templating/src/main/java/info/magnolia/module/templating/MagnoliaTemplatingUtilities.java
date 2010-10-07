@@ -107,7 +107,7 @@ public class MagnoliaTemplatingUtilities {
     }
 
     /**
-     * TODO each renderer should provide its own subclass
+     * TODO each renderer should provide its own subclass.
      */
     protected Writer getWriter() {
         final Environment env = Environment.getCurrentEnvironment();

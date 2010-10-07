@@ -43,6 +43,7 @@ import org.safehaus.uuid.UUIDGenerator;
 
 
 /**
+ * Utility class to retrieve files or directory used by Magnolia. Examples: cache directory, tmp files, ..
  * @author Sameer Charles
  * @version 2.0 $Id$
  */
@@ -206,15 +207,15 @@ public final class Path {
             charset = "UTF-8";
         }
         return getValidatedLabel(label, charset);
-   
+
     }
 
     /**
      * If charset eq to UTF-8 replaces these characters:
      * jackrabbit not allowed 32: [ ] 91: [[] 93: []] 42: [*] 34: ["] 46: [.] 58 [:] 92: [\] 39 :[']
      * url not valid 59: [;] 47: [/] 63: [?] 43: [+] 37: [%] 33: [!] 35:[#] 94: [^]
-     *  
-     * else replace illegal characters except [_] [0-9], [A-Z], [a-z], [-], [_]
+     *
+     * else replace illegal characters except [_] [0-9], [A-Z], [a-z], [-], [_].
      * @param label label to validate
      * @return validated label
      */

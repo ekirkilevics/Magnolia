@@ -49,6 +49,7 @@ import javax.mail.internet.MimeMultipart;
 
 
 /**
+ * A base class for sending mails with attachments.
  * Date: Apr 1, 2006 Time: 9:00:35 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */

@@ -37,7 +37,9 @@ import info.magnolia.cms.core.Content;
 
 
 /**
+ * The default concrete rendering definition used for templates and paragraphs.
  * @author pbracher
+ * @param <RD> - an instance of {@link RenderableDefinition}
  * @version $Id$
  *
  */
@@ -69,7 +71,7 @@ public class RenderingModelImpl<RD extends RenderableDefinition> implements Rend
     }
 
     /**
-     * Shortname for templates: model.def
+     * Shortname for templates: model.def.
      */
     public RD getDef() {
         return getDefinition();

@@ -58,11 +58,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class MgnlCommand implements Command {
 
-    /**
-     * Logger
-     */
     public static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
-
 
     /**
      * The default properties. Lazy bound.
@@ -74,14 +70,14 @@ public abstract class MgnlCommand implements Command {
     private boolean isEnabled = true;
 
     /**
-     * Create clones
+     * Command factory creating clones of the master/prototype command and pooling the cloned instances.
      * @author Philipp Bracher
      * @version $Id$
      */
     class MgnlCommandFactory extends BasePoolableObjectFactory {
 
         /**
-         * The prototype we clone for faster execution
+         * The prototype we clone for faster execution.
          */
         private MgnlCommand prototype;
 
@@ -112,7 +108,7 @@ public abstract class MgnlCommand implements Command {
     }
 
     /**
-     * Pool of inner commands
+     * Pool of inner commands.
      */
     private StackObjectPool pool;
 
@@ -122,7 +118,7 @@ public abstract class MgnlCommand implements Command {
     private boolean pooling = true;
 
     /**
-     * Make sure that the context is castable to a magnolia context
+     * Make sure that the context is castable to a magnolia context.
      */
     public boolean execute(Context ctx) throws Exception {
         if (!(ctx instanceof info.magnolia.context.Context)) {

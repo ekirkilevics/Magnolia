@@ -37,6 +37,7 @@ import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * Util to handler selectors. A selector is the part between the first dot and the extension of an URI.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

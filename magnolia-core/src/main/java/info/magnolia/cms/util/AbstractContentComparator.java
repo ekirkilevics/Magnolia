@@ -38,10 +38,10 @@ import info.magnolia.cms.core.Content;
 import java.util.Comparator;
 
 /**
- * Abstract Comparator use to compares nodes (for sorting etc.)
+ * Abstract Comparator use to compares nodes (for sorting etc.).
  *
  * @deprecated since 4.2 - now irrelevant since using generics, implement Comparator<Content> instead of extending this.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

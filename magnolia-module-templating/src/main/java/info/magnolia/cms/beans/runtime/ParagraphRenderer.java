@@ -34,6 +34,7 @@
 package info.magnolia.cms.beans.runtime;
 
 /**
+ * An interface to render paragraphs of content.
  * @deprecated since 4.0 - moved to info.magnolia.module.templating.ParagraphRenderer
  */
 public interface ParagraphRenderer extends info.magnolia.module.templating.ParagraphRenderer {

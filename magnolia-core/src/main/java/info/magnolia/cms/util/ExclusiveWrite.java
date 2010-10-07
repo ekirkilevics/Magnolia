@@ -34,25 +34,22 @@
 package info.magnolia.cms.util;
 
 /**
- * @author Sameer Charles
+ * A system wide lock. Used to synchronize writing operations.
  * @version $Revision$ ($Author$)
  */
 public class ExclusiveWrite {
 
-    /**
-     * package private
-     */
     ExclusiveWrite() {
         // protected
     }
 
     /**
-     * singleton
+     * The lock instance.
      */
     private static final ExclusiveWrite instance = new ExclusiveWrite();
 
     /**
-     * get exclusive singleton class object
+     * Get exclusive singleton class object.
      * @return instance
      */
     public static ExclusiveWrite getInstance() {

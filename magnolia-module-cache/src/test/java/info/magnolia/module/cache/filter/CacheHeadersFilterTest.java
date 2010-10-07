@@ -42,18 +42,21 @@ import javax.servlet.http.HttpServletResponse;
 import junit.framework.TestCase;
 
 
+/**
+ * Tests for the treatment of request headers by cache filter.
+ */
 public class CacheHeadersFilterTest extends TestCase {
 
     public void testFilterCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
-        
+
         response.setHeader("Pragma", "");
         response.setHeader("Cache-Control", "max-age=86400, public");
         response.setDateHeader(eq("Expires"), anyLong());
         chain.doFilter(request, response);
-        
+
         replay(request, response, chain);
         CacheHeadersFilter filter = new CacheHeadersFilter();
         filter.doFilter(request, response, chain);
@@ -64,12 +67,12 @@ public class CacheHeadersFilterTest extends TestCase {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
-        
+
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
         response.setDateHeader("Expires", 0L);
         chain.doFilter(request, response);
-        
+
         replay(request, response, chain);
         CacheHeadersFilter filter = new CacheHeadersFilter();
         filter.setNocache(true);

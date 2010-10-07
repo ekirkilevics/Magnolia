@@ -34,8 +34,7 @@
 package info.magnolia.cms.util;
 
 /**
- *
- * @author gjoseph
+ * Util to handle exceptions.
  * @version $Revision: $ ($Author: $)
  */
 public class ExceptionUtil {

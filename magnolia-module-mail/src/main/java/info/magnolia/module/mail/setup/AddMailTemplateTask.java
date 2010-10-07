@@ -41,7 +41,7 @@ import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.Task;
 
 /**
- *
+ * AddMail Template Task.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

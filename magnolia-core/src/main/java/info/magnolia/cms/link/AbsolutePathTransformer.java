@@ -44,7 +44,7 @@ import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * @author had
+ * Deprecated.
  * @version $Id$
  * @deprecated since 4.0 use {@link info.magnolia.link.AbsolutePathTransformer} instead
  */
@@ -106,7 +106,7 @@ public class AbsolutePathTransformer{
     }
 
     /**
-     * URI after the path
+     * Returns the URI after the path.
      */
     public String getURISuffix(UUIDLink uuidLink) {
         String anchor = uuidLink.getAnchor();

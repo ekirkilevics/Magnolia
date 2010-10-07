@@ -34,6 +34,8 @@
 package info.magnolia.module.model;
 
 /**
+ * Module dependencies can use a range syntax for versions.
+ * @see info.magnolia.module.model.VersionRangeTest for examples.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

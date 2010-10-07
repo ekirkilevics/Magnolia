@@ -36,7 +36,7 @@ package info.magnolia.module.cache.filter;
 import java.io.Serializable;
 
 /**
- *
+ * Cached redirect contract providing access to the status code and target location.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

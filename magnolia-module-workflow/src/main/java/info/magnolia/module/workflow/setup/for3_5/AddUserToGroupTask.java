@@ -34,6 +34,7 @@
 package info.magnolia.module.workflow.setup.for3_5;
 
 /**
+ * A task to add a user to a group.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

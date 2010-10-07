@@ -38,9 +38,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Security;
 import info.magnolia.objectfactory.Components;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -57,11 +54,11 @@ import java.util.Stack;
 
 
 /**
+ * Context implementation keeping track of the current request, response, servletContext and pageContext.
  * @author Sameer Charles
  * @version $Id$
  */
 public class WebContextImpl extends UserContextImpl implements WebContext {
-    private static final Logger log = LoggerFactory.getLogger(WebContextImpl.class);
 
     private static final long serialVersionUID = 222L;
 
@@ -106,14 +103,14 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     }
 
     /**
-     * This will only reset the original URI/URL by calling {@link AggregationState#resetURIs()}
+     * This will only reset the original URI/URL by calling {@link AggregationState#resetURIs()}.
      */
     public void resetAggregationState() {
         getAggregationState().resetURIs();
     }
 
     /**
-     * Get form object assembled by <code>MultipartRequestFilter</code>
+     * Get form object assembled by <code>MultipartRequestFilter</code>.
      * @return multipart form object
      */
     public MultipartForm getPostedForm() {
@@ -138,7 +135,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     /**
      * Get parameter values as a Map<String, String> (unlike HttpServletRequest.getParameterMap() which returns a Map<String,
-     * String[]>, so don't expect to retrieve multiple-valued form parameters here)
+     * String[]>, so don't expect to retrieve multiple-valued form parameters here).
      * @return parameter values
      */
     public Map<String, String> getParameters() {

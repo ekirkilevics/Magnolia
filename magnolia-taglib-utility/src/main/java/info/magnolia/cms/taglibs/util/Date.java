@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Emits a date.
  * @jsp.tag name="date" body-content="empty"
  * @deprecated see cms:out.
  *
@@ -114,7 +115,7 @@ public class Date extends TagSupport {
     }
 
     /**
-     * Locale string (see java.util.Locale)
+     * Locale string (see java.util.Locale).
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true"
      */

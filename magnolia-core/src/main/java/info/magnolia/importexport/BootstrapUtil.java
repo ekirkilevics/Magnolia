@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
+ * Utilities to bootstrap set of files and/or to export content into a specified directory.
  * @author philipp
  * @version $Revision$ ($Author$)
  */
@@ -100,7 +100,7 @@ public class BootstrapUtil {
 
             // if the node already exists we will keep the order
             String nameOfNodeAfterTheImportedNode = null;
-            
+
             final HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
 
             // if the path already exists --> delete it
@@ -114,7 +114,7 @@ public class BootstrapUtil {
                     if(!siblings.isLast()){
                         nameOfNodeAfterTheImportedNode = siblings.next().getName();
                     }
-                    
+
                     hm.delete(fullPath);
                     log.warn("Deleted already existing node for bootstrapping: {}", fullPath);
                 }
@@ -123,12 +123,12 @@ public class BootstrapUtil {
             }
 
             DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
-        
+
             if(nameOfNodeAfterTheImportedNode != null){
                 Content newNode = hm.getContent(fullPath);
                 newNode.getParent().orderBefore(nodeName, nameOfNodeAfterTheImportedNode);
             }
-        
+
         }
     }
 

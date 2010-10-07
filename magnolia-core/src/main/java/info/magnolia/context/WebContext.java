@@ -49,7 +49,7 @@ import javax.servlet.ServletException;
 
 /**
  * Context interface specialized for servlet requests; knows about HttpServletRequest/HttpServletResponse.
- * 
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -62,7 +62,7 @@ public interface WebContext extends Context {
     public static final String ATTRIBUTE_REQUEST_CHARACTER_ENCODING = "characterEncoding";
 
     /**
-     * Attribute name to get the request uri
+     * Attribute name to get the request uri.
      * @deprecated use AggregationState
      */
     public static final String ATTRIBUTE_REQUEST_URI = "requestURI";
@@ -125,7 +125,7 @@ public interface WebContext extends Context {
     /**
      * Includes/render the given path into the given Writer, by wrapping it in the current HttpServletResponse.
      * @see javax.servlet.ServletRequest#getRequestDispatcher(String)
-     * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse) 
+     * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
      */
     void include(final String path, final Writer out) throws ServletException, IOException;
 

@@ -36,7 +36,7 @@ package info.magnolia.setup.for3_5;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 
 /**
- *
+ * Updates login form location.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

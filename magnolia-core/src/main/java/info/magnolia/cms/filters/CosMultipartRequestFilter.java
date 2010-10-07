@@ -53,6 +53,7 @@ import com.oreilly.servlet.MultipartRequest;
 
 
 /**
+ * Processes multipart post requests (fileuploads). Files can be accessed with {@link MultipartForm#getDocument(String)}.
  * @author Sameer Charles
  * @version $Id$
  */
@@ -78,14 +79,14 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
         else if (type1 != null) {
             type = (type1.length() > type2.length() ? type1 : type2);
         }
-        boolean isMultipart = (type != null) && type.toLowerCase().startsWith("multipart/form-data"); 
-        if (isMultipart) { 
+        boolean isMultipart = (type != null) && type.toLowerCase().startsWith("multipart/form-data");
+        if (isMultipart) {
             MultipartForm mpf = parseParameters(request);
             request = new MultipartRequestWrapper(request, mpf);
             MgnlContext.push(request, response);
         }
         chain.doFilter(request, response);
-        if (isMultipart) { 
+        if (isMultipart) {
             MgnlContext.pop();
         }
     }
@@ -122,6 +123,9 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
         return form;
     }
 
+    /**
+     * Hides the complexity and exposes the parameter as if they were normal post parameters.
+     */
     static class MultipartRequestWrapper extends HttpServletRequestWrapper {
 
         private MultipartForm form;

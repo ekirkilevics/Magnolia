@@ -52,7 +52,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 /**
- *
+ * Updates configuration and naming of activation related nodes in Magnolia as part of 3.0 upgrade.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

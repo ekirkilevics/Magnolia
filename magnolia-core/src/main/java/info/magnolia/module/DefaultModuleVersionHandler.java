@@ -44,19 +44,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A version handler which provides the most common installation tasks:
+ * register repositories, nodetypes and workspaces as stated in the
+ * module definition, bootstrap the module's mgnl-bootstrap files,
+ * extract the module's mgnl-files files, register the module's servlets.
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
 
     /**
-     * Returns the most common installation tasks:
-     * register repositories, nodetypes and workspaces as stated in the
-     * module definition, bootstrap the module's mgnl-bootstrap files,
-     * extract the module's mgnl-files files, register the module's servlets.
-     *
      * This method should generally not be overridden.
+     * To add install tasks, use {@link #getExtraInstallTasks}. 
      */
     protected List<Task> getBasicInstallTasks(InstallContext installContext) {
         final List<Task> basicInstallTasks = new ArrayList<Task>();

@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Abstract implementation of the <code>LoginModule</code> providing common methods and constants implementation.
  * @author Sameer Charles
  * $Id$
  */
@@ -89,9 +90,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     public static final int STATUS_UNAVAILABLE = 4;
 
-    /**
-     * todo implement the following commonly supported flags to allow single signon with third party modules
-     * */
+     // TODO: implement the following commonly supported flags to allow single signon with third party modules
 
     //If true, the first LoginModule in the stack saves the password entered,
     // and subsequent LoginModules also try to use it. If authentication fails,
@@ -227,7 +226,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 
 
     /**
-     * Update subject with ACL and other properties
+     * Updates subject with ACL and other properties.
      */
     public boolean commit() throws LoginException {
         /**
@@ -262,15 +261,14 @@ public abstract class AbstractLoginModule implements LoginModule {
     }
 
     /**
-     * Set shared status value to be used by subsequent LoginModule(s)
+     * Sets shared status value to be used by subsequent LoginModule(s).
      * */
     public void setSharedStatus(int status) {
         this.sharedState.put(STATUS, new Integer(status));
     }
 
     /**
-     * test if the option skip_on_previous_success is set to true
-     * and preceding LoginModule was successful
+     * Tests if the option skip_on_previous_success is set to true and preceding LoginModule was successful.
      * */
     protected boolean getSkip() {
         return skipOnPreviousSuccess && this.getSharedStatus() == STATUS_SUCCEEDED;
@@ -301,23 +299,23 @@ public abstract class AbstractLoginModule implements LoginModule {
     }
 
     /**
-     * Releases all associated memory
+     * Releases all associated memory.
      */
     public abstract boolean release();
 
     /**
-     * checks if the credentials exist in the repository
+     * Checks if the credentials exist in the repository.
      * @throws LoginException or specific subclasses to report failures.
      */
     public abstract void validateUser() throws LoginException;
 
     /**
-     * set user details
+     * Sets user details.
      */
     public abstract void setEntity();
 
     /**
-     * set access control list from the user, roles and groups
+     * Sets access control list from the user, roles and groups.
      */
     public abstract void setACL();
 

@@ -42,7 +42,7 @@ import java.util.Map;
 
 
 /**
- * Subclass this context if you like to decorate an other context
+ * Subclass this context if you like to decorate an other context.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -58,56 +58,56 @@ public class ContextDecorator extends AbstractContext {
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return this.ctx.getAccessManager(repositoryId, workspaceId);
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public Object getAttribute(String name, int scope) {
         return this.ctx.getAttribute(name, scope);
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public Map<String, Object> getAttributes(int scope) {
         return this.ctx.getAttributes(scope);
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return this.ctx.getHierarchyManager(repositoryId, workspaceId);
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public User getUser() {
         return this.ctx.getUser();
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public void setAttribute(String name, Object value, int scope) {
         this.ctx.setAttribute(name, value, scope);
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.ctx.getQueryManager(repositoryId, workspaceId);
     }
 
     /**
-     * Delegate
+     * Delegates call to the original context.
      */
     public void removeAttribute(String name, int scope) {
         this.ctx.removeAttribute(name, scope);

@@ -38,7 +38,7 @@ import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.objectfactory.Components;
 
 /**
- *
+ * Entry point to get the various managers like {@link UserManager}, {@link GroupManager} and {@link RoleManager}.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -57,9 +57,15 @@ public interface SecuritySupport {
     GroupManager getGroupManager();
 
     RoleManager getRoleManager();
-    
+
+   /**
+    * Performs an authentication using the {@link CredentialsCallbackHandler} to retriev the user name and password.
+    */
     LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String jaasModuleName);
 
+    /**
+     * Factory to retrieve the singleton instance.
+     */
     public final static class Factory {
         public static SecuritySupport getInstance() {
             return Components.getSingleton(SecuritySupport.class);

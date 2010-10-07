@@ -48,6 +48,7 @@ import java.util.Map;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
+ * Template renderer for freemarker.
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {

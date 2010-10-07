@@ -36,7 +36,6 @@ package info.magnolia.module.cache.filter;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheModuleLifecycleListener;

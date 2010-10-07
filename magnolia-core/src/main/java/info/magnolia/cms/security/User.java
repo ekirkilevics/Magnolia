@@ -88,22 +88,10 @@ public interface User extends Serializable {
 
     void setEnabled(boolean enabled);
 
-    /**
-     * get user language
-     * @return language string
-     */
     String getLanguage();
 
-    /**
-     * get user name
-     * @return name string
-     */
     String getName();
 
-    /**
-     * get user password
-     * @return password string
-     */
     String getPassword();
 
     /**
@@ -118,23 +106,23 @@ public interface User extends Serializable {
     void setProperty(String propertyName, String value);
 
     /**
-     * get groups that user is in
+     * Get groups that are directly assigned to the user.
      */
     Collection<String> getGroups();
 
     /**
-     * get all groups to which this user belongs to, collected recursively including
-     * */
+     * Get all groups to which this user belongs to, collected recursively including.
+     */
     Collection<String> getAllGroups();
 
     /**
-     * get roles that are directly assigned to user
+     * Get roles that are directly assigned to the user.
      */
     Collection<String> getRoles();
 
     /**
-     * get all roles assigned to this user, collected recursively including groups/subgroups
-     * */
+     * Get all roles assigned to this user, collected recursively including groups/subgroups.
+     */
     Collection<String> getAllRoles();
 
     /**
@@ -143,7 +131,7 @@ public interface User extends Serializable {
     Subject getSubject();
 
     /**
-     * The jass login handler will set the subject
+     * The jass login handler will set the subject.
      *
      */
     void setSubject(Subject subject);

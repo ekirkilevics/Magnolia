@@ -34,7 +34,8 @@
 package info.magnolia.module.workflow;
 
 /**
- * Date: Mar 28, 2006 Time: 5:34:32 PM
+ * Constants used throughout the workflow module.
+ *
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public final class WorkflowConstants {

@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Store for all virtual URI to template/page mapping.
- * 
+ *
  * @author Sameer Charles
  * @version 2.0
  */

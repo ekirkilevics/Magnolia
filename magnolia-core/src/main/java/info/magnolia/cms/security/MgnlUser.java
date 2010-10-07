@@ -60,8 +60,7 @@ import java.util.TreeSet;
 
 
 /**
- * This class wraps a user content object to provide some nice methods
- * @author philipp
+ * This class wraps a user content object.
  * @version $Revision$ ($Author$)
  */
 public class MgnlUser extends AbstractUser implements Serializable {
@@ -71,14 +70,14 @@ public class MgnlUser extends AbstractUser implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(MgnlUser.class);
 
     /**
-     * Under this subnodes the assigned roles are saved
+     * Under this subnodes the assigned roles are saved.
      */
     private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
 
     private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
 
     /**
-     * Used for a global synchronization
+     * Used to to synchronize write operations in {@link MgnlUser#setLastAccess().
      */
     private static final Object mutex = new Object();
 
@@ -143,19 +142,12 @@ public class MgnlUser extends AbstractUser implements Serializable {
         this.remove(roleName, NODE_ROLES);
     }
 
-    /**
-     * Adds a role to this user
-     * @param roleName the name of the role
-     */
     public void addRole(String roleName) {
         this.add(roleName, NODE_ROLES);
     }
 
-    /**
-     * checks is any object exist with the given name under this node
-     * @param name
-     * @param nodeName
-     */
+    // TODO this are the same methods as in {@link MgnlGroup}. A rewrite is needed.
+
     private boolean hasAny(String name, String nodeName) {
         try {
             HierarchyManager hm;
@@ -188,11 +180,6 @@ public class MgnlUser extends AbstractUser implements Serializable {
         return false;
     }
 
-    /**
-     * removed node
-     * @param name
-     * @param nodeName
-     */
     private void remove(String name, String nodeName) {
         try {
             HierarchyManager hm;
@@ -225,9 +212,6 @@ public class MgnlUser extends AbstractUser implements Serializable {
         }
     }
 
-    /**
-     * adds a new node under specified node collection
-     */
     private void add(String name, String nodeName) {
         try {
             final String hmName;
@@ -263,18 +247,10 @@ public class MgnlUser extends AbstractUser implements Serializable {
         }
     }
 
-    /**
-     * The name of the user
-     * @return the name of the user
-     */
     public String getName() {
         return this.getUserNode().getName();
     }
 
-    /**
-     * get user password
-     * @return password string
-     */
     public String getPassword() {
         final String encodedPassword = this.getUserNode().getNodeData("pswd").getString().trim();
         return decodePassword(encodedPassword);
@@ -284,9 +260,6 @@ public class MgnlUser extends AbstractUser implements Serializable {
         return new String(Base64.decodeBase64(encodedPassword.getBytes()));
     }
 
-    /**
-     * the language of the current user
-     */
     public String getLanguage() {
         return this.getUserNode().getNodeData("language").getString(); //$NON-NLS-1$
     }

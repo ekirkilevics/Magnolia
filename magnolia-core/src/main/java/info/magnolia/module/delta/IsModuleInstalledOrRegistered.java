@@ -36,8 +36,10 @@ package info.magnolia.module.delta;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.InstallContext;
 
-
 /**
+ * A Task which delegates depending on the existence of a module. (whether it was previously
+ * installed, or registered in the current InstallContext)
+ *
  * @author vsteller
  * @version $Id$
  */

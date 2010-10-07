@@ -59,7 +59,9 @@ public class CacheConfiguration {
     public CacheConfiguration() {
     }
 
-    /** for tests */
+    /**
+     * This constructor is intended for tests only. For regular use, instantiate this class from its repository configuration using content2bean.
+     */
     CacheConfiguration(String name, CachePolicy cachePolicy, FlushPolicy flushPolicy) {
         this.name = name;
         this.cachePolicy = cachePolicy;

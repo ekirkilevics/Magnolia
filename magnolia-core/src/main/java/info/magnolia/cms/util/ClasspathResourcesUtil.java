@@ -78,6 +78,9 @@ public class ClasspathResourcesUtil {
         public boolean accept(String name);
     }
 
+    /**
+     * A filter using a regex pattern.
+     */
     public static class PatternFilter implements Filter{
         private final Pattern pattern;
 
@@ -206,7 +209,7 @@ public class ClasspathResourcesUtil {
     }
 
     /**
-     * Load resources from jars or directories
+     * Load resources from jars or directories.
      * @param resources found resources will be added to this collection
      * @param jarOrDir a File, can be a jar or a directory
      * @param filter used to filter resources
@@ -294,7 +297,7 @@ public class ClasspathResourcesUtil {
     }
 
     /**
-     * Get the class loader of the current Thread
+     * Get the class loader of the current thread.
      * @return current classloader
      */
     private static ClassLoader getCurrentClassLoader() {

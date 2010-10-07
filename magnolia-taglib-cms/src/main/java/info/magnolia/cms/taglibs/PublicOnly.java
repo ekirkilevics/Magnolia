@@ -43,10 +43,11 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
  * Everything between publicOnly tags will only be shown on the public instance.
  * @jsp.tag name="publicOnly" body-content="JSP"
  * @jsp.tag-example
- * <cms:publicOnly>
+ * <pre>
+ * &lt;cms:publicOnly&gt;
  *    Public now!
- * </cms:publicOnly>
- *
+ * &lt;/cms:publicOnly&gt;
+ *</pre>
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)

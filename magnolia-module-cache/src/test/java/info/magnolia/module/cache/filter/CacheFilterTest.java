@@ -81,7 +81,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
+ * Basic cache filter test.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

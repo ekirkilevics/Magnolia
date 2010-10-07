@@ -45,7 +45,7 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * Move NodeContent Task.
  * @author tmiyar
  *
  */

@@ -599,7 +599,7 @@ public class ModuleManagerImpl implements ModuleManager {
     }
     
     /**
-     * Register nodeType file in repository
+     * Register nodeType file in repository.
      * @param repositoryName repository name
      * @param nodeTypeFile nodeType file
      */

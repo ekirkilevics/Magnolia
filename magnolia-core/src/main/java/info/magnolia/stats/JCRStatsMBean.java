@@ -34,6 +34,8 @@
 package info.magnolia.stats;
 
 /**
+ * Provides current session count.
+ *
  * @author philipp
  * @version $Id$
  *

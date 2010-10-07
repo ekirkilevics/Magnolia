@@ -60,7 +60,7 @@ public class DelayedExecutor {
     protected Runnable command;
 
     /**
-     * The current taskId
+     * The current taskId.
      */
     protected Object taskId;
 

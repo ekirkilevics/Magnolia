@@ -118,17 +118,17 @@ public class TextToImageTag extends BaseImageTag {
     private static final String CSS_TEXT_IMAGE = "text-image";
 
     /**
-     * The text will not be split
+     * The text will not be split.
      */
     private static final String TEXT_SPLIT_NONE = "none";
 
     /**
-     * The text will be split into words
+     * The text will be split into words.
      */
     private static final String TEXT_SPLIT_WORDS = "words";
 
     /**
-     * The text will be split into characters
+     * The text will be split into characters.
      */
     private static final String TEXT_SPLIT_CHARACTERS = "characters";
 
@@ -223,7 +223,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Initialize settings
+     * Initialize settings.
      */
     public void setUp() {
 
@@ -254,9 +254,6 @@ public class TextToImageTag extends BaseImageTag {
         }
     }
 
-    /**
-     * Do this tag
-     */
     public void doTag() throws JspException {
 
         this.setUp();
@@ -293,7 +290,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Set objects to null
+     * Set objects to null.
      */
     public void cleanUp() {
         this.parentContentNodeName = null;
@@ -452,7 +449,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Create an image file that is a scaled version of the original image
+     * Create an image file that is a scaled version of the original image.
      * @param the original BufferedImage
      * @param the scale factor
      * @return the new BufferedImage

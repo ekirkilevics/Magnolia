@@ -53,7 +53,7 @@ import java.util.TimeZone;
 
 
 /**
- *
+ * Meta data of a content like creation date, modification date, assigned template, ...
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);

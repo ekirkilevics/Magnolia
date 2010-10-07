@@ -56,7 +56,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Uses a single full access AccessManager. Jcr sessions are only released if no event listener were registered.
+ * Uses a single full access AccessManager. JCR sessions are only released if no event listener were registered.
  */
 public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 

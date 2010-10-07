@@ -37,7 +37,8 @@ import info.magnolia.module.InstallContext;
 
 
 /**
- * Bootstraps a classpath resources relative to the module's bootstrap folder: /mgnl-bootstrap/&lt;module-name&gt;>
+ * Bootstraps a classpath resources relative to the module's bootstrap folder: /mgnl-bootstrap/&lt;module-name&gt;>.
+ * 
  * @author pbracher
  * @version $Id$
  *

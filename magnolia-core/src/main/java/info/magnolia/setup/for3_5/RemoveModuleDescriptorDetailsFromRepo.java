@@ -41,7 +41,7 @@ import info.magnolia.module.delta.AllModulesNodeOperation;
 import javax.jcr.RepositoryException;
 
 /**
- *
+ * Cleanup module description.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

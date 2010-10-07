@@ -42,8 +42,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author philipp
- * @version $Id$
+ * Deprecated.
  * @deprecated since 4.0 use {@link LinkUtil} instead
  */
 public class LinkResolverImpl implements LinkResolver {
@@ -53,7 +52,7 @@ public class LinkResolverImpl implements LinkResolver {
     private boolean makeBrowserLinksRelative = false;
 
     private boolean addContextPathToBrowserLinks = false;
-    
+
     public String parseLinks(String str) {
         return LinkUtil.convertAbsoluteLinksToUUIDs(str);
     }

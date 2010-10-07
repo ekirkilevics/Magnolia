@@ -69,7 +69,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
     }
 
     /**
-     * Prepare the email (format it) and send it
+     * Prepare the email (format it) and send it.
      * @param email the email to send
      * @throws Exception if fails
      */
@@ -82,7 +82,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
     }
 
     /**
-     * Send the email as is, without touching it
+     * Send the email as is, without touching it.
      * @param email the email to send
      * @throws Exception if fails
      */
@@ -94,7 +94,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
     }
 
     /**
-     * Thread doing all the job for sending emails and formatting the body
+     * Thread doing all the job for sending emails and formatting the body.
      */
     class MailThread implements Runnable {
 

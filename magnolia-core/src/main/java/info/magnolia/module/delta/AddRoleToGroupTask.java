@@ -41,6 +41,7 @@ import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.module.InstallContext;
 
 /**
+ * A task to add a role to a group, using {@link info.magnolia.cms.security.GroupManager}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

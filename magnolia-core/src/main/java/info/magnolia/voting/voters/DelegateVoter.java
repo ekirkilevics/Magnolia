@@ -43,9 +43,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.Voter;
 
 /**
- * Check a magnolia system delegatePath
- * @author had
+ * Check a magnolia system delegatePath.
  *
+ * @author had
  */
 public class DelegateVoter extends AbstractBoolVoter {
     

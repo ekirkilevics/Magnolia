@@ -38,13 +38,11 @@ import java.security.Principal;
 
 
 /**
+ * A user entity. Defines some standard properties as user name or language.
  * @author Sameer Charles $Id$
  */
 public interface Entity extends Principal, Serializable {
 
-    /**
-     * default properties
-     */
     public static final String FULL_NAME = "fullName";
 
     public static final String NAME = "name";
@@ -72,7 +70,7 @@ public interface Entity extends Principal, Serializable {
     public void addProperty(String key, Object value);
 
     /**
-     * @return the property's value, or null if undefined 
+     * @return the property's value, or null if undefined
      */
     public Object getProperty(String key);
 }

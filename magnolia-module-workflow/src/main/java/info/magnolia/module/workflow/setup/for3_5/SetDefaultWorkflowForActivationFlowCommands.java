@@ -48,9 +48,10 @@ import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.commands.ActivationFlowCommand;
 
 /**
+ * A {@link info.magnolia.module.delta.Task} which sets the 'workflowName' and 'dialogName' properties on activation flow commands.
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class SetDefaultWorkflowForActivationFlowCommands extends AbstractRepositoryTask {
 

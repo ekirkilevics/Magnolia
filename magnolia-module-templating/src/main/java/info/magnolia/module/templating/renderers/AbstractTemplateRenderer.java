@@ -51,6 +51,7 @@ import java.io.Writer;
 
 
 /**
+ * Base class for implementing {@link TemplateRenderer}s.
  * @author pbracher
  * @version $Id$
  *

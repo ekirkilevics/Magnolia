@@ -36,7 +36,7 @@ package info.magnolia.module.cache.filter;
 import java.io.Serializable;
 
 /**
- *
+ * Contract for cached errors providing access to the error codes.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

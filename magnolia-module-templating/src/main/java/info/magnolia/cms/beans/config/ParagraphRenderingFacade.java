@@ -34,6 +34,7 @@
 package info.magnolia.cms.beans.config;
 
 /**
+ * The central component to call when rendering paragraphs.
  * @deprecated since 4.0 - moved to info.magnolia.module.templating.ParagraphRenderingFacade
  */
 public class ParagraphRenderingFacade extends info.magnolia.module.templating.ParagraphRenderingFacade {

@@ -37,54 +37,27 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * A user group. Groups are assigned to {@link User users} and can have sub groups.
  * @author Sameer Charles $Id:Group.java 9391 2007-05-11 15:48:02Z scharles $
  */
 public interface Group extends Serializable {
 
-    /**
-     * get name of this node
-     * @return group name
-     */
     public String getName();
 
-    /**
-     * add role to this group
-     * @param roleName
-     * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     */
     public void addRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
-     * add subgroup to this group
+     * Add a subgroup to this group.
      * @param groupName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
      */
     public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
-    /**
-     * remove role from this group
-     * @param roleName
-     * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     */
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
-    /**
-     * remove subgroup from this group
-     * @param groupName
-     * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     */
     public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
-    /**
-     * returns true if role exist in this group
-     * @param roleName
-     * @throws UnsupportedOperationException if the implementation does not exist
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     */
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
@@ -98,17 +71,17 @@ public interface Group extends Serializable {
     void setProperty(String propertyName, String value);
 
     /**
-     * get groups that are directly assigned to group
+     * Get groups that are directly assigned to group.
      */
     public Collection<String> getGroups();
 
     /**
-     * get all groups assigned to this group, collected recursively from subgroups
+     * Get all groups assigned to this group, collected recursively from subgroups.
      * */
     public Collection<String> getAllGroups();
 
     /**
-     * get roles that are directly assigned to group
+     * Get roles that are directly assigned to group.
      */
     public Collection<String> getRoles();
 

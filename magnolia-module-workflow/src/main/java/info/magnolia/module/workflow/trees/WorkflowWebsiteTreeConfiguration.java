@@ -44,6 +44,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * An {@link info.magnolia.module.admininterface.AdminTreeConfiguration} for the website tree, which redefines the activation context menu items,
+ * so that they popup the activation dialog ('enter comment'). 
+ *
  * @author pbracher
  * @version $Id$
  *

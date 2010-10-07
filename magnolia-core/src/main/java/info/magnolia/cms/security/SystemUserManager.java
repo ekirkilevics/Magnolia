@@ -128,9 +128,7 @@ public class SystemUserManager extends MgnlUserManager {
     }
 
     /**
-     * Load a system user from the repository, but don't try to create it if missing
-     * @param username username
-     * @param password password
+     * Load a system user from the repository, but don't try to create it if missing.
      */
     private User getRequiredSystemUser(String username, String password) {
         MgnlUser user = null;

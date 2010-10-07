@@ -87,7 +87,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * Resolves in this order
+     * Resolves the <code>TypeDescriptor</code> from current transformation state.
+     * Resolving happens in the following order:
      * <ul>
      * <li> checks the class property of the current node
      * <li> calls onResolve subclasses should override
@@ -184,7 +185,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * Process all nodes except metadata
+     * Process all nodes except MetaData and nodes with names prefixed by "jcr:".
      */
     public boolean accept(Content content) {
         return ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER.accept(content);
@@ -353,7 +354,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * Call init method if present
+     * Initializes bean by calling its init method if present.
      */
     public void initBean(TransformationState state, Map properties) throws Content2BeanException {
         Object bean = state.getCurrentBean();

@@ -37,6 +37,8 @@ import info.magnolia.importexport.DataTransporter;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * A Task which bootstraps if the node targeted by the bootstrap file does not exist.
+ * (see constructors for details)
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

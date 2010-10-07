@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Basic implementation of the <code>RepositoryAcquiringStrategy</code> providing storage of JCR sessions and hierarchy manager instances to extending classes.
  * @author philipp
  * @version $Id$
  *

@@ -53,9 +53,8 @@ import javax.jcr.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * Contains the logic for traversing the hierarchy and do the calls to the transformer
+ * Contains the logic for traversing the hierarchy and do the calls to the transformer.
  * @author philipp
  * @version $Id$
  *
@@ -134,7 +133,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     public Object setProperties(final Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
         // enable extending feature
         node = new ExtendingContentWrapper(node);
-        
+
         TransformationState state = transformer.newState();
         state.pushBean(bean);
         state.pushContent(node);
@@ -159,7 +158,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     }
 
     /**
-     * toBean() is used to build children
+     * Transforms the children of provided content into a map.
      */
     protected Map<String, Object> toMap(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
@@ -197,9 +196,9 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     }
 
     /**
-     * Populates the values to the bean
-     * @todo in case the bean is a map / collection the transfomer.setProperty() method should be called too
-     * @todo if the bean has not a certain property but a value is present, transformer.setProperty() should be called with a fake property descriptor
+     * Populates the properties of the bean with values from the map.
+     * TODO in case the bean is a map / collection the transfomer.setProperty() method should be called too
+     * TODO if the bean has not a certain property but a value is present, transformer.setProperty() should be called with a fake property descriptor
      */
     protected void setProperties(Map<String, Object> values, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
         Object bean = state.getCurrentBean();

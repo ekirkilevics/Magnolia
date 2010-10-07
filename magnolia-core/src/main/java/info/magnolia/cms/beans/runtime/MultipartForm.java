@@ -42,6 +42,7 @@ import java.util.Map;
 
 
 /**
+ * A util class to access file uploads in multipart post requests. Use {@link #getDocument(String)} to access an uploaded file.
  * @author Sameer Charles
  * @version 1.1
  */

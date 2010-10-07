@@ -37,13 +37,11 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.ServletDefinition;
 
-import java.util.Iterator;
-
 /**
  * Reads the servlets to register from the module descriptor.
+ * 
  * @author philipp
  * @version $Id$
- *
  */
 public class RegisterModuleServletsTask extends ArrayDelegateTask {
 

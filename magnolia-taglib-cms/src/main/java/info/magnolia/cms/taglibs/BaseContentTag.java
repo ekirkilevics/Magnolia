@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Base class for implementing content tags (e.g. {@link ContentNodeIterator}).
  * @author fgiust
  * @version $Revision$ ($Author$)
  */

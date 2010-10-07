@@ -72,43 +72,45 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This version manager uses an extra workspace to manage the versions. The
+ * workspace maintains a flat hierarchy. The content is then finally versioned
+ * using JCR versioning which also copies the sub-nodes.
+ *
+ * The mix:versionable is only added on the top level nodes.
+ *
  * @author Sameer Charles
- * $Id$
  */
 public abstract class BaseVersionManager {
 
-    /**
-      * version data base
+     /**
+      * Name of the workspace.
       */
      public static final String VERSION_WORKSPACE = "mgnlVersion";
 
      /**
-      * version workspace system path
+      * Node which contains stubs for referenced nodes. We have to copy them to the workspace as well.
       */
      public static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
 
      /**
-      * version system node, holds this node version specific data
+      * Sub-node containing the data used for the version/restore process.
       */
      protected static final String SYSTEM_NODE = "mgnl:versionMetaData";
 
      /**
-      * property name for collection rule
+      * Property name for collection rule. The rule defines which sub-nodes belong to a node: page and paragraphs.
       */
      public static final String PROPERTY_RULE = "Rule";
 
      /**
-      * jcr root version
+      * JCR version store root.
       */
      protected static final String ROOT_VERSION = "jcr:rootVersion";
 
-     /**
-      * Logger.
-      */
      private static Logger log = LoggerFactory.getLogger(BaseVersionManager.class);
 
      /**
-      * create structure needed for version store workspace
+      * Create structure needed for version store workspace.
       * @throws RepositoryException if unable to create magnolia system structure
       */
      protected void createInitialStructure() throws RepositoryException {
@@ -131,7 +133,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * add version of the specified node and all child nodes while ignoring the same node type
+      * Add version of the specified node and all child nodes while ignoring the same node type.
       * @param node to be versioned
       * @return newly created version node
       * @throws UnsupportedOperationException if repository implementation does not support Versions API
@@ -146,7 +148,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * add version of the specified node and all child nodes while ignoring the same node type
+      * Add version of the specified node and all child nodes while ignoring the same node type.
       * @param node to be versioned
       * @return newly created version node
       * @throws UnsupportedOperationException if repository implementation does not support Versions API
@@ -172,7 +174,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * create version of the specified node and all child nodes based on the given <code>Rule</code>
+      * Create version of the specified node and all child nodes based on the given <code>Rule</code>.
       * @param node to be versioned
       * @param rule
       * @return newly created version node
@@ -245,21 +247,19 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * check if version index is set to negative number
-      * */
+      * Check if version index is set to negative number.
+      */
      public abstract boolean isInvalidMaxVersions();
 
      /**
-      * get node from version store
-      * @param node
+      * Get node from version store.
       */
      public synchronized Content getVersionedNode(Content node) throws RepositoryException {
          return getVersionedNode(node.getUUID());
      }
 
      /**
-      * get node from version store
-      * @param uuid
+      * Get node from version store.
       */
      protected synchronized Content getVersionedNode(String uuid) throws RepositoryException {
          List permissions = this.getAccessManagerPermissions();
@@ -279,14 +279,13 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * set version history to max version possible
-      * @param node
+      * Set version history to max version possible.
       * @throws RepositoryException if failed to get VersionHistory or fail to remove
       */
      public abstract void setMaxVersionHistory(Content node) throws RepositoryException;
 
      /**
-      * get history of this node as recorded in the version store
+      * Get history of this node as recorded in the version store.
       * @param node
       * @return version history of the given node
       * @throws UnsupportedOperationException if repository implementation does not support Versions API
@@ -304,10 +303,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * get named version
-      * @param node
-      * @param name
-      * @return version node
+      * Get named version.
       * @throws UnsupportedOperationException if repository implementation does not support Versions API
       * @throws javax.jcr.RepositoryException if any repository error occurs
       */
@@ -322,7 +318,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * Returns the current base version of given node
+      * Returns the current base version of given node.
       * @throws UnsupportedRepositoryOperationException
       * @throws RepositoryException
       */
@@ -336,7 +332,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * get all versions
+      * Get all versions.
       * @param node
       * @return Version iterator retreived from version history
       * @throws UnsupportedOperationException if repository implementation does not support Versions API
@@ -353,7 +349,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * restore specified version
+      * Restore specified version.
       * @param node to be restored
       * @param version to be used
       * @param removeExisting
@@ -400,7 +396,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * Removes all versions of the node associated with given UUID
+      * Removes all versions of the node associated with given UUID.
       * @param uuid
       * @throws RepositoryException if fails to remove versioned node from the version store
       */
@@ -446,7 +442,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * get Rule used for this version
+      * Get Rule used for this version.
       * @param versionedNode
       * @throws IOException
       * @throws ClassNotFoundException
@@ -473,7 +469,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * get magnolia system node created under the given node
+      * Get the Magnolia system node created under the given node.
       * @param node
       * @throws RepositoryException if failed to create system node
       */
@@ -487,7 +483,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * impersonate to be access manager with system rights
+      * Impersonate to be access manager with system rights.
       * @param permissions
       */
      protected void impersonateAccessManager(List permissions) {
@@ -503,7 +499,7 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * revert access manager permissions
+      * Revert access manager permissions.
       * @param permissions
       */
      protected void revertAccessManager(List permissions) {
@@ -511,14 +507,14 @@ public abstract class BaseVersionManager {
      }
 
      /**
-      * get access manager permission list
+      * Get access manager permission list.
       */
      protected List getAccessManagerPermissions() {
          return this.getHierarchyManager().getAccessManager().getPermissionList();
      }
 
      /**
-      * get version store hierarchy manager
+      * Get version store hierarchy manager.
       */
      protected HierarchyManager getHierarchyManager() {
          return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);

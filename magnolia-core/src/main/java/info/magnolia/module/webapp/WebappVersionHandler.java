@@ -46,6 +46,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * ModuleVersionHandler for the webapp module; bootstraps webapp content only if all workspaces are empty.
+ * @see info.magnolia.module.webapp.WebappBootstrap
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

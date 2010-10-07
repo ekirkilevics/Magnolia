@@ -38,27 +38,17 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- *
- * @author gjoseph
+ * A list of Strings.
  * @version $Revision: $ ($Author: $)
  */
 public interface PrincipalList extends Principal, Serializable {
 
-    /**
-     * Get name given to this principal
-     * @return name
-     */
     String getName();
 
-    /**
-     * Set principal name
-     * @param name
-     */
     void setName(String name);
 
     /**
-     * Add a name to the list
-     * @param name
+     * Add a name to the list.
      */
     void add(String name);
 
@@ -68,8 +58,7 @@ public interface PrincipalList extends Principal, Serializable {
     Collection<String> getList();
 
     /**
-     * Checks if the name exist in this list
-     * @param name
+     * Checks if the name exist in this list.
      */
     boolean has(String name);
 }

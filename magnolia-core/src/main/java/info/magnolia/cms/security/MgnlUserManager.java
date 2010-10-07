@@ -60,8 +60,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Manages the users stored in magnolia itself.
- * @author philipp
+ * Manages the users stored in Magnolia itself.
  * @version $Revision$ ($Author$)
  */
 public class MgnlUserManager implements UserManager {
@@ -193,7 +192,7 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * All users
+     * Get all users managed by this user manager.
      */
     public Collection<User> getAllUsers() {
         Collection<User> users = new ArrayList<User>();
@@ -209,11 +208,6 @@ public class MgnlUserManager implements UserManager {
         return users;
     }
 
-    /**
-     * @param name
-     * @param pw
-     * @return the created User
-     */
     public User createUser(String name, String pw) {
         validateUsername(name);
         try {
@@ -277,7 +271,7 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * return the user HierarchyManager (through the system context)
+     * Return the HierarchyManager for the user workspace (through the system context).
      */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);

@@ -77,23 +77,23 @@ public class ContextFilter extends AbstractMgnlFilter {
                 if (uri != null) {
                     MDC.put("requesturi", uri);
                 }
-                
+
                 String userName = MgnlContext.getUser().getName();
                 if (userName != null) {
                     // FIXME: Performance: following line of code forces creation of "users", "userroles" and "usergroups" JCR workspace sessions on _every_ request no matter if the user is logged in or not!
                     MDC.put("userid", userName);
-            	}
-                
+                }
+
                 String referer = request.getHeader("Referer");
                 if (referer != null) {
                     MDC.put("Referer", referer);
                 }
-                
+
                 String userAgent = request.getHeader("User-Agent");
                 if (userAgent != null) {
                     MDC.put("User-Agent", userAgent);
                 }
-                
+
                 String remoteHost = request.getRemoteHost();
                 if (remoteHost != null) {
                     MDC.put("Remote-Host", remoteHost);

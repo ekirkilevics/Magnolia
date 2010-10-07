@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Sameer Charles
+ * Handles HTTP basic authentication requests.
  * $Id$
  */
 public class BasicLogin extends LoginHandlerBase {

@@ -34,7 +34,6 @@
 package info.magnolia.test;
 
 import org.apache.commons.collections.IteratorUtils;
-import org.junit.Ignore;
 
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -54,7 +53,7 @@ public abstract class TestUtil {
     public static Enumeration enumeration(String... strings) {
         return IteratorUtils.asEnumeration(Arrays.asList(strings).iterator());
     }
-    
+
     public static String getCurrentTestMethodName() {
         final StackTraceElement[] stackTrace = new Exception().getStackTrace();
         for (StackTraceElement ste : stackTrace) {

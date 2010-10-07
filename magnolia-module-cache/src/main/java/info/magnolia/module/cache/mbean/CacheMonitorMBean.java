@@ -36,6 +36,7 @@ package info.magnolia.module.cache.mbean;
 import java.util.Map;
 
 /**
+ * <code>MBean</code> implemenation for monitoring and manipulation of the cache.
  * @author had
  * @version $Id:$
  */

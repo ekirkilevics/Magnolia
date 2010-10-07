@@ -59,12 +59,12 @@ import org.slf4j.LoggerFactory;
 public class FilterDecorator extends AbstractMgnlFilter {
 
     /**
-     * Decorated Filter
+     * Decorated Filter.
      */
     private Filter decoratedFilter;
 
     /**
-     * Parameters passed in the config
+     * Parameters passed in the config.
      */
     private Map config;
 
@@ -101,15 +101,15 @@ public class FilterDecorator extends AbstractMgnlFilter {
         this.decoratedFilter = decoratedFilter;
     }
 
+    /**
+     * Exposes the parameters configured using content2bean as {@link FilterConfig} to the servlet API.
+     */
     public static class CustomFilterConfig implements FilterConfig {
 
         private Map parameters;
 
         private FilterConfig parent;
 
-        /**
-         * @param parameters
-         */
         public CustomFilterConfig(FilterConfig parent, Map parameters) {
             super();
             this.parent = parent;
@@ -121,36 +121,24 @@ public class FilterDecorator extends AbstractMgnlFilter {
             }
         }
 
-        /**
-         * @see javax.servlet.FilterConfig#getFilterName()
-         */
         public String getFilterName() {
             return parent.getFilterName();
         }
 
-        /**
-         * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
-         */
         public String getInitParameter(String name) {
             return (String) parameters.get(name);
         }
 
-        /**
-         * @see javax.servlet.FilterConfig#getInitParameterNames()
-         */
         public Enumeration getInitParameterNames() {
             return new Hashtable(parameters).keys();
         }
 
-        /**
-         * @see javax.servlet.FilterConfig#getServletContext()
-         */
         public ServletContext getServletContext() {
             return parent.getServletContext();
         }
 
         /**
-         * This is a custom method to get recursive configuration parameters like maps, list
+         * This is a custom method to get recursive configuration parameters like maps or list.
          */
         public Object getInitParameterObject(String name) {
             return parameters.get(name);

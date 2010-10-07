@@ -36,8 +36,9 @@ package info.magnolia.cms.exchange;
 import info.magnolia.voting.Voter;
 
 /**
+ * Description of a path or area parent subscriber will react on.
  * @author Sameer Charles
- * $Id$
+ * @version $Id$
  */
 public interface Subscription extends Voter {
 

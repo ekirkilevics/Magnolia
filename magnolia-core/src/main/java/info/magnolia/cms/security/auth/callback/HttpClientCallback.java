@@ -37,9 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Sameer Charles
+ * Use to prompt the user for user name and password.
  * $Id$
- * 
+ *
  * @content2bean
  */
 public interface HttpClientCallback {

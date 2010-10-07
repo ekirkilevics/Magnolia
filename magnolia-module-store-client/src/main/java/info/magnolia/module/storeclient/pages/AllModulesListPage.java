@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Lists all installed modules, both installed and not.
  * @author dschivo
  */
 public class AllModulesListPage extends TemplatedMVCHandler {

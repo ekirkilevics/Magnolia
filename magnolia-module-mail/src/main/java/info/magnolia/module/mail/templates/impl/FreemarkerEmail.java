@@ -44,6 +44,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 /**
+ * Sends an email using a freemarker template.
  * Date: Apr 5, 2006 Time: 8:59:18 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */

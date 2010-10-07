@@ -50,23 +50,23 @@ import java.util.Map;
 
 
 /**
- * Manages the templates of the system
+ * Manages the templates of the system.
  * @author philipp
  */
 public class TemplateManager extends ObservedManager {
 
     /**
-     * The cached templates
+     * The cached templates.
      */
     private Map<String, Template> cachedContent = new Hashtable<String, Template>();
 
     /**
-     * The templates visible in the templates selection
+     * The templates visible in the templates selection.
      */
     private List<Template> visibleTemplates = new ArrayList<Template>();
 
     /**
-     * Called by the ObservedManager
+     * Called by the ObservedManager.
      */
     protected void onRegister(Content node) {
         try {
@@ -182,7 +182,7 @@ public class TemplateManager extends ObservedManager {
     }
 
     /**
-     * Recursive search for content nodes contains template data (looks up subfolders)
+     * Recursive search for content nodes contains template data (looks up subfolders).
      * @author <a href="mailto:tm@touk.pl">Tomasz Mazan</a>
      * @param cnt current folder to look for template's nodes
      * @return collection of template's content nodes from current folder and descendants
@@ -211,7 +211,7 @@ public class TemplateManager extends ObservedManager {
     public Iterator<Template> getAvailableTemplates(Content node) {
         List<Template> templateList = new ArrayList<Template>();
         for (Template template : visibleTemplates) {
-            
+
             if (template.isAvailable(node)) {
                 templateList.add(template);
             }

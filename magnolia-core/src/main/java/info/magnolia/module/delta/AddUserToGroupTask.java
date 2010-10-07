@@ -39,6 +39,7 @@ import info.magnolia.cms.security.UserManager;
 import info.magnolia.module.InstallContext;
 
 /**
+ * A task to add a user to a group, using {@link info.magnolia.cms.security.UserManager}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

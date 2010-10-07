@@ -38,6 +38,7 @@ import freemarker.template.TemplateDirectiveModel;
 import java.util.HashMap;
 
 /**
+ * A map with freemarker directives specific to Magnolia.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -40,6 +40,8 @@ import java.util.Collection;
 
 
 /**
+ * {@link info.magnolia.cms.gui.controlx.list.ListModel} used by {@link Inbox}.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -47,32 +49,20 @@ public class InboxListModel extends AbstractListModel {
 
     private String userName;
 
-    /**
-     * @param userName
-     */
     public InboxListModel(String userName) {
         super();
         this.userName = userName;
         this.setValueProvider(new InboxValueProvider());
     }
 
-    /**
-     * @see info.magnolia.cms.gui.controlx.list.AbstractListModel#getResult()
-     */
     protected Collection getResult() throws Exception {
         return WorkflowUtil.getUserInbox(this.userName);
     }
 
-    /**
-     * @return Returns the userName.
-     */
     public String getUserName() {
         return this.userName;
     }
 
-    /**
-     * @param userName The userName to set.
-     */
     public void setUserName(String userName) {
         this.userName = userName;
     }

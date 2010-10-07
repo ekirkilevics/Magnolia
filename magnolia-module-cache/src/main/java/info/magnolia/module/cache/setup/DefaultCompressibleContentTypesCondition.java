@@ -47,7 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * Removes obsolete cache compression list in favor of new global configuration.
  * @version $Revision: $ ($Author: $)
  */
 public class DefaultCompressibleContentTypesCondition extends ConditionalDelegateTask {

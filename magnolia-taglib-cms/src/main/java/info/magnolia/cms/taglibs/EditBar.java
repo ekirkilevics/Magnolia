@@ -33,28 +33,19 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
-import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.tagext.TagSupport;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within

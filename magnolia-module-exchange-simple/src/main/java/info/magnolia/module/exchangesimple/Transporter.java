@@ -51,18 +51,15 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Class responsible to transport activation content
+ * Class responsible for transport of activated content.
  * @author Sameer Charles $Id$
  */
 public class Transporter {
 
-    /**
-     * Logger
-     */
     private static Logger log = LoggerFactory.getLogger(Transporter.class);
 
     /**
-     * content boundary
+     * Content boundary in the multipart request.
      */
     private static final String BOUNDARY = "mgnlExchange-cfc93688d385";
 
@@ -106,7 +103,7 @@ public class Transporter {
     }
 
     /**
-     * http form multipart form post
+     * Initiates multipart http post to transport content to the subscriber.
      * @param connection
      * @param activationContent
      * @throws ExchangeException

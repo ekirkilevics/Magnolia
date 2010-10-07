@@ -96,7 +96,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     /**
-     * Stores one expresion
+     * Stores one expression.
      */
     public synchronized void storeExpression(final FlowExpression fe) throws PoolException {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();

@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Type mapper implementation resolving its mapping from the properties file. The transformer class is resolved from the value of the property named [fully_qualified_class_name].transformer.
  * @author philipp
  * @version $Id$
  *

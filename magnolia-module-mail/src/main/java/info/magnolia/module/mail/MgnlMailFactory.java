@@ -98,14 +98,14 @@ public class MgnlMailFactory {
     }
 
     /**
-     * Creates email with attachments
+     * Creates email with attachments.
      */
     public MgnlEmail getEmailFromType(Map<String, String> params, String type, List<MailAttachment> attachments) {
         return getEmailFromType(params, type, null, attachments);
     }
 
     /**
-     * Creates email with attachments
+     * Creates email with attachments.
      */
     public MgnlEmail getEmail(Map<String, String> params, List<MailAttachment> attachments) {
         MailTemplate template = new MailTemplate();
@@ -113,7 +113,7 @@ public class MgnlMailFactory {
     }
 
     /**
-     * Creates email using predefined template
+     * Creates email using predefined template.
      */
     public MgnlEmail getEmailFromTemplate(String id, List<MailAttachment> attachments, Map<String, String> params) throws Exception {
         MailTemplate template = getTemplate(id);
@@ -121,7 +121,7 @@ public class MgnlMailFactory {
     }
 
     /**
-     * Creates email using predefined template with no attachments
+     * Creates email using predefined template with no attachments.
      */
     public MgnlEmail getEmailFromTemplate(String id, Map<String, String> params) throws Exception {
         return getEmailFromTemplate(id, null, params);

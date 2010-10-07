@@ -34,7 +34,7 @@
 package info.magnolia.module.cache.filter;
 
 /**
- *
+ * Marker interface for the cached items.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

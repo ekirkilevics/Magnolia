@@ -47,6 +47,7 @@ import javax.jcr.version.VersionException;
 
 
 /**
+ * Wrapping a JCR {@link Query}.
  * Date: Mar 29, 2005 Time: 2:57:55 PM
  * @author Sameer Charles
  */

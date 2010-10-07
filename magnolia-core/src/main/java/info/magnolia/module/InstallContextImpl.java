@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Default implementation of {@link info.magnolia.module.InstallContext}; provided by the {@link info.magnolia.module.ModuleManager}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -169,8 +170,8 @@ public class InstallContextImpl implements InstallContext {
     }
 
     /**
-     * The key used in the map of messages. This is mostly because Maps keys in freemarker can only be Strings...
-     * We just need to make sure this is consistent accross templates...
+     * The key used in the map of messages. This is mostly because Maps keys in FreeMarker can only be Strings...
+     * We just need to make sure this is consistent across templates...
      */
     protected String getModuleKey() {
         return currentModule != null ? currentModule.toString() : DEFAULT_KEY;

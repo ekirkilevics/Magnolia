@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.workflow.flows;
 
+/**
+ * Exception thrown when a flow definition can be read or parsed.
+ */
 public class FlowDefinitionException extends Exception {
 
     public FlowDefinitionException() {

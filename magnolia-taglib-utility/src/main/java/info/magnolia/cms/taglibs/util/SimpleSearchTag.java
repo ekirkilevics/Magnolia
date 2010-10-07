@@ -60,11 +60,12 @@ import java.text.MessageFormat;
  *
  * @jsp.tag name="simpleSearch" body-content="empty"
  * @jsp.tag-example
- * <cmsu:simplesearch query="${param.search}" var="results" />
- *   <c:forEach items="${results}" var="page">
- *   <a href="${pageContext.request.contextPath}${page.handle}.html">${page.title}</a>
- * </c:forEach>
- *
+ * <pre>
+ * &lt;cmsu:simplesearch query="${param.search}" var="results" /&gt;
+ *   &lt;c:forEach items="${results}" var="page"&gt;
+ *   &lt;a href="${pageContext.request.contextPath}${page.handle}.html"&gt;${page.title}&lt;/a&gt;
+ * &lt;/c:forEach&gt;
+ *</pre>
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -208,7 +209,7 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * @deprecated as from 3.5.5, this query is deemed to complex and not properly working, since it
-     * forces a search on non-indexed word. The better generateSimpleQuery() method is recommened.
+     * forces a search on non-indexed word. The better generateSimpleQuery() method is recommended.
      */
     protected String generateComplexXPathQuery() {
         return generateXPathQuery();
@@ -216,7 +217,7 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Split search terms and build an xpath query in the form:
-     * <code>//*[@jcr:primaryType='mgnl:content']/\*\/\*[jcr:contains(., 'first') or jcr:contains(., 'second')]</code>
+     * <code>//*[@jcr:primaryType='mgnl:content']/\*\/\*[jcr:contains(., 'first') or jcr:contains(., 'second')]</code>.
      * @return valid xpath expression or null if the given query doesn't contain at least one valid search term
      *
      * @deprecated as from 3.5.5, this query is deemed to complex and not properly working, since it

@@ -60,9 +60,6 @@ public class QueryUtil {
 
     /**
      * Executes a query.
-     * @param repository
-     * @param statement
-     * @return
      */
     public static Collection<Content> query(String repository, String statement){
         return query(repository,statement, Query.SQL);
@@ -70,10 +67,6 @@ public class QueryUtil {
 
     /**
      * Executes a query.
-     * @param repository
-     * @param statement
-     * @param language
-     * @return
      */
     public static Collection<Content> query(String repository, String statement, String language){
         return query(repository,statement,language, ItemType.NT_BASE);
@@ -91,11 +84,6 @@ public class QueryUtil {
 
     /**
      * Executes a query - if an exception is thrown, it is logged and an empty collection is returned.
-     * @param repository
-     * @param statement
-     * @param language
-     * @param returnItemType
-     * @return
      */
     @SuppressWarnings("unchecked") //Collections.EMPTY_LIST;
     public static Collection<Content> query(String repository, String statement, String language, String returnItemType) {
@@ -117,7 +105,7 @@ public class QueryUtil {
     }
 
     /**
-     * Expression representing a date
+     * Expression representing a date.
      */
     public static String createDateExpression(Calendar calendar) {
         return "DATE '" + DateFormatUtils.format(calendar.getTimeInMillis(), "yyyy-MM-dd", calendar.getTimeZone()) + "'";
@@ -133,7 +121,7 @@ public class QueryUtil {
     }
 
     /**
-     * Expression representing a date and time
+     * Expression representing a date and time.
      */
     public static String createDateTimeExpression(Calendar calendar) {
         calendar.set(Calendar.MILLISECOND, 0);

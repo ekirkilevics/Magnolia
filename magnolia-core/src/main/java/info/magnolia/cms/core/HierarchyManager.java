@@ -41,6 +41,9 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 
 /**
+ * Main class to access content. Is retrieved by {@link MgnlContext#getHierarchyManager(String)}.
+ * The {@link DefaultHierarchyManager} wraps a JCR session.
+ *
  * @author gjoseph
  * @version $Revision$ ($Author$)
  */

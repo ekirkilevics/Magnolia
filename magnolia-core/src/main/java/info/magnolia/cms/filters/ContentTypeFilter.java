@@ -66,7 +66,7 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContentTypeFilter.class);
 
     /**
-     * If set we have to reset the aggregation state before setting the original URI/URL with new values
+     * If set we have to reset the aggregation state before setting the original URI/URL with new values.
      */
     private static final String AGGREGATION_STATE_INITIALIZED = ContentTypeFilter.class.getName() + ".aggregationStateInitialized";
 

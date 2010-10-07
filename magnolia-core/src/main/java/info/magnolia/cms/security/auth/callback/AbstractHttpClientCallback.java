@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Sameer Charles
+ * Tells the client that he has to login by setting the response status to {@link HttpServletResponse#SC_UNAUTHORIZED}.
  * $Id$
  */
 public abstract class AbstractHttpClientCallback implements HttpClientCallback {

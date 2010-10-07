@@ -49,7 +49,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Manages the paragraphs on the system. Modules can register the nodes where
  * the paragraphs are defined.
- * 
+ *
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
@@ -64,7 +64,7 @@ public class ParagraphManager extends ObservedManager {
     }
 
     /**
-     * Cached paragraphs
+     * Cached paragraphs.
      */
     private Map<String, Paragraph> paragraphs = new Hashtable<String, Paragraph>();
 
@@ -77,7 +77,7 @@ public class ParagraphManager extends ObservedManager {
      * <li>path - jsp / servlet path</li>
      * <li>description - description of a template</li>
      * </ol>
-     * 
+     *
      * @return a Paragraph instance
      * @deprecated since 4.0 Use {@link #getParagraphDefinition(String)} instead
      */
@@ -94,7 +94,7 @@ public class ParagraphManager extends ObservedManager {
      * <li>path - jsp / servlet path</li>
      * <li>description - description of a template</li>
      * </ol>
-     * 
+     *
      * @return a Paragraph instance
      */
     public Paragraph getParagraphDefinition(String key) {
@@ -159,5 +159,5 @@ public class ParagraphManager extends ObservedManager {
     public void onClear() {
         this.paragraphs.clear();
     }
-    
+
 }

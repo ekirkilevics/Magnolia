@@ -48,7 +48,7 @@ import java.util.List;
 import static info.magnolia.nodebuilder.Ops.*;
 
 /**
- *
+ * The module's version handler.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

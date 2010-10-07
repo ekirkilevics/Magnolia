@@ -46,6 +46,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
+ * Principal collection implementation based on simple list. Collection is managed externally.
  * Date: Jun 29, 2005
  * @author Sameer Charles $Id$
  */
@@ -59,14 +60,14 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     private static final String NAME = "PrincipalCollection";
 
     /**
-     * collection on principal objects
+     * Collection of principal objects.
      */
     private Collection collection = new ArrayList();
 
     private String name;
 
     /**
-     * Get name given to this principal
+     * Gets name given to this principal.
      * @return name
      */
     public String getName() {
@@ -77,14 +78,14 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     }
 
     /**
-     * Set this principal name
+     * Sets this principal name.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Set collection
+     * Sets internal collection of principals.
      * @param collection
      */
     public void set(Collection collection) {
@@ -92,7 +93,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     }
 
     /**
-     * Add to collection
+     * Adds principal to the internal collection of principals.
      * @param principal to be added to the collection
      */
     public void add(Principal principal) {
@@ -100,7 +101,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     }
 
     /**
-     * Remove from the collection
+     * Removes principal from the collection if present or does nothing in case principal was not present in the collection.
      * @param principal to be removed from the collection
      */
     public void remove(Principal principal) {
@@ -108,36 +109,36 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     }
 
     /**
-     * Clear collection
+     * removes all principals from the collection.
      */
     public void clearAll() {
         this.collection.clear();
     }
 
     /**
-     * Check if this collection contains specified object
-     * @param principal
-     * @return true if the specified object exist in the collection
+     * Checks if this collection contains specified principal.
+     * @return true if the specified object exist in the collection, false otherwise.
      */
     public boolean contains(Principal principal) {
         return this.collection.contains(principal);
     }
 
     /**
-     * Checks if this collection contains object with the specified name
+     * Checks if this collection contains principal with the specified name.
      * @param name
-     * @return true if the collection contains the principal by the specified name
+     * @return true if the collection contains the principal by the specified name, false otherwise.
      */
     public boolean contains(String name) {
         return this.get(name) != null;
     }
 
     /**
-     * Get principal associated to the specified name from the collection
+     * Gets principal associated to the specified name from the collection.
      * @param name
-     * @return principal object associated to the specified name
+     * @return principal object associated to the specified name.
      */
     public Principal get(String name) {
+        //TODO: change internal collection to a map and store names as keys to avoid loops !!!!
         Iterator principalIterator = this.collection.iterator();
         while (principalIterator.hasNext()) {
             Principal principal = (Principal) principalIterator.next();
@@ -149,13 +150,13 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     }
 
     /**
-     * Returns an iterator on principals
+     * Returns an iterator over the collection of principals.
      * @return iterator for Principal objects
      */
     public Iterator iterator() {
         return collection.iterator();
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */

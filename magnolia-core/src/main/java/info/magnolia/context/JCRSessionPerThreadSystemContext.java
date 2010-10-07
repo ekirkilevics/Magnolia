@@ -33,18 +33,13 @@
  */
 package info.magnolia.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
- * A system context which creates jcrs sessions per thread (request). The sessions are released but not if any event
- * listener has been registerd on a session.
+ * A system context which creates JCR sessions per thread (request). The sessions are released but not if any event
+ * listener has been registered on a session.
  * @author philipp
  * @version $Id$
  */
 public class JCRSessionPerThreadSystemContext extends AbstractSystemContext implements ThreadDependentSystemContext {
-    private static final Logger log = LoggerFactory.getLogger(JCRSessionPerThreadSystemContext.class);
 
     public RepositoryAcquiringStrategy getRepositoryStrategy() {
         if (repositoryStrategyThreadLocal.get() == null) {

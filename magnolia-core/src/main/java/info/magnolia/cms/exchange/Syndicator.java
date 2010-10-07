@@ -42,6 +42,8 @@ import java.util.List;
 
 
 /**
+ * Basic activation contract. Provides methods to activate or de-activate content (either current or versioned).
+ *
  * @author Sameer Charles
  * $Id: Syndicator.java 6443 2006-09-21 10:14:34Z scharles $
  */
@@ -50,7 +52,7 @@ public interface Syndicator {
     /**
      * Sets up the syndicator.
      *
-     * @param user the user to use for the conection to the subscriber
+     * @param user the user to use for the connection to the subscriber
      * @param repositoryName the repository to transmit
      * @param workspaceName the workspace to transmit
      * @param rule the rules defining which nodes to transmit (node types)
@@ -106,7 +108,7 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * @param node to deactivate
+     * @param node to de-activate
      * @throws RepositoryException
      * @throws ExchangeException
      */
@@ -114,7 +116,7 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * @param node to deactivate
+     * @param node to de-activate
      * @param subscriber
      * @throws RepositoryException
      * @throws ExchangeException

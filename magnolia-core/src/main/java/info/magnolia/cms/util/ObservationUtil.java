@@ -51,7 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Philipp Bracher
+ * Util to register JCR observations. Supports delayed execution of the listener to handle event bursts.
  * @version $Revision$ ($Author$)
  */
 public class ObservationUtil {
@@ -150,7 +150,7 @@ public class ObservationUtil {
     }
 
     /**
-     * The event firing is deferred in case there is a serie of fired events
+     * The event firing is deferred in case there is a serie of fired events.
      *
      * @return the wrapped EventListener so that one can unregister it.
      */
@@ -190,6 +190,9 @@ public class ObservationUtil {
         return LifeTimeJCRSessionUtil.getHierarchyManager(repository);
     }
 
+    /**
+     * A listener using an {@link ObservationBasedDelayedExecutor}.
+     */
     public static class DeferringEventListener implements EventListener {
 
         private ObservationBasedDelayedExecutor executor;
@@ -211,7 +214,7 @@ public class ObservationUtil {
     }
 
     /**
-     * Deferred event handling. Uses the DelayedExecutor class
+     * Deferred event handling. Uses the DelayedExecutor class.
      */
     public static class ObservationBasedDelayedExecutor {
         private final DelayedExecutor delayedExecutor;

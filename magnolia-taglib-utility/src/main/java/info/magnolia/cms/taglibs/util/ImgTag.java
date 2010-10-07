@@ -72,7 +72,7 @@ public class ImgTag extends BaseContentTag {
     private String altNodeDataName;
 
     /**
-     * the name of the nodeData containing the image path
+     * the name of the nodeData containing the image path.
      * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setNodeDataName(String nodeDataName) {

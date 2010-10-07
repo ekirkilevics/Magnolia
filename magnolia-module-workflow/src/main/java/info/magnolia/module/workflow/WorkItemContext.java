@@ -56,20 +56,17 @@ public class WorkItemContext extends ContextDecorator {
     private static final Logger log = LoggerFactory.getLogger(WorkItemContext.class);
 
     /**
-     * The wrapped workitem
+     * The wrapped workitem.
      */
     private WorkItem workItem;
 
-    /**
-     * 
-     */
     public WorkItemContext(Context ctx, WorkItem workItem) {
         super(ctx);
         this.workItem = workItem;
     }
 
     /**
-     * Use work item if request scope
+     * Use work item if request scope.
      */
     public Object getAttribute(String name, int scope) {
         if (scope == Context.LOCAL_SCOPE) {
@@ -85,7 +82,7 @@ public class WorkItemContext extends ContextDecorator {
     }
 
     /**
-     * Use work item if request scope
+     * Use work item if request scope.
      */
     public Map<String, Object> getAttributes(int scope) {
         if (scope == Context.LOCAL_SCOPE) {
@@ -95,7 +92,7 @@ public class WorkItemContext extends ContextDecorator {
     }
 
     /**
-     * Use work item if request scope
+     * Use work item if request scope.
      */
     public void setAttribute(String name, Object value, int scope) {
         if (scope == Context.LOCAL_SCOPE) {
@@ -117,7 +114,7 @@ public class WorkItemContext extends ContextDecorator {
     }
 
     /**
-     * Use work item if request scope
+     * Use work item if request scope.
      */
     public void removeAttribute(String name, int scope) {
         if (scope == Context.LOCAL_SCOPE) {
@@ -127,16 +124,10 @@ public class WorkItemContext extends ContextDecorator {
         }
     }
 
-    /**
-     * @return Returns the workItem.
-     */
     public WorkItem getWorkItem() {
         return this.workItem;
     }
 
-    /**
-     * @param workItem The workItem to set.
-     */
     public void setWorkItem(WorkItem workItem) {
         this.workItem = workItem;
     }

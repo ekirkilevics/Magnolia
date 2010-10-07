@@ -35,7 +35,6 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.io.IOException;

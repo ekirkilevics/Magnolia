@@ -43,6 +43,7 @@ import java.util.Map;
 
 
 /**
+ * Implementation fo the security entity.
  * @author Sameer Charles $Id$
  */
 public class EntityImpl implements Entity {
@@ -61,7 +62,7 @@ public class EntityImpl implements Entity {
     }
 
     /**
-     * Get name given to this principal
+     * Gets name given to this principal.
      *
      * @return name
      */

@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Implement openwfe.org.embed.engine.Engine to use JCRWorkItemStore and JCRExpressionStore
+ * Implement openwfe.org.embed.engine.Engine to use JCRWorkItemStore and JCRExpressionStore.
  *
  * @author jackie_juju@hotmail.com
  */
@@ -64,7 +64,7 @@ public class JCRPersistedEngine extends PersistedEngine {
     }
 
     /**
-     * Instantiates a JCR persisted engine with the given name
+     * Instantiates a JCR persisted engine with the given name.
      */
     public JCRPersistedEngine(final String engineName, final boolean cached) throws ServiceException {
         super(engineName, cached);
@@ -79,7 +79,7 @@ public class JCRPersistedEngine extends PersistedEngine {
         getContext().add(this.eStore);
     }
 
-    // TODO : this doesnt seem to be used ... ?
+    // TODO : this doesn't seem to be used ... ?
     public Participant getParticipant(String name) {
         ParticipantMap pm = Definitions.getParticipantMap(getContext());
         if (pm == null) {
@@ -89,7 +89,7 @@ public class JCRPersistedEngine extends PersistedEngine {
         return pm.get(name);
     }
 
-    // TODO : this doesnt seem to be used ... ?
+    // TODO : this doesn't seem to be used ... ?
     public JCRExpressionStore getExpStore() {
         return this.eStore;
     }

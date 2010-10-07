@@ -54,8 +54,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
+ * Wrapping a JCR {@link javax.jcr.query.QueryResult}. This class will filter
+ * the result according to the user's ACLs. You can use
+ * {@link #getContent(String)} to retrieve nodes of a certain type. If the
+ * node's type doesn't match the nearest matching ancestors is add instead. This
+ * allows to search in paragraph content while retrieving  a list of pages.
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  */
@@ -67,12 +72,12 @@ public class QueryResultImpl implements QueryResult {
     private static Logger log = LoggerFactory.getLogger(QueryResultImpl.class);
 
     /**
-     * Unfiltered result object
+     * Unfiltered result object.
      */
     protected javax.jcr.query.QueryResult result;
 
     /**
-     * caches all previously queried objects
+     * caches all previously queried objects.
      */
     protected Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
 
@@ -104,7 +109,7 @@ public class QueryResultImpl implements QueryResult {
     }
 
     /**
-     * Build required result objects
+     * Adds all found nodes of a certain type. If the type doesn't match it will traverse the ancestors and add them instead.
      */
     protected void build(String nodeType, Collection<Content> collection) throws RepositoryException {
         this.objectStore.put(nodeType, collection);
@@ -130,7 +135,7 @@ public class QueryResultImpl implements QueryResult {
     }
 
     /**
-     * Build required result objects
+     * Traverses the hierarchy from the current node to the root until the node's type matches.
      */
     protected void build(Node node, String[] nodeType, Collection<Content> collection) throws RepositoryException {
         /**
@@ -151,16 +156,10 @@ public class QueryResultImpl implements QueryResult {
         }
     }
 
-    /**
-     * @see info.magnolia.cms.core.search.QueryResult#getContent()
-     */
     public Collection<Content> getContent() {
         return getContent(ItemType.CONTENT.getSystemName());
     }
 
-    /**
-     * @see info.magnolia.cms.core.search.QueryResult#getContent(java.lang.String)
-     */
     public Collection<Content> getContent(String nodeType) {
         Collection<Content> resultSet = this.objectStore.get(nodeType);
         if (resultSet == null) {

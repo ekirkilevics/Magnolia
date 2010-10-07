@@ -44,6 +44,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 
 /**
+ * Describes the type under the transformation. Can be used to customize the output of the transformation.
  * @author philipp
  * @version $Id$
  * @todo

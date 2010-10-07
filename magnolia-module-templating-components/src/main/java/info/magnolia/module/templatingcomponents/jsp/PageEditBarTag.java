@@ -42,6 +42,7 @@ import javax.servlet.jsp.JspException;
 import java.io.IOException;
 
 /**
+ * Jsp tag which renders a page edit bar UI component.
  * @jsp.tag name="page" body-content="empty"
  *
  * @author gjoseph

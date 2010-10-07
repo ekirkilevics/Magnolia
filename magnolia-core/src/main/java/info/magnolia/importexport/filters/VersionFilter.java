@@ -41,7 +41,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 
 
 /**
- * Sax filter, strips version information from a jcr xml (system view).
+ * SAX filter, strips version information from a JCR XML (system view).
  */
 public class VersionFilter extends XMLFilterImpl {
 

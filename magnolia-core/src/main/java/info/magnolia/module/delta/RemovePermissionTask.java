@@ -41,6 +41,9 @@ import info.magnolia.module.InstallContext;
 import javax.jcr.RepositoryException;
 
 /**
+ * A task to remove a permission from a role, using {@link info.magnolia.cms.security.RoleManager}.
+ * Removes the permission to the given path, as well as "path/*".
+
  * @author zdenekskodik
  * @version $Id$
  */

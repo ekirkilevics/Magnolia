@@ -34,6 +34,7 @@
 package info.magnolia.module.model;
 
 /**
+ * Models a dependency between modules.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

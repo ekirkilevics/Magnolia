@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Adds URI permissions to all roles.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -71,7 +71,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
                     return false;
                 }
             }
-            
+
         });
         this.isAuthorInstance = isAuthorInstance;
     }

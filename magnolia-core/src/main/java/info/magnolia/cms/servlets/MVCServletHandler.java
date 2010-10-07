@@ -37,8 +37,7 @@ import java.io.IOException;
 
 
 /**
- * This Handler is used in the MVCServlet
- * @author Philipp Bracher
+ * This Handler is used in the MVCServlet.
  * @version $Id$
  */
 public interface MVCServletHandler {
@@ -46,14 +45,13 @@ public interface MVCServletHandler {
     String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
 
     /**
-     * Depending on the request it is generating a logical command name
+     * Returns the name of the command we want to execute.
      * @return name of the command
      */
     String getCommand();
 
     /**
-     * Call the method through reflection
-     * @param command
+     * Execute the command. Returns the view name.
      * @return the name of the view to show (used in renderHtml)
      */
     String execute(String command);
@@ -67,12 +65,12 @@ public interface MVCServletHandler {
     void renderHtml(String view) throws IOException;
 
     /**
-     * The name of the handler
+     * The name of the handler.
      */
     String getName();
 
     /**
-     * Called after instantiating
+     * Called after instantiating.
      */
     void init() throws Exception;
 }

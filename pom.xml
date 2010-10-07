@@ -200,13 +200,6 @@ for Java Content Repositories (JCR).
           <goals>deploy</goals>
         </configuration>
       </plugin>
-      <plugin>
-        <!-- TODO this is temporary ! Don't loaf around and go fix some Javadoc !! -->
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <failOnViolation>false</failOnViolation>
-        </configuration>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>

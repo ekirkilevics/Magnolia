@@ -38,7 +38,7 @@ import junit.framework.TestCase;
 import java.io.IOException;
 
 /**
- *
+ * Basic tests for gzip utilities class.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

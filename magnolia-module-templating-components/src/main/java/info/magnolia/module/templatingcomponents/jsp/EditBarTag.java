@@ -43,11 +43,11 @@ import javax.servlet.jsp.JspException;
 import java.io.IOException;
 
 /**
- *
+ * Jsp tag which renders an edit bar UI component.
  * @jsp.tag name="edit" body-content="empty"
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class EditBarTag extends AbstractTag {
     private String editButtonLabel;

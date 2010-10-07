@@ -36,6 +36,9 @@ package info.magnolia.nodebuilder;
 import info.magnolia.cms.core.Content;
 
 /**
+ * Entry point for using the node builder API.
+ * Also see the {@link info.magnolia.nodebuilder.task.NodeBuilderTask} and {@link info.magnolia.nodebuilder.task.ModuleNodeBuilderTask}
+ * classes for usage of the node builder API in {@link info.magnolia.module.ModuleVersionHandler}s.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -56,7 +59,8 @@ public class NodeBuilder {
     }
 
     /**
-     *
+     * Execute the operations.
+     * 
      * @throws NodeOperationException if the given ErrorHandler decided to do so !
      */
     public void exec() throws NodeOperationException {

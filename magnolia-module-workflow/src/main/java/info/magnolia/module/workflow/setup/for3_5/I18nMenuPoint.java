@@ -42,6 +42,7 @@ import info.magnolia.module.delta.TaskExecutionException;
 import javax.jcr.RepositoryException;
 
 /**
+ * I18n-ize the menu items.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

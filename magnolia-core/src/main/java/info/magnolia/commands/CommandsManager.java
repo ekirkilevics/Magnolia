@@ -64,7 +64,7 @@ public class CommandsManager extends ObservedManager {
     protected static Content2BeanTransformer COMMAND_TRANSFORMER = new CommandTransformer();
 
     /**
-     * Register this catalogue
+     * Register observation for command catalogs.
      */
     protected void onRegister(Content node) {
         // is this a catalog or a collection of catalogs?
@@ -91,14 +91,14 @@ public class CommandsManager extends ObservedManager {
     }
 
     /**
-     * Clear all catalogues
+     * Clear all catalogs.
      */
     protected void onClear() {
         CatalogFactory.clear();
     }
 
     /**
-     * Get the command
+     * Get the command.
      * @param catalogName the catalog containing the command
      * @param commandName the name of the command
      * @return the command to execute
@@ -113,7 +113,7 @@ public class CommandsManager extends ObservedManager {
     }
 
     /**
-     * Use a delimiter to separate the catalog and command name
+     * Use a delimiter to separate the catalog and command name.
      * @param commandName
      * @return the command
      */

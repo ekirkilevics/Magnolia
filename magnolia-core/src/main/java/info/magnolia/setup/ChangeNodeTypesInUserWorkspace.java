@@ -50,14 +50,14 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * Task used to change <code>nt:folder</code> into <code>mgnl:folder</code> type in users workspace.
  * @author had
  * @version $Id $
  */
 public class ChangeNodeTypesInUserWorkspace extends AbstractRepositoryTask {
 
     /**
-     * Content filter accepting only nt:folder
+     * Content filter accepting only <code>nt:folder</code>.
      */
     private static ContentFilter NT_FOLDER_FILTER = new ContentFilter() {
         public boolean accept(Content content) {
