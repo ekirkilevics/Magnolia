@@ -74,6 +74,7 @@
             <supertype>mix:referenceable</supertype>
         </supertypes>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
     </nodeType>
     <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
