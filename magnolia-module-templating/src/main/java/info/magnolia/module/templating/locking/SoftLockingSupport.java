@@ -75,7 +75,7 @@ public interface SoftLockingSupport {
      */
     boolean isLocked(Content content) throws AccessDeniedException, RepositoryException;
     /**
-     * Used to obtain a singleton of this obejct.
+     * Used to obtain a singleton of this object.
      * @author fgrilli
      *
      */
