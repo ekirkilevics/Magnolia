@@ -38,7 +38,6 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SystemUserManager;
-import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
@@ -52,7 +51,6 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
