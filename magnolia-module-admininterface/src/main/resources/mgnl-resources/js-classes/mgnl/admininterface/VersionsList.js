@@ -31,12 +31,12 @@
  * intact.
  *
  */
- 
+
  /**
-  * 
+  *
   */
- classDef("mgnl.admininterface.VersionsList", function(onShowItem){
- 
+ classDef("mgnl.admininterface.VersionsList", function(onShowItem, onDiffItem){
+
     /**
      * The current selected items version label
      */
@@ -46,7 +46,12 @@
      * The function called to show the lists item
      */
     this.onShowItem = onShowItem;
-    
+
+    /**
+     * The function called to show the lists item
+     */
+    this.onDiffItem = onDiffItem;
+
     this.restore = function(versionLabel){
         versionLabel = versionLabel==null ? this.currentVersionLabel : versionLabel;
         document.mgnlForm.command.value="restore";
@@ -60,8 +65,13 @@
         onShowItem(versionLabel);
     };
 
+    this.diffItem = function(versionLabel){
+        versionLabel = versionLabel==null ? this.currentVersionLabel : versionLabel;
+        // on show must be set by the user of this class
+        onDiffItem(versionLabel);
+    };
  });
- 
+
 /**
  * Show versions of a page
  */
@@ -69,6 +79,6 @@ mgnl.admininterface.VersionsList.show = function(repository, path){
     url = "/.magnolia/pages/" + repository + "VersionsList.html";
     url = MgnlURLUtil.addParameter(url, "repository", repository);
     url = MgnlURLUtil.addParameter(url, "path", path);
-    
+
     mgnlOpenWindow(url, 1000, 600);
 };

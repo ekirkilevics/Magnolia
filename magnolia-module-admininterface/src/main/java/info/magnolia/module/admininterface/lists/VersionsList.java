@@ -235,4 +235,7 @@ public abstract class VersionsList extends AbstractList {
         this.versionLabel = versionLabel;
     }
 
+    public String getOnDiffFunction() {
+        return "function(versionLabel){}";
+    }
 }
