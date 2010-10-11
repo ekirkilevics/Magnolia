@@ -43,7 +43,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.objectfactory.Components;
 
 /**
- * Support for <i>"soft"</i> locking in Magnolia. Soft locking differs from JCR <i>"hard"</i> locking in that it does not really locks the node being edited, rather
+ * Support for <em>"soft"</em> locking in Magnolia. Soft locking differs from JCR <em>"hard"</em> locking in that it does not really locks the node being edited, rather
  * it just stores information about who is locking a certain content, so that this information can be shown as a warning, e.g. to users concurrently editing the same page.
  * @author fgrilli
  * @see LockManager
