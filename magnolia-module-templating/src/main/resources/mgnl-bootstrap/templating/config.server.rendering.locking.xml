@@ -10,7 +10,7 @@
     <sv:value>a10a1521-79d4-4a31-ba64-212cd884ae2e</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.templating.locking.DummySoftLockingSupport</sv:value>
+    <sv:value>info.magnolia.module.templating.locking.NoOpSoftLockingSupport</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

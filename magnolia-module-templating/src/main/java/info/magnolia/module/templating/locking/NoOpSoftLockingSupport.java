@@ -41,12 +41,11 @@ import java.util.List;
 import javax.jcr.RepositoryException;
 
 /**
- * TODO better naming? Provide more than an empty implementation?
- * An empty implementation of {@link SoftLockingSupport}. This feature in only available in Magnolia EE since version 4.4.
+ * An empty implementation of {@link SoftLockingSupport} whose methods either do nothing or throw {@link UnsupportedOperationException}. This feature in only available in Magnolia EE since version 4.4.
  * @author fgrilli
  *
  */
-public class DummySoftLockingSupport implements SoftLockingSupport {
+public class NoOpSoftLockingSupport implements SoftLockingSupport {
 
     public void lock(Content content) {
         //do nothing
