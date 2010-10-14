@@ -73,8 +73,8 @@ public abstract class AbstractRenderer {
 
         if (model == null) {
             try {
-            	// FIXME: temporary fix for 4.4 M1 release
-            	// newModel existed before and we override this method in the STK
+                // FIXME: temporary fix for 4.4 M1 release
+                // newModel existed before and we override this method in the STK
                 model = newModel(content, definition, parentModel);
             }
             catch (Exception e) {
@@ -102,14 +102,11 @@ public abstract class AbstractRenderer {
         restoreContext(ctx, savedContextState);
     }
 
-	// FIXME: temporary fix for 4.4 M1 release
-	// newModel existed before and we override this method in the STK
-	protected RenderingModel newModel(Content content,
-			RenderableDefinition definition, final RenderingModel parentModel)
-			throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException, InstantiationException {
-		return RenderingModelFactory.getInstance().newModel(content, definition, parentModel);
-	}
+    // FIXME: temporary fix for 4.4 M1 release
+    // newModel existed before and we override this method in the STK
+    protected RenderingModel newModel(Content content, RenderableDefinition definition, final RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return RenderingModelFactory.getInstance().newModel(content, definition, parentModel);
+    }
 
     protected String determineTemplatePath(Content content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
         String templatePath = definition.determineTemplatePath(actionResult, model);
