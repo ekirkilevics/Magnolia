@@ -34,8 +34,8 @@
 package info.magnolia.cms.beans.config;
 
 /**
- * VirtualURIMapping implementations are used by {@link info.magnolia.cms.beans.config.VirtualURIManager} and {@link info.magnolia.cms.filters.VirtualUriFilter}
- * to transform incoming uri requests.
+ * VirtualURIMapping implementations are used by {@link info.magnolia.cms.beans.config.VirtualURIManager} and
+ * {@link info.magnolia.cms.filters.VirtualUriFilter} to transform incoming URI requests.
  *
  * @author philipp
  * @version $Id$
@@ -43,12 +43,24 @@ package info.magnolia.cms.beans.config;
  * @content2bean.component path="/modules/.../virtualURIMapping"
  */
 public interface VirtualURIMapping {
-    public MappingResult mapURI(String uri);
+
+    /**
+     * Maps an incoming URI to a new target URI. Returns a {@link VirtualURIMapping.MappingResult} describing the new
+     * URI and the level of match. The new URI can be prefixed with "redirect:", "permanent:" or "forward:" to trigger
+     * either a temporary redirect, a permanent redirect or a forward respectively. For redirects the URI can be
+     * absolute or relative within the web application (the context path is added automatically). If the mapping does
+     * not apply to the input URI this method returns null.
+     *
+     * @param uri the URI of the current request, decoded and without the context path
+     * @return a {@link VirtualURIMapping.MappingResult} with the target URI and level or null if the mapping doesn't apply
+     */
+    MappingResult mapURI(String uri);
 
     /**
      * Mapping information returned by {@link VirtualURIMapping#mapURI(String)}.
      */
     public static class MappingResult{
+
         private String toURI;
 
         /**
