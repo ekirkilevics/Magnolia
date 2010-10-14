@@ -34,6 +34,7 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.module.templating.ModelExecutionFilter;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.module.templating.RenderingModelImpl;
@@ -201,13 +202,21 @@ public class JspParagraphRendererTest extends TestCase {
     }
 
     public void testShouldFailIfContextIsNotWebContext() throws Exception {
-        MgnlContext.setInstance(createStrictMock(Context.class));
+        Content content = createStrictMock(Content.class);
+        expect(content.getUUID()).andReturn("content-uuid");
+
+        Context context = createStrictMock(Context.class);
+        expect(context.getAttribute("info.magnolia.module.templating.RenderingModel")).andReturn(null);
+        expect(context.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + "content-uuid")).andReturn(null);
+        replay(content, context);
+
+        MgnlContext.setInstance(context);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
             final Paragraph p = new Paragraph();
             p.setName("plop");
             p.setTemplatePath("/foo/bar.jsp");
-            renderer.render(null, p, new StringWriter());
+            renderer.render(content, p, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("JspParagraphRenderer can only be used with a WebContext", e.getMessage());

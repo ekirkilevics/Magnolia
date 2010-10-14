@@ -65,18 +65,29 @@ public abstract class AbstractRenderer {
     protected void render(Content content, RenderableDefinition definition, Writer out) throws RenderException {
 
         final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
+
         RenderingModel model;
-        try {
-            model = newModel(content, definition, parentModel);
-        }
-        catch (Exception e) {
-            throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
+        String actionResult;
+
+        model = (RenderingModel) MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + content.getUUID());
+
+        if (model == null) {
+            try {
+                model = RenderingModelFactory.getInstance().newModel(content, definition, parentModel);
+            }
+            catch (Exception e) {
+                throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
+            }
+
+            actionResult = model.execute();
+
+            if (RenderingModel.SKIP_RENDERING.equals(actionResult)) {
+                return;
+            }
+        } else {
+            actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + content.getUUID());
         }
 
-        final String actionResult = model.execute();
-        if(RenderingModel.SKIP_RENDERING.equals(actionResult)){
-            return;
-        }
         String templatePath = determineTemplatePath(content, definition, model, actionResult);
 
         final Map ctx = newContext();
@@ -97,15 +108,6 @@ public abstract class AbstractRenderer {
         }
         return templatePath;
     }
-
-    /**
-     * Creates the model for this rendering process. Will set the properties
-     */
-    protected RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
-        return definition.newModel(wrappedContent, definition, parentModel);
-    }
-
 
     protected Map saveContextState(final Map ctx) {
         Map state = new HashMap();
@@ -172,15 +174,6 @@ public abstract class AbstractRenderer {
 
     protected MagnoliaTemplatingUtilities getMagnoliaTemplatingUtilities() {
         return MagnoliaTemplatingUtilities.getInstance();
-    }
-
-    /**
-     * Wraps the current content node before passing it to the model.
-     * @param currentContent the actual content
-     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
-     */
-    protected Content wrapNodeForModel(Content currentContent, Content mainContent) {
-        return new I18nContentWrapper(currentContent);
     }
 
     /**
