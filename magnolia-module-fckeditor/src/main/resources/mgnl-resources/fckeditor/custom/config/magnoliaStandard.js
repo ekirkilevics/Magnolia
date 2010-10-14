@@ -72,6 +72,8 @@ if (MgnlFCKConfig.showSpellChecker) {
     toolbar[0].push('SpellCheck');
     if (MgnlFCKConfig.spellChecker) {
        FCKConfig.SpellChecker = MgnlFCKConfig.spellChecker;
+       //if it's SCAYT start it
+       FCKConfig.ScaytAutoStartup = true;
     }
 }
 
