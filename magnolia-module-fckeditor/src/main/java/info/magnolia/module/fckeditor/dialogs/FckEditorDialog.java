@@ -69,66 +69,101 @@ import java.util.regex.Matcher;
  * <li>/admindocroot/fckeditor/custom/init/magnoliaStandard.js</li>
  * <li>/admindocroot/fckeditor/custom/config/magnoliaStandard.js</li>
  * </ul>
- * To make live simple we provide some attributes to configure the control in the magnolia configuration instead within
- * the javascript files. <table>
+ * To make life easier we provide some attributes to configure the control in the magnolia configuration instead within
+ * the javascript files.
+ * <table border="1">
  * <tr>
  * <td>css</td>
  * <td>The css file to use. Default is /admindocroot/fckeditor/custom/css/magnoliaStandard.css </td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>height</td>
  * <td>The height of the editor.</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>width</td>
  * <td>The width of the editor.</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>tables</td>
  * <td>The table editing features are available if true</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>lists</td>
  * <td>The list features are available if true</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>aligment</td>
  * <td>The aligment features are available if true</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>images</td>
  * <td>The image editing features including upload are available if true</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>fileUpload</td>
  * <td>The file upload features is enabled if true</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>styles</td>
  * <td>Defines the xml file defining the used styles. See
  * http://wiki.fckeditor.net/Developer%27s_Guide/Configuration/Styles for details</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>templates</td>
  * <td>Defines the xml file defining the used templates. See
  * http://wiki.fckeditor.net/Developer%27s_Guide/Configuration/Templates for details</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>fonts</td>
  * <td>A semicolon separated list of font names.</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>fontSizes</td>
  * <td>A semicolon separated list of font sizes</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <tr>
  * <td>colors</td>
  * <td>A comma separated list of colors. hex values without #.</td>
+ * <td>&nbsp;</td>
  * </tr>
  * <tr>
  * <td>source</td>
  * <td>Show the source button</td>
+ * <td>&nbsp;</td>
+ * </tr>
+ * <tr>
+ * <td>showSpellChecker</td>
+ * <td>Show the spellchecker button</td>
+ * <td>&nbsp;</td>
+ * </tr>
+ * <tr>
+ * <td>spellChecker</td>
+ * <td>A spellchecker provider.</td>
+ * <td>Possible values are:
+ * <ul>
+ * <li><code>ieSpell</code>
+ * <li><code>SpellerPages</code>
+ * <li><code>WSC</code> - Web Spell Checker provided by SpellChecker.net <strong>(the default)</strong>
+ * <li><code>SCAYT</code> - "Spell Check as You Type" provided by SpellChecker.net
+ * </ul>
+ * <p>More info about the FCK spell checker feature here
+ * <a href="http://docs.cksource.com/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options/SpellChecker">Configuration_Options/SpellChecker</a>
+ * and here <a href="http://docs.cksource.com/FCKeditor_2.x/Developers_Guide/Configuration/Spell_Checker">Configuration/Spell_Checker</a>
+ * </td>
  * </tr>
  * </table>
  *
@@ -189,6 +224,10 @@ public class FckEditorDialog extends DialogBox {
 
     private static final String PARAM_SHIFT_ENTER_MODE = "shiftEnterMode";
 
+    private static final String PARAM_SHOW_SPELL_CHECKER = "showSpellChecker";
+
+    private static final String PARAM_SPELL_CHECKER = "spellChecker";
+
     /**
      * Default values.
      */
@@ -225,6 +264,10 @@ public class FckEditorDialog extends DialogBox {
     private static final String PARAM_ENTER_MODE_DEFAULT = "p";
 
     private static final String PARAM_SHIFT_ENTER_MODE_DEFAULT = "br";
+
+    private static final String PARAM_SHOW_SPELL_CHECKER_DEFAULT = "true";
+
+    private static final String PARAM_SPELL_CHECKER_DEFAULT = "WSC"; // 'WSC' | 'SCAYT' | 'SpellerPages' | 'ieSpell'
 
 
     /**
@@ -359,6 +402,8 @@ public class FckEditorDialog extends DialogBox {
         String source = this.getConfigValue(PARAM_SOURCE, PARAM_SOURCE_DEFAULT);
         String enterMode = this.getConfigValue(PARAM_ENTER_MODE, PARAM_ENTER_MODE_DEFAULT);
         String shiftEnterMode = this.getConfigValue(PARAM_SHIFT_ENTER_MODE, PARAM_SHIFT_ENTER_MODE_DEFAULT);
+        String showSpellChecker = this.getConfigValue(PARAM_SHOW_SPELL_CHECKER, PARAM_SHOW_SPELL_CHECKER_DEFAULT);
+        String spellChecker = this.getConfigValue(PARAM_SPELL_CHECKER, PARAM_SPELL_CHECKER_DEFAULT);
 
         // create the the holder of the editors configs if not yet done
         out.write("if( window.MgnlFCKConfigs == null)\n");
@@ -388,6 +433,7 @@ public class FckEditorDialog extends DialogBox {
         out.write("MgnlFCKConfigs." + id + ".templates = '" + templates + "';\n");
         out.write("MgnlFCKConfigs." + id + ".enterMode = '" + enterMode + "';\n");
         out.write("MgnlFCKConfigs." + id + ".shiftEnterMode = '" + shiftEnterMode + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".spellChecker = '" + spellChecker + "';\n");
 
         // boolean values
         out.write("MgnlFCKConfigs." + id + ".lists = " + lists + ";\n");
@@ -395,6 +441,7 @@ public class FckEditorDialog extends DialogBox {
         out.write("MgnlFCKConfigs." + id + ".tables = " + tables + ";\n");
         out.write("MgnlFCKConfigs." + id + ".images = " + images + ";\n");
         out.write("MgnlFCKConfigs." + id + ".source = " + source + ";\n");
+        out.write("MgnlFCKConfigs." + id + ".showSpellChecker = " + showSpellChecker + ";\n");
     }
 
     /**

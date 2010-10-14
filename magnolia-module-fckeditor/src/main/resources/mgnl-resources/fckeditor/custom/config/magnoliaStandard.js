@@ -67,6 +67,13 @@ if (MgnlFCKConfig.source) {
     toolbar[0].push('-');
     toolbar[0].push('Source');
 }
+if (MgnlFCKConfig.showSpellChecker) {
+    toolbar[0].push('-');
+    toolbar[0].push('SpellCheck');
+    if (MgnlFCKConfig.spellChecker) {
+       FCKConfig.SpellChecker = MgnlFCKConfig.spellChecker;
+    }
+}
 
 if (MgnlFCKConfig.styles != '' || MgnlFCKConfig.templates != '' || MgnlFCKConfig.fonts != '' || MgnlFCKConfig.fontSizes != '' || MgnlFCKConfig.colors != '' || MgnlFCKConfig.bgColors) {
     toolbar[1] = '/';
