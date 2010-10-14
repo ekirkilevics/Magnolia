@@ -267,7 +267,7 @@ public class FckEditorDialog extends DialogBox {
 
     private static final String PARAM_SHOW_SPELL_CHECKER_DEFAULT = "true";
 
-    private static final String PARAM_SPELL_CHECKER_DEFAULT = "WSC"; // 'WSC' | 'SCAYT' | 'SpellerPages' | 'ieSpell'
+    private static final String PARAM_SPELL_CHECKER_DEFAULT = "SCAYT"; // 'WSC' | 'SCAYT' | 'SpellerPages' | 'ieSpell'
 
 
     /**
