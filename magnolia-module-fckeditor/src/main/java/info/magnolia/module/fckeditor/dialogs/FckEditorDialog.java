@@ -57,8 +57,8 @@ import java.util.regex.Matcher;
 
 /**
  *
- * An Magnolia dialog for the universal usage and configuration of the fckeditor. Credits for FCKEditor:
- * http://www.fckeditor.net/<p/> The fckEditor is mainly configured in javascript files. Those files are configured
+ * A Magnolia dialog for the universal usage and configuration of the fckeditor. Credits for FCKEditor:
+ * http://ckeditor.com<p/> The fckEditor is mainly configured in javascript files. Those files are configured
  * with the following attributes.
  * <ul>
  * <li>jsInitFile</li>
@@ -157,8 +157,8 @@ import java.util.regex.Matcher;
  * <ul>
  * <li><code>ieSpell</code>
  * <li><code>SpellerPages</code>
- * <li><code>WSC</code> - Web Spell Checker provided by SpellChecker.net <strong>(the default)</strong>
- * <li><code>SCAYT</code> - "Spell Check as You Type" provided by SpellChecker.net
+ * <li><code>WSC</code> - Web Spell Checker provided by SpellChecker.net
+ * <li><code>SCAYT</code> - "Spell Check as You Type" provided by SpellChecker.net <strong>(the default)</strong>
  * </ul>
  * <p>More info about the FCK spell checker feature here
  * <a href="http://docs.cksource.com/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options/SpellChecker">Configuration_Options/SpellChecker</a>
