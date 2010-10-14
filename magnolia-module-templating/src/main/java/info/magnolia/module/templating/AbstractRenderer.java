@@ -34,7 +34,6 @@
 package info.magnolia.module.templating;
 
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
