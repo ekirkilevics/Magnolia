@@ -18,7 +18,7 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>4.3.6/*</version>
+      <version>4.4/*</version>
     </dependency>
     <dependency>
       <name>dms</name>
@@ -27,7 +27,7 @@
     </dependency>
     <dependency>
       <name>samples</name>
-      <version>4.3.6/*</version>
+      <version>4.4/*</version>
       <optional>true</optional>
     </dependency>
   </dependencies>
