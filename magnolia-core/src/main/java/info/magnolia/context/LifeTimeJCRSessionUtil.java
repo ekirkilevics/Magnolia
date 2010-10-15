@@ -83,4 +83,13 @@ public class LifeTimeJCRSessionUtil {
         }
     }
 
+    public static void release() {
+        if (useSystemContext) {
+            MgnlContext.getSystemContext().release();
+        }
+        else {
+            // we handle the session
+            repositoryStrategy.release();
+        }
+    }
 }
