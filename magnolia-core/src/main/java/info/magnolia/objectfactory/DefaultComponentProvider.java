@@ -94,9 +94,9 @@ public class DefaultComponentProvider implements ComponentProvider {
 
     /**
      * Creates a new instance of the passed interface / class by using the registered implementation.
-     * If this fails a {@link IllegalStateException} is thrown.
+     * If this fails a {@link MgnlInstantiationException} is thrown.
      *
-     * @throws IllegalStateException
+     * @throws MgnlInstantiationException
      */
     public <T> T newInstance(Class<T> type) {
         if (type == null) {
