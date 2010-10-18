@@ -114,7 +114,7 @@ public abstract class MgnlTestCase extends TestCase {
 
     /**
      * Utility assertion that will match a String against a regex,
-     * <strong>with the DOTALL flag enabled, which means the . character will also matche new lines</strong>.
+     * <strong>with the DOTALL flag enabled, which means the . character will also match new lines</strong>.
      */
     public static void assertMatches(String message, String s, String regex) {
         assertMatches(message, s, regex, Pattern.DOTALL);
