@@ -119,6 +119,7 @@ public abstract class MgnlCommand implements Command {
 
     /**
      * Make sure that the context is castable to a magnolia context.
+     * @return true on success, false otherwise
      */
     public boolean execute(Context ctx) throws Exception {
         if (!(ctx instanceof info.magnolia.context.Context)) {
