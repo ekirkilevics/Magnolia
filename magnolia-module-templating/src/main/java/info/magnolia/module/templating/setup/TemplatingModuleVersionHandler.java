@@ -127,6 +127,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(orderBackwardCompatibilityFilter);
+        tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", ContentRepository.CONFIG, "/server/filters/cms/modelExecution", "backwardCompatibility"));
         // TODO : make sure the RenderingFilter is the last one ?
         return tasks;
     }
