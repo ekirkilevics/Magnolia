@@ -34,11 +34,15 @@
 package info.magnolia.module.admininterface.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.for4_0.UpdatedDefaultPublicURIWarning;
 import info.magnolia.module.admininterface.setup.for4_3.ReplaceWrongDialogNodeTypeTask;
+import info.magnolia.module.admininterface.setup.for4_4.ContentDeletionTasks;
+import info.magnolia.module.admininterface.setup.for4_4.RegisterMgnlDeletedType;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
+import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
@@ -54,9 +58,15 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.Provider;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
 
 /**
  * @author philipp
@@ -148,6 +158,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
             .addTask(new NodeExistsDelegateTask("Intercept","Checks if intercept node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept", new RemoveNodeTask("Remove intercept", "Removes unneeded intercept node", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept")))
             .addTask(new NodeExistsDelegateTask("Filters","Checks if filters node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters", new ChildrenExistsDelegateTask("Filters","Checks if filters node has children", ContentRepository.CONFIG, "/modules/adminInterface/filters", null, null, new RemoveNodeTask("Removes filters","Remove unneeded filters node", ContentRepository.CONFIG, "/modules/adminInterface/filters"))))
         );
+        register(DeltaBuilder.update("4.4","")
+                .addTask(new ContentDeletionTasks()));
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
@@ -162,6 +174,14 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         //set public uri only on installation
         tasks.add(new SetDefaultPublicURI("defaultPublicURI"));
 
+        return tasks;
+    }
+
+    @Override
+    protected List<Task> getBasicInstallTasks(InstallContext installContext) {
+        List<Task> tasks = new ArrayList<Task>();
+        tasks.add(new RegisterMgnlDeletedType());
+        tasks.addAll(super.getBasicInstallTasks(installContext));
         return tasks;
     }
 }
