@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
@@ -55,6 +56,9 @@ import info.magnolia.context.MgnlContext;
  * is skipped. The model can also return a URI prefixed by "redirect:", "permanent:" or "forward:" to trigger either
  * a temporary redirect, a permanent redirect or a forward respectively. For redirects the URI can be absolute or
  * relative within the web application (the context path is added automatically).
+ * <p/>
+ * To provide proper semantics this class mirrors functionality in RenderingEngine and AbstractRender, specifically in
+ * how it sets up the current content in aggregation state and creation and execution of the model.
  *
  * @author tmattsson
  * @see info.magnolia.module.templating.AbstractRenderer
@@ -84,28 +88,58 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
         Content content = getContent(paragraphUuid);
 
-        Paragraph paragraph = getParagraph(content);
+        Content orgMainContent = null;
+        Content orgCurrentContent = null;
 
-        RenderingModel renderingModel = createRenderingModel(content, paragraph);
+        AggregationState state = getAggregationStateSafely();
+        if (state != null) {
+            orgMainContent = state.getMainContent();
+            orgCurrentContent = state.getCurrentContent();
 
-        String actionResult = renderingModel.execute();
-
-        // If the model rendered something on its own or sent a redirect we will not proceed with rendering.
-        if (response.isCommitted())
-            return;
-
-        if (handleActionResult(actionResult, request, response))
-            return;
-
-        // Proceed with page rendering, the model will be reused later when the paragraph is rendered.
-        MgnlContext.setAttribute(MODEL_ATTRIBUTE_PREFIX + paragraphUuid, renderingModel);
-        MgnlContext.setAttribute(ACTION_RESULT_ATTRIBUTE_PREFIX + paragraphUuid, actionResult);
-        try {
-            chain.doFilter(request, response);
-        } finally {
-            MgnlContext.removeAttribute(MODEL_ATTRIBUTE_PREFIX + paragraphUuid);
-            MgnlContext.removeAttribute(ACTION_RESULT_ATTRIBUTE_PREFIX + paragraphUuid);
+            state.setCurrentContent(content);
+            // if not yet set the passed content is the entry point of the rendering
+            if (orgMainContent == null) {
+                state.setMainContent(content);
+            }
         }
+        try {
+
+            Paragraph paragraph = getParagraph(content);
+
+            RenderingModel renderingModel = createRenderingModel(content, paragraph);
+
+            String actionResult = renderingModel.execute();
+
+            // If the model rendered something on its own or sent a redirect we will not proceed with rendering.
+            if (response.isCommitted())
+                return;
+
+            if (handleActionResult(actionResult, request, response))
+                return;
+
+            // Proceed with page rendering, the model will be reused later when the paragraph is rendered.
+            MgnlContext.setAttribute(MODEL_ATTRIBUTE_PREFIX + paragraphUuid, renderingModel);
+            MgnlContext.setAttribute(ACTION_RESULT_ATTRIBUTE_PREFIX + paragraphUuid, actionResult);
+            try {
+                chain.doFilter(request, response);
+            } finally {
+                MgnlContext.removeAttribute(MODEL_ATTRIBUTE_PREFIX + paragraphUuid);
+                MgnlContext.removeAttribute(ACTION_RESULT_ATTRIBUTE_PREFIX + paragraphUuid);
+            }
+
+        } finally {
+            if (state != null) {
+                state.setMainContent(orgMainContent);
+                state.setCurrentContent(orgCurrentContent);
+            }
+        }
+    }
+
+    protected static AggregationState getAggregationStateSafely() {
+        if (MgnlContext.isWebContext()) {
+            return MgnlContext.getAggregationState();
+        }
+        return null;
     }
 
     protected String getUuidOfParagraphToExecute() {
