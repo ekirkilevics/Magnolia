@@ -51,6 +51,7 @@ import info.magnolia.objectfactory.Components;
  */
 public interface SoftLockingSupport {
 
+    static final String CONCURRENT_EDITING_USERS_LIST_ATTRIBUTE =  "concurrentEditingUsersListAttribute";
     /**
      * @param content the {@link Content} to be locked.
      */
