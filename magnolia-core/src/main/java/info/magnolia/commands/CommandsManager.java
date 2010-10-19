@@ -81,7 +81,13 @@ public class CommandsManager extends ObservedManager {
     protected void registerCatalog(Content node) {
         try {
             MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, COMMAND_TRANSFORMER);
-            CatalogFactory.getInstance().addCatalog(catalog.getName(), catalog);
+            CatalogFactory factory = CatalogFactory.getInstance();
+            if (factory.getCatalog(catalog.getName()) == null) {
+                factory.addCatalog(catalog.getName(), catalog);
+            } else {
+                // runtime because this code is called by observation and there's no place to catch it anyway
+                throw new RuntimeException("Catalog [" + catalog.getName() + "] is already registered. Please run: select * from nt:base where jcr:path like '/modules/%/commands/"+ catalog.getName()+"' on config repository to find out the duplicate.");
+            }
 
             log.debug("Catalog {} registered: {}", new Object[]{catalog.getName(), catalog});
         }
