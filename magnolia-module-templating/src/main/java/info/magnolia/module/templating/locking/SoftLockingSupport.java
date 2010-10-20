@@ -50,7 +50,6 @@ import info.magnolia.objectfactory.Components;
  *
  */
 public interface SoftLockingSupport {
-
     static final String CONCURRENT_EDITING_USERS_LIST_ATTRIBUTE =  "concurrentEditingUsersListAttribute";
     /**
      * @param content the {@link Content} to be locked.
@@ -75,6 +74,15 @@ public interface SoftLockingSupport {
      * @throws AccessDeniedException
      */
     boolean isLocked(Content content) throws AccessDeniedException, RepositoryException;
+
+    /**
+     * @param maxTime the max time expressed in <strong>minutes</strong> after which the current user lock on content is timed out.
+     * @return <code>true</code> if the current user lock on this content as timed out, <code>false</code> otherwise.
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     */
+    boolean isTimeout(Content content, Long maxTime) throws AccessDeniedException, RepositoryException;
+
     /**
      * Used to obtain a singleton of this object.
      * @author fgrilli

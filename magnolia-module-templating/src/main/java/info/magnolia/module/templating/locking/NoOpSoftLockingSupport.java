@@ -63,4 +63,7 @@ public class NoOpSoftLockingSupport implements SoftLockingSupport {
         throw new UnsupportedOperationException();
     }
 
+    public boolean isTimeout(Content content, Long maxTime) throws AccessDeniedException, RepositoryException {
+        throw new UnsupportedOperationException();
+    }
 }
