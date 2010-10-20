@@ -36,7 +36,7 @@ package info.magnolia.module.templating.locking;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.AccessDeniedException;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.jcr.RepositoryException;
 
@@ -55,7 +55,7 @@ public class NoOpSoftLockingSupport implements SoftLockingSupport {
         //do nothing
     }
 
-    public List<String> lockedBy(Content content) throws AccessDeniedException, RepositoryException {
+    public Set<String> lockedBy(Content content) throws AccessDeniedException, RepositoryException {
         throw new UnsupportedOperationException();
     }
 

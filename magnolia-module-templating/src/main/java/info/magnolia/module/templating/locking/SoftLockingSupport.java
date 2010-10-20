@@ -34,7 +34,7 @@
 package info.magnolia.module.templating.locking;
 
 
-import java.util.List;
+import java.util.Set;
 
 import javax.jcr.RepositoryException;
 
@@ -62,11 +62,11 @@ public interface SoftLockingSupport {
     void unlock(Content content);
 
     /**
-     * @return the users who are locking the content, or an empty <code>List</code> if content is not locked.
+     * @return the users who are locking the content, or an empty <code>Set</code> if content is not locked.
      * @throws RepositoryException
      * @throws AccessDeniedException
      */
-    List<String> lockedBy(Content content) throws AccessDeniedException, RepositoryException;
+    Set<String> lockedBy(Content content) throws AccessDeniedException, RepositoryException;
 
     /**
      * @return <code>true</code> if content is locked, <code>false</code> otherwise.
