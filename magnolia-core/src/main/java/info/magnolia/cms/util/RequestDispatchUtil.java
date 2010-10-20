@@ -114,6 +114,7 @@ public class RequestDispatchUtil {
                 if (forwardUrl.endsWith(".jsp")) {
                     request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
                 }
+                // Fix for MAGNOLIA-3310, unwraps to avoid shadowing parameters in targetUri
                 if (request instanceof UnicodeNormalizationFilter.UnicodeNormalizerRequestWrapper) {
                     request = ((UnicodeNormalizationFilter.UnicodeNormalizerRequestWrapper) request).getOriginal();
                 }
