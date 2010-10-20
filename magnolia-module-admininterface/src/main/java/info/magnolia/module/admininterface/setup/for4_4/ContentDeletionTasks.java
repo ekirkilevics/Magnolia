@@ -47,7 +47,7 @@ public class ContentDeletionTasks extends ArrayDelegateTask implements Task {
     public ContentDeletionTasks() {
         super("Content Deletion", "Makes configuration changes necessary for content deletion workflow support.",
             new RegisterMgnlDeletedType(),
-            new BootstrapSingleResource("", "", "mgnl-bootstrap/adminInterface/config.modules.adminInterface.commands.website.delete.xml")
+            new BootstrapSingleResource("", "", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.commands.website.delete.xml")
         );
     }
 }
