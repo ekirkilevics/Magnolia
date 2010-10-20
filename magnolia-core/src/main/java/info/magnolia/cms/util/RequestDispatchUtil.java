@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.filters.UnicodeNormalizationFilter;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 /**
@@ -113,7 +114,9 @@ public class RequestDispatchUtil {
                 if (forwardUrl.endsWith(".jsp")) {
                     request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
                 }
-
+                if (request instanceof UnicodeNormalizationFilter.UnicodeNormalizerRequestWrapper) {
+                    request = ((UnicodeNormalizationFilter.UnicodeNormalizerRequestWrapper) request).getOriginal();
+                }
                 request.getRequestDispatcher(forwardUrl).forward(request, response);
 
             } catch (Exception e) {

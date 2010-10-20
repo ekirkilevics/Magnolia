@@ -207,6 +207,10 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
             return header;
         }
 
+        public HttpServletRequest getOriginal() {
+            return original;
+        }
+
     }
 
 }
