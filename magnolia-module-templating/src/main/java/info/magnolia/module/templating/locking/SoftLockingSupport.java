@@ -77,7 +77,7 @@ public interface SoftLockingSupport {
 
     /**
      * @param maxTime the max time expressed in <strong>minutes</strong> after which the current user lock on content is timed out.
-     * @return <code>true</code> if the current user lock on this content as timed out, <code>false</code> otherwise.
+     * @return <code>true</code> if the current user lock on this content has timed out, <code>false</code> otherwise.
      * @throws RepositoryException
      * @throws AccessDeniedException
      */
