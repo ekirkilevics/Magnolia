@@ -115,7 +115,6 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
 
         register(DeltaBuilder.update("4.4", "")
-            .addTask(new BootstrapSingleModuleResource("Soft Locking Configuration", "Add configuration for the soft locking support.", "config.server.rendering.locking.xml"))
             .addTask(new BootstrapSingleResourceAndOrderBefore(
                         "Model Execution Filter",
                         "Add Model Execution Filter",
