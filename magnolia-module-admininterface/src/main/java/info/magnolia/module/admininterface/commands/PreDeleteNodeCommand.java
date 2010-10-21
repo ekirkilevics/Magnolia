@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.admininterface.commands;
 
+import java.util.Calendar;
+
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 
@@ -41,6 +44,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.commands.BaseRepositoryCommand;
 
 
@@ -53,30 +57,41 @@ public class PreDeleteNodeCommand extends BaseRepositoryCommand {
 
         Content parentNode = getNode(context);
         Content node = parentNode.getContent((String) context.get("deleteNode"));
-        preDeleteNode(node);
+        preDeleteNode(node, context);
 
         return true;
     }
 
-    private void preDeleteNode(Content node) throws RepositoryException, AccessDeniedException {
-        if (node.getMetaData().getLastActionDate() == null) {
-            // this node was never activated so anything that is underneath is deemed immediately deleteable
-            // TODO: make this optional? What if I prepare huge thing (just never activate and then press delete)???
-            // ... but this is probably the same as with VCM if never committed, local delete wipes it for good
-            Content parent = node.getParent();
-            node.delete();
-            parent.save();
-            return;
-        }
+    private void preDeleteNode(Content node, Context context) throws RepositoryException, AccessDeniedException {
+        // Disabled direct deletion ... there are way too many ways to screw it up
+//        if (node.getMetaData().getLastActionDate() == null) {
+//            // this node was never activated so anything that is underneath is deemed immediately deleteable
+//            // TODO: make this optional? What if I prepare huge thing (just never activate and then press delete)???
+//            // ... but this is probably the same as with VCM if never committed, local delete wipes it for good
+//            Content parent = node.getParent();
+//            node.delete();
+//            parent.save();
+//            return;
+//        }
 
         // TODO: versioning might be "unsupported" do we still purge in such case?
         version(node);
         markAsDeleted(node);
         purgeContent(node);
+        storeDeletionInfo(node, context);
         // save changes before progressing on sub node - means we can't roll back, but session doesn't grow out of limits
         node.save();
         for(Content childPage : node.getChildren()) {
-            preDeleteNode(node);
+            preDeleteNode(node, context);
+        }
+    }
+
+    private void storeDeletionInfo(Content node, Context context) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        node.setNodeData("mgnl:deletedBy", MgnlContext.getUser().getName());
+        node.setNodeData("mgnl:deletedOn", Calendar.getInstance());
+        final String comment = (String) context.get("comment");
+        if (comment != null) {
+            node.setNodeData("mgnl:deletedComment", comment);
         }
     }
 

@@ -82,6 +82,8 @@ public abstract class VersionsList extends AbstractList {
      */
     private String versionLabel;
 
+    private String jsExecutedAfterSaving;
+
     /**
      * @param name
      * @param request
@@ -237,5 +239,14 @@ public abstract class VersionsList extends AbstractList {
 
     public String getOnDiffFunction() {
         return "function(versionLabel){}";
+    }
+
+    public String getJsExecutedAfterSaving() {
+        return this.jsExecutedAfterSaving;
+    }
+
+
+    public void setJsExecutedAfterSaving(String jsExecutedAfterSaving) {
+        this.jsExecutedAfterSaving = jsExecutedAfterSaving;
     }
 }
