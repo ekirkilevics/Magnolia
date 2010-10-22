@@ -135,7 +135,7 @@ public class DefaultContentTest extends RepositoryTestCase {
 
     public void testCreatingAndSettingABooleanNodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
-        // this actually creates a string property having an empty string value 
+        // this actually creates a string property having an empty string value
         NodeData nodeData = content.createNodeData("nd2");
         // now setting a boolean value
         nodeData.setValue(true);
@@ -192,7 +192,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         String contentProperties =
             "/mycontent.@type=mgnl:content\n" +
             "/mycontent.nd1=hello";
-        
+
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();
