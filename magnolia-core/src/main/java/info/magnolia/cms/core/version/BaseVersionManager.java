@@ -61,6 +61,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
@@ -82,7 +83,9 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseVersionManager {
 
-     /**
+    public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
+
+    /**
       * Name of the workspace.
       */
      public static final String VERSION_WORKSPACE = "mgnlVersion";
@@ -372,6 +375,14 @@ public abstract class BaseVersionManager {
              try {
                  synchronized (ExclusiveWrite.getInstance()) {
                      CopyUtil.getInstance().copyFromVersion(versionedNode, node, new RuleBasedContentFilter(rule));
+                     NodeType[] mixins = node.getMixinNodeTypes();
+                     for (NodeType mixin : mixins) {
+                         if (DELETED_NODE_MIXIN.equals(mixin.getName())) {
+                             node.removeMixin(DELETED_NODE_MIXIN);
+                             break;
+                         }
+                     }
+
                      node.save();
                  }
              }
@@ -520,5 +531,12 @@ public abstract class BaseVersionManager {
          return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);
      }
 
-
+     public boolean isDeleted(Content thisState) throws RepositoryException {
+         for (NodeType type : thisState.getMixinNodeTypes()) {
+             if (DELETED_NODE_MIXIN.equals(type.getName())) {
+                 return true;
+             }
+         }
+         return false;
+     }
 }

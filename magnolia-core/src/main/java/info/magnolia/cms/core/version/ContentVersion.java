@@ -62,6 +62,7 @@ import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
+import javax.jcr.nodetype.NodeTypeManager;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
@@ -634,7 +635,7 @@ public class ContentVersion extends DefaultContent {
     public Workspace getWorkspace() throws RepositoryException {
         return this.base.getWorkspace();
     }
-    
+
     @Override
     public boolean hasNodeData(String name) throws RepositoryException {
         if (this.node.hasProperty(name)) {
@@ -667,5 +668,16 @@ public class ContentVersion extends DefaultContent {
         return PropertyType.UNDEFINED;
     }
 
+    @Override
+    public NodeType[] getMixinNodeTypes() throws RepositoryException {
+        Value[] vals = this.node.getProperty("jcr:frozenMixinTypes").getValues();
+        NodeTypeManager typeMan = this.hierarchyManager.getWorkspace().getNodeTypeManager();
+        NodeType[] types = new NodeType[vals.length];
+        int i = 0;
+        for (Value val : vals) {
+            types[i++] = typeMan.getNodeType(val.getString());
+        }
+        return types;
+    }
 
 }

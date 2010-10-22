@@ -53,6 +53,7 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -99,6 +100,8 @@ public final class CopyUtil {
             this.removeProperties(root);
             // copy root properties
             this.updateProperties(source, root);
+
+            this.updateNodeTypes(source, root);
             root.save();
         }
         catch (ItemNotFoundException e) {
@@ -122,6 +125,13 @@ public final class CopyUtil {
             this.clone(child, root, filter, true);
         }
         this.removeNonExistingChildNodes(source, root, filter);
+    }
+
+    private void updateNodeTypes(Content source, Content root) throws RepositoryException {
+        NodeType[] nodeTypes = source.getMixinNodeTypes();
+        for (NodeType type : nodeTypes) {
+            root.addMixin(type.getName());
+        }
     }
 
     /**
