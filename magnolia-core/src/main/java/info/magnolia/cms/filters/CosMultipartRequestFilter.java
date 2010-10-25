@@ -85,9 +85,12 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
             request = new MultipartRequestWrapper(request, mpf);
             MgnlContext.push(request, response);
         }
-        chain.doFilter(request, response);
-        if (isMultipart) {
-            MgnlContext.pop();
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            if (isMultipart) {
+                MgnlContext.pop();
+            }
         }
     }
 

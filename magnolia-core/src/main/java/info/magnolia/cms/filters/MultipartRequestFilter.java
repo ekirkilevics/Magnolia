@@ -123,9 +123,12 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
             request = new MultipartRequestWrapper(request, mpf);
             MgnlContext.push(request, response);
         }
-        chain.doFilter(request, response);
-        if(isMultipartContent){
-            MgnlContext.pop();
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            if(isMultipartContent){
+                MgnlContext.pop();
+            }
         }
     }
 

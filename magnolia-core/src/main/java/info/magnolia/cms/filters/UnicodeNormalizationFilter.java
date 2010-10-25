@@ -89,20 +89,21 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
 
         HttpServletRequest unicodeRequest = new UnicodeNormalizerRequestWrapper(request);
         MgnlContext.push(unicodeRequest, response);
-
-        if (MgnlContext.getPostedForm() != null) {
-            // if it is a multipart form, request is already wrapped and parameters are read from multipartform object;
-            // parameters are sometimes read by form.getParameter (deprecated) so we have to convert values in
-            // multipartform.paramters map
-            for (Object key : MgnlContext.getPostedForm().getParameters().keySet()) {
-                String[] value = transform((String[]) MgnlContext.getPostedForm().getParameters().get(key));
-                MgnlContext.getPostedForm().getParameters().put((String) key, value);
+        try {
+            if (MgnlContext.getPostedForm() != null) {
+                // if it is a multipart form, request is already wrapped and parameters are read from multipartform object;
+                // parameters are sometimes read by form.getParameter (deprecated) so we have to convert values in
+                // multipartform.paramters map
+                for (Object key : MgnlContext.getPostedForm().getParameters().keySet()) {
+                    String[] value = transform((String[]) MgnlContext.getPostedForm().getParameters().get(key));
+                    MgnlContext.getPostedForm().getParameters().put((String) key, value);
+                }
             }
+
+            chain.doFilter(unicodeRequest, response);
+        } finally {
+            MgnlContext.pop();
         }
-
-        chain.doFilter(unicodeRequest, response);
-
-        MgnlContext.pop();
     }
 
     /**
