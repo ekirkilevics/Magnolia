@@ -48,10 +48,10 @@ import info.magnolia.cms.core.NodeData;
 
 /**
  * This wrapper allows extending other nodes (mainly useful to extend configurations). A content node can define
- * a nodedata with the name 'extends'. Its value is either an absolute or relative path. The merge is then performed as follows:
+ * a nodeData with the name 'extends'. Its value is either an absolute or relative path. The merge is then performed as follows:
  *
  * <ul>
- * <li>node datas are merged and values are overwritten
+ * <li>nodeDatas are merged and values are overwritten
  * <li>sub content nodes are merged, the original order is guaranteed, new nodes are added at the
  * end of the list
  * </ul>
@@ -69,6 +69,7 @@ import info.magnolia.cms.core.NodeData;
 public class ExtendingContentWrapper extends ContentWrapper {
 
     private static final String EXTENDING_NODE_DATA = "extends";
+    private static final String EXTENDING_NODE_DATA_OVERRIDE = "override";
 
     private boolean extending;
 
@@ -79,8 +80,15 @@ public class ExtendingContentWrapper extends ContentWrapper {
         try {
             extending = getWrappedContent().hasNodeData(EXTENDING_NODE_DATA);
             if (extending) {
-                // support multiple inheritance
-                extendedContent = wrapIfNeeded(getWrappedContent().getNodeData(EXTENDING_NODE_DATA).getReferencedContent());
+                NodeData extendingNodeData = getWrappedContent().getNodeData(EXTENDING_NODE_DATA);
+
+                // check if override is not forced
+                if (EXTENDING_NODE_DATA_OVERRIDE.equals(extendingNodeData.getString())) {
+                    extending = false;
+                } else {
+                    // support multiple inheritance
+                    extendedContent = wrapIfNeeded(extendingNodeData.getReferencedContent());
+                }
             }
         }
         catch (RepositoryException e) {
@@ -94,7 +102,18 @@ public class ExtendingContentWrapper extends ContentWrapper {
      */
     protected ExtendingContentWrapper(Content wrappedContent, Content extendedContent) {
         super(wrapIfNeeded(wrappedContent));
-        this.extending = true;
+        extending = true;
+        try {
+            if (getWrappedContent().hasNodeData(EXTENDING_NODE_DATA)) {
+                NodeData extendingNodeData = getWrappedContent().getNodeData(EXTENDING_NODE_DATA);
+
+                // check if override is not forced
+                extending = !EXTENDING_NODE_DATA_OVERRIDE.equals(extendingNodeData.getString());
+            }
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException("Can't determine extends point for node [" + wrappedContent + "]", e);
+        }
         // might extend further more
         this.extendedContent = wrapIfNeeded(extendedContent);
     }
