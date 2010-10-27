@@ -206,6 +206,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(content.getUUID()).andReturn("some-real-uuid");
 
         expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        expect(content.hasMixin("mgnl:deleted")).andReturn(false);
 
         //expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
         // proceed with activation

@@ -68,8 +68,8 @@ import javax.jcr.version.VersionIterator;
  * <li>{@link #wrap(Content)}</li>
  * <li>{@link #wrap(NodeData)}</li>
  * </ul>
- * 
- * This default implementation assumes that the wrapped content is of type {@link AbstractContent}. If not you have to override the following methods: 
+ *
+ * This default implementation assumes that the wrapped content is of type {@link AbstractContent}. If not you have to override the following methods:
  * <ul>
  * <li>{@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}</li>
  * <li>{@link #newNodeDataInstance(String, int, boolean)}</li>
@@ -150,7 +150,7 @@ public abstract class ContentWrapper extends AbstractContent {
         buffer.append(super.toString());
         return buffer.toString();
     }
-    
+
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
         Content content = getWrappedContent();
         if(content instanceof AbstractContent){
@@ -158,7 +158,7 @@ public abstract class ContentWrapper extends AbstractContent {
         }
         throw new IllegalStateException("This wrapper supports only wrapping AbstractContent objects by default. Please override this method.");
     }
-    
+
     @Override
     public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         Content content = getWrappedContent();
@@ -391,4 +391,7 @@ public abstract class ContentWrapper extends AbstractContent {
         return this.getWrappedContent().getHierarchyManager();
     }
 
+    public boolean hasMixin(String mixinName) throws RepositoryException {
+        return this.getWrappedContent().hasMixin(mixinName);
+    }
 }

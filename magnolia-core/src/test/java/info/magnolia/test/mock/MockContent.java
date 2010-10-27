@@ -94,6 +94,8 @@ public class MockContent extends AbstractContent {
 
     private Map<String, MockContent> children = new ListOrderedMap();
 
+    private List<String> mixins = new ArrayList<String>();
+
     private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
 
     private Node node;
@@ -260,7 +262,7 @@ public class MockContent extends AbstractContent {
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         MockContent movedNode = children.get(srcName);
         List<MockContent> newOrder = new ArrayList<MockContent>();
-        
+
         for (MockContent child : children.values()) {
             if(child.getName().equals(srcName)){
                 // will be added before the beforeName
@@ -273,7 +275,7 @@ public class MockContent extends AbstractContent {
                 newOrder.add(child);
             }
         }
-        
+
         children.clear();
         for (MockContent child : newOrder) {
             children.put(child.getName(), child);
@@ -334,14 +336,14 @@ public class MockContent extends AbstractContent {
         }
         return ancestor;
     }
-    
+
     public MockHierarchyManager getHierarchyManager() {
         if (this.hierarchyManager == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
         }
         return (MockHierarchyManager) this.hierarchyManager;
     }
-    
+
     public String getUUID() {
         return this.uuid;
     }
@@ -409,7 +411,7 @@ public class MockContent extends AbstractContent {
     public ItemType getItemType() throws RepositoryException {
         return new ItemType(getNodeTypeName());
     }
-    
+
     public Node getJCRNode() {
         return node;
     }
@@ -417,9 +419,9 @@ public class MockContent extends AbstractContent {
     public boolean hasMetaData() {
         return true;
     }
-    
+
     public void addMixin(String type) throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
+        this.mixins.add(type);
     }
 
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -513,7 +515,9 @@ public class MockContent extends AbstractContent {
     public void updateMetaData() throws RepositoryException, AccessDeniedException {
     }
 
-
+    public boolean hasMixin(String mixinName) throws RepositoryException {
+        return mixins.contains(mixinName);
+    }
     /**
      * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
      * in the Property and Node interfaces.
@@ -541,4 +545,6 @@ public class MockContent extends AbstractContent {
         }
         return ChildrenCollectorFilter.matches(name, namePattern);
     }
+
+
 }

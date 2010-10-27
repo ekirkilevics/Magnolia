@@ -83,8 +83,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BaseVersionManager {
 
-    public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
-
     /**
       * Name of the workspace.
       */
@@ -375,12 +373,8 @@ public abstract class BaseVersionManager {
              try {
                  synchronized (ExclusiveWrite.getInstance()) {
                      CopyUtil.getInstance().copyFromVersion(versionedNode, node, new RuleBasedContentFilter(rule));
-                     NodeType[] mixins = node.getMixinNodeTypes();
-                     for (NodeType mixin : mixins) {
-                         if (DELETED_NODE_MIXIN.equals(mixin.getName())) {
-                             node.removeMixin(DELETED_NODE_MIXIN);
-                             break;
-                         }
+                     if (node.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
+                         node.removeMixin(ItemType.DELETED_NODE_MIXIN);
                      }
 
                      node.save();
@@ -529,14 +523,5 @@ public abstract class BaseVersionManager {
       */
      protected HierarchyManager getHierarchyManager() {
          return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);
-     }
-
-     public boolean isDeleted(Content thisState) throws RepositoryException {
-         for (NodeType type : thisState.getMixinNodeTypes()) {
-             if (DELETED_NODE_MIXIN.equals(type.getName())) {
-                 return true;
-             }
-         }
-         return false;
      }
 }

@@ -79,7 +79,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(String parent, Content content, List orderBefore)
+    public void activate(String parent, Content content, List<String> orderBefore)
             throws ExchangeException, RepositoryException;
 
     /**
@@ -104,7 +104,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, Content content, List orderBefore)
+    public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore)
             throws ExchangeException, RepositoryException;
 
     /**

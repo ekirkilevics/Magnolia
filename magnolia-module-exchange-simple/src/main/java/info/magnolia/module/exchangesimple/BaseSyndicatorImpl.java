@@ -40,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Syndicator;
@@ -199,7 +200,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         try {
             latch.acquire();
         } catch (InterruptedException e) {
-            // waked up externally - ignore try again
+            // waken up externally - ignore try again
             acquireIgnoringInterruption(latch);
             // be a good citizen and set back the interruption status
             Thread.currentThread().interrupt();
@@ -211,10 +212,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      protected String workspaceName;
 
      protected String parent;
-
-     protected String path;
-
-     protected String nodeUUID;
 
      protected Content.ContentFilter contentFilter;
 
@@ -264,7 +261,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws info.magnolia.cms.exchange.ExchangeException
       *
       */
-     public void activate(String parent, Content content, List orderBefore) throws ExchangeException, RepositoryException {
+     public void activate(String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
          this.activate(null, parent, content, orderBefore);
      }
 
@@ -291,36 +288,44 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws javax.jcr.RepositoryException
       * @throws info.magnolia.cms.exchange.ExchangeException
       */
-     public void activate(Subscriber subscriber, String parent, Content content, List orderBefore) throws ExchangeException, RepositoryException {
+     public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
          this.parent = parent;
-         this.path = content.getHandle();
+         String path = content.getHandle();
          ActivationContent activationContent = null;
          try {
              activationContent = this.collect(content, orderBefore);
              if (null == subscriber) {
-                 this.activate(activationContent);
+                 this.activate(activationContent, path);
              } else {
-                 this.activate(subscriber, activationContent);
+                 this.activate(subscriber, activationContent, path);
              }
-             this.updateActivationDetails();
-             log.info("Exchange: activation succeeded [{}]", content.getHandle());
-         }
-         catch (Exception e) {
+             if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
+                 if (content instanceof ContentVersion) {
+                     // replace versioned content with the real node
+                     content = content.getHierarchyManager().getContentByUUID(content.getUUID());
+                 }
+                 Content parentContent = content.getParent();
+                 content.delete();
+                 parentContent.save();
+             } else {
+                 this.updateActivationDetails(path);
+             }
+             log.info("Exchange: activation succeeded [{}]", path);
+         } catch (Exception e) {
              if (log.isDebugEnabled()) {
                  log.error("Exchange: activation failed for path:" + ((path != null) ? path : "[null]"), e);
                  long timestamp = System.currentTimeMillis();
                  log.warn("moving files from failed activation to *.failed" + timestamp );
-                 Iterator keys = activationContent.getFiles().values().iterator();
+                 Iterator<File> keys = activationContent.getFiles().values().iterator();
                  while (keys.hasNext()) {
-                     File f = (File) keys.next();
+                     File f = keys.next();
                      f.renameTo(new File(f.getAbsolutePath()+".failed" + timestamp));
                  }
                  activationContent.getFiles().clear();
 
              }
              throw new ExchangeException(e);
-         }
-         finally {
+         } finally {
              log.debug("Cleaning temporary files");
              cleanTemporaryStore(activationContent);
          }
@@ -329,13 +334,13 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      /**
       * @throws ExchangeException
       */
-     public abstract void activate(ActivationContent activationContent) throws ExchangeException;
+     public abstract void activate(ActivationContent activationContent, String nodePath) throws ExchangeException;
 
 
      /**
       * Send request of activation of activationContent to the subscriber. Subscriber might choose not to react if it is not subscribed to the URI under which activationContent exists.
       */
-     public abstract String activate(Subscriber subscriber, ActivationContent activationContent) throws ExchangeException;
+     public abstract String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException;
 
      /**
       * Cleans up temporary file store after activation.
@@ -350,9 +355,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              return;
          }
 
-         Iterator keys = activationContent.getFiles().keySet().iterator();
+         Iterator<String> keys = activationContent.getFiles().keySet().iterator();
          while (keys.hasNext()) {
-             String key = (String) keys.next();
+             String key = keys.next();
              log.debug("Removing temporary file {}", key);
              activationContent.getFile(key).delete();
          }
@@ -369,10 +374,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws ExchangeException
      */
     public synchronized void deactivate(Content node) throws ExchangeException, RepositoryException {
-        this.nodeUUID = node.getUUID();
-        this.path = node.getHandle();
-        this.doDeactivate();
-        updateDeactivationDetails();
+        String nodeUUID = node.getUUID();
+        String path = node.getHandle();
+        this.doDeactivate(nodeUUID, path);
+        updateDeactivationDetails(nodeUUID);
     }
 
     /**
@@ -382,23 +387,23 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws ExchangeException
      */
     public synchronized void deactivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException {
-        this.nodeUUID = node.getUUID();
-        this.path = node.getHandle();
-        this.doDeactivate(subscriber);
-        updateDeactivationDetails();
+        String nodeUUID = node.getUUID();
+        String path = node.getHandle();
+        this.doDeactivate(subscriber, nodeUUID, path);
+        updateDeactivationDetails(nodeUUID);
     }
 
      /**
       * @throws ExchangeException
       */
-     public abstract void doDeactivate() throws ExchangeException;
+     public abstract void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException;
 
      /**
       * Deactivate content from specified subscriber.
       * @param subscriber
       * @throws ExchangeException
       */
-     public abstract String doDeactivate(Subscriber subscriber) throws ExchangeException;
+     public abstract String doDeactivate(Subscriber subscriber, String nodeUUID, String nodePath) throws ExchangeException;
 
      /**
       * Return URI set for deactivation.
@@ -412,10 +417,12 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * Adds header fields describing deactivation request.
       * @param connection
       */
-     protected void addDeactivationHeaders(URLConnection connection) {
+     protected void addDeactivationHeaders(URLConnection connection, String nodeUUID) {
          connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
          connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
-         connection.addRequestProperty(NODE_UUID, this.nodeUUID);
+         if (nodeUUID != null) {
+             connection.addRequestProperty(NODE_UUID, nodeUUID);
+         }
          connection.addRequestProperty(ACTION, DEACTIVATE);
      }
 
@@ -434,9 +441,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * Adds headers fields describing activation request.
       */
      protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
-         Iterator headerKeys = activationContent.getProperties().keySet().iterator();
+         Iterator<String> headerKeys = activationContent.getProperties().keySet().iterator();
          while (headerKeys.hasNext()) {
-             String key = (String) headerKeys.next();
+             String key = headerKeys.next();
              String value = activationContent.getproperty(key);
              if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
                  try {
@@ -451,22 +458,22 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * Updates current content activation meta data with the timestamp and user details of the activation.
+      * Updates current content activation meta data with the time stamp and user details of the activation.
       */
-     protected void updateActivationDetails() throws RepositoryException {
-         // page activated already use system context to ensure metadata is activated even if activating user has no rights to the activated page children
-         Content page = getSystemHierarchyManager().getContent(this.path);
+     protected void updateActivationDetails(String path) throws RepositoryException {
+         // page activated already use system context to ensure meta data is activated even if activating user has no rights to the activated page children
+         Content page = getSystemHierarchyManager().getContent(path);
          updateMetaData(page, ACTIVATE);
          page.save();
-         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, page.getItemType(), this.path );
+         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, page.getItemType(), path );
      }
 
      /**
       * Updates current content activation meta data with the timestamp and user details of the deactivation.
       */
-     protected void updateDeactivationDetails() throws RepositoryException {
-         // page deactivated already use system context to ensure metadata is activated even if activating user has no rights to the activated page children
-         Content page = getSystemHierarchyManager().getContentByUUID(this.nodeUUID);
+     protected void updateDeactivationDetails(String nodeUUID) throws RepositoryException {
+         // page deactivated already use system context to ensure meta data is activated even if activating user has no rights to the activated page children
+         Content page = getSystemHierarchyManager().getContentByUUID(nodeUUID);
          updateMetaData(page, DEACTIVATE);
          page.save();
          AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getItemType(), page.getHandle() );
@@ -497,7 +504,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          md.setActivatorId(this.user.getName());
          md.setLastActivationActionDate();
 
-         Iterator children;
+         Iterator<Content> children;
          if (type.equals(ACTIVATE)) {
              // use syndicator rule based filter
              children = node.getChildren(this.contentFilter).iterator();
@@ -519,7 +526,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * Collects all information about activated content and its children (those that are set to be activated with the parent by filter rules).
       * @throws Exception
       */
-     protected ActivationContent collect(Content node, List orderBefore) throws Exception {
+     protected ActivationContent collect(Content node, List<String> orderBefore) throws Exception {
+         // make sure resource file is unique
          File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
 
          ActivationContent activationContent = new ActivationContent();
@@ -543,8 +551,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          XMLOutputter outputter = new XMLOutputter();
          outputter.output(document, new FileOutputStream(resourceFile));
          // add resource file to the list
-         //activationContent.addFile("resources.xml", resourceFile);
          activationContent.addFile(resourceFile.getName(), resourceFile);
+
+         // add deletion info
+         activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
 
          return activationContent;
      }
@@ -554,14 +564,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param root element of the resource file under which ordering info must be added
       * @param orderBefore
       */
-     protected void addOrderingInfo(Element root, List orderBefore) {
+     protected void addOrderingInfo(Element root, List<String> orderBefore) {
          //do not use magnolia Content class since these objects are only meant for a single use to read UUID
          Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
          root.addContent(siblingRoot);
          if (orderBefore == null) return;
-         Iterator siblings = orderBefore.iterator();
+         Iterator<String> siblings = orderBefore.iterator();
          while (siblings.hasNext()) {
-             String uuid = (String) siblings.next();
+             String uuid = siblings.next();
              Element e = new Element(SIBLINGS_ELEMENT);
              e.setAttribute(SIBLING_UUID, uuid);
              siblingRoot.addContent(e);
@@ -603,7 +613,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          // add this file element as resource in activation content
          activationContent.addFile(file.getName(), file);
 
-         Iterator children = content.getChildren(filter).iterator();
+         Iterator<Content> children = content.getChildren(filter).iterator();
          while (children.hasNext()) {
              Content child = (Content) children.next();
              this.addResources(element, session, child, filter, activationContent);

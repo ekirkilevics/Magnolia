@@ -143,6 +143,8 @@ public final class ItemType implements Serializable {
 
     public static final ItemType FOLDER = new ItemType(NT_FOLDER); //$NON-NLS-1$
 
+    public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
+
 
     /**
      * Stable serialVersionUID.

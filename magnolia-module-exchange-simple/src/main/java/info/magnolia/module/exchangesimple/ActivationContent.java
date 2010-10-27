@@ -50,12 +50,12 @@ public class ActivationContent implements Cloneable {
     /**
      * Collection of files to be transfered during activation.
      */
-    private Map fileList = new HashMap();
+    private Map<String, File> fileList = new HashMap<String, File>();
 
     /**
      * Collection of properties describing activated content (path, repo, etc). Supported property keys are listed in {@link BaseSyndicatorImpl}.
      */
-    private Map properties = new HashMap();
+    private Map<String, String> properties = new HashMap<String, String>();
 
     /**
      * Adds resource to the list of files for transfer.
@@ -75,7 +75,7 @@ public class ActivationContent implements Cloneable {
     /**
      * Cats collection of all files. This collection is not a copy, but a reference to internal collection!
      */
-    public Map getFiles() {
+    public Map<String, File> getFiles() {
         return this.fileList;
     }
 
@@ -114,7 +114,7 @@ public class ActivationContent implements Cloneable {
     /**
      * Gets collection of all properties. Such collection is not a copy, but the reference to internal collection!
      */
-    public Map getProperties() {
+    public Map<String, String> getProperties() {
         return this.properties;
     }
 
@@ -122,8 +122,8 @@ public class ActivationContent implements Cloneable {
         try {
             ActivationContent clone = (ActivationContent) super.clone();
             // need to clone maps otherwise cloned object would reference the original ones
-            clone.properties = new HashMap(this.properties);
-            clone.fileList = new HashMap(this.fileList);
+            clone.properties = new HashMap<String, String>(this.properties);
+            clone.fileList = new HashMap<String, File>(this.fileList);
             return clone;
         } catch (CloneNotSupportedException e) {
             // should never be thrown since we support cloning.

@@ -720,6 +720,11 @@ public interface Content extends Cloneable {
     boolean hasMetaData();
 
     /**
+     * Checks whether or not given mixin is assigned to a type.
+     */
+    public boolean hasMixin(String mixinName) throws RepositoryException;
+
+    /**
      * Implement this interface to be used as node filter by getChildren().
      */
     public interface ContentFilter {

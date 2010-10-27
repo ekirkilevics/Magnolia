@@ -75,6 +75,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidParameterException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -119,6 +120,11 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         String status = "";
         String result = null;
         try {
+            String action = request.getHeader(BaseSyndicatorImpl.ACTION);
+            if (action == null) {
+                throw new InvalidParameterException("Activation action must be set for each activation request.");
+            }
+
             applyLock(request);
             result = receive(request);
             status = BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL;

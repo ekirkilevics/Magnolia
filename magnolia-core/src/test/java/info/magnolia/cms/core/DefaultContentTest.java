@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +55,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
+import info.magnolia.repository.Provider;
 import info.magnolia.test.RepositoryTestCase;
 import static org.easymock.EasyMock.*;
 
@@ -79,6 +81,28 @@ public class DefaultContentTest extends RepositoryTestCase {
     public interface ExceptionThrowingCallback {
         void call() throws Exception;
     }
+
+    public void testAddMixin() throws IOException, RepositoryException{
+        final Content content = getTestContent();
+        final String repoName = content.getHierarchyManager().getName();
+        final String mixDeleted = "mgnl:deleted";
+        final Provider repoProvider = ContentRepository.getRepositoryProvider(repoName);
+        final String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
+                + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
+                + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + mixDeleted
+                + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
+                + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
+
+        try {
+            repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
+        } catch (RepositoryException e) {
+            // ignore, either it's already registered and test will pass, or type can't be registered and test should fail
+        }
+
+        assertTrue(content.getJCRNode().canAddMixin(mixDeleted));
+        content.addMixin(mixDeleted);
+    }
+
 
     public void testReadingANodeData() throws IOException, RepositoryException{
         Content content = getTestContent();
