@@ -291,8 +291,8 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, get last modified date of the current node.
-     * @return Calendar
+     * Get last modified date of the node to which this meta data belongs or null in case such a date can't be determined.
+     * @return Calendar or null when last modification date can't be found.
      */
     public Calendar getModificationDate() {
         return getDateProperty(this.getInternalPropertyName(LAST_MODIFIED));
@@ -505,6 +505,9 @@ public class MetaData {
         }
     }
 
+    /**
+     * Gets date property or null if such property doesn't exist. Do not use this method for checking existence of the property.
+     */
     public Calendar getDateProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
