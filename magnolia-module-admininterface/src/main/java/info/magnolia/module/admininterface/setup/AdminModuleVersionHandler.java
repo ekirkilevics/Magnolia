@@ -58,15 +58,9 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.delta.TaskExecutionException;
-import info.magnolia.repository.Provider;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 
 /**
  * @author philipp
@@ -159,7 +153,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
             .addTask(new NodeExistsDelegateTask("Filters","Checks if filters node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters", new ChildrenExistsDelegateTask("Filters","Checks if filters node has children", ContentRepository.CONFIG, "/modules/adminInterface/filters", null, null, new RemoveNodeTask("Removes filters","Remove unneeded filters node", ContentRepository.CONFIG, "/modules/adminInterface/filters"))))
         );
         register(DeltaBuilder.update("4.4","")
-                .addTask(new ContentDeletionTasks()));
+            .addTask(new BootstrapSingleResource("Messages bundles for js", "Bundles here will be used to generate i18n messages available in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.bundles.xml"))
+            .addTask(new ContentDeletionTasks()));
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {

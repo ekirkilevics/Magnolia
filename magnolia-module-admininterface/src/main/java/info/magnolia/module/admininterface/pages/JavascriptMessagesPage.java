@@ -33,11 +33,16 @@
  */
 package info.magnolia.module.admininterface.pages;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.util.QueryUtil;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +66,23 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
 
     public void renderHtml(String view) throws IOException {
         final Locale locale = LocaleUtils.toLocale(localeStr);
-        final Messages messages = MessagesManager.getMessages(locale);
+        //adminInterface or default messages
+        Messages messages = MessagesManager.getMessages(locale);
         MessagesUtil.generateJavaScript(response.getWriter(), messages);
+
+        final Collection<Content> bundles = QueryUtil.query(ContentRepository.CONFIG, "//adminInterface/pages/messages/bundles", "xpath");
+        if(bundles != null && !bundles.isEmpty()){
+            for(Content bundle: bundles){
+                for(NodeData nodeData : bundle.getNodeDataCollection()){
+                    if(MessagesManager.DEFAULT_BASENAME.equals(nodeData.getString())){
+                        //skip adminInterface bundle to avoid duplication
+                        continue;
+                    }
+                    messages = MessagesManager.getMessages(nodeData.getString(), locale);
+                    MessagesUtil.generateJavaScript(response.getWriter(), messages);
+                }
+            }
+        }
     }
 
     public String getLocale() {
