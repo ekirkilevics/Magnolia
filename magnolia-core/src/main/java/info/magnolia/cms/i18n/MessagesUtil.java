@@ -64,8 +64,8 @@ public class MessagesUtil {
     }
 
     /**
-     * Adds Variables to a JS witch can be used with the getMessage(key) method.
-     * @return Javascript-Construct of this textes
+     * Adds Variables to a JS which can be used with the getMessage(key) method.
+     * @return Javascript-Construct of this text
      */
     public static void generateJavaScript(Writer out, Messages messages) throws IOException {
         out.write("/* ###################################\n"); //$NON-NLS-1$
@@ -127,7 +127,7 @@ public class MessagesUtil {
     public static String javaScriptString(String msg) {
         return StringUtils.replace(StringUtils.replace(msg, "'", "\\'"), "\n", "\\n");
     }
-    
+
     public static String get(String key){
         return MessagesManager.getMessages().get(key);
     }
