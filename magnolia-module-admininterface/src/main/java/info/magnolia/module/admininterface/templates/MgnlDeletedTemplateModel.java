@@ -99,7 +99,7 @@ public class MgnlDeletedTemplateModel extends RenderingModelImpl<RenderableDefin
                 }
             }
             if (allVersions.isEmpty()) {
-                throw new RepositoryException("Failed to locate versions for content " + getContent().getHandle());
+                return null;
             }
             return allVersions.iterator().next().getName();
         } catch (UnsupportedRepositoryOperationException e) {

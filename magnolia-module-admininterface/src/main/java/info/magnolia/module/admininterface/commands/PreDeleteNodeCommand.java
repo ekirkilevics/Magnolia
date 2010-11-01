@@ -50,13 +50,21 @@ import info.magnolia.module.admininterface.commands.BaseRepositoryCommand;
 
 public class PreDeleteNodeCommand extends BaseRepositoryCommand {
 
-    private boolean versionManually;
+    public static final String DELETED_NODE_TEMPLATE = "mgnlDeleted";
+
+    public static final String DELETED_NODE_DELETED_BY = "mgnl:deletedBy";
+    public static final String DELETED_NODE_DELETED_ON = "mgnl:deletedOn";
+    public static final String DELETED_NODE_DELETED_COMMENT = "mgnl:deletedComment";
+
+    private static final String DELETED_NODE_PROP_NAME = "deleteNode";
+
+    private boolean versionManually = true;
 
     @Override
     public boolean execute(Context context) throws Exception {
 
         Content parentNode = getNode(context);
-        Content node = parentNode.getContent((String) context.get("deleteNode"));
+        Content node = parentNode.getContent((String) context.get(DELETED_NODE_PROP_NAME));
         preDeleteNode(node, context);
 
         return true;
@@ -87,11 +95,11 @@ public class PreDeleteNodeCommand extends BaseRepositoryCommand {
     }
 
     private void storeDeletionInfo(Content node, Context context) throws AccessDeniedException, PathNotFoundException, RepositoryException {
-        node.setNodeData("mgnl:deletedBy", MgnlContext.getUser().getName());
-        node.setNodeData("mgnl:deletedOn", Calendar.getInstance());
+        node.setNodeData(DELETED_NODE_DELETED_BY, MgnlContext.getUser().getName());
+        node.setNodeData(DELETED_NODE_DELETED_ON, Calendar.getInstance());
         final String comment = (String) context.get("comment");
         if (comment != null) {
-            node.setNodeData("mgnl:deletedComment", comment);
+            node.setNodeData(DELETED_NODE_DELETED_COMMENT, comment);
         }
     }
 
@@ -103,9 +111,9 @@ public class PreDeleteNodeCommand extends BaseRepositoryCommand {
 
     protected void markAsDeleted(Content node) throws RepositoryException, AccessDeniedException {
         // add mixin
-        node.addMixin("mgnl:deleted");
+        node.addMixin(ItemType.DELETED_NODE_MIXIN);
         // change template
-        node.getMetaData().setTemplate("mgnlDeleted");
+        node.getMetaData().setTemplate(DELETED_NODE_TEMPLATE);
     }
 
     protected void purgeContent(Content node) throws RepositoryException {
