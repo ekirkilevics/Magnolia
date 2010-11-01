@@ -34,19 +34,16 @@
 package info.magnolia.module.exchangesimple;
 
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -71,6 +68,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     public SimpleSyndicator() {
     }
 
+    @Override
     public void activate(final ActivationContent activationContent, String nodePath) throws ExchangeException {
         String nodeUUID = activationContent.getproperty(NODE_UUID);
         Collection<Subscriber> subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
@@ -78,7 +76,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         final Sync done = new CountDown(subscribers.size());
         final Map<Subscriber, Exception> errors = new ConcurrentHashMap<Subscriber, Exception>(subscribers.size());
         while (subscriberIterator.hasNext()) {
-            final Subscriber subscriber = (Subscriber) subscriberIterator.next();
+            final Subscriber subscriber = subscriberIterator.next();
             if (subscriber.isActive()) {
                 // Create runnable task for each subscriber execute
                 if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
@@ -102,8 +100,8 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             Iterator<Map.Entry<Subscriber, Exception>> iter = errors.entrySet().iterator();
             while (iter.hasNext()) {
                 Entry<Subscriber, Exception> entry = iter.next();
-                e = (Exception) entry.getValue();
-                Subscriber subscriber = (Subscriber) entry.getKey();
+                e = entry.getValue();
+                Subscriber subscriber = entry.getKey();
                 msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
                 log.error(e.getMessage(), e);
             }
@@ -140,6 +138,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param activationContent
      * @throws ExchangeException
      */
+    @Override
     public String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException {
         log.debug("activate");
         if (null == subscriber) {
@@ -158,15 +157,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             return null;
         }
         log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName()); //$NON-NLS-1$
-
-        if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
-            try {
-                parentPath = URLEncoder.encode(parentPath, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                // do nothing
-            }
-        }
 
         URLConnection urlConnection = null;
         try {
@@ -228,13 +218,14 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
+    @Override
     public void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException {
         Collection<Subscriber> subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
         Iterator<Subscriber> subscriberIterator = subscribers.iterator();
         final Sync done = new CountDown(subscribers.size());
         final Map<Subscriber, Exception> errors = new ConcurrentHashMap<Subscriber, Exception>();
         while (subscriberIterator.hasNext()) {
-            final Subscriber subscriber = (Subscriber) subscriberIterator.next();
+            final Subscriber subscriber = subscriberIterator.next();
             if (subscriber.isActive()) {
                 // Create runnable task for each subscriber.
                 executeInPool(getDeactivateTask(done, errors, subscriber, nodeUUID, nodePath));
@@ -251,7 +242,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         if (!errors.isEmpty()) {
             Exception e = null;
             StringBuffer msg = new StringBuffer(errors.size() + " error").append(
-            errors.size() > 1 ? "s" : "").append(" detected: ");
+                    errors.size() > 1 ? "s" : "").append(" detected: ");
             Iterator<Entry<Subscriber, Exception>> iter = errors.entrySet().iterator();
             while (iter.hasNext()) {
                 Entry<Subscriber, Exception> entry = iter.next();
@@ -286,6 +277,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param subscriber
      * @throws ExchangeException
      */
+    @Override
     public String doDeactivate(Subscriber subscriber, String nodeUUID, String path) throws ExchangeException {
         Subscription subscription = subscriber.getMatchedSubscription(path, this.repositoryName);
         if (null != subscription) {
@@ -316,25 +308,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             }
         }
         return null;
-    }
-
-    /**
-     * Gets target path to which the current path is mapped in given subscription. Provided path should be without trailing slash.
-     */
-    protected String getMappedPath(String path, Subscription subscription) {
-        String toURI = subscription.getToURI();
-        if (null != toURI) {
-            String fromURI = subscription.getFromURI();
-            // remove trailing slash if any
-            fromURI = StringUtils.removeEnd(fromURI, "/");
-            toURI = StringUtils.removeEnd(toURI, "/");
-            // apply path transformation if any
-            path = path.replaceFirst(fromURI, toURI);
-            if (path.equals("")) {
-                return "/";
-            }
-        }
-        return path;
     }
 
 }

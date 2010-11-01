@@ -74,7 +74,7 @@ public class SimpleSyndicatorTest extends TestCase {
     private ActivationManager actMan;
     private WebContext ctx;
     private SystemContext sysctx;
-    private SimpleSyndicator syndicator;
+    private BaseSyndicatorImpl syndicator;
     private User user;
     private Content content;
     private HierarchyManager hm;

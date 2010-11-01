@@ -43,6 +43,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
@@ -69,6 +70,7 @@ import javax.jcr.Session;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.jdom.Document;
@@ -647,6 +649,34 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              tempFile.delete();
          }
      }
+
+    /**
+     * Gets target path to which the current path is mapped in given subscription. Provided path should be without trailing slash.
+     */
+    protected String getMappedPath(String path, Subscription subscription) {
+        String toURI = subscription.getToURI();
+        if (null != toURI) {
+            String fromURI = subscription.getFromURI();
+            // remove trailing slash if any
+            fromURI = StringUtils.removeEnd(fromURI, "/");
+            toURI = StringUtils.removeEnd(toURI, "/");
+            // apply path transformation if any
+            path = path.replaceFirst(fromURI, toURI);
+            if (path.equals("")) {
+                path = "/";
+            }
+        }
+
+        if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
+            try {
+                path = URLEncoder.encode(path, "UTF-8");
+            }
+            catch (UnsupportedEncodingException e) {
+                // do nothing
+            }
+        }
+        return path;
+    }
 
 
 }
