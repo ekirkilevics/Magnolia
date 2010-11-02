@@ -34,7 +34,6 @@
 package info.magnolia.module.admininterface.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.for4_0.UpdatedDefaultPublicURIWarning;
@@ -42,7 +41,6 @@ import info.magnolia.module.admininterface.setup.for4_3.ReplaceWrongDialogNodeTy
 import info.magnolia.module.admininterface.setup.for4_4.ContentDeletionTasks;
 import info.magnolia.module.admininterface.setup.for4_4.RegisterMgnlDeletedType;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
-import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
@@ -85,14 +83,14 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/users"),
                         adminUsersSubMenu,
                         sysUsersSubMenu}))
-                .addTask(new ArrayDelegateTask("Menu", "Updates subscriber menu item in config menu", new Task[]{
-                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/subscriber"),
-                        subscribersMenu}))
-                .addTask(new NodeExistsDelegateTask("Remove Kupu richEdit control", "Checks for previous Kupu editor installation and removes richEdit control if existent.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit",
-                        new RemoveNodeTask("Remove Kupu richEdit control", "Removes the richEdit control from Admin Interface since the Kupu Module is not delivered anymore.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit")))
-                .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"restart\" page.", ContentRepository.CONFIG, pathToRestartPage, "class", "info.magnolia.module.admininterface.pages.RestartPage", false,
-                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, pathToRestartPage)))
-                .addTask(new RegisterModuleServletsTask())
+                        .addTask(new ArrayDelegateTask("Menu", "Updates subscriber menu item in config menu", new Task[]{
+                                new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/subscriber"),
+                                subscribersMenu}))
+                                .addTask(new NodeExistsDelegateTask("Remove Kupu richEdit control", "Checks for previous Kupu editor installation and removes richEdit control if existent.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit",
+                                        new RemoveNodeTask("Remove Kupu richEdit control", "Removes the richEdit control from Admin Interface since the Kupu Module is not delivered anymore.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit")))
+                                        .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"restart\" page.", ContentRepository.CONFIG, pathToRestartPage, "class", "info.magnolia.module.admininterface.pages.RestartPage", false,
+                                                new RemoveNodeTask(null, null, ContentRepository.CONFIG, pathToRestartPage)))
+                                                .addTask(new RegisterModuleServletsTask())
         );
 
         register(DeltaBuilder.update("3.5.9", "")
@@ -107,23 +105,23 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("3.6.4", "")
                 .addTask(new ArrayDelegateTask("Update groups tree",new MoveNodeTask("Update groups tree", "Updates incorrectly named usergroup tree",ContentRepository.CONFIG, "/modules/adminInterface/trees/groups", "/modules/adminInterface/trees/usergroups", false),
-                new CheckAndModifyPropertyValueTask("Update Group tree reference", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/groups", "onclick", "MgnlAdminCentral.showTree('groups')", "MgnlAdminCentral.showTree('usergroups')"),
-                new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
-                new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
+                        new CheckAndModifyPropertyValueTask("Update Group tree reference", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/groups", "onclick", "MgnlAdminCentral.showTree('groups')", "MgnlAdminCentral.showTree('usergroups')"),
+                        new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
+                        new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
         );
 
         final String pathToDeploymentUtilsPage = "/modules/adminInterface/pages/deploymentUtils";
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"deployment\" page.", ContentRepository.CONFIG,
-                // if still using the original class, we can go and ahead and delete:
-                pathToDeploymentUtilsPage, "class", "info.magnolia.module.admininterface.pages.DeploymentUtilsPage", false,
-                new ArrayDelegateTask(null,
-                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, pathToDeploymentUtilsPage),
-                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/tools/deployment"))))
+                        // if still using the original class, we can go and ahead and delete:
+                        pathToDeploymentUtilsPage, "class", "info.magnolia.module.admininterface.pages.DeploymentUtilsPage", false,
+                        new ArrayDelegateTask(null,
+                                new RemoveNodeTask(null, null, ContentRepository.CONFIG, pathToDeploymentUtilsPage),
+                                new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/tools/deployment"))))
 
-                .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
-                .addTask(new BootstrapSingleResource("Quickstart page", "Registers the page to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
-                .addTask(new BootstrapSingleResource("User preferences dialog", "The user preferences dialog is not the user edit dialog anymore.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.userpreferences.xml"))
+                                .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
+                                .addTask(new BootstrapSingleResource("Quickstart page", "Registers the page to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
+                                .addTask(new BootstrapSingleResource("User preferences dialog", "The user preferences dialog is not the user edit dialog anymore.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.userpreferences.xml"))
         );
 
         register(DeltaBuilder.update("4.1.1", "")
@@ -134,27 +132,27 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("4.3", "")
-            .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuration to /server/i18n.", "config.server.i18n.authoring.xml"))
-            .addTask(new ReplaceWrongDialogNodeTypeTask())
-            .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersAdmin.xml"))
-            .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersSystem.xml"))
-            // use the new trees
-            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change JavaScript of the system users menu point.", "config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)", "MgnlAdminCentral.showTree('usersSystem')"))
-            .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change JavaScript of the users menu point.","config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)", "MgnlAdminCentral.showTree('usersAdmin')"))
-            .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
+                .addTask(new BootstrapSingleModuleResource("New i18n authoring support", "Adds i18n authoring configuration to /server/i18n.", "config.server.i18n.authoring.xml"))
+                .addTask(new ReplaceWrongDialogNodeTypeTask())
+                .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersAdmin.xml"))
+                .addTask(new BootstrapSingleModuleResource("Folders in users tree", "Adds a new tree configuration with the correct root path.", "config.modules.adminInterface.trees.usersSystem.xml"))
+                // use the new trees
+                .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change JavaScript of the system users menu point.", "config", "/modules/adminInterface/config/menu/security/usersSystem", "onclick", "MgnlAdminCentral.showTree('users', '/system', true)", "MgnlAdminCentral.showTree('usersSystem')"))
+                .addTask(new CheckAndModifyPropertyValueTask("Folders in users tree","Change JavaScript of the users menu point.","config", "/modules/adminInterface/config/menu/security/usersAdmin", "onclick", "MgnlAdminCentral.showTree('users', '/admin', true)", "MgnlAdminCentral.showTree('usersAdmin')"))
+                .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
         );
         register(DeltaBuilder.update("4.3.2", "")
-            .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
-            .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
+                .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
+                .addTask(new PropertyValueDelegateTask("Security", "Updates users tree configuration.", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", true, null, new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/modules/adminInterface/trees/usersSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler", "info.magnolia.module.admininterface.trees.UsersTreeHandler")))
         );
 
         register(DeltaBuilder.update("4.3.3", "")
-            .addTask(new NodeExistsDelegateTask("Intercept","Checks if intercept node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept", new RemoveNodeTask("Remove intercept", "Removes unneeded intercept node", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept")))
-            .addTask(new NodeExistsDelegateTask("Filters","Checks if filters node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters", new ChildrenExistsDelegateTask("Filters","Checks if filters node has children", ContentRepository.CONFIG, "/modules/adminInterface/filters", null, null, new RemoveNodeTask("Removes filters","Remove unneeded filters node", ContentRepository.CONFIG, "/modules/adminInterface/filters"))))
+                .addTask(new NodeExistsDelegateTask("Intercept","Checks if intercept node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept", new RemoveNodeTask("Remove intercept", "Removes unneeded intercept node", ContentRepository.CONFIG, "/modules/adminInterface/filters/intercept")))
+                .addTask(new NodeExistsDelegateTask("Filters","Checks if filters node exists", ContentRepository.CONFIG, "/modules/adminInterface/filters", new ChildrenExistsDelegateTask("Filters","Checks if filters node has children", ContentRepository.CONFIG, "/modules/adminInterface/filters", null, null, new RemoveNodeTask("Removes filters","Remove unneeded filters node", ContentRepository.CONFIG, "/modules/adminInterface/filters"))))
         );
         register(DeltaBuilder.update("4.4","")
-            .addTask(new BootstrapSingleResource("Messages bundles for js", "Bundles here will be used to generate i18n messages available in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.bundles.xml"))
-            .addTask(new ContentDeletionTasks()));
+                .addTask(new BootstrapSingleResource("Messages bundles for js", "Bundles here will be used to generate i18n messages available in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.bundles.xml"))
+                .addTask(new ContentDeletionTasks()));
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
