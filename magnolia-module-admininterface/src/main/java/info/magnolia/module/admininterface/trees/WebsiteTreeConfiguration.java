@@ -186,6 +186,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
                 + tree.getJavascriptTree()
                 + ")"); //$NON-NLS-1$
+        menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionNotDeleted(" + tree.getJavascriptTree() + ")");
 
         ContextMenuItem menuDeactivate = new ContextMenuItem("deactivate");
         menuDeactivate.setLabel(msgs.get("tree.web.menu.deactivate")); //$NON-NLS-1$
