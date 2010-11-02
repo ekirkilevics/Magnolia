@@ -55,19 +55,22 @@ import java.util.Map;
  */
 public class TemplateManager extends ObservedManager {
 
+    private static final String DELETED_PAGE_TEMPLATE = "mgnlDeleted";
+
     /**
      * The cached templates.
      */
-    private Map<String, Template> cachedContent = new Hashtable<String, Template>();
+    private final Map<String, Template> cachedContent = new Hashtable<String, Template>();
 
     /**
      * The templates visible in the templates selection.
      */
-    private List<Template> visibleTemplates = new ArrayList<Template>();
+    private final List<Template> visibleTemplates = new ArrayList<Template>();
 
     /**
      * Called by the ObservedManager.
      */
+    @Override
     protected void onRegister(Content node) {
         try {
             log.info("Loading Template info from {}", node.getHandle()); //$NON-NLS-1$
@@ -88,6 +91,7 @@ public class TemplateManager extends ObservedManager {
 
     }
 
+    @Override
     protected void onClear() {
         this.cachedContent.clear();
         this.visibleTemplates.clear();
@@ -104,6 +108,7 @@ public class TemplateManager extends ObservedManager {
      * @return TemplateInfo
      * @deprecated since 4.0 Use {@link #getTemplateDefinition(String)} instead
      */
+    @Deprecated
     public Template getInfo(String key) {
         return getTemplateDefinition(key);
     }
@@ -158,7 +163,7 @@ public class TemplateManager extends ObservedManager {
             try {
                 Template ti = (Template) Content2BeanUtil.toBean(c, true, Template.class);
                 cachedContent.put(ti.getName(), ti);
-                if (ti.isVisible()) {
+                if (ti.isVisible() && !DELETED_PAGE_TEMPLATE.equals(ti.getName())) {
                     visibleTemplates.add(ti);
                 }
 
@@ -210,6 +215,15 @@ public class TemplateManager extends ObservedManager {
 
     public Iterator<Template> getAvailableTemplates(Content node) {
         List<Template> templateList = new ArrayList<Template>();
+
+        try {
+            if (node != null && node.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
+                templateList.add(getTemplateDefinition(DELETED_PAGE_TEMPLATE));
+                return templateList.iterator();
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to check node for deletion status.", e);
+        }
         for (Template template : visibleTemplates) {
 
             if (template.isAvailable(node)) {
