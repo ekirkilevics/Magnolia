@@ -119,13 +119,13 @@ public class Tree extends ControlImpl {
 
     private int indentionWidth = 15;
 
-    private List<String> itemTypes = new ArrayList<String>();
+    private final List<String> itemTypes = new ArrayList<String>();
 
-    private Set<String> strictTypes = new HashSet<String>();
+    private final Set<String> strictTypes = new HashSet<String>();
 
     private int height = 400;
 
-    private Map icons = new HashMap();
+    private final Map<String, String> icons = new HashMap<String, String>();
 
     private String iconOndblclick;
 
@@ -232,6 +232,7 @@ public class Tree extends ControlImpl {
         return this.pathSelected;
     }
 
+    @Override
     public String getPath() {
         if (super.getPath() != null) {
             return super.getPath();
@@ -264,6 +265,7 @@ public class Tree extends ControlImpl {
      * Add a itemType to the itemTypes that will be shown in this branch.
      * @deprecated pass the icon to use as a second parameter
      */
+    @Deprecated
     public void addItemType(String s) {
         addItemType(s, null);
     }
@@ -346,20 +348,35 @@ public class Tree extends ControlImpl {
     }
 
     protected String getIcon(String itemType) {
-        return (String) icons.get(itemType);
+        return icons.get(itemType);
     }
 
     protected String getIcon(Content node, NodeData nodedata, String itemType) {
+        // deleted icon trumps them all.
+        try {
+            if (node != null && node.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
+                return icons.get(ItemType.DELETED_NODE_MIXIN);
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to read content of " + node.getHandle());
+        }
         if(icons.containsKey(itemType)){
-            return (String) icons.get(itemType);
+            return icons.get(itemType);
         }
         return DEFAULT_ICON;
     }
 
+    /**
+     * @deprecated since 4.4 use {@link #addIcon(String, String)} instead.
+     */
+    @Deprecated
     public void setIcon(String typeName, String icon) {
-        icons.put(typeName, icon);
+        addIcon(typeName, icon);
     }
 
+    public void addIcon(String typeName, String icon) {
+        icons.put(typeName, icon);
+    }
     /**
      * Set the double click event of the icon.
      * @param s javascriopt method
@@ -532,36 +549,36 @@ public class Tree extends ControlImpl {
                 // todo: share with Contorol.Save
                 if (node.isMultiValue() != NodeData.MULTIVALUE_TRUE) {
                     switch (type) {
-                        case PropertyType.STRING:
-                            node.setValue(value);
-                            break;
-                        case PropertyType.BOOLEAN:
-                            if (value.equals("true")) { //$NON-NLS-1$
-                                node.setValue(true);
-                            }
-                            else {
-                                node.setValue(false);
-                            }
-                            break;
-                        case PropertyType.DOUBLE:
-                            try {
-                                node.setValue(Double.valueOf(value).doubleValue());
-                            }
-                            catch (Exception e) {
-                                node.setValue(0);
-                            }
-                            break;
-                        case PropertyType.LONG:
-                            try {
-                                node.setValue(Long.valueOf(value).longValue());
-                            }
-                            catch (Exception e) {
-                                node.setValue(0);
-                            }
-                            break;
-                        case PropertyType.DATE:
-                            // todo
-                            break;
+                    case PropertyType.STRING:
+                        node.setValue(value);
+                        break;
+                    case PropertyType.BOOLEAN:
+                        if (value.equals("true")) { //$NON-NLS-1$
+                            node.setValue(true);
+                        }
+                        else {
+                            node.setValue(false);
+                        }
+                        break;
+                    case PropertyType.DOUBLE:
+                        try {
+                            node.setValue(Double.valueOf(value).doubleValue());
+                        }
+                        catch (Exception e) {
+                            node.setValue(0);
+                        }
+                        break;
+                    case PropertyType.LONG:
+                        try {
+                            node.setValue(Long.valueOf(value).longValue());
+                        }
+                        catch (Exception e) {
+                            node.setValue(0);
+                        }
+                        break;
+                    case PropertyType.DATE:
+                        // todo
+                        break;
                     }
                 }
                 content.updateMetaData();
@@ -594,36 +611,36 @@ public class Tree extends ControlImpl {
             NodeData node = content.createNodeData(nodeDataName);
             if (value != null && node.isMultiValue() != NodeData.MULTIVALUE_TRUE) {
                 switch (type) {
-                    case PropertyType.STRING:
-                        node.setValue(value.getString());
-                        break;
-                    case PropertyType.BOOLEAN:
-                        if (value != null && value.getBoolean()) {
-                            node.setValue(true);
-                        }
-                        else {
-                            node.setValue(false);
-                        }
-                        break;
-                    case PropertyType.DOUBLE:
-                        try {
-                            node.setValue(value.getDouble());
-                        }
-                        catch (Exception e) {
-                            node.setValue(0);
-                        }
-                        break;
-                    case PropertyType.LONG:
-                        try {
-                            node.setValue(value.getLong());
-                        }
-                        catch (Exception e) {
-                            node.setValue(0);
-                        }
-                        break;
-                    case PropertyType.DATE:
-                        // todo
-                        break;
+                case PropertyType.STRING:
+                    node.setValue(value.getString());
+                    break;
+                case PropertyType.BOOLEAN:
+                    if (value != null && value.getBoolean()) {
+                        node.setValue(true);
+                    }
+                    else {
+                        node.setValue(false);
+                    }
+                    break;
+                case PropertyType.DOUBLE:
+                    try {
+                        node.setValue(value.getDouble());
+                    }
+                    catch (Exception e) {
+                        node.setValue(0);
+                    }
+                    break;
+                case PropertyType.LONG:
+                    try {
+                        node.setValue(value.getLong());
+                    }
+                    catch (Exception e) {
+                        node.setValue(0);
+                    }
+                    break;
+                case PropertyType.DATE:
+                    // todo
+                    break;
                 }
             }
             content.updateMetaData();
@@ -662,6 +679,7 @@ public class Tree extends ControlImpl {
         return label;
     }
 
+    @Override
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         html.append(this.getHtmlPre());
@@ -792,6 +810,7 @@ public class Tree extends ControlImpl {
         boolean hasSub = false;
         boolean showSub = false;
         boolean isActivated = false;
+        boolean isDeleted = false;
         boolean permissionWrite = false;
         boolean permissionWriteParent = false;
         if (itemType.equals(ITEM_TYPE_NODEDATA)) {
@@ -817,6 +836,9 @@ public class Tree extends ControlImpl {
             if (c.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                 permissionWrite = true;
             }
+            if (c.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
+                isDeleted = true;
+            }
             if (c.getAncestor(c.getLevel() - 1).isGranted(info.magnolia.cms.security.Permission.WRITE)) {
                 permissionWriteParent = true;
             }
@@ -828,7 +850,7 @@ public class Tree extends ControlImpl {
 
                 if (hasSub) {
                     if (this.getPathOpen() != null
-                        && (this.getPathOpen().indexOf(handle + "/") == 0 || this.getPathOpen().equals(handle))) { //$NON-NLS-1$
+                            && (this.getPathOpen().indexOf(handle + "/") == 0 || this.getPathOpen().equals(handle))) { //$NON-NLS-1$
                         showSub = true;
                     }
                     break;
@@ -845,18 +867,18 @@ public class Tree extends ControlImpl {
 
         String idPre = this.javascriptTree + "_" + handle; //$NON-NLS-1$
         String jsHighlightNode = this.javascriptTree + ".nodeHighlight(this,'" //$NON-NLS-1$
-            + handle
-            + "'," //$NON-NLS-1$
-            + Boolean.toString(permissionWrite)
-            + ");"; //$NON-NLS-1$
+        + handle
+        + "'," //$NON-NLS-1$
+        + Boolean.toString(permissionWrite)
+        + ");"; //$NON-NLS-1$
         String jsResetNode = this.javascriptTree + ".nodeReset(this,'" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
         String jsSelectNode = this.javascriptTree + ".selectNode('" //$NON-NLS-1$
-            + handle
-            + "'," //$NON-NLS-1$
-            + Boolean.toString(permissionWrite)
-            + ",'" //$NON-NLS-1$
-            + itemType
-            + "');"; //$NON-NLS-1$
+        + handle
+        + "'," //$NON-NLS-1$
+        + Boolean.toString(permissionWrite)
+        + ",'" //$NON-NLS-1$
+        + itemType
+        + "');"; //$NON-NLS-1$
         String jsExpandNode;
         if (this.getDrawShifter()) {
             jsExpandNode = this.javascriptTree + ".expandNode('" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -980,6 +1002,7 @@ public class Tree extends ControlImpl {
 
         // this is done because js is not executed when you get it with ajax
         html.append(new Hidden(idPre + "_PermissionWrite", Boolean.toString(permissionWrite), false).getHtml()); //$NON-NLS-1$
+        html.append(new Hidden(idPre + "_IsDeleted", Boolean.toString(isDeleted), false).getHtml()); //$NON-NLS-1$
         html.append(new Hidden(idPre + "_ItemType", itemType, false).getHtml()); //$NON-NLS-1$
         html.append(new Hidden(idPre + "_IsActivated", Boolean.toString(isActivated), false).getHtml()); //$NON-NLS-1$
 
@@ -1160,7 +1183,7 @@ public class Tree extends ControlImpl {
     public void addFunctionBarItemFromContextMenu(String itemName) {
         final ContextMenuItem menuItem = getMenu().getMenuItemByName(itemName);
         if (menuItem != null) {
-           addFunctionBarItem(new FunctionBarItem(menuItem));
+            addFunctionBarItem(new FunctionBarItem(menuItem));
         }
     }
 

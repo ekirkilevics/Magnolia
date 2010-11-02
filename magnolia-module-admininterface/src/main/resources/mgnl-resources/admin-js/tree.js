@@ -494,7 +494,7 @@
         }
 
 
-    mgnlTree.prototype.deleteNode = function()
+    mgnlTree.prototype.deleteNode = function(dontAskConfirmation)
         {
         var text;
         if(this.getNode(this.selectedNode.id).isActivated){
@@ -505,7 +505,7 @@
         }
 
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
-        if (mgnlConfirm(text,title))
+        if (!dontAskConfirmation || mgnlConfirm(text,title))
             {
             var parentNode=this.getNode(this.selectedNode.parentId);
             var deleteNode=this.selectedNode.label;
@@ -1031,6 +1031,11 @@
             if (document.getElementById(this.idPre+"_PermissionWrite").value=="true") this.permissionWrite=true;
             else this.permissionWrite=false;
             }
+        if (document.getElementById(this.idPre+"_IsDeleted"))
+	        {
+	        if (document.getElementById(this.idPre+"_IsDeleted").value=="true") this.isDeleted=true;
+	        else this.isDeleted=false;
+	        }
 
         //html objects get lost, therefore use id and getElement on the float
         this.divMainId=this.idPre+"_DivMain";

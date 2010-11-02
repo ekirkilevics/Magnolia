@@ -241,6 +241,16 @@ function mgnlTreeMenuItemConditionPermissionWrite(tree)
     }
 }
 
+function mgnlTreeMenuItemConditionNotDeleted(tree)
+{
+	this.tree = tree;
+
+	this.test = function(){
+	    if (!this.tree.selectedNode.isDeleted) return true;
+	    else return false;
+	}
+}
+
 //#################
 //### Common Commands
 //#################
