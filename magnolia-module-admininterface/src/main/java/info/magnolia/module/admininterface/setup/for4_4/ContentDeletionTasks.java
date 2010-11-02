@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.admininterface.setup.for4_4;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 
 /**
@@ -46,9 +48,11 @@ public class ContentDeletionTasks extends ArrayDelegateTask implements Task {
 
     public ContentDeletionTasks() {
         super("Content Deletion", "Makes configuration changes necessary for content deletion workflow support.",
-            new RegisterMgnlDeletedType(),
-            new BootstrapSingleResource("", "", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.commands.website.delete.xml"),
-            new BootstrapSingleResource("", "", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.templates.mgnlDeleted.xml")
+                new RegisterMgnlDeletedType(),
+                new BootstrapSingleResource("Delete Command", "Installs new delete command to allow for activation of deletions.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.commands.website.delete.xml"),
+                new BootstrapSingleResource("", "", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.templates.mgnlDeleted.xml"),
+                // disable delete confirmation since we also install the command to not delete immediately
+                new SetPropertyTask(ContentRepository.CONFIG, "/modules/adminInterface/trees/website", "enableDeleteConfirmation", "false")
         );
     }
 }

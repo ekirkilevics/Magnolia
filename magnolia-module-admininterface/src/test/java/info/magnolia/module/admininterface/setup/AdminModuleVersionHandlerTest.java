@@ -58,10 +58,12 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     private static final String QUICKSTART = "redirect:/.magnolia/pages/quickstart.html";
     private static final String ADMIN_CENTRAL = "redirect:/.magnolia/pages/adminCentral.html";
 
+    @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/admininterface.xml";
     }
 
+    @Override
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new AdminModuleVersionHandler();
     }
@@ -101,6 +103,11 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
         setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
+        // fake website tree
+        setupConfigNode("/modules/adminInterface/trees/website");
+        // fake website commands
+        setupConfigNode("/modules/adminInterface/commands/website");
+
         setupDummyTemplate();
 
         setupExistingDefaultUriMapping("custom-value");
@@ -122,6 +129,11 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
         setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
         setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+
+        // fake website tree
+        setupConfigNode("/modules/adminInterface/trees/website");
+        // fake website commands
+        setupConfigNode("/modules/adminInterface/commands/website");
 
         setupDummyTemplate();
 
@@ -145,6 +157,11 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
         setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
 
+        // fake website tree
+        setupConfigNode("/modules/adminInterface/trees/website");
+        // fake website commands
+        setupConfigNode("/modules/adminInterface/commands/website");
+
         setupDummyTemplate();
 
         setupExistingDefaultUriMapping(QUICKSTART);
@@ -164,6 +181,11 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
         setupConfigProperty("/modules/adminInterface/trees/users", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
         setupConfigProperty("/modules/adminInterface/trees/userSystem", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
         setupConfigProperty("/modules/adminInterface/trees/userAdmin", "class", "info.magnolia.module.admininterface.AdminTreeMVCHandler");
+
+        // fake website tree
+        setupConfigNode("/modules/adminInterface/trees/website");
+        // fake website commands
+        setupConfigNode("/modules/adminInterface/commands/website");
 
         // setup some dialogs
         final String path = "/modules/myModule/dialogs/myDialog";
