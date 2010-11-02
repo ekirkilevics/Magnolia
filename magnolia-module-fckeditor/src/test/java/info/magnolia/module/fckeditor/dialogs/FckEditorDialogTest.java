@@ -130,7 +130,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
 
         final String input = "<p><strong>Some</strong> <em><a href=\"${link:{uuid:{unexi-sting-uuid},repository:{website},handle:{/unexi/sting/path},nodeData:{},extension:{html}}}\">formatted</a></em> text.</p>";
 
-        assertEquals("<p><strong>Some</strong> <em><a href=\"/unexi/sting/path.html\">formatted</a></em> text.</p>", d.convertToView(input));
+        assertEquals("<p><strong>Some</strong> <em><a href=\"/some-context/unexi/sting/path.html\">formatted</a></em> text.</p>", d.convertToView(input));
     }
 
     public void testConvertToViewDoesNotConvertMailtoLinks() throws RepositoryException {

@@ -122,7 +122,8 @@ FCKConfig.FlashDlgHideAdvanced = false;
 FCKConfig.LinkBrowser = true;
 FCKConfig.LinkBrowserURL = MgnlFCKConfig.contextPath + "/.magnolia/pages/repositoryBrowser.html?contextPath=" + MgnlFCKConfig.contextPath;
 
-FCKConfig.ImageBrowser = false;
+FCKConfig.ImageBrowser = true;
+FCKConfig.ImageBrowserURL = MgnlFCKConfig.contextPath + "/.magnolia/pages/repositoryBrowser.html?contextPath=" + MgnlFCKConfig.contextPath;
 
 FCKConfig.FlashBrowser = false;
 
