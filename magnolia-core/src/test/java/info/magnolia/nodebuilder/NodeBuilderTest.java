@@ -70,7 +70,9 @@ public class NodeBuilderTest extends RepositoryTestCase {
                         )
                 ),
                 addNode("other").then(addProperty("X", "Y")),
-                addProperty("lala", "lolo")
+                addProperty("lala", "lolo"),
+                addProperty("oldName", "some String value"),
+                renameProperty("oldName", "newName")
 
         );
         nodeBuilder.exec();
@@ -84,6 +86,9 @@ public class NodeBuilderTest extends RepositoryTestCase {
         assertFalse("Node should have been removed", hm.isExist("/MyRoot/hello/zing"));
         assertFalse("Property should have been removed", hm.isExist("/MyRoot/hello/world/foo"));
         assertEquals(0, messageTracker.getMessages().size());
+        assertFalse(hm.getContent("/MyRoot").hasNodeData("oldName"));
+        assertNotNull(hm.getContent("/MyRoot").getNodeData("newName"));
+        assertEquals("some String value", hm.getNodeData("/MyRoot/newName").getString());
     }
 
     public void testErrorMessages() throws Exception {
