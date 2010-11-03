@@ -46,12 +46,14 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.cms.util.HierarchyManagerWrapper;
+import info.magnolia.cms.util.NodeDataWrapper;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.SimpleUrlPattern;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -79,10 +81,15 @@ import org.slf4j.LoggerFactory;
  */
 public class ContentVersion extends DefaultContent {
 
-    private final class FixParentContentWrapper extends ContentWrapper {
+    /**
+     * Makes sure that the handle hides the fact that the nodes live in the version store.
+     * @version $Id$
+     *
+     */
+    private final class ContentVersionChildWrapper extends ContentWrapper {
         private final Content parent;
 
-        private FixParentContentWrapper(Content wrappedContent, Content parent) {
+        private ContentVersionChildWrapper(Content wrappedContent, Content parent) {
             super(wrappedContent);
             this.parent = parent;
         }
@@ -92,9 +99,35 @@ public class ContentVersion extends DefaultContent {
             return parent;
         }
 
+        /**
+         * Show the original path not the one from the version store.
+         */
+        @Override
+        public String getHandle() {
+            try {
+                return getParent().getHandle() + "/" + getName();
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't create handle for versioned node.", e);
+            }
+        }
+
+        /**
+         * We have to wrap the node data to make sure that the handle is correct.
+         */
+        @Override
+        public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
+            return new NodeDataWrapper(super.newNodeDataInstance(name, type, createIfNotExisting)) {
+                @Override
+                public String getHandle() {
+                    return ContentVersionChildWrapper.this.getHandle() + "/" + getName();
+                }
+            };
+        }
+
         @Override
         protected Content wrap(Content node) {
-            return new FixParentContentWrapper(node, this);
+            return new ContentVersionChildWrapper(node, this);
         }
     }
 
@@ -236,8 +269,43 @@ public class ContentVersion extends DefaultContent {
         return this.base.getHandle();
     }
 
+    /**
+     * Returns a direct child if it was included in the version. Otherwise it tries to get the child from the original place.
+     * The versioning rule is respected.
+     */
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return new FixParentContentWrapper(super.getContent(name), this);
+        //first we have to check if this is a direct child
+        if(super.hasContent(name)){
+            return new ContentVersionChildWrapper(super.getContent(name), this);
+        }
+        else{
+            Content content = base.getContent(name);
+            // only return the node if it was excluded from the versioning, otherwise the node is new
+            if(!rule.isAllowed(content.getNodeTypeName())){
+                return content;
+            }
+            else{
+                throw new PathNotFoundException(base.getHandle() + "/" + name);
+            }
+        }
+    }
+
+    /**
+     * Uses the same approach as {@link #getContent(String)}.
+     */
+    @Override
+    public boolean hasContent(String name) throws RepositoryException {
+        if(super.hasContent(name)){
+            return true;
+        }
+        else if(base.hasContent(name)){
+            Content content = base.getContent(name);
+            // only return the node if it was excluded from the versioning, otherwise the node is new
+            if(!rule.isAllowed(content.getNodeTypeName())){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -304,59 +372,33 @@ public class ContentVersion extends DefaultContent {
     }
 
     /**
-     * gets a Collection containing all child nodes of the same NodeType as "this" object.
-     * @return Collection of content objects
+     * All {@link #getChildren()} methods delegate to this method. We combine the direct children and children
+     * from the current node which were not included by the version rule.
      */
-    public Collection<Content> getChildren() {
-        try {
-            if (this.rule.isAllowed(this.base.getNodeTypeName())) {
-                return wrap(super.getChildren());
+    @Override
+    public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
+        ArrayList<Content> result = new ArrayList<Content>();
+        result.addAll(wrap(super.getChildren(filter, namePattern, orderCriteria)));
+
+        Collection<Content> transientChildren = this.base.getChildren(filter, namePattern, orderCriteria);
+        for (Content transientChild : transientChildren) {
+            try {
+                if(!rule.isAllowed(transientChild.getNodeTypeName())){
+                    result.add(transientChild);
+                }
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("Can't determine node type of " + transientChild, e);
             }
         }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return this.base.getChildren();
-    }
 
-    /**
-     * Get collection of specified content type.
-     * @param contentType JCR node type as configured
-     * @return Collection of content nodes
-     */
-    public Collection<Content> getChildren(String contentType) {
-        if (this.rule.isAllowed(contentType)) {
-            return wrap(super.getChildren(contentType));
-        }
-        return this.base.getChildren(contentType);
-    }
-
-    /**
-     * Get collection of specified content type.
-     * @param contentType ItemType
-     * @return Collection of content nodes
-     */
-    public Collection<Content> getChildren(ItemType contentType) {
-        return this.getChildren(contentType.getSystemName());
-    }
-
-    /**
-     * Get collection of specified content type.
-     * @param contentType JCR node type as configured
-     * @param namePattern
-     * @return Collection of content nodes
-     */
-    public Collection<Content> getChildren(String contentType, String namePattern) {
-        if (this.rule.isAllowed(contentType)) {
-            return wrap(super.getChildren(contentType, namePattern));
-        }
-        return this.base.getChildren(contentType, namePattern);
+        return result;
     }
 
     private Collection<Content> wrap(Collection<Content> children) {
         List<Content> transformed = new ArrayList<Content>();
         for (Content child : children) {
-            transformed.add(new FixParentContentWrapper(child, this));
+            transformed.add(new ContentVersionChildWrapper(child, this));
         }
         return transformed;
     }
