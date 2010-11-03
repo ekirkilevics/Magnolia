@@ -588,7 +588,8 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>net.sf.json-lib</groupId>
         <artifactId>json-lib</artifactId>
-        <version>0.9</version>
+        <version>2.3</version>
+        <classifier>jdk15</classifier>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
