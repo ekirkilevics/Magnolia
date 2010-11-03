@@ -111,4 +111,18 @@ public class OpsTest extends RepositoryTestCase {
             assertEquals("non-existing", e.getMessage());
         }
     }
+
+    public void testRenamePropertyAndCheckValueForString() throws Exception {
+        final HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        hm.getRoot().createContent("hello").setNodeData("fooOld", "bar");
+        hm.save();
+
+        final Content root = hm.getContent("/hello");
+        final NodeOperation op = Ops.renameProperty("fooOld", "fooNew");
+        op.exec(root, eh);
+        assertFalse(root.hasNodeData("fooOld"));
+        assertNotNull(root.getNodeData("fooNew"));
+        assertEquals("bar", root.getNodeData("fooNew").getString());
+    }
+
 }

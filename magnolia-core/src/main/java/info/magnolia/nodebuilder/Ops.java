@@ -171,8 +171,15 @@ public abstract class Ops {
     public static NodeOperation renameProperty(final String name, final String newName) {
         return new AbstractOp() {
             Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
-                Object value = context.getNodeData(name);
-                context.createNodeData(newName, value);
+                if (!context.hasNodeData(name)) {
+                    throw new ItemNotFoundException(name);
+                }
+                if (context.hasNodeData(newName)) {
+                    //throw new ItemExistsException("Property " + newName + " already exists at " + context.getHandle());
+                    throw new ItemExistsException(newName);
+                }
+                final Value value = context.getNodeData(name).getValue();
+                context.setNodeData(newName, value);
                 context.deleteNodeData(name);
                 return context;
             }
@@ -192,7 +199,7 @@ public abstract class Ops {
     }
 
     /**
-     * Copies the node defined by the name parameter in the session. 
+     * Copies the node defined by the name parameter in the session.
      */
     public static NodeOperation copyNode(final String name, final String dest) {
         return new AbstractOp() {
