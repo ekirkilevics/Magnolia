@@ -118,16 +118,25 @@ public abstract class VersionsList extends AbstractList {
     public void configureList(ListControl list) {
         // set onselect
         list.setRenderer(new AdminListControlRenderer() {
-
-            public String onSelect(ListControl list, Integer index) {
-                String js = super.onSelect(list, index);
-                js += "mgnlVersionsList.currentVersionLabel = '" + list.getIteratorValue("versionLabel") + "';";
-                return js;
-            }
-
             public String onDblClick(ListControl list, Integer index) {
-                return "mgnlVersionsList.showItem()";
+                return list.getName() + ".showItem()";
             }
+
+            @Override
+            public String getJavaScriptClass() {
+                return "mgnl.admininterface.VersionsList";
+            }
+
+            @Override
+            protected String buildJavaScriptObject(ListControl list, Object value) {
+                return super.buildJavaScriptObject(list, value) + ", versionLabel: '" + list.getIteratorValue("versionLabel")  + "'";
+            }
+
+            @Override
+            public String getConstructorArguments(ListControl list) {
+                return super.getConstructorArguments(list) + ", '"+repository+"', '"+path+"', " + getOnShowFunction() + ", " + getOnDiffFunction() ;
+            }
+
         });
 
         list.addGroupableField("userName");
@@ -145,24 +154,52 @@ public abstract class VersionsList extends AbstractList {
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(MessagesManager.get("versions.show"));
-        show.setOnclick("mgnlVersionsList.showItem()");
+        show.setOnclick(this.getList().getName() + ".showItem()");
         show.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/note_view.gif");
+        show.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
 
         ContextMenuItem restore = new ContextMenuItem("restore");
         restore.setLabel(MessagesManager.get("versions.restore"));
-        restore.setOnclick("mgnlVersionsList.restore()");
+        restore.setOnclick(this.getList().getName() + ".restore()");
         restore.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/undo.gif");
+        restore.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
 
         menu.addMenuItem(show);
         menu.addMenuItem(restore);
+
+        if(isSupportsDiff()){
+            ContextMenuItem diffWithCurrent = new ContextMenuItem("diffWithCurrent");
+            diffWithCurrent.setLabel(MessagesManager.getMessages("info.magnolia.module.diff.messages").get("diff.compareWithCurrent"));
+            diffWithCurrent.setOnclick(this.getList().getName() + ".diffItemWithCurrent()");
+            diffWithCurrent.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
+            diffWithCurrent.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
+
+            ContextMenuItem diffWithPrevious = new ContextMenuItem("diffWithPrevious");
+            diffWithPrevious.setLabel(MessagesManager.getMessages("info.magnolia.module.diff.messages").get("diff.compareWithPrevious"));
+            diffWithPrevious.setOnclick(this.getList().getName() + ".diffItemWithPrevious()");
+            diffWithPrevious.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
+            diffWithPrevious.addJavascriptCondition("function(){return " + getList().getName()+".hasPreviousVersion()}");
+
+            menu.addMenuItem(diffWithCurrent);
+            menu.addMenuItem(diffWithPrevious);
+        }
+    }
+
+    protected boolean isSupportsDiff() {
+        return false;
     }
 
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#configureFunctionBar(info.magnolia.cms.gui.control.FunctionBar)
      */
     protected void configureFunctionBar(FunctionBar bar) {
-        bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
-        bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
+        if(isSupportsDiff()){
+            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
+            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
+
+            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("diffWithCurrent")));
+            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("diffWithPrevious")));
+        }
     }
 
     /**
@@ -244,7 +281,6 @@ public abstract class VersionsList extends AbstractList {
     public String getJsExecutedAfterSaving() {
         return this.jsExecutedAfterSaving;
     }
-
 
     public void setJsExecutedAfterSaving(String jsExecutedAfterSaving) {
         this.jsExecutedAfterSaving = jsExecutedAfterSaving;
