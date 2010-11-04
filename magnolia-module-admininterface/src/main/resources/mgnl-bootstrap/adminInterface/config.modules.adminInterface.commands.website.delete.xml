@@ -7,7 +7,7 @@
     <sv:value>97165496-0ca4-491e-8f69-01f729712548</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.commands.PreDeleteNodeCommand</sv:value>
+    <sv:value>info.magnolia.module.admininterface.commands.MarkNodeAsDeletedCommand</sv:value>
   </sv:property>
   <sv:property sv:name="enabled" sv:type="Boolean">
     <sv:value>true</sv:value>

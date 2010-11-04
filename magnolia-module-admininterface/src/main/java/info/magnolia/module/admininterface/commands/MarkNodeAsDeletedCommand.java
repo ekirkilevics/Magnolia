@@ -41,6 +41,7 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.Context;
@@ -48,7 +49,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.commands.BaseRepositoryCommand;
 
 
-public class PreDeleteNodeCommand extends BaseRepositoryCommand {
+public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
 
     public static final String DELETED_NODE_TEMPLATE = "mgnlDeleted";
 
@@ -72,15 +73,15 @@ public class PreDeleteNodeCommand extends BaseRepositoryCommand {
 
     private void preDeleteNode(Content node, Context context) throws RepositoryException, AccessDeniedException {
         // Disabled direct deletion ... there are way too many ways to screw it up
-//        if (node.getMetaData().getLastActionDate() == null) {
-//            // this node was never activated so anything that is underneath is deemed immediately deleteable
-//            // TODO: make this optional? What if I prepare huge thing (just never activate and then press delete)???
-//            // ... but this is probably the same as with VCM if never committed, local delete wipes it for good
-//            Content parent = node.getParent();
-//            node.delete();
-//            parent.save();
-//            return;
-//        }
+        //        if (node.getMetaData().getLastActionDate() == null) {
+        //            // this node was never activated so anything that is underneath is deemed immediately deleteable
+        //            // TODO: make this optional? What if I prepare huge thing (just never activate and then press delete)???
+        //            // ... but this is probably the same as with VCM if never committed, local delete wipes it for good
+        //            Content parent = node.getParent();
+        //            node.delete();
+        //            parent.save();
+        //            return;
+        //        }
 
         // TODO: versioning might be "unsupported" do we still purge in such case?
         version(node);
@@ -89,8 +90,8 @@ public class PreDeleteNodeCommand extends BaseRepositoryCommand {
         storeDeletionInfo(node, context);
         // save changes before progressing on sub node - means we can't roll back, but session doesn't grow out of limits
         node.save();
-        for(Content childPage : node.getChildren()) {
-            preDeleteNode(node, context);
+        for(Content childPage : node.getChildren(ItemType.CONTENT)) {
+            preDeleteNode(childPage, context);
         }
     }
 
@@ -113,7 +114,11 @@ public class PreDeleteNodeCommand extends BaseRepositoryCommand {
         // add mixin
         node.addMixin(ItemType.DELETED_NODE_MIXIN);
         // change template
-        node.getMetaData().setTemplate(DELETED_NODE_TEMPLATE);
+        MetaData metadata = node.getMetaData();
+        metadata.setTemplate(DELETED_NODE_TEMPLATE);
+        if (metadata.getActivationStatus() != MetaData.ACTIVATION_STATUS_NOT_ACTIVATED) {
+            metadata.setModificationDate();
+        }
     }
 
     protected void purgeContent(Content node) throws RepositoryException {
