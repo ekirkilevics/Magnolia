@@ -166,6 +166,8 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     protected boolean browseMode;
 
+    private String enableDeleteConfirmation = "true";
+
     /**
      * Override this method if you are not using the same name for the tree and the repository
      * @return name of the repository
@@ -192,6 +194,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         super(name, request, response);
     }
 
+    @Override
     public void init() {
         super.init();
 
@@ -215,6 +218,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * Depending on the request it is generating a logical command name
      * @return name of the command
      */
+    @Override
     public String getCommand() {
         // if an explicit action was called
         if (StringUtils.isNotEmpty(super.getCommand())) {
@@ -251,11 +255,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
         // editet any value directly in the columns?
         if (this.getRequest().getParameter("saveName") != null //$NON-NLS-1$
-            || this.getRequest().getParameter("saveValue") != null
-            // value to save is a node data's value (config admin)
-            || "true".equals(this.getRequest().getParameter("isNodeDataValue")) //$NON-NLS-1$ //$NON-NLS-2$
-            // value to save is a node data's type (config admin)
-            || "true".equals(this.getRequest().getParameter("isNodeDataType"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                || this.getRequest().getParameter("saveValue") != null
+                // value to save is a node data's value (config admin)
+                || "true".equals(this.getRequest().getParameter("isNodeDataValue")) //$NON-NLS-1$ //$NON-NLS-2$
+                // value to save is a node data's type (config admin)
+                || "true".equals(this.getRequest().getParameter("isNodeDataType"))) { //$NON-NLS-1$ //$NON-NLS-2$
             return COMMAND_SAVE_VALUE;
         }
 
@@ -265,6 +269,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     /**
      * TODO: this is a temporary solution
      */
+    @Override
     protected Context getCommandContext(String commandName) {
         Context context = MgnlContext.getInstance();
 
@@ -298,6 +303,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     /**
      * Allow default catalogue
      */
+    @Override
     protected Command findCommand(String commandName) {
         Command cmd = super.findCommand(commandName);
         if (cmd == null) {
@@ -309,6 +315,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     /**
      * Show the tree after execution of a command
      */
+    @Override
     protected String getViewNameAfterExecution(String commandName, Context ctx) {
         return VIEW_TREE;
     }
@@ -468,7 +475,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     }
 
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
-        RepositoryException {
+    RepositoryException {
         // todo: ??? generic -> RequestInterceptor.java
         final HierarchyManager hm = getHierarchyManager();
         if (hm.isExist(destination)) {
@@ -535,7 +542,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     }
 
     public String renameNode(String newLabel) throws AccessDeniedException, ExchangeException, PathNotFoundException,
-        RepositoryException {
+    RepositoryException {
         String returnValue;
         String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
         newLabel = Path.getValidatedLabel(newLabel);
@@ -646,7 +653,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     }
 
     public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
-        throws ExchangeException, RepositoryException {
+    throws ExchangeException, RepositoryException {
         boolean move = false;
         if (action == Tree.ACTION_MOVE) {
             move = true;
@@ -912,6 +919,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         this.configuration = configuration;
         final Messages messages = MessagesUtil.chainWithDefault(getI18nBasename());
         configuration.setMessages(messages);
+        if (configuration instanceof AbstractTreeConfiguration) {
+            ((AbstractTreeConfiguration) configuration).setEnableDeleteConfirmation(isEnableDeleteConfirmation());
+        }
     }
 
     public String getConfigurationClass() {
@@ -944,5 +954,21 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
+    }
+
+    public String getEnableDeleteConfirmation() {
+        return enableDeleteConfirmation;
+    }
+
+    public boolean isEnableDeleteConfirmation() {
+        return Boolean.parseBoolean(enableDeleteConfirmation);
+    }
+
+    public void setEnableDeleteConfirmation(String enableConfirmation) {
+        this.enableDeleteConfirmation = enableConfirmation;
+        AdminTreeConfiguration conf = getConfiguration();
+        if (conf != null && conf instanceof AbstractTreeConfiguration) {
+            ((AbstractTreeConfiguration) conf).setEnableDeleteConfirmation(isEnableDeleteConfirmation());
+        }
     }
 }
