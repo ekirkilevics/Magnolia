@@ -169,13 +169,13 @@ public abstract class VersionsList extends AbstractList {
 
         if(isSupportsDiff()){
             ContextMenuItem diffWithCurrent = new ContextMenuItem("diffWithCurrent");
-            diffWithCurrent.setLabel(MessagesManager.getMessages("info.magnolia.module.diff.messages").get("diff.compareWithCurrent"));
+            diffWithCurrent.setLabel(MessagesManager.get("versions.compareWithCurrent"));
             diffWithCurrent.setOnclick(this.getList().getName() + ".diffItemWithCurrent()");
             diffWithCurrent.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
             diffWithCurrent.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
 
             ContextMenuItem diffWithPrevious = new ContextMenuItem("diffWithPrevious");
-            diffWithPrevious.setLabel(MessagesManager.getMessages("info.magnolia.module.diff.messages").get("diff.compareWithPrevious"));
+            diffWithPrevious.setLabel(MessagesManager.get("versions.compareWithPrevious"));
             diffWithPrevious.setOnclick(this.getList().getName() + ".diffItemWithPrevious()");
             diffWithPrevious.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
             diffWithPrevious.addJavascriptCondition("function(){return " + getList().getName()+".hasPreviousVersion()}");
