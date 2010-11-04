@@ -126,7 +126,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.web.menu.delete")); //$NON-NLS-1$
         menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif"); //$NON-NLS-1$
-        menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode("+!isEnableDeleteConfirmation() +");"); //$NON-NLS-1$
+        menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode("+(!isEnableDeleteConfirmation()) +");"); //$NON-NLS-1$
         menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
                 + tree.getJavascriptTree()
                 + ")"); //$NON-NLS-1$
@@ -273,5 +273,4 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         tree.getFunctionBar().setSearchable(true);
         tree.getFunctionBar().setOnSearchFunction("mgnl.admininterface.WebsiteTree.search");
     }
-
 }

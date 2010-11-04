@@ -46,7 +46,16 @@ import info.magnolia.cms.exchange.ActivationManagerFactory;
  */
 public abstract class AbstractTreeConfiguration implements AdminTreeConfiguration {
     private Messages messages;
-    protected boolean enableDeleteConfirmation = true;
+
+    private boolean enableDeleteConfirmation = true;
+
+    public boolean isEnableDeleteConfirmation() {
+        return enableDeleteConfirmation;
+    }
+
+    public void setEnableDeleteConfirmation(boolean enableConfirmation) {
+        this.enableDeleteConfirmation = enableConfirmation;
+    }
 
     public void setMessages(Messages m) {
         this.messages = m;
@@ -66,13 +75,4 @@ public abstract class AbstractTreeConfiguration implements AdminTreeConfiguratio
     protected boolean hasAnyActiveSubscriber() {
         return ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber();
     }
-
-    public boolean isEnableDeleteConfirmation() {
-        return enableDeleteConfirmation;
-    }
-
-    public void setEnableDeleteConfirmation(boolean enableConfirmation) {
-        this.enableDeleteConfirmation = enableConfirmation;
-    }
-
 }

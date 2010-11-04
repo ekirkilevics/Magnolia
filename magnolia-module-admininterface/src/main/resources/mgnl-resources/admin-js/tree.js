@@ -143,7 +143,8 @@
 
     mgnlTree.prototype.selectNode = function(id) {
         mgnlDebug("selectNode:" + id, "tree");
-        var sNode=this.getNode(id);
+        // stale data paranoia - refresh on select
+        var sNode=this.getNode(id, true);
         var divMain=document.getElementById(sNode.divMainId);
         mgnlDebug("selectNode: divMainId:" + sNode.divMainId, "tree");
 
@@ -168,13 +169,22 @@
     }
 
 
-    mgnlTree.prototype.getNode = function(id)
+    mgnlTree.prototype.getNode = function(id, refresh)
         {
-        var node=this.nodes[id];
-        if (!node)
+         var node=this.nodes[id];
+         if (!node || refresh)
             {
-            node=new mgnlTreeNode(this,id);
+            var node=new mgnlTreeNode(this,id);
             this.nodes[id]=node;
+            }
+         else if (node == this.selectedNode)
+            {
+             // do not cache - data might be stale already.
+             var node=new mgnlTreeNode(this,id);
+             this.nodes[id]=node;
+             // transitive params - need to keep them around or ops like deletion stop working
+             node.params = this.selectedNode.params;
+             this.selectedNode = node;
             }
         return node;
         }
@@ -505,7 +515,7 @@
         }
 
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
-        if (!dontAskConfirmation || mgnlConfirm(text,title))
+        if (dontAskConfirmation || mgnlConfirm(text,title))
             {
             var parentNode=this.getNode(this.selectedNode.parentId);
             var deleteNode=this.selectedNode.label;
