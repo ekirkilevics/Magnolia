@@ -146,12 +146,12 @@ public class ContentVersion extends DefaultContent {
     /**
      * Version node (nt:version).
      */
-    private Version state;
+    private final Version state;
 
     /**
      * The node as existing in the workspace. Not the version node.
      */
-    private AbstractContent base;
+    private final AbstractContent base;
 
     /**
      * Rule used to create this version.
@@ -239,6 +239,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * The original name of the node.
      */
+    @Override
     public String getName() {
         try {
             return VersionManager.getInstance().getSystemNode(this).getNodeData(NAME).getString();
@@ -265,6 +266,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Get original path of this versioned content.
      */
+    @Override
     public String getHandle() {
         return this.base.getHandle();
     }
@@ -273,6 +275,7 @@ public class ContentVersion extends DefaultContent {
      * Returns a direct child if it was included in the version. Otherwise it tries to get the child from the original place.
      * The versioning rule is respected.
      */
+    @Override
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         //first we have to check if this is a direct child
         if(super.hasContent(name)){
@@ -311,6 +314,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Content createContent(String name) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -318,6 +322,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Content createContent(String name, String contentType) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -325,6 +330,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Content createContent(String name, ItemType contentType) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -332,6 +338,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public NodeData createNodeData(String name) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -346,6 +353,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public NodeData createNodeData(String name, Value value) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -353,6 +361,7 @@ public class ContentVersion extends DefaultContent {
     /**
      *  Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public NodeData createNodeData(String name, int type) throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -360,6 +369,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void deleteNodeData(String name) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -367,6 +377,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void updateMetaData() throws AccessDeniedException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -406,6 +417,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * @return Boolean, if sub node(s) exists
      */
+    @Override
     public boolean hasChildren() {
         return (this.getChildren().size() > 0);
     }
@@ -414,6 +426,7 @@ public class ContentVersion extends DefaultContent {
      * @param contentType JCR node type as configured
      * @return Boolean, if sub <code>collectionType</code> exists
      */
+    @Override
     public boolean hasChildren(String contentType) {
         return (this.getChildren(contentType).size() > 0);
     }
@@ -421,10 +434,12 @@ public class ContentVersion extends DefaultContent {
     /**
      * Returns the parent of the base node.
      */
+    @Override
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return this.base.getParent();
     }
 
+    @Override
     public Content getAncestor(int level) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return this.base.getAncestor(level);
     }
@@ -434,6 +449,7 @@ public class ContentVersion extends DefaultContent {
      * @return Content representing node on level 0
      * @throws javax.jcr.RepositoryException if an error occurs
      */
+    @Override
     public Collection<Content> getAncestors() throws PathNotFoundException, RepositoryException {
         return this.base.getAncestors();
     }
@@ -444,6 +460,7 @@ public class ContentVersion extends DefaultContent {
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException if an error occurs
      */
+    @Override
     public int getLevel() throws PathNotFoundException, RepositoryException {
         return this.base.getLevel();
     }
@@ -451,6 +468,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -463,6 +481,7 @@ public class ContentVersion extends DefaultContent {
      * @return The index of this node within the ordered set of its same-name sibling nodes.
      * @throws javax.jcr.RepositoryException if an error occurs
      */
+    @Override
     public int getIndex() throws RepositoryException {
         return this.base.getIndex();
     }
@@ -471,6 +490,7 @@ public class ContentVersion extends DefaultContent {
      * Returns primary node type definition of the associated Node of this object.
      * @throws RepositoryException if an error occurs
      */
+    @Override
     public NodeType getNodeType() throws RepositoryException {
         log.warn("This is a Version node, it will always return NT_FROZEN as node type.");
         log.warn("Use getNodeTypeName to retrieve base node primary type");
@@ -480,6 +500,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void restore(String versionName, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -487,6 +508,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void restore(Version version, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -494,6 +516,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void restore(Version version, String relPath, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -501,6 +524,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -508,6 +532,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Version addVersion() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to add version on version preview");
     }
@@ -515,6 +540,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Version addVersion(Rule rule) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to add version on version preview");
     }
@@ -522,6 +548,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Returns always false as verions are read only.
      */
+    @Override
     public boolean isModified() {
         log.error("Not valid for version");
         return false;
@@ -530,6 +557,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public VersionHistory getVersionHistory() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to read VersionHistory of Version");
     }
@@ -537,6 +565,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public VersionIterator getAllVersions() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get VersionIterator of Version");
     }
@@ -544,6 +573,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public ContentVersion getBaseVersion() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get base version of Version");
     }
@@ -551,6 +581,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public ContentVersion getVersionedContent(Version version) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get preview of Version itself");
     }
@@ -558,6 +589,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to get preview of Version itself");
     }
@@ -565,6 +597,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void save() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -574,6 +607,7 @@ public class ContentVersion extends DefaultContent {
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
+    @Override
     public boolean isGranted(long permissions) {
         return (permissions & Permission.READ) == permissions;
     }
@@ -581,6 +615,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void delete() throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -588,6 +623,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void delete(String path) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -596,6 +632,7 @@ public class ContentVersion extends DefaultContent {
      * UUID of the node refrenced by this object.
      * @return uuid
      */
+    @Override
     public String getUUID() {
         return this.base.getUUID();
     }
@@ -603,6 +640,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void addMixin(String type) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -610,6 +648,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void removeMixin(String type) throws RepositoryException {
         throw new AccessDeniedException("Not allowed to write on version preview");
     }
@@ -617,6 +656,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
@@ -624,6 +664,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
@@ -631,6 +672,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public Lock getLock() throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
@@ -638,6 +680,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public void unlock() throws LockException, RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
@@ -645,6 +688,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public boolean holdsLock() throws RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
@@ -652,6 +696,7 @@ public class ContentVersion extends DefaultContent {
     /**
      * Throws an {@link AccessDeniedException} as versions are read only.
      */
+    @Override
     public boolean isLocked() throws RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
@@ -660,6 +705,7 @@ public class ContentVersion extends DefaultContent {
      * Get hierarchy manager if previously set for this object.
      * @return HierarchyManager
      */
+    @Override
     public HierarchyManager getHierarchyManager() {
         return this.base.getHierarchyManager();
     }
@@ -669,6 +715,8 @@ public class ContentVersion extends DefaultContent {
      * @return AccessManager
      * @deprecated use getHierarchyManager instead
      */
+    @Deprecated
+    @Override
     public AccessManager getAccessManager() {
         return this.base.getAccessManager();
     }
@@ -722,4 +770,15 @@ public class ContentVersion extends DefaultContent {
         return types;
     }
 
+    //    public List<ContentVersion> getPredecessors() throws RepositoryException {
+    //        List<ContentVersion> list = new ArrayList<ContentVersion>();
+    //        for (Version v : this.state.getPredecessors()) {
+    //            list.add(new ContentVersion(v, this.base));
+    //        }
+    //        return list;
+    //    }
+    public Version[] getPredecessors() throws RepositoryException {
+        // would prefer to return the above version (List of ContentVersions), but since our other APIs return jcr Version as well ...
+        return this.state.getPredecessors();
+    }
 }

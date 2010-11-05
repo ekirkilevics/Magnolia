@@ -34,6 +34,7 @@
 package info.magnolia.module.workflow.inbox;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -52,6 +53,9 @@ public class InboxHelper {
 
     protected static String getIcon(String repository, String path) {
         if (StringUtils.equals(repository, "website")) {
+            if (ItemType.DELETED_NODE_MIXIN.equals(path)) {
+                return ".resources/icons/16/document_deleted.gif";
+            }
             return ".resources/icons/16/document_plain_earth.gif";
         }
 
