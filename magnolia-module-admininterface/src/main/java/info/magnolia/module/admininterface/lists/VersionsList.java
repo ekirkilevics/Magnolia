@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admininterface.lists;
 
+import java.util.Collection;
+
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ContextMenu;
@@ -47,11 +49,15 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.freemarker.FreemarkerUtil;
+import info.magnolia.module.admininterface.VersionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 
+import javax.jcr.InvalidItemStateException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.version.Version;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -97,6 +103,7 @@ public abstract class VersionsList extends AbstractList {
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#getModel()
      */
+    @Override
     public ListModel getModel() {
         try {
             Content node = getNode();
@@ -115,9 +122,11 @@ public abstract class VersionsList extends AbstractList {
         return Math.min((int)VersionConfig.getInstance().getMaxVersionAllowed(), 50);
     }
 
+    @Override
     public void configureList(ListControl list) {
         // set onselect
         list.setRenderer(new AdminListControlRenderer() {
+            @Override
             public String onDblClick(ListControl list, Integer index) {
                 return list.getName() + ".showItem()";
             }
@@ -151,6 +160,7 @@ public abstract class VersionsList extends AbstractList {
      */
     public abstract String getOnShowFunction();
 
+    @Override
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(MessagesManager.get("versions.show"));
@@ -192,6 +202,7 @@ public abstract class VersionsList extends AbstractList {
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#configureFunctionBar(info.magnolia.cms.gui.control.FunctionBar)
      */
+    @Override
     protected void configureFunctionBar(FunctionBar bar) {
         if(isSupportsDiff()){
             bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
@@ -228,6 +239,39 @@ public abstract class VersionsList extends AbstractList {
         return show();
     }
 
+    public String restoreRecursive() {
+        try {
+            restoreRecursive(this.getNode(), this.getVersionLabel());
+            AlertUtil.setMessage(MessagesManager.get("versions.restore.latest.success"));
+        } catch (Exception e) {
+            log.error("can't restore", e);
+            AlertUtil.setMessage(MessagesManager.get("versions.restore.exception", new String[]{e.getMessage()}));
+        }
+        return show();
+    }
+
+    private String restoreRecursive(Content node, String version) throws UnsupportedRepositoryOperationException, RepositoryException {
+        node.addVersion();
+        // get last non deleted version
+        try {
+            node.restore(version, true);
+        } catch (InvalidItemStateException e) {
+            node.refresh(false);
+            node.restore(version, true);
+        }
+        //node.save();
+        // all children of the same type
+        for (Content child : node.getChildren()) {
+            // figure out undelete version for the child
+            Collection<Version> versions = VersionUtil.getSortedNotDeletedVersions(child);
+            if (versions.size() > 0) {
+                String childVersion = versions.iterator().next().getName();
+                restoreRecursive(child, childVersion);
+            }
+        }
+        return show();
+    }
+
     /**
      * @return Returns the path.
      */
@@ -256,6 +300,7 @@ public abstract class VersionsList extends AbstractList {
         this.repository = repository;
     }
 
+    @Override
     public String onRender() {
         return FreemarkerUtil.process(VersionsList.class, this);
     }

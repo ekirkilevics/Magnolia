@@ -13,7 +13,8 @@
       <a href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restore&repository=website&path=${page.@handle}&versionLabel=${lastVersion}&jsExecutedAfterSaving=
 opener.document.location.href=opener.document.location.href;window.close();" target="_blank">${i18n["templates.mgnlDeleted.restoreLastVersion"]}</a></br>
       [#if model.hasChildren()]
-        <a href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restore&repository=website&path=${page.@handle}&versionLabel=${lastVersion}">${i18n["templates.mgnlDeleted.restoreLastVersionRecursively"]}</a></br>
+        <a href="${ctx.contextPath}/.magnolia/pages/websiteVersionsList.html?command=restoreRecursive&repository=website&path=${page.@handle}&versionLabel=${lastVersion}&jsExecutedAfterSaving=
+opener.document.location.href=opener.document.location.href;window.close();" target="_blank">${i18n["templates.mgnlDeleted.restoreLastVersionRecursively"]}</a></br>
       [/#if]
     [#else]
       ${i18n["templates.mgnlDeleted.versioningNotSupported"]}
