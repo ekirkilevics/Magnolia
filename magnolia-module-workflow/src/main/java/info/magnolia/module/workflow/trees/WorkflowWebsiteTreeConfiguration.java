@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An {@link info.magnolia.module.admininterface.AdminTreeConfiguration} for the website workflow, which redefines the activation context menu items,
- * so that they popup the activation dialog ('enter comment'). 
+ * so that they popup the activation dialog ('enter comment').
  *
  * @author pbracher
  * @version $Id$
@@ -55,14 +55,18 @@ public class WorkflowWebsiteTreeConfiguration extends WebsiteTreeConfiguration {
 
     private static Logger log = LoggerFactory.getLogger(WorkflowWebsiteTreeConfiguration.class);
 
+    @Override
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
         super.prepareContextMenu(tree, browseMode, request);
         if(!browseMode){
-            ContextMenuItem activate = tree.getMenu().getMenuItemByName("activate");
+            final ContextMenuItem activate = tree.getMenu().getMenuItemByName("activate");
             activate.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", false);");
 
-            ContextMenuItem activateInclSubs = tree.getMenu().getMenuItemByName("activateInclSubs");
+            final ContextMenuItem activateInclSubs = tree.getMenu().getMenuItemByName("activateInclSubs");
             activateInclSubs.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", true);");
+
+            final ContextMenuItem deactivate = tree.getMenu().getMenuItemByName("deactivate");
+            deactivate.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_DEACTIVATE + ", false);");
         }
     }
 }

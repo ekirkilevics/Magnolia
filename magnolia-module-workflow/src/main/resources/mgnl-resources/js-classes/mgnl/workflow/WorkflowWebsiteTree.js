@@ -40,11 +40,20 @@ classDef("mgnl.workflow.WorkflowWebsiteTree",
             this.recursive = recursive;
             this.action = action;
 
-            // manipulate tree object
-            tree.activateNode =
+            if (action == 2) {
+	            // manipulate tree object
+	            tree.activateNode =
 
-            // will call the same method but with the comment as a parameter
-            mgnl.admininterface.Dialog.open('startActivationWorkflow');
+	            // will call the same method but with the comment as a parameter
+	            mgnl.admininterface.Dialog.open('startActivationWorkflow');
+            } else if (action == 3) {
+	            // manipulate tree object
+	            tree.deactivateNode =
+
+	            // will call the same method but with the comment as a parameter
+	            mgnl.admininterface.Dialog.open('startDeactivationWorkflow');
+            }
+
         },
 
         submitActivation: function(form){
@@ -60,7 +69,7 @@ classDef("mgnl.workflow.WorkflowWebsiteTree",
             for (var i = 0; i < form.elements.length; i++) {
                 var element = form.elements[i];
                 // ignores mgnlSaveInfo and _saveHandler and _configNode elements
-                // unfortunately also ignores checkbox fields ... 
+                // unfortunately also ignores checkbox fields ...
                 if (element.type != "hidden") {
                     params[element.name] = element.value;
                 }
