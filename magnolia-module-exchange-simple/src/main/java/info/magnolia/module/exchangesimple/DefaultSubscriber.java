@@ -53,6 +53,16 @@ public class DefaultSubscriber implements Subscriber {
 
     private String name;
 
+    /**
+     * 10 seconds default
+     */
+    private int readTimeout = 10000;
+
+    /**
+     * 10 seconds default
+     */
+    private int connectTimeout = 10000;
+
     Collection subscriptions = new ArrayList();
 
     private String authMethod = "Basic";
@@ -143,6 +153,23 @@ public class DefaultSubscriber implements Subscriber {
 
     public void setAuthenticationMethod(String method) {
         this.authMethod  = method;
+    }
+
+    public int getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public int getReadTimeout() {
+        // TODO Auto-generated method stub
+        return readTimeout;
+    }
+
+    public void setConnectTimeout(int timeoutMillis) {
+        this.connectTimeout = timeoutMillis;
+    }
+
+    public void setReadTimeout(int timeoutMillis) {
+        this.readTimeout = timeoutMillis;
     }
 
 }

@@ -47,17 +47,18 @@ import java.util.Iterator;
  */
 public class DefaultActivationManager implements ActivationManager {
 
-    private Collection subscribers = new ArrayList();
+    private final Collection<Subscriber> subscribers = new ArrayList<Subscriber>();
 
-    public Collection getSubscribers() {
-        return subscribers;
+    public synchronized Collection<Subscriber> getSubscribers() {
+        return new ArrayList<Subscriber>(subscribers);
     }
 
-    public void setSubscribers(Collection subscribers) {
-        this.subscribers = subscribers;
+    public synchronized void setSubscribers(Collection<Subscriber> subscribers) {
+        this.subscribers.clear();
+        this.subscribers.addAll(subscribers);
     }
 
-    public void addSubscribers(Subscriber subscriber) {
+    public synchronized void addSubscribers(Subscriber subscriber) {
         this.subscribers.add(subscriber);
     }
 
@@ -65,10 +66,10 @@ public class DefaultActivationManager implements ActivationManager {
         return "/server/activation/subscribers";
     }
 
-    public boolean hasAnyActiveSubscriber() {
-        Iterator subscribers = this.getSubscribers().iterator();
+    public synchronized boolean hasAnyActiveSubscriber() {
+        final Iterator<Subscriber> subscribers = this.subscribers.iterator();
         while (subscribers.hasNext()) {
-            Subscriber subscriber = (Subscriber) subscribers.next();
+            final Subscriber subscriber = subscribers.next();
             if (subscriber.isActive()) {
                 return true;
             }

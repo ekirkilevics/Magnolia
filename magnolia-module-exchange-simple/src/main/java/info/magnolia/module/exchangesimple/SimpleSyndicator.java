@@ -42,7 +42,6 @@ import info.magnolia.cms.exchange.Subscription;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Iterator;
@@ -187,35 +186,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             throw new ExchangeException(e);
         }
         return null;
-    }
-
-    protected URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
-
-        String handle = getActivationURL(subscriber);
-
-        try {
-            // authentication headers
-            if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
-                handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
-            }
-            URL url = new URL(handle);
-            URLConnection urlConnection = url.openConnection();
-            // authentication headers
-            if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
-            } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
-            }
-
-            return urlConnection;
-        } catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
-        } catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
-        } catch (Exception e) {
-            throw new ExchangeException(e);
-        }
     }
 
     @Override

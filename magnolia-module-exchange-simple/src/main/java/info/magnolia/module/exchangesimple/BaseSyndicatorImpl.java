@@ -59,6 +59,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -91,85 +93,85 @@ import EDU.oswego.cs.dl.util.concurrent.Sync;
  * $Id: $
  */
 public abstract class BaseSyndicatorImpl implements Syndicator {
-     private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
 
     /**
-      * URI used for activation.
-      */
-     public static final String DEFAULT_HANDLER = ".magnolia/activation"; //$NON-NLS-1$
+     * URI used for activation.
+     */
+    public static final String DEFAULT_HANDLER = ".magnolia/activation"; //$NON-NLS-1$
 
-     public static final String PARENT_PATH = "mgnlExchangeParentPath";
+    public static final String PARENT_PATH = "mgnlExchangeParentPath";
 
-     public static final String MAPPED_PARENT_PATH = "mgnlExchangeMappedParent";
+    public static final String MAPPED_PARENT_PATH = "mgnlExchangeMappedParent";
 
-     /**
-      * Path to be activated or deactivated.
-      */
-     public static final String PATH = "mgnlExchangePath";
+    /**
+     * Path to be activated or deactivated.
+     */
+    public static final String PATH = "mgnlExchangePath";
 
-     public static final String NODE_UUID = "mgnlExchangeNodeUUID";
+    public static final String NODE_UUID = "mgnlExchangeNodeUUID";
 
-     public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
+    public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
 
-     public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
+    public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
 
-     public static final String VERSION_NAME = "mgnlExchangeVersionName";
+    public static final String VERSION_NAME = "mgnlExchangeVersionName";
 
-     /**
-      * Mane of the resource containing reading sequence for importing the data in activation target.
-      */
-     public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
+    /**
+     * Mane of the resource containing reading sequence for importing the data in activation target.
+     */
+    public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
 
-     /**
-      * Name of the element in the resource file describing siblings of activated node.
-      * Siblings element will contain all siblings of the same node type which are "before"
-      * this node.
-      */
-     public static final String SIBLINGS_ROOT_ELEMENT = "NodeSiblings";
+    /**
+     * Name of the element in the resource file describing siblings of activated node.
+     * Siblings element will contain all siblings of the same node type which are "before"
+     * this node.
+     */
+    public static final String SIBLINGS_ROOT_ELEMENT = "NodeSiblings";
 
-     public static final String SIBLINGS_ELEMENT = "sibling";
+    public static final String SIBLINGS_ELEMENT = "sibling";
 
-     public static final String SIBLING_UUID = "siblingUUID";
+    public static final String SIBLING_UUID = "siblingUUID";
 
-     public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
+    public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
 
-     public static final String RESOURCE_MAPPING_NAME_ATTRIBUTE = "name";
+    public static final String RESOURCE_MAPPING_NAME_ATTRIBUTE = "name";
 
-     public static final String RESOURCE_MAPPING_UUID_ATTRIBUTE = "contentUUID";
+    public static final String RESOURCE_MAPPING_UUID_ATTRIBUTE = "contentUUID";
 
-     public static final String RESOURCE_MAPPING_ID_ATTRIBUTE = "resourceId";
+    public static final String RESOURCE_MAPPING_ID_ATTRIBUTE = "resourceId";
 
-     public static final String RESOURCE_MAPPING_ROOT_ELEMENT = "Resources";
+    public static final String RESOURCE_MAPPING_ROOT_ELEMENT = "Resources";
 
-     public static final String ACTION = "mgnlExchangeAction";
+    public static final String ACTION = "mgnlExchangeAction";
 
-     public static final String ACTIVATE = "activate"; //$NON-NLS-1$
+    public static final String ACTIVATE = "activate"; //$NON-NLS-1$
 
-     public static final String DEACTIVATE = "deactivate"; //$NON-NLS-1$
+    public static final String DEACTIVATE = "deactivate"; //$NON-NLS-1$
 
-     public static final String COMMIT = "commit";
+    public static final String COMMIT = "commit";
 
-     public static final String ROLLBACK = "rollback";
+    public static final String ROLLBACK = "rollback";
 
-     public static final String AUTHORIZATION = "Authorization";
+    public static final String AUTHORIZATION = "Authorization";
 
-     public static final String AUTH_CREDENTIALS= "mgnlUserPSWD";
+    public static final String AUTH_CREDENTIALS= "mgnlUserPSWD";
 
-     public static final String AUTH_USER = "mgnlUserId";
+    public static final String AUTH_USER = "mgnlUserId";
 
-     public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
+    public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
 
-     public static final String ACTIVATION_SUCCESSFUL = "sa_success"; //$NON-NLS-1$
+    public static final String ACTIVATION_SUCCESSFUL = "sa_success"; //$NON-NLS-1$
 
-     public static final String ACTIVATION_FAILED = "sa_failed"; //$NON-NLS-1$
+    public static final String ACTIVATION_FAILED = "sa_failed"; //$NON-NLS-1$
 
-     public static final String ACTIVATION_ATTRIBUTE_STATUS = "sa_attribute_status"; //$NON-NLS-1$
+    public static final String ACTIVATION_ATTRIBUTE_STATUS = "sa_attribute_status"; //$NON-NLS-1$
 
-     public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message"; //$NON-NLS-1$
+    public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message"; //$NON-NLS-1$
 
-     public static final String ACTIVATION_ATTRIBUTE_VERSION = "sa_attribute_version"; //$NON-NLS-1$
+    public static final String ACTIVATION_ATTRIBUTE_VERSION = "sa_attribute_version"; //$NON-NLS-1$
 
-     /**
+    /**
      * Runs a given job in the thread pool.
      *
      * @param job the job to run
@@ -211,164 +213,164 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
     protected String repositoryName;
 
-     protected String workspaceName;
+    protected String workspaceName;
 
-     protected String parent;
+    protected String parent;
 
-     protected Content.ContentFilter contentFilter;
+    protected Content.ContentFilter contentFilter;
 
-     protected Rule contentFilterRule;
+    protected Rule contentFilterRule;
 
-     protected User user;
+    protected User user;
 
-     protected String basicCredentials;
-
-     /**
-      * @param user
-      * @param repositoryName repository ID
-      * @param workspaceName workspace ID
-      * @param rule content filter rule
-      * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, String, String,
-      * info.magnolia.cms.util.Rule)
-      */
-     public void init(User user, String repositoryName, String workspaceName, Rule rule) {
-         this.user = user;
-         this.basicCredentials = "Basic "
-             + new String(Base64.encodeBase64((this.user.getName() + ":" + this.user.getPassword()).getBytes()));
-         this.contentFilter = new RuleBasedContentFilter(rule);
-         this.contentFilterRule = rule;
-         this.repositoryName = repositoryName;
-         this.workspaceName = workspaceName;
-     }
+    protected String basicCredentials;
 
     /**
-      * This will activate specifies page (sub pages) to all configured subscribers.
+     * @param user
+     * @param repositoryName repository ID
+     * @param workspaceName workspace ID
+     * @param rule content filter rule
+     * @see info.magnolia.cms.exchange.Syndicator#init(info.magnolia.cms.security.User, String, String,
+     * info.magnolia.cms.util.Rule)
+     */
+    public void init(User user, String repositoryName, String workspaceName, Rule rule) {
+        this.user = user;
+        this.basicCredentials = "Basic "
+            + new String(Base64.encodeBase64((this.user.getName() + ":" + this.user.getPassword()).getBytes()));
+        this.contentFilter = new RuleBasedContentFilter(rule);
+        this.contentFilterRule = rule;
+        this.repositoryName = repositoryName;
+        this.workspaceName = workspaceName;
+    }
+
+    /**
+     * This will activate specifies page (sub pages) to all configured subscribers.
      *
-      * @param parent parent under which this page will be activated
-      * @param content to be activated
-      * @throws javax.jcr.RepositoryException
-      * @throws info.magnolia.cms.exchange.ExchangeException
-      */
-     public void activate(String parent, Content content) throws ExchangeException, RepositoryException {
-         this.activate(parent, content, null);
-     }
+     * @param parent parent under which this page will be activated
+     * @param content to be activated
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     */
+    public void activate(String parent, Content content) throws ExchangeException, RepositoryException {
+        this.activate(parent, content, null);
+    }
 
-     /**
-      * This will activate specified node to all configured subscribers.
-      *
-      * @param parent parent under which this page will be activated
-      * @param content to be activated
-      * @param orderBefore List of UUID to be used by the implementation to order this node after activation
-      * @throws javax.jcr.RepositoryException
-      * @throws info.magnolia.cms.exchange.ExchangeException
-      *
-      */
-     public void activate(String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
-         this.activate(null, parent, content, orderBefore);
-     }
+    /**
+     * This will activate specified node to all configured subscribers.
+     *
+     * @param parent parent under which this page will be activated
+     * @param content to be activated
+     * @param orderBefore List of UUID to be used by the implementation to order this node after activation
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     *
+     */
+    public void activate(String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
+        this.activate(null, parent, content, orderBefore);
+    }
 
-     /**
-      * This will activate specifies page (sub pages) to the specified subscriber.
-      *
-      * @param subscriber
-      * @param parent parent under which this page will be activated
-      * @param content to be activated
-      * @throws javax.jcr.RepositoryException
-      * @throws info.magnolia.cms.exchange.ExchangeException
-      */
-     public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException, RepositoryException {
-         this.activate(subscriber, parent, content, null);
-     }
+    /**
+     * This will activate specifies page (sub pages) to the specified subscriber.
+     *
+     * @param subscriber
+     * @param parent parent under which this page will be activated
+     * @param content to be activated
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     */
+    public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException, RepositoryException {
+        this.activate(subscriber, parent, content, null);
+    }
 
-     /**
-      * This will activate specifies node to the specified subscriber.
-      *
-      * @param subscriber
-      * @param parent      parent under which this page will be activated
-      * @param content     to be activated
-      * @param orderBefore List of UUID to be used by the subscriber to order this node after activation
-      * @throws javax.jcr.RepositoryException
-      * @throws info.magnolia.cms.exchange.ExchangeException
-      */
-     public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
-         this.parent = parent;
-         String path = content.getHandle();
-         ActivationContent activationContent = null;
-         try {
-             activationContent = this.collect(content, orderBefore);
-             if (null == subscriber) {
-                 this.activate(activationContent, path);
-             } else {
-                 this.activate(subscriber, activationContent, path);
-             }
-             if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
-                 if (content instanceof ContentVersion) {
-                     // replace versioned content with the real node
-                     content = content.getHierarchyManager().getContentByUUID(content.getUUID());
-                 }
-                 Content parentContent = content.getParent();
-                 content.delete();
-                 parentContent.save();
-             } else {
-                 this.updateActivationDetails(path);
-             }
-             log.info("Exchange: activation succeeded [{}]", path);
-         } catch (Exception e) {
-             if (log.isDebugEnabled()) {
-                 log.error("Exchange: activation failed for path:" + ((path != null) ? path : "[null]"), e);
-                 long timestamp = System.currentTimeMillis();
-                 log.warn("moving files from failed activation to *.failed" + timestamp );
-                 Iterator<File> keys = activationContent.getFiles().values().iterator();
-                 while (keys.hasNext()) {
-                     File f = keys.next();
-                     f.renameTo(new File(f.getAbsolutePath()+".failed" + timestamp));
-                 }
-                 activationContent.getFiles().clear();
+    /**
+     * This will activate specifies node to the specified subscriber.
+     *
+     * @param subscriber
+     * @param parent      parent under which this page will be activated
+     * @param content     to be activated
+     * @param orderBefore List of UUID to be used by the subscriber to order this node after activation
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     */
+    public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException {
+        this.parent = parent;
+        String path = content.getHandle();
+        ActivationContent activationContent = null;
+        try {
+            activationContent = this.collect(content, orderBefore);
+            if (null == subscriber) {
+                this.activate(activationContent, path);
+            } else {
+                this.activate(subscriber, activationContent, path);
+            }
+            if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
+                if (content instanceof ContentVersion) {
+                    // replace versioned content with the real node
+                    content = content.getHierarchyManager().getContentByUUID(content.getUUID());
+                }
+                Content parentContent = content.getParent();
+                content.delete();
+                parentContent.save();
+            } else {
+                this.updateActivationDetails(path);
+            }
+            log.info("Exchange: activation succeeded [{}]", path);
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.error("Exchange: activation failed for path:" + ((path != null) ? path : "[null]"), e);
+                long timestamp = System.currentTimeMillis();
+                log.warn("moving files from failed activation to *.failed" + timestamp );
+                Iterator<File> keys = activationContent.getFiles().values().iterator();
+                while (keys.hasNext()) {
+                    File f = keys.next();
+                    f.renameTo(new File(f.getAbsolutePath()+".failed" + timestamp));
+                }
+                activationContent.getFiles().clear();
 
-             }
-             throw new ExchangeException(e);
-         } finally {
-             log.debug("Cleaning temporary files");
-             cleanTemporaryStore(activationContent);
-         }
-     }
+            }
+            throw new ExchangeException(e);
+        } finally {
+            log.debug("Cleaning temporary files");
+            cleanTemporaryStore(activationContent);
+        }
+    }
 
-     /**
-      * @throws ExchangeException
-      */
-     public abstract void activate(ActivationContent activationContent, String nodePath) throws ExchangeException;
+    /**
+     * @throws ExchangeException
+     */
+    public abstract void activate(ActivationContent activationContent, String nodePath) throws ExchangeException;
 
 
-     /**
-      * Send request of activation of activationContent to the subscriber. Subscriber might choose not to react if it is not subscribed to the URI under which activationContent exists.
-      */
-     public abstract String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException;
+    /**
+     * Send request of activation of activationContent to the subscriber. Subscriber might choose not to react if it is not subscribed to the URI under which activationContent exists.
+     */
+    public abstract String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException;
 
-     /**
-      * Cleans up temporary file store after activation.
-      */
-     protected void cleanTemporaryStore(ActivationContent activationContent) {
-         if (activationContent == null) {
-             log.debug("Clean temporary store - nothing to do");
-             return;
-         }
-         if (log.isDebugEnabled()) {
-             log.debug("Debugging is enabled. Keeping temporary files in store for debugging purposes. Clean the store manually once done with debugging.");
-             return;
-         }
+    /**
+     * Cleans up temporary file store after activation.
+     */
+    protected void cleanTemporaryStore(ActivationContent activationContent) {
+        if (activationContent == null) {
+            log.debug("Clean temporary store - nothing to do");
+            return;
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Debugging is enabled. Keeping temporary files in store for debugging purposes. Clean the store manually once done with debugging.");
+            return;
+        }
 
-         Iterator<String> keys = activationContent.getFiles().keySet().iterator();
-         while (keys.hasNext()) {
-             String key = keys.next();
-             log.debug("Removing temporary file {}", key);
-             activationContent.getFile(key).delete();
-         }
-     }
+        Iterator<String> keys = activationContent.getFiles().keySet().iterator();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            log.debug("Removing temporary file {}", key);
+            activationContent.getFile(key).delete();
+        }
+    }
 
-     public synchronized void deactivate(String path) throws ExchangeException, RepositoryException {
-         final Content node = getHierarchyManager().getContent(path);
-         deactivate(node);
-     }
+    public synchronized void deactivate(String path) throws ExchangeException, RepositoryException {
+        final Content node = getHierarchyManager().getContent(path);
+        deactivate(node);
+    }
 
     /**
      * @param node to deactivate
@@ -395,260 +397,262 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         updateDeactivationDetails(nodeUUID);
     }
 
-     /**
-      * @throws ExchangeException
-      */
-     public abstract void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException;
+    /**
+     * @throws ExchangeException
+     */
+    public abstract void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException;
 
-     /**
-      * Deactivate content from specified subscriber.
-      * @param subscriber
-      * @throws ExchangeException
-      */
-     public abstract String doDeactivate(Subscriber subscriber, String nodeUUID, String nodePath) throws ExchangeException;
+    /**
+     * Deactivate content from specified subscriber.
+     * @param subscriber
+     * @throws ExchangeException
+     */
+    public abstract String doDeactivate(Subscriber subscriber, String nodeUUID, String nodePath) throws ExchangeException;
 
-     /**
-      * Return URI set for deactivation.
-      * @param subscriberInfo
-      */
-     protected String getDeactivationURL(Subscriber subscriberInfo) {
-         return getActivationURL(subscriberInfo);
-     }
+    /**
+     * Return URI set for deactivation.
+     * @param subscriberInfo
+     */
+    protected String getDeactivationURL(Subscriber subscriberInfo) {
+        return getActivationURL(subscriberInfo);
+    }
 
-     /**
-      * Adds header fields describing deactivation request.
-      * @param connection
-      */
-     protected void addDeactivationHeaders(URLConnection connection, String nodeUUID) {
-         connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
-         connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
-         if (nodeUUID != null) {
-             connection.addRequestProperty(NODE_UUID, nodeUUID);
-         }
-         connection.addRequestProperty(ACTION, DEACTIVATE);
-     }
+    /**
+     * Adds header fields describing deactivation request.
+     * @param connection
+     */
+    protected void addDeactivationHeaders(URLConnection connection, String nodeUUID) {
+        connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
+        connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
+        if (nodeUUID != null) {
+            connection.addRequestProperty(NODE_UUID, nodeUUID);
+        }
+        connection.addRequestProperty(ACTION, DEACTIVATE);
+    }
 
-     /**
-      * Retrieves URL subscriber is listening on for (de)activation requests.
-      */
-     protected String getActivationURL(Subscriber subscriberInfo) {
-         final String url = subscriberInfo.getURL();
-         if (!url.endsWith("/")) {
-             return url + "/" + DEFAULT_HANDLER;
-         }
-         return url + DEFAULT_HANDLER;
-     }
+    /**
+     * Retrieves URL subscriber is listening on for (de)activation requests.
+     */
+    protected String getActivationURL(Subscriber subscriberInfo) {
+        final String url = subscriberInfo.getURL();
+        if (!url.endsWith("/")) {
+            return url + "/" + DEFAULT_HANDLER;
+        }
+        return url + DEFAULT_HANDLER;
+    }
 
-     /**
-      * Adds headers fields describing activation request.
-      */
-     protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
-         Iterator<String> headerKeys = activationContent.getProperties().keySet().iterator();
-         while (headerKeys.hasNext()) {
-             String key = headerKeys.next();
-             String value = activationContent.getproperty(key);
-             if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
-                 try {
-                     value = URLEncoder.encode(value, "UTF-8");
-                 }
-                 catch (UnsupportedEncodingException e) {
-                  // do nothing
-                 }
-             }
-             connection.setRequestProperty(key, value);
-         }
-     }
+    /**
+     * Adds headers fields describing activation request.
+     */
+    protected void addActivationHeaders(URLConnection connection, ActivationContent activationContent) {
+        Iterator<String> headerKeys = activationContent.getProperties().keySet().iterator();
+        while (headerKeys.hasNext()) {
+            String key = headerKeys.next();
+            String value = activationContent.getproperty(key);
+            if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
+                try {
+                    value = URLEncoder.encode(value, "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    // do nothing
+                }
+            }
+            connection.setRequestProperty(key, value);
+        }
+    }
 
-     /**
-      * Updates current content activation meta data with the time stamp and user details of the activation.
-      */
-     protected void updateActivationDetails(String path) throws RepositoryException {
-         // page activated already use system context to ensure meta data is activated even if activating user has no rights to the activated page children
-         Content page = getSystemHierarchyManager().getContent(path);
-         updateMetaData(page, ACTIVATE);
-         page.save();
-         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, page.getItemType(), path );
-     }
+    /**
+     * Updates current content activation meta data with the time stamp and user details of the activation.
+     */
+    protected void updateActivationDetails(String path) throws RepositoryException {
+        // page activated already use system context to ensure meta data is activated even if activating user has no rights to the activated page children
+        Content page = getSystemHierarchyManager().getContent(path);
+        updateMetaData(page, ACTIVATE);
+        page.save();
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, page.getItemType(), path );
+    }
 
-     /**
-      * Updates current content activation meta data with the timestamp and user details of the deactivation.
-      */
-     protected void updateDeactivationDetails(String nodeUUID) throws RepositoryException {
-         // page deactivated already use system context to ensure meta data is activated even if activating user has no rights to the activated page children
-         Content page = getSystemHierarchyManager().getContentByUUID(nodeUUID);
-         updateMetaData(page, DEACTIVATE);
-         page.save();
-         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getItemType(), page.getHandle() );
-     }
-
-
-     private HierarchyManager getHierarchyManager() {
-         return MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-     }
-
-     private HierarchyManager getSystemHierarchyManager() {
-         return MgnlContext.getSystemContext().getHierarchyManager(this.repositoryName, this.workspaceName);
-     }
-
-     /**
-      * @param node
-      * @param type (activate / deactivate)
-      */
-     protected void updateMetaData(Content node, String type) throws AccessDeniedException {
-         // update the passed node
-         MetaData md = node.getMetaData();
-         if (type.equals(ACTIVATE)) {
-             md.setActivated();
-         }
-         else {
-             md.setUnActivated();
-         }
-         md.setActivatorId(this.user.getName());
-         md.setLastActivationActionDate();
-
-         Iterator<Content> children;
-         if (type.equals(ACTIVATE)) {
-             // use syndicator rule based filter
-             children = node.getChildren(this.contentFilter).iterator();
-         }
-         else {
-             // all children
-             children = node.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).iterator();
-         }
-
-         while (children.hasNext()) {
-             Content child = (Content) children.next();
-             this.updateMetaData(child, type);
-         }
+    /**
+     * Updates current content activation meta data with the timestamp and user details of the deactivation.
+     */
+    protected void updateDeactivationDetails(String nodeUUID) throws RepositoryException {
+        // page deactivated already use system context to ensure meta data is activated even if activating user has no rights to the activated page children
+        Content page = getSystemHierarchyManager().getContentByUUID(nodeUUID);
+        updateMetaData(page, DEACTIVATE);
+        page.save();
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getItemType(), page.getHandle() );
+    }
 
 
-     }
+    private HierarchyManager getHierarchyManager() {
+        return MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
+    }
 
-     /**
-      * Collects all information about activated content and its children (those that are set to be activated with the parent by filter rules).
-      * @throws Exception
-      */
-     protected ActivationContent collect(Content node, List<String> orderBefore) throws Exception {
-         // make sure resource file is unique
-         File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
+    private HierarchyManager getSystemHierarchyManager() {
+        return MgnlContext.getSystemContext().getHierarchyManager(this.repositoryName, this.workspaceName);
+    }
 
-         ActivationContent activationContent = new ActivationContent();
-         // add global properties true for this path/hierarchy
-         activationContent.addProperty(PARENT_PATH, this.parent);
-         activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
-         activationContent.addProperty(REPOSITORY_NAME, this.repositoryName);
-         activationContent.addProperty(RESOURCE_MAPPING_FILE, resourceFile.getName());//"resources.xml");
-         activationContent.addProperty(ACTION, ACTIVATE);
-         activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
-         activationContent.addProperty(NODE_UUID, node.getUUID());
+    /**
+     * @param node
+     * @param type (activate / deactivate)
+     */
+    protected void updateMetaData(Content node, String type) throws AccessDeniedException {
+        // update the passed node
+        MetaData md = node.getMetaData();
+        if (type.equals(ACTIVATE)) {
+            md.setActivated();
+        }
+        else {
+            md.setUnActivated();
+        }
+        md.setActivatorId(this.user.getName());
+        md.setLastActivationActionDate();
+
+        Iterator<Content> children;
+        if (type.equals(ACTIVATE)) {
+            // use syndicator rule based filter
+            children = node.getChildren(this.contentFilter).iterator();
+        }
+        else {
+            // all children
+            children = node.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).iterator();
+        }
+
+        while (children.hasNext()) {
+            Content child = children.next();
+            this.updateMetaData(child, type);
+        }
 
 
-         Document document = new Document();
-         Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
-         document.setRootElement(root);
-         // collect exact order of this node within its same nodeType siblings
-         addOrderingInfo(root, orderBefore);
+    }
 
-         this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
-         XMLOutputter outputter = new XMLOutputter();
-         outputter.output(document, new FileOutputStream(resourceFile));
-         // add resource file to the list
-         activationContent.addFile(resourceFile.getName(), resourceFile);
+    /**
+     * Collects all information about activated content and its children (those that are set to be activated with the parent by filter rules).
+     * @throws Exception
+     */
+    protected ActivationContent collect(Content node, List<String> orderBefore) throws Exception {
+        // make sure resource file is unique
+        File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
 
-         // add deletion info
-         activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
+        ActivationContent activationContent = new ActivationContent();
+        // add global properties true for this path/hierarchy
+        activationContent.addProperty(PARENT_PATH, this.parent);
+        activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
+        activationContent.addProperty(REPOSITORY_NAME, this.repositoryName);
+        activationContent.addProperty(RESOURCE_MAPPING_FILE, resourceFile.getName());//"resources.xml");
+        activationContent.addProperty(ACTION, ACTIVATE);
+        activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
+        activationContent.addProperty(NODE_UUID, node.getUUID());
 
-         return activationContent;
-     }
 
-     /**
-      * Adds ordering information to the resource mapping file.
-      * @param root element of the resource file under which ordering info must be added
-      * @param orderBefore
-      */
-     protected void addOrderingInfo(Element root, List<String> orderBefore) {
-         //do not use magnolia Content class since these objects are only meant for a single use to read UUID
-         Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
-         root.addContent(siblingRoot);
-         if (orderBefore == null) return;
-         Iterator<String> siblings = orderBefore.iterator();
-         while (siblings.hasNext()) {
-             String uuid = siblings.next();
-             Element e = new Element(SIBLINGS_ELEMENT);
-             e.setAttribute(SIBLING_UUID, uuid);
-             siblingRoot.addContent(e);
-         }
-     }
+        Document document = new Document();
+        Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
+        document.setRootElement(root);
+        // collect exact order of this node within its same nodeType siblings
+        addOrderingInfo(root, orderBefore);
 
-     protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
-         File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
-         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
+        this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
+        XMLOutputter outputter = new XMLOutputter();
+        outputter.output(document, new FileOutputStream(resourceFile));
+        // add resource file to the list
+        activationContent.addFile(resourceFile.getName(), resourceFile);
 
-         // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
-         if (content.isNodeType("nt:frozenNode") || content.getWorkspace().getName().equals(ContentRepository.VERSION_STORE)) {
-             XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
-                 .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-             ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
-             /**
-              * nt:file node type has mandatory sub nodes
-              */
-             boolean noRecurse = !content.isNodeType(ItemType.NT_FILE);
-             exportAndParse(session, content, elementfilter, gzipOutputStream, noRecurse);
-         } else {
-             /**
-              * nt:file node type has mandatory sub nodes
-              */
-             if (content.isNodeType(ItemType.NT_FILE)) {
-                 session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, false);
-             } else {
-                 session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, true);
-             }
-         }
+        // add deletion info
+        activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
 
-         IOUtils.closeQuietly(gzipOutputStream);
-         // add file entry in mapping.xml
-         Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
-         element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
-         element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, content.getUUID());
-         element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
-         resourceElement.addContent(element);
-         // add this file element as resource in activation content
-         activationContent.addFile(file.getName(), file);
+        return activationContent;
+    }
 
-         Iterator<Content> children = content.getChildren(filter).iterator();
-         while (children.hasNext()) {
-             Content child = (Content) children.next();
-             this.addResources(element, session, child, filter, activationContent);
-         }
-     }
+    /**
+     * Adds ordering information to the resource mapping file.
+     * @param root element of the resource file under which ordering info must be added
+     * @param orderBefore
+     */
+    protected void addOrderingInfo(Element root, List<String> orderBefore) {
+        //do not use magnolia Content class since these objects are only meant for a single use to read UUID
+        Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
+        root.addContent(siblingRoot);
+        if (orderBefore == null) {
+            return;
+        }
+        Iterator<String> siblings = orderBefore.iterator();
+        while (siblings.hasNext()) {
+            String uuid = siblings.next();
+            Element e = new Element(SIBLINGS_ELEMENT);
+            e.setAttribute(SIBLING_UUID, uuid);
+            siblingRoot.addContent(e);
+        }
+    }
 
-     protected void exportAndParse(Session session, Content content, XMLReader elementfilter, OutputStream os, boolean noRecurse) throws Exception {
-         File tempFile = File.createTempFile("Frozen_"+content.getName(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
-         OutputStream tmpFileOutStream = null;
-         FileInputStream tmpFileInStream = null;
-         try {
-             tmpFileOutStream = new FileOutputStream(tempFile);
-             // has to get path via JCR node since if "content" is of type ContentVersion, getHandle() call would have returned path to the base
-             session.exportSystemView(content.getJCRNode().getPath(), tmpFileOutStream, false, noRecurse);
-             tmpFileOutStream.flush();
-             tmpFileOutStream.close();
+    protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
+        File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
+        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
-             OutputFormat outputFormat = new OutputFormat();
-             outputFormat.setPreserveSpace(false);
+        // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
+        if (content.isNodeType("nt:frozenNode") || content.getWorkspace().getName().equals(ContentRepository.VERSION_STORE)) {
+            XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
+                    .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
+            ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
+            /**
+             * nt:file node type has mandatory sub nodes
+             */
+            boolean noRecurse = !content.isNodeType(ItemType.NT_FILE);
+            exportAndParse(session, content, elementfilter, gzipOutputStream, noRecurse);
+        } else {
+            /**
+             * nt:file node type has mandatory sub nodes
+             */
+            if (content.isNodeType(ItemType.NT_FILE)) {
+                session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, false);
+            } else {
+                session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, true);
+            }
+        }
 
-             tmpFileInStream = new FileInputStream(tempFile);
-             elementfilter.setContentHandler(new XMLSerializer(os, outputFormat));
-             elementfilter.parse(new InputSource(tmpFileInStream));
-             tmpFileInStream.close();
-         } catch (Throwable t) {
-             log.error("Failed to parse XML using FrozenElementFilter",t);
-             throw new Exception(t);
-         } finally {
-             IOUtils.closeQuietly(tmpFileInStream);
-             IOUtils.closeQuietly(tmpFileOutStream);
-             tempFile.delete();
-         }
-     }
+        IOUtils.closeQuietly(gzipOutputStream);
+        // add file entry in mapping.xml
+        Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
+        element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
+        element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, content.getUUID());
+        element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
+        resourceElement.addContent(element);
+        // add this file element as resource in activation content
+        activationContent.addFile(file.getName(), file);
+
+        Iterator<Content> children = content.getChildren(filter).iterator();
+        while (children.hasNext()) {
+            Content child = children.next();
+            this.addResources(element, session, child, filter, activationContent);
+        }
+    }
+
+    protected void exportAndParse(Session session, Content content, XMLReader elementfilter, OutputStream os, boolean noRecurse) throws Exception {
+        File tempFile = File.createTempFile("Frozen_"+content.getName(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        OutputStream tmpFileOutStream = null;
+        FileInputStream tmpFileInStream = null;
+        try {
+            tmpFileOutStream = new FileOutputStream(tempFile);
+            // has to get path via JCR node since if "content" is of type ContentVersion, getHandle() call would have returned path to the base
+            session.exportSystemView(content.getJCRNode().getPath(), tmpFileOutStream, false, noRecurse);
+            tmpFileOutStream.flush();
+            tmpFileOutStream.close();
+
+            OutputFormat outputFormat = new OutputFormat();
+            outputFormat.setPreserveSpace(false);
+
+            tmpFileInStream = new FileInputStream(tempFile);
+            elementfilter.setContentHandler(new XMLSerializer(os, outputFormat));
+            elementfilter.parse(new InputSource(tmpFileInStream));
+            tmpFileInStream.close();
+        } catch (Throwable t) {
+            log.error("Failed to parse XML using FrozenElementFilter",t);
+            throw new Exception(t);
+        } finally {
+            IOUtils.closeQuietly(tmpFileInStream);
+            IOUtils.closeQuietly(tmpFileOutStream);
+            tempFile.delete();
+        }
+    }
 
     /**
      * Gets target path to which the current path is mapped in given subscription. Provided path should be without trailing slash.
@@ -676,6 +680,38 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
             }
         }
         return path;
+    }
+
+    protected URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
+
+        String handle = getActivationURL(subscriber);
+
+        try {
+            String authMethod = subscriber.getAuthenticationMethod();
+            // authentication headers
+            if (authMethod != null && "form".equalsIgnoreCase(authMethod)) {
+                handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
+                handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
+            }
+            URL url = new URL(handle);
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setConnectTimeout(subscriber.getConnectTimeout());
+            urlConnection.setReadTimeout(subscriber.getReadTimeout());
+            // authentication headers
+            if (authMethod == null || "basic".equalsIgnoreCase(authMethod)) {
+                urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
+            } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
+            }
+
+            return urlConnection;
+        } catch (MalformedURLException e) {
+            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
+        } catch (IOException e) {
+            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
+        } catch (Exception e) {
+            throw new ExchangeException(e);
+        }
     }
 
 
