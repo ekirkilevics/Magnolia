@@ -54,12 +54,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * Wrapping a JCR {@link javax.jcr.query.QueryResult}. This class will filter
- * the result according to the user's ACLs. You can use
- * {@link #getContent(String)} to retrieve nodes of a certain type. If the
- * node's type doesn't match the nearest matching ancestors is add instead. This
- * allows to search in paragraph content while retrieving  a list of pages.
+ * Wrapping a JCR {@link javax.jcr.query.QueryResult}. This class will filter the result according
+ * to the user's ACLs. You can use {@link #getContent(String)} to retrieve nodes of a certain type.
+ * If the node's type doesn't match the nearest matching ancestors is add instead. This allows to
+ * search in paragraph content while retrieving a list of pages.
  *
  * @author Sameer Charles
  * @author Fabrizio Giustina
@@ -88,12 +88,19 @@ public class QueryResultImpl implements QueryResult {
 
     protected HierarchyManager hm;
 
+    protected final long maxResultSize;
+
     protected Map<String, String> dirtyHandles = new Hashtable<String, String>();
 
     protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm) {
+        this(result, hm, Long.MAX_VALUE);
+    }
+
+    protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm, long maxResultSize) {
         this.result = result;
         this.hm = hm;
         this.accessManager = hm.getAccessManager();
+        this.maxResultSize = maxResultSize;
     }
 
     /**
@@ -109,7 +116,8 @@ public class QueryResultImpl implements QueryResult {
     }
 
     /**
-     * Adds all found nodes of a certain type. If the type doesn't match it will traverse the ancestors and add them instead.
+     * Adds all found nodes of a certain type. If the type doesn't match it will traverse the
+     * ancestors and add them instead.
      */
     protected void build(String nodeType, Collection<Content> collection) throws RepositoryException {
         this.objectStore.put(nodeType, collection);
@@ -118,7 +126,7 @@ public class QueryResultImpl implements QueryResult {
         // whitespace separated list (can't hurt since a single nodetype name can't contain a space)
         String[] nodeTypes = StringUtils.split(nodeType);
 
-        while (nodeIterator.hasNext()) {
+        while (collection.size() < maxResultSize && nodeIterator.hasNext()) {
             Node node = nodeIterator.nextNode();
             try {
                 build(node, nodeTypes, collection);
@@ -141,7 +149,7 @@ public class QueryResultImpl implements QueryResult {
         /**
          * All custom node types
          */
-        if ((nodeType== null || nodeType.length == 0) || isNodeType(node, nodeType) && !node.isNodeType(ItemType.NT_RESOURCE)) {
+        if ((nodeType == null || nodeType.length == 0) || isNodeType(node, nodeType) && !node.isNodeType(ItemType.NT_RESOURCE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 boolean isAllowed = this.hm.getAccessManager().isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {

@@ -65,6 +65,21 @@ public interface Query {
     QueryResult execute() throws RepositoryException;
 
     /**
+     * Restrict the result size of subsequent {@link #execute()} invocations to the given
+     * number of objects.<p>
+     * Use this method if the query result can be large, but you are interested
+     * only in the first few objects. This will avoid the rest of the result objects
+     * to be instantiated, resulting in a huge performance gain for large
+     * results and small limit numbers.<p>
+     * The performance gain may be defeated if your query returns a lot of nodes
+     * of the "wrong" nodetype, resulting in {@link QueryResult#getContent(String)} to
+     * iterate often before the limit is reached. So make sure your query yields only nodes with the
+     * required nodetype.
+     * @param limit the maximum result size, initial value is {@link Long#MAX_VALUE}
+     */
+    void setLimit(long limit);
+
+    /**
      * <i>Description inherited from javax.jcr.query.Query#getStatement()</i><br>
      * Returns the statement set for this query.
      * @return the query statement.

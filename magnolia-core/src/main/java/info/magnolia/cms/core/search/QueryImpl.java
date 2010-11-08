@@ -58,14 +58,20 @@ public class QueryImpl implements Query {
 
     protected HierarchyManager hm;
 
+    protected long limit = Long.MAX_VALUE;
+
     protected QueryImpl(javax.jcr.query.Query query, HierarchyManager hm) {
         this.query = query;
         this.hm = hm;
     }
 
+    public void setLimit(long limit) {
+        this.limit = limit;
+    }
+
     public QueryResult execute() throws RepositoryException {
         javax.jcr.query.QueryResult result = this.query.execute();
-        QueryResultImpl filteredResult = new QueryResultImpl(result, this.hm);
+        QueryResultImpl filteredResult = new QueryResultImpl(result, this.hm, limit);
         return filteredResult;
     }
 
