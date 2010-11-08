@@ -54,12 +54,12 @@ public class DefaultSubscriber implements Subscriber {
     private String name;
 
     /**
-     * 10 seconds default
+     * 10 seconds default.
      */
     private int readTimeout = 10000;
 
     /**
-     * 10 seconds default
+     * 10 seconds default.
      */
     private int connectTimeout = 10000;
 
