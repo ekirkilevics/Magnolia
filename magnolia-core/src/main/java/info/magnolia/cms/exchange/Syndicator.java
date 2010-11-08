@@ -67,8 +67,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(String parent, Content content)
-            throws ExchangeException, RepositoryException;
+    public void activate(String parent, Content content) throws ExchangeException, RepositoryException;
 
     /**
      * This will activate the specified node to all configured subscribers.
@@ -79,8 +78,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(String parent, Content content, List<String> orderBefore)
-            throws ExchangeException, RepositoryException;
+    public void activate(String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException;
 
     /**
      * This will activate the specified node to the specified subscriber.
@@ -91,8 +89,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, Content content)
-            throws ExchangeException, RepositoryException;
+    public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException, RepositoryException;
 
     /**
      * This will activate the specified node to the specified subscriber.
@@ -104,16 +101,14 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore)
-            throws ExchangeException, RepositoryException;
+    public void activate(Subscriber subscriber, String parent, Content content, List<String> orderBefore) throws ExchangeException, RepositoryException;
 
     /**
      * @param node to de-activate
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deactivate(Content node)
-            throws ExchangeException, RepositoryException;
+    public void deactivate(Content node) throws ExchangeException, RepositoryException;
 
     /**
      * @param node to de-activate
@@ -121,8 +116,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deactivate(Subscriber subscriber, Content node)
-            throws ExchangeException, RepositoryException;
+    public void deactivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException;
 
 
 }
