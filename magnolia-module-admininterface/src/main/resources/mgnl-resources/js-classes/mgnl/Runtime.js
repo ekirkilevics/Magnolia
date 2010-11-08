@@ -305,23 +305,23 @@ MgnlRuntime = mgnl.Runtime = {
     /**
      * Cache for not yet printed messages
      */
-    notYetDebuged: new Array(),
+    notYetDebugged: new Array(),
 
     /**
      * Debug the message. Check if the debug class is already loaded. If not cache.
      */
     debug: function(msg, o ,level){
         if(window.MgnlDebug){
-            if(notYetDebugged.length>0){
-                for(i=0; i < notYetDebugged.length; i++){
-                    MgnlDebug.debug(notYetDebuged[i].msg, this, notYetDebuged[i].o, notYetDebuged[i].level);
+            if(this.notYetDebugged.length>0){
+                for(i=0; i < this.notYetDebugged.length; i++){
+                    MgnlDebug.debug(this.notYetDebugged[i].msg, this, this.notYetDebugged[i].o, this.notYetDebugged[i].level);
                 }
-                notYetDebugged = new Array();
+                this.notYetDebugged = new Array();
             }
             MgnlDebug.debug(msg, this, o, level);
         }
         else{
-            notYetDebuged.append({msg: msg, o:o, level:level});
+            this.notYetDebugged.push({msg: msg, o:o, level:level});
         }
     }
 
