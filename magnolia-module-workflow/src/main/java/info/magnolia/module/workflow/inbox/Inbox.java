@@ -165,7 +165,6 @@ public class Inbox extends AbstractList {
 
             @Override
             public Object getValue() {
-                java.util.Map attrs = ((openwfe.org.engine.workitem.WorkItem) this.getListControl().getIterator().getValueObject()).getAttributes(); java.util.Iterator set = attrs.keySet().iterator(); while (set.hasNext()) { openwfe.org.engine.workitem.StringAttribute key = ( openwfe.org.engine.workitem.StringAttribute) set.next(); System.out.println("K:" + key + ", V:" + attrs.get(key));};
                 String path = "" + this.getListControl().getIteratorValue("path");
                 String repository = "" + this.getListControl().getIteratorValue("repository");
                 String uuid = "" + this.getListControl().getIteratorValue("uuid");
