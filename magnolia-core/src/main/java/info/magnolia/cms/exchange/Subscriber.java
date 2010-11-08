@@ -68,4 +68,11 @@ public interface Subscriber {
 
     public String getAuthenticationMethod();
 
+    public int getConnectTimeout();
+
+    public void setConnectTimeout(int timeoutMillis);
+
+    public int getReadTimeout();
+
+    public void setReadTimeout(int timeoutMillis);
 }
