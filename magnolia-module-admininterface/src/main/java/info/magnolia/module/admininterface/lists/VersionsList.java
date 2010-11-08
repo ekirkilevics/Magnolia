@@ -153,6 +153,7 @@ public abstract class VersionsList extends AbstractList {
         list.addColumn(new ListColumn("name", "Name", "150", true));
         list.addColumn(new ListColumn("created", "Date", "100", true));
         list.addColumn(new ListColumn("userName", "User", "100", true));
+        list.addColumn(new ListColumn("comment", "Comment", "150", true));
     }
 
     /**

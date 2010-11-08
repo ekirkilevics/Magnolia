@@ -34,7 +34,9 @@
 package info.magnolia.module.admininterface.commands;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 
 import org.apache.commons.lang.StringUtils;
@@ -62,6 +64,8 @@ public class VersionCommand extends RuleBasedCommand {
 
     private boolean recursive;
 
+    private String comment;
+
     /**
      * @see info.magnolia.commands.MgnlCommand#execute(org.apache.commons.chain.Context)
      */
@@ -74,6 +78,7 @@ public class VersionCommand extends RuleBasedCommand {
                 versionRecursively(node, ctx, versionMap);
                 ctx.setAttribute(Context.ATTRIBUTE_VERSION_MAP, versionMap, Context.LOCAL_SCOPE);
             } else {
+                addComment(node);
                 Version version = node.addVersion(getRule());
                 ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
             }
@@ -86,7 +91,17 @@ public class VersionCommand extends RuleBasedCommand {
         return true;
     }
 
+    protected void addComment(final Content node) throws AccessDeniedException, RepositoryException {
+        if(getComment() != null){
+            synchronized (ExclusiveWrite.getInstance()) {
+                node.getMetaData().setProperty(Context.ATTRIBUTE_COMMENT, getComment());
+                node.save();
+            }
+        }
+    }
+
     private void versionRecursively(Content node, Context ctx, List versionMap) throws RepositoryException {
+        addComment(node);
         Version version = node.addVersion(getRule());
         Map entry = new HashMap();
         entry.put("version", version.getName());
@@ -129,6 +144,14 @@ public class VersionCommand extends RuleBasedCommand {
      */
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override
