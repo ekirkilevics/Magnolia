@@ -53,7 +53,7 @@ classDef("mgnl.admininterface.VersionsList",
     // members
     {
     	restore: function(versionLabel){
-	        versionLabel = versionLabel==null ? this.currentVersionLabel : versionLabel;
+	        versionLabel = versionLabel==null ? this.getSelectedItem().versionLabel : versionLabel;
 	        document.mgnlForm.command.value="restore";
 	        document.mgnlForm.versionLabel.value=versionLabel;
 	        document.mgnlForm.submit();
