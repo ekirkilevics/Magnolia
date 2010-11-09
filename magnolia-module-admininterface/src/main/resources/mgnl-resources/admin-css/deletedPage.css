@@ -1,0 +1,123 @@
+/*
+ * CSS definitions for template of a page,
+ * which has been marked as deleted.
+ */
+ 
+body {
+	padding: 0;
+	margin: 0;
+	background-color: #FAFBF4;
+}
+
+/* --- Message box underneath edit bar --- */
+div.mgnlMessageBox {
+	float: left;
+
+	margin: 25px;
+	padding: 20px;
+	border: 1px black solid;
+	
+	font-family: Verdana, sans-serif;
+	
+	background-color: #E4F5C9;
+}
+
+div.mgnlMessageBox h1 {
+	margin-top: 0px;
+
+	font-size: 24px;
+}
+
+div.mgnlMessageBox p {
+	font-size: 16px;
+}
+
+div.mgnlMessageBox p#pageDeleteOptions {
+	margin-bottom: 10px;
+}
+
+div.mgnlMessageBox div#pageDeleteOptions {
+	margin: 10px;
+}
+
+/* --- Embedded context menu --- */
+/* Style based on context menus used in AdminCentral. */
+div.mgnlTreeMenuEmbedded {
+	clear: both;
+	float: left;
+
+    width: 172px;
+    margin-left: 15px;
+    padding: 0;
+    border: #999 1px solid;
+    
+    background-color: #FAFBF4;
+}
+
+a.mgnlTreeMenuItemEmbedded {
+	display: block;
+
+    clear: both;
+    float: left;
+    
+    font-family: Verdana, sans-serif;
+    font-size: 11px;
+    text-decoration: none;
+    
+    color: #000;
+    
+    cursor: pointer;
+}
+
+a.mgnlTreeMenuItemEmbedded img.mgnlTreeMenuItemIcon {
+	float: left;
+	
+	margin: 0;
+	padding-left: 4px;
+	padding-right: 1px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border: none;
+}
+
+a.mgnlTreeMenuItemEmbedded div.mgnlTreeMenuItemCommand {
+	float: right;
+
+    width: 143px;
+	padding-left: 4px;
+	padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    
+    line-height: 16px;
+}
+
+div#mgnlPageDeletedOptions_gotoCentralCommand {
+	padding-left: 25px;
+}
+
+/* Hover over menu item */
+a#mgnlPageDeletedOptions_showPrevious:hover {
+	background-color: #F0F2E6;
+}
+
+a#mgnlPageDeletedOptions_undelete:hover {
+	background-color: #F0F2E6;
+}
+
+a#mgnlPageDeletedOptions_gotoCentral:hover {
+	background-color: #F0F2E6;
+}
+
+a.mgnlTreeMenuItemEmbedded:hover img.mgnlTreeMenuItemIcon {
+	background-color: #F0F2E6;
+}
+
+a.mgnlTreeMenuItemEmbedded:hover div.mgnlTreeMenuItemCommand {
+	background-color: #F0F2E6;
+}
+
+/* Separator line between undelete and goto */
+a#mgnlPageDeletedOptions_undelete {
+	border-bottom: #999 2px solid;
+}
