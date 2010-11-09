@@ -182,13 +182,13 @@ public abstract class VersionsList extends AbstractList {
             ContextMenuItem diffWithCurrent = new ContextMenuItem("diffWithCurrent");
             diffWithCurrent.setLabel(MessagesManager.get("versions.compareWithCurrent"));
             diffWithCurrent.setOnclick(this.getList().getName() + ".diffItemWithCurrent()");
-            diffWithCurrent.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
+            diffWithCurrent.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/compare_with_current.gif");
             diffWithCurrent.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
 
             ContextMenuItem diffWithPrevious = new ContextMenuItem("diffWithPrevious");
             diffWithPrevious.setLabel(MessagesManager.get("versions.compareWithPrevious"));
             diffWithPrevious.setOnclick(this.getList().getName() + ".diffItemWithPrevious()");
-            diffWithPrevious.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/elements1.gif");
+            diffWithPrevious.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/compare_with_previous.gif");
             diffWithPrevious.addJavascriptCondition("function(){return " + getList().getName()+".hasPreviousVersion()}");
 
             menu.addMenuItem(diffWithCurrent);
@@ -205,10 +205,10 @@ public abstract class VersionsList extends AbstractList {
      */
     @Override
     protected void configureFunctionBar(FunctionBar bar) {
-        if(isSupportsDiff()){
-            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
-            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
+        bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
+        bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
 
+        if(isSupportsDiff()){
             bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("diffWithCurrent")));
             bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("diffWithPrevious")));
         }
