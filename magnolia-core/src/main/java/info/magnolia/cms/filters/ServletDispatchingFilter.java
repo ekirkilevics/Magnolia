@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.util.CustomServletConfig;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -40,7 +41,6 @@ import info.magnolia.objectfactory.Classes;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -50,10 +50,7 @@ import java.util.regex.Pattern;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -106,7 +103,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         if (servletClass != null) {
             try {
                 servlet = Classes.newInstance(servletClass);
-                servlet.init(new WrappedServletConfig(servletName, filterConfig, parameters));
+                servlet.init(new CustomServletConfig(servletName, filterConfig.getServletContext(), parameters));
             }
             catch (Throwable e) {
                 log.error("Unable to load servlet " + servletClass + " : " + e.getMessage(), e);
@@ -150,11 +147,12 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     protected Matcher findMatcher(HttpServletRequest request) {
+        String uri = null;
         WebContext ctx = MgnlContext.getWebContextOrNull();
-        final String uri;
         if (ctx != null) {
-            uri = MgnlContext.getWebContext().getAggregationState().getCurrentURI();
-        } else {
+            uri = ctx.getAggregationState().getCurrentURI();
+        }
+        if (uri == null) {
             // the web context is not available during installation
             uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
         }
@@ -180,7 +178,8 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Dispatching to servlet {}", getServletClass());
         final Matcher matcher = findMatcher(request);
-        servlet.service(new WrappedRequest(request, matcher), response);
+        if (matcher != null)
+            servlet.service(new WrappedRequest(request, matcher), response);
     }
 
     public String getServletName() {
@@ -289,60 +288,20 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         this.comment = comment;
     }
 
-    private final static class WrappedServletConfig implements ServletConfig {
+    /**
+     * Request wrapper that overrides servletPath and pathInfo with new values. If any of the path elements changes in
+     * a wrapper behind it then it returns them instead of the overridden values. This happens on forwards. It's
+     * necessary to check all four since they act as a group, if any of them changes we cannot override any of them.
+     */
+    private static class WrappedRequest extends HttpServletRequestWrapper {
 
-        private final String servletName;
+        private String originalRequestUri;
+        private String originalServletPath;
+        private String originalPathInfo;
+        private String originalQueryString;
 
-        private final FilterConfig filterConfig;
-
-        private final Map parameters;
-
-        public WrappedServletConfig(String servletName, FilterConfig filterConfig, Map parameters) {
-            this.servletName = servletName;
-            this.filterConfig = filterConfig;
-            this.parameters = parameters;
-        }
-
-        public String getInitParameter(String name) {
-            return (String) parameters.get(name);
-        }
-
-        public Enumeration getInitParameterNames() {
-            return new Enumeration() {
-
-                private Iterator iter = parameters.keySet().iterator();
-
-                public boolean hasMoreElements() {
-                    return iter.hasNext();
-                }
-
-                public Object nextElement() {
-                    return iter.next();
-                }
-            };
-        }
-
-        public ServletContext getServletContext() {
-            return filterConfig.getServletContext();
-        }
-
-        public String getServletName() {
-            return servletName;
-        }
-
-    }
-
-    private class WrappedRequest extends HttpServletRequestWrapper {
-
-        private Matcher matcher;
-
-        /**
-         * This is set to true when the original request object passed
-         * in is changed by the setRequest() method.  This can indicate
-         * that a forward occurred and the values pulled from the
-         * matcher should no longer be used.
-         */
-        private boolean requestReplaced = false;
+        private String newServletPath;
+        private String newPathInfo;
 
         /**
          * The given Matcher should be built from a Pattern containing two groups:
@@ -350,35 +309,47 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
          */
         public WrappedRequest(HttpServletRequest request, Matcher matcher) {
             super(request);
-            this.matcher = matcher;
+
+            this.originalRequestUri = request.getRequestURI();
+            this.originalServletPath = request.getServletPath();
+            this.originalPathInfo = request.getPathInfo();
+            this.originalQueryString = request.getQueryString();
+
+            this.newServletPath = matcher.group(1);
+            if (matcher.groupCount() > 2) {
+                String pathInfo = matcher.group(3);
+                // pathInfo should be null when empty
+                if (!pathInfo.equals("")) {
+                    // according to the servlet spec the pathInfo should contain a leading slash
+                    this.newPathInfo = (pathInfo.startsWith("/") ? pathInfo : "/" + pathInfo);
+                }
+            }
         }
 
         public String getPathInfo() {
-            if (requestReplaced) {
-                return super.getPathInfo();
-            }
-            if (matcher.groupCount() > 2) {
-                String pathInfo = matcher.group(3);
-                if (pathInfo.equals("")) {
-                    return null;
-                }
-                // according to the servlet spec the pathInfo should contain a leading slash
-                return (pathInfo.startsWith("/") ? pathInfo : "/" + pathInfo);
-            }
-            return null;
+            String current = super.getPathInfo();
+            if (!StringUtils.equals(super.getRequestURI(), originalRequestUri))
+                return current;
+            if (!StringUtils.equals(super.getServletPath(), originalServletPath))
+                return current;
+            if (!StringUtils.equals(current, originalPathInfo))
+                return current;
+            if (!StringUtils.equals(super.getQueryString(), originalQueryString))
+                return current;
+            return newPathInfo;
         }
 
         public String getServletPath() {
-            if (requestReplaced) {
-                return super.getServletPath();
-            }
-            return matcher.group(1);
+            String current = super.getServletPath();
+            if (!StringUtils.equals(super.getRequestURI(), originalRequestUri))
+                return current;
+            if (!StringUtils.equals(current, originalServletPath))
+                return current;
+            if (!StringUtils.equals(super.getPathInfo(), originalPathInfo))
+                return current;
+            if (!StringUtils.equals(super.getQueryString(), originalQueryString))
+                return current;
+            return newServletPath;
         }
-
-        public void setRequest(ServletRequest request) {
-            requestReplaced = true;
-            super.setRequest(request);
-        }
-
     }
 }

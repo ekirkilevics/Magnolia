@@ -39,17 +39,12 @@ import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
 
 /**
  * Normalizes the current URI to the NFC form which is used internally.
@@ -58,16 +53,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author Luca Boati
  * @version $Id: $
  */
-public class UnicodeNormalizationFilter extends AbstractMgnlFilter
-{
+public class UnicodeNormalizationFilter extends AbstractMgnlFilter {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException
-    {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         String originalBrowserURI = MgnlContext.getContextPath() + aggregationState.getOriginalBrowserURI();
         String originalBrowserURL = aggregationState.getOriginalBrowserURL();
@@ -87,17 +77,14 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         MgnlContext.getAggregationState().setOriginalURI(originalURINormalized);
         MgnlContext.getAggregationState().setOriginalURL(originalURLNormalized);
 
-        HttpServletRequest unicodeRequest = new UnicodeNormalizerRequestWrapper(request);
+        HttpServletRequest unicodeRequest = new UnicodeNormalizationRequestWrapper(request);
         MgnlContext.push(unicodeRequest, response);
         try {
             if (MgnlContext.getPostedForm() != null) {
                 // if it is a multipart form, request is already wrapped and parameters are read from multipartform object;
                 // parameters are sometimes read by form.getParameter (deprecated) so we have to convert values in
-                // multipartform.paramters map
-                for (Object key : MgnlContext.getPostedForm().getParameters().keySet()) {
-                    String[] value = transform((String[]) MgnlContext.getPostedForm().getParameters().get(key));
-                    MgnlContext.getPostedForm().getParameters().put((String) key, value);
-                }
+                // multipartform.parameters map
+                normalizeParameterMap(MgnlContext.getPostedForm().getParameters());
             }
 
             chain.doFilter(unicodeRequest, response);
@@ -106,107 +93,16 @@ public class UnicodeNormalizationFilter extends AbstractMgnlFilter
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    private void normalizeParameterMap(Map<String, String[]> parameterMap) {
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            entry.setValue(UnicodeNormalizer.normalizeNFC(entry.getValue()));
+        }
+    }
+
     @Override
-    public boolean isEnabled()
-    {
-        // @todo this filter is enabled only if utf8 support is enabled. remove it when the check of this property is
-        // not needed anymore.
+    public boolean isEnabled() {
+        // @todo this filter is enabled only if utf8 support is enabled. remove it when the check of this property is not needed anymore.
         return super.isEnabled() && SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED);
-    }
-
-    private static String[] transform(String[] input)
-    {
-        String[] toNormalize = input;
-        if (toNormalize != null && toNormalize.length > 0)
-        {
-            for (int i = 0; i < toNormalize.length; i++)
-            {
-                toNormalize[i] = UnicodeNormalizer.normalizeNFC(toNormalize[i]);
-            }
-        }
-        return toNormalize;
-    }
-
-    /**
-     * Normalizes the parameter strings.
-     */
-    public class UnicodeNormalizerRequestWrapper extends HttpServletRequestWrapper
-    {
-
-        private HttpServletRequest original;
-
-        private Map parameters;
-
-        /**
-         * @param request
-         */
-        public UnicodeNormalizerRequestWrapper(HttpServletRequest request)
-        {
-            super(request);
-            original = request;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getParameter(String name)
-        {
-            String[] values = getParameterValues(name);
-            if (values != null && values.length > 0)
-            {
-                return values[0];
-            }
-            return null;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Map getParameterMap()
-        {
-            if (parameters == null)
-            {
-                parameters = new HashMap<String, String[]>();
-                for (Object key : original.getParameterMap().keySet())
-                {
-                    String[] value = transform((String[]) original.getParameterMap().get(key));
-                    parameters.put(key, value);
-                }
-            }
-            return parameters;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String[] getParameterValues(String name)
-        {
-            return (String[]) getParameterMap().get(name);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getHeader(String name) {
-            String header = null;
-            try {
-                header = super.getHeader(name);
-                if (header != null) {
-                    header = URLDecoder.decode(header, getCharacterEncoding());
-                }
-            }
-            catch (UnsupportedEncodingException e) {
-                header = super.getHeader(name);
-            }
-            return header;
-        }
     }
 
 }

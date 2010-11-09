@@ -64,10 +64,21 @@ public class UnicodeNormalizer {
 
     private static final Normalizer normalizer = Components.getSingleton(Normalizer.class);
 
+    public static String[] normalizeNFC(String[] values) {
+        if (values == null)
+            return null;
+        for (int i = 0; i < values.length; i++) {
+            values[i] = normalizeNFC(values[i]);
+        }
+        return values;
+    }
+
     /**
      * Normalizes the given String to the NFC form.
      */
     public static String normalizeNFC(String in) {
+        if (in == null)
+            return null;
         return normalizer.normalizeNFC(in);
         /* if you're in dire need to debug:
          try {

@@ -40,16 +40,13 @@ import info.magnolia.context.MgnlContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
@@ -216,51 +213,5 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         }
 
         form.addDocument(atomName, fileName, type, file);
-    }
-
-
-    /**
-     * Hides the complexity and exposes the parameter as if they were normal post parameters.
-     */
-    static class MultipartRequestWrapper extends HttpServletRequestWrapper {
-        private final MultipartForm form;
-
-        public MultipartRequestWrapper(HttpServletRequest request, MultipartForm form) {
-            super(request);
-            this.form = form;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public String getParameter(String name) {
-            String value = form.getParameter(name);
-            log.debug("getParameter: {}={}", name, value);
-            return value;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public Map getParameterMap() {
-            return form.getParameters();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public Enumeration getParameterNames() {
-            return form.getParameterNames();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public String[] getParameterValues(String name) {
-            String[] value = form.getParameterValues(name);
-            log.debug("getParameterValues: {}={}", name, value);
-            return value;
-        }
-
     }
 }

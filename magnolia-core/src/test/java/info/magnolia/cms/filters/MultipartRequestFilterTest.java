@@ -33,31 +33,31 @@
  */
 package info.magnolia.cms.filters;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.easymock.IAnswer;
+
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import junit.framework.TestCase;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import static org.easymock.EasyMock.*;
-
-import org.easymock.IAnswer;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author Andreas Brenk
@@ -92,12 +92,12 @@ public class MultipartRequestFilterTest extends TestCase {
     }
 
     public void testFilterCOS() throws Throwable {
-        webCtx.push(isA(CosMultipartRequestFilter.MultipartRequestWrapper.class), eq(res));
+        webCtx.push(isA(MultipartRequestWrapper.class), eq(res));
         doTest(new CosMultipartRequestFilter(), "text/xml");
     }
 
     public void testFilterCommonsFileUpload() throws Throwable {
-        webCtx.push(isA(MultipartRequestFilter.MultipartRequestWrapper.class), eq(res));
+        webCtx.push(isA(MultipartRequestWrapper.class), eq(res));
         doTest(new MultipartRequestFilter(), "text/xml; charset=UTF-8");
     }
 
@@ -113,6 +113,7 @@ public class MultipartRequestFilterTest extends TestCase {
             }
         };
 
+        req.setAttribute(isA(String.class), isA(Boolean.class));
         expect(req.getContentType()).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getHeader("Content-Type")).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getCharacterEncoding()).andReturn("UTF-8").anyTimes();
