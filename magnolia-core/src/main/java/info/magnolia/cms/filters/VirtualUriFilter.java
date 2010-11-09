@@ -87,12 +87,22 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
                 } else if (targetUri.startsWith("permanent:")) {
                     String permanentUrl = StringUtils.substringAfter(targetUri, "permanent:");
 
-                    if (isInternal(permanentUrl)) {
-                        permanentUrl = new URL(
-                            request.getScheme(),
-                            request.getServerName(),
-                            request.getServerPort(),
-                            request.getContextPath() + permanentUrl).toExternalForm();
+                    final String requestScheme = request.getScheme();
+                    if(isInternal(permanentUrl)){
+                        int serverPort = request.getServerPort();
+                        if((serverPort == 80 && "http".equals(requestScheme)) ||
+                           (serverPort == 443 && "https".equals(requestScheme))){
+                            permanentUrl = new URL(
+                                request.getScheme(),
+                                request.getServerName(),
+                                request.getContextPath() + permanentUrl).toExternalForm();
+                        } else {
+                            permanentUrl = new URL(
+                                request.getScheme(),
+                                request.getServerName(),
+                                serverPort,
+                                request.getContextPath() + permanentUrl).toExternalForm();
+                        }
                     }
 
                     response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
