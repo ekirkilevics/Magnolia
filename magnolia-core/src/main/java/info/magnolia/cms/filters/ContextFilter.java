@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -49,15 +50,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-
 /**
- * This class initializes the current context.
+ * This class initializes the current context and configures MDC logging.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public class ContextFilter extends AbstractMgnlFilter {
 
     public static Logger log = LoggerFactory.getLogger(ContextFilter.class);
+
     private ServletContext servletContext;
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -66,12 +68,17 @@ public class ContextFilter extends AbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        // if the filter chain was reset, this filter could be called several time. Using this flag so that only the
-        // first call will unset the context (which should be the last post-filters operation)
-        boolean contextSet = false;
+
+        // This filter can be invoked multiple times. The first time it's called it initializes the MgnlContext. On
+        // subsequent invocations it only pushes the request and response objects on the stack in WebContext. The
+        // multiple invocations result from either dispatching a forward, an include or an error request, and also
+        // when the filter chain is reset (which happens when logging out).
+
+        final Context originalContext = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
+        boolean initializedContext = false;
         if (!MgnlContext.hasInstance() || MgnlContext.isSystemInstance()) {
             MgnlContext.initAsWebContext(request, response, servletContext);
-            contextSet = true;
+            initializedContext = true;
             try {
                 String uri = request.getRequestURI();
                 if (uri != null) {
@@ -109,25 +116,24 @@ public class ContextFilter extends AbstractMgnlFilter {
                 log.debug(e.getMessage(), e);
             }
         }
-        if (!contextSet) {
+        if (!initializedContext) {
             // push req/res every time except the first time
             MgnlContext.push(request, response);
         }
         try {
             chain.doFilter(request, response);
         } finally {
-            if (!contextSet) {
+            if (!initializedContext) {
                 // pop req/res every time except the first time
                 MgnlContext.pop();
             }
-            if (contextSet) {
+            if (initializedContext) {
                 MgnlContext.release();
-                MgnlContext.setInstance(null);
+                MgnlContext.setInstance(originalContext);
 
                 // cleanup
                 MDC.clear();
             }
         }
     }
-
 }

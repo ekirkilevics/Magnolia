@@ -34,6 +34,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.security.User;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.ModuleManagementException;
@@ -77,6 +78,7 @@ public class InstallFilter extends AbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // this isn't the cleanest thing, but we're basically tricking FreemarkerHelper into using a Context, while avoiding using WebContextImpl and its depedencies on the repository
+        final Context originalContext = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
         final InstallWebContext ctx = new InstallWebContext();
         ctx.init(request, response, servletContext);
         MgnlContext.setInstance(ctx);
@@ -108,7 +110,7 @@ public class InstallFilter extends AbstractMgnlFilter {
             throw new RuntimeException(e); // TODO
         } finally {
             MgnlContext.release();
-            MgnlContext.setInstance(null);
+            MgnlContext.setInstance(originalContext);
         }
     }
 

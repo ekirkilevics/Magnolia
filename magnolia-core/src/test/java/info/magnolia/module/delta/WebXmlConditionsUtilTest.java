@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.cms.filters.ContextFilter;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -74,5 +75,65 @@ public class WebXmlConditionsUtilTest extends TestCase {
         replay(installContext);
         assertEquals(expectedResult, condition.check(installContext));
         verify(installContext);
+    }
+
+    public void testFalseConditionWhenContextFilterMissing() {
+
+        assertWebXmlResultsInCondition(
+                "web-xml-without-context-filter.xml",
+                FalseCondition.class,
+                "web.xml updates",
+                "Since Magnolia 4.4, the Magnolia context filter " + ContextFilter.class.getName() + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR."
+                    + " Please add " +
+                    " <filter>\n" +
+                    "   <display-name>Magnolia context filter</display-name>\n" +
+                    "   <filter-name>magnoliaContextFilter</filter-name>\n" +
+                    "   <filter-class>info.magnolia.cms.filters.ContextFilter</filter-class>\n" +
+                    " </filter>\n" +
+                    " <filter-mapping>\n" +
+                    "   <filter-name>magnoliaContextFilter</filter-name>\n" +
+                    "   <url-pattern>/*</url-pattern>\n" +
+                    "   <dispatcher>REQUEST</dispatcher>\n" +
+                    "   <dispatcher>FORWARD</dispatcher>\n" +
+                    "   <dispatcher>INCLUDE</dispatcher>\n" +
+                    "   <dispatcher>ERROR</dispatcher>\n" +
+                    " </filter-mapping>\n" +
+                    " to your web.xml file.");
+
+        assertWebXmlResultsInCondition(
+                "web-xml-with-context-filter.xml",
+                TrueCondition.class,
+                "web.xml updates",
+                "Since Magnolia 4.4, the Magnolia context filter " + ContextFilter.class.getName() + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR.");
+
+        assertWebXmlResultsInCondition(
+                "web-xml-with-context-filter-but-additional-dispatcher.xml",
+                WarnCondition.class,
+                "web.xml updates",
+                "Since Magnolia 4.4, the Magnolia context filter " + ContextFilter.class.getName() + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR.");
+
+        assertWebXmlResultsInCondition(
+                "web-xml-with-context-filter-but-missing-dispatcher.xml",
+                FalseCondition.class,
+                "web.xml updates",
+                "Since Magnolia 4.4, the Magnolia context filter " + ContextFilter.class.getName() + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR."
+                + " Please add \n"
+                + " <dispatcher>REQUEST</dispatcher>\n"
+                + " <dispatcher>FORWARD</dispatcher>\n"
+                + " <dispatcher>INCLUDE</dispatcher>\n"
+                + " <dispatcher>ERROR</dispatcher>\n"
+                + " to the filter-mapping element in your web.xml file.");
+    }
+
+    private void assertWebXmlResultsInCondition(String webxmlfile, Class<? extends Condition> conditionClass, String conditionName, String conditionDescription) {
+        final ArrayList<Condition> conditions = new ArrayList<Condition>();
+        final WebXmlUtil webxml = new WebXmlUtil(WebXmlUtil.class.getResourceAsStream(webxmlfile));
+        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(webxml, conditions);
+        u.contextFilterMustBeRegisteredWithCorrectDispatchers(ContextFilter.class.getName());
+        assertEquals(1, conditions.size());
+        Condition condition = conditions.get(0);
+        assertTrue(conditionClass.isAssignableFrom(condition.getClass()));
+        assertEquals(conditionName, condition.getName());
+        assertEquals(conditionDescription, condition.getDescription());
     }
 }

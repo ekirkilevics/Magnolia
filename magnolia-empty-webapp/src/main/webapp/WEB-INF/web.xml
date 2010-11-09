@@ -5,6 +5,19 @@
   <display-name>magnolia</display-name>
   <distributable/>
   <filter>
+    <display-name>Magnolia context filter</display-name>
+    <filter-name>magnoliaContextFilter</filter-name>
+    <filter-class>info.magnolia.cms.filters.ContextFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>magnoliaContextFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+  <filter>
     <display-name>Magnolia global filters</display-name>
     <filter-name>magnoliaFilterChain</filter-name>
     <filter-class>info.magnolia.cms.filters.MgnlMainFilter</filter-class>
