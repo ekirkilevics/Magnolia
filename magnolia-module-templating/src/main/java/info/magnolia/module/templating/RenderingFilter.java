@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
+import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.objectfactory.Components;
@@ -128,7 +129,12 @@ public class RenderingFilter extends AbstractMgnlFilter {
     }
 
     protected void render(Content content, String templateName, HttpServletResponse response) throws IOException, RenderException {
-        renderingEngine.render(content, templateName, response.getWriter());
+
+        // This lazy print writer will only acquire the writer from response if it is going to be used. This allows
+        // templates to use the output stream if they wish. See MAGNOLIA-3014.
+        LazyInitPrintWriter out = new LazyInitPrintWriter(response);
+
+        renderingEngine.render(content, templateName, out);
     }
 
 
