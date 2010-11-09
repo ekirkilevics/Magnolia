@@ -70,7 +70,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MultipartRequestFilter extends AbstractMgnlFilter {
+public class MultipartRequestFilter extends OncePerRequestAbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(MultipartRequestFilter.class);
 
     /**

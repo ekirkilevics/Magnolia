@@ -54,7 +54,7 @@ import com.oreilly.servlet.MultipartRequest;
  * @author Sameer Charles
  * @version $Id$
  */
-public class CosMultipartRequestFilter extends AbstractMgnlFilter {
+public class CosMultipartRequestFilter extends OncePerRequestAbstractMgnlFilter {
 
     /**
      * Max file upload size.
