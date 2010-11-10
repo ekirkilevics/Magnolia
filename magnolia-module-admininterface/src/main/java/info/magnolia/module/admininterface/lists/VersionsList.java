@@ -228,9 +228,15 @@ public abstract class VersionsList extends AbstractList {
 
     public String restore() {
         try {
-            Content node = this.getNode();
+            final Content node = this.getNode();
+            final String version = this.getVersionLabel();
             node.addVersion();
-            node.restore(this.getVersionLabel(), true);
+            try {
+                node.restore(version, true);
+            } catch (InvalidItemStateException e) {
+                node.refresh(false);
+                node.restore(version, true);
+            }
             AlertUtil.setMessage(MessagesManager.get("versions.restore.latest.success"));
         }
         catch (Exception e) {
