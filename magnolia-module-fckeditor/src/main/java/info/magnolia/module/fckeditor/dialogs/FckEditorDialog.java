@@ -446,12 +446,12 @@ public class FckEditorDialog extends DialogBox {
         out.write("MgnlFCKConfigs." + id + ".shiftEnterMode = '" + shiftEnterMode + "';\n");
 
         if(StringUtils.isNotBlank(spellChecker)) {
-            if(!isSpellCheckerValid(spellChecker)){
-                log.warn("Invalid spellchecker {} configured for fckEditor. Valid options are {}", spellChecker, SpellCheckerProviders.values());
-                out.write("alert('" + spellChecker + " is not a valid spell checker. Spell checking will not be available. Please contact your administrator.');\n");
-            } else {
+            if(isSpellCheckerValid(spellChecker)){
                 out.write("MgnlFCKConfigs." + id + ".spellChecker = '" + spellChecker + "';\n");
                 out.write("MgnlFCKConfigs." + id + ".showSpellChecker = " + showSpellChecker + ";\n");
+            } else {
+                log.warn("Invalid spellchecker {} configured for fckEditor. Valid options are {}", spellChecker, SpellCheckerProviders.values());
+                out.write("alert('" + spellChecker + " is not a valid spell checker. Spell checking will not be available.');\n");
             }
         }
 
