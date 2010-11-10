@@ -104,6 +104,8 @@ a.mgnlTreeMenuItemEmbedded div.mgnlTreeMenuItemCommand {
 
 div#mgnlPageDeletedOptions_gotoCentralCommand {
 	padding-left: 25px;
+	/* Separator line between undelete and goto */
+	border-top: #999 2px solid;
 }
 
 /* Hover over menu item */
@@ -129,9 +131,4 @@ a.mgnlTreeMenuItemEmbedded:hover img.mgnlTreeMenuItemIcon {
 
 a.mgnlTreeMenuItemEmbedded:hover div.mgnlTreeMenuItemCommand {
 	background-color: #F0F2E6;
-}
-
-/* Separator line between undelete and goto */
-a#mgnlPageDeletedOptions_undeleteAll {
-	border-bottom: #999 2px solid;
 }
