@@ -155,12 +155,13 @@ import java.util.regex.Matcher;
  * <td>A spellchecker provider.</td>
  * <td>Possible values are:
  * <ul>
- * <li><code>ieSpell</code>
- * <li><code>SpellerPages</code>
- * <li><code>WSC</code> - Web Spell Checker provided by SpellChecker.net
- * <li><code>SCAYT</code> - "Spell Check as You Type" provided by SpellChecker.net <strong>(the default)</strong>
+ * <li><strong>By default spell checking is not enabled.</strong> This amounts to an empty value.
+ * <li><code>ieSpell</code> A spell checker for IE only.
+ * <li><code>SpellerPages</code> Requires a separate php or perl setup.
+ * <li><code>WSC</code> - Web Spell Checker provided by SpellChecker.net (free with advertisements)
+ * <li><code>SCAYT</code> - "Spell Check as You Type" provided by SpellChecker.net (free with advertisements)
  * </ul>
- * <p>More info about the FCK spell checker feature here
+ * <p>More information about the FCK spell checker feature can be found here
  * <a href="http://docs.cksource.com/FCKeditor_2.x/Developers_Guide/Configuration/Configuration_Options/SpellChecker">Configuration_Options/SpellChecker</a>
  * and here <a href="http://docs.cksource.com/FCKeditor_2.x/Developers_Guide/Configuration/Spell_Checker">Configuration/Spell_Checker</a>
  * </td>
@@ -267,7 +268,12 @@ public class FckEditorDialog extends DialogBox {
 
     private static final String PARAM_SHOW_SPELL_CHECKER_DEFAULT = "true";
 
-    private static final String PARAM_SPELL_CHECKER_DEFAULT = "SCAYT"; // 'WSC' | 'SCAYT' | 'SpellerPages' | 'ieSpell'
+    private static final String PARAM_SPELL_CHECKER_DEFAULT = ""; // 'WSC' | 'SCAYT' | 'SpellerPages' | 'ieSpell'
+
+    public enum SpellCheckerProviders {
+
+        WSC, SCAYT, SpellerPages, ieSpell
+    }
 
 
     /**
@@ -433,7 +439,16 @@ public class FckEditorDialog extends DialogBox {
         out.write("MgnlFCKConfigs." + id + ".templates = '" + templates + "';\n");
         out.write("MgnlFCKConfigs." + id + ".enterMode = '" + enterMode + "';\n");
         out.write("MgnlFCKConfigs." + id + ".shiftEnterMode = '" + shiftEnterMode + "';\n");
-        out.write("MgnlFCKConfigs." + id + ".spellChecker = '" + spellChecker + "';\n");
+
+        if(StringUtils.isNotBlank(spellChecker)) {
+            if(!isSpellCheckerValid(spellChecker)){
+                log.warn("Invalid spellchecker {} configured for fckEditor. Valid options are {}", spellChecker, SpellCheckerProviders.values());
+                out.write("alert('" + spellChecker + " is not a valid spell checker. Spell checking will not be available. Please contact your administrator.');\n");
+            } else {
+                out.write("MgnlFCKConfigs." + id + ".spellChecker = '" + spellChecker + "';\n");
+                out.write("MgnlFCKConfigs." + id + ".showSpellChecker = " + showSpellChecker + ";\n");
+            }
+        }
 
         // boolean values
         out.write("MgnlFCKConfigs." + id + ".lists = " + lists + ";\n");
@@ -441,7 +456,6 @@ public class FckEditorDialog extends DialogBox {
         out.write("MgnlFCKConfigs." + id + ".tables = " + tables + ";\n");
         out.write("MgnlFCKConfigs." + id + ".images = " + images + ";\n");
         out.write("MgnlFCKConfigs." + id + ".source = " + source + ";\n");
-        out.write("MgnlFCKConfigs." + id + ".showSpellChecker = " + showSpellChecker + ";\n");
     }
 
     /**
@@ -494,4 +508,15 @@ public class FckEditorDialog extends DialogBox {
         return StringEscapeUtils.escapeJavaScript(src);
     }
 
+
+    private boolean isSpellCheckerValid(String spellChecker) {
+        boolean isValid = false;
+        for(SpellCheckerProviders value: SpellCheckerProviders.values()){
+            if(value.toString().equals(spellChecker)){
+                isValid = true;
+                break;
+            }
+        }
+        return isValid;
+    }
 }
