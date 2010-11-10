@@ -270,6 +270,11 @@ public class FckEditorDialog extends DialogBox {
 
     private static final String PARAM_SPELL_CHECKER_DEFAULT = ""; // 'WSC' | 'SCAYT' | 'SpellerPages' | 'ieSpell'
 
+    /**
+     * The spell checker providers supported by fckEditor.
+     * @author fgrilli
+     *
+     */
     public enum SpellCheckerProviders {
 
         WSC, SCAYT, SpellerPages, ieSpell
