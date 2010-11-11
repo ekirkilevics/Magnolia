@@ -112,6 +112,11 @@
       <artifactId>commons-beanutils</artifactId>
     </dependency>
     <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
+    </dependency>
+    <dependency>
       <groupId>commons-betwixt</groupId>
       <artifactId>commons-betwixt</artifactId>
       <!-- Following exclusions are not inherited from the parent pom and need to be defined here. If you think about removing them, be sure to build DMS afterwards. -->
