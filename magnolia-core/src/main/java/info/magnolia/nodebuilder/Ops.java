@@ -154,12 +154,12 @@ public abstract class Ops {
     }
 
     /**
-     * Renames the node defined by the name parameter.
+     * Renames a node.
      */
-    public static NodeOperation renameNode(final String name, final String newName) {
+    public static NodeOperation renameNode(final String currentName, final String newName) {
         return new AbstractOp() {
             Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
-                ContentUtil.rename(context.getContent(name), newName);
+                ContentUtil.rename(context.getContent(currentName), newName);
                 return context;
             }
         };
@@ -187,24 +187,24 @@ public abstract class Ops {
     }
 
     /**
-     * Moves the node defined by the name parameter in the session.
+     * Moves a node, using session-scoped operation.
      */
-    public static NodeOperation moveNode(final String name, final String dest) {
+    public static NodeOperation moveNode(final String nodeName, final String dest) {
         return new AbstractOp() {
             Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
-                ContentUtil.moveInSession(context.getContent(name), dest);
+                ContentUtil.moveInSession(context.getContent(nodeName), dest);
                 return context;
             }
         };
     }
 
     /**
-     * Copies the node defined by the name parameter in the session.
+     * Copies a node, using session-scoped operation.
      */
-    public static NodeOperation copyNode(final String name, final String dest) {
+    public static NodeOperation copyNode(final String nodeName, final String dest) {
         return new AbstractOp() {
             Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
-                ContentUtil.copyInSession(context.getContent(name), dest);
+                ContentUtil.copyInSession(context.getContent(nodeName), dest);
                 return context;
             }
         };
