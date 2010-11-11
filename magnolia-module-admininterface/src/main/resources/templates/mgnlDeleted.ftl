@@ -14,7 +14,7 @@
     <p id="mgnlPageDeletedOptions">${i18n["templates.mgnlDeleted.options"]}</p>
     [#if hasLastVersion]
     <div id="mgnlPageDeletedOptions" class="mgnlTreeMenuEmbedded">
-      <a id="mgnlPageDeletedOptions_showPrevious" class="mgnlTreeMenuItemEmbedded" href="${ctx.contextPath}/${page.@name}.html?mgnlVersion=${lastVersion}" target="_blank">
+      <a id="mgnlPageDeletedOptions_showPrevious" class="mgnlTreeMenuItemEmbedded" href="${mgnl.createLink(page)}?mgnlVersion=${lastVersion}" target="_blank">
         <img class="mgnlTreeMenuItemIcon" src="${ctx.contextPath}/.resources/admin-images/showPreviousVersion.gif"/>
         <div class="mgnlTreeMenuItemCommand">${i18n["templates.mgnlDeleted.showLastVersion"]}</div>
       </a>
