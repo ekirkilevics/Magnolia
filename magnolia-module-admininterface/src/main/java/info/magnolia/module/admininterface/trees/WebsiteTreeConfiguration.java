@@ -61,7 +61,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");");
 
         tree.addItemType(ItemType.CONTENT);
-        tree.addIcon(ItemType.DELETED_NODE_MIXIN, request.getContextPath() + "/.resources/icons/16/document_deleted.gif");
+        tree.addIcon(ItemType.DELETED_NODE_MIXIN, "/.resources/icons/16/document_deleted.gif");
 
         TreeColumn column0 = TreeColumn.createLabelColumn(tree, msgs.get("tree.web.page"), true);
         column0.setWidth(3);

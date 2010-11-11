@@ -166,7 +166,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     protected boolean browseMode;
 
-    private String enableDeleteConfirmation = "true";
+    private boolean enableDeleteConfirmation = true;
 
     /**
      * Override this method if you are not using the same name for the tree and the repository
@@ -956,15 +956,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         this.rootPath = rootPath;
     }
 
-    public String getEnableDeleteConfirmation() {
+    public boolean isEnableDeleteConfirmation() {
         return enableDeleteConfirmation;
     }
 
-    public boolean isEnableDeleteConfirmation() {
-        return Boolean.parseBoolean(enableDeleteConfirmation);
-    }
-
-    public void setEnableDeleteConfirmation(String enableConfirmation) {
+    public void setEnableDeleteConfirmation(boolean enableConfirmation) {
         this.enableDeleteConfirmation = enableConfirmation;
         AdminTreeConfiguration conf = getConfiguration();
         if (conf != null && conf instanceof AbstractTreeConfiguration) {
