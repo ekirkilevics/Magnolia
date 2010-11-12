@@ -178,8 +178,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Dispatching to servlet {}", getServletClass());
         final Matcher matcher = findMatcher(request);
-        if (matcher != null)
-            servlet.service(new WrappedRequest(request, matcher), response);
+        servlet.service(new WrappedRequest(request, matcher), response);
     }
 
     public String getServletName() {

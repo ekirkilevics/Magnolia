@@ -197,7 +197,9 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         filter.addMapping(mapping);
 
         assertEquals("Should " + (shouldBypass ? "" : "not ") + "have bypassed", shouldBypass, filter.bypasses(req));
-        filter.doFilter(req, res, chain);
+        if (!shouldBypass) {
+            filter.doFilter(req, res, chain);
+        }
 
         verify(chain, res, req, servlet, ctx);
     }
