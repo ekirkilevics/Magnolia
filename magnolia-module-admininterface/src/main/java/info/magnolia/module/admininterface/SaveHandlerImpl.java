@@ -395,6 +395,8 @@ public class SaveHandlerImpl implements SaveHandler {
         valueStr = cleanLineBreaks(valueStr, isRichEditValue);
 
         if (isRichEditValue == ControlImpl.RICHEDIT_FCK) {
+            // MAGNOLIA-3384: remove scayt <span> http://dev.ckeditor.com/ticket/3560
+            valueStr = valueStr.replaceAll("<span scaytid=\"\\d*\" scayt_word=\".*?\">(.*?)</span>", "$1");
             valueStr = updateLinks(node, name, valueStr);
         }
 
