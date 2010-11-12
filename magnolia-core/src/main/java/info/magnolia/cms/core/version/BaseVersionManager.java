@@ -36,7 +36,6 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.ExclusiveWrite;
@@ -52,6 +51,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,6 +61,8 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Value;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
@@ -188,8 +190,10 @@ public abstract class BaseVersionManager {
             log.debug("Returning root version of the source node");
             return node.getJCRNode().getVersionHistory().getRootVersion();
         }
+
         CopyUtil.getInstance().copyToversion(node, new RuleBasedContentFilter(rule));
         Content versionedNode = this.getVersionedNode(node);
+
         checkAndAddMixin(versionedNode);
         Content systemInfo = this.getSystemNode(versionedNode);
         // add serialized rule which was used to create this version
@@ -199,15 +203,8 @@ public abstract class BaseVersionManager {
             objectOut.writeObject(rule);
             objectOut.flush();
             objectOut.close();
-            NodeData nodeData;
             // PROPERTY_RULE is not a part of MetaData to allow versioning of node types which does NOT support MetaData
-            if (!systemInfo.hasNodeData(PROPERTY_RULE)) {
-                nodeData = systemInfo.createNodeData(PROPERTY_RULE);
-            }
-            else {
-                nodeData = systemInfo.getNodeData(PROPERTY_RULE);
-            }
-            nodeData.setValue(new String(Base64.encodeBase64(out.toByteArray())));
+            systemInfo.setNodeData(PROPERTY_RULE, new String(Base64.encodeBase64(out.toByteArray())));
         }
         catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
@@ -218,23 +215,14 @@ public abstract class BaseVersionManager {
             userName = MgnlContext.getUser().getName();
         }
         // add all system properties for this version
-        if (!systemInfo.hasNodeData(ContentVersion.VERSION_USER)) {
-            systemInfo.createNodeData(ContentVersion.VERSION_USER).setValue(userName);
-        }
-        else {
-            systemInfo.getNodeData(ContentVersion.VERSION_USER).setValue(userName);
-        }
-        if (!systemInfo.hasNodeData(ContentVersion.NAME)) {
-            systemInfo.createNodeData(ContentVersion.NAME).setValue(node.getName());
-        }
-        else {
-            systemInfo.getNodeData(ContentVersion.NAME).setValue(node.getName());
-        }
+        systemInfo.setNodeData(ContentVersion.VERSION_USER, userName);
+        systemInfo.setNodeData(ContentVersion.NAME, node.getName());
 
         versionedNode.save();
         // add version
         Version newVersion = versionedNode.getJCRNode().checkin();
         versionedNode.getJCRNode().checkout();
+
         try {
             this.setMaxVersionHistory(versionedNode);
         }
@@ -334,12 +322,11 @@ public abstract class BaseVersionManager {
     /**
      * Get all versions.
      * @param node
-     * @return Version iterator retreived from version history
+     * @return Version iterator retrieved from version history
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    public synchronized VersionIterator getAllVersions(Content node) throws UnsupportedRepositoryOperationException,
-    RepositoryException {
+    public synchronized VersionIterator getAllVersions(Content node) throws UnsupportedRepositoryOperationException, RepositoryException {
         Content versionedNode = this.getVersionedNode(node);
         if (versionedNode == null) {
             // node does not exist in version store so no versions
@@ -358,12 +345,28 @@ public abstract class BaseVersionManager {
      * @throws javax.jcr.RepositoryException if an error occurs
      * @throws javax.jcr.version.VersionException
      */
-    public synchronized void restore(Content node, Version version, boolean removeExisting) throws VersionException,
-    UnsupportedRepositoryOperationException, RepositoryException {
+    public synchronized void restore(Content node, Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         // get the cloned node from version store
         Content versionedNode = this.getVersionedNode(node);
+
         versionedNode.getJCRNode().restore(version, removeExisting);
         versionedNode.getJCRNode().checkout();
+        //mixins are NOT restored automatically
+        List<String> mixins = new ArrayList<String>();
+        for (Value v: version.getNode("jcr:frozenNode").getProperty("jcr:frozenMixinTypes").getValues()) {
+            mixins.add(v.getString());
+        }
+        final Content systemVersionedNode = MgnlContext.getSystemContext().getHierarchyManager(versionedNode.getHierarchyManager().getName()).getContentByUUID(versionedNode.getUUID());
+        for (NodeType nt : versionedNode.getMixinNodeTypes()) {
+            if (!mixins.remove(nt.getName())) {
+                systemVersionedNode.removeMixin(nt.getName());
+            }
+        }
+        for (String mix : mixins) {
+            systemVersionedNode.addMixin(mix);
+        }
+        systemVersionedNode.save();
+
         List permissions = this.getAccessManagerPermissions();
         this.impersonateAccessManager(null);
         try {
@@ -375,7 +378,6 @@ public abstract class BaseVersionManager {
                     if (node.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
                         node.removeMixin(ItemType.DELETED_NODE_MIXIN);
                     }
-
                     node.save();
                 }
             }
@@ -436,11 +438,11 @@ public abstract class BaseVersionManager {
     }
 
     /**
-     * Veryfies the existence of the mix:versionable and adds it if not.
+     * Verifies the existence of the mix:versionable and adds it if not.
      */
     protected void checkAndAddMixin(Content node) throws RepositoryException {
         if(!node.getJCRNode().isNodeType("mix:versionable")){
-            log.debug("Add mixin");
+            log.debug("Add mix:versionable");
             node.addMixin("mix:versionable");
         }
     }
