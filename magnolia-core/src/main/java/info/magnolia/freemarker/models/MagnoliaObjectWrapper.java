@@ -85,14 +85,24 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             // handleUnknownType() will relay to our ContextModelFactory.
             return handleUnknownType(obj);
         }
+
+        // wrap enums
+        // can't do this later, as the Class instance passed to getModelFactory() lost the information about its enum.
+        if (obj != null && (obj instanceof Class) && ((Class) obj).isEnum()) {
+            final String enumClassName = ((Class) obj).getName();
+            return getEnumModels().get(enumClassName);
+        }
+
         return super.wrap(obj);
     }
 
     /**
      * Checks the ModelFactory instances registered in FreemarkerConfig, then
      * the default ones. If no appropriate ModelFactory was found, delegates to
-     * Freemarker's implementation. These factories are cached by Freemarker,
-     * so this method only gets called once per type of object.
+     * Freemarker's implementation. This is called by {@link freemarker.ext.beans.BeansModelCache},
+     * which is itself called by {@link freemarker.ext.beans.BeansWrapper#wrap}.
+     * These factories are cached by Freemarker, so this method only gets called
+     * once per type of object.
      *
      * @see #DEFAULT_MODEL_FACTORIES
      * @see info.magnolia.freemarker.FreemarkerConfig
