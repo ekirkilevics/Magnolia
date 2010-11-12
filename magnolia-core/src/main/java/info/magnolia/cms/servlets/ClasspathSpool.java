@@ -60,6 +60,7 @@ import org.slf4j.LoggerFactory;
  * <code>/.resources/*</code>. This servlet should be used for authoring-only resources, like rich editor images and
  * scripts. It's not suggested for public website resources. Content length and last modification date are not set on
  * files returned from the classpath.
+ * 
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -70,15 +71,9 @@ public class ClasspathSpool extends HttpServlet {
      */
     public static final String MGNL_RESOURCES_ROOT = "/mgnl-resources";
 
-    /**
-     * Stable serialVersionUID.
-     */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ClasspathSpool.class);
+    private final static Logger log = LoggerFactory.getLogger(ClasspathSpool.class);
 
     protected long getLastModified(HttpServletRequest req) {
         String filePath = this.getFilePath(req);
@@ -110,8 +105,6 @@ public class ClasspathSpool extends HttpServlet {
 
     /**
      * All static resource requests are handled here.
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -146,14 +139,14 @@ public class ClasspathSpool extends HttpServlet {
         return filePath;
     }
 
-    private Map multipleFilePathsCache;
+    private Map<String, String[]> multipleFilePathsCache;
 
     /**
      * @see javax.servlet.GenericServlet#init()
      */
     public void init() throws ServletException {
         super.init();
-        multipleFilePathsCache = new Hashtable();
+        multipleFilePathsCache = new Hashtable<String, String[]>();
     }
 
     /**
@@ -167,16 +160,13 @@ public class ClasspathSpool extends HttpServlet {
     /**
      * Join and stream multiple files, using a "regexp-like" pattern. Only a single "*" is allowed as keyword in the
      * request URI.
-     * @param response
-     * @param filePath
-     * @throws IOException
      */
     private void streamMultipleFile(HttpServletResponse response, String filePath) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("aggregating files for request {}", filePath);
         }
 
-        String[] paths = (String[]) multipleFilePathsCache.get(filePath);
+        String[] paths = multipleFilePathsCache.get(filePath);
         if (paths == null) {
             final String startsWith = MGNL_RESOURCES_ROOT + StringUtils.substringBefore(filePath, "*");
             final String endssWith = StringUtils.substringAfterLast(filePath, "*");
@@ -198,18 +188,12 @@ public class ClasspathSpool extends HttpServlet {
         streamMultipleFile(response, paths);
     }
 
-    /**
-     * @param response
-     * @param paths
-     * @throws IOException
-     */
     private void streamMultipleFile(HttpServletResponse response, String[] paths) throws IOException {
         ServletOutputStream out = response.getOutputStream();
         InputStream in = null;
 
-        for (int j = 0; j < paths.length; j++) {
+        for (String path : paths) {
             try {
-                String path = paths[j];
                 if (!path.startsWith(MGNL_RESOURCES_ROOT)) {
                     path = MGNL_RESOURCES_ROOT + path;
                 }
@@ -227,15 +211,10 @@ public class ClasspathSpool extends HttpServlet {
         IOUtils.closeQuietly(out);
     }
 
-    /**
-     * @param response
-     * @param filePath
-     * @throws IOException
-     */
     private void streamSingleFile(HttpServletResponse response, String filePath) throws IOException {
         InputStream in = null;
         // this method caches content if possible and checks the magnolia.develop property to avoid
-        // caching during the developement process
+        // caching during the development process
         try {
             in = ClasspathResourcesUtil.getStream(MGNL_RESOURCES_ROOT + filePath);
         }
@@ -259,9 +238,7 @@ public class ClasspathSpool extends HttpServlet {
         catch (IOException e) {
             // only log at debug level
             // tomcat usually throws a ClientAbortException anytime the user stop loading the page
-            if (log.isDebugEnabled()) {
-                log.debug("Unable to spool resource due to a {} exception", e.getClass().getName()); //$NON-NLS-1$
-            }
+            log.debug("Unable to spool resource due to a {} exception", e.getClass().getName());
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
