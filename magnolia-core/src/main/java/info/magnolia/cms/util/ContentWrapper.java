@@ -154,7 +154,18 @@ public abstract class ContentWrapper extends AbstractContent {
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
         Content content = getWrappedContent();
         if(content instanceof AbstractContent){
-            return wrapContentNodes(((AbstractContent) content).getChildren(filter, namePattern, orderCriteria));
+            // first get the children from the wrapped content
+            Collection<Content> children = ((AbstractContent) content).getChildren(ContentUtil.ALL_NODES_CONTENT_FILTER, namePattern, orderCriteria);
+            // wrap the children
+            Collection<Content> wrappedChildren = wrapContentNodes(children);
+            // now we can apply the filter which might depend on the behavior of the wrapper
+            Collection<Content> filteredChildren = new ArrayList<Content>();
+            for (Content wrappedChild : wrappedChildren) {
+                if(filter.accept(wrappedChild)){
+                    filteredChildren.add(wrappedChild);
+                }
+            }
+            return filteredChildren;
         }
         throw new IllegalStateException("This wrapper supports only wrapping AbstractContent objects by default. Please override this method.");
     }
