@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -106,7 +105,15 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
             Paragraph paragraph = getParagraph(content);
 
-            RenderingModel renderingModel = createRenderingModel(content, paragraph);
+            RenderingModelBasedRenderer renderingModelBasedRenderer = getRenderingModelBasedRenderer(paragraph);
+
+            RenderingModel renderingModel;
+            try {
+                renderingModel = renderingModelBasedRenderer.newModel(content, paragraph, null);
+            }
+            catch (RenderException e) {
+                throw new ServletException(e.getMessage(), e);
+            }
 
             String actionResult = renderingModel.execute();
 
@@ -181,13 +188,19 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
         return paragraph;
     }
 
-    protected RenderingModel createRenderingModel(Content content, Paragraph paragraph) throws ServletException {
-        try {
-            return RenderingModelFactory.getInstance().newModel(content, paragraph, null);
-        }
-        catch (Exception e) {
-            throw new ServletException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
-        }
+    /**
+     * Returns the ParagraphRenderer for the supplied Paragraph if it supports RenderingModel. Never returns null.
+     * @throws IllegalArgumentException if there is no renderer registered for the paragraph
+     * @throws ServletException if the renderer does not support RenderingModel
+     */
+    protected RenderingModelBasedRenderer getRenderingModelBasedRenderer(Paragraph paragraph) throws ServletException {
+
+        ParagraphRenderer renderer = ParagraphRendererManager.getInstance().getRenderer(paragraph.getType());
+
+        if (!(renderer instanceof RenderingModelBasedRenderer))
+            throw new ServletException("Renderer [" + paragraph.getName() + "] does not support RenderingModel");
+
+        return (RenderingModelBasedRenderer) renderer;
     }
 
     /**

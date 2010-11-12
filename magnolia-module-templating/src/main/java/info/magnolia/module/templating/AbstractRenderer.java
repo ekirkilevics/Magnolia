@@ -34,7 +34,6 @@
 package info.magnolia.module.templating;
 
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,7 +54,7 @@ import info.magnolia.context.MgnlContext;
  * @version $Id$
  *
  */
-public abstract class AbstractRenderer {
+public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
 
     private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
 
@@ -72,14 +71,8 @@ public abstract class AbstractRenderer {
         model = (RenderingModel) MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + content.getUUID());
 
         if (model == null) {
-            try {
-                // FIXME: temporary fix for 4.4 M1 release
-                // newModel existed before and we override this method in the STK
-                model = newModel(content, definition, parentModel);
-            }
-            catch (Exception e) {
-                throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
-            }
+
+            model = newModel(content, definition, parentModel);
 
             actionResult = model.execute();
 
@@ -102,12 +95,6 @@ public abstract class AbstractRenderer {
         restoreContext(ctx, savedContextState);
     }
 
-    // FIXME: temporary fix for 4.4 M1 release
-    // newModel existed before and we override this method in the STK
-    protected RenderingModel newModel(Content content, RenderableDefinition definition, final RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return RenderingModelFactory.getInstance().newModel(content, definition, parentModel);
-    }
-
     protected String determineTemplatePath(Content content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
         String templatePath = definition.determineTemplatePath(actionResult, model);
 
@@ -117,13 +104,27 @@ public abstract class AbstractRenderer {
         return templatePath;
     }
 
+    /**
+     * Creates the model for this rendering process. Will set the properties
+     */
+    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws RenderException {
+        try {
+            final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
+            return definition.newModel(wrappedContent, definition, parentModel);
+        } catch (Exception e) {
+            throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
+        }
+    }
+
     protected Map saveContextState(final Map ctx) {
         Map state = new HashMap();
         // save former values
         saveAttribute(ctx, state, "content");
-        saveAttribute(ctx, state, "actionResult");
-        saveAttribute(ctx, state, "state");
         saveAttribute(ctx, state, "def");
+        saveAttribute(ctx, state, "state");
+        saveAttribute(ctx, state, "mgnl");
+        saveAttribute(ctx, state, "model");
+        saveAttribute(ctx, state, "actionResult");
 
         saveAttribute(ctx, state, getPageAttributeName());
         return state;
@@ -182,6 +183,15 @@ public abstract class AbstractRenderer {
 
     protected MagnoliaTemplatingUtilities getMagnoliaTemplatingUtilities() {
         return MagnoliaTemplatingUtilities.getInstance();
+    }
+
+    /**
+     * Wraps the current content node before passing it to the model.
+     * @param currentContent the actual content
+     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
+     */
+    protected Content wrapNodeForModel(Content currentContent, Content mainContent) {
+        return new I18nContentWrapper(currentContent);
     }
 
     /**
