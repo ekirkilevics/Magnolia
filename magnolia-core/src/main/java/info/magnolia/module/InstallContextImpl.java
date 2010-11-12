@@ -80,11 +80,6 @@ public class InstallContextImpl implements InstallContext {
         log(new Message(MessagePriority.warning, message));
     }
 
-    public void error(String message) {
-        log.warn("> " + message);
-        log(new Message(MessagePriority.error, message));
-    }
-
     public void error(String message, Throwable th) {
         log.error("> " + message, th);
         log(new Message(MessagePriority.error, message, th));
