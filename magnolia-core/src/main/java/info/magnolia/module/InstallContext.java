@@ -56,6 +56,8 @@ public interface InstallContext {
 
     void warn(String message);
 
+    void error(String message);
+
     void error(String message, Throwable th);
 
     void restartNeeded(String message);

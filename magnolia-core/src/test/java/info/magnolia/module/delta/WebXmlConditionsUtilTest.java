@@ -84,7 +84,7 @@ public class WebXmlConditionsUtilTest extends TestCase {
                 FalseCondition.class,
                 "web.xml updates",
                 "Since Magnolia 4.4, the Magnolia context filter " + ContextFilter.class.getName() + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR."
-                    + " Please add " +
+                    + " Please add the following to your web.xml file:\n" +
                     " <filter>\n" +
                     "   <display-name>Magnolia context filter</display-name>\n" +
                     "   <filter-name>magnoliaContextFilter</filter-name>\n" +
@@ -97,8 +97,7 @@ public class WebXmlConditionsUtilTest extends TestCase {
                     "   <dispatcher>FORWARD</dispatcher>\n" +
                     "   <dispatcher>INCLUDE</dispatcher>\n" +
                     "   <dispatcher>ERROR</dispatcher>\n" +
-                    " </filter-mapping>\n" +
-                    " to your web.xml file.");
+                    " </filter-mapping>");
 
         assertWebXmlResultsInCondition(
                 "web-xml-with-context-filter.xml",
@@ -117,12 +116,11 @@ public class WebXmlConditionsUtilTest extends TestCase {
                 FalseCondition.class,
                 "web.xml updates",
                 "Since Magnolia 4.4, the Magnolia context filter " + ContextFilter.class.getName() + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR."
-                + " Please add \n"
+                + " Please add the following to your web.xml file:\n"
                 + " <dispatcher>REQUEST</dispatcher>\n"
                 + " <dispatcher>FORWARD</dispatcher>\n"
                 + " <dispatcher>INCLUDE</dispatcher>\n"
-                + " <dispatcher>ERROR</dispatcher>\n"
-                + " to the filter-mapping element in your web.xml file.");
+                + " <dispatcher>ERROR</dispatcher>");
     }
 
     private void assertWebXmlResultsInCondition(String webxmlfile, Class<? extends Condition> conditionClass, String conditionName, String conditionDescription) {

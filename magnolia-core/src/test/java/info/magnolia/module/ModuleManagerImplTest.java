@@ -208,13 +208,13 @@ public class ModuleManagerImplTest extends TestCase {
         expect(d1.getConditions()).andReturn(Arrays.asList(c1, c2));
         expect(c1.check(ctx)).andReturn(Boolean.FALSE);
         expect(c1.getDescription()).andReturn("Hi, please fix condition #1");
-        ctx.info("Hi, please fix condition #1");
+        ctx.error("Hi, please fix condition #1");
         expect(c2.check(ctx)).andReturn(Boolean.TRUE);
         ctx.setCurrentModule(mod2);
         expect(d2.getConditions()).andReturn(Arrays.asList(c3));
         expect(c3.check(ctx)).andReturn(Boolean.FALSE);
         expect(c3.getDescription()).andReturn("Hi, please fix condition #3 too");
-        ctx.info("Hi, please fix condition #3 too");
+        ctx.error("Hi, please fix condition #3 too");
         ctx.setCurrentModule(null);
         ctx.setStatus(InstallStatus.stoppedConditionsNotMet);
 

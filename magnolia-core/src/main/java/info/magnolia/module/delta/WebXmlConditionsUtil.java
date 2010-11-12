@@ -127,7 +127,7 @@ public class WebXmlConditionsUtil {
     public void contextFilterMustBeRegisteredWithCorrectDispatchers(String filterClass) {
         final String conditionName = "web.xml updates";
         final String message = "Since Magnolia 4.4, the Magnolia context filter " + filterClass + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR.";
-        final String webXmlSnippet = " Please add " +
+        final String webXmlSnippet = " Please add the following to your web.xml file:\n" +
                 " <filter>\n" +
                 "   <display-name>Magnolia context filter</display-name>\n" +
                 "   <filter-name>magnoliaContextFilter</filter-name>\n" +
@@ -140,14 +140,12 @@ public class WebXmlConditionsUtil {
                 "   <dispatcher>FORWARD</dispatcher>\n" +
                 "   <dispatcher>INCLUDE</dispatcher>\n" +
                 "   <dispatcher>ERROR</dispatcher>\n" +
-                " </filter-mapping>\n" +
-                " to your web.xml file.";
-        final String additionalMessage = " Please add \n"
+                " </filter-mapping>";
+        final String additionalMessage = " Please add the following to your web.xml file:\n"
                 + " <dispatcher>REQUEST</dispatcher>\n"
                 + " <dispatcher>FORWARD</dispatcher>\n"
                 + " <dispatcher>INCLUDE</dispatcher>\n"
-                + " <dispatcher>ERROR</dispatcher>\n"
-                + " to the filter-mapping element in your web.xml file.";
+                + " <dispatcher>ERROR</dispatcher>";
 
         if (!webXmlUtil.isFilterRegistered(filterClass)) {
             conditions.add(new FalseCondition(conditionName, message + webXmlSnippet));

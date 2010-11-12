@@ -164,6 +164,7 @@ h3 {
     margin: 0 0 5px 0;
     padding-left: 0;
     font-size: 9pt;
+	white-space: pre-wrap;
 }
 
 .condition {
