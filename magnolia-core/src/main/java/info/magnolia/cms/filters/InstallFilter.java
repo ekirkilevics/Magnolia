@@ -103,7 +103,8 @@ public class InstallFilter extends AbstractMgnlFilter {
                     response.sendRedirect(contextPath + "/");
                 }
             } else {
-                ui.renderTempPage(out);
+                // redirect to /.magnolia/installer - even if it has no concrete effect, the change in the browser's url bar makes this more explicit
+                response.sendRedirect(prefix);
             }
         } catch (ModuleManagementException e) {
             log.error(e.getMessage(), e);

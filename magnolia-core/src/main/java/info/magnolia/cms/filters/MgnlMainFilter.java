@@ -36,6 +36,7 @@ package info.magnolia.cms.filters;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.servlets.ClasspathSpool;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -155,8 +156,9 @@ public class MgnlMainFilter implements Filter {
         final ServletDispatchingFilter classpathSpoolFilter = new ServletDispatchingFilter();
         classpathSpoolFilter.setName("resources");
         classpathSpoolFilter.setServletName("ClasspathSpool Servlet");
-        classpathSpoolFilter.setServletClass(info.magnolia.cms.servlets.ClasspathSpool.class.getName());
+        classpathSpoolFilter.setServletClass(ClasspathSpool.class.getName());
         classpathSpoolFilter.addMapping("/.resources/*");
+        classpathSpoolFilter.addMapping("/favicon.ico");
         classpathSpoolFilter.setEnabled(true);
         systemUIFilter.addFilter(classpathSpoolFilter);
 

@@ -1,11 +1,12 @@
 [#include "ModuleManagerWebUI.header.html" /]
 
 <div id="actions">
-  <a href="${contextPath}${installerPath}/start" id="buttonStart" class="button">Start install/update...</a>
+  <a href="${contextPath}${installerPath}/start" id="buttonStart" class="button">Start ${status.getDeltaTypesDescription(['install', 'update', 'install/update'])} ...</a>
 </div>
 
 <div id="content">
-<p class="status">The following modules will be updated/installed:</p>
+<h2>Magnolia modules need to be ${status.getDeltaTypesDescription(['installed', 'updated', 'installed or updated'])}.</h2>
+<p class="status">The following modules will be ${status.getDeltaTypesDescription(['installed', 'updated', 'installed or updated'])}:</p>
 [#list status.list as moduleStatus]
 <div class="module">
 <h3>${moduleStatus.module?cap_first}</h3>

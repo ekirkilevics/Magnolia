@@ -53,5 +53,10 @@ public interface ModuleManagerUI {
      */
     boolean execute(Writer out, String command) throws ModuleManagementException;
 
+    /**
+     * Not used anymore since 4.4 - but keeping this around; in the future, we might re-use this,
+     * as the page shown to regular users while the Magnolia instance is being updated by an admin;
+     * only admin(s) would have access to the update status pages.
+     */
     void renderTempPage(Writer out) throws ModuleManagementException;
 }

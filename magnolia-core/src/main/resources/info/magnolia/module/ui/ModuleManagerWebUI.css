@@ -88,8 +88,9 @@ h3 {
     font-size: 22px;
     text-decoration: none;
     float: right;
-    margin: 30px 40px 0 0;
-    padding: 14px 75px 32px 20px;
+    margin: 30px 0 0 0;
+    padding: 14px 0 32px 20px;
+    width: 306px;
     background-repeat: no-repeat;
 }
 
