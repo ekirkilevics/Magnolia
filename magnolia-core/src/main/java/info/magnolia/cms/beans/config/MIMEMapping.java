@@ -62,7 +62,7 @@ public class MIMEMapping {
     private static final Logger log = LoggerFactory.getLogger(MIMEMapping.class);
 
     public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
-    private static final String DEFAULT_ICON = ICONS_PATH + "general.png";
+    public static final String DEFAULT_ICON = ICONS_PATH + "general.png";
     private static final String NODEPATH = "/server/MIMEMapping"; //$NON-NLS-1$
 
     private static Map cachedContent = new Hashtable();
@@ -105,7 +105,7 @@ public class MIMEMapping {
         try {
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
-            Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
+            Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); 
             MIMEMapping.cacheContent(mimeList);
             log.debug("MIMEMapping loaded from {}", NODEPATH); //$NON-NLS-1$
         } catch (PathNotFoundException e) {
