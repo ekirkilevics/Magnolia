@@ -100,7 +100,7 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         installTasks.add(new BootstrapSingleResource("Bootstrap new filter", "Bootstrap new filter",
                 "/mgnl-bootstrap/exchange-simple/config.server.filters.activation.xml"));
         installTasks.add(bootstrapVirtualURIMapping);
-        installTasks.add(new FilterOrderingTask("activation", new String[]{"login", "uriSecurity", "multipartRequest"}));
+        installTasks.add(new FilterOrderingTask("activation", new String[]{"context", "login", "uriSecurity", "multipartRequest"}));
         return installTasks;
     }
 

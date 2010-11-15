@@ -180,9 +180,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(DeltaBuilder.update("4.3.6", "")
                 .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", ContentRepository.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
                 .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class","Unable to set property class because it already exists"),  new NewPropertyTask("Class", "Creates property class and sets it to class path", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
-
-        register(DeltaBuilder.update("4.4", "")
-                .addTask(new RemoveNodeTask("Remove context filter", "Removes the context filter from filter chain.", ContentRepository.CONFIG, "/server/filters/context")));
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
@@ -222,7 +219,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
         u.listenerIsDeprecated("info.magnolia.cms.servlets.PropertyInitializer", "info.magnolia.cms.servlets.MgnlServletContextListener");
         u.listenerIsDeprecated("info.magnolia.cms.beans.config.ShutdownManager", "info.magnolia.cms.servlets.MgnlServletContextListener");
-        u.contextFilterMustBeRegisteredWithCorrectDispatchers(ContextFilter.class.getName());
         final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
         u2.workspaceHasOldIndexer();
 

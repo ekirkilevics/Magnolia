@@ -123,41 +123,4 @@ public class WebXmlConditionsUtil {
             conditions.add(new FalseCondition("web.xml updates", "The " + listenerClass + " listener is not installed. Please configure a <listener> with class " + listenerClass + " in your web.xml file."));
         }
     }
-
-    public void contextFilterMustBeRegisteredWithCorrectDispatchers(String filterClass) {
-        final String conditionName = "web.xml updates";
-        final String message = "Since Magnolia 4.4, the Magnolia context filter " + filterClass + " must be mapped in web.xml before MgnlMainFilter with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR.";
-        final String webXmlSnippet = " Please add the following to your web.xml file:\n" +
-                " <filter>\n" +
-                "   <display-name>Magnolia context filter</display-name>\n" +
-                "   <filter-name>magnoliaContextFilter</filter-name>\n" +
-                "   <filter-class>info.magnolia.cms.filters.ContextFilter</filter-class>\n" +
-                " </filter>\n" +
-                " <filter-mapping>\n" +
-                "   <filter-name>magnoliaContextFilter</filter-name>\n" +
-                "   <url-pattern>/*</url-pattern>\n" +
-                "   <dispatcher>REQUEST</dispatcher>\n" +
-                "   <dispatcher>FORWARD</dispatcher>\n" +
-                "   <dispatcher>INCLUDE</dispatcher>\n" +
-                "   <dispatcher>ERROR</dispatcher>\n" +
-                " </filter-mapping>";
-        final String additionalMessage = " Please add the following to your web.xml file:\n"
-                + " <dispatcher>REQUEST</dispatcher>\n"
-                + " <dispatcher>FORWARD</dispatcher>\n"
-                + " <dispatcher>INCLUDE</dispatcher>\n"
-                + " <dispatcher>ERROR</dispatcher>";
-
-        if (!webXmlUtil.isFilterRegistered(filterClass)) {
-            conditions.add(new FalseCondition(conditionName, message + webXmlSnippet));
-        } else {
-            final int result = webXmlUtil.checkFilterDispatchersConfiguration(filterClass, Arrays.asList("REQUEST", "FORWARD", "INCLUDE"), Collections.singletonList("ERROR"));
-            if (result > 0) {
-                conditions.add(new TrueCondition(conditionName, message));
-            } else if (result == 0) {
-                conditions.add(new WarnCondition(conditionName, message));
-            } else if (result < 0) {
-                conditions.add(new FalseCondition(conditionName, message + additionalMessage));
-            }
-        }
-    }
 }

@@ -61,8 +61,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new CoreModuleVersionHandler() {
-            // Since some of the conditions needs web.xml we override this method to prevent them from being run. They
-            // are instead tested in WebXmlConditionsUtilTest.
+            // cheat - one of the conditions needs web.xml. Can't be bothered to fake that here
             protected List<Condition> getInstallConditions() {
                 return Collections.emptyList();
             }
@@ -268,6 +267,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void testUnicodeNormalizerAndFilterOrderOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
 
+        setupConfigProperty("/server/filters/context", "enable", "true");
         setupConfigProperty("/server/filters/contentType", "enable", "true");
         setupConfigProperty("/server/filters/login", "enable", "true");
         setupConfigProperty("/server/filters/logout", "enable", "true");
@@ -276,6 +276,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigProperty("/server/filters/activation", "enable", "true");
         // let's make sure we've set up this test with filters in their pre-4.3 order
         final Iterator<Content> filters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
+        assertEquals("context", filters.next().getName());
         assertEquals("contentType", filters.next().getName());
         assertEquals("login", filters.next().getName());
         assertEquals("logout", filters.next().getName());
@@ -288,6 +289,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1"));
 
         final Iterator<Content> updatedFilters = MgnlContext.getHierarchyManager("config").getContent("/server/filters/").getChildren().iterator();
+        assertEquals("context", updatedFilters.next().getName());
         assertEquals("contentType", updatedFilters.next().getName());
         assertEquals("multipartRequest", updatedFilters.next().getName());
         assertEquals("unicodeNormalization", updatedFilters.next().getName());
