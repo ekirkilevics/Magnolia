@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.filters.ContextFilter;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

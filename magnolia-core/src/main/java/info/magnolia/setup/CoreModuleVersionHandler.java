@@ -35,7 +35,6 @@ package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.filters.ContextFilter;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AddMimeMappingTask;
@@ -52,7 +51,6 @@ import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
-import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
