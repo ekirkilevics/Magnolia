@@ -206,6 +206,7 @@ public class ControlImpl implements Control {
     /**
      * @deprecated
      */
+    @Deprecated
     public void setRequest(HttpServletRequest request) {
     }
 
@@ -434,16 +435,16 @@ public class ControlImpl implements Control {
             html.append("<input type=\"hidden\""); //$NON-NLS-1$
             html.append(" name=\"mgnlSaveInfo\""); //$NON-NLS-1$
             html.append(" value=\"" //$NON-NLS-1$
-                + ControlImpl.escapeHTML(this.getName())
-                + "," //$NON-NLS-1$
-                + PropertyType.nameFromValue(this.getType())
-                + "," //$NON-NLS-1$
-                + this.getValueType()
-                + "," //$NON-NLS-1$
-                + this.getIsRichEditValue()
-                + "," //$NON-NLS-1$
-                + this.getEncoding()
-                + "\""); //$NON-NLS-1$
+                    + ControlImpl.escapeHTML(this.getName())
+                    + "," //$NON-NLS-1$
+                    + PropertyType.nameFromValue(this.getType())
+                    + "," //$NON-NLS-1$
+                    + this.getValueType()
+                    + "," //$NON-NLS-1$
+                    + this.getIsRichEditValue()
+                    + "," //$NON-NLS-1$
+                    + this.getEncoding()
+                    + "\""); //$NON-NLS-1$
             html.append(" />"); //$NON-NLS-1$
         }
         return html.toString();

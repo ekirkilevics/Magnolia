@@ -11,7 +11,6 @@
     </#list>
 
 </style>
-
 <!-- background image -->
 <div class="mgnlListHeaderBackground">
 

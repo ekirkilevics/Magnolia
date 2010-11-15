@@ -84,6 +84,10 @@ public class Tree extends ControlImpl {
 
     public static final String DEFAULT_ICON_NODEDATA = ICONDOCROOT + "cube_green.gif";
 
+    /**
+     * @deprecated since 4.4, use ItemType.MGNL_NODE_DATA instead
+     */
+    @Deprecated
     public static final String ITEM_TYPE_NODEDATA = "mgnl:nodeData";
 
     public static final int ACTION_MOVE = 0;
@@ -314,7 +318,9 @@ public class Tree extends ControlImpl {
     /**
      * Set the icon of pages.
      * @param src source of the image
+     * @deprecated since 4.4, use addIcon(ItemType.CONTENT.getSystemName(), src) instead
      */
+    @Deprecated
     public void setIconPage(String src) {
         this.setIcon(ItemType.CONTENT.getSystemName(), src);
     }
@@ -326,7 +332,9 @@ public class Tree extends ControlImpl {
     /**
      * Set the icon of content nodes.
      * @param src source of the image
+     * @deprecated since 4.4, use addIcon(ItemType.CONTENTNODE.getSystemName(), src) instead
      */
+    @Deprecated
     public void setIconContentNode(String src) {
         this.setIcon(ItemType.CONTENTNODE.getSystemName(), src);
     }
@@ -338,7 +346,9 @@ public class Tree extends ControlImpl {
     /**
      * Set the icon of node data.
      * @param src source of the image
+     * @deprecated since 4.4, use addIcon(ItemType.MGNL_NODE_DATA, src) instead
      */
+    @Deprecated
     public void setIconNodeData(String src) {
         this.setIcon(ITEM_TYPE_NODEDATA, src);
     }
@@ -738,7 +748,7 @@ public class Tree extends ControlImpl {
         String lineId = this.getJavascriptTree() + "_" + this.getPath() + "_LineInter"; //$NON-NLS-1$ //$NON-NLS-2$
 
         // prepare the data for the templates
-        Map params = new HashMap();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("tree", this);
         params.put("PASTETYPE_SUB", new Integer(Tree.PASTETYPE_SUB));
         params.put("DOCROOT", Tree.DOCROOT);
