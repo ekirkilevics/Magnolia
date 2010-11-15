@@ -105,11 +105,16 @@ public final class ItemType implements Serializable {
 
     public static final String MIX_LOCKABLE = "mix:lockable"; //$NON-NLS-1$
 
+    public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
+
     /**
      * Magnolia content.
      * @deprecated use ItemType.CONTENT
      */
+    @Deprecated
     public static final String NT_CONTENT = "mgnl:content"; //$NON-NLS-1$
+
+    public static final String MGNL_NODE_DATA = "mgnl:nodeData";
 
     public static final String NT_FROZENNODE = "nt:frozenNode";
 
@@ -125,6 +130,7 @@ public final class ItemType implements Serializable {
      * Magnolia content node.
      * @deprecated use ItemType.CONTENTNODE
      */
+    @Deprecated
     public static final String NT_CONTENTNODE = "mgnl:contentNode"; //$NON-NLS-1$
 
     public static final ItemType CONTENT = new ItemType("mgnl:content"); //$NON-NLS-1$
@@ -141,9 +147,7 @@ public final class ItemType implements Serializable {
 
     public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
 
-    public static final ItemType FOLDER = new ItemType(NT_FOLDER); //$NON-NLS-1$
-
-    public static final String DELETED_NODE_MIXIN = "mgnl:deleted";
+    public static final ItemType FOLDER = new ItemType(NT_FOLDER); 
 
 
     /**
@@ -154,7 +158,7 @@ public final class ItemType implements Serializable {
     /**
      * Node name.
      */
-    private String systemName;
+    private final String systemName;
 
     /**
      * Ctor.
@@ -175,6 +179,7 @@ public final class ItemType implements Serializable {
     /**
      * @see java.lang.Object#equals(Object)
      */
+    @Override
     public boolean equals(Object object) {
         if (!(object instanceof ItemType)) {
             return false;
@@ -186,6 +191,7 @@ public final class ItemType implements Serializable {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         return this.systemName;
     }
@@ -193,6 +199,7 @@ public final class ItemType implements Serializable {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return this.systemName.hashCode();
     }
