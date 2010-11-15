@@ -148,6 +148,9 @@ public interface ModuleManager {
         }
 
         protected EnumSet<DeltaType> getDeltaTypes() {
+            if (list.isEmpty()) {
+                throw new IllegalStateException("No registered deltas");
+            }
             final Set<DeltaType> types = new HashSet<DeltaType>();
             for (ModuleAndDeltas moduleAndDeltas : list) {
                 for (Delta delta : moduleAndDeltas.getDeltas()) {
