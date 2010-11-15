@@ -77,7 +77,7 @@ classDef("mgnl.admininterface.VersionsList",
 
 	    hasPreviousVersion: function(){
 	    	return this.selected > 0;
-	    },
+	    }
 
     },
 
