@@ -61,7 +61,7 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
     private static final Logger log = LoggerFactory.getLogger(AbstractListeningFlushPolicy.class);
 
     private List repositories = new ArrayList();
-    private Map registeredListeners = new HashMap();
+    private final Map registeredListeners = new HashMap();
 
     /**
      * The repositories to which the listener is attached - upon any event on these,
@@ -137,23 +137,24 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
     protected void flushByUUID(String uuid, String repository, Cache cache) {
         CacheModule cacheModule = ((CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache"));
 
-            final CacheConfiguration config = cacheModule.getConfiguration(cache.getName());
-            final CachePolicy policy = config.getCachePolicy();
-            if (policy == null) {
-                // no cache policy, no cache key, nothing to flush here ...
-                return;
-            }
-            Object[] cacheEntryKeys = config.getCachePolicy().removeCacheKeys(uuid, repository);
-            log.debug("Flushing {} due to detected content update.", ToStringBuilder.reflectionToString(cacheEntryKeys));
+        final CacheConfiguration config = cacheModule.getConfiguration(cache.getName());
+        final CachePolicy policy = config.getCachePolicy();
+        if (policy == null) {
+            // no cache policy, no cache key, nothing to flush here ...
+            return;
+        }
+        // do NOT remove key mappings, just retrieve them. Rather try remove not existent items then leaving entries in other caches that might depend on the same mapping
+        Object[] cacheEntryKeys = config.getCachePolicy().retrieveCacheKeys(uuid, repository);
+        log.debug("Flushing {} due to detected content {}:{} update.", new Object[] {ToStringBuilder.reflectionToString(cacheEntryKeys), repository, uuid});
 
-            if (cacheEntryKeys == null || cacheEntryKeys.length == 0) {
-                // nothing to remove
-                return;
-            }
-            for (Object key : cacheEntryKeys) {
-                cache.remove(key);
-            }
-            // we are done here
+        if (cacheEntryKeys == null || cacheEntryKeys.length == 0) {
+            // nothing to remove
+            return;
+        }
+        for (Object key : cacheEntryKeys) {
+            cache.remove(key);
+        }
+        // we are done here
     }
 
     /**
