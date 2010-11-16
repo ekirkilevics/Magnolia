@@ -114,7 +114,6 @@ function MgnlAdminCentral(){
         MgnlDHTMLUtil.hide(this.divScrolledContent);
 
         // if loading of the new page takes a while the user should not see the old page in the meantime
-        $(name).src = "about:blank";
 
         url = MgnlURLUtil.addCacheKiller(url);
         if(!MgnlURLUtil.isExternal(url)){
