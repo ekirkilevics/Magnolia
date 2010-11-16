@@ -144,7 +144,7 @@
     mgnlTree.prototype.selectNode = function(id) {
         mgnlDebug("selectNode:" + id, "tree");
         // stale data paranoia - refresh on select
-        var sNode=this.getNode(id, true);
+        var sNode=this.getNode(id, false);
         var divMain=document.getElementById(sNode.divMainId);
         mgnlDebug("selectNode: divMainId:" + sNode.divMainId, "tree");
 
@@ -179,12 +179,10 @@
             }
          else if (node == this.selectedNode)
             {
-             // do not cache - data might be stale already.
-             var node=new mgnlTreeNode(this,id);
-             this.nodes[id]=node;
-             // transitive params - need to keep them around or ops like deletion stop working
-             node.params = this.selectedNode.params;
-             this.selectedNode = node;
+             var aNode=new mgnlTreeNode(this,id);
+             // refresh - data might be stale already.
+             this.selectedNode.isDeleted = aNode.isDeleted;
+             this.selectedNode.isActivated = aNode.isActivated;
             }
         return node;
         }
