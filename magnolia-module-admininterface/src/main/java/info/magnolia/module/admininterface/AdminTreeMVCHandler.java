@@ -53,6 +53,7 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 import info.magnolia.objectfactory.Classes;
 
@@ -906,6 +907,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     public AdminTreeConfiguration getConfiguration() {
         if (this.configuration == null) {
+            if (getConfigurationClass() == null) {
+                return null;
+            }
             final AdminTreeConfiguration treeConfiguration = Classes.quietNewInstance(getConfigurationClass());
             setConfiguration(treeConfiguration);
         }
