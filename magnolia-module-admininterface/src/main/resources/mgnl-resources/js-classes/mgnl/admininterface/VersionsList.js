@@ -32,9 +32,8 @@
  *
  */
 
-/**
- *
- */
+importClass("mgnl.controls.List");
+
 classDef("mgnl.admininterface.VersionsList",
 
 	// extends
