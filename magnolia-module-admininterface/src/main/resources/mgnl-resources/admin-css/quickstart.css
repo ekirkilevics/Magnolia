@@ -15,12 +15,26 @@ a {
     color: #669900;
 }
 
+a img {
+	margin: 0 0 -2px 0;
+	padding: 0;
+	border: 0;
+}
+
 h2 {
     padding: 0;
     margin: 0;
     font-weight: normal;
     color: #669900;
     font-size: 14pt;
+}
+
+h3 {
+    padding: 0;
+    margin: 40px 0 0 0;
+    font-weight: normal;
+    color: #669900;
+    font-size: 12pt;
 }
 
 li {
