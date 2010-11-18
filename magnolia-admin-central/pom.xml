@@ -77,7 +77,7 @@
           <webResources>
             <resource>
               <!-- these are the resources copied by the remote-resources-plugin -->
-              <directory>${basedir}/target/maven-shared-archive-resources</directory>
+              <directory>${basedir}/target/magnolia-build-tools-resources</directory>
             </resource>
           </webResources>
         </configuration>
