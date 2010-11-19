@@ -117,6 +117,10 @@ public class MgnlMailFactory {
      */
     public MgnlEmail getEmailFromTemplate(String id, List<MailAttachment> attachments, Map<String, Object> params) throws Exception {
         MailTemplate template = getTemplate(id);
+        if (template == null) {
+            log.error("Template {} can't be found", id);
+            return null;            
+        }
         return getEmail(params, attachments, template);
     }
 
@@ -134,7 +138,7 @@ public class MgnlMailFactory {
             return getEmailFromType(template);
 
         } catch (Exception e) {
-            log.error("Couln't instantiate email type: " + template.getType());
+            log.error("Couln't instantiate email type: " + template.getType(), e);
             return null;
         }
     }
