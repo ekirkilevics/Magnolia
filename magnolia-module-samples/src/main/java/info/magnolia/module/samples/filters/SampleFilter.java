@@ -51,6 +51,7 @@ import java.io.IOException;
 public class SampleFilter extends AbstractMgnlFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleFilter.class);
 
+    @Override
     public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)  throws IOException, ServletException {
         log.info("Executing sample filter");
         req.setAttribute("sampleFilter", "attribute set by sample filter");
