@@ -34,9 +34,10 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.module.cache.util.GZipUtil;
-import junit.framework.TestCase;
+import info.magnolia.test.MgnlTestCase;
 import static org.easymock.EasyMock.*;
 
+import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
 import javax.servlet.FilterChain;
@@ -55,7 +56,7 @@ import java.util.Enumeration;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class GZipFilterTest extends TestCase {
+public class GZipFilterTest extends MgnlTestCase {
     private static final String SOME_10CHARSLONG_CHAIN = "qwertzuiop";
 
     public void testBufferIsFlushedProperlyWhenUsingWriterFurtherDownTheChainOfFilters() throws Exception {
@@ -63,6 +64,7 @@ public class GZipFilterTest extends TestCase {
 
         final FilterChain chain = createStrictMock(FilterChain.class);
         final HttpServletRequest mockRequest = createStrictMock(HttpServletRequest.class);
+        expect(mockRequest.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
         expect(mockRequest.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;
             public boolean hasMoreElements() {

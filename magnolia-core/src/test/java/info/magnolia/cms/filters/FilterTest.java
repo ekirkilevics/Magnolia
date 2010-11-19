@@ -52,6 +52,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.easymock.EasyMock;
+
 
 /**
  * @author fgiust
@@ -141,6 +143,7 @@ public class FilterTest extends MgnlTestCase {
         // log statement
         expect(request.getRequestURI()).andReturn("blah").anyTimes();
         expect(request.getPathInfo()).andReturn("bleh").anyTimes();
+        expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
         WebContext webCtx = createMock(WebContext.class);
         

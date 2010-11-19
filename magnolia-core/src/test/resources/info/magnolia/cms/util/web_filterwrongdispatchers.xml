@@ -10,6 +10,7 @@
     <filter-name>testWithMissingForward</filter-name>
     <url-pattern>/*</url-pattern>
     <dispatcher>ERROR</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>
 
@@ -21,7 +22,20 @@
     <filter-name>testWithMissingRequest</filter-name>
     <url-pattern>/*</url-pattern>
     <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
     <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>testWithMissingInclude</filter-name>
+    <filter-class>webxmltest.WithMissingInclude</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>testWithMissingInclude</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
 
   <filter>
@@ -31,18 +45,6 @@
   <filter-mapping>
     <filter-name>testErrorIsNotMandatory</filter-name>
     <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
-  </filter-mapping>
-
-  <filter>
-    <filter-name>testWithInclude</filter-name>
-    <filter-class>webxmltest.WithInclude</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>testWithInclude</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>ERROR</dispatcher>
     <dispatcher>REQUEST</dispatcher>
     <dispatcher>INCLUDE</dispatcher>
     <dispatcher>FORWARD</dispatcher>
@@ -55,6 +57,7 @@
   <filter-mapping>
     <filter-name>testOrderIsIrrelevant</filter-name>
     <url-pattern>/*</url-pattern>
+    <dispatcher>INCLUDE</dispatcher>
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>ERROR</dispatcher>
     <dispatcher>REQUEST</dispatcher>

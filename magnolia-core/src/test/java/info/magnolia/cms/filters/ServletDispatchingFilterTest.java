@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -164,6 +165,7 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         final FilterChain chain = createNiceMock(FilterChain.class);
         final HttpServletResponse res = createNiceMock(HttpServletResponse.class);
         final HttpServletRequest req = createMock(HttpServletRequest.class);
+        expect(req.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
         expect(ctx.getAggregationState()).andReturn(state).anyTimes();
         expect(req.getRequestURI()).andReturn("/magnoliaAuthor" + requestPath).anyTimes();
         expect(req.getContextPath()).andReturn("/magnoliaAuthor").anyTimes();

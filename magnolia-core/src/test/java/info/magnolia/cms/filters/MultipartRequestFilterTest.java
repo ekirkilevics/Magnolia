@@ -49,6 +49,7 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
 import info.magnolia.cms.beans.runtime.Document;
@@ -56,7 +57,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import junit.framework.TestCase;
+import info.magnolia.test.MgnlTestCase;
 import static org.easymock.EasyMock.*;
 
 /**
@@ -64,7 +65,7 @@ import static org.easymock.EasyMock.*;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MultipartRequestFilterTest extends TestCase {
+public class MultipartRequestFilterTest extends MgnlTestCase {
     private File testFile;
     private HttpServletRequest req;
     private HttpServletResponse res;
@@ -80,6 +81,7 @@ public class MultipartRequestFilterTest extends TestCase {
         testFile = new File("pom.xml");
         assertTrue(testFile.getAbsolutePath() + " can't be found.", testFile.exists());
         req = createMock(HttpServletRequest.class);
+        expect(req.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
         res = createNiceMock(HttpServletResponse.class);
         filterChain = createNiceMock(FilterChain.class);
         webCtx = createStrictMock(WebContext.class);

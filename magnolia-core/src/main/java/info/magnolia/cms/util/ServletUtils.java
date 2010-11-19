@@ -53,6 +53,8 @@ public abstract class ServletUtils {
 
     public static final String INCLUDE_REQUEST_URI_ATTRIBUTE = "javax.servlet.include.request_uri";
 
+    public static final String ERROR_REQUEST_STATUS_CODE_ATTRIBUTE = "javax.servlet.error.status_code";
+
     /**
      * Returns the init parameters for a {@link javax.servlet.ServletConfig} object as a Map, preserving the order in which they are exposed
      * by the {@link javax.servlet.ServletConfig} object.
@@ -114,5 +116,29 @@ public abstract class ServletUtils {
      */
     public static boolean isInclude(HttpServletRequest request) {
         return request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null;
+    }
+
+    /**
+     * Returns true if the request is rendering an error page, either due to a call to sendError() or an exception
+     * being thrown in a filter or a servlet that reached the container. Will return true also after an include() or
+     * forward() while rendering the error page.
+     */
+    public static boolean isError(HttpServletRequest request) {
+        return request.getAttribute(ERROR_REQUEST_STATUS_CODE_ATTRIBUTE) != null;
+    }
+
+    /**
+     * Returns the dispatcher type of the request, the dispatcher type is defined to be identical to the semantics of
+     * filter mappings in web.xml.
+     */
+    public static DispatcherType getDispatcherType(HttpServletRequest request) {
+        // The order of these tests is important.
+        if (request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null)
+            return DispatcherType.INCLUDE;
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null)
+            return DispatcherType.FORWARD;
+        if (request.getAttribute(ERROR_REQUEST_STATUS_CODE_ATTRIBUTE) != null)
+            return DispatcherType.ERROR;
+        return DispatcherType.REQUEST;
     }
 }

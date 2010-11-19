@@ -46,9 +46,6 @@ import static org.easymock.EasyMock.*;
  * @version $Revision: $ ($Author: $)
  */
 public class WebXmlConditionsUtilTest extends TestCase {
-    public void testWarnsIfIncludeDispatcherIsUsed() {
-        doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.WithInclude", true, true);
-    }
 
     public void testDoesNotWarnIfErrorDispatcherIsUsed() {
         doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.ErrorIsNotMandatory", false, true);
@@ -56,6 +53,10 @@ public class WebXmlConditionsUtilTest extends TestCase {
 
     public void testBlocksIfRequestDispatcherIsMissing() {
         doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.WithMissingRequst", false, false);
+    }
+
+    public void testBlocksIfIncludeDispatcherIsMissing() {
+        doTestFilterDispatchersConditions("web_filterwrongdispatchers.xml", "webxmltest.WithMissingInclude", false, false);
     }
 
     private void doTestFilterDispatchersConditions(String webxmlResource, String fakeFilterClass, boolean shouldWarn, boolean expectedResult) {

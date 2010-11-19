@@ -34,22 +34,24 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import info.magnolia.voting.voters.TrueVoter;
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 import static info.magnolia.test.TestUtil.enumeration;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.easymock.EasyMock;
 
 /**
  * Basic test for the gzip filter deployed without cache filter.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class StandaloneGZipFilterTest extends TestCase {
+public class StandaloneGZipFilterTest extends MgnlTestCase {
     private HttpServletRequest request;
 
      public void testBypassesAsDictatedByVoters() {
@@ -83,7 +85,6 @@ public class StandaloneGZipFilterTest extends TestCase {
         super.setUp();
         MockUtil.initMockContext();
         request = createStrictMock(HttpServletRequest.class);
+        expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
     }
-
-
 }

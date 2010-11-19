@@ -127,4 +127,51 @@ public class ServletUtilsTest extends TestCase {
         mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
         assertTrue(ServletUtils.isInclude(mock));
     }
+
+    public void testIsError() {
+        MockHttpServletRequest mock = new MockHttpServletRequest();
+
+        assertFalse(ServletUtils.isError(mock));
+        assertFalse(ServletUtils.isForward(mock));
+        assertFalse(ServletUtils.isInclude(mock));
+
+        mock.setAttribute(ServletUtils.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE, 500);
+        assertTrue(ServletUtils.isError(mock));
+        assertFalse(ServletUtils.isForward(mock));
+        assertFalse(ServletUtils.isInclude(mock));
+
+        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
+        assertTrue(ServletUtils.isError(mock));
+        assertTrue(ServletUtils.isForward(mock));
+        assertFalse(ServletUtils.isInclude(mock));
+
+        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
+        assertTrue(ServletUtils.isError(mock));
+        assertFalse(ServletUtils.isForward(mock));
+        assertTrue(ServletUtils.isInclude(mock));
+    }
+
+    public void testGetDispatcherType() {
+
+        MockHttpServletRequest mock = new MockHttpServletRequest();
+
+        assertEquals(DispatcherType.REQUEST, ServletUtils.getDispatcherType(mock));
+
+        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
+        assertEquals(DispatcherType.FORWARD, ServletUtils.getDispatcherType(mock));
+
+        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
+        assertEquals(DispatcherType.INCLUDE, ServletUtils.getDispatcherType(mock));
+
+        mock.removeAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE);
+        mock.removeAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
+        mock.setAttribute(ServletUtils.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE, 500);
+        assertEquals(DispatcherType.ERROR, ServletUtils.getDispatcherType(mock));
+
+        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/error.html");
+        assertEquals(DispatcherType.FORWARD, ServletUtils.getDispatcherType(mock));
+
+        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/error.jsp");
+        assertEquals(DispatcherType.INCLUDE, ServletUtils.getDispatcherType(mock));
+    }
 }

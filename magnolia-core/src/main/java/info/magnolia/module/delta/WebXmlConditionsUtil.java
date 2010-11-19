@@ -85,17 +85,18 @@ public class WebXmlConditionsUtil {
 
     public void filterMustBeRegisteredWithCorrectDispatchers(final String filterClass) {
         final String conditionName = "web.xml updates";
-        final String message = "Since Magnolia 3.5, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. The INCLUDE dispatcher is not supported.";
+        final String message = "Since Magnolia 4.4, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD, INCLUDE and, optionally, ERROR.";
         final String additionalMessage = " Please add \n"
                 + " <dispatcher>REQUEST</dispatcher>\n"
                 + " <dispatcher>FORWARD</dispatcher>\n"
+                + " <dispatcher>INCLUDE</dispatcher>\n"
                 + " <dispatcher>ERROR</dispatcher>\n"
                 + " to the filter-mapping element in your web.xml file.";
 
         if (!webXmlUtil.isFilterRegistered(filterClass)) {
             conditions.add(new FalseCondition(conditionName, message));
         } else {
-            final int result = webXmlUtil.checkFilterDispatchersConfiguration(filterClass, Arrays.asList("REQUEST", "FORWARD"), Collections.singletonList("ERROR"));
+            final int result = webXmlUtil.checkFilterDispatchersConfiguration(filterClass, Arrays.asList("REQUEST", "FORWARD", "INCLUDE"), Collections.singletonList("ERROR"));
             if (result > 0) {
                 conditions.add(new TrueCondition(conditionName, message));
             } else if (result == 0) {

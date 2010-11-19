@@ -33,11 +33,16 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.util.DispatcherType;
 import info.magnolia.cms.util.RequestHeaderUtil;
+import info.magnolia.cms.util.ServletUtils;
 import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -62,6 +67,14 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     private Voter[] bypasses = new Voter[0];
 
     private boolean enabled = true;
+    private final SimpleConcurrentEnumMap<DispatcherType, DispatchRule> dispatchRules = new SimpleConcurrentEnumMap<DispatcherType, DispatchRule>(DispatcherType.class);
+
+    protected AbstractMgnlFilter() {
+        dispatchRules.put(DispatcherType.REQUEST, new DispatchRule());
+        dispatchRules.put(DispatcherType.FORWARD, new DispatchRule());
+        dispatchRules.put(DispatcherType.INCLUDE, new DispatchRule(false));
+        dispatchRules.put(DispatcherType.ERROR, new DispatchRule());
+    }
 
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -73,11 +86,19 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
     public boolean bypasses(HttpServletRequest request) {
-        if(!isEnabled()){
+        if (!isEnabled()){
             return true;
         }
+
         Voting voting = Voting.Factory.getDefaultVoting();
-        return voting.vote(bypasses, request) > 0;
+        if (voting.vote(bypasses, request) > 0)
+            return true;
+
+        DispatchRule dispatchRule = dispatchRules.get(ServletUtils.getDispatcherType(request));
+        if (dispatchRule.bypasses(request))
+            return true;
+
+        return false;
     }
 
     public void destroy() {
@@ -105,9 +126,24 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         return this.enabled;
     }
 
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setRequest(DispatchRule voter) {
+        this.dispatchRules.put(DispatcherType.REQUEST, voter);
+    }
+
+    public void setForward(DispatchRule voter) {
+        this.dispatchRules.put(DispatcherType.FORWARD, voter);
+    }
+
+    public void setInclude(DispatchRule voter) {
+        this.dispatchRules.put(DispatcherType.INCLUDE, voter);
+    }
+
+    public void setError(DispatchRule voter) {
+        this.dispatchRules.put(DispatcherType.ERROR, voter);
     }
 
     //---- utility methods -----
@@ -125,5 +161,32 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     protected void addAndVerifyHeader(HttpServletResponse response, String name, String value) {
         RequestHeaderUtil.addAndVerifyHeader(response, name, value);
+    }
+
+    /**
+     * Simple thread-safe key-value-store for use with an enum as key. Not a complete java.util.Map implementation.
+     * Optimized for read access. Faster read access than both ConcurrentHashMap and EnumMap wrapped in a synchronizing
+     * wrapper.
+     */
+    private static class SimpleConcurrentEnumMap<K extends Enum, V> {
+
+        private final List<V> values = new CopyOnWriteArrayList<V>();
+
+        private SimpleConcurrentEnumMap(Class<K> keyType) {
+            this(keyType, null);
+        }
+
+        public SimpleConcurrentEnumMap(Class<K> keyType, V defaultValue) {
+            // Initial fill of the list to prevent IndexOutOfBoundsException later on
+            values.addAll(Collections.nCopies(keyType.getEnumConstants().length, defaultValue));
+        }
+
+        public void put(K key, V value) {
+            values.set(key.ordinal(), value);
+        }
+
+        public V get(K key) {
+            return values.get(key.ordinal());
+        }
     }
 }

@@ -42,14 +42,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import info.magnolia.cms.util.CustomFilterConfig;
-import junit.framework.TestCase;
+import info.magnolia.test.MgnlTestCase;
 
 /**
  * Test for CompositeFilter.
  *
  * @see info.magnolia.cms.filters.FilterTest
  */
-public class CompositeFilterTest extends TestCase {
+public class CompositeFilterTest extends MgnlTestCase {
 
     private static class TestFilter extends AbstractMgnlFilter {
 
