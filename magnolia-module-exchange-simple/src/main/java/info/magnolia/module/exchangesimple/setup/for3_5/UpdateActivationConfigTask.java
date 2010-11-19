@@ -66,6 +66,7 @@ public class UpdateActivationConfigTask extends AbstractRepositoryTask {
     }
 
     // TODO exception handling ?
+    @Override
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getConfigHierarchyManager();
         if (hm.isExist(EE30_ROOT_PATH)) {
