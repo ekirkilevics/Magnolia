@@ -35,14 +35,12 @@ package info.magnolia.cms.filters;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.ArrayUtils;
-
-import info.magnolia.voting.Voter;
-import info.magnolia.voting.Voting;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
+
 /**
- * Used to configure if a filter is executed for a specific dispatcher type (REQUEST, FORWARD, INCLUDE, ERROR).
+ * Used to configure if a filter is executed for a specific dispatcher type (REQUEST, FORWARD,
+ * INCLUDE, ERROR).
  *
  * @author tmattsson
  * @see info.magnolia.cms.filters.AbstractMgnlFilter
@@ -50,9 +48,8 @@ import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 public class DispatchRule {
 
     private boolean enabled = true;
-    private Voter[] bypasses = new Voter[0];
-    private boolean dispatchOnForwardAttribute = false;
-    private Voting voting = Voting.Factory.getDefaultVoting();
+
+    private boolean dontDispatchOnForwardAttribute = false;
 
     public DispatchRule() {
     }
@@ -61,16 +58,12 @@ public class DispatchRule {
         this.enabled = enabled;
     }
 
-    public void addBypass(Voter voter) {
-        this.bypasses = (Voter[]) ArrayUtils.add(this.bypasses, voter);
+    public void setDontDispatchOnForwardAttribute(boolean dispatchOnForwardAttribute) {
+        this.dontDispatchOnForwardAttribute = dispatchOnForwardAttribute;
     }
 
-    public void setDispatchOnForwardAttribute(boolean dispatchOnForwardAttribute) {
-        this.dispatchOnForwardAttribute = dispatchOnForwardAttribute;
-    }
-
-    public boolean isDispatchOnForwardAttribute() {
-        return dispatchOnForwardAttribute;
+    public boolean isDontDispatchOnForwardAttribute() {
+        return dontDispatchOnForwardAttribute;
     }
 
     public boolean isEnabled() {
@@ -84,8 +77,8 @@ public class DispatchRule {
     public boolean bypasses(HttpServletRequest request) {
         if (!isEnabled())
             return true;
-        if (!dispatchOnForwardAttribute && request.getAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE) != null)
+        if (!dontDispatchOnForwardAttribute && request.getAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE) != null)
             return true;
-        return voting.vote(bypasses, request) > 0;
+        return false;
     }
 }
