@@ -34,16 +34,16 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderException;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
-import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +71,8 @@ import java.util.Map;
 public class ServletTemplateRenderer extends AbstractTemplateRenderer {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ServletTemplateRenderer.class);
 
+    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
+
     public void renderTemplate(Content content, Template template, Writer out) throws IOException, RenderException {
         final HttpServletRequest request = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getRequest();
         final HttpServletResponse response = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getResponse();
@@ -87,12 +89,9 @@ public class ServletTemplateRenderer extends AbstractTemplateRenderer {
                 log.warn("Forwarding to {} for request {}, but response is already committed.", path, request.getRequestURL());
             }
 
-            RequestDispatcher rd = request.getRequestDispatcher(path);
-            // set this attribute to avoid a second dispatching of the filters
-            request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
             // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
             try {
-                rd.forward(request, response);
+                webContainerResources.forward(path, request, response);
             } catch (ServletException e) {
                 throw new RenderException(e);
             }

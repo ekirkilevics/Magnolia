@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2007-2010 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2010 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,34 +25,39 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.voting.voters;
+package info.magnolia.cms.filters;
 
-import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 
 
 /**
- * This voter returns true if the DONT_DISPATCH_ON_FORWARD_ATTRIBUTE attribute is set in the request.
- * @deprecated since 4.4, use {@link WebContainerResources} instead
- * @author philipp
+ * Web container resources are resources which are served by the web container and not by the
+ * Magnolia CMS. This information is needed to bypass most of the Magnolia filters in such a forward
+ * or include request. A typical example is a forward to a JSP file
  * @version $Id$
  */
-public class DontDispatchOnForwardAttributeVoter extends AbstractBoolVoter {
+public interface WebContainerResources {
 
     /**
-     * @deprecated since 4.4, should not be used anymore, replaced by the {@link WebContainerResourcesImpl#WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE}.
+     * True if this request requests a web container resource.
      */
-    public static final String DONT_DISPATCH_ON_FORWARD_ATTRIBUTE = WebContainerResourcesImpl.WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE;
+    public boolean isWebContainerResource(ServletRequest request);
 
-    protected boolean boolVote(Object value) {
-        HttpServletRequest request = (HttpServletRequest) value;
-        return request.getAttribute(DONT_DISPATCH_ON_FORWARD_ATTRIBUTE) != null;
-    }
+    /**
+     * Forwards the request to a web container resource and guarantees that {@link #isWebContainerResource(ServletRequest)} will return true.
+     */
+    public void forward(String pathToWebContainerResource, ServletRequest request, ServletResponse response) throws ServletException, IOException;
+
+
 }

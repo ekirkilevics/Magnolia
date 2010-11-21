@@ -35,13 +35,13 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import info.magnolia.module.templating.RenderException;
+import info.magnolia.objectfactory.Components;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,7 +56,10 @@ import java.util.Map;
  * @version $Revision$ ($Author$)
  */
 public class JspTemplateRenderer extends AbstractTemplateRenderer {
+
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
+
+    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
 
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
@@ -64,21 +67,13 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
         if (response.isCommitted()) {
             log.warn("Attempting to forward to {}, but response is already committed.", templatePath);
         }
-        RequestDispatcher rd = request.getRequestDispatcher(templatePath);
 
-        // set this attribute to avoid a second dispatching of the filters
-        request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
         // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
         try {
-            rd.forward(request, response);
+            webContainerResources.forward(templatePath, request, response);
         }
         catch (Exception e) {
             throw new RenderException("Can't render template " + templatePath, e);
-        }
-        finally {
-            // remove the attribute just set, because a custom magnolia managed error-page may have been configured in
-            // web.xml
-            request.removeAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE);
         }
     }
 

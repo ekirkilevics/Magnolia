@@ -35,9 +35,9 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.cms.util.ServletUtils;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
-import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import java.io.IOException;
 
@@ -67,6 +67,8 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     private DispatchRules dispatchRules = new DispatchRules();
 
+    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
+
     protected AbstractMgnlFilter() {
     }
 
@@ -84,7 +86,7 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
             return true;
         }
 
-        boolean toWebContainerResource = isWebContainerResource(request);
+        boolean toWebContainerResource = webContainerResources.isWebContainerResource(request);
         boolean toMagnoliaResource = !toWebContainerResource;
 
         DispatchRule dispatchRule = getDispatchRules().getDispatchRule(ServletUtils.getDispatcherType(request));
@@ -98,10 +100,6 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
             return true;
 
         return false;
-    }
-
-    private boolean isWebContainerResource(HttpServletRequest request) {
-        return request.getAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE) != null;
     }
 
     public void destroy() {
