@@ -33,9 +33,6 @@
  */
 package info.magnolia.cms.filters;
 
-import javax.servlet.http.HttpServletRequest;
-
-import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 
 /**
@@ -47,38 +44,31 @@ import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
  */
 public class DispatchRule {
 
-    private boolean enabled = true;
+    private boolean toMagnoliaResources = true;
 
-    private boolean dontDispatchOnForwardAttribute = false;
+    private boolean toWebContainerResources = true;
 
     public DispatchRule() {
     }
 
-    public DispatchRule(boolean enabled) {
-        this.enabled = enabled;
+    public DispatchRule(boolean toMagnoliaResources, boolean toWebContainerResources) {
+        this.toMagnoliaResources = toMagnoliaResources;
+        this.toWebContainerResources = toWebContainerResources;
     }
 
-    public void setDontDispatchOnForwardAttribute(boolean dispatchOnForwardAttribute) {
-        this.dontDispatchOnForwardAttribute = dispatchOnForwardAttribute;
+    public void setToWebContainerResources(boolean toWebContainerResources) {
+        this.toWebContainerResources = toWebContainerResources;
     }
 
-    public boolean isDontDispatchOnForwardAttribute() {
-        return dontDispatchOnForwardAttribute;
+    public boolean isToWebContainerResources() {
+        return toWebContainerResources;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isToMagnoliaResources() {
+        return toMagnoliaResources;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean bypasses(HttpServletRequest request) {
-        if (!isEnabled())
-            return true;
-        if (!dontDispatchOnForwardAttribute && request.getAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE) != null)
-            return true;
-        return false;
+    public void setToMagnoliaResources(boolean toMagnoliaResources) {
+        this.toMagnoliaResources = toMagnoliaResources;
     }
 }

@@ -52,10 +52,10 @@ public class DispatchRules {
         DispatcherType.class);
 
     public DispatchRules() {
-        dispatchRules.put(DispatcherType.REQUEST, new DispatchRule());
-        dispatchRules.put(DispatcherType.FORWARD, new DispatchRule());
-        dispatchRules.put(DispatcherType.INCLUDE, new DispatchRule(false));
-        dispatchRules.put(DispatcherType.ERROR, new DispatchRule());
+        dispatchRules.put(DispatcherType.REQUEST, new DispatchRule(true, true));
+        dispatchRules.put(DispatcherType.FORWARD, new DispatchRule(true, false));
+        dispatchRules.put(DispatcherType.INCLUDE, new DispatchRule(false, false));
+        dispatchRules.put(DispatcherType.ERROR, new DispatchRule(true, false));
     }
 
     public void setRequest(DispatchRule rule) {
