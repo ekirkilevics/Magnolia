@@ -41,6 +41,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
 
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 
 
@@ -48,6 +51,12 @@ import info.magnolia.test.MgnlTestCase;
  * Tests for the treatment of request headers by cache filter.
  */
 public class CacheHeadersFilterTest extends MgnlTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
 
     public void testFilterCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);

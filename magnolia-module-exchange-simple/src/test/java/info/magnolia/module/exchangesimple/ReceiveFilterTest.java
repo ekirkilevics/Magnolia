@@ -38,6 +38,8 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -87,6 +89,12 @@ public class ReceiveFilterTest extends MgnlTestCase {
         void importNode(HierarchyManager hm, Session session) throws Exception;
 
         void saveSession(HierarchyManager hm) throws Exception;
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
 
     protected void tearDown() throws Exception {

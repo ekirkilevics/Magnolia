@@ -33,7 +33,10 @@
  */
 package info.magnolia.module.cache.filter;
 
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.module.cache.util.GZipUtil;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import static org.easymock.EasyMock.*;
 
@@ -58,6 +61,12 @@ import java.util.Enumeration;
  */
 public class GZipFilterTest extends MgnlTestCase {
     private static final String SOME_10CHARSLONG_CHAIN = "qwertzuiop";
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
 
     public void testBufferIsFlushedProperlyWhenUsingWriterFurtherDownTheChainOfFilters() throws Exception {
         final int iterations = 5000;

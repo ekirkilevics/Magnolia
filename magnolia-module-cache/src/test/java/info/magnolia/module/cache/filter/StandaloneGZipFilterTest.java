@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.cache.filter;
 
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
@@ -84,6 +86,8 @@ public class StandaloneGZipFilterTest extends MgnlTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         MockUtil.initMockContext();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+
         request = createStrictMock(HttpServletRequest.class);
         expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
     }

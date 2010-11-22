@@ -35,6 +35,8 @@ package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
@@ -96,7 +98,6 @@ public class CacheFilterTest extends TestCase {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private FilterChain filterChain;
-//    private HierarchyManager configHm;
 
 
     public void testFilterUsesGivenConfigAndCacheName() throws Exception {
@@ -709,6 +710,8 @@ public class CacheFilterTest extends TestCase {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
         MockUtil.initMockContext();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+
         aggregationState = new AggregationState();
 
         cacheFactory = createStrictMock(CacheFactory.class);
