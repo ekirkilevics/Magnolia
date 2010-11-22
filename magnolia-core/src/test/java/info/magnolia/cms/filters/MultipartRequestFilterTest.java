@@ -57,6 +57,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import static org.easymock.EasyMock.*;
 
@@ -74,6 +75,8 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
 
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR, System.getProperty("java.io.tmpdir"));
         SystemProperty.setProperty("info.magnolia.cms.util.UnicodeNormalizer$Normalizer", "info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer");

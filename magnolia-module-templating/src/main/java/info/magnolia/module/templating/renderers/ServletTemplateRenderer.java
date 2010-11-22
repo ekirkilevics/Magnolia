@@ -34,13 +34,11 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderException;
 import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import org.apache.commons.lang.StringUtils;
 
@@ -71,8 +69,6 @@ import java.util.Map;
 public class ServletTemplateRenderer extends AbstractTemplateRenderer {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ServletTemplateRenderer.class);
 
-    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
-
     public void renderTemplate(Content content, Template template, Writer out) throws IOException, RenderException {
         final HttpServletRequest request = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getRequest();
         final HttpServletResponse response = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getResponse();
@@ -91,7 +87,7 @@ public class ServletTemplateRenderer extends AbstractTemplateRenderer {
 
             // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
             try {
-                webContainerResources.forward(path, request, response);
+                request.getRequestDispatcher(path).forward(request, response);
             } catch (ServletException e) {
                 throw new RenderException(e);
             }

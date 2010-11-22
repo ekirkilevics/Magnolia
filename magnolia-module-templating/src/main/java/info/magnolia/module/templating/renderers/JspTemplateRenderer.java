@@ -35,12 +35,10 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.RenderException;
-import info.magnolia.objectfactory.Components;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,8 +57,6 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
 
-    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
-
     protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
@@ -70,7 +66,7 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
         // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
         try {
-            webContainerResources.forward(templatePath, request, response);
+            request.getRequestDispatcher(templatePath).forward(request, response);
         }
         catch (Exception e) {
             throw new RenderException("Can't render template " + templatePath, e);

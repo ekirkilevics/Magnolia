@@ -146,7 +146,7 @@ public class FilterTest extends MgnlTestCase {
         expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
         WebContext webCtx = createMock(WebContext.class);
-        
+
         AggregationState aggState = createMock(AggregationState.class);
         expect(aggState.getCurrentURI()).andReturn(".magnolia/something.html");
         expect(webCtx.getAggregationState()).andStubReturn(aggState);
@@ -156,6 +156,10 @@ public class FilterTest extends MgnlTestCase {
         HttpServletResponse response = createMock(HttpServletResponse.class);
         FilterChain chain = createMock(FilterChain.class);
 
+        // in the main filter
+        webCtx.push(request, response);
+        webCtx.pop();
+        // in the chain
         webCtx.push(request, response);
         webCtx.pop();
         webCtx.push(request, response);

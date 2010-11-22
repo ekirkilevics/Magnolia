@@ -93,12 +93,27 @@ public class MgnlMainFilter implements Filter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Handling URI: {} - Path info: {}", request.getRequestURI(), request.getPathInfo());
 
-        if (!rootFilter.bypasses(request)) {
-            rootFilter.doFilter(request, response, chain);
-        } else {
-            // pass request to next filter in web.xml
-            chain.doFilter(request, response);
+        // global fix for MAGNOLIA-3338 to make this independent of other dispatching rules
+        boolean contextUpdated = false;
+        if(MgnlContext.hasInstance()){
+            MgnlContext.push(request, response);
+            contextUpdated = true;
         }
+
+        try{
+            if (rootFilter.matches(request)) {
+                rootFilter.doFilter(request, response, chain);
+            } else {
+                // pass request to next filter in web.xml
+                chain.doFilter(request, response);
+            }
+        }
+        finally{
+            if(contextUpdated && MgnlContext.hasInstance()){
+                MgnlContext.pop();
+            }
+        }
+
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {

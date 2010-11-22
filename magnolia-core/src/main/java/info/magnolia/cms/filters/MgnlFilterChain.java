@@ -78,7 +78,7 @@ public class MgnlFilterChain implements FilterChain {
             else {
                 position++;
                 MgnlFilter filter = filters[position - 1];
-                if (!filter.bypasses((HttpServletRequest)request)) {
+                if (filter.matches((HttpServletRequest)request)) {
                     filter.doFilter(request, response, this);
                 } else {
                     doFilter(request, response);

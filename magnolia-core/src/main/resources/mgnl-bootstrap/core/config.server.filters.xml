@@ -60,170 +60,6 @@
         <sv:value>superuser</sv:value>
       </sv:property>
     </sv:node>
-    <sv:node sv:name="dispatching">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:lockable</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>ffe0980b-f777-4b63-b5d8-7129e58d2c8b</sv:value>
-      </sv:property>
-      <sv:node sv:name="MetaData">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:metaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-          <sv:value>false</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:authorid" sv:type="String">
-          <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2010-11-19T13:29:09.997+01:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2010-11-21T15:56:20.750+01:00</sv:value>
-        </sv:property>
-      </sv:node>
-      <sv:node sv:name="request">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-          <sv:value>mix:lockable</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>ad089653-c82e-42a4-ad06-795e8de32c12</sv:value>
-        </sv:property>
-        <sv:property sv:name="toMagnoliaResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:property sv:name="toWebContainerResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:node sv:name="MetaData">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:metaData</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-            <sv:value>false</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:authorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2010-11-19T13:29:39.998+01:00</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-11-21T15:56:12.087+01:00</sv:value>
-          </sv:property>
-        </sv:node>
-      </sv:node>
-      <sv:node sv:name="error">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-          <sv:value>mix:lockable</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>bb87cd33-a307-4858-9086-a088e9c75437</sv:value>
-        </sv:property>
-        <sv:property sv:name="toMagnoliaResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:property sv:name="toWebContainerResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:node sv:name="MetaData">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:metaData</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-            <sv:value>false</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:authorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2010-11-19T13:29:39.998+01:00</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-11-21T15:56:12.087+01:00</sv:value>
-          </sv:property>
-        </sv:node>
-      </sv:node>
-      <sv:node sv:name="forward">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-          <sv:value>mix:lockable</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>e2d101a4-e2c6-4fe0-9257-86e93d77cdc2</sv:value>
-        </sv:property>
-        <sv:property sv:name="toMagnoliaResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:property sv:name="toWebContainerResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:node sv:name="MetaData">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:metaData</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-            <sv:value>false</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:authorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2010-11-19T13:29:39.998+01:00</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-11-21T15:56:12.087+01:00</sv:value>
-          </sv:property>
-        </sv:node>
-      </sv:node>
-      <sv:node sv:name="include">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-          <sv:value>mix:lockable</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>379550b8-d0ae-4eb7-8199-81c4167cb2f9</sv:value>
-        </sv:property>
-        <sv:property sv:name="toMagnoliaResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:property sv:name="toWebContainerResources" sv:type="String">
-          <sv:value>true</sv:value>
-        </sv:property>
-        <sv:node sv:name="MetaData">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:metaData</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-            <sv:value>false</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:authorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2010-11-19T13:29:39.998+01:00</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-11-21T15:56:12.088+01:00</sv:value>
-          </sv:property>
-        </sv:node>
-      </sv:node>
-    </sv:node>
   </sv:node>
   <sv:node sv:name="contentType">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1401,7 +1237,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="toWebContainerResources" sv:type="String">
-        <sv:value>true</sv:value>
+        <sv:value>false</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1435,7 +1271,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="toWebContainerResources" sv:type="String">
-        <sv:value>true</sv:value>
+        <sv:value>false</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1466,10 +1302,10 @@
         <sv:value>34b3c5ad-abf5-4e25-851c-50768d91e58a</sv:value>
       </sv:property>
       <sv:property sv:name="toMagnoliaResources" sv:type="String">
-        <sv:value>true</sv:value>
+        <sv:value>false</sv:value>
       </sv:property>
       <sv:property sv:name="toWebContainerResources" sv:type="String">
-        <sv:value>true</sv:value>
+        <sv:value>false</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">

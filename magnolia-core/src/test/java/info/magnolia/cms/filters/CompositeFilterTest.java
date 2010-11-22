@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import info.magnolia.cms.util.CustomFilterConfig;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 
 /**
@@ -50,6 +51,12 @@ import info.magnolia.test.MgnlTestCase;
  * @see info.magnolia.cms.filters.FilterTest
  */
 public class CompositeFilterTest extends MgnlTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
 
     private static class TestFilter extends AbstractMgnlFilter {
 

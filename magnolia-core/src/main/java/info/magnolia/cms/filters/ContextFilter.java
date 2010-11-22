@@ -116,10 +116,6 @@ public class ContextFilter extends AbstractMgnlFilter {
                 log.debug(e.getMessage(), e);
             }
         }
-        if (!initializedContext) {
-            // push req/res every time except the first time
-            MgnlContext.push(request, response);
-        }
         try {
             chain.doFilter(request, response);
         } finally {

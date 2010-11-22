@@ -35,6 +35,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ui.ModuleManagerUI;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import static org.easymock.EasyMock.*;
 
@@ -59,6 +60,8 @@ public class InstallFilterTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+
         moduleManager = createStrictMock(ModuleManager.class);
         ui = createStrictMock(ModuleManagerUI.class);
         req = createStrictMock(HttpServletRequest.class);

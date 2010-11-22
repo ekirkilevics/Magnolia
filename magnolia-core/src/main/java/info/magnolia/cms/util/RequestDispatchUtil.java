@@ -121,15 +121,7 @@ public class RequestDispatchUtil {
         if (targetUri.startsWith(FORWARD_PREFIX)) {
             String forwardUrl = StringUtils.substringAfter(targetUri, FORWARD_PREFIX);
             try {
-
-                // TODO: solves MAGNOLIA-2015 but should be solved by implementing MAGNOLIA-2027
-                if (forwardUrl.endsWith(".jsp")) {
-                    webContainerResources.forward(forwardUrl, request, response);
-                }
-                else{
-                    request.getRequestDispatcher(forwardUrl).forward(request, response);
-                }
-
+                request.getRequestDispatcher(forwardUrl).forward(request, response);
             } catch (Exception e) {
                 log.error("Failed to forward to {} - {}:{}", new Object[]{
                         forwardUrl,

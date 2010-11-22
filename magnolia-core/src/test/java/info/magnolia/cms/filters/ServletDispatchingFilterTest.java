@@ -71,10 +71,16 @@ import static org.easymock.EasyMock.*;
  * @version $Revision: $ ($Author: $)
  */
 public class ServletDispatchingFilterTest extends MgnlTestCase {
+    
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
 
     public void testEscapeMetaCharacters() {
         assertEquals("a\\{b\\)c\\(d\\}e\\^f\\]g\\[h\\*i\\$j\\+kl",
-                ServletDispatchingFilter.escapeMetaCharacters("a{b)c(d}e^f]g[h*i$j+kl"));
+                Mapping.escapeMetaCharacters("a{b)c(d}e^f]g[h*i$j+kl"));
     }
 
     public void testSupportsDefaultMapping() throws Exception {
@@ -191,14 +197,14 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
         replay(chain, res, req, servlet, ctx);
 
         state.setCurrentURI(requestPath);
-        final ServletDispatchingFilter filter = new ServletDispatchingFilter();
+        final AbstractMgnlFilter filter = new ServletDispatchingFilter();
         final Field servletField = ServletDispatchingFilter.class.getDeclaredField("servlet");
         servletField.setAccessible(true);
         servletField.set(filter, servlet);
 
         filter.addMapping(mapping);
 
-        assertEquals("Should " + (shouldBypass ? "" : "not ") + "have bypassed", shouldBypass, filter.bypasses(req));
+        assertEquals("Should " + (shouldBypass ? "" : "not ") + "have bypassed", shouldBypass, !filter.matches(req));
         if (!shouldBypass) {
             filter.doFilter(req, res, chain);
         }

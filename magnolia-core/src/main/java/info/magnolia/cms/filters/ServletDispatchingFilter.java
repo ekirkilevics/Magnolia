@@ -34,18 +34,11 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.util.CustomServletConfig;
-import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Classes;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -70,15 +63,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ServletDispatchingFilter extends AbstractMgnlFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(ServletDispatchingFilter.class);
-
-    private static final String METACHARACTERS = "([\\^\\(\\)\\{\\}\\[\\]*$+])";
+    static final Logger log = LoggerFactory.getLogger(ServletDispatchingFilter.class);
 
     private String servletName;
 
     private String servletClass;
-
-    private Collection mappings;
 
     private Map parameters;
 
@@ -87,7 +76,6 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     private Servlet servlet;
 
     public ServletDispatchingFilter() {
-        mappings = new LinkedList();
     }
 
     public String getName() {
@@ -122,62 +110,12 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     /**
-     * Bypasses if the current request does not match any of the mappings of the servlet. Explicit bypasses defined in
-     * the bypasses content node of this filter are taken into account as well.
-     */
-    public boolean bypasses(HttpServletRequest request) {
-        return determineMatchingEnd(request) < 0 || super.bypasses(request);
-    }
-
-    /**
-     * Determines the index of the first pathInfo character. If the uri does not match any mapping this method returns
-     * -1.
-     */
-    protected int determineMatchingEnd(HttpServletRequest request) {
-        final Matcher matcher = findMatcher(request);
-        if (matcher == null) {
-            return -1;
-        } else {
-            if (matcher.groupCount() > 0) {
-                return matcher.end(1);
-            } else {
-                return matcher.end();
-            }
-        }
-    }
-
-    protected Matcher findMatcher(HttpServletRequest request) {
-        String uri = null;
-        WebContext ctx = MgnlContext.getWebContextOrNull();
-        if (ctx != null) {
-            uri = ctx.getAggregationState().getCurrentURI();
-        }
-        if (uri == null) {
-            // the web context is not available during installation
-            uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
-        }
-        return findMatcher(uri);
-    }
-
-    protected Matcher findMatcher(String uri) {
-        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
-            final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
-
-            if (matcher.find()) {
-                return matcher;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Dispatches the request to the servlet if not already bypassed. The request is wrapped for properly setting the
      * pathInfo.
      */
     public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Dispatching to servlet {}", getServletClass());
-        final Matcher matcher = findMatcher(request);
+        final Matcher matcher = getMapping().match(request).getMatcher();
         servlet.service(new WrappedRequest(request, matcher), response);
     }
 
@@ -195,80 +133,6 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
 
     public void setServletClass(String servletClass) {
         this.servletClass = servletClass;
-    }
-
-    public Collection getMappings() {
-        return mappings;
-    }
-
-    public void setMappings(Collection mappings) {
-        this.mappings = mappings;
-    }
-
-    /**
-     * See SRV.11.2 Specification of Mappings in the Servlet Specification
-     * for the syntax of mappings. Additionally, you can also use plain regular
-     * expressions to map your servlets, by prefix the mapping by "regex:". (in
-     * which case anything in the request url following the expression's match
-     * will be the pathInfo - if your pattern ends with a $, extra pathInfo won't
-     * match)
-     */
-    public void addMapping(final String mapping) {
-        final String pattern;
-
-        // we're building a Pattern with 3 groups: (1) servletPath (2) ignored (3) pathInfo
-
-        if (isDefaultMapping(mapping)) {
-            // the mapping is exactly '/*', the servlet path should be
-            // an empty string and everything else should be the path info
-            pattern = "^()(/)(" + SimpleUrlPattern.MULTIPLE_CHAR_PATTERN + ")";
-        } else if (isPathMapping(mapping)) {
-            // the pattern ends with /*, escape out metacharacters for
-            // use in a regex, and replace the ending * with MULTIPLE_CHAR_PATTERN
-            final String mappingWithoutSuffix = StringUtils.removeEnd(mapping, "/*");
-            pattern = "^(" + escapeMetaCharacters(mappingWithoutSuffix) + ")(/)(" + SimpleUrlPattern.MULTIPLE_CHAR_PATTERN + ")";
-        } else if (isExtensionMapping(mapping)) {
-            // something like '*.jsp', everything should be the servlet path
-            // and the path info should be null
-            final String regexedMapping = StringUtils.replace(mapping, "*.", SimpleUrlPattern.MULTIPLE_CHAR_PATTERN + "\\.");
-            pattern = "^(" + regexedMapping + ")$";
-        } else if (isRegexpMapping(mapping)) {
-            final String mappingWithoutPrefix = StringUtils.removeStart(mapping, "regex:");
-            pattern = "^(" + mappingWithoutPrefix + ")($|/)(" + SimpleUrlPattern.MULTIPLE_CHAR_PATTERN + ")";
-        } else {
-            // just literal text, ensure metacharacters are escaped, and that only
-            // the exact string is matched.
-            pattern = "^(" + escapeMetaCharacters(mapping) + ")$";
-        }
-        log.debug("Adding new mapping for {}", mapping);
-
-        mappings.add(Pattern.compile(pattern));
-    }
-
-    static String escapeMetaCharacters(String str) {
-        return str.replaceAll(METACHARACTERS, "\\\\$1");
-    }
-
-    /**
-     * This is order specific, this method should not be called until
-     * after the isDefaultMapping() method else it will return true
-     * for a default mapping.
-     */
-    private boolean isPathMapping(String mapping) {
-        return mapping.startsWith("/") && mapping.endsWith("/*");
-    }
-
-    private boolean isExtensionMapping(String mapping) {
-        return mapping.startsWith("*.");
-    }
-
-    private boolean isDefaultMapping(String mapping) {
-        // TODO : default mapping per spec is "/" - do we really want to support this? is there a point ?
-        return mapping.equals("/");
-    }
-
-    private boolean isRegexpMapping(String mapping) {
-        return mapping.startsWith("regex:");
     }
 
     public Map getParameters() {

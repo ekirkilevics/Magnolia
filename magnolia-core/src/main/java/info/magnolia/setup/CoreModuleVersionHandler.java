@@ -85,6 +85,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
     private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
             ContentRepository.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
+    private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
 
     public CoreModuleVersionHandler() {
         super();
@@ -174,7 +175,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 ))
                 .addTask(new UpdateUserPermissions())
         );
-        
+
         register(DeltaBuilder.update("4.3.6", "")
                 .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", ContentRepository.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
                 .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class","Unable to set property class because it already exists"),  new NewPropertyTask("Class", "Creates property class and sets it to class path", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
@@ -199,6 +200,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(auditTrailManagerTask);
         l.add(bootstrapFreemarker);
         l.add(addFreemarkerSharedVariables);
+        l.add(bootstrapWebContainerResources);
         return l;
     }
 

@@ -33,11 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 
 
@@ -52,12 +48,6 @@ public interface WebContainerResources {
     /**
      * True if this request requests a web container resource.
      */
-    public boolean isWebContainerResource(ServletRequest request);
-
-    /**
-     * Forwards the request to a web container resource and guarantees that {@link #isWebContainerResource(ServletRequest)} will return true.
-     */
-    public void forward(String pathToWebContainerResource, ServletRequest request, ServletResponse response) throws ServletException, IOException;
-
+    public boolean isWebContainerResource(HttpServletRequest request);
 
 }

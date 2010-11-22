@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.filters;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -53,21 +53,22 @@ public class WebContainerResourcesImpl implements WebContainerResources {
      */
     public static final String WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE = WebContainerResources.class.getName();
 
-    public boolean isWebContainerResource(ServletRequest request) {
-        return request.getAttribute(WebContainerResourcesImpl.WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE) != null;
+    private Mapping mapping = new Mapping();
+
+    public boolean isWebContainerResource(HttpServletRequest request) {
+        boolean markerAttribute = request.getAttribute(WebContainerResourcesImpl.WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE) != null;
+        return markerAttribute || mapping.match(request).isMatching();
     }
 
-    public void forward(String pathToWebContainerResource, ServletRequest request, ServletResponse response) throws ServletException, IOException {
-        request.setAttribute(WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE, Boolean.TRUE);
-        try {
-            request.getRequestDispatcher(pathToWebContainerResource).forward(request, response);
+    public Collection<String> getMappings() {
+        ArrayList<String> result = new ArrayList<String>();
+        for (Pattern pattern : mapping.getMappings()) {
+            result.add(pattern.pattern());
         }
-        finally {
-            // remove the attribute just set, because a custom magnolia managed error-page may have
-            // been configured in
-            // web.xml
-            request.removeAttribute(WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE);
-        }
+        return result;
     }
 
+    public void addMapping(String mapping){
+        this.mapping.addMapping(mapping);
+    }
 }

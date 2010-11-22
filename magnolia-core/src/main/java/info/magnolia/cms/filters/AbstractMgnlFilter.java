@@ -40,6 +40,9 @@ import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -50,6 +53,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -59,6 +64,8 @@ import org.apache.commons.lang.ArrayUtils;
  */
 public abstract class AbstractMgnlFilter implements MgnlFilter {
 
+    private static Logger log =  LoggerFactory.getLogger(AbstractMgnlFilter.class);
+
     private String name;
 
     private Voter[] bypasses = new Voter[0];
@@ -66,6 +73,8 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     private boolean enabled = true;
 
     private DispatchRules dispatchRules = new DispatchRules();
+
+    private Mapping mapping = new Mapping();
 
     private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
 
@@ -81,20 +90,33 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
-    public boolean bypasses(HttpServletRequest request) {
-        if (!isEnabled()){
+    public boolean matches(HttpServletRequest request) {
+        return isEnabled() && matchesDispatching(request) && mapsTo(request) && !bypasses(request);
+    }
+
+    protected boolean mapsTo(HttpServletRequest request) {
+        if(getMapping().getMappings().isEmpty()){
             return true;
         }
+        return getMapping().match(request).isMatching();
+    }
 
+    protected boolean matchesDispatching(HttpServletRequest request) {
+        if(webContainerResources == null){
+            return true;
+        }
         boolean toWebContainerResource = webContainerResources.isWebContainerResource(request);
         boolean toMagnoliaResource = !toWebContainerResource;
 
         DispatchRule dispatchRule = getDispatchRules().getDispatchRule(ServletUtils.getDispatcherType(request));
-        if (toMagnoliaResource && !dispatchRule.isToMagnoliaResources())
+        if (toMagnoliaResource && dispatchRule.isToMagnoliaResources())
             return true;
-        if (toWebContainerResource && !dispatchRule.isToWebContainerResources())
+        if (toWebContainerResource && dispatchRule.isToWebContainerResources())
             return true;
+        return false;
+    }
 
+    protected boolean bypasses(HttpServletRequest request) {
         Voting voting = Voting.Factory.getDefaultVoting();
         if (voting.vote(bypasses, request) > 0)
             return true;
@@ -139,6 +161,22 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         this.dispatchRules = dispatching;
     }
 
+    public Collection<String> getMappings() {
+        ArrayList<String> result = new ArrayList<String>();
+        for (Pattern pattern : getMapping().getMappings()) {
+            result.add(pattern.pattern());
+        }
+        return result;
+    }
+
+    protected Mapping getMapping() {
+        return mapping;
+    }
+
+    public void addMapping(String mapping){
+        this.getMapping().addMapping(mapping);
+    }
+
     //---- utility methods -----
     protected boolean acceptsGzipEncoding(HttpServletRequest request) {
         return RequestHeaderUtil.acceptsGzipEncoding(request);
@@ -155,5 +193,7 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     protected void addAndVerifyHeader(HttpServletResponse response, String name, String value) {
         RequestHeaderUtil.addAndVerifyHeader(response, name, value);
     }
+
+
 
 }

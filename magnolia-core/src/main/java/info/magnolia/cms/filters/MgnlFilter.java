@@ -50,5 +50,5 @@ public interface MgnlFilter extends Filter {
 
     public void setName(String name);
 
-    public boolean bypasses(HttpServletRequest request);
+    public boolean matches(HttpServletRequest request);
 }
