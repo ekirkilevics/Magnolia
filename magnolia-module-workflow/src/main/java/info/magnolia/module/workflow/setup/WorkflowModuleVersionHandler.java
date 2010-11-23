@@ -194,7 +194,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new RemovePermissionTask("Update workflow-base role", "Updates the workflow-base role, removing unnecessary permission to self.", "workflow-base", "userroles", "/workflow-base", Permission.READ)));
 
         register(DeltaBuilder.update("4.3.3", "")
-                .addTask(new NodeExistsDelegateTask("StartActivationWorkflowDialog", "Checs if startActivationWorkflow node exists", ContentRepository.CONFIG, "/modules/workflow/dialogs/startActivationWorkflow", new CheckAndModifyPropertyValueTask("StartActivationWorkflowDialog", "Increases the height to 450px to prevent visual artefacts on FF on Linux", ContentRepository.CONFIG, "/modules/workflow/dialogs/startActivationWorkflow", "height", "400", "450")))
+                .addTask(new NodeExistsDelegateTask("StartActivationWorkflowDialog", "Checks if startActivationWorkflow node exists", ContentRepository.CONFIG, "/modules/workflow/dialogs/startActivationWorkflow", new CheckAndModifyPropertyValueTask("StartActivationWorkflowDialog", "Increases the height to 450px to prevent visual artefacts on FF on Linux", ContentRepository.CONFIG, "/modules/workflow/dialogs/startActivationWorkflow", "height", "400", "450")))
         );
         register(DeltaBuilder.update("4.4", "")
                 .addTask(new InstallWorkflowDefinitionTask("Setup default deactivation workflow definition", "Adds the default deactivation workflow definition under the /modules/workflow/config/flows/deactivation config node.", "deactivation", "info/magnolia/module/workflow/deactivation-workflow.xml"))
