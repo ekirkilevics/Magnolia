@@ -35,17 +35,26 @@ package info.magnolia.module.cache.filter;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.io.output.ThresholdingOutputStream;
+
+import info.magnolia.cms.core.Path;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 
 /**
@@ -54,16 +63,41 @@ import java.util.Locale;
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
+
+    public static final int THRESHOLD = 200 * 1024;
+
     private final ServletOutputStream wrappedStream;
     private PrintWriter wrappedWriter = null;
     private final MultiMap headers = new MultiValueMap();
     private int status = SC_OK;
     private boolean isError;
     private String redirectionLocation;
+    private HttpServletResponse originalResponse;
+    private ByteArrayOutputStream inMemoryBuffer;
+    private File contentFile;
 
-    public CacheResponseWrapper(final HttpServletResponse response, final ServletOutputStream wrappedStream) {
+    private ThresholdingOutputStream thresholdingOutputStream;
+    private boolean serveIfThresholdReached;
+
+    public CacheResponseWrapper(final HttpServletResponse response, int threshold, boolean serveIfThresholdReached) {
         super(response);
-        this.wrappedStream = wrappedStream;
+        this.serveIfThresholdReached = serveIfThresholdReached;
+        this.originalResponse = response;
+        this.inMemoryBuffer = new ByteArrayOutputStream();
+        this.thresholdingOutputStream = new ThresholdingCacheOutputStream(threshold);
+        this.wrappedStream = new SimpleServletOutputStream(thresholdingOutputStream);
+    }
+
+    public boolean isThesholdExceeded() {
+        return thresholdingOutputStream.isThresholdExceeded();
+    }
+
+    public byte[] getBufferedContent(){
+        return inMemoryBuffer.toByteArray();
+    }
+
+    public File getContentFile() {
+        return contentFile;
     }
 
     // MAGNOLIA-1996: this can be called multiple times, e.g. by chunk writers, but always from a single thread.
@@ -83,7 +117,6 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void flushBuffer() throws IOException {
-        super.flushBuffer();
         flush();
     }
 
@@ -228,4 +261,64 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         this.status = status;
         this.isError = true;
     }
+
+    public long getContentLength() {
+        return thresholdingOutputStream.getByteCount();
+    }
+
+    private void replay() throws IOException {
+        originalResponse.setStatus(getStatus());
+
+        final Iterator it = headers.keySet().iterator();
+        while (it.hasNext()) {
+            final String header = (String) it.next();
+
+            final Collection values = (Collection) headers.get(header);
+            final Iterator valIt = values.iterator();
+            while (valIt.hasNext()) {
+                final Object val = valIt.next();
+                if (val instanceof Long) {
+                    originalResponse.addDateHeader(header, ((Long) val).longValue());
+                } else if (val instanceof Integer) {
+                    originalResponse.addIntHeader(header, ((Integer) val).intValue());
+                } else if (val instanceof String) {
+                    originalResponse.addHeader(header, (String) val);
+                } else {
+                    throw new IllegalStateException("Unrecognized type for header [" + header + "], value is: " + val);
+                }
+            }
+        }
+
+
+        // TODO : cookies ?
+        originalResponse.setContentType(getContentType());
+        originalResponse.setCharacterEncoding(getCharacterEncoding());
+    }
+
+    private final class ThresholdingCacheOutputStream extends ThresholdingOutputStream {
+        OutputStream out = inMemoryBuffer;
+
+        private ThresholdingCacheOutputStream(int threshold) {
+            super(threshold);
+        }
+
+        @Override
+        protected OutputStream getStream() throws IOException {
+            return out;
+        }
+
+        @Override
+        protected void thresholdReached() throws IOException {
+            if(serveIfThresholdReached){
+                replay();
+                out = originalResponse.getOutputStream();
+            }
+            else{
+                contentFile = File.createTempFile("cacheStream", null, Path.getTempDirectory());
+                out = new FileOutputStream(contentFile);
+            }
+            out.write(getBufferedContent());
+        }
+    }
+
 }

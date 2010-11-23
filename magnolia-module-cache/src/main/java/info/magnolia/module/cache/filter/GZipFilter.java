@@ -42,7 +42,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -63,11 +62,9 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
         // we need to setContentLength before writing content ...
         // (otherwise Tomcat adds a Transfer-Encoding: chunked header, which seems to cause trouble
         // to browsers ...)
-        final ByteArrayOutputStream flat = new ByteArrayOutputStream();
-        final SimpleServletOutputStream wrappedOut = new SimpleServletOutputStream(flat);
 
         // Handle the request
-        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response,wrappedOut) {
+        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.THRESHOLD, true) {
             public void setContentLength(int len) {
                 // don't let the container set a (wrong) content-length too early,
                 // we're going to set it later to the appropriate
@@ -85,39 +82,41 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
         // flush only internal buffers, not the actual response's !
         responseWrapper.flush();
 
-        byte[] array = flat.toByteArray();
+        if(!responseWrapper.isThesholdExceeded()){
+            byte[] array = responseWrapper.getBufferedContent();
 
-        //GZIP only 200 SC_OK responses as in other cases response might be already committed - only dump bytes and flush ...
-        int statusCode = responseWrapper.getStatus();
-        if (statusCode == HttpServletResponse.SC_OK) {
+            //GZIP only 200 SC_OK responses as in other cases response might be already committed - only dump bytes and flush ...
+            int statusCode = responseWrapper.getStatus();
+            if (statusCode == HttpServletResponse.SC_OK) {
 
-            if (!GZipUtil.isGZipped(array) && RequestHeaderUtil.acceptsGzipEncoding(request)) {
-                array = GZipUtil.gzip(array);
+                if (!GZipUtil.isGZipped(array) && RequestHeaderUtil.acceptsGzipEncoding(request)) {
+                    array = GZipUtil.gzip(array);
+                }
+
+                // add headers only if not set yet.
+                if (GZipUtil.isGZipped(array) && !response.containsHeader("Content-Encoding")) {
+                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
+                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
+                }
+
+                response.setContentLength(array.length);
             }
 
-            // add headers only if not set yet.
-            if (GZipUtil.isGZipped(array) && !response.containsHeader("Content-Encoding")) {
-                RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
-                RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
+            if (array.length > 0) {
+                response.getOutputStream().write(array);
             }
 
-            response.setContentLength(array.length);
-        }
+            response.flushBuffer();
 
-        if (array.length > 0) {
-            response.getOutputStream().write(array);
-        }
-
-        response.flushBuffer();
-
-        // TODO :
-         //Sanity checks
-//            byte[] compressedBytes = compressed.toByteArray();
-//            boolean shouldGzippedBodyBeZero = ResponseUtil.shouldGzippedBodyBeZero(compressedBytes, request);
-//            boolean shouldBodyBeZero = ResponseUtil.shouldBodyBeZero(request, wrapper.getStatusCode());
-//            if (shouldGzippedBodyBeZero || shouldBodyBeZero) {
-//                compressedBytes = new byte[0];
-//            }
+            // TODO :
+             //Sanity checks
+    //            byte[] compressedBytes = compressed.toByteArray();
+    //            boolean shouldGzippedBodyBeZero = ResponseUtil.shouldGzippedBodyBeZero(compressedBytes, request);
+    //            boolean shouldBodyBeZero = ResponseUtil.shouldBodyBeZero(request, wrapper.getStatusCode());
+    //            if (shouldGzippedBodyBeZero || shouldBodyBeZero) {
+    //                compressedBytes = new byte[0];
+    //            }
+            }
     }
 
 }

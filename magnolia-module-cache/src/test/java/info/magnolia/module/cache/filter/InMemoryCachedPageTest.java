@@ -43,24 +43,19 @@ import java.io.IOException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedPageTest extends TestCase {
-    public void testDoesNotAttemptToUnzipsContentIfPassedContentIsGZipped() throws IOException {
+public class InMemoryCachedPageTest extends TestCase {
+
+    public void testUnGZipIfContentIsGZipped() throws IOException {
         final String s = "hello";
         final byte[] gzipped = GZipUtil.gzip(s.getBytes());
-        final CachedPage p = new CachedPage(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis(), true);
-        assertEquals(gzipped, p.getDefaultContent());
-        assertEquals(null, p.getUngzippedContent());
+        final InMemoryCachedPage p = new InMemoryCachedPage(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis());
+        assertEquals(gzipped, p.getGzippedContent());
+        assertEquals("hello", new String(p.getPlainContent()));
     }
 
     public void testGZipIfContentIsNotGZipped() throws IOException {
-        final CachedPage p = new CachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), true);
-        assertEquals("hello", new String(GZipUtil.ungzip(p.getDefaultContent())));
-        assertEquals("hello", new String(p.getUngzippedContent()));
-    }
-
-    public void testDontGZipIfContentIsNotGZippedAndShouldNotBe() throws IOException {
-        final CachedPage p = new CachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), false);
-        assertEquals("hello", new String(p.getDefaultContent()));
-        assertEquals(null, p.getUngzippedContent());
+        final InMemoryCachedPage p = new InMemoryCachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis());
+        assertEquals("hello", new String(GZipUtil.ungzip(p.getGzippedContent())));
+        assertEquals("hello", new String(p.getPlainContent()));
     }
 }

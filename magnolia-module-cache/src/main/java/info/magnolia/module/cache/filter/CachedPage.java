@@ -33,7 +33,9 @@
  */
 package info.magnolia.module.cache.filter;
 
-import info.magnolia.module.cache.util.GZipUtil;
+import info.magnolia.cms.util.RequestHeaderUtil;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.cache.CacheModule;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -45,6 +47,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
@@ -59,7 +66,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedPage implements CachedEntry, Serializable {
+public abstract class CachedPage implements CachedEntry, Serializable {
 
     private static final ToStringStyle BYTE_ARRAY_SIZE_STYLE = new ToStringStyle() {
         protected void appendDetail(StringBuffer buffer, String fieldName,
@@ -68,9 +75,6 @@ public class CachedPage implements CachedEntry, Serializable {
         }
     };
 
-    // TODO : headers and cookies ?
-    private final byte[] defaultContent;
-    private final byte[] ungzippedContent;
     private final String contentType;
     private final String characterEncoding;
     private final int statusCode;
@@ -79,13 +83,6 @@ public class CachedPage implements CachedEntry, Serializable {
     private final long lastModificationTime;
     // slightly fishy, but other executors needs to know if this is freshly created CachedPage and StatusCode have been manipulated or not.
     private transient int preCacheStatusCode;
-
-    /**
-     * @deprecated not used, since 3.6.2, as it will compress all not gzipped content of every entry created using this constructor which is not desirable for already compressed content (e.g. jpg & tif images)
-     */
-    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
-        this(out, contentType, characterEncoding, statusCode, headers, modificationDate, true);
-    }
 
     /**
      * @param out Cached content.
@@ -97,15 +94,7 @@ public class CachedPage implements CachedEntry, Serializable {
      * @param shouldCompress Flag marking this content as desirable to be sent in compressed form (should the client support such compression). Setting this to true means cache entry will contain both, compressed and flat version of the content. Compression is applied here only if content is not gzipped already.
      * @throws IOException when failing to compress the content.
      */
-    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, boolean shouldCompress) throws IOException {
-        // content which is actually of a compressed type must stay that way
-        if (GZipUtil.isGZipped(out) || !shouldCompress) {
-            this.defaultContent = out;
-            this.ungzippedContent = null;
-        } else {
-            this.defaultContent = GZipUtil.gzip(out);
-            this.ungzippedContent = out;
-        }
+    public CachedPage(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         this.contentType = contentType;
         this.characterEncoding = characterEncoding;
         this.statusCode = statusCode;
@@ -119,14 +108,6 @@ public class CachedPage implements CachedEntry, Serializable {
     // TODO : to know if we can push gzipped content... or this would need to be passed as an explicit
     // TODO : parameter, which isn't too exciting either...
 
-
-    public byte[] getUngzippedContent() {
-        return ungzippedContent;
-    }
-
-    public byte[] getDefaultContent() {
-        return defaultContent;
-    }
 
     public String getContentType() {
         return contentType;
@@ -176,7 +157,7 @@ public class CachedPage implements CachedEntry, Serializable {
         }
         serializableHeadersBackingList = null;
    }
-    
+
     public int getPreCacheStatusCode() {
         // preCached is transient and will be 0 after deserialization (or after going through UseCache for that matter)
         if (preCacheStatusCode == 0) {
@@ -188,5 +169,76 @@ public class CachedPage implements CachedEntry, Serializable {
     public void setPreCacheStatusCode(int preCacheStatusCode) {
         this.preCacheStatusCode = preCacheStatusCode;
     }
+
+    public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        response.setStatus(getStatusCode());
+
+        boolean acceptsGzipEncoding = isAcceptsGzip(request);
+        addHeaders(acceptsGzipEncoding, response);
+
+        // TODO : cookies ?
+        response.setContentType(getContentType());
+        response.setCharacterEncoding(getCharacterEncoding());
+
+        writeContent(request, response, chain, acceptsGzipEncoding);
+    }
+
+    protected abstract void writeContent(HttpServletRequest request, HttpServletResponse response, FilterChain chain, boolean acceptsGzipEncoding) throws IOException, ServletException;
+
+    /**
+     * Sets headers in the response object.
+     */
+    protected void addHeaders(final boolean acceptsGzipEncoding, final HttpServletResponse response) {
+        final MultiMap headers = getHeaders();
+
+        final Iterator it = headers.keySet().iterator();
+        while (it.hasNext()) {
+            final String header = (String) it.next();
+            if (!acceptsGzipEncoding) {
+                //TODO: this should not be necessary any more ...
+                if ("Content-Encoding".equals(header) || "Vary".equals(header)) {
+                    continue;
+                }
+            }
+            if (response.containsHeader(header)) {
+                // do not duplicate headers. Some of the headers we have to set in Store to have them added to the cache entry, on the other hand we don't want to duplicate them if they are already set.
+                continue;
+            }
+
+            final Collection values = (Collection) headers.get(header);
+            final Iterator valIt = values.iterator();
+            while (valIt.hasNext()) {
+                final Object val = valIt.next();
+                if (val instanceof Long) {
+                    response.addDateHeader(header, ((Long) val).longValue());
+                } else if (val instanceof Integer) {
+                    response.addIntHeader(header, ((Integer) val).intValue());
+                } else if (val instanceof String) {
+                    response.addHeader(header, (String) val);
+                } else {
+                    throw new IllegalStateException("Unrecognized type for header [" + header + "], value is: " + val);
+                }
+
+            }
+        }
+
+        if(acceptsGzipEncoding){
+            // write the headers as well (if not written already)
+            if (!response.containsHeader("Content-Encoding")) {
+                RequestHeaderUtil.addAndVerifyHeader(response, "Content-Encoding", "gzip");
+                RequestHeaderUtil.addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
+            }
+        }
+    }
+
+    protected boolean isAcceptsGzip(HttpServletRequest request){
+        CacheModule module = (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache");
+        boolean compressionVote = module.getCompression().getVoters().vote(request)==0;
+        boolean requestAcceptsGzip = RequestHeaderUtil.acceptsGzipEncoding(request);
+        return requestAcceptsGzip && compressionVote && isSupportsGzip();
+
+    }
+
+    abstract protected boolean isSupportsGzip();
 
 }
