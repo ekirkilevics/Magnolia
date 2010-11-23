@@ -119,10 +119,6 @@ public class ContextFilter extends AbstractMgnlFilter {
         try {
             chain.doFilter(request, response);
         } finally {
-            if (!initializedContext) {
-                // pop req/res every time except the first time
-                MgnlContext.pop();
-            }
             if (initializedContext) {
                 MgnlContext.release();
                 MgnlContext.setInstance(originalContext);
