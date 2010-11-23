@@ -35,6 +35,8 @@ package info.magnolia.module.cache.filter;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ThresholdingOutputStream;
 
 import info.magnolia.cms.core.Path;
@@ -43,8 +45,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -64,7 +68,7 @@ import java.util.Locale;
  */
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
-    public static final int THRESHOLD = 200 * 1024;
+    public static final int DEFAULT_THRESHOLD = 500 * 1024;
 
     private final ServletOutputStream wrappedStream;
     private PrintWriter wrappedWriter = null;
@@ -75,6 +79,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     private HttpServletResponse originalResponse;
     private ByteArrayOutputStream inMemoryBuffer;
     private File contentFile;
+    private long contentLength = -1;
 
     private ThresholdingOutputStream thresholdingOutputStream;
     private boolean serveIfThresholdReached;
@@ -262,12 +267,16 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         this.isError = true;
     }
 
-    public long getContentLength() {
-        return thresholdingOutputStream.getByteCount();
+    public void setContentLength(int len) {
+        contentLength = contentLength;
     }
 
-    private void replay() throws IOException {
-        originalResponse.setStatus(getStatus());
+    public int getContentLength() {
+        return (int)(contentLength >=0 ? contentLength : thresholdingOutputStream.getByteCount());
+    }
+
+    public void replayHeadersAndStatus(HttpServletResponse target) throws IOException {
+        target.setStatus(getStatus());
 
         final Iterator it = headers.keySet().iterator();
         while (it.hasNext()) {
@@ -278,11 +287,11 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
             while (valIt.hasNext()) {
                 final Object val = valIt.next();
                 if (val instanceof Long) {
-                    originalResponse.addDateHeader(header, ((Long) val).longValue());
+                    target.addDateHeader(header, ((Long) val).longValue());
                 } else if (val instanceof Integer) {
-                    originalResponse.addIntHeader(header, ((Integer) val).intValue());
+                    target.addIntHeader(header, ((Integer) val).intValue());
                 } else if (val instanceof String) {
-                    originalResponse.addHeader(header, (String) val);
+                    target.addHeader(header, (String) val);
                 } else {
                     throw new IllegalStateException("Unrecognized type for header [" + header + "], value is: " + val);
                 }
@@ -291,8 +300,29 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
 
         // TODO : cookies ?
-        originalResponse.setContentType(getContentType());
-        originalResponse.setCharacterEncoding(getCharacterEncoding());
+        target.setContentType(getContentType());
+        target.setCharacterEncoding(getCharacterEncoding());
+    }
+
+    public void replayContent(HttpServletResponse target, boolean setContentLength) throws IOException {
+        if(setContentLength){
+            target.setContentLength(getContentLength());
+        }
+        if(isThesholdExceeded()){
+            FileInputStream in = FileUtils.openInputStream(getContentFile());
+            IOUtils.copy(in, target.getOutputStream());
+            IOUtils.closeQuietly(in);
+        }
+        else{
+            IOUtils.copy(new ByteArrayInputStream(inMemoryBuffer.toByteArray()), target.getOutputStream());
+        }
+        target.flushBuffer();
+    }
+
+    public void release(){
+        if(isThesholdExceeded()){
+            getContentFile().delete();
+        }
     }
 
     private final class ThresholdingCacheOutputStream extends ThresholdingOutputStream {
@@ -310,7 +340,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         @Override
         protected void thresholdReached() throws IOException {
             if(serveIfThresholdReached){
-                replay();
+                replayHeadersAndStatus(originalResponse);
                 out = originalResponse.getOutputStream();
             }
             else{

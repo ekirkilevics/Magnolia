@@ -39,6 +39,7 @@ import info.magnolia.module.cache.util.GZipUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,47 +59,36 @@ import java.io.IOException;
  */
 public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    @Override
+    public boolean bypasses(HttpServletRequest request) {
+        return !RequestHeaderUtil.acceptsGzipEncoding(request) || super.bypasses(request);
+    }
+
+    public void doFilter(HttpServletRequest request, final HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we need to setContentLength before writing content ...
         // (otherwise Tomcat adds a Transfer-Encoding: chunked header, which seems to cause trouble
         // to browsers ...)
 
-        // Handle the request
-        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.THRESHOLD, true) {
-            public void setContentLength(int len) {
-                // don't let the container set a (wrong) content-length too early,
-                // we're going to set it later to the appropriate
-                // value - once it's gzipped !
-            }
+        final GZipCacheResponseWrapper responseWrapper = new GZipCacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, true);
 
-            public void flushBuffer() throws IOException {
-                // let's ignore this for now, we're flushing manually ourselves a bit later.
-                // TODO : See MAGNOLIA-2129, MAGNOLIA-2177 and MAGNOLIA-2178
-                //DeprecationUtil.isDeprecated("Should not flush the response manually:");
-            }
-        };
         chain.doFilter(request, responseWrapper);
 
         // flush only internal buffers, not the actual response's !
         responseWrapper.flush();
 
-        if(!responseWrapper.isThesholdExceeded()){
+        // otherwise the content was already streamed
+        if(!responseWrapper.isGzipResponseDetected() && !responseWrapper.isThesholdExceeded()){
             byte[] array = responseWrapper.getBufferedContent();
 
             //GZIP only 200 SC_OK responses as in other cases response might be already committed - only dump bytes and flush ...
             int statusCode = responseWrapper.getStatus();
             if (statusCode == HttpServletResponse.SC_OK) {
+                responseWrapper.replayHeadersAndStatus(response);
 
-                if (!GZipUtil.isGZipped(array) && RequestHeaderUtil.acceptsGzipEncoding(request)) {
-                    array = GZipUtil.gzip(array);
-                }
+                RequestHeaderUtil.addAndVerifyHeader(response, "Content-Encoding", "gzip");
+                RequestHeaderUtil.addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
 
-                // add headers only if not set yet.
-                if (GZipUtil.isGZipped(array) && !response.containsHeader("Content-Encoding")) {
-                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
-                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
-                }
-
+                array = GZipUtil.gzip(array);
                 response.setContentLength(array.length);
             }
 
@@ -107,16 +97,69 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
             }
 
             response.flushBuffer();
+        }
+    }
 
-            // TODO :
-             //Sanity checks
-    //            byte[] compressedBytes = compressed.toByteArray();
-    //            boolean shouldGzippedBodyBeZero = ResponseUtil.shouldGzippedBodyBeZero(compressedBytes, request);
-    //            boolean shouldBodyBeZero = ResponseUtil.shouldBodyBeZero(request, wrapper.getStatusCode());
-    //            if (shouldGzippedBodyBeZero || shouldBodyBeZero) {
-    //                compressedBytes = new byte[0];
-    //            }
+    /**
+     * Detects if the response has the "Content-Encoding" header set. If so it will stream it through.
+     * @version $Id$
+     */
+    private final class GZipCacheResponseWrapper extends CacheResponseWrapper {
+
+        private final HttpServletResponse response;
+
+        private boolean gzipResponseDetected;
+
+        private ServletOutputStream deferredOutputStream = new DeferredServletOutputStream();
+
+        public boolean isGzipResponseDetected() {
+            return gzipResponseDetected;
+        }
+
+        private GZipCacheResponseWrapper(HttpServletResponse response, int threshold, boolean serveIfThresholdReached) {
+            super(response, threshold, serveIfThresholdReached);
+            this.response = response;
+        }
+
+        @Override
+        public void addHeader(String name, String value) {
+            if(name.equals("Content-Encoding")){
+                gzipResponseDetected = true;
             }
+            super.addHeader(name, value);
+        }
+
+        public ServletOutputStream getWrappedOutputStream() throws IOException {
+            return getOutputStream();
+        }
+
+        public ServletOutputStream getOutputStream() throws IOException {
+            return deferredOutputStream;
+        }
+
+        /**
+         * Only gets the real output stream once we are writing. If we have detected a gzip response we will just stream it through.
+         * @version $Id$
+         *
+         */
+        private final class DeferredServletOutputStream extends ServletOutputStream {
+
+            ServletOutputStream stream;
+
+            @Override
+            public void write(int b) throws IOException {
+                if(stream == null){
+                    if(gzipResponseDetected){
+                        replayHeadersAndStatus(response);
+                        stream = response.getOutputStream();
+                    }
+                    else{
+                        stream = getWrappedOutputStream();
+                    }
+                }
+                stream.write(b);
+            }
+        }
     }
 
 }
