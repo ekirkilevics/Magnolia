@@ -126,6 +126,12 @@ public class Transporter {
             connection.setRequestProperty("Cache-Control", "no-cache");
 
             is = new FileInputStream(tempFile);
+            if(tempFile.length() > Integer.MAX_VALUE){
+                connection.setChunkedStreamingMode(4096);
+            }
+            else{
+                connection.setFixedLengthStreamingMode((int) tempFile.length());
+            }
             os = connection.getOutputStream();
 
             IOUtils.copy(is, os);
