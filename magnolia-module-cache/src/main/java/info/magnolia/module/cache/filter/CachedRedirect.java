@@ -33,7 +33,13 @@
  */
 package info.magnolia.module.cache.filter;
 
+import java.io.IOException;
 import java.io.Serializable;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Cached redirect contract providing access to the status code and target location.
@@ -55,5 +61,13 @@ public class CachedRedirect implements CachedEntry, Serializable {
 
     public String getLocation() {
         return location;
+    }
+
+    public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
+        // except if someone sets the header manually ?
+        if (!response.isCommitted()) {
+            response.sendRedirect(getLocation());
+        }
     }
 }

@@ -53,35 +53,46 @@ import org.apache.commons.io.IOUtils;
  * @version $Id$
  *
  */
-public class InRepositoryCachedPage extends CachedPage {
+public class BlobCachedEntry extends ContentCachedEntry {
 
 
-    private static final String CONTENT_FILE_ATTIBUTE = InRepositoryCachedPage.class.getName() + ".contentFile";
+    private static final String CONTENT_FILE_ATTIBUTE = BlobCachedEntry.class.getName() + ".contentFile";
 
     private long contentLength;
 
-    public InRepositoryCachedPage(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
+    public BlobCachedEntry(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         super(contentType, characterEncoding, statusCode, headers, modificationDate);
         this.contentLength = contentLength;
     }
 
     @Override
-    protected boolean isSupportsGzip() {
+    protected boolean canServeGzipContent() {
         return false;
+    }
+
+    public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        File contentFile = getContentFileBoundToTheRequest(request);
+        if(contentFile != null){
+            super.replay(request, response, chain);
+        }
+        else{
+            chain.doFilter(request, response);
+        }
     }
 
     @Override
     protected void writeContent(HttpServletRequest request, HttpServletResponse response, FilterChain chain, boolean acceptsGzipEncoding) throws IOException, ServletException {
         response.setContentLength((int) contentLength);
-        File tmpFile = getContentFileBoundToTheRequest(request);
-        if(tmpFile != null){
-            FileInputStream tmpFileStream = FileUtils.openInputStream(tmpFile);
-            IOUtils.copy(tmpFileStream,response.getOutputStream());
-            IOUtils.closeQuietly(tmpFileStream);
-            tmpFile.delete();
+        File contentFile = getContentFileBoundToTheRequest(request);
+        if(contentFile != null){
+            FileInputStream contentStream = FileUtils.openInputStream(contentFile);
+            IOUtils.copy(contentStream,response.getOutputStream());
+            IOUtils.closeQuietly(contentStream);
+            contentFile.delete();
         }
         else{
-            chain.doFilter(request, response);
+            // should not happen as we delegate to the filter chain in replay in that case and ignore all cached data
+            throw new IllegalStateException("No content file attached to the request!");
         }
     }
 
@@ -90,7 +101,7 @@ public class InRepositoryCachedPage extends CachedPage {
     }
 
     public void bindContentFileToCurrentRequest(HttpServletRequest request, File contentFile){
-        request.setAttribute(InRepositoryCachedPage.CONTENT_FILE_ATTIBUTE, contentFile);
+        request.setAttribute(BlobCachedEntry.CONTENT_FILE_ATTIBUTE, contentFile);
     }
 
 }

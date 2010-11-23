@@ -46,17 +46,17 @@ import org.apache.commons.collections.MultiMap;
 
 
 /**
- * Cache entry keeping the content in memory. Stores a gzipped and none gzipped version.
+ * Cache entry keeping the content in memory. Stores a gzipped and non-gzipped version.
  * @author pbaerfuss
  * @version $Id$
  *
  */
-public class InMemoryCachedPage extends CachedPage {
+public class InMemoryCachedEntry extends ContentCachedEntry {
 
     private final byte[] gzippedContent;
     private final byte[] plainContent;
 
-    public InMemoryCachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
+    public InMemoryCachedEntry(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         super(contentType, characterEncoding, statusCode, headers, modificationDate);
         // content which is actually of a compressed type must stay that way
         if (GZipUtil.isGZipped(out)) {
@@ -76,7 +76,7 @@ public class InMemoryCachedPage extends CachedPage {
     }
 
     @Override
-    protected boolean isSupportsGzip() {
+    protected boolean canServeGzipContent() {
         return true;
     }
 
@@ -89,11 +89,6 @@ public class InMemoryCachedPage extends CachedPage {
             body = getPlainContent();
         }
 
-        // TODO : check for empty responses
-        // (HttpServletResponse.SC_NO_CONTENT, HttpServletResponse.SC_NOT_MODIFIED, or 20bytes which is an empty gzip
-//        if (shouldBodyBeEmpty) {
-//            body = new byte[0];
-//        }
         response.setContentLength(body.length);
         response.getOutputStream().write(body);
     }

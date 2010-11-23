@@ -163,11 +163,11 @@ public class CacheFilterTest extends TestCase {
         expect(response.getContentType()).andReturn("some content type");
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
-        cache.put(eq("/test-page"), isA(CachedPage.class));
+        cache.put(eq("/test-page"), isA(ContentCachedEntry.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
-                final InMemoryCachedPage cachedEntry = ((InMemoryCachedPage) args[1]);
+                final InMemoryCachedEntry cachedEntry = ((InMemoryCachedEntry) args[1]);
                 // default should be unzipped for unknown content types!!!
                 assertEquals("hello", new String(cachedEntry.getPlainContent()));
                 assertEquals("some content type", cachedEntry.getContentType());
@@ -206,11 +206,11 @@ public class CacheFilterTest extends TestCase {
         expect(response.getContentType()).andReturn("text/html");
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
-        cache.put(eq("/test-page"), isA(CachedPage.class));
+        cache.put(eq("/test-page"), isA(ContentCachedEntry.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
-                final InMemoryCachedPage cachedEntry = ((InMemoryCachedPage) args[1]);
+                final InMemoryCachedEntry cachedEntry = ((InMemoryCachedEntry) args[1]);
                 assertTrue(Arrays.equals(GZipUtil.gzip("hello".getBytes()), cachedEntry.getGzippedContent()));
                 assertEquals("text/html", cachedEntry.getContentType());
                 assertEquals("UTF-8", cachedEntry.getCharacterEncoding());
@@ -231,7 +231,7 @@ public class CacheFilterTest extends TestCase {
         headers.put("Dummy", "dummy");
         headers.put("Dummy", "dummy2");
 
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
@@ -271,7 +271,7 @@ public class CacheFilterTest extends TestCase {
         headers.put("Dummy", "dummy");
         headers.put("Dummy", "dummy2");
 
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 6.0; Windows NT 5.1)").anyTimes();
@@ -302,7 +302,7 @@ public class CacheFilterTest extends TestCase {
         headers.put("Content-Encoding", "gzip");
         headers.put("Vary", "Accept-Encoding");
         headers.put("Dummy", "Some Value");
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
 
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
@@ -326,7 +326,7 @@ public class CacheFilterTest extends TestCase {
 
     public void testServesGZippedContentIfClientAcceptsGZipEncoding() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
@@ -362,7 +362,7 @@ public class CacheFilterTest extends TestCase {
     public void testJustSends304WithNoBodyIfRequestHeadersAskForIt() throws Exception {
         long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
 
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn(null);
@@ -378,12 +378,12 @@ public class CacheFilterTest extends TestCase {
         long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
 
         final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
         cachedPage.setPreCacheStatusCode(304);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn(null);
-        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the CachedPage
+        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the ContentCachedEntry
         expect(response.isCommitted()).andReturn(true);
 
         response.setStatus(304);
@@ -395,7 +395,7 @@ public class CacheFilterTest extends TestCase {
     public void testDontJustSends304WithNoBodyIfRequestHeadersAskForItButResponseIsCommitted() throws Exception {
         long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
 
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
         final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
@@ -426,7 +426,7 @@ public class CacheFilterTest extends TestCase {
     public void testPageShouldBeServedIfIfNoneMatchHeaderWasPassed() throws Exception {
         final String dummyContent = "i'm a dummy page that was cached earlier on";
         final byte[] gzipped = GZipUtil.gzip(dummyContent.getBytes());
-        final InMemoryCachedPage cachedPage = new InMemoryCachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), System.currentTimeMillis());
+        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry(dummyContent.getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(System.currentTimeMillis() + 1000); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn("Some value");
@@ -584,16 +584,16 @@ public class CacheFilterTest extends TestCase {
         expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
-        // when setting response headers and when instanciating CachedPage:
+        // when setting response headers and when instanciating ContentCachedEntry:
         expect(response.getContentType()).andReturn("some content type").times(2);
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
-        cache.put(eq("/dummy"), isA(CachedPage.class));
+        cache.put(eq("/dummy"), isA(ContentCachedEntry.class));
 
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
-                final CachedPage cachedEntry = ((CachedPage) args[1]);
+                final ContentCachedEntry cachedEntry = ((ContentCachedEntry) args[1]);
                 assertEquals(expectedLastModified.getTime(), cachedEntry.getLastModificationTime());
                 return null;
             }

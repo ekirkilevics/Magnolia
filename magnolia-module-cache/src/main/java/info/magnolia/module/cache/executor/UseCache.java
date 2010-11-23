@@ -36,9 +36,7 @@ package info.magnolia.module.cache.executor;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CachedEntry;
-import info.magnolia.module.cache.filter.CachedError;
-import info.magnolia.module.cache.filter.CachedPage;
-import info.magnolia.module.cache.filter.CachedRedirect;
+import info.magnolia.module.cache.filter.ContentCachedEntry;
 
 import java.io.IOException;
 
@@ -65,8 +63,8 @@ public class UseCache extends AbstractExecutor {
 
     protected void processCachedEntry(CachedEntry cached, HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Serving {}", cached);
-        if (cached instanceof CachedPage) {
-            final CachedPage page = (CachedPage) cached;
+        if (cached instanceof ContentCachedEntry) {
+            final ContentCachedEntry page = (ContentCachedEntry) cached;
             if (!ifModifiedSince(request, page.getLastModificationTime())) {
                 if (response.isCommitted() && page.getPreCacheStatusCode() != HttpServletResponse.SC_NOT_MODIFIED) {
                     // this should not happen ... if it does, log it and _serve_the_data_ otherwise we will confuse client
@@ -79,34 +77,16 @@ public class UseCache extends AbstractExecutor {
                 }
             }
 
-            writePage(request, response, chain, page);
+
+        }
+
+        if (cached != null) {
+            cached.replay(request, response, chain);
             response.flushBuffer();
-        } else if (cached instanceof CachedError) {
-            final CachedError error = (CachedError) cached;
-            if (!response.isCommitted()) {
-                response.sendError(error.getStatusCode());
-            } else {
-                //this usually happens first time the error occurs and is put in cache - since setting page as error causes it to be committed
-                // TODO: is there a better work around to make sure we do not swallow some exception accidentally?
-                log.debug("Failed to serve cached error due to response already committed.");
-            }
-        } else if (cached instanceof CachedRedirect) {
-            final CachedRedirect redir = (CachedRedirect) cached;
-            // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
-            // except if someone sets the header manually ?
-            if (!response.isCommitted()) {
-                response.sendRedirect(redir.getLocation());
-            }
-        } else if (cached == null) {
+        } else {
             // 304 or nothing to write to the output
             return;
-        } else {
-            throw new IllegalStateException("Unexpected CachedEntry type: " + cached);
         }
-    }
-
-    protected void writePage(final HttpServletRequest request, final HttpServletResponse response, FilterChain chain, final CachedPage cachedEntry) throws IOException, ServletException {
-        cachedEntry.replay(request, response, chain);
     }
 
 }

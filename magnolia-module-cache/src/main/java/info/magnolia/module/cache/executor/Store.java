@@ -42,10 +42,10 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
-import info.magnolia.module.cache.filter.CachedPage;
+import info.magnolia.module.cache.filter.ContentCachedEntry;
 import info.magnolia.module.cache.filter.CachedRedirect;
-import info.magnolia.module.cache.filter.InMemoryCachedPage;
-import info.magnolia.module.cache.filter.InRepositoryCachedPage;
+import info.magnolia.module.cache.filter.InMemoryCachedEntry;
+import info.magnolia.module.cache.filter.BlobCachedEntry;
 
 import java.io.IOException;
 
@@ -75,16 +75,6 @@ public class Store extends AbstractExecutor {
             responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
             chain.doFilter(request, responseWrapper);
 
-//            if ((responseWrapper.getStatus() != HttpServletResponse.SC_MOVED_TEMPORARILY) && (responseWrapper.getStatus() != HttpServletResponse.SC_NOT_MODIFIED) && !responseWrapper.isError()) {
-//                //handle gzip headers (have to be written BEFORE committing the response
-//                int vote = getCompressionVote(responseWrapper, ResponseContentTypeVoter.class);
-//                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && vote == 0;
-//                if (acceptsGzipEncoding) {
-//                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
-//                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
-//                }
-//            }
-
             // change the status (if appropriate) before flushing the buffer.
             if (!response.isCommitted() && !ifModifiedSince(request, cacheStorageDate)) {
                 responseWrapper.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -95,17 +85,19 @@ public class Store extends AbstractExecutor {
 
             cachedEntry = makeCachedEntry(responseWrapper);
             // cached page should have some body
-            if (cachedEntry != null && (cachedEntry instanceof CachedPage) && responseWrapper.getContentLength() == 0) {
+            if (cachedEntry != null && (cachedEntry instanceof ContentCachedEntry) && responseWrapper.getContentLength() == 0) {
                 log.warn("Response body for {}:{} is empty.",  String.valueOf(responseWrapper.getStatus()), cachePolicyResult.getCacheKey());
             }
 
             // Cached page should be created only with 200 status and nothing else should go in
-            if ((cachedEntry instanceof CachedPage) && ((CachedPage) cachedEntry).getStatusCode() != HttpServletResponse.SC_OK) {
-                log.warn("Caching response {} for {}", String.valueOf(((CachedPage) cachedEntry).getStatusCode() ), cachePolicyResult.getCacheKey());
+            if ((cachedEntry instanceof ContentCachedEntry) && ((ContentCachedEntry) cachedEntry).getStatusCode() != HttpServletResponse.SC_OK) {
+                log.warn("Caching response {} for {}", String.valueOf(((ContentCachedEntry) cachedEntry).getStatusCode() ), cachePolicyResult.getCacheKey());
             }
 
-            if(cachedEntry instanceof InRepositoryCachedPage){
-                ((InRepositoryCachedPage)cachedEntry).bindContentFileToCurrentRequest(request, responseWrapper.getContentFile());
+            // TODO remove this once we use a blob store
+            if(cachedEntry instanceof BlobCachedEntry){
+                // the file will be deleted once served in this request
+                ((BlobCachedEntry)cachedEntry).bindContentFileToCurrentRequest(request, responseWrapper.getContentFile());
             }
 
         } catch (Throwable t) {
@@ -152,9 +144,9 @@ public class Store extends AbstractExecutor {
         final long modificationDate = cacheResponse.getLastModified();
         final String contentType = cacheResponse.getContentType();
 
-        CachedPage page;
+        ContentCachedEntry page;
         if(!cacheResponse.isThesholdExceeded()){
-            page = new InMemoryCachedPage(cacheResponse.getBufferedContent(),
+            page = new InMemoryCachedEntry(cacheResponse.getBufferedContent(),
                     contentType,
                     cacheResponse.getCharacterEncoding(),
                     status,
@@ -162,7 +154,7 @@ public class Store extends AbstractExecutor {
                     modificationDate);
         }
         else{
-            page = new InRepositoryCachedPage(cacheResponse.getContentLength(),
+            page = new BlobCachedEntry(cacheResponse.getContentLength(),
                 contentType,
                 cacheResponse.getCharacterEncoding(),
                 status,

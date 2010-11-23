@@ -66,7 +66,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public abstract class CachedPage implements CachedEntry, Serializable {
+public abstract class ContentCachedEntry implements CachedEntry, Serializable {
 
     private static final ToStringStyle BYTE_ARRAY_SIZE_STYLE = new ToStringStyle() {
         protected void appendDetail(StringBuffer buffer, String fieldName,
@@ -81,7 +81,7 @@ public abstract class CachedPage implements CachedEntry, Serializable {
     private transient MultiMap headers;
     private Map serializableHeadersBackingList;
     private final long lastModificationTime;
-    // slightly fishy, but other executors needs to know if this is freshly created CachedPage and StatusCode have been manipulated or not.
+    // slightly fishy, but other executors needs to know if this is freshly created ContentCachedEntry and StatusCode have been manipulated or not.
     private transient int preCacheStatusCode;
 
     /**
@@ -94,7 +94,7 @@ public abstract class CachedPage implements CachedEntry, Serializable {
      * @param shouldCompress Flag marking this content as desirable to be sent in compressed form (should the client support such compression). Setting this to true means cache entry will contain both, compressed and flat version of the content. Compression is applied here only if content is not gzipped already.
      * @throws IOException when failing to compress the content.
      */
-    public CachedPage(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
+    public ContentCachedEntry(String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         this.contentType = contentType;
         this.characterEncoding = characterEncoding;
         this.statusCode = statusCode;
@@ -173,7 +173,7 @@ public abstract class CachedPage implements CachedEntry, Serializable {
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         response.setStatus(getStatusCode());
 
-        boolean acceptsGzipEncoding = isAcceptsGzip(request);
+        boolean acceptsGzipEncoding = isAcceptsGzip(request) && canServeGzipContent();
         addHeaders(acceptsGzipEncoding, response);
 
         // TODO : cookies ?
@@ -235,10 +235,10 @@ public abstract class CachedPage implements CachedEntry, Serializable {
         CacheModule module = (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache");
         boolean compressionVote = module.getCompression().getVoters().vote(request)==0;
         boolean requestAcceptsGzip = RequestHeaderUtil.acceptsGzipEncoding(request);
-        return requestAcceptsGzip && compressionVote && isSupportsGzip();
+        return requestAcceptsGzip && compressionVote;
 
     }
 
-    abstract protected boolean isSupportsGzip();
+    abstract protected boolean canServeGzipContent();
 
 }
