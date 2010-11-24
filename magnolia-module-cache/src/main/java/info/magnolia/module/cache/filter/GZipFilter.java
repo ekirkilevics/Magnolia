@@ -129,8 +129,8 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
             super.addHeader(name, value);
         }
 
-        public ServletOutputStream getWrappedOutputStream() throws IOException {
-            return getOutputStream();
+        private ServletOutputStream getWrappedOutputStream() throws IOException {
+            return super.getOutputStream();
         }
 
         public ServletOutputStream getOutputStream() throws IOException {
