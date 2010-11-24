@@ -3,7 +3,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>18-SNAPSHOT</version>
+    <version>18</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -604,7 +604,7 @@ for Java Content Repositories (JCR).
       </snapshots>
     </repository>
   </repositories>
-  
+
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
