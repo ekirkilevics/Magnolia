@@ -268,7 +268,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setContentLength(int len) {
-        contentLength = contentLength;
+        this.contentLength = len;
     }
 
     public int getContentLength() {
