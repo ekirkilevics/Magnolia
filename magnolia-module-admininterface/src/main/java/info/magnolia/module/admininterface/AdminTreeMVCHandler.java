@@ -277,7 +277,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
 
-        if ("activate".equals(commandName)) {
+        if ("activate".equals(commandName) || "deactivate".equals(commandName)) {
             context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
             if (this.pathSelected != null) {
                 try {
