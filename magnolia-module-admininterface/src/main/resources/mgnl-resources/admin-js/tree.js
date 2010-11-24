@@ -505,11 +505,21 @@
     mgnlTree.prototype.deleteNode = function(dontAskConfirmation)
         {
         var text;
+        var stagedDeletion = this.repository == 'website' || this.repository == 'dms'
+
         if(this.getNode(this.selectedNode.id).isActivated){
+          if(stagedDeletion){
+            text = mgnlMessages.get('tree.deletenode.staged.confirm.deactivation.text.js', null, [this.selectedNode.id]);
+          } else {
             text = mgnlMessages.get('tree.deletenode.confirm.deactivation.text.js', null, [this.selectedNode.id]);
+          }
         }
         else{
+          if(stagedDeletion){
+            text = mgnlMessages.get('tree.deletenode.staged.confirm.text.js', null, [this.selectedNode.id]);
+          } else {
             text = mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
+          }
         }
 
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
@@ -1040,10 +1050,10 @@
             else this.permissionWrite=false;
             }
         if (document.getElementById(this.idPre+"_IsDeleted"))
-	        {
-	        if (document.getElementById(this.idPre+"_IsDeleted").value=="true") this.isDeleted=true;
-	        else this.isDeleted=false;
-	        }
+          {
+          if (document.getElementById(this.idPre+"_IsDeleted").value=="true") this.isDeleted=true;
+          else this.isDeleted=false;
+          }
 
         //html objects get lost, therefore use id and getElement on the float
         this.divMainId=this.idPre+"_DivMain";
