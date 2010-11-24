@@ -44,7 +44,7 @@
       <set field="mailTemplate" value="workflowNotification"/>
       <participant ref="command-sendMail"/>
       -->
-      <!-- reset the assignTo field so the editor no longers see the workflow item --> 
+      <!-- reset the assignTo field so the editor no longers see the workflow item -->
       <unset field="assignTo"/>
       <participant ref="group-publishers"/>
     </sequence>
@@ -82,7 +82,7 @@
       <if>
         <defined field-value="exception"/>
         <!--  restart again -->
-        <activation/>
+        <deactivation/>
         <break/>
       </if>
 
