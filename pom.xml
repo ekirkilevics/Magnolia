@@ -139,30 +139,6 @@ for Java Content Repositories (JCR).
     </profile>
   </profiles>
   <build>
-    <resources>
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-      <resource>
-        <filtering>true</filtering>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>META-INF/magnolia/*</include>
-          <include>**/license.xml</include>
-        </includes>
-      </resource>
-      <resource>
-        <filtering>false</filtering>
-        <directory>${project.build.directory}/generated-resources/taglibs</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -213,11 +189,13 @@ for Java Content Repositories (JCR).
                           <uri>${taglib.uri}</uri>
                           <displayname>${project.name}</displayname>
                           <description>${project.description}</description>
-                          <destdir>${project.build.directory}/generated-resources/taglibs</destdir>
+                          <!--<destdir>let's use the default, so that addToResources works as expected </destdir>-->
                         </params>
                       </component>
                     </components>
                     <includes>**/*.java</includes>
+                    <addToSources>false</addToSources>
+                    <addToResources>true</addToResources>
                   </config>
                 </configs>
               </configuration>
