@@ -33,17 +33,8 @@
  */
 package info.magnolia.module.cache.filter;
 
-import org.apache.commons.collections.MultiMap;
-import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.ThresholdingOutputStream;
-
 import info.magnolia.cms.core.Path;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+import info.magnolia.cms.util.RequestHeaderUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,16 +45,30 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
+import org.apache.commons.collections.MultiMap;
+import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ThresholdingOutputStream;
+
+
 /**
- * Response wrapper used by cache in order to control settings of the headers and redirects.
- * @author
+ * A response wrapper which records the status, headers and content. Unless the threshold is reached
+ * the written content gets buffered and the content can get retrieved by
+ * {@link #getBufferedContent()}. Once the threshold is reached either a tmp file is created which
+ * can be retrieved with {@link #getContentFile()} or the content/headers are made transparent to
+ * the original response if {@link #serveIfThresholdReached} is true.
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
@@ -83,6 +88,8 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     private ThresholdingOutputStream thresholdingOutputStream;
     private boolean serveIfThresholdReached;
+
+    private String errorMsg;
 
     public CacheResponseWrapper(final HttpServletResponse response, int threshold, boolean serveIfThresholdReached) {
         super(response);
@@ -201,37 +208,35 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setDateHeader(String name, long date) {
-        super.setDateHeader(name, date);
         replaceHeader(name, new Long(date));
     }
 
     public void addDateHeader(String name, long date) {
-        super.addDateHeader(name, date);
         appendHeader(name, new Long(date));
     }
 
     public void setHeader(String name, String value) {
-        super.setHeader(name, value);
         replaceHeader(name, value);
     }
 
     public void addHeader(String name, String value) {
-        super.addHeader(name, value);
         appendHeader(name, value);
     }
 
     public void setIntHeader(String name, int value) {
-        super.setIntHeader(name, value);
         replaceHeader(name, new Integer(value));
     }
 
     public void addIntHeader(String name, int value) {
-        super.addIntHeader(name, value);
         appendHeader(name, new Integer(value));
     }
 
+    @Override
+    public boolean containsHeader(String name) {
+        return headers.containsKey(name);
+    }
+
     private void replaceHeader(String name, Object value) {
-        headers.remove(name);
         appendHeader(name, value);
     }
 
@@ -240,12 +245,10 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setStatus(int status) {
-        super.setStatus(status);
         this.status = status;
     }
 
     public void setStatus(int status, String string) {
-        super.setStatus(status, string);
         this.status = status;
     }
 
@@ -255,14 +258,13 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         super.sendRedirect(location);
     }
 
-    public void sendError(int status, String string) throws IOException {
-        super.sendError(status, string);
+    public void sendError(int status, String errorMsg) throws IOException {
+        this.errorMsg = errorMsg;
         this.status = status;
         this.isError = true;
     }
 
     public void sendError(int status) throws IOException {
-        super.sendError(status);
         this.status = status;
         this.isError = true;
     }
@@ -276,6 +278,21 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void replayHeadersAndStatus(HttpServletResponse target) throws IOException {
+        if(isError){
+            if(errorMsg != null){
+                target.sendError(status, errorMsg);
+            }
+            else{
+                target.sendError(status);
+            }
+        }
+        else if(redirectionLocation != null){
+            target.sendRedirect(redirectionLocation);
+        }
+        else{
+            target.setStatus(status);
+        }
+
         target.setStatus(getStatus());
 
         final Iterator it = headers.keySet().iterator();
@@ -286,18 +303,9 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
             final Iterator valIt = values.iterator();
             while (valIt.hasNext()) {
                 final Object val = valIt.next();
-                if (val instanceof Long) {
-                    target.addDateHeader(header, ((Long) val).longValue());
-                } else if (val instanceof Integer) {
-                    target.addIntHeader(header, ((Integer) val).intValue());
-                } else if (val instanceof String) {
-                    target.addHeader(header, (String) val);
-                } else {
-                    throw new IllegalStateException("Unrecognized type for header [" + header + "], value is: " + val);
-                }
+                RequestHeaderUtil.setHeader(target, header, val);
             }
         }
-
 
         // TODO : cookies ?
         target.setContentType(getContentType());

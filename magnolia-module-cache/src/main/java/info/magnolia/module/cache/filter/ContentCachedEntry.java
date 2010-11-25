@@ -200,25 +200,12 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
                     continue;
                 }
             }
-            if (response.containsHeader(header)) {
-                // do not duplicate headers. Some of the headers we have to set in Store to have them added to the cache entry, on the other hand we don't want to duplicate them if they are already set.
-                continue;
-            }
 
             final Collection values = (Collection) headers.get(header);
             final Iterator valIt = values.iterator();
             while (valIt.hasNext()) {
                 final Object val = valIt.next();
-                if (val instanceof Long) {
-                    response.addDateHeader(header, ((Long) val).longValue());
-                } else if (val instanceof Integer) {
-                    response.addIntHeader(header, ((Integer) val).intValue());
-                } else if (val instanceof String) {
-                    response.addHeader(header, (String) val);
-                } else {
-                    throw new IllegalStateException("Unrecognized type for header [" + header + "], value is: " + val);
-                }
-
+                RequestHeaderUtil.setHeader(response, header, val);
             }
         }
 
