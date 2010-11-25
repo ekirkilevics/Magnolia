@@ -81,8 +81,6 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
     private transient MultiMap headers;
     private Map serializableHeadersBackingList;
     private final long lastModificationTime;
-    // slightly fishy, but other executors needs to know if this is freshly created ContentCachedEntry and StatusCode have been manipulated or not.
-    private transient int preCacheStatusCode;
 
     /**
      * @param out Cached content.
@@ -158,18 +156,6 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
         serializableHeadersBackingList = null;
    }
 
-    public int getPreCacheStatusCode() {
-        // preCached is transient and will be 0 after deserialization (or after going through UseCache for that matter)
-        if (preCacheStatusCode == 0) {
-            return statusCode;
-        }
-        return preCacheStatusCode;
-    }
-
-    public void setPreCacheStatusCode(int preCacheStatusCode) {
-        this.preCacheStatusCode = preCacheStatusCode;
-    }
-
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         response.setStatus(getStatusCode());
 
@@ -199,6 +185,10 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
                 if ("Content-Encoding".equals(header) || "Vary".equals(header)) {
                     continue;
                 }
+            }
+            if (response.containsHeader(header)) {
+                // do not duplicate headers. Some of the headers we have to set in Store to have them added to the cache entry, on the other hand we don't want to duplicate them if they are already set.
+                continue;
             }
 
             final Collection values = (Collection) headers.get(header);
