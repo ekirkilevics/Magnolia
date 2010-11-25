@@ -4,7 +4,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.4-SNAPSHOT</version>
+    <version>4.4-beta2</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-module-templating-components</artifactId>
@@ -42,13 +42,13 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.4-SNAPSHOT</version>
+      <version>4.4-beta2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>4.4-SNAPSHOT</version>
+      <version>4.4-beta2</version>
       <scope>provided</scope>
     </dependency>
     <!-- dependency
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
-      <version>4.4-SNAPSHOT</version>
+      <version>4.4-beta2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -89,7 +89,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
-      <version>4.4-SNAPSHOT</version>
+      <version>4.4-beta2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
