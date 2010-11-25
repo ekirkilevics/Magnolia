@@ -375,21 +375,24 @@ public class CacheFilterTest extends TestCase {
     }
 
     public void testJustSends304WithNoBodyIfRequestHeadersAskForItEvenOnCommitedResponse() throws Exception {
-        long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
+        fail("commented out to make it compile");
 
-        final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
-        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
-        cachedPage.setPreCacheStatusCode(304);
-        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
-        expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
-        expect(request.getHeader("If-None-Match")).andReturn(null);
-        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the ContentCachedEntry
-        expect(response.isCommitted()).andReturn(true);
 
-        response.setStatus(304);
-        // since the status is correct we don't expect response.getOuputStream(), we actually assert nothing is written to the body
-
-        executeNoCacheFilterAndVerify();
+//        long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
+//
+//        final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
+//        final InMemoryCachedEntry cachedPage = new InMemoryCachedEntry("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+//        cachedPage.setPreCacheStatusCode(304);
+//        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
+//        expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
+//        expect(request.getHeader("If-None-Match")).andReturn(null);
+//        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the ContentCachedEntry
+//        expect(response.isCommitted()).andReturn(true);
+//
+//        response.setStatus(304);
+//        // since the status is correct we don't expect response.getOuputStream(), we actually assert nothing is written to the body
+//
+//        executeNoCacheFilterAndVerify();
     }
 
     public void testDontJustSends304WithNoBodyIfRequestHeadersAskForItButResponseIsCommitted() throws Exception {
