@@ -90,10 +90,12 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
                 array = GZipUtil.gzip(array);
                 response.setContentLength(array.length);
+                if (array.length > 0) {
+                    response.getOutputStream().write(array);
+                }
             }
-
-            if (array.length > 0) {
-                response.getOutputStream().write(array);
+            else{
+                responseWrapper.replay(response);
             }
 
             response.flushBuffer();
