@@ -66,12 +66,10 @@ public class UseCache extends AbstractExecutor {
         if (cached instanceof ContentCachedEntry) {
             final ContentCachedEntry page = (ContentCachedEntry) cached;
             if (!ifModifiedSince(request, page.getLastModificationTime())) {
-                if (response.isCommitted() && page.getPreCacheStatusCode() != HttpServletResponse.SC_NOT_MODIFIED) {
+                if (response.isCommitted()) {
                     // this should not happen ... if it does, log it and _serve_the_data_ otherwise we will confuse client
                     log.warn("Unable to change status on already commited response {}.", response.getClass().getName());
                 } else {
-                    // not newly cached anymore, reset the code ...
-                    page.setPreCacheStatusCode(0);
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
                 }
