@@ -75,6 +75,11 @@ public class Store extends AbstractExecutor {
             responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
             chain.doFilter(request, responseWrapper);
 
+            if (responseWrapper.getStatus() == HttpServletResponse.SC_NOT_MODIFIED) {
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                return;
+            }
+
             // change the status (if appropriate) before flushing the buffer.
             if (!response.isCommitted() && !ifModifiedSince(request, cacheStorageDate)) {
                 responseWrapper.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -128,15 +133,6 @@ public class Store extends AbstractExecutor {
             return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
         }
 
-        if (status == HttpServletResponse.SC_NOT_MODIFIED) {
-            if (cacheResponse.getContentLength() == 0) {
-                return null;
-            } else {
-                // we got the content already so we might as well cache it
-                status = HttpServletResponse.SC_OK;
-            }
-        }
-
         if (cacheResponse.isError()) {
             return new CachedError(cacheResponse.getStatus());
         }
@@ -162,10 +158,6 @@ public class Store extends AbstractExecutor {
                 modificationDate);
         }
 
-        if (status != cacheResponse.getStatus()) {
-            // since we have manipulated the status here, we need to provide original value to other executors not to confuse them
-            page.setPreCacheStatusCode(cacheResponse.getStatus());
-        }
         return page;
     }
 
