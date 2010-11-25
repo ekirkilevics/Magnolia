@@ -277,6 +277,11 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         return (int)(contentLength >=0 ? contentLength : thresholdingOutputStream.getByteCount());
     }
 
+    public void replay(HttpServletResponse target) throws IOException {
+        replayHeadersAndStatus(target);
+        replayContent(target, true);
+    }
+
     public void replayHeadersAndStatus(HttpServletResponse target) throws IOException {
         if(isError){
             if(errorMsg != null){
@@ -316,15 +321,17 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         if(setContentLength){
             target.setContentLength(getContentLength());
         }
-        if(isThesholdExceeded()){
-            FileInputStream in = FileUtils.openInputStream(getContentFile());
-            IOUtils.copy(in, target.getOutputStream());
-            IOUtils.closeQuietly(in);
+        if(getContentLength()>0){
+            if(isThesholdExceeded()){
+                FileInputStream in = FileUtils.openInputStream(getContentFile());
+                IOUtils.copy(in, target.getOutputStream());
+                IOUtils.closeQuietly(in);
+            }
+            else{
+                IOUtils.copy(new ByteArrayInputStream(inMemoryBuffer.toByteArray()), target.getOutputStream());
+            }
+            target.flushBuffer();
         }
-        else{
-            IOUtils.copy(new ByteArrayInputStream(inMemoryBuffer.toByteArray()), target.getOutputStream());
-        }
-        target.flushBuffer();
     }
 
     public void release(){
