@@ -80,30 +80,9 @@ public class Store extends AbstractExecutor {
                 return;
             }
 
-            // change the status (if appropriate) before flushing the buffer.
-            if (!response.isCommitted() && !ifModifiedSince(request, cacheStorageDate)) {
-                responseWrapper.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-
-            }
-
             responseWrapper.flushBuffer();
 
-            cachedEntry = makeCachedEntry(responseWrapper);
-            // cached page should have some body
-            if (cachedEntry != null && (cachedEntry instanceof ContentCachedEntry) && responseWrapper.getContentLength() == 0) {
-                log.warn("Response body for {}:{} is empty.",  String.valueOf(responseWrapper.getStatus()), cachePolicyResult.getCacheKey());
-            }
-
-            // Cached page should be created only with 200 status and nothing else should go in
-            if ((cachedEntry instanceof ContentCachedEntry) && ((ContentCachedEntry) cachedEntry).getStatusCode() != HttpServletResponse.SC_OK) {
-                log.warn("Caching response {} for {}", String.valueOf(((ContentCachedEntry) cachedEntry).getStatusCode() ), cachePolicyResult.getCacheKey());
-            }
-
-            // TODO remove this once we use a blob store
-            if(cachedEntry instanceof BlobCachedEntry){
-                // the file will be deleted once served in this request
-                ((BlobCachedEntry)cachedEntry).bindContentFileToCurrentRequest(request, responseWrapper.getContentFile());
-            }
+            cachedEntry = makeCachedEntry(request, responseWrapper);
 
         } catch (Throwable t) {
             log.error("Failed to process cache request : " + t.getMessage(), t);
@@ -126,39 +105,43 @@ public class Store extends AbstractExecutor {
         }
     }
 
-    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse) throws IOException {
-        int status = cacheResponse.getStatus();
+    protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cachedResponse) throws IOException {
+        int status = cachedResponse.getStatus();
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302 or 304.
         if (status == HttpServletResponse.SC_MOVED_TEMPORARILY) {
-            return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
+            return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation());
         }
 
-        if (cacheResponse.isError()) {
-            return new CachedError(cacheResponse.getStatus());
+        if (cachedResponse.isError()) {
+            return new CachedError(cachedResponse.getStatus());
         }
 
-        final long modificationDate = cacheResponse.getLastModified();
-        final String contentType = cacheResponse.getContentType();
+        final long modificationDate = cachedResponse.getLastModified();
+        final String contentType = cachedResponse.getContentType();
 
-        ContentCachedEntry page;
-        if(!cacheResponse.isThesholdExceeded()){
-            page = new InMemoryCachedEntry(cacheResponse.getBufferedContent(),
+        ContentCachedEntry cacheEntry;
+        if(!cachedResponse.isThesholdExceeded()){
+            cacheEntry = new InMemoryCachedEntry(cachedResponse.getBufferedContent(),
                     contentType,
-                    cacheResponse.getCharacterEncoding(),
+                    cachedResponse.getCharacterEncoding(),
                     status,
-                    cacheResponse.getHeaders(),
+                    cachedResponse.getHeaders(),
                     modificationDate);
         }
         else{
-            page = new BlobCachedEntry(cacheResponse.getContentLength(),
+            cacheEntry = new BlobCachedEntry(cachedResponse.getContentLength(),
                 contentType,
-                cacheResponse.getCharacterEncoding(),
+                cachedResponse.getCharacterEncoding(),
                 status,
-                cacheResponse.getHeaders(),
+                cachedResponse.getHeaders(),
                 modificationDate);
+
+            // TODO remove this once we use a blob store
+            // the file will be deleted once served in this request
+            ((BlobCachedEntry)cacheEntry).bindContentFileToCurrentRequest(request, cachedResponse.getContentFile());
         }
 
-        return page;
+        return cacheEntry;
     }
 
     protected CachePolicy getCachePolicy(Cache cache) {
