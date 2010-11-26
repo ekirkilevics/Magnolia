@@ -113,13 +113,29 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     protected void setupNode(String workspace, String path) throws RepositoryException {
         setupProperty(workspace, path, null, null, null);
     }
-    
+
+    /**
+     * Helper to set a property in the config workspace.
+     * @see #setupProperty(String, String, String, String, ItemType)
+     */
+    protected void setupNode(String workspace, String path, ItemType type) throws RepositoryException {
+        setupProperty(workspace, path, null, null, type);
+    }
+
     /**
      * Helper to create an empty node.
      * @see #setupProperty(String, String, String, String, ItemType)
      */
     protected void setupConfigNode(String path) throws RepositoryException {
         setupNode(ContentRepository.CONFIG, path);
+    }
+
+    /**
+     * Helper to create an empty node.
+     * @see #setupProperty(String, String, String, String, ItemType)
+     */
+    protected void setupConfigNode(String path, ItemType type) throws RepositoryException {
+        setupNode(ContentRepository.CONFIG, path, type);
     }
 
     /**
