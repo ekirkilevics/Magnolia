@@ -100,7 +100,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         this.wrappedStream = new SimpleServletOutputStream(thresholdingOutputStream);
     }
 
-    public boolean isThesholdExceeded() {
+    public boolean isThresholdExceeded() {
         return thresholdingOutputStream.isThresholdExceeded();
     }
 
@@ -321,7 +321,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
             target.setContentLength(getContentLength());
         }
         if(getContentLength()>0){
-            if(isThesholdExceeded()){
+            if(isThresholdExceeded()){
                 FileInputStream in = FileUtils.openInputStream(getContentFile());
                 IOUtils.copy(in, target.getOutputStream());
                 IOUtils.closeQuietly(in);
@@ -334,7 +334,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void release(){
-        if(isThesholdExceeded()){
+        if(isThresholdExceeded()){
             getContentFile().delete();
         }
     }

@@ -77,7 +77,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
         responseWrapper.flush();
 
         // otherwise the content was already streamed
-        if(!responseWrapper.isGzipResponseDetected() && !responseWrapper.isThesholdExceeded()){
+        if(!responseWrapper.isGzipResponseDetected() && !responseWrapper.isThresholdExceeded()){
             byte[] array = responseWrapper.getBufferedContent();
 
             //GZIP only 200 SC_OK responses as in other cases response might be already committed - only dump bytes and flush ...

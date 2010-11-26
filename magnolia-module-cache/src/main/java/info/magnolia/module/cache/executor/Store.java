@@ -108,7 +108,7 @@ public class Store extends AbstractExecutor {
     protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cachedResponse) throws IOException {
         int status = cachedResponse.getStatus();
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302 or 304.
-        if (status == HttpServletResponse.SC_MOVED_TEMPORARILY) {
+        if (cachedResponse.getRedirectionLocation() != null) {
             return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation());
         }
 
@@ -120,7 +120,7 @@ public class Store extends AbstractExecutor {
         final String contentType = cachedResponse.getContentType();
 
         ContentCachedEntry cacheEntry;
-        if(!cachedResponse.isThesholdExceeded()){
+        if(!cachedResponse.isThresholdExceeded()){
             cacheEntry = new InMemoryCachedEntry(cachedResponse.getBufferedContent(),
                     contentType,
                     cachedResponse.getCharacterEncoding(),
