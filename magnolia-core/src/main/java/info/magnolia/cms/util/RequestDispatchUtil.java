@@ -91,11 +91,8 @@ public class RequestDispatchUtil {
             String permanentUrl = StringUtils.substringAfter(targetUri, PERMANENT_PREFIX);
             try {
 
-                final String requestScheme = request.getScheme();
-                if(isInternal(permanentUrl)){
-                    int serverPort = request.getServerPort();
-                    if((serverPort == 80 && "http".equals(requestScheme)) ||
-                       (serverPort == 443 && "https".equals(requestScheme))){
+                if (isInternal(permanentUrl)){
+                    if (isUsingStandardPort(request)) {
                         permanentUrl = new URL(
                             request.getScheme(),
                             request.getServerName(),
@@ -104,7 +101,7 @@ public class RequestDispatchUtil {
                         permanentUrl = new URL(
                             request.getScheme(),
                             request.getServerName(),
-                            serverPort,
+                            request.getServerPort(),
                             request.getContextPath() + permanentUrl).toExternalForm();
                     }
                 }
@@ -132,6 +129,12 @@ public class RequestDispatchUtil {
         }
 
         return false;
+    }
+
+    private static boolean isUsingStandardPort(HttpServletRequest request) {
+        String requestScheme = request.getScheme();
+        int serverPort = request.getServerPort();
+        return (serverPort == 80 && "http".equals(requestScheme)) || (serverPort == 443 && "https".equals(requestScheme));
     }
 
     private static boolean isInternal(String url) {
