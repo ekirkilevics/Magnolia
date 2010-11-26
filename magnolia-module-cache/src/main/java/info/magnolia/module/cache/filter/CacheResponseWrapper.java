@@ -255,7 +255,6 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     public void sendRedirect(String location) throws IOException {
         this.status = SC_MOVED_TEMPORARILY;
         this.redirectionLocation = location;
-        super.sendRedirect(location);
     }
 
     public void sendError(int status, String errorMsg) throws IOException {
