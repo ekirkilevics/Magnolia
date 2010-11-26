@@ -44,9 +44,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.filters.WebContainerResources;
-import info.magnolia.objectfactory.Components;
-
 /**
  * Provides support for a simple syntax form of doing redirects and forwards. You pass it a url prefixed with either
  * "redirect:", "permanent:" or "forward:". The context path is added to the url.
@@ -60,8 +57,6 @@ public class RequestDispatchUtil {
     private static final String REDIRECT_PREFIX = "redirect:";
     private static final String PERMANENT_PREFIX = "permanent:";
     private static final String FORWARD_PREFIX = "forward:";
-
-    private static final WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
 
     /**
      * Returns true if processing took place, even if it fails.
