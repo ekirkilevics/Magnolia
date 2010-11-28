@@ -59,9 +59,8 @@ import java.io.IOException;
  */
 public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
-    @Override
     public boolean bypasses(HttpServletRequest request) {
-        return !RequestHeaderUtil.acceptsGzipEncoding(request) || super.bypasses(request);
+        return !GZipUtil.isAcceptsGzip(request) || super.bypasses(request);
     }
 
     public void doFilter(HttpServletRequest request, final HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -82,7 +81,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
             //GZIP only 200 SC_OK responses as in other cases response might be already committed - only dump bytes and flush ...
             int statusCode = responseWrapper.getStatus();
-            if (statusCode == HttpServletResponse.SC_OK) {
+            if (statusCode == HttpServletResponse.SC_OK && !GZipUtil.isGZipped(array)) {
                 responseWrapper.replayHeadersAndStatus(response);
 
                 RequestHeaderUtil.addAndVerifyHeader(response, "Content-Encoding", "gzip");
