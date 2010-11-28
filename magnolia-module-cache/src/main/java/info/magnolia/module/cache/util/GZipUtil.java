@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.cache.util;
 
+import info.magnolia.cms.util.RequestHeaderUtil;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.cache.CacheModule;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -40,6 +44,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Provide useful methods for working with gzip'd byte[]. Code originated
@@ -101,4 +107,15 @@ public class GZipUtil {
     public static boolean isGZipMimeType(String contentType) {
         return GZIP_MIMETYPES.contains(contentType);
     }
+
+    /**
+     * True if the response should be gzipped. Uses the compression configuration of the cache and checks if the client accepts gzip responses.
+     */
+    public static boolean isAcceptsGzip(HttpServletRequest request){
+        CacheModule module = (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache");
+        boolean compressionVote = module.getCompression().getVoters().vote(request)>0;
+        boolean requestAcceptsGzip = RequestHeaderUtil.acceptsGzipEncoding(request);
+        return requestAcceptsGzip && compressionVote;
+    }
+
 }

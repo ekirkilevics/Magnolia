@@ -34,8 +34,7 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.cache.CacheModule;
+import info.magnolia.module.cache.util.GZipUtil;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -209,11 +208,7 @@ public abstract class ContentCachedEntry implements CachedEntry, Serializable {
     }
 
     protected boolean isAcceptsGzip(HttpServletRequest request){
-        CacheModule module = (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache");
-        boolean compressionVote = module.getCompression().getVoters().vote(request)==0;
-        boolean requestAcceptsGzip = RequestHeaderUtil.acceptsGzipEncoding(request);
-        return requestAcceptsGzip && compressionVote;
-
+        return GZipUtil.isAcceptsGzip(request);
     }
 
     abstract protected boolean canServeGzipContent();
