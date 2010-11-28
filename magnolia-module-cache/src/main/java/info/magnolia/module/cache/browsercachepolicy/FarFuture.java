@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,33 +33,34 @@
  */
 package info.magnolia.module.cache.browsercachepolicy;
 
-import info.magnolia.module.cache.BrowserCachePolicy;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 
+
 /**
- * Uses a fix expiration time (in minutes). Default to 30 minutes.
+ * Uses the *.identifier.cache.ext pattern to determine if a file can be cached for ever.
+ * @author pbaerfuss
+ * @version $Id$
  *
- * @version $Revision$ ($Author$)
  */
-public class FixedDuration implements BrowserCachePolicy {
+public class FarFuture extends FixedDuration {
 
-    private static final int MINUTE_IN_MILLIS = 60 * 1000;
-
-    private int expirationMinutes = 30;
+    public FarFuture() {
+        // a year
+        setExpirationMinutes(60*24*365);
+    }
 
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
-        // cast to long as the operation might exceed the int range
-        long expirationInMilliseconds = (long) this.getExpirationMinutes() * MINUTE_IN_MILLIS;
-        return new BrowserCachePolicyResult(System.currentTimeMillis() + expirationInMilliseconds);
+        String uri = MgnlContext.getAggregationState().getOriginalBrowserURI();
+        if(isFarFutureURI(uri)){
+            return super.canCacheOnClient(cachePolicyResult);
+        }
+        return BrowserCachePolicyResult.NO_CACHE;
     }
 
-    public int getExpirationMinutes() {
-        return expirationMinutes;
-    }
-
-    public void setExpirationMinutes(int expirationMinutes) {
-        this.expirationMinutes = expirationMinutes;
+    private boolean isFarFutureURI(String uri) {
+        return uri.matches(".*\\.cache\\.[^\\.]*");
     }
 
 }

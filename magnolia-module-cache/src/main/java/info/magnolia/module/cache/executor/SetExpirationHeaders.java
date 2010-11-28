@@ -45,19 +45,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * TODO : avoid duplication with CacheHeadersFilter ???
- * 
+ *
  * @author pbracher
  * @version $Revision$ ($Author$)
  */
 public class SetExpirationHeaders extends AbstractExecutor {
+
+    private static Logger log = LoggerFactory.getLogger(SetExpirationHeaders.class);
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicyResult) throws IOException, ServletException {
 
         BrowserCachePolicy browserCachePolicy = this.getCacheConfiguration().getBrowserCachePolicy();
+        if(browserCachePolicy == null){
+            log.debug("Missing browser cache configuration. Can't set chaching headers.");
+            return;
+        }
         BrowserCachePolicyResult clientCacheResult = browserCachePolicy.canCacheOnClient(cachePolicyResult);
 
         if (clientCacheResult == BrowserCachePolicyResult.NO_CACHE) {
