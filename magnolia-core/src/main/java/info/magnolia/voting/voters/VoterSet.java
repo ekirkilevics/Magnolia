@@ -98,7 +98,7 @@ public class VoterSet extends BaseVoterImpl {
                 voting = Voting.AND;
             }
             else if("OR".equalsIgnoreCase(op)){
-                voting = Voting.AND;
+                voting = Voting.OR;
             }
             else{
                 voting = Voting.HIGHEST_LEVEL;
