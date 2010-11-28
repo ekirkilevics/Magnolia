@@ -117,7 +117,7 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     }
 
     protected boolean bypasses(HttpServletRequest request) {
-        Voting voting = Voting.Factory.getDefaultVoting();
+        Voting voting = Voting.HIGHEST_LEVEL;
         if (voting.vote(bypasses, request) > 0)
             return true;
 

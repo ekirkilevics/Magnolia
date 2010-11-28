@@ -34,6 +34,8 @@
 package info.magnolia.voting;
 
 import info.magnolia.objectfactory.Components;
+import info.magnolia.voting.voters.AndVoting;
+import info.magnolia.voting.voters.OrVoting;
 
 /**
  * Contract for decision maker (i.e. class executing set of voters and providing combined output).
@@ -44,10 +46,15 @@ import info.magnolia.objectfactory.Components;
  */
 public interface Voting {
 
+    public static Voting AND = new AndVoting();
+    public static Voting OR = new OrVoting();
+    public static Voting HIGHEST_LEVEL = new DefaultVoting();
+
     int vote(Voter[] voters, Object value);
 
     /**
      * Factory for instantiation of the <code>Voting</code> implementation.
+     * @deprecated since 4.4, use one of the constants
      */
     static class Factory {
         public static Voting getDefaultVoting() {
