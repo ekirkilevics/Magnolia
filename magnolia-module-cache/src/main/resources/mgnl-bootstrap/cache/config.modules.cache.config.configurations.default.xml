@@ -760,7 +760,7 @@
           <sv:value>info.magnolia.module.cache.browsercachepolicy.VoterBased</sv:value>
         </sv:property>
         <sv:property sv:name="expirationMinutes" sv:type="String">
-          <sv:value>30</sv:value>
+          <sv:value>60</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
