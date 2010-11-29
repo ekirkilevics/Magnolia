@@ -47,7 +47,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Property;
-import javax.jcr.Value;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -468,29 +467,6 @@ public class MetaData {
         catch (PathNotFoundException e) {
             try {
                 this.node.setProperty(name, value);
-            }
-            catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-            throw new AccessDeniedException(re.getMessage());
-        }
-        catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
-        }
-    }
-
-    public void setProperty(String name, Value[] values) throws AccessDeniedException {
-        allowUpdate();
-        name = this.getInternalPropertyName(name);
-        try {
-            this.node.getProperty(name).setValue(values);
-        }
-        catch (PathNotFoundException e) {
-            try {
-                this.node.setProperty(name, values);
             }
             catch (RepositoryException re) {
                 log.error(re.getMessage(), re);
