@@ -33,15 +33,12 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.cms.util.QueryUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -60,6 +57,8 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
 
     private String localeStr = MessagesManager.getInstance().getDefaultLocale().toString();
 
+    private Collection<String> bundles = new ArrayList<String>();
+
     public JavascriptMessagesPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
@@ -70,18 +69,13 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
         Messages messages = MessagesManager.getMessages(locale);
         MessagesUtil.generateJavaScript(response.getWriter(), messages);
 
-        final Collection<Content> bundles = QueryUtil.query(ContentRepository.CONFIG, "//adminInterface/pages/messages/bundles", "xpath");
-        if(bundles != null && !bundles.isEmpty()){
-            for(Content bundle: bundles){
-                for(NodeData nodeData : bundle.getNodeDataCollection()){
-                    if(MessagesManager.DEFAULT_BASENAME.equals(nodeData.getString())){
-                        //skip adminInterface bundle to avoid duplication
-                        continue;
-                    }
-                    messages = MessagesManager.getMessages(nodeData.getString(), locale);
-                    MessagesUtil.generateJavaScript(response.getWriter(), messages);
-                }
+        for (String bundleName : this.bundles) {
+            if(MessagesManager.DEFAULT_BASENAME.equals(bundleName)){
+                //skip adminInterface bundle to avoid duplication
+                continue;
             }
+            messages = MessagesManager.getMessages(bundleName);
+            MessagesUtil.generateJavaScript(response.getWriter(), messages);
         }
     }
 
@@ -91,6 +85,18 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
 
     public void setLocale(String language) {
         this.localeStr = language;
+    }
+
+    public Collection<String> getBundles() {
+        return bundles;
+    }
+
+    public void setBundles(Collection<String> bundles) {
+        this.bundles = bundles;
+    }
+
+    public void addBundle(String bundleName){
+        this.bundles.add(bundleName);
     }
 
 }
