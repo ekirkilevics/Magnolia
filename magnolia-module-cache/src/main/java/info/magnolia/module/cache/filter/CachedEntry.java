@@ -48,7 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface CachedEntry extends Serializable {
 
     /**
-     * @param chain a cache entry might want to delegate to the filter chain, see {@link BlobCachedEntry#replay(HttpServletRequest, HttpServletResponse, FilterChain)}
+     * @param chain a cache entry might want to delegate to the filter chain, see {@link DelegatingBlobCachedEntry#replay(HttpServletRequest, HttpServletResponse, FilterChain)}
      */
     void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 

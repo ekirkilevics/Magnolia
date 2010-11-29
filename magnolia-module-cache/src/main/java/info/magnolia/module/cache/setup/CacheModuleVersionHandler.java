@@ -180,7 +180,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         remove("not")),
                     getNode("userAgent").then(
                         remove("not")),
-                    setProperty("op", "AND"))
+                    addProperty("op", "AND"))
              ))
 
              .addTask(new SetPropertyTask("Safer default cache configuration.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy/voters/deny/authenticated", "enabled", "false"))

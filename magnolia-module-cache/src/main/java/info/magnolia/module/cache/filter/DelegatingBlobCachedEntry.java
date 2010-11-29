@@ -45,6 +45,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -53,14 +55,16 @@ import org.apache.commons.io.IOUtils;
  * @version $Id$
  *
  */
-public class BlobCachedEntry extends ContentCachedEntry {
+public class DelegatingBlobCachedEntry extends ContentCachedEntry {
+
+    private static Logger log = LoggerFactory.getLogger(DelegatingBlobCachedEntry.class);
 
 
-    private static final String CONTENT_FILE_ATTIBUTE = BlobCachedEntry.class.getName() + ".contentFile";
+    private static final String CONTENT_FILE_ATTIBUTE = DelegatingBlobCachedEntry.class.getName() + ".contentFile";
 
     private long contentLength;
 
-    public BlobCachedEntry(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
+    public DelegatingBlobCachedEntry(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         super(contentType, characterEncoding, statusCode, headers, modificationDate);
         this.contentLength = contentLength;
     }
@@ -88,7 +92,9 @@ public class BlobCachedEntry extends ContentCachedEntry {
             FileInputStream contentStream = FileUtils.openInputStream(contentFile);
             IOUtils.copy(contentStream,response.getOutputStream());
             IOUtils.closeQuietly(contentStream);
-            contentFile.delete();
+            if(!contentFile.delete()){
+                log.error("Can't delete file: " + contentFile);
+            }
         }
         else{
             // should not happen as we delegate to the filter chain in replay in that case and ignore all cached data
@@ -101,7 +107,7 @@ public class BlobCachedEntry extends ContentCachedEntry {
     }
 
     public void bindContentFileToCurrentRequest(HttpServletRequest request, File contentFile){
-        request.setAttribute(BlobCachedEntry.CONTENT_FILE_ATTIBUTE, contentFile);
+        request.setAttribute(DelegatingBlobCachedEntry.CONTENT_FILE_ATTIBUTE, contentFile);
     }
 
 }

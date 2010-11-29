@@ -45,7 +45,7 @@ import info.magnolia.module.cache.filter.CachedError;
 import info.magnolia.module.cache.filter.ContentCachedEntry;
 import info.magnolia.module.cache.filter.CachedRedirect;
 import info.magnolia.module.cache.filter.InMemoryCachedEntry;
-import info.magnolia.module.cache.filter.BlobCachedEntry;
+import info.magnolia.module.cache.filter.DelegatingBlobCachedEntry;
 
 import java.io.IOException;
 
@@ -129,7 +129,7 @@ public class Store extends AbstractExecutor {
                     modificationDate);
         }
         else{
-            cacheEntry = new BlobCachedEntry(cachedResponse.getContentLength(),
+            cacheEntry = new DelegatingBlobCachedEntry(cachedResponse.getContentLength(),
                 contentType,
                 cachedResponse.getCharacterEncoding(),
                 status,
@@ -138,7 +138,7 @@ public class Store extends AbstractExecutor {
 
             // TODO remove this once we use a blob store
             // the file will be deleted once served in this request
-            ((BlobCachedEntry)cacheEntry).bindContentFileToCurrentRequest(request, cachedResponse.getContentFile());
+            ((DelegatingBlobCachedEntry)cacheEntry).bindContentFileToCurrentRequest(request, cachedResponse.getContentFile());
         }
 
         return cacheEntry;

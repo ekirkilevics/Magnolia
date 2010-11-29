@@ -134,7 +134,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
             return super.getOutputStream();
         }
 
-        public ServletOutputStream getOutputStream() throws IOException {
+        public ServletOutputStream getOutputStream(){
             return deferredOutputStream;
         }
 

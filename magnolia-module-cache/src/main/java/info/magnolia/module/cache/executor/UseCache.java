@@ -82,8 +82,7 @@ public class UseCache extends AbstractExecutor {
             cached.replay(request, response, chain);
             response.flushBuffer();
         } else {
-            // 304 or nothing to write to the output
-            return;
+            // not modified (304) or nothing to write to the output
         }
     }
 
