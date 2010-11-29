@@ -35,12 +35,21 @@ package info.magnolia.module.cache;
 
 /**
  * Transports the expiration date.
- * 
+ *
  * @author pbracher
  * @version $Revision$ ($Author$)
  */
 public class BrowserCachePolicyResult {
-    public static final BrowserCachePolicyResult NO_CACHE = new BrowserCachePolicyResult(-1);
+
+    /**
+     * Set caching headers so that the browser does not even send an if-modified request.
+     */
+    public static final BrowserCachePolicyResult NEVER = new BrowserCachePolicyResult(-1);
+
+    /**
+     * No cache headers will be set. The browser will use if-modified or GET requests.
+     */
+    public static final BrowserCachePolicyResult NO_CACHE = new BrowserCachePolicyResult(0);
 
     private long expirationDate;
 

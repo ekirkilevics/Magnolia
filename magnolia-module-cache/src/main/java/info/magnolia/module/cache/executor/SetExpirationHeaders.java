@@ -69,11 +69,15 @@ public class SetExpirationHeaders extends AbstractExecutor {
         }
         BrowserCachePolicyResult clientCacheResult = browserCachePolicy.canCacheOnClient(cachePolicyResult);
 
-        if (clientCacheResult == BrowserCachePolicyResult.NO_CACHE) {
+        if (clientCacheResult == BrowserCachePolicyResult.NEVER) {
             response.setHeader("Pragma", "no-cache");
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
             response.setDateHeader("Expires", 0L);
-        } else {
+        }
+        else if(clientCacheResult == BrowserCachePolicyResult.NO_CACHE){
+            // don't set any headers so that the browser can use if-modified requests
+        }
+        else {
             final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000L;
             response.setHeader("Pragma", "");
             response.setHeader("Cache-Control", "max-age=" + maxAgeSeconds + ", public");
