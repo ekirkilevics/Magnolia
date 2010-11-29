@@ -33,19 +33,22 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
-import java.io.IOException;
-
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
+import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.dialog.Dialog;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.module.admininterface.DialogHandlerManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
-
+import info.magnolia.module.admininterface.InvalidDialogHandlerException;
+import info.magnolia.module.admininterface.SaveHandler;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * This dialog hander delegates to a dialog handler representing the dialog assigned to the paragraph we edit (or create).
@@ -64,10 +67,19 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
         final String dialogName = getDialogUsedByParagraph(paragraphName);
 
-        dialogHandler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
+        try {
+            dialogHandler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
 
-        // needed for the creation of new paragraphs
-        dialogHandler.getDialog().setConfig("paragraph", paragraphName);
+            // needed for the creation of new paragraphs
+            dialogHandler.getDialog().setConfig("paragraph", paragraphName);
+        } catch (InvalidDialogHandlerException e) {
+            if (dialogName.equals(paragraphName)) {
+                // we're probably in the hack of getDialogUsedByParagraph (trying to load a dialog by paragraph name), except there's no such dialog
+                dialogHandler = new NoDialogMVCHandler(request, response);
+            } else {
+                throw e;
+            }
+        }
     }
 
     private String getDialogUsedByParagraph(String paragraphName) {
@@ -102,4 +114,39 @@ public class ParagraphEditDialog extends ConfiguredDialog {
         dialogHandler.renderHtml(view);
     }
 
+    public static class NoDialogMVCHandler extends DialogMVCHandler {
+        public NoDialogMVCHandler(HttpServletRequest request, HttpServletResponse response) {
+            // we don't really need this call to super, we'll fake the form !
+            super("auto-save", request, response);
+            // at this stage, this.params is essentially a wrapper around the request parameters, and this.form is null.
+        }
+
+        @Override
+        public String getCommand() {
+            // bypass COMMAND_SHOW_DIALOG
+            return DialogMVCHandler.COMMAND_SAVE;
+        }
+
+        @Override
+        public String save() {
+            // completely bypass the regular save() method - we have no validation and dialog, so we fake everything
+            final SaveHandler saveHandler = Components.getComponentProvider().newInstance(SaveHandler.class);
+            final MultipartForm dummyForm = new MultipartForm();
+            dummyForm.addparameterValues("mgnlSaveInfo", new String[0]);
+            saveHandler.init(dummyForm);
+
+            // copied/adapted from info.magnolia.module.admininterface.DialogMVCHandler#DialogMVCHandler
+            saveHandler.setPath(path); // protected variable init'd in constructor
+            saveHandler.setNodeCollectionName(params.getParameter("mgnlNodeCollection")); // private, so we do this
+            saveHandler.setNodeName(nodeName); // protected variable init'd in constructor
+            saveHandler.setParagraph(params.getParameter("mgnlParagraph"));
+            saveHandler.setRepository(repository); // protected variable init'd in constructor
+            saveHandler.setCreationItemType(new ItemType(getItemType()));
+
+
+            boolean result = saveHandler.save();
+            return result ? DialogMVCHandler.VIEW_CLOSE_WINDOW : DialogMVCHandler.VIEW_ERROR;
+        }
+
+    }
 }
