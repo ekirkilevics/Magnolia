@@ -61,11 +61,11 @@ public class BrowserCachePolicySet implements BrowserCachePolicy {
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
         for (BrowserCachePolicy policy : policies) {
             BrowserCachePolicyResult result = policy.canCacheOnClient(cachePolicyResult);
-            if(result!=BrowserCachePolicyResult.NO_CACHE){
+            if(result!=null){
                 return result;
             }
         }
-        return BrowserCachePolicyResult.NO_CACHE;
+        return null;
     }
 
 }

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.cache.browsercachepolicy;
 
-import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 
@@ -42,13 +41,14 @@ import info.magnolia.module.cache.CachePolicyResult;
  *
  * @version $Revision$ ($Author$)
  */
-public class FixedDuration implements BrowserCachePolicy {
+public class FixedDuration extends AbstractVoterBased {
 
     private static final int MINUTE_IN_MILLIS = 60 * 1000;
 
     private int expirationMinutes = 30;
 
-    public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
+    @Override
+    protected BrowserCachePolicyResult getPositiveVoteResult(CachePolicyResult cachePolicyResult) {
         // cast to long as the operation might exceed the int range
         long expirationInMilliseconds = (long) this.getExpirationMinutes() * MINUTE_IN_MILLIS;
         return new BrowserCachePolicyResult(System.currentTimeMillis() + expirationInMilliseconds);

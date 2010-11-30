@@ -33,19 +33,20 @@
  */
 package info.magnolia.module.cache.browsercachepolicy;
 
+import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.voting.voters.VoterSet;
 
 
 /**
- * Uses a {@link VoterSet} to decided if the file should be cached in the browser.
+ * Uses a {@link VoterSet} to decided if the file should be cached in the browser. If no voters are configured it means that the content can be cached.
  * @version $Id$
  *
  */
-public class VoterBased extends FixedDuration {
+public abstract class AbstractVoterBased implements BrowserCachePolicy {
 
-    private VoterSet voters = new VoterSet();
+    private VoterSet voters;
 
     public VoterSet getVoters() {
         return voters;
@@ -55,12 +56,13 @@ public class VoterBased extends FixedDuration {
         this.voters = voters;
     }
 
-    @Override
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
-        if(voters.vote(cachePolicyResult)>0){
-            return super.canCacheOnClient(cachePolicyResult);
+        if(voters == null || voters.vote(cachePolicyResult)>0){
+            return getPositiveVoteResult(cachePolicyResult);
         }
-        return BrowserCachePolicyResult.NO_CACHE;
+        return null;
     }
+
+    protected abstract BrowserCachePolicyResult getPositiveVoteResult(CachePolicyResult cachePolicyResult);
 
 }

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.cache.browsercachepolicy;
 
-import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 
@@ -43,10 +42,10 @@ import info.magnolia.module.cache.CachePolicyResult;
  * @author pbracher
  * @version $Revision$ ($Author$)
  */
-public class Never implements BrowserCachePolicy {
+public class Never extends AbstractVoterBased {
 
-    public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
+    @Override
+    protected BrowserCachePolicyResult getPositiveVoteResult(CachePolicyResult cachePolicyResult) {
         return BrowserCachePolicyResult.NO_CACHE;
     }
-
 }

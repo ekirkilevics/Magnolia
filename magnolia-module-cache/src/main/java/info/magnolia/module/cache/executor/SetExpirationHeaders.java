@@ -45,9 +45,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * TODO : avoid duplication with CacheHeadersFilter ???
  *
@@ -56,32 +53,24 @@ import org.slf4j.LoggerFactory;
  */
 public class SetExpirationHeaders extends AbstractExecutor {
 
-    private static Logger log = LoggerFactory.getLogger(SetExpirationHeaders.class);
-
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicyResult) throws IOException, ServletException {
 
         BrowserCachePolicy browserCachePolicy = this.getCacheConfiguration().getBrowserCachePolicy();
-        if(browserCachePolicy == null){
-            log.debug("Missing browser cache configuration. Can't set chaching headers.");
-            return;
-        }
         BrowserCachePolicyResult clientCacheResult = browserCachePolicy.canCacheOnClient(cachePolicyResult);
 
-        if (clientCacheResult == BrowserCachePolicyResult.NEVER) {
-            response.setHeader("Pragma", "no-cache");
-            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
-            response.setDateHeader("Expires", 0L);
-        }
-        else if(clientCacheResult == BrowserCachePolicyResult.NO_CACHE){
-            // don't set any headers so that the browser can use if-modified requests
-        }
-        else {
-            final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000L;
-            response.setHeader("Pragma", "");
-            response.setHeader("Cache-Control", "max-age=" + maxAgeSeconds + ", public");
-            response.setDateHeader("Expires", clientCacheResult.getExpirationDate());
+        if(clientCacheResult !=null){
+            if (clientCacheResult == BrowserCachePolicyResult.NO_CACHE) {
+                response.setHeader("Pragma", "no-cache");
+                response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+                response.setDateHeader("Expires", 0L);
+            } else {
+                final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000L;
+                response.setHeader("Pragma", "");
+                response.setHeader("Cache-Control", "max-age=" + maxAgeSeconds + ", public");
+                response.setDateHeader("Expires", clientCacheResult.getExpirationDate());
+            }
         }
     }
 }

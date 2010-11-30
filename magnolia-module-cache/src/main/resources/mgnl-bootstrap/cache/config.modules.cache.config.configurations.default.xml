@@ -729,7 +729,10 @@
           <sv:value>ffc6fe5b-a302-4d2f-9930-c01b8e879380</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.cache.browsercachepolicy.FarFuture</sv:value>
+          <sv:value>info.magnolia.module.cache.browsercachepolicy.FixedDuration</sv:value>
+        </sv:property>
+        <sv:property sv:name="expirationMinutes" sv:type="String">
+          <sv:value>525600</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -742,8 +745,67 @@
             <sv:value>2010-11-27T23:40:50.694+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-11-28T15:10:14.465+01:00</sv:value>
+            <sv:value>2010-11-30T10:01:37.339+01:00</sv:value>
           </sv:property>
+        </sv:node>
+        <sv:node sv:name="voters">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:lockable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>2d52a57c-498e-4999-a7d2-fee7109e8dbc</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2010-11-30T10:01:43.490+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+              <sv:value>2010-11-30T10:01:47.898+01:00</sv:value>
+            </sv:property>
+          </sv:node>
+          <sv:node sv:name="dotCacheExtension">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:contentNode</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+              <sv:value>mix:lockable</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>f8ab6eae-9d60-4e2e-87c9-36a54feb0fe1</sv:value>
+            </sv:property>
+            <sv:property sv:name="class" sv:type="String">
+              <sv:value>info.magnolia.voting.voters.URIRegexVoter</sv:value>
+            </sv:property>
+            <sv:property sv:name="pattern" sv:type="String">
+              <sv:value>.*\.cache\.[^\.]*</sv:value>
+            </sv:property>
+            <sv:node sv:name="MetaData">
+              <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>mgnl:metaData</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+                <sv:value>false</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:authorid" sv:type="String">
+                <sv:value>superuser</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+                <sv:value>2010-11-27T23:46:20.045+01:00</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+                <sv:value>2010-11-30T10:03:20.144+01:00</sv:value>
+              </sv:property>
+            </sv:node>
+          </sv:node>
         </sv:node>
       </sv:node>
       <sv:node sv:name="resources">
@@ -757,7 +819,7 @@
           <sv:value>40e73b48-c0cb-48f3-b1c1-91b29153f259</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.cache.browsercachepolicy.VoterBased</sv:value>
+          <sv:value>info.magnolia.module.cache.browsercachepolicy.FixedDuration</sv:value>
         </sv:property>
         <sv:property sv:name="expirationMinutes" sv:type="String">
           <sv:value>60</sv:value>
@@ -773,7 +835,7 @@
             <sv:value>2010-11-27T23:40:06.135+01:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-11-28T15:09:02.271+01:00</sv:value>
+            <sv:value>2010-11-30T09:57:40.942+01:00</sv:value>
           </sv:property>
         </sv:node>
         <sv:node sv:name="voters">
@@ -874,11 +936,11 @@
               <sv:property sv:name="jcr:uuid" sv:type="String">
                 <sv:value>83047d8f-1789-4d5b-b52c-8c09a5df5fc4</sv:value>
               </sv:property>
-              <sv:property sv:name="2" sv:type="String">
-                <sv:value>application/x-javascript</sv:value>
-              </sv:property>
-              <sv:property sv:name="3" sv:type="String">
+              <sv:property sv:name="css" sv:type="String">
                 <sv:value>text/css</sv:value>
+              </sv:property>
+              <sv:property sv:name="javascript" sv:type="String">
+                <sv:value>application/x-javascript</sv:value>
               </sv:property>
               <sv:node sv:name="MetaData">
                 <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -894,11 +956,169 @@
                   <sv:value>2008-05-13T15:29:24.274+02:00</sv:value>
                 </sv:property>
                 <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-                  <sv:value>2010-11-27T23:58:22.132+01:00</sv:value>
+                  <sv:value>2010-11-30T10:04:17.540+01:00</sv:value>
                 </sv:property>
               </sv:node>
             </sv:node>
           </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="dontCachePages">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:lockable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>58c3bd87-9c40-4c2f-a0a3-ef938f6f285b</sv:value>
+        </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.module.cache.browsercachepolicy.Never</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2010-11-27T23:40:06.135+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2010-11-30T10:33:55.174+01:00</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="voters">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:lockable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>7d0affc0-4983-4374-84e0-47a45326db83</sv:value>
+          </sv:property>
+          <sv:property sv:name="op" sv:type="String">
+            <sv:value>OR</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2010-11-27T23:46:14.059+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+              <sv:value>2010-11-30T10:03:33.959+01:00</sv:value>
+            </sv:property>
+          </sv:node>
+          <sv:node sv:name="contentType">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:contentNode</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+              <sv:value>mix:lockable</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>6efec087-ecce-439b-80de-f7f8a0f5947c</sv:value>
+            </sv:property>
+            <sv:property sv:name="class" sv:type="String">
+              <sv:value>info.magnolia.voting.voters.ResponseContentTypeVoter</sv:value>
+            </sv:property>
+            <sv:node sv:name="MetaData">
+              <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>mgnl:metaData</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+                <sv:value>false</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:authorid" sv:type="String">
+                <sv:value>superuser</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+                <sv:value>2008-05-13T15:28:30.192+02:00</sv:value>
+              </sv:property>
+              <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+                <sv:value>2010-11-30T10:03:33.961+01:00</sv:value>
+              </sv:property>
+            </sv:node>
+            <sv:node sv:name="allowed">
+              <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                <sv:value>mgnl:contentNode</sv:value>
+              </sv:property>
+              <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+                <sv:value>mix:lockable</sv:value>
+              </sv:property>
+              <sv:property sv:name="jcr:uuid" sv:type="String">
+                <sv:value>16a7b538-b394-444d-bab0-aa4c16aa2f8a</sv:value>
+              </sv:property>
+              <sv:property sv:name="html" sv:type="String">
+                <sv:value>text/html</sv:value>
+              </sv:property>
+              <sv:node sv:name="MetaData">
+                <sv:property sv:name="jcr:primaryType" sv:type="Name">
+                  <sv:value>mgnl:metaData</sv:value>
+                </sv:property>
+                <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+                  <sv:value>false</sv:value>
+                </sv:property>
+                <sv:property sv:name="mgnl:authorid" sv:type="String">
+                  <sv:value>superuser</sv:value>
+                </sv:property>
+                <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+                  <sv:value>2008-05-13T15:29:24.274+02:00</sv:value>
+                </sv:property>
+                <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+                  <sv:value>2010-11-30T10:04:01.232+01:00</sv:value>
+                </sv:property>
+              </sv:node>
+            </sv:node>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="default">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:lockable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>37841c9a-d150-425a-99aa-cb0e31b545f1</sv:value>
+        </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.module.cache.browsercachepolicy.FixedDuration</sv:value>
+        </sv:property>
+        <sv:property sv:name="expirationMinutes" sv:type="String">
+          <sv:value>10</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2010-11-27T23:40:06.135+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2010-11-30T10:35:24.564+01:00</sv:value>
+          </sv:property>
         </sv:node>
       </sv:node>
     </sv:node>

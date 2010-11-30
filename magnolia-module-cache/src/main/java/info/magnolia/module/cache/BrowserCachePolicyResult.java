@@ -41,15 +41,7 @@ package info.magnolia.module.cache;
  */
 public class BrowserCachePolicyResult {
 
-    /**
-     * Set caching headers so that the browser does not even send an if-modified request.
-     */
-    public static final BrowserCachePolicyResult NEVER = new BrowserCachePolicyResult(-1);
-
-    /**
-     * No cache headers will be set. The browser will use if-modified or GET requests.
-     */
-    public static final BrowserCachePolicyResult NO_CACHE = new BrowserCachePolicyResult(0);
+    public static final BrowserCachePolicyResult NO_CACHE = new BrowserCachePolicyResult(-1);
 
     private long expirationDate;
 
