@@ -83,7 +83,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         Subscriber subscriber = man.getSubscribers().iterator().next();
 
         assertEquals(10000, subscriber.getConnectTimeout());
-        assertEquals(10000, subscriber.getReadTimeout());
+        assertEquals(600000, subscriber.getReadTimeout());
     }
 
     public void testCustomTimeout() throws Exception {
@@ -116,7 +116,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         URLConnection conn = syndicator.prepareConnection(subscriber);
 
         assertEquals(10000, conn.getConnectTimeout());
-        assertEquals(10000, conn.getReadTimeout());
+        assertEquals(600000, conn.getReadTimeout());
     }
 
     public class TestSyndicator extends BaseSyndicatorImpl {
