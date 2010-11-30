@@ -45,7 +45,7 @@ import info.magnolia.cms.util.SimpleUrlPattern;
  * <p>
  * Parameters (as Magnolia's configuration nodes):
  * <ul>
- * <li>pattern: regular expression
+ * <li>pattern: a pattern complaint to {@link SimpleUrlPattern}
  * </ul>
  * @author philipp
  * @version $Id$
