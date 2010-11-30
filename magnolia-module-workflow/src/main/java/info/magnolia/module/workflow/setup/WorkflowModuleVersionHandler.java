@@ -201,7 +201,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleModuleResource("Deactivation","Add new deactivation dialog.", "config.modules.workflow.dialogs.startDeactivationWorkflow.xml"))
                 .addTask(new BootstrapSingleModuleResource("Deactivation","Add deactivation tab to the workitem dialog", "config.modules.workflow.dialogs.editDeactivationWorkItem.xml"))
                 .addTask(new IsModuleInstalledOrRegistered("Deactivation (DMS)","Add deactivation command.","dms", new BootstrapSingleResource("Deactivate Command", "Installs deactivation command.", "/info/magnolia/module/workflow/setup/dms/config.modules.dms.commands.dms.deactivate.xml")))
-                .addTask(new IsModuleInstalledOrRegistered("Deactivation (Data)","Add deactivation command.","dms", new BootstrapSingleResource("Deactivate Command", "Installs deactivation command.", "/info/magnolia/module/workflow/setup/data/config.modules.data.commands.data.deactivate.xml")))
+                .addTask(new IsModuleInstalledOrRegistered("Deactivation (Data)","Add deactivation command.","data", new BootstrapSingleResource("Deactivate Command", "Installs deactivation command.", "/info/magnolia/module/workflow/setup/data/config.modules.data.commands.data.deactivate.xml")))
         );
     }
 
