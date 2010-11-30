@@ -54,9 +54,9 @@ public class DefaultSubscriber implements Subscriber {
     private String name;
 
     /**
-     * 10 seconds default.
+     * 600 seconds default.
      */
-    private int readTimeout = 10000;
+    private int readTimeout = 600000;
 
     /**
      * 10 seconds default.
