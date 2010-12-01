@@ -47,7 +47,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Property;
-import javax.jcr.Value;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -59,8 +58,6 @@ import java.util.TimeZone;
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
-
-    public static final Value[] EMPTY_VALUE_ARRAY = new Value[0];
 
     /**
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
@@ -484,29 +481,6 @@ public class MetaData {
         }
     }
 
-    public void setProperty(String name, Value[] values) throws AccessDeniedException {
-        allowUpdate();
-        name = this.getInternalPropertyName(name);
-        try {
-            this.node.getProperty(name).setValue(values);
-        }
-        catch (PathNotFoundException e) {
-            try {
-                this.node.setProperty(name, values);
-            }
-            catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-            throw new AccessDeniedException(re.getMessage());
-        }
-        catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
-        }
-    }
-
     public Calendar getDateProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
@@ -601,29 +575,6 @@ public class MetaData {
         }
         return StringUtils.EMPTY;
     }
-
-    /**
-     * Returns an array with all the values for this property. If the property does not exist, this will return an empty array.
-     * @return an array of {@link Value}s, never null.
-     */
-    public Value[] getMultiValueProperty(String name) {
-        name = this.getInternalPropertyName(name);
-        try {
-            final Property property = this.node.getProperty(name);
-            return property.getValues();
-        }
-        catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        catch (NullPointerException e) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot get property {}", name);
-        }
-        return EMPTY_VALUE_ARRAY;
-    }
-
 
 
     /**
