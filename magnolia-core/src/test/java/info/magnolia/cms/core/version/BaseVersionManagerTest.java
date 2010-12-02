@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core.version;
 
+import java.io.ByteArrayInputStream;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
@@ -41,6 +43,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.Provider;
 import info.magnolia.test.RepositoryTestCase;
 
 /**
@@ -72,6 +75,40 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         // restore
         node.restore(version.getName(), true);
         assertTrue("Paragraph should be restored", node.hasContent("paragraph"));
+    }
+
+    public void testCreateAndRestoreDeletedVersion() throws RepositoryException {
+        Provider repoProvider = ContentRepository.getRepositoryProvider(ContentRepository.WEBSITE);
+        String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
+        + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
+        + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + ItemType.DELETED_NODE_MIXIN
+        + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
+        + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
+
+        repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
+
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());
+
+        // add deleted mixin
+        node.addMixin(ItemType.DELETED_NODE_MIXIN);
+
+        hm.save();
+        Version version = node.addVersion();
+
+        Content nodeInVersionWS = VersionManager.getInstance().getVersionedNode(node);
+        assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
+
+        node.removeMixin(ItemType.DELETED_NODE_MIXIN);
+        hm.save();
+
+        assertFalse("Node in website workspace should not have mixin", node.isNodeType(ItemType.DELETED_NODE_MIXIN));
+
+        // add version w/o mixin
+        node.addVersion();
+        nodeInVersionWS = VersionManager.getInstance().getVersionedNode(node);
+
+        assertFalse("Node in mgnlVersion workspace should not have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
     }
 
 }

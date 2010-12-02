@@ -34,6 +34,7 @@
 package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
@@ -130,9 +131,21 @@ public final class CopyUtil {
     }
 
     private void updateNodeTypes(Content source, Content root) throws RepositoryException {
+        List<String> targetNodeTypes = new ArrayList<String>();
+        for (NodeType t : root.getMixinNodeTypes()) {
+            targetNodeTypes.add(t.getName());
+        }
         NodeType[] nodeTypes = source.getMixinNodeTypes();
         for (NodeType type : nodeTypes) {
             root.addMixin(type.getName());
+            targetNodeTypes.remove(type.getName());
+        }
+        // remove all mixins not found in the original except MIX_VERSIONABLE
+        for (String nodeType : targetNodeTypes) {
+            if (ItemType.MIX_VERSIONABLE.equals(nodeType)) {
+                continue;
+            }
+            root.removeMixin(nodeType);
         }
     }
 
