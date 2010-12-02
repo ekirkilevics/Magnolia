@@ -85,7 +85,7 @@ public class Store extends AbstractExecutor {
             cachedEntry = makeCachedEntry(request, responseWrapper);
 
         } catch (Throwable t) {
-            log.error("Failed to process cache request : " + t.getMessage(), t);
+            log.error("Failed to process cache request [" + request.getRequestURL() + "] : " + t.getMessage(), t);
         } finally {
             final Object key = cachePolicyResult.getCacheKey();
             // have to put cache entry no matter what even if it is null to release lock.
