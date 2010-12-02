@@ -203,6 +203,9 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new IsModuleInstalledOrRegistered("Deactivation (DMS)","Add deactivation command.","dms", new BootstrapSingleResource("Deactivate Command", "Installs deactivation command.", "/info/magnolia/module/workflow/setup/dms/config.modules.dms.commands.dms.deactivate.xml")))
                 .addTask(new IsModuleInstalledOrRegistered("Deactivation (Data)","Add deactivation command.","data", new BootstrapSingleResource("Deactivate Command", "Installs deactivation command.", "/info/magnolia/module/workflow/setup/data/config.modules.data.commands.data.deactivate.xml")))
         );
+        register(DeltaBuilder.update("4.4.1", "")
+        		.addTask(new BootstrapSingleModuleResource("Deactivation (Website)","Adds deactivation command.", "config.modules.adminInterface.commands.website.deactivate.xml"))
+        );
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext ctx) {
