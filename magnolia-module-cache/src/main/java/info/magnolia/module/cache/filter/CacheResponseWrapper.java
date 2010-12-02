@@ -237,7 +237,8 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     private void replaceHeader(String name, Object value) {
-        appendHeader(name, value);
+        headers.remove(name);
+        headers.put(name, value);
     }
 
     private void appendHeader(String name, Object value) {
