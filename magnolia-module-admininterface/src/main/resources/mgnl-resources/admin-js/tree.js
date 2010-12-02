@@ -509,7 +509,7 @@
 
         if(this.getNode(this.selectedNode.id).isActivated){
           if(stagedDeletion){
-            text = mgnlMessages.get('tree.deletenode.staged.confirm.deactivation.text.js', null, [this.selectedNode.id]);
+            text = mgnlMessages.get('tree.deletenode.staged.confirm.text.js', null, [this.selectedNode.id]);
           } else {
             text = mgnlMessages.get('tree.deletenode.confirm.deactivation.text.js', null, [this.selectedNode.id]);
           }
