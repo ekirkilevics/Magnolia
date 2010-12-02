@@ -52,10 +52,10 @@ public class InboxHelper {
     private static final Logger log = LoggerFactory.getLogger(InboxHelper.class);
 
     protected static String getIcon(String repository, String path) {
+        if (ItemType.DELETED_NODE_MIXIN.equals(path)) {
+            return ".resources/icons/16/document_deleted.gif";
+        }
         if (StringUtils.equals(repository, "website")) {
-            if (ItemType.DELETED_NODE_MIXIN.equals(path)) {
-                return ".resources/icons/16/document_deleted.gif";
-            }
             return ".resources/icons/16/document_plain_earth.gif";
         }
 
