@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.5.1-SNAPSHOT</version>
+    <version>4.4.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-module-workflow</artifactId>
@@ -17,25 +17,25 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.5.1-SNAPSHOT</version>
+      <version>4.4.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-exchange-simple</artifactId>
-      <version>4.5.1-SNAPSHOT</version>
+      <version>4.4.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>4.5.1-SNAPSHOT</version>
+      <version>4.4.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>4.5.1-SNAPSHOT</version>
+      <version>4.4.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -296,7 +296,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.5.1-SNAPSHOT</version>
+      <version>4.4.1-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
