@@ -9,7 +9,7 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>4.4/*</version>
+      <version>4.4.1/*
     </dependency>
   </dependencies>
 </module>

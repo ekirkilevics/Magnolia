@@ -24,11 +24,11 @@
   <dependencies>
     <dependency>
       <name>core</name>
-      <version>4.4/*</version>
+      <version>4.4.1/*
     </dependency>
     <dependency>
       <name>exchange-simple</name>
-      <version>4.4/*</version>
+      <version>4.4.1/*
       <optional>true</optional>
     </dependency>
   </dependencies>
