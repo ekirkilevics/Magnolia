@@ -593,12 +593,12 @@ for Java Content Repositories (JCR).
     <downloadUrl>http://sourceforge.net/projects/magnolia/files/</downloadUrl>
   </distributionManagement>
 
-  <!-- TODO get rid of this ? -->
+  <!-- TODO we'll have to remove this if we want to sync our repo to central -->
   <repositories>
     <!-- just a little trick for folks who don't have our parent pom in their local repo yet -->
     <repository>
       <id>magnolia</id>
-      <url>http://repo.magnolia-cms.com/m2</url>
+      <url>http://nexus.magnolia-cms.com/content/repositories/magnolia.public.releases/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
