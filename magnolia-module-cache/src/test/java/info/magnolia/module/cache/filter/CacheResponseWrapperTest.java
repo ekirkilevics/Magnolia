@@ -65,4 +65,49 @@ public class CacheResponseWrapperTest extends TestCase {
         names = (Collection) wrapper.getHeaders().get(testName);
         assertEquals(1, names.size());
     }
+
+    public void testGetLastModified() {
+        IMocksControl mocksControl = EasyMock.createNiceControl();
+        HttpServletResponse mockResponse = mocksControl.createMock(HttpServletResponse.class);
+
+        CacheResponseWrapper wrapper = new CacheResponseWrapper(mockResponse, 0, false);
+
+        try {
+            wrapper.getLastModified();
+            fail("No Last-Modified was set yet - expected Exception here!");
+        }
+        catch (IllegalStateException e) {
+            assertTrue(true);
+        }
+
+        String timestampString = "Fri, 03 Dec 2010 07:14:01 CET";
+        String lastModified = "Last-Modified";
+        wrapper.setHeader(lastModified, timestampString);
+        assertEquals(1291356841000l, wrapper.getLastModified());
+
+        // force adding second LastModified-value
+        wrapper.addHeader(lastModified, timestampString);
+
+        try {
+            wrapper.getLastModified();
+            fail("Two Last-Modified were set - expected Exception here!");
+        }
+        catch (IllegalStateException e) {
+            assertTrue(true);
+        }
+
+        // add long Last-Modified
+        wrapper.setDateHeader(lastModified, 1291356841000l);
+        assertEquals(1291356841000l, wrapper.getLastModified());
+
+        // add invalid int-type for Last-Modified
+        wrapper.setIntHeader(lastModified, 42);
+        try {
+            wrapper.getLastModified();
+            fail("Last-Modified was set as int - expected Exception here!");
+        }
+        catch (IllegalStateException e) {
+            assertTrue(true);
+        }
+    }
 }
