@@ -88,10 +88,10 @@ public class DefaultContentTest extends RepositoryTestCase {
         final String mixDeleted = "mgnl:deleted";
         final Provider repoProvider = ContentRepository.getRepositoryProvider(repoName);
         final String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
-                + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
-                + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + mixDeleted
-                + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
-                + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
+        + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
+        + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + mixDeleted
+        + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
+        + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
 
         try {
             repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
@@ -180,7 +180,7 @@ public class DefaultContentTest extends RepositoryTestCase {
         String binaryContent = "the content";
         NodeData nodeData = content.createNodeData("nd2", PropertyType.BINARY);
         nodeData.setValue(IOUtils.toInputStream(binaryContent));
-//        nodeData.setAttribute(FileProperties.PROPERTY_FILENAME, "filename");
+        //        nodeData.setAttribute(FileProperties.PROPERTY_FILENAME, "filename");
         nodeData.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, "text/plain");
         nodeData.setAttribute(FileProperties.PROPERTY_LASTMODIFIED, Calendar.getInstance());
 
@@ -433,7 +433,7 @@ public class DefaultContentTest extends RepositoryTestCase {
                 "/hello/bin.extension=gif",
                 "/hello/bin.jcr\\:data=some-data",
                 "/hello/bin.jcr\\:mimeType=image/gif",
-                "/hello/bin.jcr\\:lastModified="), "\n");
+        "/hello/bin.jcr\\:lastModified="), "\n");
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();
@@ -450,9 +450,25 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertEquals("some-data", bin.getString());
     }
 
+
+    public void testModDate() throws IOException, RepositoryException{
+        Content content = getTestContent();
+        Calendar modDate = content.getMetaData().getModificationDate();
+        Calendar creationDate = content.getMetaData().getCreationDate();
+        assertNotNull(modDate);
+        assertEquals(creationDate, modDate);
+        content.setNodeData("test", false);
+        content.save();
+        modDate = content.getMetaData().getModificationDate();
+        assertNotNull(modDate);
+        assertNotSame(creationDate, modDate);
+    }
+
+
     private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {
         ValueFactory valueFactory = MgnlContext.getHierarchyManager("website").getWorkspace().getSession().getValueFactory();
         return NodeDataUtil.createValue(valueObj, valueFactory);
     }
+
 
 }
