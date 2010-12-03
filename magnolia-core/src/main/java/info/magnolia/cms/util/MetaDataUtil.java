@@ -36,7 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -62,9 +62,23 @@ public class MetaDataUtil {
     public static String getPropertyValueString(Content content, String propertyName, String dateFormat) {
         try {
             if (propertyName.equals(MetaData.CREATION_DATE) || propertyName.equals(MetaData.LAST_MODIFIED) || propertyName.equals(MetaData.LAST_ACTION)) {
-                Date date = content.getMetaData().getDateProperty(propertyName).getTime();
+                final Calendar date;
+                if(propertyName.equals(MetaData.CREATION_DATE)){
+                    date = content.getMetaData().getCreationDate();
+                }
+                else if(propertyName.equals(MetaData.LAST_MODIFIED)){
+                    date = content.getMetaData().getModificationDate();
+                }
+                else if(propertyName.equals(MetaData.LAST_ACTION)){
+                    date = content.getMetaData().getLastActionDate();
+                }
+                else{
+                    date = content.getMetaData().getDateProperty(propertyName);
+                }
 
-                return DateUtil.format(date, dateFormat);
+                if(date != null){
+                    return DateUtil.format(date.getTime(), dateFormat);
+                }
             }
             else if (propertyName.equals(MetaData.ACTIVATED)) {
                 return Boolean.toString(content.getMetaData().getBooleanProperty(propertyName));
