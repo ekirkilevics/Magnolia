@@ -51,6 +51,7 @@ import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
@@ -185,6 +186,10 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
              .addTask(new SetPropertyTask("Safer default cache configuration.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy/voters/deny/authenticated", "enabled", "false"))
              .addTask(new PartialBootstrapTask("New browser cache policy", "", "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml", "/default/browserCachePolicy"))
+        );
+
+        register(DeltaBuilder.update("4.4.2", "Update cache configuration")
+            .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
         );
     }
 
