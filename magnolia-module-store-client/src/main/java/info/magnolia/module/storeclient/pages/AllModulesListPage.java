@@ -91,13 +91,13 @@ public class AllModulesListPage extends TemplatedMVCHandler {
             ModuleDefinition def = registry.getDefinition(name);
             if (def != null) {
                 JSONObject module = new JSONObject();
-                module.set("name", def.getName());
-                module.set("version", def.getVersion().toString());
-                installedModules.put(module);
+                module.element("name", def.getName());
+                module.element("version", def.getVersion().toString());
+                installedModules.element(module);
             }
         }
         JSONObject json = new JSONObject();
-        json.set("installedModules", installedModules);
+        json.element("installedModules", installedModules);
         postdata = Functions.escapeXml(json.toString());
         return super.show();
     }
