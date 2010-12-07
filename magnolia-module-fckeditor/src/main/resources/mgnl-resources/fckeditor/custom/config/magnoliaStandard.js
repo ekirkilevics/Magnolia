@@ -67,6 +67,15 @@ if (MgnlFCKConfig.source) {
     toolbar[0].push('-');
     toolbar[0].push('Source');
 }
+if (MgnlFCKConfig.showSpellChecker) {
+    toolbar[0].push('-');
+    toolbar[0].push('SpellCheck');
+    if (MgnlFCKConfig.spellChecker) {
+       FCKConfig.SpellChecker = MgnlFCKConfig.spellChecker;
+       //if it's SCAYT start it
+       FCKConfig.ScaytAutoStartup = true;
+    }
+}
 
 if (MgnlFCKConfig.styles != '' || MgnlFCKConfig.templates != '' || MgnlFCKConfig.fonts != '' || MgnlFCKConfig.fontSizes != '' || MgnlFCKConfig.colors != '' || MgnlFCKConfig.bgColors) {
     toolbar[1] = '/';
@@ -113,7 +122,8 @@ FCKConfig.FlashDlgHideAdvanced = false;
 FCKConfig.LinkBrowser = true;
 FCKConfig.LinkBrowserURL = MgnlFCKConfig.contextPath + "/.magnolia/pages/repositoryBrowser.html?contextPath=" + MgnlFCKConfig.contextPath;
 
-FCKConfig.ImageBrowser = false;
+FCKConfig.ImageBrowser = true;
+FCKConfig.ImageBrowserURL = MgnlFCKConfig.contextPath + "/.magnolia/pages/repositoryBrowser.html?contextPath=" + MgnlFCKConfig.contextPath;
 
 FCKConfig.FlashBrowser = false;
 

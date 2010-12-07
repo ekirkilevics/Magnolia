@@ -10,7 +10,7 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>4.3/*</version>
+      <version>5.0/*</version>
     </dependency>
   </dependencies>
 

@@ -54,3 +54,10 @@ body, .BackColor {
     border-bottom: none; /*border-bottom: #f1f1e3 1px solid;*/
     background-color: #FAFBF4;
 }
+
+a.PopupTabArea {
+    color: F0F2E6
+}
+a:link, a:hover, a:visited {
+    font-size: 11px !important;
+}

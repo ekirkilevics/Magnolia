@@ -34,6 +34,7 @@
 package info.magnolia.module.fckeditor.pages;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.InvalidTreeHandlerException;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
@@ -84,7 +85,7 @@ public class RepositoryBrowserPage extends TemplatedMVCHandler {
 
 
             final String absoluteURI = manager.getURI(repoName, getSelectedPath());
-            setAbsoluteURI(absoluteURI);
+            setAbsoluteURI(MgnlContext.getContextPath() + absoluteURI);
         } else {
             setAbsoluteURI(StringUtils.EMPTY);
         }
@@ -96,8 +97,9 @@ public class RepositoryBrowserPage extends TemplatedMVCHandler {
         final URI2RepositoryManager manager = URI2RepositoryManager.getInstance();
 
         if (StringUtils.isNotEmpty(absoluteURI)) {
-            final String repository = manager.getRepository(absoluteURI);
-            final String path = manager.getHandle(absoluteURI);
+            String absoluteURIWithoutContextPath = StringUtils.removeStart(absoluteURI, MgnlContext.getContextPath());
+            final String repository = manager.getRepository(absoluteURIWithoutContextPath);
+            final String path = manager.getHandle(absoluteURIWithoutContextPath);
 
             setSelectedRepository(repository);
             setSelectedPath(path);
