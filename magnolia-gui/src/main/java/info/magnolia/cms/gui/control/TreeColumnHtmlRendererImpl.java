@@ -34,7 +34,9 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
@@ -81,17 +83,43 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
      * @return html snippet for the activation info flag and the permission flag
      */
     private String getHtmlIcons(TreeColumn treeColumn, Content content) {
-        StringBuffer html = new StringBuffer();
+        StringBuilder html = new StringBuilder();
+        String altOrTitle = "";
         if (treeColumn.getIconsActivation()) {
             String imgSrc = Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(content);
-            html.append("<img src=\"").append(MgnlContext.getContextPath()).append(imgSrc).append("\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+            int activationStatus = content.getMetaData().getActivationStatus();
+            switch (activationStatus) {
+            case MetaData.ACTIVATION_STATUS_ACTIVATED:
+                altOrTitle = MessagesUtil.get("status.activated");
+                break;
+            case MetaData.ACTIVATION_STATUS_MODIFIED:
+                altOrTitle = MessagesUtil.get("status.modified");
+                break;
+            case MetaData.ACTIVATION_STATUS_NOT_ACTIVATED:
+                altOrTitle = MessagesUtil.get("status.notActivated");
+                break;
+            }
+            html.append("<img src=\"")
+                .append(MgnlContext.getContextPath())
+                .append(imgSrc)
+                .append("\" alt=\"")
+                .append(altOrTitle)
+                .append("\" title=\"")
+                .append(altOrTitle)
+                .append("\" />");
         }
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                html.append("<img src=\"") //$NON-NLS-1$
+                altOrTitle = MessagesUtil.get("status.cannotWrite");
+                html.append("<img src=\"")
                     .append(treeColumn.getRequest().getContextPath())
                     .append(Tree.ICONDOCROOT)
-                    .append("pen_blue_canceled.gif\" />"); //$NON-NLS-1$
+                    .append("pen_blue_canceled.gif\"")
+                    .append("\" alt=\"")
+                    .append(altOrTitle)
+                    .append("\" title=\"")
+                    .append(altOrTitle)
+                    .append("\" />");
             }
         }
         return html.toString();
