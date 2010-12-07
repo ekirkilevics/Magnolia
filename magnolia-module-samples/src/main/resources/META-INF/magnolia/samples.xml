@@ -15,11 +15,11 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>4.3/*</version>
+      <version>5.0/*</version>
     </dependency>
     <dependency>
       <name>dms</name>
-      <version>1.4/*</version>
+      <version>1.5/*</version>
       <optional>true</optional>
     </dependency>
   </dependencies>
