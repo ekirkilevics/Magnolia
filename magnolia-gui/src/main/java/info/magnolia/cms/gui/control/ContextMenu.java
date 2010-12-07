@@ -34,7 +34,6 @@
 package info.magnolia.cms.gui.control;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -46,9 +45,9 @@ import java.util.List;
 public class ContextMenu extends ControlImpl {
 
     /**
-     * All the menu items showed by the context menu
+     * All the menu items showed by the context menu.
      */
-    private List menuItems = new ArrayList();
+    private List<ContextMenuItem> menuItems = new ArrayList<ContextMenuItem>();
 
     /**
      * Create a context menu and provide the name (used in javascript)
@@ -62,7 +61,7 @@ public class ContextMenu extends ControlImpl {
     /**
      * @return all menu items
      */
-    public List getMenuItems() {
+    public List<ContextMenuItem> getMenuItems() {
         return this.menuItems;
     }
 
@@ -70,7 +69,7 @@ public class ContextMenu extends ControlImpl {
      * Populate it with a list
      * @param menuItems the list
      */
-    public void setMenuItems(List menuItems) {
+    public void setMenuItems(List<ContextMenuItem> menuItems) {
         this.menuItems = menuItems;
     }
 
@@ -79,17 +78,12 @@ public class ContextMenu extends ControlImpl {
      * @return the item
      */
     public ContextMenuItem getMenuItem(int col) {
-        return (ContextMenuItem) this.getMenuItems().get(col);
+        return this.getMenuItems().get(col);
     }
 
-    /**
-     * @param col index
-     * @return the item
-     */
     public ContextMenuItem getMenuItemByName(String name) {
-        List menuItems = this.getMenuItems();
-        for (Iterator iter = menuItems.iterator(); iter.hasNext();) {
-            ContextMenuItem menuItem = (ContextMenuItem) iter.next();
+        List<ContextMenuItem> menuItems = this.getMenuItems();
+        for (ContextMenuItem menuItem : menuItems) {
             if (menuItem != null && menuItem.getName() != null && menuItem.getName().equals(name)) {
                 return menuItem;
             }
@@ -111,8 +105,7 @@ public class ContextMenu extends ControlImpl {
      */
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html
-            .append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" onmouseover=\"" + getName() + ".keepShowing();\" onmouseout=\"" + getName() + ".hide();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" onmouseover=\"" + getName() + ".keepShowing();\" onmouseout=\"" + getName() + ".hide();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
         int counter = 0;
 
         for (int i = 0; i < this.getMenuItems().size(); i++) {
