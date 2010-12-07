@@ -11,6 +11,10 @@
   <name>magnolia-core</name>
   <dependencies>
     <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
@@ -81,6 +85,10 @@
       <!-- required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of commons-logging-->
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>

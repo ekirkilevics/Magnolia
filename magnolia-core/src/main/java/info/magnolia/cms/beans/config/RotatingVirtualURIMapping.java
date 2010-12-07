@@ -35,6 +35,8 @@ package info.magnolia.cms.beans.config;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -53,6 +55,8 @@ import org.apache.commons.lang.math.RandomUtils;
  */
 public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
 
+    private static final Logger log = LoggerFactory.getLogger(RotatingVirtualURIMapping.class);
+    
     /**
      * Placeholder that will be replaced by a random number.
      */
@@ -105,10 +109,14 @@ public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
         MappingResult mr = super.mapURI(uri);
 
         if (mr != null) {
-            int randomNumber = RandomUtils.nextInt(end - start) + 1;
-            String randomAsString = StringUtils.leftPad(Integer.toString(randomNumber), padding, '0');
+            if (end > start) {
+                int randomNumber = RandomUtils.nextInt(end - (start - 1)) + start;
+                String randomAsString = StringUtils.leftPad(Integer.toString(randomNumber), padding, '0');
 
-            mr.setToURI(StringUtils.replace(mr.getToURI(), RANDOM_PLACEHOLDER, randomAsString));
+                mr.setToURI(StringUtils.replace(mr.getToURI(), RANDOM_PLACEHOLDER, randomAsString));
+            }else{
+               log.warn("End value must be greater than start value.");
+            }
         }
         return mr;
     }

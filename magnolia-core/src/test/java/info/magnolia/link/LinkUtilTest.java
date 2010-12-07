@@ -57,6 +57,8 @@ public class LinkUtilTest extends BaseLinkTest {
 
     private static final String HTML_WITH_UUIDS = "this is a <a href=\"" + UUID_PATTERN_SIMPLE + "\">test</a>";
 
+    private static final String HTML_WITH_ABSOLUTE_LINK_AND_CONTEXT_PATH = "this is a <a href=\"" + SOME_CONTEXT + HREF_ABSOLUTE_LINK + "\">test</a>";
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -122,13 +124,13 @@ public class LinkUtilTest extends BaseLinkTest {
 
     public void testUUIDToInternalLinks() throws LinkException {
         String res = LinkUtil.convertLinksFromUUIDPattern(HTML_WITH_UUIDS, LinkTransformerManager.getInstance().getEditorLink());
-        assertEquals(HTML_WITH_ABSOLUTE_LINK, res);
+        assertEquals(HTML_WITH_ABSOLUTE_LINK_AND_CONTEXT_PATH, res);
     }
 
     public void testUUIDToRootLinks() throws LinkException {
         String res = LinkUtil.convertLinksFromUUIDPattern("<p>Large article pages have a <a href=\"${link:{uuid:{2a98b29f-b514-4949-9cb3-e1162171a2ca},repository:{website},handle:{/features/special-templates},nodeData:{},extension:{html}}}\">Table Of Contents</a> (<a href=\"${link:{uuid:{},repository:{website},handle:{/},nodeData:{},extension:{html}}}\">TOC</a>) navigation.</p>", LinkTransformerManager.getInstance().getEditorLink());
         // the real content will actually generate link to / instead of that to /jcr:root.html
-        assertEquals("<p>Large article pages have a <a href=\"/features/special-templates.html\">Table Of Contents</a> (<a href=\"/jcr:root.html\">TOC</a>) navigation.</p>", res);
+        assertEquals("<p>Large article pages have a <a href=\"/some-context/features/special-templates.html\">Table Of Contents</a> (<a href=\"/some-context/jcr:root.html\">TOC</a>) navigation.</p>", res);
     }
 
     public void testUUIDToRelativeLinks() throws LinkException {

@@ -3,7 +3,7 @@
     setTimeout("window.location.replace('${contextPath}${installerPath}/status')", 3000);
 </script>
 <div id="content">
-  <h2>In progress ... </h2>
+  <h2>${status.getDeltaTypesDescription(['Installation', 'Update', 'Installation and updates'])} in progress ... </h2>
   [@progress /]
   [@contextMessages /]
 </div>

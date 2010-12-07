@@ -35,113 +35,55 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.util.RequestDispatchUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import java.io.IOException;
-import java.net.URL;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Handle redirects configured using VirtualURIMappings.
+ *
  * @author Fabrizio Giustina
  * @version $Id$
+ * @see info.magnolia.cms.beans.config.VirtualURIMapping
  */
 public class VirtualUriFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(VirtualUriFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         String targetUri = getURIMapping(aggregationState.getCurrentURI());
 
-        if (StringUtils.isNotEmpty(targetUri)) {
-            if (!response.isCommitted()) {
-
-                if (targetUri.startsWith("redirect:")) {
-                    try {
-                        String redirectUrl = StringUtils.substringAfter(targetUri, "redirect:");
-
-                        if (isInternal(redirectUrl)) {
-                            redirectUrl = request.getContextPath() + redirectUrl;
-                        }
-
-                        response.sendRedirect(redirectUrl);
-                        return;
-                    }
-                    catch (IOException e) {
-                        log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
-                    }
-                } else if (targetUri.startsWith("permanent:")) {
-                    String permanentUrl = StringUtils.substringAfter(targetUri, "permanent:");
-
-                    final String requestScheme = request.getScheme();
-                    if(isInternal(permanentUrl)){
-                        int serverPort = request.getServerPort();
-                        if((serverPort == 80 && "http".equals(requestScheme)) ||
-                           (serverPort == 443 && "https".equals(requestScheme))){
-                            permanentUrl = new URL(
-                                request.getScheme(),
-                                request.getServerName(),
-                                request.getContextPath() + permanentUrl).toExternalForm();
-                        } else {
-                            permanentUrl = new URL(
-                                request.getScheme(),
-                                request.getServerName(),
-                                serverPort,
-                                request.getContextPath() + permanentUrl).toExternalForm();
-                        }
-                    }
-
-                    response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                    response.setHeader("Location", permanentUrl);
-                    return;
-                } else if (targetUri.startsWith("forward:")) {
-                    targetUri = StringUtils.substringAfter(targetUri, "forward:");
-                    try {
-                        // TODO: solves MAGNOLIA-2015 but should be solved by implementing MAGNOLIA-2027
-                        if(targetUri.endsWith(".jsp")){
-                            request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
-                        }
-                        request.getRequestDispatcher(targetUri).forward(request, response);
-                        return;
-                    }
-                    catch (Exception e) {
-                        log.error("Failed to forward to {} - {}:{}", new Object[]{
-                            targetUri,
-                            ClassUtils.getShortClassName(e.getClass()),
-                            e.getMessage()});
-                    }
-                } else {
-                    aggregationState.setCurrentURI(targetUri);
-                }
-            }
-            else {
-                log.warn(
-                    "Response is already committed, cannot forward to {} (original URI was {})",
-                    targetUri,
-                    request.getRequestURI());
-            }
-
+        if (StringUtils.isEmpty(targetUri)) {
+            chain.doFilter(request, response);
+            return;
         }
 
-        chain.doFilter(request, response);
-    }
+        if (response.isCommitted()) {
+            log.warn(
+                    "Response is already committed, cannot apply virtual URI {} (original URI was {})",
+                    targetUri,
+                    request.getRequestURI());
+            chain.doFilter(request, response);
+            return;
+        }
 
-    protected boolean isInternal(String url) {
-        return !url.startsWith("http://") && !url.startsWith("https://");
+        if (RequestDispatchUtil.dispatch(targetUri, request, response))
+            return;
+
+        aggregationState.setCurrentURI(targetUri);
+        chain.doFilter(request, response);
     }
 
     /**
@@ -150,5 +92,4 @@ public class VirtualUriFilter extends AbstractMgnlFilter {
     protected String getURIMapping(String currentURI) {
         return VirtualURIManager.getInstance().getURIMapping(currentURI);
     }
-
 }

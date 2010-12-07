@@ -35,6 +35,7 @@ package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
@@ -54,7 +55,7 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
-    
+
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/core.xml";
     }
@@ -79,8 +80,10 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
+
 
         // prior to 3.6.4, the mime types for flv and svg did not exit
         // prior to 3.6.4, the mime types for png and swf were incorrect
@@ -97,6 +100,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a 3pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
@@ -115,6 +119,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
@@ -141,6 +146,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
 
@@ -161,6 +167,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
@@ -189,6 +196,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
@@ -211,6 +219,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
@@ -239,6 +248,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         // fake a pre-install:
         setupConfigProperty("/server/filters/multipartRequest", "enable", "true");
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute");
         setupConfigProperty("/server/filters/servlets/log4j/mappings/--magnolia-log4j-", "pattern", "/.magnolia/log4j*");
         setupConfigProperty("server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl");
         setupProperty(ContentRepository.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", null);
@@ -265,8 +275,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
      * test unicode normalization filter and the new filter ordering (update version to 4.3).
      */
     public void testUnicodeNormalizerAndFilterOrderOnUpdateFrom410() throws ModuleManagementException, RepositoryException {
+        setupConfigNode("/server/filters/");
+        setupConfigNode("/server/filters/bypasses/dontDispatchOnForwardAttribute", ItemType.CONTENTNODE);
         setupConfigProperty("/server/rendering/freemarker", "foo", "bar"); // this was bootstrapped starting from 4.0
-
         setupConfigProperty("/server/filters/context", "enable", "true");
         setupConfigProperty("/server/filters/contentType", "enable", "true");
         setupConfigProperty("/server/filters/login", "enable", "true");

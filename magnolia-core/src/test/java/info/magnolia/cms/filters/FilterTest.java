@@ -52,6 +52,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.easymock.EasyMock;
+
 
 /**
  * @author fgiust
@@ -141,9 +143,10 @@ public class FilterTest extends MgnlTestCase {
         // log statement
         expect(request.getRequestURI()).andReturn("blah").anyTimes();
         expect(request.getPathInfo()).andReturn("bleh").anyTimes();
+        expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
         WebContext webCtx = createMock(WebContext.class);
-        
+
         AggregationState aggState = createMock(AggregationState.class);
         expect(aggState.getCurrentURI()).andReturn(".magnolia/something.html");
         expect(webCtx.getAggregationState()).andStubReturn(aggState);
@@ -153,6 +156,10 @@ public class FilterTest extends MgnlTestCase {
         HttpServletResponse response = createMock(HttpServletResponse.class);
         FilterChain chain = createMock(FilterChain.class);
 
+        // in the main filter
+        webCtx.push(request, response);
+        webCtx.pop();
+        // in the chain
         webCtx.push(request, response);
         webCtx.pop();
         webCtx.push(request, response);

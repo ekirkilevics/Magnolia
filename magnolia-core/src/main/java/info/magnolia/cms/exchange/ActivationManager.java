@@ -54,6 +54,7 @@ public interface ActivationManager {
      * @deprecated There's no real need to expose this as such a location is an implementation detail.
      * @return
      */
+    @Deprecated
     public String getConfigPath();
 
     public boolean hasAnyActiveSubscriber();

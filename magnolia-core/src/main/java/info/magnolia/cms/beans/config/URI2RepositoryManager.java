@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Maps uri prefixes to repositories.
- * 
+ *
  * @author Philipp Bracher
  * @version $Id$
  */
@@ -63,7 +63,7 @@ public class URI2RepositoryManager {
     /**
      * The mappings.
      */
-    private Collection<URI2RepositoryMapping> mappings;
+    private final Collection<URI2RepositoryMapping> mappings;
 
     public URI2RepositoryManager() {
         mappings = new TreeSet<URI2RepositoryMapping>(getMappingComparator());
@@ -143,5 +143,4 @@ public class URI2RepositoryManager {
     public Collection<URI2RepositoryMapping> getMappings() {
         return this.mappings;
     }
-
 }

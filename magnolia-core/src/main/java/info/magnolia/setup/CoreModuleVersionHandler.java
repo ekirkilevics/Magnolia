@@ -55,6 +55,8 @@ import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
+import info.magnolia.nodebuilder.task.ErrorHandling;
+import info.magnolia.nodebuilder.task.NodeBuilderTask;
 import info.magnolia.setup.for3_5.GenericTasks;
 import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
@@ -63,6 +65,7 @@ import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
 import info.magnolia.setup.for4_3.UpdateUserPermissions;
+import static info.magnolia.nodebuilder.Ops.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +88,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
     private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
             ContentRepository.CONFIG, "/server/rendering/freemarker", "sharedVariables", ItemType.CONTENTNODE.getSystemName());
+    private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
 
     public CoreModuleVersionHandler() {
         super();
@@ -174,10 +178,33 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 ))
                 .addTask(new UpdateUserPermissions())
         );
-        
+
         register(DeltaBuilder.update("4.3.6", "")
                 .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", ContentRepository.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", ItemType.CONTENTNODE.getSystemName())))
                 .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class","Unable to set property class because it already exists"),  new NewPropertyTask("Class", "Creates property class and sets it to class path", ContentRepository.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
+
+        register(DeltaBuilder.update("4.4", "")
+            .addTask(bootstrapWebContainerResources)
+            .addTask(
+                new NodeBuilderTask("Update filter configuration", "Removes the dontDispatchOnForward bypass and adds the dispatching configuration instead", ErrorHandling.strict, ContentRepository.CONFIG,
+                    getNode("server/filters").then(
+                        getNode("bypasses").then(
+                            remove("dontDispatchOnForwardAttribute")),
+                        addNode("dispatching", ItemType.CONTENTNODE).then(
+                            addNode("request").then(
+                                addProperty("toMagnoliaResources", Boolean.TRUE),
+                                addProperty("toWebContainerResources", Boolean.TRUE)),
+                            addNode("error").then(
+                                addProperty("toMagnoliaResources", Boolean.TRUE),
+                                addProperty("toWebContainerResources", Boolean.FALSE)),
+                            addNode("forward").then(
+                                addProperty("toMagnoliaResources", Boolean.TRUE),
+                                addProperty("toWebContainerResources", Boolean.FALSE)),
+                            addNode("include").then(
+                                addProperty("toMagnoliaResources", Boolean.FALSE),
+                                addProperty("toWebContainerResources", Boolean.FALSE))
+                                )))));
+
     }
 
     private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
@@ -199,6 +226,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(auditTrailManagerTask);
         l.add(bootstrapFreemarker);
         l.add(addFreemarkerSharedVariables);
+        l.add(bootstrapWebContainerResources);
         return l;
     }
 

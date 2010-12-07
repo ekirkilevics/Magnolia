@@ -47,7 +47,7 @@ public class EditorLinkTransformer implements LinkTransformer {
 
     protected LinkTransformer binaryTransformer = new AbsolutePathTransformer(true,true,false);
 
-    protected LinkTransformer linkTransformer = new AbsolutePathTransformer(false,true,false);
+    protected LinkTransformer linkTransformer = new AbsolutePathTransformer(true,true,false);
 
     public String transform(Link uuidLink) {
         // TODO use a better way to determine if this is a binary

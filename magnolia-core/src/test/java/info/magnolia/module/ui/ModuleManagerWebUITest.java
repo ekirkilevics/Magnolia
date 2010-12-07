@@ -33,23 +33,29 @@
  */
 package info.magnolia.module.ui;
 
+import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
-import info.magnolia.freemarker.FreemarkerConfig;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import static org.easymock.EasyMock.*;
 
 /**
  *
@@ -62,12 +68,14 @@ public class ModuleManagerWebUITest extends TestCase {
         super.setUp();
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
-        
+
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
 
-        ComponentsTestUtil.setInstance(FreemarkerConfig.class, new FreemarkerConfig());
+        final FreemarkerConfig freemarkerConfig = new FreemarkerConfig();
+        freemarkerConfig.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        ComponentsTestUtil.setInstance(FreemarkerConfig.class, freemarkerConfig);
     }
 
     protected void tearDown() throws Exception {
@@ -154,6 +162,15 @@ public class ModuleManagerWebUITest extends TestCase {
         ctx.error("hoolala", new Exception("booh-ooh!"));
         final ModuleManager moduleManager = createStrictMock(ModuleManager.class);
         final ModuleManager.ModuleManagementState state = new ModuleManager.ModuleManagementState();
+        state.getList().add(new ModuleManager.ModuleAndDeltas(mod1, null, Arrays.<Delta>asList(
+                DeltaBuilder.install(Version.parseVersion("1.0"), "")
+                        .addTask(new WarnTask("a", ""))
+                        .addTask(new WarnTask("b", ""))
+        )));
+        state.getList().add(new ModuleManager.ModuleAndDeltas(mod2, null, Arrays.<Delta>asList(
+                DeltaBuilder.update("1.0", "").addTask(new WarnTask("q", "")),
+                DeltaBuilder.update("1.1", "").addTask(new WarnTask("w", ""))
+        )));
         expect(moduleManager.getStatus()).andReturn(state);
         expect(moduleManager.getInstallContext()).andReturn(ctx);
         final StringWriter out = new StringWriter();

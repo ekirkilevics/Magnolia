@@ -48,7 +48,7 @@ import javax.jcr.RepositoryException;
  * @author pbracher
  * @version $Id$
  */
-public class RecursiveOp extends Ops.AbstractOp {
+public class RecursiveOp extends AbstractNodeOperation {
 
     /**
      * Visits the hierarchy recursively and executes the operations on all nodes excluding meta data and jcr base nodes. The recursion does not stop if a node does not match!
@@ -87,7 +87,7 @@ public class RecursiveOp extends Ops.AbstractOp {
         this.childrenOps = childrenOps;
     }
 
-    Content doExec(Content context, final ErrorHandler errorHandler) throws RepositoryException {
+    protected Content doExec(Content context, final ErrorHandler errorHandler) throws RepositoryException {
         try {
             ContentUtil.visit(context, new ContentUtil.Visitor() {
                 public void visit(Content node) throws Exception {

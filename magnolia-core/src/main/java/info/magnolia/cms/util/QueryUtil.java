@@ -49,6 +49,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 
+
 /**
  * Util to execute queries as simple as possible.
  * @author Philipp Bracher
@@ -56,41 +57,55 @@ import java.util.Collections;
  *
  */
 public class QueryUtil {
+
     private static Logger log = LoggerFactory.getLogger(QueryUtil.class);
 
     /**
      * Executes a query.
      */
-    public static Collection<Content> query(String repository, String statement){
-        return query(repository,statement, Query.SQL);
+    public static Collection<Content> query(String repository, String statement) {
+        return query(repository, statement, Query.SQL);
     }
 
     /**
      * Executes a query.
      */
-    public static Collection<Content> query(String repository, String statement, String language){
-        return query(repository,statement,language, ItemType.NT_BASE);
+    public static Collection<Content> query(String repository, String statement, String language) {
+        return query(repository, statement, language, ItemType.NT_BASE);
+    }
+
+    public static Collection<Content> exceptionThrowingQuery(String repository, String statement, String language, String returnItemType) throws RepositoryException {
+        return exceptionThrowingQuery(repository, statement, language, returnItemType, Long.MAX_VALUE);
     }
 
     /**
      * Executes a query, throwing any exceptions that arise as a result.
      */
-    public static Collection<Content> exceptionThrowingQuery(String repository, String statement, String language, String returnItemType) throws RepositoryException {
+    public static Collection<Content> exceptionThrowingQuery(String repository, String statement, String language, String returnItemType,
+        long maxResultSize) throws RepositoryException {
         QueryManager qm = MgnlContext.getQueryManager(repository);
-        Query query= qm.createQuery(statement, language);
+        Query query = qm.createQuery(statement, language);
+        query.setLimit(maxResultSize);
         QueryResult result = query.execute();
         return result.getContent(returnItemType);
     }
 
-    /**
-     * Executes a query - if an exception is thrown, it is logged and an empty collection is returned.
-     */
-    @SuppressWarnings("unchecked") //Collections.EMPTY_LIST;
     public static Collection<Content> query(String repository, String statement, String language, String returnItemType) {
+        return query(repository, statement, language, returnItemType, Long.MAX_VALUE);
+    }
+
+    /**
+     * Executes a query - if an exception is thrown, it is logged and an empty collection is
+     * returned.
+     */
+    @SuppressWarnings("unchecked")
+    // Collections.EMPTY_LIST;
+    public static Collection<Content> query(String repository, String statement, String language, String returnItemType, long maxResultSize) {
         try {
-            return exceptionThrowingQuery(repository, statement, language, returnItemType);
-        } catch (Exception e) {
-            log.error("can't execute query [" + statement  + "], will return empty collection", e);
+            return exceptionThrowingQuery(repository, statement, language, returnItemType, maxResultSize);
+        }
+        catch (Exception e) {
+            log.error("can't execute query [" + statement + "], will return empty collection", e);
         }
         return Collections.EMPTY_LIST;
     }
@@ -127,7 +142,7 @@ public class QueryUtil {
         calendar.set(Calendar.MILLISECOND, 0);
         StringBuffer str = new StringBuffer("TIMESTAMP '");
         str.append(DateFormatUtils.format(calendar.getTime(), "yyyy-MM-dd'T'HH:mm:ss.SSSZ", calendar.getTimeZone()));
-        str.insert(str.length()-2, ":");
+        str.insert(str.length() - 2, ":");
         str.append("'");
         return str.toString();
     }

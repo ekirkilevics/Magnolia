@@ -69,4 +69,17 @@ public class RequestHeaderUtil {
             throw new IllegalStateException("Failure when attempting to set response header " + name + ": " + value);
         }
     }
+
+    public static void setHeader(final HttpServletResponse response, final String name, final Object value) {
+        if (value instanceof Long) {
+            response.addDateHeader(name, ((Long) value).longValue());
+        } else if (value instanceof Integer) {
+            response.addIntHeader(name, ((Integer) value).intValue());
+        } else if (value instanceof String) {
+            response.addHeader(name, (String) value);
+        } else {
+            throw new IllegalStateException("Unrecognized type for header [" + name + "], value is: " + value);
+        }
+    }
+
 }

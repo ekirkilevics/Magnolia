@@ -88,8 +88,9 @@ h3 {
     font-size: 22px;
     text-decoration: none;
     float: right;
-    margin: 30px 40px 0 0;
-    padding: 14px 75px 32px 20px;
+    margin: 30px 0 0 0;
+    padding: 14px 0 32px 20px;
+    width: 306px;
     background-repeat: no-repeat;
 }
 
@@ -163,6 +164,7 @@ h3 {
     margin: 0 0 5px 0;
     padding-left: 0;
     font-size: 9pt;
+    white-space: pre-wrap;
 }
 
 .condition {
@@ -172,6 +174,10 @@ h3 {
 .taskDescription, .conditionDescription {
     color: #666;
     margin-left: 0.5em;
+}
+
+.messages .warning {
+    color: #146993;
 }
 
 .messages .error {

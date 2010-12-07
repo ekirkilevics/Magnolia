@@ -40,9 +40,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
+import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.core.AbstractContent;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.NodeData;
 
 
@@ -83,7 +85,11 @@ public class ExtendingContentWrapper extends ContentWrapper {
                 NodeData extendingNodeData = getWrappedContent().getNodeData(EXTENDING_NODE_DATA);
 
                 // check if override is not forced
-                if (EXTENDING_NODE_DATA_OVERRIDE.equals(extendingNodeData.getString())) {
+                String extendedNode = extendingNodeData.getString();
+                if (StringUtils.isBlank(extendedNode)) {
+                    // there is nothing to do, extending node is not define ... probably caught in middle of config
+                    extending = false;
+                } else if (EXTENDING_NODE_DATA_OVERRIDE.equals(extendedNode)) {
                     extending = false;
                 } else {
                     // support multiple inheritance
@@ -129,6 +135,18 @@ public class ExtendingContentWrapper extends ContentWrapper {
         return this.extending;
     }
 
+    @Override
+    public Content getWrappedContent() {
+        Content wrapped = super.getWrappedContent();
+        if (wrapped instanceof ExtendingContentWrapper) {
+            ExtendingContentWrapper wrappedECW = (ExtendingContentWrapper) wrapped;
+            if (!wrappedECW.extending) {
+                // wrapped but not extending ==> should not be wrapped in the first place but decision is made too late - in init<> of the ECW
+                return ((ExtendingContentWrapper) wrapped).getWrappedContent();
+            }
+        }
+        return super.getWrappedContent();
+    }
     @Override
     public boolean hasContent(String name) throws RepositoryException {
         if (getWrappedContent().hasContent(name)) {
@@ -178,6 +196,19 @@ public class ExtendingContentWrapper extends ContentWrapper {
 
     @Override
     public NodeData getNodeData(String name) {
+        if (EXTENDING_NODE_DATA.equals(name)) {
+            return new DefaultNodeData(extendedContent, name) {
+                @Override
+                public boolean isExist() {
+                    return false;
+                }
+
+                @Override
+                public void save() throws RepositoryException {
+                    // do nothing
+                }
+            };
+        }
         try {
             if (getWrappedContent().hasNodeData(name)) {
                 return wrap(getWrappedContent().getNodeData(name));
@@ -195,8 +226,29 @@ public class ExtendingContentWrapper extends ContentWrapper {
     }
 
     @Override
+    public boolean hasNodeData(String name) throws RepositoryException {
+        if (EXTENDING_NODE_DATA.equals(name)) {
+            return false;
+        }
+        return super.hasNodeData(name);
+    }
+
+    @Override
     public Collection<NodeData> getNodeDataCollection() {
-        Collection<NodeData> directChildren = getWrappedContent().getNodeDataCollection();
+        final Content wrapped = getWrappedContent();
+        Collection<NodeData> directChildren = wrapped.getNodeDataCollection();
+        try {
+            if (wrapped.hasNodeData(EXTENDING_NODE_DATA)) {
+                for (NodeData child : directChildren) {
+                    if (EXTENDING_NODE_DATA.equals(child.getName())) {
+                        directChildren.remove(child);
+                        break;
+                    }
+                }
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException("Can't read nodedata collection from node [" + wrapped.getHandle() + "]", e);
+        }
         if (extending) {
             Collection<NodeData> inheritedChildren = extendedContent.getNodeDataCollection();
             // sort by name
@@ -214,6 +266,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
         }
     }
 
+    @Override
     protected Content wrap(Content node) {
         // get the same subnode of the extended content
         try {
@@ -226,7 +279,7 @@ public class ExtendingContentWrapper extends ContentWrapper {
         catch (RepositoryException e) {
             throw new RuntimeException("Can't wrap " + node, e);
         }
-        return new ExtendingContentWrapper(node);
+        return wrapIfNeeded(node);
     }
 
 }

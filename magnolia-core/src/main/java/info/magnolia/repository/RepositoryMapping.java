@@ -52,9 +52,9 @@ public class RepositoryMapping {
 
     private boolean loadOnStartup;
 
-    private Map parameters;
+    private Map<String, String> parameters;
 
-    private Collection workspaces = new ArrayList();
+    private Collection<String> workspaces = new ArrayList<String>();
 
     public RepositoryMapping() {
     }
@@ -83,19 +83,19 @@ public class RepositoryMapping {
         this.loadOnStartup = loadOnStartup;
     }
 
-    public Map getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map parameters) {
+    public void setParameters(Map<String, String> parameters) {
         this.parameters = parameters;
     }
 
-    public Collection getWorkspaces() {
+    public Collection<String> getWorkspaces() {
         return workspaces;
     }
 
-    public void setWorkspaces(Collection workspaces) {
+    public void setWorkspaces(Collection<String> workspaces) {
         this.workspaces = workspaces;
     }
 

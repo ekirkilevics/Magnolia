@@ -46,8 +46,14 @@ import org.apache.commons.lang.ArrayUtils;
  *
  */
 public class VoterSet extends BaseVoterImpl {
+
     /**
-     * If 0 the outcome of the voting is use.
+     * AND/OR or null for the default voting. See {@link #getVoting()}.
+     */
+    String op;
+
+    /**
+     * If 0 the outcome of the voting is used.
      */
     int level;
 
@@ -58,7 +64,7 @@ public class VoterSet extends BaseVoterImpl {
 
     private Voter[] voters = new Voter[0];
 
-    private Voting voting = Voting.Factory.getDefaultVoting();
+    private Voting voting;
 
     public Voter[] getVoters() {
         return voters;
@@ -87,6 +93,17 @@ public class VoterSet extends BaseVoterImpl {
     }
 
     public Voting getVoting() {
+        if(voting == null){
+            if("AND".equalsIgnoreCase(op)){
+                voting = Voting.AND;
+            }
+            else if("OR".equalsIgnoreCase(op)){
+                voting = Voting.OR;
+            }
+            else{
+                voting = Voting.HIGHEST_LEVEL;
+            }
+        }
         return voting;
     }
 
@@ -112,5 +129,13 @@ public class VoterSet extends BaseVoterImpl {
 
     public String toString() {
         return super.toString() + " set: " + (not ? "not " : "") + ArrayUtils.toString(voters);
+    }
+
+    public String getOp() {
+        return op;
+    }
+
+    public void setOp(String op) {
+        this.op = op;
     }
 }

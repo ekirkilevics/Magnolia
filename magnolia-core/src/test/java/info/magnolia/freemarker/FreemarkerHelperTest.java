@@ -652,14 +652,28 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContentWithoutCheckingContext("Coco: FooBar says hello", new HashMap(), "test.ftl");
     }
 
-    public void testEnums() throws Exception {
+    public void testEnumMembersCanBeUsedInTemplates() throws Exception {
         fmConfig.addSharedVariable("chalala", Chalala.class);
-        // TODO : not really
-        // tplLoader.putTemplate("test.ftl", "3: ${chalala.three}");
-        // TODO, but:
-        tplLoader.putTemplate("test.ftl", "list enum values: [#list chalala.enumConstants as val]${val} [/#list]");
+        tplLoader.putTemplate("test.ftl", "3: ${chalala.three}");
+        assertRendereredContentWithoutCheckingContext("3: three", new HashMap(), "test.ftl");
+    }
 
-        assertRendereredContentWithoutCheckingContext("list enum values: one two three ", new HashMap(), "test.ftl");
+    public void testEnumCanBeComparedWith() throws Exception {
+        fmConfig.addSharedVariable("chalala", Chalala.class);
+        fmConfig.addSharedVariable("three", Chalala.three);
+        fmConfig.addSharedVariable("two", Chalala.two);
+        tplLoader.putTemplate("test.ftl", "${(three == chalala.three)?string}, ${(two == chalala.three)?string}, ${(three == chalala.two)?string}, ${(three != chalala.two)?string}");
+        assertRendereredContentWithoutCheckingContext("true, false, false, true", new HashMap(), "test.ftl");
+    }
+
+    public void testEnumCanBeListed() throws Exception {
+        fmConfig.addSharedVariable("chalala", Chalala.class);
+        tplLoader.putTemplate("test.ftl", "" +
+                "list enum by keys: [#list chalala?keys as val]${val} [/#list]\n" +
+                "list enum by values: [#list chalala?values as val]${val} [/#list]");
+        assertRendereredContentWithoutCheckingContext("" +
+                "list enum by keys: one two three \n" +
+                "list enum by values: one two three ", new HashMap(), "test.ftl");
     }
 
     public void testCanAccessEnumPropertiesOfVariables() throws Exception {

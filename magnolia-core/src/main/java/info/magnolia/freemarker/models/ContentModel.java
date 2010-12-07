@@ -88,17 +88,19 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
     public TemplateModel get(String key) throws TemplateModelException {
         final Object result;
 
-        if (key.equals("@handle")) {
-            result = content.getHandle();
-        } else if (key.equals("@uuid")) {
-            result = content.getUUID();
-        } else if (key.equals("@name")) {
-            result = content.getName();
-        } else if (key.equalsIgnoreCase("metaData")) {
-            result = content.getMetaData();
-        } else {
-            // try for node data or child node
-            try {
+        try {
+            if (key.equals("@handle")) {
+                result = content.getHandle();
+            } else if (key.equals("@uuid")) {
+                result = content.getUUID();
+            } else if (key.equals("@name")) {
+                result = content.getName();
+            } else if (key.equals("@level") || key.equals("@depth")) {
+                result = content.getLevel();
+            } else if (key.equalsIgnoreCase("metaData")) {
+                result = content.getMetaData();
+            } else {
+                // try for node data or child node
                 if (content.hasNodeData(key)) {
                     result = content.getNodeData(key);
                 } else {
@@ -108,9 +110,9 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
                         result = null;
                     }
                 }
-            } catch (RepositoryException e) {
-                throw new TemplateModelException(e);
             }
+        } catch (RepositoryException e) {
+            throw new TemplateModelException(e);
         }
         return wrapper.wrap(result);
     }

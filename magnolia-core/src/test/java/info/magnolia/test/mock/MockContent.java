@@ -94,6 +94,8 @@ public class MockContent extends AbstractContent {
 
     private Map<String, MockContent> children = new ListOrderedMap();
 
+    private List<String> mixins = new ArrayList<String>();
+
     private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
 
     private Node node;
@@ -419,7 +421,7 @@ public class MockContent extends AbstractContent {
     }
 
     public void addMixin(String type) throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
+        this.mixins.add(type);
     }
 
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -513,7 +515,9 @@ public class MockContent extends AbstractContent {
     public void updateMetaData() throws RepositoryException, AccessDeniedException {
     }
 
-
+    public boolean hasMixin(String mixinName) throws RepositoryException {
+        return mixins.contains(mixinName);
+    }
     /**
      * Filters a name of a NodeData or Content instance according to the same rules applied by Jackrabbit
      * in the Property and Node interfaces.
@@ -550,4 +554,6 @@ public class MockContent extends AbstractContent {
         }
         return false;
     }
+
+
 }

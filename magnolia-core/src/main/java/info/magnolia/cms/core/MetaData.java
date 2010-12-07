@@ -107,7 +107,7 @@ public class MetaData {
             try {
                 log.debug("{} does not support MetaData, check node type definition of {}", workingNode.getPath(), workingNode.getPrimaryNodeType().getName());
             } catch (RepositoryException re) {
-                    // should never come here
+                // should never come here
             }
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -141,6 +141,7 @@ public class MetaData {
      * @return property iterator
      * @deprecated since 4.0 - not used.
      */
+    @Deprecated
     public PropertyIterator getProperties() {
         if (node == null) {
             return null;
@@ -290,11 +291,15 @@ public class MetaData {
     }
 
     /**
-     * Part of metadata, get last modified date of the current node.
-     * @return Calendar
+     * Get last modified date of the node to which this meta data belongs or creation date in case content was not modified since.
+     * @return Calendar when last modification date can't be found.
      */
     public Calendar getModificationDate() {
-        return getDateProperty(this.getInternalPropertyName(LAST_MODIFIED));
+        Calendar modDate = getDateProperty(this.getInternalPropertyName(LAST_MODIFIED));
+        if (modDate == null) {
+            modDate = getCreationDate();
+        }
+        return modDate;
     }
 
     /**
@@ -353,6 +358,7 @@ public class MetaData {
      * @param value
      * @deprecated since 4.0 - not used - template type is determined by template definition
      */
+    @Deprecated
     public void setTemplateType(String value) throws AccessDeniedException {
         allowUpdate();
         setProperty(this.getInternalPropertyName(TEMPLATE_TYPE), value);
@@ -481,6 +487,9 @@ public class MetaData {
         }
     }
 
+    /**
+     * Gets date property or null if such property doesn't exist. Do not use this method for checking existence of the property.
+     */
     public Calendar getDateProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
@@ -488,7 +497,7 @@ public class MetaData {
             return property.getDate();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -506,7 +515,7 @@ public class MetaData {
             return property.getBoolean();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -524,7 +533,7 @@ public class MetaData {
             return property.getDouble();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -542,7 +551,7 @@ public class MetaData {
             return property.getLong();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -565,7 +574,7 @@ public class MetaData {
             return property.getString();
         }
         catch (PathNotFoundException re) {
-            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
@@ -594,6 +603,7 @@ public class MetaData {
      *
      * @deprecated since 4.0 - not used
      */
+    @Deprecated
     public boolean hasProperty(String name) {
         try {
             return this.node.hasProperty(this.getInternalPropertyName(name));
@@ -604,17 +614,18 @@ public class MetaData {
         return false;
     }
 
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("title", this.getTitle()) //$NON-NLS-1$
-            .append("template", this.getTemplate()) //$NON-NLS-1$
-            .append("authorId", this.getAuthorId()) //$NON-NLS-1$
-            .append("label", this.getLabel()) //$NON-NLS-1$
-            .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
-            .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
-            .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
-            .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
-            .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
-            .toString();
+        .append("template", this.getTemplate()) //$NON-NLS-1$
+        .append("authorId", this.getAuthorId()) //$NON-NLS-1$
+        .append("label", this.getLabel()) //$NON-NLS-1$
+        .append("activatorId", this.getActivatorId()) //$NON-NLS-1$
+        .append("isActivated", this.getIsActivated()) //$NON-NLS-1$
+        .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
+        .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
+        .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
+        .toString();
     }
 
 }

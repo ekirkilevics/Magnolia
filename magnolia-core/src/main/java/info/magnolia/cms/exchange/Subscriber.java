@@ -54,9 +54,9 @@ public interface Subscriber {
 
     public void setActive(boolean active);
 
-    public void setSubscriptions(Collection subscriptions);
+    public void setSubscriptions(Collection<Subscription> subscriptions);
 
-    public Collection getSubscriptions();
+    public Collection<Subscription> getSubscriptions();
 
     public void addSubscriptions(Subscription subscription);
 
@@ -68,4 +68,11 @@ public interface Subscriber {
 
     public String getAuthenticationMethod();
 
+    public int getConnectTimeout();
+
+    public void setConnectTimeout(int timeoutMillis);
+
+    public int getReadTimeout();
+
+    public void setReadTimeout(int timeoutMillis);
 }

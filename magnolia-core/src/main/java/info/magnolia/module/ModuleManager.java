@@ -37,10 +37,14 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaType;
 import info.magnolia.objectfactory.Components;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * ModuleManager is responsible for the lifecycle of modules.
@@ -92,6 +96,7 @@ public interface ModuleManager {
      */
     public final static class ModuleManagementState {
         private final List<ModuleAndDeltas> list;
+        private EnumSet<DeltaType> cachedDeltaTypes;
 
         public ModuleManagementState() {
             this.list = new ArrayList<ModuleAndDeltas>();
@@ -107,6 +112,52 @@ public interface ModuleManager {
 
         public List<ModuleAndDeltas> getList() {
             return list;
+        }
+
+        /**
+         * Returns one of the given Strings depending on the combination of delta types
+         * in the registered deltas. Typical use:
+         * <code>
+         * getDeltaTypesDescription({"modules need to be installed", "modules need to be installed", "modules need to be installed or updated"});
+         * </code>
+         * @param texts
+         * @return
+         */
+        public String getDeltaTypesDescription(String[] texts) {
+            if (texts == null || texts.length != 3) {
+                throw new IllegalStateException("Please pass an array of 3 strings.");
+            }
+
+            // we can cache this, since this method is only used after all modules' deltas have been registered.
+            if (cachedDeltaTypes == null) {
+                cachedDeltaTypes = getDeltaTypes();
+            }
+
+            if (cachedDeltaTypes.size() == 1) {
+                if (cachedDeltaTypes.contains(DeltaType.install)) {
+                    return texts[0];
+                } else if (cachedDeltaTypes.contains(DeltaType.update)) {
+                    return texts[1];
+                }
+            } else if (cachedDeltaTypes.size() == 2) {
+                if (cachedDeltaTypes.containsAll(EnumSet.<DeltaType>of(DeltaType.install, DeltaType.update))) {
+                    return texts[2];
+                }
+            }
+            throw new IllegalStateException("Unhandled delta types combination: " + cachedDeltaTypes);
+        }
+
+        protected EnumSet<DeltaType> getDeltaTypes() {
+            if (list.isEmpty()) {
+                throw new IllegalStateException("No registered deltas");
+            }
+            final Set<DeltaType> types = new HashSet<DeltaType>();
+            for (ModuleAndDeltas moduleAndDeltas : list) {
+                for (Delta delta : moduleAndDeltas.getDeltas()) {
+                    types.add(delta.getType());
+                }
+            }
+            return EnumSet.copyOf(types);
         }
     }
 

@@ -556,11 +556,14 @@ public class DefaultContent extends AbstractContent {
 
     public void addMixin(String type) throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.SET);
-        if (this.node.canAddMixin(type)) {
-            this.node.addMixin(type);
+        // TODO: there seems to be bug somewhere as we are able to add mixins even when the method below returns false
+        if (!this.node.canAddMixin(type)) {
+            log.debug("Node - " + this.node.getPath() + " does not allow mixin type - " + type); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        else {
-            log.error("Node - " + this.node.getPath() + " does not allow mixin type - " + type); //$NON-NLS-1$ //$NON-NLS-2$
+        try {
+            this.node.addMixin(type);
+        } catch (Exception e) {
+            log.error("Failed to add  mixin type - " + type + " to a node " + this.node.getPath()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -620,5 +623,16 @@ public class DefaultContent extends AbstractContent {
         return false;
     }
 
+    public boolean hasMixin(String mixinName) throws RepositoryException {
+        if (StringUtils.isBlank(mixinName)) {
+            throw new IllegalArgumentException("Mixin name can't be empty.");
+        }
+        for (NodeType type : getMixinNodeTypes()) {
+            if (mixinName.equals(type.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 

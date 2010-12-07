@@ -35,7 +35,6 @@ package info.magnolia.cms.filters;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -46,6 +45,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.cms.util.CustomFilterConfig;
+import info.magnolia.cms.util.ServletUtils;
 
 /**
  * A single filter which in turn executes a chain of other filters.
@@ -53,6 +54,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class CompositeFilter extends AbstractMgnlFilter {
+
     private static final Logger log = LoggerFactory.getLogger(CompositeFilter.class);
 
     private MgnlFilter[] filters = new MgnlFilter[0];
@@ -80,12 +82,10 @@ public class CompositeFilter extends AbstractMgnlFilter {
      * The first time called by the main filter.
      */
     public void initFilters(FilterConfig filterConfig) {
-        for (int j = 0; j < filters.length; j++) {
-            MgnlFilter filter = filters[j];
-
+        for (MgnlFilter filter : filters) {
             try {
                 log.info("Initializing filter [{}]", filter.getName());
-                filter.init(filterConfig);
+                filter.init(new CustomFilterConfig(filter.getName(), filterConfig.getServletContext(), ServletUtils.initParametersToMap(filterConfig)));
             }
             catch (Exception e) {
                 log.error("Error initializing filter [" + filter.getName() + "]", e);
@@ -94,11 +94,13 @@ public class CompositeFilter extends AbstractMgnlFilter {
     }
 
     public void destroy() {
-        for (int j = 0; j < filters.length; j++) {
-            Filter filter = filters[j];
-            filter.destroy();
+        for (MgnlFilter filter : filters) {
+            try {
+                filter.destroy();
+            } catch (Exception e) {
+                log.error("Error destroying filter [" + filter.getName() + "]", e);
+            }
         }
         filters = new MgnlFilter[0];
     }
-
 }

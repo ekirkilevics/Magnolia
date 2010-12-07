@@ -1,7 +1,10 @@
 [#include "ModuleManagerWebUI.header.html" /]
 <div id="content">
-<h2>Magnolia needs to be updated.</h2>
+<h2>Magnolia modules need to be ${status.getDeltaTypesDescription(['installed', 'updated', 'installed or updated'])}.</h2>
 <p>If you are an administrator, point your browser to <a href="${contextPath}${installerPath}">${contextPath}/.magnolia/installer</a></p>
+<!--
+  THIS PAGE IS NOT USED ANYMORE
+-->
 </div>
 
 [#include "ModuleManagerWebUI.footer.html" /]

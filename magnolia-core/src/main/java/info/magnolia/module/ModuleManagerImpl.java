@@ -236,7 +236,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 for (Condition cond : conditions) {
                     if (!cond.check(installContext)) {
                         conditionsChecked = false;
-                        installContext.info(cond.getDescription());
+                        installContext.warn(cond.getDescription());
                     }
                 }
             }

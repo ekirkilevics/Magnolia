@@ -33,17 +33,23 @@
  */
 package info.magnolia.voting.voters;
 
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
+
 import javax.servlet.http.HttpServletRequest;
 
 
 /**
  * This voter returns true if the DONT_DISPATCH_ON_FORWARD_ATTRIBUTE attribute is set in the request.
+ * @deprecated since 4.4, use {@link WebContainerResources} instead
  * @author philipp
  * @version $Id$
  */
 public class DontDispatchOnForwardAttributeVoter extends AbstractBoolVoter {
 
-    public static final String DONT_DISPATCH_ON_FORWARD_ATTRIBUTE = DontDispatchOnForwardAttributeVoter.class.getName();
+    /**
+     * @deprecated since 4.4, should not be used anymore, replaced by the {@link WebContainerResourcesImpl#WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE}.
+     */
+    public static final String DONT_DISPATCH_ON_FORWARD_ATTRIBUTE = WebContainerResourcesImpl.WEB_CONTAINER_RESOURCE_MARKER_ATTRIBUTE;
 
     protected boolean boolVote(Object value) {
         HttpServletRequest request = (HttpServletRequest) value;

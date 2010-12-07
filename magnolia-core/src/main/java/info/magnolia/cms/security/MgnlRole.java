@@ -74,8 +74,8 @@ public class MgnlRole implements Role {
                 HierarchyManager hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_ROLES);
                 String nodename = Path.getUniqueLabel(hm, aclNode.getHandle(), "0");
                 Content node = aclNode.createContent(nodename, ItemType.CONTENTNODE);
-                node.createNodeData("path").setValue(path);
-                node.createNodeData("permissions").setValue(String.valueOf(permission));
+                node.setNodeData("path", path);
+                node.setNodeData("permissions", permission);
                 roleNode.save();
             }
         }
@@ -95,7 +95,7 @@ public class MgnlRole implements Role {
             for (Content child : children) {
                 if (child.getNodeData("path").getString().equals(path)) {
                     if (permission == MgnlRole.PERMISSION_ANY
-                        || child.getNodeData("permissions").getLong() == permission) {
+                            || child.getNodeData("permissions").getLong() == permission) {
                         child.delete();
                     }
                 }
@@ -111,7 +111,7 @@ public class MgnlRole implements Role {
      * Get the ACL node for the current role node.
      */
     private Content getAclNode(String repository) throws RepositoryException, PathNotFoundException,
-        AccessDeniedException {
+    AccessDeniedException {
         Content aclNode;
         if (!roleNode.hasContent("acl_" + repository)) {
             aclNode = roleNode.createContent("acl_" + repository, ItemType.CONTENTNODE);
@@ -130,7 +130,7 @@ public class MgnlRole implements Role {
         for (Content child : children) {
             if (child.getNodeData("path").getString().equals(path)) {
                 if (permission == MgnlRole.PERMISSION_ANY
-                    || child.getNodeData("permissions").getLong() == permission) {
+                        || child.getNodeData("permissions").getLong() == permission) {
                     return true;
                 }
             }

@@ -34,6 +34,7 @@
 package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
@@ -43,7 +44,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -53,6 +56,7 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -99,6 +103,8 @@ public final class CopyUtil {
             this.removeProperties(root);
             // copy root properties
             this.updateProperties(source, root);
+
+            this.updateNodeTypes(source, root);
             root.save();
         }
         catch (ItemNotFoundException e) {
@@ -124,6 +130,25 @@ public final class CopyUtil {
         this.removeNonExistingChildNodes(source, root, filter);
     }
 
+    private void updateNodeTypes(Content source, Content root) throws RepositoryException {
+        List<String> targetNodeTypes = new ArrayList<String>();
+        for (NodeType t : root.getMixinNodeTypes()) {
+            targetNodeTypes.add(t.getName());
+        }
+        NodeType[] nodeTypes = source.getMixinNodeTypes();
+        for (NodeType type : nodeTypes) {
+            root.addMixin(type.getName());
+            targetNodeTypes.remove(type.getName());
+        }
+        // remove all mixins not found in the original except MIX_VERSIONABLE
+        for (String nodeType : targetNodeTypes) {
+            if (ItemType.MIX_VERSIONABLE.equals(nodeType)) {
+                continue;
+            }
+            root.removeMixin(nodeType);
+        }
+    }
+
     /**
      * Copy source to destination using the provided filter.
      * @param source node in version store
@@ -138,13 +163,31 @@ public final class CopyUtil {
         this.copyAllChildNodes(source, destination, filter);
         // remove all non existing nodes
         this.removeNonExistingChildNodes(source, destination, filter);
+
+        this.removeNonExistingMixins(source, destination);
+    }
+
+    private void removeNonExistingMixins(Content source, Content destination) throws RepositoryException {
+        List<String> destNodeTypes = new ArrayList<String>();
+        // has to match mixin names as mixin instances to not equal()
+        for (NodeType nt : destination.getMixinNodeTypes()) {
+            destNodeTypes.add(nt.getName());
+        }
+        // remove all that still exist in source
+        for (NodeType nt :source.getMixinNodeTypes()) {
+            destNodeTypes.remove(nt.getName());
+        }
+        // un-mix the rest
+        for (String type : destNodeTypes) {
+            destination.removeMixin(type);
+        }
     }
 
     /**
      * Recursively removes all child nodes from node using specified filter.
      */
     private void removeNonExistingChildNodes(Content source, Content destination, Content.ContentFilter filter)
-        throws RepositoryException {
+    throws RepositoryException {
         // collect all uuids from the source node hierarchy using the given filter
         Iterator children = destination.getChildren(filter).iterator();
         while (children.hasNext()) {
@@ -176,7 +219,7 @@ public final class CopyUtil {
      * Copy all child nodes from node1 to node2.
      */
     private void copyAllChildNodes(Content node1, Content node2, Content.ContentFilter filter)
-        throws RepositoryException {
+    throws RepositoryException {
         Iterator children = node1.getChildren(filter).iterator();
         while (children.hasNext()) {
             Content child = (Content) children.next();
@@ -185,14 +228,14 @@ public final class CopyUtil {
     }
 
     public void clone(Content node, Content parent, Content.ContentFilter filter, boolean removeExisting)
-        throws RepositoryException {
+    throws RepositoryException {
         try {
             // it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
             // exist, "removeExisting" has no effect
             // if node exist with the same UUID, simply update non propected properties
             String workspaceName = ContentRepository.getInternalWorkspaceName(parent.getWorkspace().getName());
             Content existingNode = getHierarchyManager(workspaceName)
-                .getContentByUUID(node.getUUID());
+            .getContentByUUID(node.getUUID());
             if (removeExisting) {
                 existingNode.delete();
                 parent.save();
@@ -221,10 +264,10 @@ public final class CopyUtil {
         else {
             String parH = parent.getHandle();
             parent.getWorkspace().clone(
-                node.getWorkspace().getName(),
-                node.getHandle(),
-                 parH + (parH != null && parH.endsWith("/") ? "" :"/") + node.getName(),
-                true);
+                    node.getWorkspace().getName(),
+                    node.getHandle(),
+                    parH + (parH != null && parH.endsWith("/") ? "" :"/") + node.getName(),
+                    true);
         }
     }
 
@@ -264,9 +307,9 @@ public final class CopyUtil {
         IOUtils.closeQuietly(outStream);
         FileInputStream inStream = new FileInputStream(file);
         parent.getWorkspace().getSession().importXML(
-            parent.getHandle(),
-            inStream,
-            ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+                parent.getHandle(),
+                inStream,
+                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inStream);
         file.delete();
     }
@@ -299,18 +342,18 @@ public final class CopyUtil {
                     // first check for the referenced node existence
                     try {
                         getHierarchyManager(destination.getWorkspace().getName())
-                            .getContentByUUID(property.getString());
+                        .getContentByUUID(property.getString());
                     }
                     catch (ItemNotFoundException e) {
                         if (!StringUtils.equalsIgnoreCase(
-                            destination.getWorkspace().getName(),
-                            VersionManager.VERSION_WORKSPACE)) {
+                                destination.getWorkspace().getName(),
+                                VersionManager.VERSION_WORKSPACE)) {
                             throw e;
                         }
                         // get referenced node under temporary store
                         // use jcr import, there is no other way to get a node without sub hierarchy
                         Content referencedNode = getHierarchyManager(source.getWorkspace().getName()).getContentByUUID(
-                            property.getString());
+                                property.getString());
                         try {
                             this.importNode(getTemporaryPath(), referencedNode);
                             this.removeProperties(getHierarchyManager().getContentByUUID(property.getString()));

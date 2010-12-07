@@ -65,7 +65,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     private boolean forceCreation = true;
 
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
-       return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState());
+        return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState());
     }
 
     protected Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException{

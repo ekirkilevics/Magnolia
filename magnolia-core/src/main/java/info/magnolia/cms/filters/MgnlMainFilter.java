@@ -36,6 +36,7 @@ package info.magnolia.cms.filters;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.servlets.ClasspathSpool;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -92,12 +93,27 @@ public class MgnlMainFilter implements Filter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Handling URI: {} - Path info: {}", request.getRequestURI(), request.getPathInfo());
 
-        if (!rootFilter.bypasses(request)) {
-            rootFilter.doFilter(request, response, chain);
-        } else {
-            // pass request to next filter in web.xml
-            chain.doFilter(request, response);
+        // global fix for MAGNOLIA-3338 to make this independent of other dispatching rules
+        boolean contextUpdated = false;
+        if(MgnlContext.hasInstance()){
+            MgnlContext.push(request, response);
+            contextUpdated = true;
         }
+
+        try{
+            if (rootFilter.matches(request)) {
+                rootFilter.doFilter(request, response, chain);
+            } else {
+                // pass request to next filter in web.xml
+                chain.doFilter(request, response);
+            }
+        }
+        finally{
+            if(contextUpdated && MgnlContext.hasInstance()){
+                MgnlContext.pop();
+            }
+        }
+
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -155,8 +171,9 @@ public class MgnlMainFilter implements Filter {
         final ServletDispatchingFilter classpathSpoolFilter = new ServletDispatchingFilter();
         classpathSpoolFilter.setName("resources");
         classpathSpoolFilter.setServletName("ClasspathSpool Servlet");
-        classpathSpoolFilter.setServletClass(info.magnolia.cms.servlets.ClasspathSpool.class.getName());
+        classpathSpoolFilter.setServletClass(ClasspathSpool.class.getName());
         classpathSpoolFilter.addMapping("/.resources/*");
+        classpathSpoolFilter.addMapping("/favicon.ico");
         classpathSpoolFilter.setEnabled(true);
         systemUIFilter.addFilter(classpathSpoolFilter);
 

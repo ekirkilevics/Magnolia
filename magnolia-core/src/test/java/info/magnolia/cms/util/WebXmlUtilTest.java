@@ -44,7 +44,7 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class WebXmlUtilTest extends TestCase {
-    private static final List<String> MANDATORY_DISPATCHERS = Arrays.asList("REQUEST", "FORWARD");
+    private static final List<String> MANDATORY_DISPATCHERS = Arrays.asList("REQUEST", "FORWARD", "INCLUDE");
     private static final List<String> OPTIONAL_DISPATCHERS = Arrays.asList("ERROR");
 
     public void testFilterDispatcherChecksShouldNotFailWithCorrectConfiguration() {
@@ -62,14 +62,14 @@ public class WebXmlUtilTest extends TestCase {
         assertEquals(1, util.checkFilterDispatchersConfiguration(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
-    public void testFilterDispatcherChecksShouldFailIfMandatoryDispatchersIsNotUsed() {
+    public void testFilterDispatcherChecksShouldFailIfRequestIsMissing() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
         assertEquals(-1, util.checkFilterDispatchersConfiguration("webxmltest.WithMissingForward", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
-    public void testFilterDispatcherChecksShouldReturnZeroIfUnsupportedDispatchersAreUsed() {
+    public void testFilterDispatcherChecksShouldFailIfIncludeIsMissing() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
-        assertEquals(0, util.checkFilterDispatchersConfiguration("webxmltest.WithInclude", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
+        assertEquals(-1, util.checkFilterDispatchersConfiguration("webxmltest.WithMissingInclude", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
     public void testFilterDispatcherErrorIsNotMandatory() {

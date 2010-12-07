@@ -54,11 +54,29 @@ import info.magnolia.test.mock.MockUtil;
  */
 public class ExtendingContentWrapperTest extends MgnlTestCase {
 
+    public void testExtendsNodeDatasIsHidden() throws IOException, RepositoryException{
+        HierarchyManager hm = MockUtil.createHierarchyManager(
+                "/base/node/nodeData1=org1\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/nodeData2=org2");
+        Content plainContent = hm.getContent("/impl/node");
+        Content extendedContent = new ExtendingContentWrapper(plainContent);
+
+        assertFalse(extendedContent.hasNodeData("extends"));
+        assertFalse(extendedContent.getNodeData("extends").isExist());
+        for (NodeData nd : extendedContent.getNodeDataCollection()) {
+            if ("extends".equals(nd.getName())) {
+                fail("Found extends node data that is supposed to be hidden.");
+            }
+        }
+    }
+
+
     public void testThatNodeDatasAreMerged() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/base/node/nodeData1=org1\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/nodeData2=org2");
+                "/base/node/nodeData1=org1\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/nodeData2=org2");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
@@ -69,25 +87,25 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         assertEquals("org1", extendedContent.getNodeData("nodeData1").getString());
         assertEquals("org2", extendedContent.getNodeData("nodeData2").getString());
 
-        assertEquals(3, extendedContent.getNodeDataCollection().size());
+        assertEquals(2, extendedContent.getNodeDataCollection().size());
     }
 
-    public void testThatNodeDatasCanBeOvwerWritten() throws IOException, RepositoryException{
+    public void testThatNodeDatasCanBeOverriden() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/base/node/nodeData=org1\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/nodeData=new");
+                "/base/node/nodeData=org1\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/nodeData=new");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
         assertEquals("new", extendedContent.getNodeData("nodeData").getString());
-        assertEquals(2, extendedContent.getNodeDataCollection().size());    }
+        assertEquals(1, extendedContent.getNodeDataCollection().size());    }
 
     public void testThatSubNodesAreMerged() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/base/node/subnode1\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/subnode2");
+                "/base/node/subnode1\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/subnode2");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
@@ -102,9 +120,9 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
     public void testThatSubNodesCanBeOverwritten() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/base/node/subnode@uuid=1\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/subnode@uuid=2");
+                "/base/node/subnode@uuid=1\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/subnode@uuid=2");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
@@ -117,16 +135,16 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
     public void testDeepMerge() throws IOException, RepositoryException{
         String [][] expected = new String[][]{
-            {"nodeData1","org1"}, // inherited
-            {"nodeData2","org2.2"}, // overwritten
-            {"nodeData3","org3"}, // added
+                {"nodeData1","org1"}, // inherited
+                {"nodeData2","org2.2"}, // overwritten
+                {"nodeData3","org3"}, // added
         };
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/base/node/subnode/nodeData1=org1\n" +
-            "/base/node/subnode/nodeData2=org2.1\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/subnode/nodeData2=org2.2\n" +
-            "/impl/node/subnode/nodeData3=org3");
+                "/base/node/subnode/nodeData1=org1\n" +
+                "/base/node/subnode/nodeData2=org2.1\n" +
+                "/impl/node/extends=../../base/node\n" +
+                "/impl/node/subnode/nodeData2=org2.2\n" +
+        "/impl/node/subnode/nodeData3=org3");
 
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
@@ -153,12 +171,12 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
     public void testThatOrderIsKeptWhileMergingSubNodes() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/base/node/subnode1@uuid=1\n" +
-            "/base/node/subnode2@uuid=2.1\n" +
-            "/base/node/subnode3@uuid=3\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/subnode2@uuid=2.2\n" +
-            "/impl/node/subnode4@uuid=4");
+                "/base/node/subnode1@uuid=1\n" +
+                "/base/node/subnode2@uuid=2.1\n" +
+                "/base/node/subnode3@uuid=3\n" +
+                "/impl/node/extends=../../base/node\n" +
+                "/impl/node/subnode2@uuid=2.2\n" +
+        "/impl/node/subnode4@uuid=4");
 
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
@@ -183,11 +201,11 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
 
     public void testBasicMultipleInheritance() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/superbase/node/nodeData1=org1\n" +
-            "/base/node/extends=../../superbase/node\n" +
-            "/base/node/nodeData2=org2\n" +
-            "/impl/node/extends=../../base/node\n" +
-            "/impl/node/nodeData3=org3");
+                "/superbase/node/nodeData1=org1\n" +
+                "/base/node/extends=../../superbase/node\n" +
+                "/base/node/nodeData2=org2\n" +
+                "/impl/node/extends=../../base/node\n" +
+        "/impl/node/nodeData3=org3");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
@@ -199,17 +217,16 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         assertEquals("org2", extendedContent.getNodeData("nodeData2").getString());
         assertEquals("org3", extendedContent.getNodeData("nodeData3").getString());
 
-        //3 + extends node data
-        assertEquals(4, extendedContent.getNodeDataCollection().size());
+        assertEquals(3, extendedContent.getNodeDataCollection().size());
     }
 
     public void testComplextMultipleInheritance1() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/superbase/nodeData1=org1\n" +
-            "/base/node/subnode/nodeData2=org2\n" +
-            "/base/node/subnode/extends=/superbase\n" +
-            "/impl/node/extends=/base/node\n" +
-            "/impl/node/subnode/nodeData3=org3");
+                "/superbase/nodeData1=org1\n" +
+                "/base/node/subnode/nodeData2=org2\n" +
+                "/base/node/subnode/extends=/superbase\n" +
+                "/impl/node/extends=/base/node\n" +
+        "/impl/node/subnode/nodeData3=org3");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
@@ -222,17 +239,16 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         assertEquals("org2", subnode.getNodeData("nodeData2").getString());
         assertEquals("org3", subnode.getNodeData("nodeData3").getString());
 
-        //3 + extends node data
-        assertEquals(4, subnode.getNodeDataCollection().size());
+        assertEquals(3, subnode.getNodeDataCollection().size());
     }
 
     public void testComplextMultipleInheritance2() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/superbase/nodeData1=org1\n" +
-            "/base/node/subnode/nodeData2=org2\n" +
-            "/impl/node/extends=/base/node\n" +
-            "/impl/node/subnode/extends=/superbase\n" +
-            "/impl/node/subnode/nodeData3=org3");
+                "/superbase/nodeData1=org1\n" +
+                "/base/node/subnode/nodeData2=org2\n" +
+                "/impl/node/extends=/base/node\n" +
+                "/impl/node/subnode/extends=/superbase\n" +
+        "/impl/node/subnode/nodeData3=org3");
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
@@ -245,38 +261,40 @@ public class ExtendingContentWrapperTest extends MgnlTestCase {
         assertEquals("org2", subnode.getNodeData("nodeData2").getString());
         assertEquals("org3", subnode.getNodeData("nodeData3").getString());
 
-        //3 + extends node data
-        assertEquals(4, subnode.getNodeDataCollection().size());
+        assertEquals(3, subnode.getNodeDataCollection().size());
     }
 
     public void testComplextMultipleInheritanceWithOverride() throws IOException, RepositoryException{
         HierarchyManager hm = MockUtil.createHierarchyManager(
-            "/superbase/nodeData1=org1\n" +
-            "/superbase/uglyChild/withSubChild/nodeDataX=over1\n" +
-            "/base/node/subnode/nodeData2=org2\n" +
-            "/impl/node/extends=/base/node\n" +
-            "/impl/node/subnode/extends=/superbase\n" +
-            "/impl/node/subnode/uglyChild/extends=override\n" +
-            "/impl/node/subnode/nodeData3=org3");
+                "/superbase/nodeData1=org1\n" +
+                "/superbase/uglyChild/withSubChild/nodeDataX=over1\n" +
+                "/base/node/subnode/nodeData2=org2\n" +
+                "/impl/node/extends=/base/node\n" +
+                "/impl/node/subnode/extends=/superbase\n" +
+                "/impl/node/subnode/uglyChild/extends=override\n" +
+        "/impl/node/subnode/nodeData3=org3");
 
         Content plainContent = hm.getContent("/impl/node");
         Content extendedContent = new ExtendingContentWrapper(plainContent);
 
         Content subnode = extendedContent.getContent("subnode");
+        // inherited from superbase:
         assertTrue(subnode.hasNodeData("nodeData1"));
+        // inherited from base/node:/subnode
         assertTrue(subnode.hasNodeData("nodeData2"));
+        // subnode's own content
         assertTrue(subnode.hasNodeData("nodeData3"));
 
+        // override defining node
         Content disinheritedNode = subnode.getContent("uglyChild");
-        assertTrue(disinheritedNode.hasNodeData("extends"));
+        // we hide extends now
+        assertFalse(disinheritedNode.hasNodeData("extends"));
+        // superbase child node should not be inherited because of override
         assertFalse(disinheritedNode.hasContent("withSubChild"));
 
         assertEquals("org2", subnode.getNodeData("nodeData2").getString());
         assertEquals("org3", subnode.getNodeData("nodeData3").getString());
 
-        //3 + extends node data
-        assertEquals(4, subnode.getNodeDataCollection().size());
+        assertEquals(3, subnode.getNodeDataCollection().size());
     }
-
-
 }

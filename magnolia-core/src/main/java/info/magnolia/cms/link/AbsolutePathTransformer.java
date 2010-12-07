@@ -48,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  * @deprecated since 4.0 use {@link info.magnolia.link.AbsolutePathTransformer} instead
  */
+@Deprecated
 public class AbsolutePathTransformer{
 
     boolean addContextPath = true;
