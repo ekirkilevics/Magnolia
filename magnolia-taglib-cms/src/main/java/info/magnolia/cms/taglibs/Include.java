@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 /**
@@ -209,10 +210,11 @@ public class Include extends BodyTagSupport {
             } else {
                 WebContext webContext = MgnlContext.getWebContext();
                 webContext.setPageContext(pageContext);
-                try{
+                webContext.push((HttpServletRequest)pageContext.getRequest(), (HttpServletResponse)pageContext.getResponse());
+                try {
                     renderingEngine.render(content, pageContext.getOut());
-                }
-                finally{
+                } finally{
+                    webContext.pop();
                     webContext.setPageContext(null);
                 }
             }
