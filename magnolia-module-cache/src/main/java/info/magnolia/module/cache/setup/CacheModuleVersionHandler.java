@@ -51,9 +51,11 @@ import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.PartialBootstrapTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
@@ -62,6 +64,9 @@ import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.nodebuilder.task.ErrorHandling;
+import info.magnolia.nodebuilder.task.ModuleNodeBuilderTask;
+import static info.magnolia.nodebuilder.Ops.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,8 +173,24 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.pages.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
                 );
         
-        register(DeltaBuilder.update("5.0", "Better browser caching").
-            addTask(new WarnTask("Update browser caching configuration", "")));
+        register(DeltaBuilder.update("4.4", "Centralizes the compression configuration")
+            .addTask(new RemoveNodeTask("Centralized compression configuration", "Removes the contentType bypass of the gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"))
+            .addTask(new ModuleNodeBuilderTask("Centralized compression configuration", "Update the compression voters. They should vote positive if the compression is desirable.", ErrorHandling.strict,
+                getNode("config/compression/voters").then(
+                    getNode("contentType").then(
+                        remove("not")),
+                    getNode("userAgent").then(
+                        remove("not")),
+                    addProperty("op", "AND"))
+             ))
+
+             .addTask(new SetPropertyTask("Safer default cache configuration.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/cachePolicy/voters/deny/authenticated", "enabled", "false"))
+             .addTask(new PartialBootstrapTask("New browser cache policy", "", "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml", "/default/browserCachePolicy"))
+        );
+
+        register(DeltaBuilder.update("4.4.2", "Update cache configuration")
+            .addTask(new IsModuleInstalledOrRegistered("FlushByComments", "Checks for unwanted presence of FlushByComments node.", "commenting", null, new NodeExistsDelegateTask("FlushByComments", "Checks if FlushByComments node exists.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments", new RemoveNodeTask("FlushByComments", "Removes FlushByComments node.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/flushPolicy/policies/FlushByComments"))))
+        );
     }
 
     private List<Task> getTasksFor364() {

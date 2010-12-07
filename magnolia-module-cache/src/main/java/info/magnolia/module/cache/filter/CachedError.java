@@ -33,7 +33,16 @@
  */
 package info.magnolia.module.cache.filter;
 
+import java.io.IOException;
 import java.io.Serializable;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contract for cached errors providing access to the error codes.
@@ -41,6 +50,8 @@ import java.io.Serializable;
  * @version $Revision: $ ($Author: $)
  */
 public class CachedError implements CachedEntry, Serializable {
+    private static Logger log = LoggerFactory.getLogger(CachedError.class);
+
     private final int statusCode;
 
     public CachedError(int statusCode) {
@@ -49,5 +60,15 @@ public class CachedError implements CachedEntry, Serializable {
 
     public int getStatusCode() {
         return statusCode;
+    }
+
+    public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (!response.isCommitted()) {
+            response.sendError(getStatusCode());
+        } else {
+            //this usually happens first time the error occurs and is put in cache - since setting page as error causes it to be committed
+            // TODO: is there a better work around to make sure we do not swallow some exception accidentally?
+            log.debug("Failed to serve cached error due to response already committed.");
+        }
     }
 }

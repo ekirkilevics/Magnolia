@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2008-2010 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2010 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,19 +33,39 @@
  */
 package info.magnolia.module.cache.browsercachepolicy;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 
-/**
- * The pages are sent by using no cache headers.
- *
- * @author pbracher
- * @version $Revision$ ($Author$)
- */
-public class Never extends AbstractVoterBased {
 
-    @Override
-    protected BrowserCachePolicyResult getPositiveVoteResult(CachePolicyResult cachePolicyResult) {
-        return BrowserCachePolicyResult.NO_CACHE;
+/**
+ * A collection of {@link BrowserCachePolicy}. The first matching policy will be used.
+ * @version $Id$
+ *
+ */
+public class BrowserCachePolicySet implements BrowserCachePolicy {
+
+    private Collection<BrowserCachePolicy> policies = new ArrayList<BrowserCachePolicy>();
+
+    public Collection<BrowserCachePolicy> getPolicies() {
+        return policies;
     }
+
+    public void setPolicies(Collection<BrowserCachePolicy> policies) {
+        this.policies = policies;
+    }
+
+    public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
+        for (BrowserCachePolicy policy : policies) {
+            BrowserCachePolicyResult result = policy.canCacheOnClient(cachePolicyResult);
+            if(result!=null){
+                return result;
+            }
+        }
+        return null;
+    }
+
 }

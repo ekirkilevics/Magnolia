@@ -33,10 +33,14 @@
  */
 package info.magnolia.module.cache.filter;
 
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.module.cache.util.GZipUtil;
-import junit.framework.TestCase;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTestCase;
 import static org.easymock.EasyMock.*;
 
+import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
 import javax.servlet.FilterChain;
@@ -55,14 +59,21 @@ import java.util.Enumeration;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class GZipFilterTest extends TestCase {
+public class GZipFilterTest extends MgnlTestCase {
     private static final String SOME_10CHARSLONG_CHAIN = "qwertzuiop";
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
 
     public void testBufferIsFlushedProperlyWhenUsingWriterFurtherDownTheChainOfFilters() throws Exception {
         final int iterations = 5000;
 
         final FilterChain chain = createStrictMock(FilterChain.class);
         final HttpServletRequest mockRequest = createStrictMock(HttpServletRequest.class);
+        expect(mockRequest.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
         expect(mockRequest.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;
             public boolean hasMoreElements() {

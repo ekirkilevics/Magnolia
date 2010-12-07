@@ -33,37 +33,83 @@
  */
 package info.magnolia.module.cache.filter;
 
-import org.apache.commons.collections.MultiMap;
-import org.apache.commons.collections.map.MultiValueMap;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.RequestHeaderUtil;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Collection;
-import java.util.Locale;
+
+import org.apache.commons.collections.MultiMap;
+import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ThresholdingOutputStream;
+
 
 /**
- * Response wrapper used by cache in order to control settings of the headers and redirects.
- * @author
+ * A response wrapper which records the status, headers and content. Unless the threshold is reached
+ * the written content gets buffered and the content can get retrieved by
+ * {@link #getBufferedContent()}. Once the threshold is reached either a tmp file is created which
+ * can be retrieved with {@link #getContentFile()} or the content/headers are made transparent to
+ * the original response if {@link #serveIfThresholdReached} is true.
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
+
+    public static final int DEFAULT_THRESHOLD = 500 * 1024;
+
     private final ServletOutputStream wrappedStream;
     private PrintWriter wrappedWriter = null;
     private final MultiMap headers = new MultiValueMap();
     private int status = SC_OK;
     private boolean isError;
     private String redirectionLocation;
+    private HttpServletResponse originalResponse;
+    private ByteArrayOutputStream inMemoryBuffer;
+    private File contentFile;
+    private long contentLength = -1;
 
-    public CacheResponseWrapper(final HttpServletResponse response, final ServletOutputStream wrappedStream) {
+    private ThresholdingOutputStream thresholdingOutputStream;
+    private boolean serveIfThresholdReached;
+
+    private String errorMsg;
+
+    public CacheResponseWrapper(final HttpServletResponse response, int threshold, boolean serveIfThresholdReached) {
         super(response);
-        this.wrappedStream = wrappedStream;
+        this.serveIfThresholdReached = serveIfThresholdReached;
+        this.originalResponse = response;
+        this.inMemoryBuffer = new ByteArrayOutputStream();
+        this.thresholdingOutputStream = new ThresholdingCacheOutputStream(threshold);
+        this.wrappedStream = new SimpleServletOutputStream(thresholdingOutputStream);
+    }
+
+    public boolean isThresholdExceeded() {
+        return thresholdingOutputStream.isThresholdExceeded();
+    }
+
+    public byte[] getBufferedContent(){
+        return inMemoryBuffer.toByteArray();
+    }
+
+    public File getContentFile() {
+        return contentFile;
     }
 
     // MAGNOLIA-1996: this can be called multiple times, e.g. by chunk writers, but always from a single thread.
@@ -83,7 +129,6 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void flushBuffer() throws IOException {
-        super.flushBuffer();
         flush();
     }
 
@@ -163,38 +208,37 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setDateHeader(String name, long date) {
-        super.setDateHeader(name, date);
         replaceHeader(name, new Long(date));
     }
 
     public void addDateHeader(String name, long date) {
-        super.addDateHeader(name, date);
         appendHeader(name, new Long(date));
     }
 
     public void setHeader(String name, String value) {
-        super.setHeader(name, value);
         replaceHeader(name, value);
     }
 
     public void addHeader(String name, String value) {
-        super.addHeader(name, value);
         appendHeader(name, value);
     }
 
     public void setIntHeader(String name, int value) {
-        super.setIntHeader(name, value);
         replaceHeader(name, new Integer(value));
     }
 
     public void addIntHeader(String name, int value) {
-        super.addIntHeader(name, value);
         appendHeader(name, new Integer(value));
+    }
+
+    @Override
+    public boolean containsHeader(String name) {
+        return headers.containsKey(name);
     }
 
     private void replaceHeader(String name, Object value) {
         headers.remove(name);
-        appendHeader(name, value);
+        headers.put(name, value);
     }
 
     private void appendHeader(String name, Object value) {
@@ -202,30 +246,124 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setStatus(int status) {
-        super.setStatus(status);
         this.status = status;
     }
 
     public void setStatus(int status, String string) {
-        super.setStatus(status, string);
         this.status = status;
     }
 
     public void sendRedirect(String location) throws IOException {
         this.status = SC_MOVED_TEMPORARILY;
         this.redirectionLocation = location;
-        super.sendRedirect(location);
     }
 
-    public void sendError(int status, String string) throws IOException {
-        super.sendError(status, string);
+    public void sendError(int status, String errorMsg) throws IOException {
+        this.errorMsg = errorMsg;
         this.status = status;
         this.isError = true;
     }
 
     public void sendError(int status) throws IOException {
-        super.sendError(status);
         this.status = status;
         this.isError = true;
     }
+
+    public void setContentLength(int len) {
+        this.contentLength = len;
+    }
+
+    public int getContentLength() {
+        return (int)(contentLength >=0 ? contentLength : thresholdingOutputStream.getByteCount());
+    }
+
+    public void replay(HttpServletResponse target) throws IOException {
+        replayHeadersAndStatus(target);
+        replayContent(target, true);
+    }
+
+    public void replayHeadersAndStatus(HttpServletResponse target) throws IOException {
+        if(isError){
+            if(errorMsg != null){
+                target.sendError(status, errorMsg);
+            }
+            else{
+                target.sendError(status);
+            }
+        }
+        else if(redirectionLocation != null){
+            target.sendRedirect(redirectionLocation);
+        }
+        else{
+            target.setStatus(status);
+        }
+
+        target.setStatus(getStatus());
+
+        final Iterator it = headers.keySet().iterator();
+        while (it.hasNext()) {
+            final String header = (String) it.next();
+
+            final Collection values = (Collection) headers.get(header);
+            final Iterator valIt = values.iterator();
+            while (valIt.hasNext()) {
+                final Object val = valIt.next();
+                RequestHeaderUtil.setHeader(target, header, val);
+            }
+        }
+
+        // TODO : cookies ?
+        target.setContentType(getContentType());
+        target.setCharacterEncoding(getCharacterEncoding());
+    }
+
+    public void replayContent(HttpServletResponse target, boolean setContentLength) throws IOException {
+        if(setContentLength){
+            target.setContentLength(getContentLength());
+        }
+        if(getContentLength()>0){
+            if(isThresholdExceeded()){
+                FileInputStream in = FileUtils.openInputStream(getContentFile());
+                IOUtils.copy(in, target.getOutputStream());
+                IOUtils.closeQuietly(in);
+            }
+            else{
+                IOUtils.copy(new ByteArrayInputStream(inMemoryBuffer.toByteArray()), target.getOutputStream());
+            }
+            target.flushBuffer();
+        }
+    }
+
+    public void release(){
+        if(isThresholdExceeded()){
+            getContentFile().delete();
+        }
+    }
+
+    private final class ThresholdingCacheOutputStream extends ThresholdingOutputStream {
+        OutputStream out = inMemoryBuffer;
+
+        private ThresholdingCacheOutputStream(int threshold) {
+            super(threshold);
+        }
+
+        @Override
+        protected OutputStream getStream() throws IOException {
+            return out;
+        }
+
+        @Override
+        protected void thresholdReached() throws IOException {
+            if(serveIfThresholdReached){
+                replayHeadersAndStatus(originalResponse);
+                out = originalResponse.getOutputStream();
+            }
+            else{
+                contentFile = File.createTempFile("cacheStream", null, Path.getTempDirectory());
+                out = new FileOutputStream(contentFile);
+            }
+            out.write(getBufferedContent());
+        }
+    }
+
 }

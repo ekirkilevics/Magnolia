@@ -39,18 +39,31 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTestCase;
 
 
 /**
  * Tests for the treatment of request headers by cache filter.
  */
-public class CacheHeadersFilterTest extends TestCase {
+public class CacheHeadersFilterTest extends MgnlTestCase {
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
+    }
 
     public void testFilterCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
+
+        expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
         response.setHeader("Pragma", "");
         response.setHeader("Cache-Control", "max-age=86400, public");
@@ -67,6 +80,8 @@ public class CacheHeadersFilterTest extends TestCase {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
+
+        expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");

@@ -34,7 +34,6 @@
 package info.magnolia.module.cache.executor;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheModule;
@@ -43,12 +42,11 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
-import info.magnolia.module.cache.filter.CachedPage;
+import info.magnolia.module.cache.filter.ContentCachedEntry;
 import info.magnolia.module.cache.filter.CachedRedirect;
-import info.magnolia.module.cache.filter.SimpleServletOutputStream;
-import info.magnolia.voting.voters.ResponseContentTypeVoter;
+import info.magnolia.module.cache.filter.InMemoryCachedEntry;
+import info.magnolia.module.cache.filter.DelegatingBlobCachedEntry;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -69,61 +67,25 @@ public class Store extends AbstractExecutor {
     public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
         try {
-            // will write to both the response stream and an internal byte array for caching
-            final ByteArrayOutputStream cachingStream = new ByteArrayOutputStream();
 
-            final SimpleServletOutputStream out = new SimpleServletOutputStream(cachingStream);
-            final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, out) {
-                public void flushBuffer() throws IOException {
-                    // do nothing we will flush later.
-                }
-            };
+            final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, false);
 
             // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
             final long cacheStorageDate = System.currentTimeMillis();
             responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
             chain.doFilter(request, responseWrapper);
 
-            if ((responseWrapper.getStatus() != HttpServletResponse.SC_MOVED_TEMPORARILY) && (responseWrapper.getStatus() != HttpServletResponse.SC_NOT_MODIFIED) && !responseWrapper.isError()) {
-                //handle gzip headers (have to be written BEFORE committing the response
-                int vote = getCompressionVote(responseWrapper, ResponseContentTypeVoter.class);
-                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && vote == 0;
-                if (acceptsGzipEncoding) {
-                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
-                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
-                }
-            }
-
-            // change the status (if appropriate) before flushing the buffer.
-            if (!response.isCommitted() && !ifModifiedSince(request, cacheStorageDate)) {
-                responseWrapper.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-
-            }
-
-            try {
-                response.flushBuffer();
-                responseWrapper.flush();
-
-            } catch (IOException e) {
-                //TODO better handling ?
-                // ignore and don't cache, should be a ClientAbortException
+            if (responseWrapper.getStatus() == HttpServletResponse.SC_NOT_MODIFIED) {
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 return;
             }
 
-            cachedEntry = makeCachedEntry(responseWrapper, cachingStream);
-            // cached page should have some body
-            if (cachedEntry != null && (cachedEntry instanceof CachedPage) && ((CachedPage) cachedEntry).getDefaultContent().length == 0) {
-                log.warn("Response body for {}:{} is empty.",  String.valueOf(responseWrapper.getStatus()), cachePolicyResult.getCacheKey());
-            }
+            responseWrapper.flushBuffer();
 
-            // Cached page should be created only with 200 status and nothing else should go in
-            if ((cachedEntry instanceof CachedPage) && ((CachedPage) cachedEntry).getStatusCode() != HttpServletResponse.SC_OK) {
-                log.warn("Caching response {} for {}", String.valueOf(((CachedPage) cachedEntry).getStatusCode() ), cachePolicyResult.getCacheKey());
-            }
-
+            cachedEntry = makeCachedEntry(request, responseWrapper);
 
         } catch (Throwable t) {
-            log.error("Failed to process cache request : " + t.getMessage(), t);
+            log.error("Failed to process cache request [" + request.getRequestURL() + "] : " + t.getMessage(), t);
         } finally {
             final Object key = cachePolicyResult.getCacheKey();
             // have to put cache entry no matter what even if it is null to release lock.
@@ -143,50 +105,43 @@ public class Store extends AbstractExecutor {
         }
     }
 
-    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream) throws IOException {
-        int status = cacheResponse.getStatus();
+    protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cachedResponse) throws IOException {
+        int status = cachedResponse.getStatus();
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302 or 304.
-        if (status == HttpServletResponse.SC_MOVED_TEMPORARILY) {
-            return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
+        if (cachedResponse.getRedirectionLocation() != null) {
+            return new CachedRedirect(cachedResponse.getStatus(), cachedResponse.getRedirectionLocation());
         }
 
-        final byte[] aboutToBeCached = cachingStream.toByteArray();
-        if (status == HttpServletResponse.SC_NOT_MODIFIED) {
-            if (aboutToBeCached.length == 0) {
-                return null;
-            } else {
-                // we got the content already so we might as well cache it
-                status = HttpServletResponse.SC_OK;
-            }
+        if (cachedResponse.isError()) {
+            return new CachedError(cachedResponse.getStatus());
         }
 
-        if (cacheResponse.isError()) {
-            return new CachedError(cacheResponse.getStatus());
+        final long modificationDate = cachedResponse.getLastModified();
+        final String contentType = cachedResponse.getContentType();
+
+        ContentCachedEntry cacheEntry;
+        if(!cachedResponse.isThresholdExceeded()){
+            cacheEntry = new InMemoryCachedEntry(cachedResponse.getBufferedContent(),
+                    contentType,
+                    cachedResponse.getCharacterEncoding(),
+                    status,
+                    cachedResponse.getHeaders(),
+                    modificationDate);
         }
-
-        final long modificationDate = cacheResponse.getLastModified();
-        final String contentType = cacheResponse.getContentType();
-
-        int vote = getCompressionVote(cacheResponse, ResponseContentTypeVoter.class);
-        CachedPage page = new CachedPage(aboutToBeCached,
+        else{
+            cacheEntry = new DelegatingBlobCachedEntry(cachedResponse.getContentLength(),
                 contentType,
-                cacheResponse.getCharacterEncoding(),
+                cachedResponse.getCharacterEncoding(),
                 status,
-                cacheResponse.getHeaders(),
-                modificationDate, vote == 0);
-        if (status != cacheResponse.getStatus()) {
-            // since we have manipulated the status here, we need to provide original value to other executors not to confuse them
-            page.setPreCacheStatusCode(cacheResponse.getStatus());
-        }
-        return page;
-    }
+                cachedResponse.getHeaders(),
+                modificationDate);
 
-    /**
-     * @deprecated not used, since 3.6.1, the modificationDate is retrieved from the CacheResponseWrapper, using the
-     * appropriate header. It has been set by processCacheRequest() and possibly overwritten by another filter or servlet.
-     */
-    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
-        return makeCachedEntry(cacheResponse, cachingStream);
+            // TODO remove this once we use a blob store
+            // the file will be deleted once served in this request
+            ((DelegatingBlobCachedEntry)cacheEntry).bindContentFileToCurrentRequest(request, cachedResponse.getContentFile());
+        }
+
+        return cacheEntry;
     }
 
     protected CachePolicy getCachePolicy(Cache cache) {

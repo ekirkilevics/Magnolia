@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.cache.browsercachepolicy;
 
-import info.magnolia.module.cache.BrowserCachePolicy;
 import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.voting.Voter;
@@ -48,7 +47,8 @@ import info.magnolia.voting.voters.TrueVoter;
  * @author pbracher
  * @version $Revision$ ($Author$)
  */
-public class FixedDuration implements BrowserCachePolicy {
+public class FixedDuration extends AbstractVoterBased {
+
 
     /**
      * Far future expiration is a year.
@@ -69,7 +69,8 @@ public class FixedDuration implements BrowserCachePolicy {
 
     private int expirationMinutes = 30;
 
-    public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
+    @Override
+    protected BrowserCachePolicyResult getPositiveVoteResult(CachePolicyResult cachePolicyResult) {
         if(farFutureVoter.vote(cachePolicyResult)>0){
             return new BrowserCachePolicyResult(System.currentTimeMillis() + ONE_YEAR_IN_MILLISECONDS);
         }

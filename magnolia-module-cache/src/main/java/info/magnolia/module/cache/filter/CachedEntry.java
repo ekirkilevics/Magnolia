@@ -33,11 +33,23 @@
  */
 package info.magnolia.module.cache.filter;
 
+import java.io.IOException;
+import java.io.Serializable;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
- * Marker interface for the cached items.
- * @author gjoseph
+ * A cached entry used to store content produced by the filter chain. The cache can be replayed.
  * @version $Revision: $ ($Author: $)
  */
-public interface CachedEntry {
+public interface CachedEntry extends Serializable {
+
+    /**
+     * @param chain a cache entry might want to delegate to the filter chain, see {@link DelegatingBlobCachedEntry#replay(HttpServletRequest, HttpServletResponse, FilterChain)}
+     */
+    void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
 }

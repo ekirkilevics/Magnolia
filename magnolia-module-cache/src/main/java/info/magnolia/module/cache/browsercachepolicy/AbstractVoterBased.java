@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2008-2010 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2010 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,32 +25,44 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.cache;
+package info.magnolia.module.cache.browsercachepolicy;
+
+import info.magnolia.module.cache.BrowserCachePolicy;
+import info.magnolia.module.cache.BrowserCachePolicyResult;
+import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.voting.voters.VoterSet;
+
 
 /**
- * Transports the expiration date.
+ * Uses a {@link VoterSet} to decided if the file should be cached in the browser. If no voters are configured it means that the content can be cached.
+ * @version $Id$
  *
- * @author pbracher
- * @version $Revision$ ($Author$)
  */
-public class BrowserCachePolicyResult {
+public abstract class AbstractVoterBased implements BrowserCachePolicy {
 
-    public static final BrowserCachePolicyResult NO_CACHE = new BrowserCachePolicyResult(-1);
+    private VoterSet voters;
 
-    private long expirationDate;
-
-    public BrowserCachePolicyResult(long expirationDate) {
-        this.expirationDate = expirationDate;
+    public VoterSet getVoters() {
+        return voters;
     }
 
-    public long getExpirationDate() {
-        return expirationDate;
+    public void setVoters(VoterSet voters) {
+        this.voters = voters;
     }
+
+    public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
+        if(voters == null || voters.vote(cachePolicyResult)>0){
+            return getPositiveVoteResult(cachePolicyResult);
+        }
+        return null;
+    }
+
+    protected abstract BrowserCachePolicyResult getPositiveVoteResult(CachePolicyResult cachePolicyResult);
 
 }
