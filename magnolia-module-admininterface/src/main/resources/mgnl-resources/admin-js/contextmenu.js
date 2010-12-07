@@ -29,6 +29,11 @@ mgnlContextMenu.prototype.show = function(event){
         //todo: (hack) find out height/width of div
         var divMenuHeight=0;
         var divMenuWidth=150;
+        if (navigator.appName == 'Microsoft Internet Explorer'){
+            divMenuHeight+=40;
+        }else if(navigator.appName == 'Opera'){
+            divMenuHeight+=55;
+        }
         for (var i=0;i<this.menuItems.length;i++)
             {
             divMenuHeight+=18; //17: item height; 1: possible line
@@ -239,6 +244,16 @@ function mgnlTreeMenuItemConditionPermissionWrite(tree)
         if (this.tree.selectedNode.permissionWrite) return true;
         else return false;
     }
+}
+
+function mgnlTreeMenuItemConditionNotDeleted(tree)
+{
+	this.tree = tree;
+
+	this.test = function(){
+	    if (!this.tree.selectedNode.isDeleted) return true;
+	    else return false;
+	}
 }
 
 //#################

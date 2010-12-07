@@ -11,7 +11,7 @@
     var ${this.name}Items = new Object;
 
     MgnlDHTMLUtil.addOnLoad(function(){
-        ${this.name} = new ${renderer.javaScriptClass}('${this.name}', document.mgnlForm);
+        ${this.name} = new ${renderer.javaScriptClass}(${renderer.getConstructorArguments(this)});
         // add the columns
         [#list this.children as column]
             new mgnl.controls.ListColumn(
@@ -29,7 +29,7 @@
     MgnlDHTMLUtil.addOnResize(function(){${this.name}.resize();});
 </script>
 
-<div style="position:relative">
+<div id="${this.name}" style="position:relative">
     [#assign style = ""]
 
     [#if this.groupableFields?has_content || this.sortableFields?has_content]

@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admininterface.lists;
 
+import java.util.Collection;
+
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ContextMenu;
@@ -47,11 +49,15 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.freemarker.FreemarkerUtil;
+import info.magnolia.module.admininterface.VersionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 
+import javax.jcr.InvalidItemStateException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.version.Version;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -82,6 +88,8 @@ public abstract class VersionsList extends AbstractList {
      */
     private String versionLabel;
 
+    private String jsExecutedAfterSaving;
+
     /**
      * @param name
      * @param request
@@ -95,6 +103,7 @@ public abstract class VersionsList extends AbstractList {
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#getModel()
      */
+    @Override
     public ListModel getModel() {
         try {
             Content node = getNode();
@@ -113,19 +122,30 @@ public abstract class VersionsList extends AbstractList {
         return Math.min((int)VersionConfig.getInstance().getMaxVersionAllowed(), 50);
     }
 
+    @Override
     public void configureList(ListControl list) {
         // set onselect
         list.setRenderer(new AdminListControlRenderer() {
-
-            public String onSelect(ListControl list, Integer index) {
-                String js = super.onSelect(list, index);
-                js += "mgnlVersionsList.currentVersionLabel = '" + list.getIteratorValue("versionLabel") + "';";
-                return js;
-            }
-
+            @Override
             public String onDblClick(ListControl list, Integer index) {
-                return "mgnlVersionsList.showItem()";
+                return list.getName() + ".showItem()";
             }
+
+            @Override
+            public String getJavaScriptClass() {
+                return "mgnl.admininterface.VersionsList";
+            }
+
+            @Override
+            protected String buildJavaScriptObject(ListControl list, Object value) {
+                return super.buildJavaScriptObject(list, value) + ", versionLabel: '" + list.getIteratorValue("versionLabel")  + "'";
+            }
+
+            @Override
+            public String getConstructorArguments(ListControl list) {
+                return super.getConstructorArguments(list) + ", '"+repository+"', '"+path+"', " + getOnShowFunction() + ", " + getOnDiffFunction() ;
+            }
+
         });
 
         list.addGroupableField("userName");
@@ -133,6 +153,7 @@ public abstract class VersionsList extends AbstractList {
         list.addColumn(new ListColumn("name", "Name", "150", true));
         list.addColumn(new ListColumn("created", "Date", "100", true));
         list.addColumn(new ListColumn("userName", "User", "100", true));
+        list.addColumn(new ListColumn("comment", "Comment", "150", true));
     }
 
     /**
@@ -140,27 +161,57 @@ public abstract class VersionsList extends AbstractList {
      */
     public abstract String getOnShowFunction();
 
+    @Override
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(MessagesManager.get("versions.show"));
-        show.setOnclick("mgnlVersionsList.showItem()");
+        show.setOnclick(this.getList().getName() + ".showItem()");
         show.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/note_view.gif");
+        show.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
 
         ContextMenuItem restore = new ContextMenuItem("restore");
         restore.setLabel(MessagesManager.get("versions.restore"));
-        restore.setOnclick("mgnlVersionsList.restore()");
+        restore.setOnclick(this.getList().getName() + ".restore()");
         restore.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/undo.gif");
+        restore.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
 
         menu.addMenuItem(show);
         menu.addMenuItem(restore);
+
+        if(isSupportsDiff()){
+            ContextMenuItem diffWithCurrent = new ContextMenuItem("diffWithCurrent");
+            diffWithCurrent.setLabel(MessagesManager.get("versions.compareWithCurrent"));
+            diffWithCurrent.setOnclick(this.getList().getName() + ".diffItemWithCurrent()");
+            diffWithCurrent.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/compare_with_current.gif");
+            diffWithCurrent.addJavascriptCondition("function(){return " + getList().getName()+".isSelected()}");
+
+            ContextMenuItem diffWithPrevious = new ContextMenuItem("diffWithPrevious");
+            diffWithPrevious.setLabel(MessagesManager.get("versions.compareWithPrevious"));
+            diffWithPrevious.setOnclick(this.getList().getName() + ".diffItemWithPrevious()");
+            diffWithPrevious.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/compare_with_previous.gif");
+            diffWithPrevious.addJavascriptCondition("function(){return " + getList().getName()+".hasPreviousVersion()}");
+
+            menu.addMenuItem(diffWithCurrent);
+            menu.addMenuItem(diffWithPrevious);
+        }
+    }
+
+    protected boolean isSupportsDiff() {
+        return false;
     }
 
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#configureFunctionBar(info.magnolia.cms.gui.control.FunctionBar)
      */
+    @Override
     protected void configureFunctionBar(FunctionBar bar) {
         bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
         bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
+
+        if(isSupportsDiff()){
+            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("diffWithCurrent")));
+            bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("diffWithPrevious")));
+        }
     }
 
     /**
@@ -177,14 +228,53 @@ public abstract class VersionsList extends AbstractList {
 
     public String restore() {
         try {
-            Content node = this.getNode();
+            final Content node = this.getNode();
+            final String version = this.getVersionLabel();
             node.addVersion();
-            node.restore(this.getVersionLabel(), true);
+            try {
+                node.restore(version, true);
+            } catch (InvalidItemStateException e) {
+                node.refresh(false);
+                node.restore(version, true);
+            }
             AlertUtil.setMessage(MessagesManager.get("versions.restore.latest.success"));
         }
         catch (Exception e) {
             log.error("can't restore", e);
             AlertUtil.setMessage(MessagesManager.get("versions.restore.exception", new String[]{e.getMessage()}));
+        }
+        return show();
+    }
+
+    public String restoreRecursive() {
+        try {
+            restoreRecursive(this.getNode(), this.getVersionLabel());
+            AlertUtil.setMessage(MessagesManager.get("versions.restore.latest.success"));
+        } catch (Exception e) {
+            log.error("can't restore", e);
+            AlertUtil.setMessage(MessagesManager.get("versions.restore.exception", new String[]{e.getMessage()}));
+        }
+        return show();
+    }
+
+    private String restoreRecursive(Content node, String version) throws UnsupportedRepositoryOperationException, RepositoryException {
+        node.addVersion();
+        // get last non deleted version
+        try {
+            node.restore(version, true);
+        } catch (InvalidItemStateException e) {
+            node.refresh(false);
+            node.restore(version, true);
+        }
+        //node.save();
+        // all children of the same type
+        for (Content child : node.getChildren()) {
+            // figure out undelete version for the child
+            Collection<Version> versions = VersionUtil.getSortedNotDeletedVersions(child);
+            if (versions.size() > 0) {
+                String childVersion = versions.iterator().next().getName();
+                restoreRecursive(child, childVersion);
+            }
         }
         return show();
     }
@@ -217,6 +307,7 @@ public abstract class VersionsList extends AbstractList {
         this.repository = repository;
     }
 
+    @Override
     public String onRender() {
         return FreemarkerUtil.process(VersionsList.class, this);
     }
@@ -235,4 +326,15 @@ public abstract class VersionsList extends AbstractList {
         this.versionLabel = versionLabel;
     }
 
+    public String getOnDiffFunction() {
+        return "function(versionLabel){}";
+    }
+
+    public String getJsExecutedAfterSaving() {
+        return this.jsExecutedAfterSaving;
+    }
+
+    public void setJsExecutedAfterSaving(String jsExecutedAfterSaving) {
+        this.jsExecutedAfterSaving = jsExecutedAfterSaving;
+    }
 }

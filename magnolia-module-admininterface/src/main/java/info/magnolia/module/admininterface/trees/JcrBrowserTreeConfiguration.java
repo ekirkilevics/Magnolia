@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Revision: $ ($Author: $)
  */
 public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
+    @Override
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
         super.prepareTree(tree, browseMode, request);
         tree.addItemType(ItemType.NT_UNSTRUCTURED);
@@ -55,5 +56,6 @@ public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
         tree.addItemType(ItemType.GROUP.getSystemName());
         tree.addItemType(ItemType.ROLE.getSystemName());
         tree.addItemType(ItemType.SYSTEM.getSystemName());
+        tree.addIcon(ItemType.DELETED_NODE_MIXIN, "/.resources/icons/16/document_deleted.gif");
     }
 }

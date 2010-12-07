@@ -83,6 +83,10 @@ public class ActivationCommandTest extends TestCase {
         final SystemContext sysCtx = createStrictMock(SystemContext.class);
         final WebContext ctx = createStrictMock(WebContext.class);
         final HierarchyManager hm = createMock(HierarchyManager.class);
+        final HierarchyManager vhm = createNiceMock(HierarchyManager.class);
+        final Content versionTmp = createMock(Content.class);
+        final Node versionTmpNode = createMock(Node.class);
+        final NodeIterator emptyIterator = createMock(NodeIterator.class);
         final Content state = createStrictMock(Content.class);
         final Content parent = createStrictMock(Content.class);
         final Node stateJCRNode = createStrictMock(Node.class);
@@ -99,7 +103,8 @@ public class ActivationCommandTest extends TestCase {
         expect(hm.getContent(PARENT_PATH)).andReturn(state);
         expect(ctx.getAccessManager("some-repo")).andReturn(accessMan);
         expect(accessMan.isGranted("/foo/bar", 8)).andReturn(true);
-        expect(state.getHandle()).andReturn(PARENT_PATH).times(2);
+        expect(state.getHandle()).andReturn(PARENT_PATH);
+        expect(state.getHandle()).andReturn(PARENT_PATH);
         expect(state.getName()).andReturn("foo");
         expect(state.getJCRNode()).andReturn(stateJCRNode);
         expect(state.getNodeTypeName()).andReturn("mgnl:contentNode");
@@ -117,9 +122,10 @@ public class ActivationCommandTest extends TestCase {
         //expect(ctx.getAttribute("msg", 1)).andReturn(null);
         //ctx.setMessage("msg", "Can't activate: :", 1);
 
-        replay(sysCtx, ctx, accessMan, hm, state, parent, stateJCRNode, parentJCRNode, siblings, messages, syndicator);
+        Object[] mocks = new Object[] {sysCtx, ctx, accessMan, hm, state, parent, stateJCRNode, parentJCRNode, siblings, messages, syndicator, vhm,versionTmpNode,versionTmp};
+        replay(mocks);
         command.execute(ctx);
-        verify(sysCtx, ctx, accessMan, hm, state, parent, stateJCRNode, parentJCRNode, siblings, messages, syndicator);
+        verify(mocks);
     }
 
     //todo: refactor and test other scenarios

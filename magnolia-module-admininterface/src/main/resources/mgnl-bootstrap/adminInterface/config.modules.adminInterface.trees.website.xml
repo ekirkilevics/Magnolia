@@ -16,6 +16,9 @@
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>website</sv:value>
   </sv:property>
+  <sv:property sv:name="enableDeleteConfirmation" sv:type="String">
+    <sv:value>false</sv:value>
+  </sv:property>
   <sv:property sv:name="configurationClass" sv:type="String">
     <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration</sv:value>
   </sv:property>

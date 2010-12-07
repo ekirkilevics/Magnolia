@@ -31,44 +31,67 @@
  * intact.
  *
  */
- 
- /**
-  * 
-  */
- classDef("mgnl.admininterface.VersionsList", function(onShowItem){
- 
-    /**
-     * The current selected items version label
-     */
-    this.currentVersionLabel = null;
 
-    /**
-     * The function called to show the lists item
-     */
-    this.onShowItem = onShowItem;
-    
-    this.restore = function(versionLabel){
-        versionLabel = versionLabel==null ? this.currentVersionLabel : versionLabel;
-        document.mgnlForm.command.value="restore";
-        document.mgnlForm.versionLabel.value=versionLabel;
-        document.mgnlForm.submit();
-    };
+importClass("mgnl.controls.List");
 
-    this.showItem = function(versionLabel){
-        versionLabel = versionLabel==null ? this.currentVersionLabel : versionLabel;
-        // on show must be set by the user of this class
-        onShowItem(versionLabel);
-    };
+classDef("mgnl.admininterface.VersionsList",
 
- });
- 
-/**
- * Show versions of a page
- */
-mgnl.admininterface.VersionsList.show = function(repository, path){
-    url = "/.magnolia/pages/" + repository + "VersionsList.html";
-    url = MgnlURLUtil.addParameter(url, "repository", repository);
-    url = MgnlURLUtil.addParameter(url, "path", path);
-    
-    mgnlOpenWindow(url, 1000, 600);
-};
+	// extends
+	mgnl.controls.List,
+
+	// constructor
+	function(name, form, repository, path, onShowItem, onDiffItem){
+		this.parentConstructor(name, form);
+
+		this.repository = repository;
+		this.path = path;
+		this.onShowItem = onShowItem;
+		this.onDiffItem = onDiffItem;
+    },
+
+    // members
+    {
+    	restore: function(versionLabel){
+	        versionLabel = versionLabel==null ? this.getSelectedItem().versionLabel : versionLabel;
+	        document.mgnlForm.command.value="restore";
+	        document.mgnlForm.versionLabel.value=versionLabel;
+	        document.mgnlForm.submit();
+	    },
+
+	    showItem: function(versionLabel){
+	        versionLabel = versionLabel==null ? this.getSelectedItem().versionLabel : versionLabel;
+	        // on show must be set by the user of this class
+	        this.onShowItem(versionLabel);
+	    },
+
+	    diffItemWithCurrent: function(versionLabel){
+	        versionLabel = versionLabel==null ? this.getSelectedItem().versionLabel : versionLabel;
+	        this.onDiffItem(this.repository, this.path, versionLabel, "");
+	    },
+
+	    diffItemWithPrevious: function(versionLabel){
+	        versionLabel = versionLabel==null ? this.getSelectedItem().versionLabel : versionLabel;
+	        this.onDiffItem(this.repository, this.path, "previous", versionLabel);
+	    },
+
+	    hasPreviousVersion: function(){
+	    	return this.selected > 0;
+	    }
+
+    },
+
+    // static
+    {
+        /**
+         * Show versions of a page
+         */
+    	show: function(repository, path){
+	        url = "/.magnolia/pages/" + repository + "VersionsList.html";
+	        url = MgnlURLUtil.addParameter(url, "repository", repository);
+	        url = MgnlURLUtil.addParameter(url, "path", path);
+
+	        mgnlOpenWindow(url, 1000, 600);
+    	}
+    }
+);
+

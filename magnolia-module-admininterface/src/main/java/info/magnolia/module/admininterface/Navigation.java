@@ -55,6 +55,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Navigation {
 
+	private static final String CP_PREFIX = "contextPath + ";
+
     Logger log = LoggerFactory.getLogger(Navigation.class);
 
     /**
@@ -83,40 +85,51 @@ public class Navigation {
 
     /**
      * Generate the code to initialize the js navigation
-     * @param name the name of the javascript menu variable
      * @return the javascript
      */
     public String getJavascript() {
         StringBuffer str = new StringBuffer();
 
         // name, id, text, link, icon
-        String nodePattern = "{0}.addNode (\"{1}\", \"{2}\", \"{3}\", contextPath + \"{4}\");\n";
+        String nodePattern = "{0}.addNode (\"{1}\", \"{2}\", \"{3}\", {4}\"{5}\");\n";
         // name, parentId, id, text, link, icon
-        String subPattern = "{0}.getNode(\"{1}\").addNode (\"{2}\", \"{3}\", \"{4}\", contextPath + \"{5}\");\n";
+        String subPattern = "{0}.getNode(\"{1}\").addNode (\"{2}\", \"{3}\", \"{4}\", {5}\"{6}\");\n";
 
         // loop over the menupoints
         for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content mp = (Content) iter.next();
             // check permission
             if (isMenuPointRendered(mp)) {
-                str.append(MessageFormat.format(nodePattern, new Object[]{
-                    jsName,
-                    mp.getUUID(),
-                    getLabel(mp),
-                    NodeDataUtil.getString(mp, "onclick").trim(),
-                    NodeDataUtil.getString(mp, "icon").trim()}));
+                String icon = NodeDataUtil.getString(mp, "icon");
+                String contextPath = "";
+                if (!"".equals(icon)) {
+                    contextPath = CP_PREFIX;
+                }
+                str.append(MessageFormat.format(nodePattern, jsName,
+                mp.getUUID(),
+                getLabel(mp),
+                NodeDataUtil.getString(mp, "onclick"),
+                contextPath,
+                icon));
+
 
                 // sub menupoints (2 level only)
                 for (Iterator iterator = mp.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
                     Content sub = (Content) iterator.next();
                     if (isMenuPointRendered(sub)) {
-                        str.append(MessageFormat.format(subPattern, new Object[]{
-                            jsName,
-                            mp.getUUID(),
-                            sub.getUUID(),
-                            getLabel(sub),
-                            NodeDataUtil.getString(sub, "onclick").trim(),
-                            NodeDataUtil.getString(sub, "icon").trim()}));
+                        String subIcon = NodeDataUtil.getString(sub, "icon");
+                        String subContextPath = "";
+                        if (!"".equals(subIcon)) {
+                            subContextPath = CP_PREFIX;
+                        }
+                        str.append(MessageFormat.format(subPattern, jsName,
+                        mp.getUUID(),
+                        sub.getUUID(),
+                        getLabel(sub),
+                        NodeDataUtil.getString(sub, "onclick"),
+                        subContextPath,
+                        subIcon));
+
                     }
                 }
             }

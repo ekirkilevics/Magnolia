@@ -344,18 +344,24 @@ MgnlNavigation.prototype.create = function (container) {
         table.className = 'mgnlNavigation' + this.getDepth () + 'Inactive';
         table.appendChild (document.createElement ('tbody'));
         table.firstChild.appendChild (document.createElement ('tr'));
+        
+        if (this.hasIcon ()) {
+            var iconTd = document.createElement ('td');
+            iconTd.width = '1%';
+            iconTd.appendChild(document.createElement ('img'));
+            iconTd.firstChild.src = this.getIcon();
+            table.firstChild.firstChild.appendChild (iconTd);
+        };
 
         var cell = document.createElement ('td');
         cell.className = 'mgnlNavigation' + this.getDepth () + 'Cell mgnlNavigationText';
-        if (this.hasIcon ()) 
-        	cell.style.backgroundImage = 'url(' + this.getIcon () + ')';
-
         cell.id = this.getId ();
 
         cell.onmouseover = function () { myNavigation.mouseOver (this.id); };
         cell.onmouseout = function () { myNavigation.mouseOut (this.id); };
         cell.onclick = function () { myNavigation.mouseClick (this.id); };
         
+        cell.style.paddingLeft = '2px';
         cell.innerHTML = this.getTitle();
 
         table.firstChild.firstChild.appendChild (cell);

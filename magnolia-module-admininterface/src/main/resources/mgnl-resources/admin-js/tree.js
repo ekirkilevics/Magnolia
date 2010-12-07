@@ -143,7 +143,8 @@
 
     mgnlTree.prototype.selectNode = function(id) {
         mgnlDebug("selectNode:" + id, "tree");
-        var sNode=this.getNode(id);
+        // stale data paranoia - refresh on select
+        var sNode=this.getNode(id, false);
         var divMain=document.getElementById(sNode.divMainId);
         mgnlDebug("selectNode: divMainId:" + sNode.divMainId, "tree");
 
@@ -168,13 +169,20 @@
     }
 
 
-    mgnlTree.prototype.getNode = function(id)
+    mgnlTree.prototype.getNode = function(id, refresh)
         {
-        var node=this.nodes[id];
-        if (!node)
+         var node=this.nodes[id];
+         if (!node || refresh)
             {
-            node=new mgnlTreeNode(this,id);
+            var node=new mgnlTreeNode(this,id);
             this.nodes[id]=node;
+            }
+         else if (node == this.selectedNode)
+            {
+             var aNode=new mgnlTreeNode(this,id);
+             // refresh - data might be stale already.
+             this.selectedNode.isDeleted = aNode.isDeleted;
+             this.selectedNode.isActivated = aNode.isActivated;
             }
         return node;
         }
@@ -494,18 +502,28 @@
         }
 
 
-    mgnlTree.prototype.deleteNode = function()
+    mgnlTree.prototype.deleteNode = function(dontAskConfirmation)
         {
         var text;
+        var stagedDeletion = this.repository == 'website' || this.repository == 'dms'
+
         if(this.getNode(this.selectedNode.id).isActivated){
+          if(stagedDeletion){
+            text = mgnlMessages.get('tree.deletenode.staged.confirm.text.js', null, [this.selectedNode.id]);
+          } else {
             text = mgnlMessages.get('tree.deletenode.confirm.deactivation.text.js', null, [this.selectedNode.id]);
+          }
         }
         else{
+          if(stagedDeletion){
+            text = mgnlMessages.get('tree.deletenode.staged.confirm.text.js', null, [this.selectedNode.id]);
+          } else {
             text = mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
+          }
         }
 
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
-        if (mgnlConfirm(text,title))
+        if (dontAskConfirmation || mgnlConfirm(text,title))
             {
             var parentNode=this.getNode(this.selectedNode.parentId);
             var deleteNode=this.selectedNode.label;
@@ -1031,6 +1049,11 @@
             if (document.getElementById(this.idPre+"_PermissionWrite").value=="true") this.permissionWrite=true;
             else this.permissionWrite=false;
             }
+        if (document.getElementById(this.idPre+"_IsDeleted"))
+          {
+          if (document.getElementById(this.idPre+"_IsDeleted").value=="true") this.isDeleted=true;
+          else this.isDeleted=false;
+          }
 
         //html objects get lost, therefore use id and getElement on the float
         this.divMainId=this.idPre+"_DivMain";

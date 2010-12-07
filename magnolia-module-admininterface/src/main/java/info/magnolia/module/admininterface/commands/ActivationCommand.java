@@ -80,23 +80,9 @@ public class ActivationCommand extends BaseActivationCommand {
         boolean success = false;
         try {
             log.debug("Will activate content from {} repository with uuid {} and path {}", new Object[] {getRepository(), getUuid(), getPath()});
-            Content thisState = getNode(ctx);
-            String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
-            if (StringUtils.isEmpty(parentPath)) {
-                parentPath = "/";
-            }
-            log.debug("Activate content {} as a child of {}", new Object[] {thisState.getName(), parentPath});
-            // make multiple activations instead of a big bulk
-            if (recursive) {
-                List versionMap = getVersionMap();
-                if (versionMap == null) {
-                    activateRecursive(parentPath, thisState, ctx);
-                } else {
-                    activateRecursive(ctx, versionMap);
-                }
-            }
-            else {
-                List orderInfo = getOrderingInfo(thisState);
+            final Content originalState = getNode(ctx);
+            Content thisState = originalState;
+            if (!recursive) {
                 if (StringUtils.isNotEmpty(getVersion())) {
                     try {
                         thisState = thisState.getVersionedContent(getVersion());
@@ -104,15 +90,57 @@ public class ActivationCommand extends BaseActivationCommand {
                         log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
                     }
                 }
-                getSyndicator().activate(parentPath, thisState, orderInfo);
+                success = activateUpdate(ctx, originalState);
+            } else {
+                success = activateBulkUpdate(ctx, getNode(ctx));
             }
-            log.debug("exec successfully.");
-            success = true;
         }
         catch (Exception e) {
             log.error("can't activate", e);
             AlertUtil.setException(MessagesManager.get("tree.error.activate"), e, ctx);
         }
+        return success;
+    }
+
+    private boolean activateUpdate(Context ctx, Content thisState) throws ExchangeException, RepositoryException {
+        boolean success;
+        String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
+        if (StringUtils.isEmpty(parentPath)) {
+            parentPath = "/";
+        }
+        log.debug("Activate content {} as a child of {}", new Object[] {thisState.getName(), parentPath});
+        // make multiple activations instead of a big bulk
+        List orderInfo = getOrderingInfo(thisState);
+        if (StringUtils.isNotEmpty(getVersion())) {
+            try {
+                thisState = thisState.getVersionedContent(getVersion());
+            } catch (RepositoryException re) {
+                // TODO: is this correct? should not we fail completely rather then silently ignore versions?
+                log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle() + ". Activating current content instead.", re);
+            }
+        }
+        getSyndicator().activate(parentPath, thisState, orderInfo);
+        log.debug("exec successfully.");
+        success = true;
+        return success;
+    }
+
+    private boolean activateBulkUpdate(Context ctx, Content thisState) throws ExchangeException, RepositoryException {
+        boolean success;
+        // make multiple activations instead of a big bulk
+        List versionMap = getVersionMap();
+        if (versionMap == null) {
+            String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
+            if (StringUtils.isEmpty(parentPath)) {
+                parentPath = "/";
+            }
+            log.debug("Activate content {} as a child of {}", new Object[] {thisState.getName(), parentPath});
+            activateRecursive(parentPath, thisState, ctx);
+        } else {
+            activateRecursive(ctx, versionMap);
+        }
+        log.debug("exec successfully.");
+        success = true;
         return success;
     }
 

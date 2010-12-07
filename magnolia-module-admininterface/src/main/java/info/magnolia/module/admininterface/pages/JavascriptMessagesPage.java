@@ -33,11 +33,13 @@
  */
 package info.magnolia.module.admininterface.pages;
 
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.cms.i18n.Messages;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,14 +57,26 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
 
     private String localeStr = MessagesManager.getInstance().getDefaultLocale().toString();
 
+    private Collection<String> bundles = new ArrayList<String>();
+
     public JavascriptMessagesPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
 
     public void renderHtml(String view) throws IOException {
         final Locale locale = LocaleUtils.toLocale(localeStr);
-        final Messages messages = MessagesManager.getMessages(locale);
+        //adminInterface or default messages
+        Messages messages = MessagesManager.getMessages(locale);
         MessagesUtil.generateJavaScript(response.getWriter(), messages);
+
+        for (String bundleName : this.bundles) {
+            if(MessagesManager.DEFAULT_BASENAME.equals(bundleName)){
+                //skip adminInterface bundle to avoid duplication
+                continue;
+            }
+            messages = MessagesManager.getMessages(bundleName);
+            MessagesUtil.generateJavaScript(response.getWriter(), messages);
+        }
     }
 
     public String getLocale() {
@@ -71,6 +85,18 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
 
     public void setLocale(String language) {
         this.localeStr = language;
+    }
+
+    public Collection<String> getBundles() {
+        return bundles;
+    }
+
+    public void setBundles(Collection<String> bundles) {
+        this.bundles = bundles;
+    }
+
+    public void addBundle(String bundleName){
+        this.bundles.add(bundleName);
     }
 
 }

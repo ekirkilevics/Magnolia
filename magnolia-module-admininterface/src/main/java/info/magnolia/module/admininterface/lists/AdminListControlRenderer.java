@@ -104,11 +104,21 @@ public class AdminListControlRenderer extends ListControlRenderer {
         this.border = border;
     }
 
+    /**
+     * Defines the class/constructor function used to instantiate the javascript list object.
+     */
     public String getJavaScriptClass() {
         return this.javaScriptClass;
     }
 
     public void setJavaScriptClass(String javaScriptClass) {
         this.javaScriptClass = javaScriptClass;
+    }
+
+    /**
+     * The arguments passed to the constructor.
+     */
+    public String getConstructorArguments(ListControl list){
+        return "'" + list.getName() + "', document.mgnlForm";
     }
 }

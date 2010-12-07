@@ -61,6 +61,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         templateManager = TemplateManager.getInstance();
     }
 
+    @Override
     public String createNode() {
         String view = super.createNode();
         try {
@@ -85,6 +86,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         return templateManager.getDefaultTemplate(node);
     }
 
+    @Override
     public String show() {
         //show start page if no templates present yet
         if (!templateManager.getAvailableTemplates().hasNext()) {

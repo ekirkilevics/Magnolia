@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="bundles" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:contentNode</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+    <sv:value>mix:lockable</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>b132503e-0b0e-4b47-a8ee-1dc33cbe2522</sv:value>
+  </sv:property>
+  <sv:property sv:name="adminInterface" sv:type="String">
+    <sv:value>info.magnolia.module.admininterface.messages</sv:value>
+  </sv:property>
+  <sv:node sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      <sv:value>2010-10-27T16:55:15.274+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2010-10-27T17:23:19.331+02:00</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>
