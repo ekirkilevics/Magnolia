@@ -321,6 +321,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         expect(context.getAggregationState()).andReturn(new MockAggregationState());
         expect(context.getServletContext()).andReturn(null);
         expect(context.getRequest()).andReturn(null);
+        expect(context.getResponse()).andReturn(null);
         replay(context);
         MgnlContext.setInstance(context);
         assertRendereredContentWithoutCheckingContext(":/tralala:", new HashMap(), "pouet");
@@ -355,6 +356,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         expect(context.getAggregationState()).andReturn(new MockAggregationState());
         expect(context.getServletContext()).andReturn(null);
         expect(context.getRequest()).andReturn(null);
+        expect(context.getResponse()).andReturn(null);
         expect(context.getContextPath()).andReturn("/tralala"); // actual call from the template
         replay(context);
         MgnlContext.setInstance(context);

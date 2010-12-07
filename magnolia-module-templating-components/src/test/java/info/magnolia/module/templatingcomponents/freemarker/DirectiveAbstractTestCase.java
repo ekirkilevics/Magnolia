@@ -123,6 +123,7 @@ public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCa
         expect(ctx.getServletContext()).andStubReturn(createMock(ServletContext.class));
         req = createMock(HttpServletRequest.class);
         expect(ctx.getRequest()).andReturn(req).anyTimes();
+        expect(ctx.getResponse()).andReturn(null).anyTimes();
         expect(req.getAttribute(Sources.REQUEST_LINKS_DRAWN)).andReturn(Boolean.FALSE).times(0, 1);
         req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
         expectLastCall().times(0, 1);
