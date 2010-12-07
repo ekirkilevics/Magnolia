@@ -126,8 +126,8 @@ public class LegacyTreeHandlerFactory {
             c.addContextMenuItem(menuItem);
         }
 
-        List<FunctionBarItem> fis = tree.getFunctionBar().getMenuItems();
-        for (FunctionBarItem fi : fis) {
+        List<ContextMenuItem> fis = tree.getFunctionBar().getMenuItems();
+        for (ContextMenuItem fi : fis) {
             JsonMenuItem menuItem = new JsonMenuItem();
             if (fi == null) {
                 menuItem.setSeparator(true);
