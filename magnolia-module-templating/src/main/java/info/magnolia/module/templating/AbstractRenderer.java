@@ -34,7 +34,6 @@
 package info.magnolia.module.templating;
 
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,7 +54,7 @@ import info.magnolia.context.MgnlContext;
  * @version $Id$
  *
  */
-public abstract class AbstractRenderer {
+public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
 
     private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
 
@@ -65,18 +64,25 @@ public abstract class AbstractRenderer {
     protected void render(Content content, RenderableDefinition definition, Writer out) throws RenderException {
 
         final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
+
         RenderingModel model;
-        try {
+        String actionResult;
+
+        model = (RenderingModel) MgnlContext.getAttribute(ModelExecutionFilter.MODEL_ATTRIBUTE_PREFIX + content.getUUID());
+
+        if (model == null) {
+
             model = newModel(content, definition, parentModel);
-        }
-        catch (Exception e) {
-            throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
+
+            actionResult = model.execute();
+
+            if (RenderingModel.SKIP_RENDERING.equals(actionResult)) {
+                return;
+            }
+        } else {
+            actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + content.getUUID());
         }
 
-        final String actionResult = model.execute();
-        if(RenderingModel.SKIP_RENDERING.equals(actionResult)){
-            return;
-        }
         String templatePath = determineTemplatePath(content, definition, model, actionResult);
 
         final Map ctx = newContext();
@@ -101,19 +107,24 @@ public abstract class AbstractRenderer {
     /**
      * Creates the model for this rendering process. Will set the properties
      */
-    protected RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
-        return definition.newModel(wrappedContent, definition, parentModel);
+    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws RenderException {
+        try {
+            final Content wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
+            return definition.newModel(wrappedContent, definition, parentModel);
+        } catch (Exception e) {
+            throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
+        }
     }
-
 
     protected Map saveContextState(final Map ctx) {
         Map state = new HashMap();
         // save former values
         saveAttribute(ctx, state, "content");
-        saveAttribute(ctx, state, "actionResult");
-        saveAttribute(ctx, state, "state");
         saveAttribute(ctx, state, "def");
+        saveAttribute(ctx, state, "state");
+        saveAttribute(ctx, state, "mgnl");
+        saveAttribute(ctx, state, "model");
+        saveAttribute(ctx, state, "actionResult");
 
         saveAttribute(ctx, state, getPageAttributeName());
         return state;

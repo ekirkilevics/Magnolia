@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="locking" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sv:node sv:name="modelExecution" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:contentNode</sv:value>
+    <sv:value>mgnl:content</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>a10a1521-79d4-4a31-ba64-212cd884ae2e</sv:value>
+    <sv:value>62289312-e1ed-4c13-b6d5-6e0ded9052a3</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.templating.locking.DummySoftLockingSupport</sv:value>
+    <sv:value>info.magnolia.module.templating.ModelExecutionFilter</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-      <sv:value>false</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-      <sv:value>2010-03-14T23:53:44.191+01:00</sv:value>
+      <sv:value>2010-09-29T18:38:30.721+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2010-10-06T18:13:04.177+02:00</sv:value>
+      <sv:value>2010-10-05T11:09:55.085+02:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>

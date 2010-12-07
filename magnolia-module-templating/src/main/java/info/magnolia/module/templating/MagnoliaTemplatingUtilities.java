@@ -188,5 +188,19 @@ public class MagnoliaTemplatingUtilities {
     public Content getContentByUUID(String repository, String uuid){
         return ContentUtil.getContentByUUID(repository, uuid);
     }
+    
+    public static Content encode(Content content){
+        if(content != null){
+            return new HTMLEncodingContentWrapper(content, true);
+        }
+        return null;
+    }
+    
+    public static Content decode(Content content){
+        if(content instanceof HTMLEncodingContentWrapper){
+            return ((HTMLEncodingContentWrapper)content).getWrappedContent();
+        }
+        throw new IllegalStateException("The content to decode is not wrapped by a " + HTMLEncodingContentWrapper.class.getName());
+    }
 
 }

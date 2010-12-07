@@ -38,9 +38,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
+import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.engine.RenderingEngine;
-import info.magnolia.module.templating.locking.SoftLockingSupport;
 import info.magnolia.objectfactory.Components;
 
 import java.io.IOException;
@@ -75,9 +75,6 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
     protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
 
-    private SoftLockingSupport softLockSupport = Components.getSingleton(SoftLockingSupport.class);
-
-
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         final AggregationState aggregationState = MgnlContext.getAggregationState();
 
@@ -92,11 +89,6 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
                 Content content = aggregationState.getMainContent();
 
-                if(!aggregationState.isPreviewMode()){
-                    softLockSupport.lock(content);
-                } else {
-                    softLockSupport.unlock(content);
-                }
                 render(content, templateName, response);
 
                 try {
@@ -137,7 +129,12 @@ public class RenderingFilter extends AbstractMgnlFilter {
     }
 
     protected void render(Content content, String templateName, HttpServletResponse response) throws IOException, RenderException {
-        renderingEngine.render(content, templateName, response.getWriter());
+
+        // This lazy print writer will only acquire the writer from response if it is going to be used. This allows
+        // templates to use the output stream if they wish. See MAGNOLIA-3014.
+        LazyInitPrintWriter out = new LazyInitPrintWriter(response);
+
+        renderingEngine.render(content, templateName, out);
     }
 
 

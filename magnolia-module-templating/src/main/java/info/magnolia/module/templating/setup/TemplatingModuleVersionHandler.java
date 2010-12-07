@@ -62,7 +62,7 @@ import java.util.List;
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatiblity filter", "", ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
+    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatibility filter", "", ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
 
     public TemplatingModuleVersionHandler() {
         register(DeltaBuilder.update("3.5", "")
@@ -115,15 +115,19 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
 
         register(DeltaBuilder.update("4.4", "")
-            .addTask(new BootstrapSingleModuleResource("Soft Locking Configuration", "Add configuration for the soft locking support.", "config.server.rendering.locking.xml"))
+            .addTask(new BootstrapSingleResourceAndOrderBefore(
+                        "Model Execution Filter",
+                        "Add Model Execution Filter",
+                        "/mgnl-bootstrap/templating/config.server.filters.cms.modelExecution.xml",
+                        "backwardCompatibility"))
         );
     }
 
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.add(orderBackwardCompatibilityFilter);
+        tasks.add(new OrderNodeBeforeTask("Order model execution filter", "", ContentRepository.CONFIG, "/server/filters/cms/modelExecution", "backwardCompatibility"));
         // TODO : make sure the RenderingFilter is the last one ?
         return tasks;
     }
-
 }

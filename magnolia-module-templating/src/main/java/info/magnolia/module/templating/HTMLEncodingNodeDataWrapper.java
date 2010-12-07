@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2010 Magnolia International
+ * This file Copyright (c) 2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,43 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.locking;
+package info.magnolia.module.templating;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.NodeDataWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
 
 /**
- * TODO better naming? Provide more than an empty implementation?
- * An empty implementation of {@link SoftLockingSupport}. This feature in only available in Magnolia EE since version 4.4.
- * @author fgrilli
+ * Implementation of wrapped node data in HTML format.
+ * 
+ * @author pbracher
+ * @version $Id: HTMLEncodingNodeDataWrapper.java 32669 2010-03-13 00:53:19Z gjoseph $
  *
  */
-public class DummySoftLockingSupport implements SoftLockingSupport {
+public class HTMLEncodingNodeDataWrapper extends NodeDataWrapper {
+    
+    private boolean transformLineBreaks;
 
-    public void lock(Content content) {
-        //do nothing
-        List<String> list = new ArrayList<String>();
-        for(String s:list){
-            System.out.println(s);
+    public HTMLEncodingNodeDataWrapper(NodeData wrappedNodeData, boolean transformLineBreaks) {
+        super(wrappedNodeData);
+        this.transformLineBreaks = transformLineBreaks;
+    }
+
+    public String getString() {
+        final String str = StringEscapeUtils.escapeHtml(super.getString());
+        if(transformLineBreaks){
+            return StringUtils.replace(str, "\n", "<br/>");
         }
-
-    }
-
-    public void unlock(Content content) {
-        //do nothing
-    }
-
-    public List<String> lockedBy(Content content) throws AccessDeniedException, RepositoryException {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean isLocked(Content content) throws AccessDeniedException, RepositoryException {
-        throw new UnsupportedOperationException();
+        return str;
     }
 
 }

@@ -36,6 +36,7 @@ package info.magnolia.module.templating.setup;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.filters.BackwardCompatibilityFilter;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
@@ -63,6 +64,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
     public void testPre4_0TemplatesAreFixedProperly() throws Exception {
         // fake pre-install
         setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
+        setupConfigProperty("/server/filters/cms/backwardCompatibility", "class", BackwardCompatibilityFilter.class.getName());
         setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
 
         // setup a template, with pre-4.0 properties
@@ -91,6 +93,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
     public void testMisfixedTemplatesFrom402AreFixed() throws Exception {
         // fake pre-install
         setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
+        setupConfigProperty("/server/filters/cms/backwardCompatibility", "class", BackwardCompatibilityFilter.class.getName());
         setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
 
         // setup a template, with pre-4.0 properties
@@ -119,6 +122,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
     public void testSilentIfUserFixedTemplatesHimself() throws Exception {
         // fake pre-install
         setupConfigProperty("/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter"); // old RenderingFilter fqn
+        setupConfigProperty("/server/filters/cms/backwardCompatibility", "class", BackwardCompatibilityFilter.class.getName());
         setupConfigNode("/server/rendering/freemarker/sharedVariables"); // this is assumed to have been created by CoreModuleVersionHandler
 
         // setup a template, with pre-4.0 properties
