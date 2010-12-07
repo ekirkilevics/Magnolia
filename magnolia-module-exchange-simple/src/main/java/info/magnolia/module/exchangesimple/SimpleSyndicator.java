@@ -33,29 +33,26 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
 import EDU.oswego.cs.dl.util.concurrent.CountDown;
 import EDU.oswego.cs.dl.util.concurrent.Sync;
 
@@ -70,16 +67,22 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     public SimpleSyndicator() {
     }
 
-    public void activate(final ActivationContent activationContent) throws ExchangeException {
-        Collection subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
-        Iterator subscriberIterator = subscribers.iterator();
+    @Override
+    public void activate(final ActivationContent activationContent, String nodePath) throws ExchangeException {
+        String nodeUUID = activationContent.getproperty(NODE_UUID);
+        Collection<Subscriber> subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
+        Iterator<Subscriber> subscriberIterator = subscribers.iterator();
         final Sync done = new CountDown(subscribers.size());
-        final Map errors = new ConcurrentHashMap(subscribers.size());
+        final Map<Subscriber, Exception> errors = new ConcurrentHashMap<Subscriber, Exception>(subscribers.size());
         while (subscriberIterator.hasNext()) {
-            final Subscriber subscriber = (Subscriber) subscriberIterator.next();
+            final Subscriber subscriber = subscriberIterator.next();
             if (subscriber.isActive()) {
                 // Create runnable task for each subscriber execute
-                executeInPool(getActivateTask(activationContent, done, errors, subscriber));
+                if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
+                    executeInPool(getDeactivateTask(done, errors, subscriber, nodeUUID, nodePath));
+                } else {
+                    executeInPool(getActivateTask(activationContent, done, errors, subscriber, nodePath));
+                }
             } else {
                 // count down directly
                 done.release();
@@ -89,16 +92,15 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
         acquireIgnoringInterruption(done);
 
-        String uuid = activationContent.getproperty(NODE_UUID);
         // collect all the errors and send them back.
         if (!errors.isEmpty()) {
             Exception e = null;
             StringBuffer msg = new StringBuffer(errors.size() + " error").append(errors.size() > 1 ? "s" : "").append(" detected: ");
-            Iterator iter = errors.entrySet().iterator();
+            Iterator<Map.Entry<Subscriber, Exception>> iter = errors.entrySet().iterator();
             while (iter.hasNext()) {
-                Entry entry = (Entry) iter.next();
-                e = (Exception) entry.getValue();
-                Subscriber subscriber = (Subscriber) entry.getKey();
+                Entry<Subscriber, Exception> entry = iter.next();
+                e = entry.getValue();
+                Subscriber subscriber = entry.getKey();
                 msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
                 log.error(e.getMessage(), e);
             }
@@ -113,11 +115,11 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         });
     }
 
-    private Runnable getActivateTask(final ActivationContent activationContent, final Sync done, final Map errors, final Subscriber subscriber) {
+    private Runnable getActivateTask(final ActivationContent activationContent, final Sync done, final Map<Subscriber, Exception> errors, final Subscriber subscriber, final String nodePath) {
         Runnable r = new Runnable() {
             public void run() {
                 try {
-                    activate(subscriber, activationContent);
+                    activate(subscriber, activationContent, nodePath);
                 } catch (ExchangeException e) {
                     log.error("Failed to activate content.", e);
                     errors.put(subscriber,e);
@@ -135,7 +137,8 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param activationContent
      * @throws ExchangeException
      */
-    public String activate(Subscriber subscriber, ActivationContent activationContent) throws ExchangeException {
+    @Override
+    public String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException {
         log.debug("activate");
         if (null == subscriber) {
             throw new ExchangeException("Null Subscriber");
@@ -143,25 +146,16 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
         String parentPath = null;
 
-        Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
+        Subscription subscription = subscriber.getMatchedSubscription(nodePath, this.repositoryName);
         if (null != subscription) {
             // its subscribed since we found the matching subscription
             // unfortunately activationContent is not thread safe and is used by multiple threads in case of multiple subscribers so we can't use it as a vessel for transfer of parentPath value
             parentPath = this.getMappedPath(this.parent, subscription);
         } else {
-            log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
+            log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), nodePath);
             return null;
         }
         log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName()); //$NON-NLS-1$
-
-        if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
-            try {
-                parentPath = URLEncoder.encode(parentPath, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                // do nothing
-            }
-        }
 
         URLConnection urlConnection = null;
         try {
@@ -194,45 +188,17 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         return null;
     }
 
-    protected URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
-
-        String handle = getActivationURL(subscriber);
-
-        try {
-            // authentication headers
-            if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
-                handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
-            }
-            URL url = new URL(handle);
-            URLConnection urlConnection = url.openConnection();
-            // authentication headers
-            if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
-            } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
-            }
-
-            return urlConnection;
-        } catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
-        } catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
-        } catch (Exception e) {
-            throw new ExchangeException(e);
-        }
-    }
-
-    public void doDeactivate() throws ExchangeException {
-        Collection subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
-        Iterator subscriberIterator = subscribers.iterator();
+    @Override
+    public void doDeactivate(String nodeUUID, String nodePath) throws ExchangeException {
+        Collection<Subscriber> subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
+        Iterator<Subscriber> subscriberIterator = subscribers.iterator();
         final Sync done = new CountDown(subscribers.size());
-        final Map errors = new ConcurrentHashMap();
+        final Map<Subscriber, Exception> errors = new ConcurrentHashMap<Subscriber, Exception>();
         while (subscriberIterator.hasNext()) {
-            final Subscriber subscriber = (Subscriber) subscriberIterator.next();
+            final Subscriber subscriber = subscriberIterator.next();
             if (subscriber.isActive()) {
                 // Create runnable task for each subscriber.
-                executeInPool(getDeactivateTask(done, errors, subscriber));
+                executeInPool(getDeactivateTask(done, errors, subscriber, nodeUUID, nodePath));
             } else {
                 // count down directly
                 done.release();
@@ -246,12 +212,12 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         if (!errors.isEmpty()) {
             Exception e = null;
             StringBuffer msg = new StringBuffer(errors.size() + " error").append(
-            errors.size() > 1 ? "s" : "").append(" detected: ");
-            Iterator iter = errors.entrySet().iterator();
+                    errors.size() > 1 ? "s" : "").append(" detected: ");
+            Iterator<Entry<Subscriber, Exception>> iter = errors.entrySet().iterator();
             while (iter.hasNext()) {
-                Entry entry = (Entry) iter.next();
-                e = (Exception) entry.getValue();
-                Subscriber subscriber = (Subscriber) entry.getKey();
+                Entry<Subscriber, Exception> entry = iter.next();
+                e = entry.getValue();
+                Subscriber subscriber = entry.getKey();
                 msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
                 log.error(e.getMessage(), e);
             }
@@ -260,11 +226,11 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
-    private Runnable getDeactivateTask(final Sync done, final Map errors, final Subscriber subscriber) {
+    private Runnable getDeactivateTask(final Sync done, final Map<Subscriber, Exception> errors, final Subscriber subscriber, final String nodeUUID, final String nodePath) {
         Runnable r = new Runnable() {
             public void run() {
                 try {
-                    doDeactivate(subscriber);
+                    doDeactivate(subscriber, nodeUUID, nodePath);
                 } catch (ExchangeException e) {
                     log.error("Failed to deactivate content.", e);
                     errors.put(subscriber,e);
@@ -281,14 +247,15 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param subscriber
      * @throws ExchangeException
      */
-    public String doDeactivate(Subscriber subscriber) throws ExchangeException {
-        Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
+    @Override
+    public String doDeactivate(Subscriber subscriber, String nodeUUID, String path) throws ExchangeException {
+        Subscription subscription = subscriber.getMatchedSubscription(path, this.repositoryName);
         if (null != subscription) {
             String handle = getDeactivationURL(subscriber);
             try {
                 URLConnection urlConnection = prepareConnection(subscriber);
 
-                this.addDeactivationHeaders(urlConnection);
+                this.addDeactivationHeaders(urlConnection, nodeUUID);
                 String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
 
                 // check if the activation failed
@@ -311,25 +278,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             }
         }
         return null;
-    }
-
-    /**
-     * Gets target path to which the current path is mapped in given subscription. Provided path should be without trailing slash.
-     */
-    protected String getMappedPath(String path, Subscription subscription) {
-        String toURI = subscription.getToURI();
-        if (null != toURI) {
-            String fromURI = subscription.getFromURI();
-            // remove trailing slash if any
-            fromURI = StringUtils.removeEnd(fromURI, "/");
-            toURI = StringUtils.removeEnd(toURI, "/");
-            // apply path transformation if any
-            path = path.replaceFirst(fromURI, toURI);
-            if (path.equals("")) {
-                return "/";
-            }
-        }
-        return path;
     }
 
 }

@@ -74,7 +74,7 @@ public class SimpleSyndicatorTest extends TestCase {
     private ActivationManager actMan;
     private WebContext ctx;
     private SystemContext sysctx;
-    private SimpleSyndicator syndicator;
+    private BaseSyndicatorImpl syndicator;
     private User user;
     private Content content;
     private HierarchyManager hm;
@@ -82,6 +82,7 @@ public class SimpleSyndicatorTest extends TestCase {
     private Collection<Subscriber> subscribers;
     private List<Object> allMocks;
 
+    @Override
     public void setUp() {
         actMan = createStrictMock(ActivationManager.class);
         ComponentsTestUtil.setInstance(ActivationManager.class, actMan);
@@ -106,6 +107,7 @@ public class SimpleSyndicatorTest extends TestCase {
         syndicator.contentFilterRule = rule;
     }
 
+    @Override
     public void tearDown() {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.setInstance(ActivationManager.class, null);
@@ -206,6 +208,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(content.getUUID()).andReturn("some-real-uuid");
 
         expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
+        expect(content.hasMixin("mgnl:deleted")).andReturn(false);
 
         //expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
         // proceed with activation
@@ -213,7 +216,7 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(subscription.getFromURI()).andReturn("/");
         expect(subscriber.getName()).andReturn("aSubscriber");
         expect(subscriber.getURL()).andReturn("prot://dummyURL");
-        expect(subscriber.getAuthenticationMethod()).andReturn("basic").times(2);
+        expect(subscriber.getAuthenticationMethod()).andReturn("basic");
         expect(subscriber.getName()).andReturn("aSubscriber");
         // and don't update the status ...
 
