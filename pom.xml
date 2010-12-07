@@ -161,30 +161,6 @@ for Java Content Repositories (JCR).
     </profile>
   </profiles>
   <build>
-    <resources>
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-      <resource>
-        <filtering>true</filtering>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>META-INF/magnolia/*</include>
-          <include>**/license.xml</include>
-        </includes>
-      </resource>
-      <resource>
-        <filtering>false</filtering>
-        <directory>${project.build.directory}/generated-resources/taglibs</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -235,11 +211,13 @@ for Java Content Repositories (JCR).
                           <uri>${taglib.uri}</uri>
                           <displayname>${project.name}</displayname>
                           <description>${project.description}</description>
-                          <destdir>${project.build.directory}/generated-resources/taglibs</destdir>
+                          <!--<destdir>let's use the default, so that addToResources works as expected </destdir>-->
                         </params>
                       </component>
                     </components>
                     <includes>**/*.java</includes>
+                    <addToSources>false</addToSources>
+                    <addToResources>true</addToResources>
                   </config>
                 </configs>
               </configuration>
@@ -351,6 +329,11 @@ for Java Content Repositories (JCR).
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>
         <version>10.3.1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>concurrent</groupId>
+        <artifactId>concurrent</artifactId>
+        <version>1.3.4</version>
       </dependency>
       <dependency>
         <groupId>commons-beanutils</groupId>
@@ -604,6 +587,10 @@ for Java Content Repositories (JCR).
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -670,7 +657,8 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>net.sf.json-lib</groupId>
         <artifactId>json-lib</artifactId>
-        <version>0.9</version>
+        <version>2.3</version>
+        <classifier>jdk15</classifier>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
