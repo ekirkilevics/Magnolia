@@ -34,6 +34,7 @@
 package info.magnolia.module.workflow.inbox;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,9 @@ public class InboxHelper {
     private static final Logger log = LoggerFactory.getLogger(InboxHelper.class);
 
     protected static String getIcon(String repository, String path) {
+        if (ItemType.DELETED_NODE_MIXIN.equals(path)) {
+            return ".resources/icons/16/document_deleted.gif";
+        }
         if (StringUtils.equals(repository, "website")) {
             return ".resources/icons/16/document_plain_earth.gif";
         }

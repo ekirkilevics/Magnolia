@@ -1,0 +1,92 @@
+<process-definition name="deactivation" revision="j0.0.1">
+  <sequence>
+    <set field="deactivator" field-value="userName"/>
+
+    <!--  go to publisher first -->
+    <to-publisher/>
+
+    <!-- will loop if rejected -->
+    <if test="${field:action} == reject">
+      <revision-round/>
+    </if>
+
+    <log message="deactivate: ${field:action}"/>
+
+    <!-- if the last action was proceed: deactivate-->
+    <if test="${field:action} == proceed">
+      <deactivate/>
+    </if>
+  </sequence>
+
+  <process-definition name="revision-round">
+    <loop>
+      <while>
+         <equals field-value="action" other-value="reject" />
+      </while>
+      <to-editor/>
+
+      <if test="${field:action} != proceed">
+        <break/>
+      </if>
+
+      <to-publisher/>
+    </loop>
+  </process-definition>
+
+  <process-definition name="to-publisher">
+    <sequence>
+      <!--
+       uncomment if you like to use an email notification
+      -->
+
+      <!--
+      <set field="mailTo" value="group-publishers"/>
+      <set field="mailTemplate" value="workflowNotification"/>
+      <participant ref="command-sendMail"/>
+      -->
+      <!-- reset the assignTo field so the editor no longers see the workflow item -->
+      <unset field="assignTo"/>
+      <participant ref="group-publishers"/>
+    </sequence>
+  </process-definition>
+
+  <process-definition name="to-editor">
+    <sequence>
+      <!-- assign back to the user who launched the activation -->
+      <set field="assignTo" field-value="deactivator"/>
+
+      <!--
+       uncomment if you like to use an email notification
+      -->
+      <!--
+      <set field="mailTo" value="user-${f:assignTo}"/>
+      <set field="mailTemplate" value="workflowNotification"/>
+      <participant ref="command-sendMail"/>
+      -->
+      <participant ref="group-editors"/>
+    </sequence>
+  </process-definition>
+
+  <process-definition name="deactivate">
+    <sequence>
+      <!--  wait if scheduled -->
+      <if>
+        <defined field-value="startDate"/>
+
+        <sleep until="${f:startDate}"/>
+      </if>
+
+      <!-- deactivate -->
+      <participant ref="command-deactivate"/>
+
+      <if>
+        <defined field-value="exception"/>
+        <!--  restart again -->
+        <deactivation/>
+        <break/>
+      </if>
+
+    </sequence>
+  </process-definition>
+
+</process-definition>

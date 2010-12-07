@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.workflow.inbox;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -55,11 +57,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -68,6 +73,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision:3416 $ ($Author:philipp $)
  */
 public class Inbox extends AbstractList {
+
+    private static final Logger log = LoggerFactory.getLogger(Inbox.class);
 
     /**
      * The id of the workitem on which we called the command.
@@ -90,6 +97,7 @@ public class Inbox extends AbstractList {
         super(name, request, response);
     }
 
+    @Override
     public ListModel getModel() {
         return new InboxListModel(MgnlContext.getUser().getName());
     }
@@ -105,15 +113,17 @@ public class Inbox extends AbstractList {
     /**
      * Sets the select js code and defines the columns.
      */
+    @Override
     public void configureList(ListControl list) {
 
         // define the select action
         list.setRenderer(new AdminListControlRenderer() {
 
+            @Override
             public String onSelect(ListControl list, Integer index) {
 
                 String customEditDialog = ObjectUtils.toString(list
-                    .getIteratorValue(WorkflowConstants.ATTRIBUTE_EDIT_DIALOG));
+                        .getIteratorValue(WorkflowConstants.ATTRIBUTE_EDIT_DIALOG));
 
                 String editDialog = StringUtils.defaultIfEmpty(customEditDialog, WorkflowConstants.DEFAULT_EDIT_DIALOG);
                 String repository = ObjectUtils.toString(list.getIteratorValue("repository"));
@@ -134,6 +144,7 @@ public class Inbox extends AbstractList {
                 return js.toString();
             }
 
+            @Override
             public String onDblClick(ListControl list, Integer index) {
                 return "mgnl.workflow.Inbox.edit();";
             }
@@ -152,14 +163,31 @@ public class Inbox extends AbstractList {
                 setSeparator(false);
             }
 
+            @Override
             public Object getValue() {
                 String path = "" + this.getListControl().getIteratorValue("path");
                 String repository = "" + this.getListControl().getIteratorValue("repository");
+                String uuid = "" + this.getListControl().getIteratorValue("uuid");
+                String version = "" + this.getListControl().getIteratorValue("version");
+                try {
+                    final Content content;
+                    // versioning disabled
+                    if (StringUtils.isEmpty(version)) {
+                        content = MgnlContext.getSystemContext().getHierarchyManager(repository).getContentByUUID(uuid);
+                    } else {
+                        content = MgnlContext.getSystemContext().getHierarchyManager(repository).getContentByUUID(uuid).getVersionedContent(version);
+                    }
+                    if (content.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
+                        path = ItemType.DELETED_NODE_MIXIN;
+                    }
+                } catch (RepositoryException e) {
+                    log.error("Failed to retrieve versioned node [path=" + path + ", uuid=" + uuid + ", version=" + version, e);
+                }
                 return "<img src=\""
-                    + MgnlContext.getContextPath()
-                    + "/"
-                    + getIcon(path, repository)
-                    + "\" alt=\"\" border=\"0\" />";
+                + MgnlContext.getContextPath()
+                + "/"
+                + getIcon(path, repository)
+                + "\" alt=\"\" border=\"0\" />";
             }
         });
         list.addColumn(new ListColumn("name", msgs.get("inbox.item"), "100", true));
@@ -174,6 +202,7 @@ public class Inbox extends AbstractList {
                 setWidth("150px");
             }
 
+            @Override
             public Object getValue() {
                 String str = (String) super.getValue();
                 Date date = null;
@@ -198,6 +227,7 @@ public class Inbox extends AbstractList {
         return InboxHelper.getShowJSFunction(repository, path);
     }
 
+    @Override
     public void configureContextMenu(ContextMenu menu) {
         ContextMenuItem edit = new ContextMenuItem("edit");
         edit.setLabel(msgs.get("inbox.edit"));
@@ -242,6 +272,7 @@ public class Inbox extends AbstractList {
     /**
      * Same as the context menu.
      */
+    @Override
     public void configureFunctionBar(FunctionBar bar) {
         ContextMenu menu = this.getContextMenu();
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
@@ -257,6 +288,7 @@ public class Inbox extends AbstractList {
     /**
      * Add some inbox specific stuff: mainly hidden fields.
      */
+    @Override
     public String onRender() {
         return FreemarkerUtil.process(this);
     }
