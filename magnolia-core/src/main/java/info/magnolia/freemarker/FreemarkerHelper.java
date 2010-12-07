@@ -222,7 +222,7 @@ public class FreemarkerHelper {
         try {
             data.put(FreemarkerServlet.KEY_JSP_TAGLIBS, checkTaglibFactory(servletContext));
             data.put(FreemarkerServlet.KEY_APPLICATION_PRIVATE, checkServletContextModel(servletContext));
-            data.put(FreemarkerServlet.KEY_REQUEST_PRIVATE, new HttpRequestHashModel(webCtx.getRequest(), cfg.getObjectWrapper()));
+            data.put(FreemarkerServlet.KEY_REQUEST_PRIVATE, new HttpRequestHashModel(webCtx.getRequest(), webCtx.getResponse(), cfg.getObjectWrapper()));
         } catch (ServletException e) {
             // this should be an IllegalStateException (i.e there's no reason we should end up here) but this constructor isn't available in 1.4
             throw new RuntimeException("Can't initialize taglib support for FreeMarker: ", e);
