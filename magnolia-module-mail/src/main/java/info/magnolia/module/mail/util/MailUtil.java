@@ -227,7 +227,7 @@ public class MailUtil {
         return user.getProperty("email");
     }
 
-    public static String getParameter(Map<String, String> param, String name, String defaultValue) {
+    public static Object getParameter(Map<String, Object> param, String name, String defaultValue) {
 
         if(param != null && param.containsKey(name)) {
           return param.get(name);

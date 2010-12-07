@@ -73,20 +73,20 @@ public class MgnlMailFactory {
     /**
      * Creates email with no attachments.
      */
-    public MgnlEmail getEmail(Map<String, String> params) {
+    public MgnlEmail getEmail(Map<String, Object> params) {
         return getEmail(params, null);
     }
 
     /**
      * Creates email with no attachments.
      */
-    public MgnlEmail getEmailFromType(Map<String, String> params, String type) {
+    public MgnlEmail getEmailFromType(Map<String, Object> params, String type) {
 
         return getEmailFromType(params, type, null);
     }
 
-    public MgnlEmail getEmailFromType(Map<String, String> params, String type, String contentType, List<MailAttachment> attachments) {
-        Map<String, String> newParams = new HashMap<String, String>();
+    public MgnlEmail getEmailFromType(Map<String, Object> params, String type, String contentType, List<MailAttachment> attachments) {
+        Map<String, Object> newParams = new HashMap<String, Object>();
         newParams.putAll(params);
         if(!StringUtils.isEmpty(type)) {
             newParams.put(MailTemplate.MAIL_TYPE, type);
@@ -100,14 +100,14 @@ public class MgnlMailFactory {
     /**
      * Creates email with attachments.
      */
-    public MgnlEmail getEmailFromType(Map<String, String> params, String type, List<MailAttachment> attachments) {
+    public MgnlEmail getEmailFromType(Map<String, Object> params, String type, List<MailAttachment> attachments) {
         return getEmailFromType(params, type, null, attachments);
     }
 
     /**
      * Creates email with attachments.
      */
-    public MgnlEmail getEmail(Map<String, String> params, List<MailAttachment> attachments) {
+    public MgnlEmail getEmail(Map<String, Object> params, List<MailAttachment> attachments) {
         MailTemplate template = new MailTemplate();
         return getEmail(params, attachments, template);
     }
@@ -115,26 +115,30 @@ public class MgnlMailFactory {
     /**
      * Creates email using predefined template.
      */
-    public MgnlEmail getEmailFromTemplate(String id, List<MailAttachment> attachments, Map<String, String> params) throws Exception {
+    public MgnlEmail getEmailFromTemplate(String id, List<MailAttachment> attachments, Map<String, Object> params) throws Exception {
         MailTemplate template = getTemplate(id);
+        if (template == null) {
+            log.error("Template {} can't be found", id);
+            return null;            
+        }
         return getEmail(params, attachments, template);
     }
 
     /**
      * Creates email using predefined template with no attachments.
      */
-    public MgnlEmail getEmailFromTemplate(String id, Map<String, String> params) throws Exception {
+    public MgnlEmail getEmailFromTemplate(String id, Map<String, Object> params) throws Exception {
         return getEmailFromTemplate(id, null, params);
     }
 
-    protected MgnlEmail getEmail(Map<String, String> params, List<MailAttachment> attachments, MailTemplate template) {
+    protected MgnlEmail getEmail(Map<String, Object> params, List<MailAttachment> attachments, MailTemplate template) {
         template.setValues(params, attachments);
 
         try {
             return getEmailFromType(template);
 
         } catch (Exception e) {
-            log.error("Couln't instantiate email type: " + template.getType());
+            log.error("Couln't instantiate email type: " + template.getType(), e);
             return null;
         }
     }
