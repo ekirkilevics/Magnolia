@@ -203,10 +203,7 @@ public class LockTest extends RepositoryTestCase {
         assertTrue(check.isLocked());
         hm.getContent("/page").unlock();
         Thread.sleep(1000);
-        /**
-         * TODO: uncomment next lins and fix to run with JCR 2.0
-         */
-        //assertFalse(check.isLocked());
+        assertFalse(check.isLocked());
         t2.interrupt();
     }
 

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -55,7 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Tools page to show cache info and flush caches.
- *
+ * 
  * @author Bert Leunis
  */
 public class CacheToolsPage extends TemplatedMVCHandler {

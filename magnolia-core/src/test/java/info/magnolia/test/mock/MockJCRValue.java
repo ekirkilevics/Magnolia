@@ -34,10 +34,8 @@
 package info.magnolia.test.mock;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.Calendar;
 
-import javax.jcr.Binary;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
@@ -50,7 +48,7 @@ import javax.jcr.ValueFormatException;
 class MockJCRValue implements Value {
 
     /**
-     *
+     * 
      */
     private final MockNodeData mockNodeData;
 
@@ -87,13 +85,5 @@ class MockJCRValue implements Value {
 
     public boolean getBoolean() throws ValueFormatException, IllegalStateException, RepositoryException {
         return this.mockNodeData.getBoolean();
-    }
-
-    public Binary getBinary() throws RepositoryException {
-        return null;
-    }
-
-    public BigDecimal getDecimal() throws ValueFormatException, RepositoryException {
-        return null;
     }
 }

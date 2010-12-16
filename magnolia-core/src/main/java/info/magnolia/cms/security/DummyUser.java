@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Dummy user implementation returned when an actual user instance can't be instantiated.
  *
+ * @deprecated since 4.3.6 - usage needs to be reviewed - see MAGNOLIA-3269
+ *
  * @author Sameer Charles
  * @version $Revision:9391 $ ($Author:scharles $)
  */

@@ -33,19 +33,26 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.gui.control.Button;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.freemarker.FreemarkerUtil;
-
-import javax.servlet.jsp.tagext.TagSupport;
+import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
 
 /**
  * Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
@@ -72,7 +79,7 @@ public class EditBar extends TagSupport {
     private String deleteLabel;
 
     private String moveLabel;
-
+    
     private static final Logger log = LoggerFactory.getLogger(EditBar.class);
 
     /**
@@ -84,12 +91,6 @@ public class EditBar extends TagSupport {
      * Show paragraph name in the bar.
      */
     private boolean showParagraphName = false;
-
-    private Content content;
-
-    public Content getContent() {
-        return content;
-    }
 
     /**
      * The contentNode (i.e. paragraph) you wish to edit.
@@ -186,111 +187,109 @@ public class EditBar extends TagSupport {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && aggregationState.getMainContent().isGranted(Permission.SET)) {
-//            try {
+            try {
                 BarEdit bar = new BarEdit();
 
-                content = Resource.getLocalContentNode();
+                Content localContentNode = Resource.getLocalContentNode();
 
                 if(StringUtils.isNotEmpty(this.nodeName)){
                     try {
-                        if (content.hasContent(this.nodeName)) {
-                            content = content.getContent(this.nodeName);
+                        if (localContentNode.hasContent(this.nodeName)) {
+                            localContentNode = localContentNode.getContent(this.nodeName);
                         } else {
-                            content = null;
+                            localContentNode = null;
                         }
                     } catch (Exception e) {
                         log.warn(e.getMessage(), e);
                     }
                 }
 
-                FreemarkerUtil.process(this, pageContext.getOut());
+                final String paragraphToUse;
+                if (this.dialog != null) {
+                    paragraphToUse = this.dialog;
+                } else if (this.paragraph == null && localContentNode != null) {
+                    paragraphToUse = localContentNode.getMetaData().getTemplate();
+                } else {
+                    paragraphToUse = this.paragraph;
+                }
+                bar.setParagraph(paragraphToUse);
 
-//                final String paragraphToUse;
-//                if (this.dialog != null) {
-//                    paragraphToUse = this.dialog;
-//                } else if (this.paragraph == null && localContentNode != null) {
-//                    paragraphToUse = localContentNode.getMetaData().getTemplate();
-//                } else {
-//                    paragraphToUse = this.paragraph;
-//                }
-//                bar.setParagraph(paragraphToUse);
-//
-//                if (this.nodeCollectionName == null) {
-//                    this.nodeCollectionName = StringUtils.defaultString(Resource.getLocalContentNodeCollectionName());
-//                }
-//                bar.setNodeCollectionName(this.nodeCollectionName);
-//
-//                if (this.nodeName == null) {
-//                    if (localContentNode != null) {
-//                        this.nodeName = localContentNode.getName();
-//                    }
-//                }
-//                bar.setNodeName(this.nodeName);
-//
-//                try {
-//                    String path;
-//                    if (localContentNode != null) {
-//                        path = localContentNode.getParent().getHandle();
-//                        if (StringUtils.isNotEmpty(this.nodeCollectionName) && path.endsWith("/" + this.nodeCollectionName)) {
-//                            path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName);
-//                        }
-//                    }
-//                    else {
-//                        path = Resource.getCurrentActivePage().getHandle();
-//                    }
-//                    bar.setPath(path);
-//                }
-//                catch (Exception re) {
-//                    bar.setPath(StringUtils.EMPTY);
-//                }
-//
-//                bar.setDefaultButtons();
-//                // TODO - yes this is a bit ugly - 1) we should in fact open the correct dialog immediately instead of faking the paragraph parameter - 2) the gui elements should not have defaults nor know anything about urls and onclick functions
-//                if (this.dialog == null) {
-//                    bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
-//                    bar.getButtonEdit().setDefaultOnclick(); // re-set the onclick after having set the dialog path.
-//                }
-//
-//                if (this.editLabel != null) {
-//                    if (StringUtils.isEmpty(this.editLabel)) {
-//                        bar.setButtonEdit(null);
-//                    }
-//                    else {
-//                        bar.getButtonEdit().setLabel(this.editLabel);
-//                    }
-//                }
-//
-//                if (this.moveLabel != null) {
-//                    if (StringUtils.isEmpty(this.moveLabel)) {
-//                        bar.setButtonMove(null);
-//                    }
-//                    else {
-//                        bar.getButtonMove().setLabel(this.moveLabel);
-//                    }
-//                }
-//
-//                if (this.deleteLabel != null) {
-//                    if (StringUtils.isEmpty(this.deleteLabel)) {
-//                        bar.setButtonDelete((Button)null);
-//                    }
-//                    else {
-//                        bar.getButtonDelete().setLabel(this.deleteLabel);
-//                    }
-//                }
-//                bar.placeDefaultButtons();
-//
-//                if (isShowParagraphName() && this.dialog == null) {
-//                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(paragraphToUse);
-//                    final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
-//                    final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
-//                    bar.setLabel(label);
-//                }
-//
-//                bar.drawHtml(pageContext.getOut());
-//            }
-//            catch (IOException e) {
-//                throw new NestableRuntimeException(e);
-//            }
+                if (this.nodeCollectionName == null) {
+                    this.nodeCollectionName = StringUtils.defaultString(Resource.getLocalContentNodeCollectionName());
+                }
+                bar.setNodeCollectionName(this.nodeCollectionName);
+
+                if (this.nodeName == null) {
+                    if (localContentNode != null) {
+                        this.nodeName = localContentNode.getName();
+                    }
+                }
+                bar.setNodeName(this.nodeName);
+
+                try {
+                    String path;
+                    if (localContentNode != null) {
+                        path = localContentNode.getParent().getHandle();
+                        if (StringUtils.isNotEmpty(this.nodeCollectionName) && path.endsWith("/" + this.nodeCollectionName)) {
+                            path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName);
+                        }
+                    }
+                    else {
+                        path = Resource.getCurrentActivePage().getHandle();
+                    }
+                    bar.setPath(path);
+                } 
+                catch (Exception re) {
+                    bar.setPath(StringUtils.EMPTY);
+                }
+
+                bar.setDefaultButtons();
+                // TODO - yes this is a bit ugly - 1) we should in fact open the correct dialog immediately instead of faking the paragraph parameter - 2) the gui elements should not have defaults nor know anything about urls and onclick functions
+                if (this.dialog == null) {
+                    bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
+                    bar.getButtonEdit().setDefaultOnclick(); // re-set the onclick after having set the dialog path.
+                }
+
+                if (this.editLabel != null) {
+                    if (StringUtils.isEmpty(this.editLabel)) {
+                        bar.setButtonEdit(null);
+                    }
+                    else {
+                        bar.getButtonEdit().setLabel(this.editLabel);
+                    }
+                }
+
+                if (this.moveLabel != null) {
+                    if (StringUtils.isEmpty(this.moveLabel)) {
+                        bar.setButtonMove(null);
+                    }
+                    else {
+                        bar.getButtonMove().setLabel(this.moveLabel);
+                    }
+                }
+
+                if (this.deleteLabel != null) {
+                    if (StringUtils.isEmpty(this.deleteLabel)) {
+                        bar.setButtonDelete((Button)null);
+                    }
+                    else {
+                        bar.getButtonDelete().setLabel(this.deleteLabel);
+                    }
+                }
+                bar.placeDefaultButtons();
+
+                if (isShowParagraphName() && this.dialog == null) {
+                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(paragraphToUse);
+                    final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
+                    final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
+                    bar.setLabel(label);
+                }
+
+                bar.drawHtml(pageContext.getOut());
+            }
+            catch (IOException e) {
+                throw new NestableRuntimeException(e);
+            }
         }
         reset();
 

@@ -36,8 +36,13 @@ package info.magnolia.cms.core;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
@@ -64,6 +69,7 @@ import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.easymock.IAnswer;
 
 /**
@@ -336,119 +342,114 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
     public void testNameFilteringWorksForBothBinaryAndNonBinaryProperties() throws Exception {
-        /**
-         * TODO: uncomment following lines and fix to run with JCR 2.0
-         */
-//        String contentProperties = StringUtils.join(Arrays.asList(
-//                "/somepage/mypage@type=mgnl:content",
-//                "/somepage/mypage/paragraphs@type=mgnl:contentNode",
-//                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
-//                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
-//
-//                // 2 regular props
-//                "/somepage/mypage/paragraphs/0/attention=booyah",
-//                "/somepage/mypage/paragraphs/0/imaginary=date:2009-10-14T08:59:01.227-04:00",
-//
-//                // 3 binaries
-//                "/somepage/mypage/paragraphs/0/attachment1@type=mgnl:resource",
-//                "/somepage/mypage/paragraphs/0/attachment1.fileName=hello",
-//                "/somepage/mypage/paragraphs/0/attachment1.extension=gif",
-//                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:data=X",
-//                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:mimeType=image/gif",
-//                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=",
-//
-//                "/somepage/mypage/paragraphs/0/attachment2@type=mgnl:resource",
-//                "/somepage/mypage/paragraphs/0/attachment2.fileName=test",
-//                "/somepage/mypage/paragraphs/0/attachment2.extension=jpeg",
-//                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:data=X",
-//                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:mimeType=image/jpeg",
-//                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=",
-//
-//                "/somepage/mypage/paragraphs/0/image3@type=mgnl:resource",
-//                "/somepage/mypage/paragraphs/0/image3.fileName=third",
-//                "/somepage/mypage/paragraphs/0/image3.extension=png",
-//                "/somepage/mypage/paragraphs/0/image3.jcr\\:data=X",
-//                "/somepage/mypage/paragraphs/0/image3.jcr\\:mimeType=image/png",
-//                "/somepage/mypage/paragraphs/0/image3.jcr\\:lastModified=",
-//
-//                // and more which should not match
-//                "/somepage/mypage/paragraphs/0/foo=bar",
-//                "/somepage/mypage/paragraphs/0/mybool=boolean:true",
-//                "/somepage/mypage/paragraphs/0/rand@type=mgnl:resource",
-//                "/somepage/mypage/paragraphs/0/rand.fileName=randdddd",
-//                "/somepage/mypage/paragraphs/0/rand.extension=png",
-//                "/somepage/mypage/paragraphs/0/rand.jcr\\:data=X",
-//                "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
-//                "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified="
-//        ), "\n");
-//        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-//        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
-//        hm.save();
-//
-//        final Content content = hm.getContent("/somepage/mypage/paragraphs/0");
-//        final Collection<NodeData> props = content.getNodeDataCollection("att*|ima*");
-//        assertEquals(5, props.size());
-//
-//        // sort by name
-//        final TreeSet<NodeData> sorted = new TreeSet<NodeData>(new Comparator<NodeData>() {
-//            public int compare(NodeData o1, NodeData o2) {
-//                return o1.getName().compareTo(o2.getName());
-//            }
-//        });
-//        sorted.addAll(props);
-//        // sanity check - just recheck we still have 5 elements
-//        assertEquals(5, sorted.size());
-//        final Iterator<NodeData> it = sorted.iterator();
-//        final NodeData a = it.next();
-//        final NodeData b = it.next();
-//        final NodeData c = it.next();
-//        final NodeData d = it.next();
-//        final NodeData e = it.next();
-//        assertEquals("attachment1", a.getName());
-//        assertEquals(PropertyType.BINARY, a.getType());
-//        assertEquals("attachment2", b.getName());
-//        assertEquals(PropertyType.BINARY, b.getType());
-//        assertEquals("image3", d.getName());
-//        assertEquals(PropertyType.BINARY, d.getType());
-//        assertEquals("image3", d.getName());
-//        assertEquals(PropertyType.BINARY, d.getType());
-//
-//        assertEquals("attention", c.getName());
-//        assertEquals(PropertyType.STRING, c.getType());
-//        assertEquals("booyah", c.getString());
-//        assertEquals("imaginary", e.getName());
-//        assertEquals(PropertyType.DATE, e.getType());
-//        assertEquals(true, e.getDate().before(Calendar.getInstance()));
+        String contentProperties = StringUtils.join(Arrays.asList(
+                "/somepage/mypage@type=mgnl:content",
+                "/somepage/mypage/paragraphs@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
+                "/somepage/mypage/paragraphs/0@type=mgnl:contentNode",
+
+                // 2 regular props
+                "/somepage/mypage/paragraphs/0/attention=booyah",
+                "/somepage/mypage/paragraphs/0/imaginary=date:2009-10-14T08:59:01.227-04:00",
+
+                // 3 binaries
+                "/somepage/mypage/paragraphs/0/attachment1@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/attachment1.fileName=hello",
+                "/somepage/mypage/paragraphs/0/attachment1.extension=gif",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:mimeType=image/gif",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=",
+
+                "/somepage/mypage/paragraphs/0/attachment2@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/attachment2.fileName=test",
+                "/somepage/mypage/paragraphs/0/attachment2.extension=jpeg",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:mimeType=image/jpeg",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=",
+
+                "/somepage/mypage/paragraphs/0/image3@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/image3.fileName=third",
+                "/somepage/mypage/paragraphs/0/image3.extension=png",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:mimeType=image/png",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:lastModified=",
+
+                // and more which should not match
+                "/somepage/mypage/paragraphs/0/foo=bar",
+                "/somepage/mypage/paragraphs/0/mybool=boolean:true",
+                "/somepage/mypage/paragraphs/0/rand@type=mgnl:resource",
+                "/somepage/mypage/paragraphs/0/rand.fileName=randdddd",
+                "/somepage/mypage/paragraphs/0/rand.extension=png",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified="
+        ), "\n");
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
+        hm.save();
+
+        final Content content = hm.getContent("/somepage/mypage/paragraphs/0");
+        final Collection<NodeData> props = content.getNodeDataCollection("att*|ima*");
+        assertEquals(5, props.size());
+
+        // sort by name
+        final TreeSet<NodeData> sorted = new TreeSet<NodeData>(new Comparator<NodeData>() {
+            public int compare(NodeData o1, NodeData o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        sorted.addAll(props);
+        // sanity check - just recheck we still have 5 elements
+        assertEquals(5, sorted.size());
+        final Iterator<NodeData> it = sorted.iterator();
+        final NodeData a = it.next();
+        final NodeData b = it.next();
+        final NodeData c = it.next();
+        final NodeData d = it.next();
+        final NodeData e = it.next();
+        assertEquals("attachment1", a.getName());
+        assertEquals(PropertyType.BINARY, a.getType());
+        assertEquals("attachment2", b.getName());
+        assertEquals(PropertyType.BINARY, b.getType());
+        assertEquals("image3", d.getName());
+        assertEquals(PropertyType.BINARY, d.getType());
+        assertEquals("image3", d.getName());
+        assertEquals(PropertyType.BINARY, d.getType());
+
+        assertEquals("attention", c.getName());
+        assertEquals(PropertyType.STRING, c.getType());
+        assertEquals("booyah", c.getString());
+        assertEquals("imaginary", e.getName());
+        assertEquals(PropertyType.DATE, e.getType());
+        assertEquals(true, e.getDate().before(Calendar.getInstance()));
     }
 
     public void testStringPropertiesCanBeRetrievedByStreamAndViceVersa() throws Exception {
-        /**
-         * TODO: uncomment following lines and fix to run with JCR 2.0
-         */
-//        String contentProperties = StringUtils.join(Arrays.asList(
-//                "/hello/foo=bar",
-//                // a binary
-//                "/hello/bin@type=mgnl:resource",
-//                "/hello/bin.fileName=hello",
-//                "/hello/bin.extension=gif",
-//                "/hello/bin.jcr\\:data=some-data",
-//                "/hello/bin.jcr\\:mimeType=image/gif",
-//                "/hello/bin.jcr\\:lastModified="), "\n");
-//        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-//        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
-//        hm.save();
-//
-//        final Content content = hm.getContent("/hello");
-//        final NodeData st = content.getNodeData("foo");
-//        assertEquals(PropertyType.STRING, st.getType());
-//        assertEquals("bar", st.getString());
-//        assertEquals("bar", IOUtils.toString(st.getStream()));
-//
-//        final NodeData bin = content.getNodeData("bin");
-//        assertEquals(PropertyType.BINARY, bin.getType());
-//        assertEquals("some-data", IOUtils.toString(bin.getStream()));
-//        assertEquals("some-data", bin.getString());
+        String contentProperties = StringUtils.join(Arrays.asList(
+                "/hello/foo=bar",
+                // a binary
+                "/hello/bin@type=mgnl:resource",
+                "/hello/bin.fileName=hello",
+                "/hello/bin.extension=gif",
+                "/hello/bin.jcr\\:data=some-data",
+                "/hello/bin.jcr\\:mimeType=image/gif",
+        "/hello/bin.jcr\\:lastModified="), "\n");
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
+        hm.save();
+
+        final Content content = hm.getContent("/hello");
+        final NodeData st = content.getNodeData("foo");
+        assertEquals(PropertyType.STRING, st.getType());
+        assertEquals("bar", st.getString());
+        assertEquals("bar", IOUtils.toString(st.getStream()));
+
+        final NodeData bin = content.getNodeData("bin");
+        assertEquals(PropertyType.BINARY, bin.getType());
+        assertEquals("some-data", IOUtils.toString(bin.getStream()));
+        assertEquals("some-data", bin.getString());
     }
+
 
     public void testModDate() throws IOException, RepositoryException{
         Content content = getTestContent();
@@ -463,9 +464,11 @@ public class DefaultContentTest extends RepositoryTestCase {
         assertNotSame(creationDate, modDate);
     }
 
+
     private Value createValue(Object valueObj) throws RepositoryException, UnsupportedRepositoryOperationException {
         ValueFactory valueFactory = MgnlContext.getHierarchyManager("website").getWorkspace().getSession().getValueFactory();
         return NodeDataUtil.createValue(valueObj, valueFactory);
     }
+
 
 }

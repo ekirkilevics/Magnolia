@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Command outputting the value of "message" property into current log file. Used to monitor execution of workflow or other sorts of command chains.
  * @author pbracher
- * @version $Id: LogCommand.java 37741 2010-10-07 12:11:53Z pbaerfuss $
+ * @version $Id: LogCommand.java 36506 2010-08-18 12:05:34Z had $
  */
 public class LogCommand extends MgnlCommand {
 

@@ -38,40 +38,34 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.context.MgnlContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * A lot of "manager" objects are observed. Will mean that they reload the
- * registered content after the content was changed. To centralize this code we
- * use this abstract manager. A subclass will implement onRegister and onClear.
- * 
+ * A lot of "manager" objects are observed. Will mean that they reload the registered content after the content was changed. To
+ * centralize this code we use this abstract manager. A subclass will implement onRegister and onClear.
  * @author philipp
  */
 public abstract class ObservedManager {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * UUIDs of the registered main nodes. They will get registered again after
-     * a change.
+     * UUIDs of the registered main nodes. They will get registered again after a change.
      */
     protected Set registeredUUIDs = new HashSet();
 
     /**
      * Register a node. The uuid is cached and then onRegister() called.
-     * 
-     * @param node
-     *            the node to register
+     * @param node the node to register
      */
     public synchronized void register(Content node) {
         if (node == null) {
@@ -89,7 +83,8 @@ public abstract class ObservedManager {
         try {
             registeredUUIDs.add(node.getUUID());
             onRegister(new SystemContentWrapper(node));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.warn("Was not able to register [" + node.getHandle() + "]", e);
         }
     }
@@ -103,8 +98,7 @@ public abstract class ObservedManager {
 
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
-        // copy to avoid ConcurrentModificationException since the list get
-        // changed during iteration
+        // copy to avoid ConcurrentModificationException since the list get changed during iteration
         List uuids = new ArrayList(registeredUUIDs);
 
         for (Iterator iter = uuids.iterator(); iter.hasNext();) {
@@ -112,9 +106,10 @@ public abstract class ObservedManager {
             try {
                 Content node = hm.getContentByUUID(uuid);
                 reload(node);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 registeredUUIDs.remove(uuid);
-                log.warn("Can't reload the node [" + uuid + "]");
+                log.warn("Can't reload the the node [" + uuid + "]");
             }
         }
         return;
@@ -122,7 +117,6 @@ public abstract class ObservedManager {
 
     /**
      * Reload a specific node.
-     * 
      * @param node
      */
     protected void reload(Content node) {
@@ -139,14 +133,12 @@ public abstract class ObservedManager {
 
     /**
      * Registers a node.
-     * 
      * @param node
      */
     protected abstract void onRegister(Content node);
 
     /**
-     * The implementor should clear everthing. If needed the nodes will get
-     * registered.
+     * The implementor should clear everthing. If needed the nodes will get registered.
      */
     protected abstract void onClear();
 

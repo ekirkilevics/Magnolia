@@ -44,7 +44,7 @@ import java.util.Enumeration;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public abstract class TestUtil {
+public class TestUtil {
 
     /**
      * Builds an enumeration from a vararg of Strings. Useful for testing header-related code,
@@ -53,7 +53,7 @@ public abstract class TestUtil {
     public static Enumeration enumeration(String... strings) {
         return IteratorUtils.asEnumeration(Arrays.asList(strings).iterator());
     }
-
+    
     public static String getCurrentTestMethodName() {
         final StackTraceElement[] stackTrace = new Exception().getStackTrace();
         for (StackTraceElement ste : stackTrace) {

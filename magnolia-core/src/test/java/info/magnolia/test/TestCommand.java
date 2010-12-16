@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2010 Magnolia International
+ * This file Copyright (c) 2009-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.paragraphs;
+package info.magnolia.test;
 
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.templating.AbstractRenderer;
-import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.ParagraphRenderer;
-import info.magnolia.module.templating.Paragraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
-import java.io.IOException;
-import java.io.Writer;
-
+import info.magnolia.commands.MgnlCommand;
+import info.magnolia.context.Context;
 
 /**
- * Base class for implementing {@link ParagraphRenderer}s.
- * @author pbracher
- * @version $Id$
- *
+ * Test command with List type property.
+ * @author had
+ * @version $Id:$
  */
-public abstract class AbstractParagraphRenderer extends AbstractRenderer implements ParagraphRenderer {
+public class TestCommand extends MgnlCommand {
 
-    private static Logger log = LoggerFactory.getLogger(AbstractParagraphRenderer.class);
+    private List versionMap;
 
-    public AbstractParagraphRenderer() {
-        super();
+    /**
+     * Execute activation
+     */
+    public boolean execute(Context ctx) {
+        return true;
     }
 
-    public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
-        try {
-            render(content, (RenderableDefinition) paragraph, out);
-        } finally{
-            out.flush();
-        }
+    public void setVersionMap(List versionMap) {
+        this.versionMap = versionMap;
+    }
+
+    public List getVersionMap() {
+        return this.versionMap;
+    }
+
+    @Override
+    public void release() {
+        super.release();
+        this.versionMap = null;
     }
 
 }

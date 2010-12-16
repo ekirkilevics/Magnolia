@@ -46,8 +46,6 @@ import java.io.Writer;
  */
 public interface ParagraphRenderer {
 
-    public static final String PARAGRAPH_BOUNDARY = "paragraphMarker";
-
     /**
      * @param content the content to render (usually passed to the appropriate templating engine)
      * @param paragraph information about the rendering (template to use etc)

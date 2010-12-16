@@ -34,13 +34,10 @@
 package info.magnolia.test.mock;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
-import javax.jcr.Binary;
 import javax.jcr.InvalidItemStateException;
-import javax.jcr.InvalidLifecycleTransitionException;
 import javax.jcr.Item;
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -86,11 +83,11 @@ public class MockJCRNode implements Node {
     }
 
     public void addMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException {
@@ -98,35 +95,35 @@ public class MockJCRNode implements Node {
     }
 
     public boolean canAddMixin(String mixinName) throws NoSuchNodeTypeException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void cancelMerge(Version version) throws VersionException, InvalidItemStateException, UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Version checkin() throws VersionException, UnsupportedRepositoryOperationException, InvalidItemStateException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void checkout() throws UnsupportedRepositoryOperationException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void doneMerge(Version version) throws VersionException, InvalidItemStateException, UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Version getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public String getCorrespondingNodePath(String workspaceName) throws ItemNotFoundException, NoSuchWorkspaceException, AccessDeniedException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public NodeDefinition getDefinition() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public int getIndex() throws RepositoryException {
@@ -134,7 +131,7 @@ public class MockJCRNode implements Node {
     }
 
     public Lock getLock() throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
@@ -154,11 +151,11 @@ public class MockJCRNode implements Node {
     }
 
     public Item getPrimaryItem() throws ItemNotFoundException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public NodeType getPrimaryNodeType() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public PropertyIterator getProperties() throws RepositoryException {
@@ -174,7 +171,7 @@ public class MockJCRNode implements Node {
     }
 
     public PropertyIterator getReferences() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public String getUUID() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -182,7 +179,7 @@ public class MockJCRNode implements Node {
     }
 
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public boolean hasNode(String relPath) throws RepositoryException {
@@ -202,15 +199,15 @@ public class MockJCRNode implements Node {
     }
 
     public boolean holdsLock() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public boolean isCheckedOut() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");    
     }
 
     public boolean isLocked() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public boolean isNodeType(String nodeTypeName) throws RepositoryException {
@@ -218,11 +215,11 @@ public class MockJCRNode implements Node {
     }
 
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class."); 
     }
 
     public NodeIterator merge(String srcWorkspace, boolean bestEffort) throws NoSuchWorkspaceException, AccessDeniedException, MergeException, LockException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void orderBefore(String srcChildRelPath, String destChildRelPath) throws UnsupportedRepositoryOperationException, VersionException, ConstraintViolationException, ItemNotFoundException, LockException, RepositoryException {
@@ -230,23 +227,23 @@ public class MockJCRNode implements Node {
     }
 
     public void removeMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void restore(String versionName, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void restore(Version version, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void restore(Version version, String relPath, boolean removeExisting) throws PathNotFoundException, ItemExistsException, VersionException, ConstraintViolationException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Property setProperty(String name, Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
@@ -257,7 +254,7 @@ public class MockJCRNode implements Node {
         return mockContent.setNodeData(name, values).getJCRProperty();    }
 
     public Property setProperty(String name, String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Property setProperty(String name, String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
@@ -285,7 +282,7 @@ public class MockJCRNode implements Node {
     }
 
     public Property setProperty(String name, Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Property setProperty(String name, Value value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
@@ -297,23 +294,23 @@ public class MockJCRNode implements Node {
     }
 
     public Property setProperty(String name, String[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Property setProperty(String name, String value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void unlock() throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void update(String srcWorkspaceName) throws NoSuchWorkspaceException, AccessDeniedException, LockException, InvalidItemStateException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public void accept(ItemVisitor visitor) throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
@@ -341,11 +338,11 @@ public class MockJCRNode implements Node {
     }
 
     public boolean isModified() {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public boolean isNew() {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        throw new UnsupportedOperationException("Not implmeneted. This is a mock class.");
     }
 
     public boolean isNode() {
@@ -366,57 +363,5 @@ public class MockJCRNode implements Node {
 
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException, ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
         mockContent.save();
-    }
-
-    public void followLifecycleTransition(String transition) throws UnsupportedRepositoryOperationException, InvalidLifecycleTransitionException, RepositoryException {
-    }
-
-    public String[] getAllowedLifecycleTransistions() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return null;
-    }
-
-    public String getIdentifier() throws RepositoryException {
-        return null;
-    }
-
-    public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
-        return null;
-    }
-
-    public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
-        return null;
-    }
-
-    public PropertyIterator getReferences(String name) throws RepositoryException {
-        return null;
-    }
-
-    public NodeIterator getSharedSet() throws RepositoryException {
-        return null;
-    }
-
-    public PropertyIterator getWeakReferences() throws RepositoryException {
-        return null;
-    }
-
-    public PropertyIterator getWeakReferences(String name) throws RepositoryException {
-        return null;
-    }
-
-    public void removeShare() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
-    }
-
-    public void removeSharedSet() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
-    }
-
-    public void setPrimaryType(String nodeTypeName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-    }
-
-    public Property setProperty(String name, Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return null;
-    }
-
-    public Property setProperty(String name, BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return null;
     }
 }

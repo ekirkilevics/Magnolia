@@ -172,7 +172,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/admincentral/config.modules.adminInterface.config.menu.tools.cacheTools.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
                 .addTask(new BootstrapConditionally("Cache tools", "Bootstrap for cache tools", "/mgnl-bootstrap/cache/config.modules.cache.pages.xml", new WarnTask("Cache tools", "Skipped installation of the Cache Tools menu since such entry already exists.")))
                 );
-        
+
         register(DeltaBuilder.update("4.4", "Centralizes the compression configuration")
             .addTask(new RemoveNodeTask("Centralized compression configuration", "Removes the contentType bypass of the gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"))
             .addTask(new ModuleNodeBuilderTask("Centralized compression configuration", "Update the compression voters. They should vote positive if the compression is desirable.", ErrorHandling.strict,

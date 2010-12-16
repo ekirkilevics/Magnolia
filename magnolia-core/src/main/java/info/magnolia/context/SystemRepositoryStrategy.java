@@ -63,8 +63,9 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     private static final Logger log = LoggerFactory.getLogger(SystemRepositoryStrategy.class);
 
     private AccessManager accessManager;
-
+  
     private Map<String, EventListener> observedHMs = new HashMap<String, EventListener>();
+ 
 
     public SystemRepositoryStrategy(SystemContext context) {
     }
@@ -134,6 +135,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
             } catch (RepositoryException e) {
                 log.error("Failed to register observer for repository updates.");
             }
+            //ObservationUtil.registerChangeListener(hm.getName(), "/", listener );
         }
         return hm;
     }

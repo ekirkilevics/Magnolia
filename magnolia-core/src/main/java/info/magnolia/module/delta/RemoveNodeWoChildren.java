@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2010 Magnolia International
+ * This file Copyright (c) 2003-2010 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.paragraphs;
+package info.magnolia.module.delta;
 
-import info.magnolia.module.templating.RenderableDefinition;
+import javax.jcr.RepositoryException;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.templating.AbstractRenderer;
-import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.ParagraphRenderer;
-import info.magnolia.module.templating.Paragraph;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.Writer;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.InstallContext;
 
 
 /**
- * Base class for implementing {@link ParagraphRenderer}s.
- * @author pbracher
- * @version $Id$
- *
+ * A task that removes node if that has no children.
+ * @author ochytil
+ * @version $Revision: $ ($Author: $)
  */
-public abstract class AbstractParagraphRenderer extends AbstractRenderer implements ParagraphRenderer {
-
-    private static Logger log = LoggerFactory.getLogger(AbstractParagraphRenderer.class);
-
-    public AbstractParagraphRenderer() {
-        super();
+public class RemoveNodeWoChildren extends AbstractRepositoryTask {
+    private final String workspaceName;
+    private final String pathToCheck;
+    
+    public RemoveNodeWoChildren(String name, String description, String workspaceName, String pathToCheck) {
+        super(name, description);
+        this.pathToCheck = pathToCheck;
+        this.workspaceName = workspaceName;
     }
 
-    public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
-        try {
-            render(content, (RenderableDefinition) paragraph, out);
-        } finally{
-            out.flush();
-        }
+    protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
+        final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
+           if (!hm.getContent(pathToCheck).hasChildren() == true) {
+                    final Content node = hm.getContent(pathToCheck);
+                    node.delete();
+            }
+           else ctx.warn("Was supposed to remove " + pathToCheck + " but the node was not empty");
     }
-
 }

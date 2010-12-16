@@ -56,7 +56,7 @@ import javax.jcr.RepositoryException;
  */
 public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private static final String QUICKSTART = "redirect:/.magnolia/pages/quickstart.html";
-    private static final String ADMIN_CENTRAL = "redirect:/.magnolia/admin-central";
+    private static final String ADMIN_CENTRAL = "redirect:/.magnolia/pages/adminCentral.html";
 
     @Override
     protected String getModuleDescriptorPath() {

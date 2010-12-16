@@ -50,7 +50,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -70,6 +69,7 @@ import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -543,16 +543,7 @@ public class MockContent extends AbstractContent {
         } else {
             throw new IllegalStateException("Unsupported object type: " + object.getClass());
         }
-        StringTokenizer st = new StringTokenizer(namePattern, "|", false);
-        // "pattern" in JR terms mean * as a wildcard 0..n chars and [\d] index is optional
-        while (st.hasMoreTokens()) {
-            String token = st.nextToken().trim();
-            token = token.replaceAll("\\*", ".*") + "(\\[\\d\\])?";
-            if (name.matches(token)) {
-                return true;
-            }
-        }
-        return false;
+        return ChildrenCollectorFilter.matches(name, namePattern);
     }
 
 

@@ -35,7 +35,6 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.misc.Sources;
-import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.io.IOException;
 
@@ -76,10 +75,6 @@ public class LinksTag extends TagSupport {
                 try {
                     out.write(src.getHtmlCss());
                     out.write(src.getHtmlJs());
-
-                    // write plain VAADIN code
-                    FreemarkerUtil.process(this, out);
-
                 }
                 catch (IOException e) {
                     // should never happen

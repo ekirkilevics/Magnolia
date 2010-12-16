@@ -99,7 +99,7 @@ Number of occurrences: %o%n
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss}%m%n" />
     </layout>
-  </appender> 
+  </appender>
   <appender name="log-access" class="org.apache.log4j.AsyncAppender">
     <appender-ref ref="sync-log-access" />
   </appender>
@@ -115,7 +115,7 @@ Number of occurrences: %o%n
   <appender name="log-audit" class="org.apache.log4j.AsyncAppender">
     <appender-ref ref="sync-log-audit" />
   </appender>
-  <appender name="sync-log-form" class="org.apache.log4j.RollingFileAppender">
+    <appender name="sync-log-form" class="org.apache.log4j.RollingFileAppender">
     <param name="File" value="${magnolia.logs.dir}/magnolia-form.log" />
     <param name="MaxFileSize" value="1MB" />
     <param name="MaxBackupIndex" value="5" />
