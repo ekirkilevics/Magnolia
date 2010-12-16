@@ -9,7 +9,7 @@
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>4.4.2-SNAPSHOT</version>
+  <version>5.0-SNAPSHOT</version>
   <description>
 Magnolia is an open-source enterprise class Content Management System
 developed by Magnolia International Ltd., based on the standard API
