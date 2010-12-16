@@ -19,7 +19,7 @@ for Java Content Repositories (JCR).
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
-    <documentationURL>http://documentation.magnolia-cms.com/release/4-4-1.html</documentationURL>
+    <documentationURL>http://documentation.magnolia-cms.com/release/5-0.html</documentationURL>
     <javaVersion>1.5</javaVersion>
   </properties>
   <issueManagement>
@@ -115,9 +115,9 @@ for Java Content Repositories (JCR).
     </contributor>
   </contributors>
   <scm>
-    <connection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.4</connection>
-    <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/branches/magnolia-4.4</developerConnection>
-    <url>http://svn.magnolia-cms.com/view/community/magnolia/branches/magnolia-4.4</url>
+    <connection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</connection>
+    <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</developerConnection>
+    <url>http://svn.magnolia-cms.com/view/community/magnolia/trunk</url>
   </scm>
   <profiles>
     <profile>
