@@ -62,7 +62,7 @@ public class EhCacheFactoryTest extends TestCase {
 
     @Override
     public void setUp() throws Exception {
-        SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "cacheTest");
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "target/cacheTest");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
 
         factory = new EhCacheFactory();
