@@ -115,9 +115,11 @@ public class ConfigLoader {
             log.info("Configuration loaded (took {} seconds)", Long.toString((System.currentTimeMillis() - millis) / 1000)); //$NON-NLS-1$
 
         } catch (ModuleManagementException e) {
-            log.error("An error occurred during initialization", e); //$NON-NLS-1$
+            log.error("A module error occurred during initialization: " + e.getMessage(), e);
         } catch (ConfigurationException e) {
-            log.error("An error occurred during initialization", e); //$NON-NLS-1$
+            log.error("A configuration error occurred during initialization: " + e.getMessage(), e);
+        } catch (Throwable e) {
+            log.error("An unspecified error occurred during initialization: " + e.getMessage(), e);
         }
 
     }
