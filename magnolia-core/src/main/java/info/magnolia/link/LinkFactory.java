@@ -165,7 +165,7 @@ public class LinkFactory {
     }
 
     /**
-     * Creates link based on provided parameters.
+     * Creates link based on provided parameters. Should the uuid be non existent or the fallback handle invalid, creates nonetheless an <em>"undefined"</em> {@link Link} object.
      * @param uuid UUID of the content
      * @param repository Content repository name.
      * @param fallbackHandle Optional fallback content handle.
@@ -177,19 +177,20 @@ public class LinkFactory {
      * @throws LinkException
      */
     public static Link createLink(String uuid, String repository, String fallbackHandle, String nodeDataName, String extension, String anchor, String parameters) throws LinkException {
-        repository = StringUtils.defaultIfEmpty(repository, ContentRepository.WEBSITE);
+        final String defaultRepository = StringUtils.defaultIfEmpty(repository, ContentRepository.WEBSITE);
         Link link;
         try {
-            link = createLink(repository, uuid);
+            link = createLink(defaultRepository, uuid);
         } catch (LinkException e) {
             try {
-                final Content node = MgnlContext.getHierarchyManager(repository).getContent(fallbackHandle);
+                final Content node = MgnlContext.getHierarchyManager(defaultRepository).getContent(fallbackHandle != null? fallbackHandle:"");
                 link = createLink(node);
-            } catch (PathNotFoundException e1) {
-                log.warn("Can't find node with uuid " + uuid + " or handle " + fallbackHandle + " in repository " + repository);
+            } catch (PathNotFoundException pnfe) {
+                log.warn("Can't find node with uuid {} or handle {} in repository {}", new Object[]{ uuid, fallbackHandle, defaultRepository});
                 link = new Link();
-            } catch (RepositoryException e1) {
-                throw new LinkException("Failed to create link with uuid " + uuid + " and repository " + repository + " and fallbackhandle " + fallbackHandle, e);
+            } catch (RepositoryException re) {
+                log.warn("Can't find node with uuid {} or handle {} in repository {}", new Object[]{ uuid, fallbackHandle, defaultRepository});
+                link = new Link();
             }
         }
         link.setFallbackHandle(fallbackHandle);
