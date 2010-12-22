@@ -52,7 +52,7 @@ public class DialogStatic extends DialogBox {
         if (value == null) {
             value = this.getValue();
         }
-        out.write(value);
+        out.write(getMessage(value));
         this.drawHtmlPost(out);
     }
 }
