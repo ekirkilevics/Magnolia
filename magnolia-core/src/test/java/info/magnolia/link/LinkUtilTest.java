@@ -245,7 +245,7 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals(-1, StringUtils.substringAfter(url, "http://").indexOf("//"));
     }
 
-    public void testCreateUndefinedLinkIfUUIDIsNonExistentOrDefaultFallbackIsEmpty() {
+    public void testCreateUndefinedLinkIfUUIDIsNonExistentOrFallbackHandleIsEmpty() {
         try {
             String link = LinkUtil.convertLinksFromUUIDPattern("<p>Large article pages have a <a href=\"${link:{uuid:{00060890-0220-4544-b6a4-320325dcfd86},repository:{website},handle:{},nodeData:{},extension:{html}}}\">Table Of Contents</a></p>", LinkTransformerManager.getInstance().getEditorLink());
             assertEquals("<p>Large article pages have a <a href=\"/some-context/\">Table Of Contents</a></p>", link);
