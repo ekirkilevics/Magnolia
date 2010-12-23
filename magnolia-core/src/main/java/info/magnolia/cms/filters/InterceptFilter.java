@@ -134,7 +134,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
 
 
     /**
-     * Request and Response here is same as receivced by the original page so it includes all post/get data. Sub action
+     * Request and Response here is same as received by the original page so it includes all post/get data. Sub action
      * could be called from here once this action finishes, it will continue loading the requested page.
      */
     public void intercept(HttpServletRequest request, HttpServletResponse response) {
@@ -154,7 +154,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         synchronized (ExclusiveWrite.getInstance()) {
-            if (action.equals(ACTION_PREVIEW)) {
+            if (ACTION_PREVIEW.equals(action)) {
                 // preview mode (button in main bar)
                 String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
                 if (preview != null) {
@@ -170,7 +170,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
                     }
                 }
             }
-            else if (action.equals(ACTION_NODE_DELETE)) {
+            else if (ACTION_NODE_DELETE.equals(action)) {
                 // delete paragraph
                 try {
                     Content page = hm.getContent(handle);
@@ -179,11 +179,11 @@ public class InterceptFilter extends AbstractMgnlFilter {
                     hm.save();
                 }
                 catch (RepositoryException e) {
-                    log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                    log.error("Exception caught: {}", e.getMessage(), e); //$NON-NLS-1$
                 }
             }
-            else if (action.equals(ACTION_NODE_SORT)) {
-                // sort paragrpahs
+            else if (ACTION_NODE_SORT.equals(action)) {
+                // sort paragraphs
                 try {
                     String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
                     String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
@@ -194,13 +194,15 @@ public class InterceptFilter extends AbstractMgnlFilter {
                         destName = null;
                     }
                     hm.getContent(pathParent).orderBefore(srcName, destName);
+                    Content page = hm.getContent(handle);
+                    page.updateMetaData();
                     hm.save();
                 }
                 catch (RepositoryException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-                    }
+                    log.error("Exception caught: {}", e.getMessage(), e); //$NON-NLS-1$
                 }
+            } else {
+                log.warn("Unknown action {}", action);
             }
         }
     }
