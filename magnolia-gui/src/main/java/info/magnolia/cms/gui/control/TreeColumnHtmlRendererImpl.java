@@ -88,16 +88,17 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         if (treeColumn.getIconsActivation()) {
             String imgSrc = Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(content);
             int activationStatus = content.getMetaData().getActivationStatus();
+
             switch (activationStatus) {
-            case MetaData.ACTIVATION_STATUS_ACTIVATED:
-                altOrTitle = MessagesUtil.get("status.activated");
-                break;
-            case MetaData.ACTIVATION_STATUS_MODIFIED:
-                altOrTitle = MessagesUtil.get("status.modified");
-                break;
-            case MetaData.ACTIVATION_STATUS_NOT_ACTIVATED:
-                altOrTitle = MessagesUtil.get("status.notActivated");
-                break;
+                case MetaData.ACTIVATION_STATUS_ACTIVATED:
+                    altOrTitle = MessagesUtil.get("status.activated");
+                    break;
+                case MetaData.ACTIVATION_STATUS_MODIFIED:
+                    altOrTitle = MessagesUtil.get("status.modified");
+                    break;
+                case MetaData.ACTIVATION_STATUS_NOT_ACTIVATED:
+                    altOrTitle = MessagesUtil.get("status.notActivated");
+                    break;
             }
             html.append("<img src=\"")
                 .append(MgnlContext.getContextPath())
@@ -115,7 +116,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
                     .append(treeColumn.getRequest().getContextPath())
                     .append(Tree.ICONDOCROOT)
                     .append("pen_blue_canceled.gif\"")
-                    .append("\" alt=\"")
+                    .append(" alt=\"")
                     .append(altOrTitle)
                     .append("\" title=\"")
                     .append(altOrTitle)
