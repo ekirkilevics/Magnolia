@@ -51,7 +51,7 @@
 
 .mgnlListInnerContentDiv {
     border-left: 1px solid #999;
-    overflow: auto;
+    overflow-x: hidden;
 }
 
 .mgnlListSortGroupDiv {
