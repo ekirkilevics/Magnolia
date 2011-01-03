@@ -37,10 +37,10 @@ package info.magnolia.module.cache.ehcache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.mbean.CacheMonitor;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.constructs.blocking.BlockingCache;
 import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 /**
@@ -48,15 +48,26 @@ import net.sf.ehcache.constructs.blocking.LockTimeoutException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EhCacheWrapper implements Cache {
+public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache {
 
     private static final Logger log = LoggerFactory.getLogger(EhCacheWrapper.class);
-    private final Ehcache ehcache;
+    private final BlockingCache ehcache;
     private String name;
 
-    public EhCacheWrapper(Ehcache ehcache, String name) {
+    public EhCacheWrapper(BlockingCache ehcache, String name) {
         this.ehcache = ehcache;
         this.name = name;
+    }
+
+    public EhCacheWrapper(Ehcache ehcache, String name) {
+        this(castToBlockingCacheOrThrowException(ehcache), name);
+    }
+
+    private static BlockingCache castToBlockingCacheOrThrowException(Ehcache ehcache) {
+        if(!(ehcache instanceof BlockingCache)){
+            throw new RuntimeException("The current caching framework depends on the fact the a blocking cache is used.");
+        }
+        return (BlockingCache) ehcache;
     }
 
     public Object get(Object key) {
@@ -101,6 +112,17 @@ public class EhCacheWrapper implements Cache {
         ehcache.removeAll();
     }
 
+    public void unlock(Object key) {
+        if(ehcache.getQuiet(key) == null) {
+            put(key, null);
+            remove(key);
+        }
+    }
+
+    public int getBlockingTimeout() {
+        return ehcache.getTimeoutMillis();
+    }
+
     public Ehcache getWrappedEhcache() {
         return ehcache;
     }
@@ -112,5 +134,7 @@ public class EhCacheWrapper implements Cache {
     public int getSize() {
         return ehcache.getSize();
     }
+
+
 
 }

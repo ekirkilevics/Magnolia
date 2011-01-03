@@ -36,6 +36,7 @@ package info.magnolia.module.cache.filter;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.cache.BlockingCache;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheModuleLifecycleListener;
@@ -49,6 +50,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 import java.io.IOException;
 
@@ -68,6 +71,10 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     private String cacheConfigurationName;
     private CacheConfiguration cacheConfig;
     private Cache cache;
+
+    // to provide warning log messages when we run into timeouts we have to save the timeout
+    private int blockingTimeout = -1;
+
 
     public String getCacheConfigurationName() {
         return cacheConfigurationName;
@@ -94,6 +101,10 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
         this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
 
+        if(cache instanceof BlockingCache){
+            blockingTimeout = ((BlockingCache)cache).getBlockingTimeout();
+        }
+
         if (cacheConfig == null || cache == null) {
             log.error("The " + getName() + " CacheFilter is not properly configured, either cacheConfig(" + cacheConfig + ") or cache(" + cache + ") is null. Check if " + cacheConfigurationName + " is a valid cache configuration name. Will disable temporarily.");
             setEnabled(false);
@@ -107,6 +118,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final CachePolicyResult cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
 
@@ -119,20 +131,27 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         if (executor == null) {
             throw new IllegalStateException("Unexpected cache policy result: " + cachePolicyResult);
         }
-        executor.processCacheRequest(request, response, chain, cache, cachePolicyResult);
 
-        // TODO if the cache blocks we will have to add this again.
-        /*
-        finally{
-            Object key = cachePolicyResult.getCacheKey();
-            if (!cachePolicyResult.getBehaviour().equals(CachePolicyResult.bypass) && (
-            ((EhCacheWrapper)cache).getWrappedEhcache().getQuiet(key) == null)) {
-                log.warn("Cache nearly blocked for key: {}, removed entry", key);
-                cache.put(key, null);
-                cache.remove(key);
+        try{
+            final long start = System.currentTimeMillis();
+            executor.processCacheRequest(request, response, chain, cache, cachePolicyResult);
+            final long end = System.currentTimeMillis();
+
+            if(blockingTimeout != -1 && (end-start) >= blockingTimeout){
+                log.warn("The following URL took longer than {} seconds to render. This might cause timout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
             }
         }
-        */
+        catch(LockTimeoutException timeout){
+            log.warn("The following URL was blocked for longer than {} seconds. [url={}], [key={}]", new Object[]{blockingTimeout/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()} );
+            throw timeout;
+        }
+        catch (Throwable th) {
+            if(cachePolicyResult.getBehaviour().equals(CachePolicyResult.store) && cache instanceof BlockingCache){
+                log.error("A request started to cache but never put a cache entry into the blocking cache. This would block the cache key for ever. We are removing the cache entry manually. [url={}], [key={}]", new Object[]{request.getRequestURL(), cachePolicyResult.getCacheKey()});
+                ((BlockingCache) cache).unlock(cachePolicyResult.getCacheKey());
+            }
+            throw new RuntimeException(th);
+        }
     }
 
 }
