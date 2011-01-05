@@ -318,19 +318,26 @@ public class ContentUtil {
      */
     public static void orderAfter(Content nodeToMove, String targetNodeName) throws RepositoryException{
         Content parent = nodeToMove.getParent();
+        Boolean readyToMove = false;
 
         Collection<Content> children = new ArrayList<Content>(ContentUtil.getAllChildren(parent));
-        // move all nodes before nodeToMove until the target node has been moved to
-        // this will keep the original order
         for (Content child : children) {
-            // don't reorder the node we are moving. we are moving the other nodes in front of it
-            if(child.getName().equals(nodeToMove.getName())){
-                continue;
-            }
-            // order the current child in front of the target node -->
-            parent.orderBefore(child.getName(), nodeToMove.getName());
-            if(child.getName().equals(targetNodeName)){
+            if(readyToMove){
+                parent.orderBefore(nodeToMove.getName(), child.getName());
+                readyToMove = false;
                 break;
+            }
+
+            if(child.getName().equals(targetNodeName)){
+                readyToMove = true;
+            }
+        }
+
+        if(readyToMove){
+            for (Content child : children){
+                if(!nodeToMove.getName().equals(child.getName())){
+                    parent.orderBefore(child.getName(), nodeToMove.getName());
+                }
             }
         }
     }

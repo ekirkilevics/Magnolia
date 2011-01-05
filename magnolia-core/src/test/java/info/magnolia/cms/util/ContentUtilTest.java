@@ -42,6 +42,7 @@ import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import static org.easymock.EasyMock.*;
+import static java.util.Arrays.asList;
 
 import javax.jcr.RepositoryException;
 
@@ -141,11 +142,11 @@ public class ContentUtilTest extends RepositoryTestCase {
         assertTrue(hm.isExist("/gugu"));
         assertTrue(hm.isExist("/gugu/subnode"));
     }
-    
+
     public void testOrderAfter() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
-            "/node/b\n" + 
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         Content a = node.getContent("a");
@@ -162,7 +163,7 @@ public class ContentUtilTest extends RepositoryTestCase {
     public void testOrderAfterLastNode() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
-            "/node/b\n" + 
+            "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         Content a = node.getContent("a");
@@ -173,7 +174,324 @@ public class ContentUtilTest extends RepositoryTestCase {
                 return ((Content)childObj).getName();
             }
         });
-        assertEquals(Arrays.asList(new String[]{"b", "c","a"}), result);
+        assertEquals(asList("b", "c","a"), result);
+    }
+    
+    public void testOrderAfterLastNodeVariation1() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content a = node.getContent("c");
+        ContentUtil.orderAfter(a, "f");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","d","e","f","c"), result);
+    }
+
+    public void testOrderAfterFirstNodeOnlyThree() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("c");
+        ContentUtil.orderAfter(c, "a");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a", "c","b"), result);
+    }
+
+    public void testOrderAfterFirstNodeMoreThanThreeVariation1() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("f");
+        ContentUtil.orderAfter(c, "a");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","f","b","c","d","e"), result);
+    }
+
+    public void testOrderAfterFirstNodeMoreThanThreeVariation2() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("e");
+        ContentUtil.orderAfter(c, "a");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","e","b","c","d","f"), result);
+    }
+
+    public void testOrderAfterMidNodeMoreThanThreeVariation1() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("f");
+        ContentUtil.orderAfter(c, "c");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","c","f","d","e"), result);
+    }
+
+    public void testOrderAfterMidNodeMoreThanThreeVariation2() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("e");
+        ContentUtil.orderAfter(c, "b");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","e","c","d","f"), result);
+    }
+    
+    public void testOrderBeforeFirstNodeVariation1() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("c");
+        ContentUtil.orderBefore(c, "a");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("c","a","b","d","e","f"), result);
+    }
+
+    public void testOrderBeforeFirstNodeVariation2() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("b");
+        ContentUtil.orderBefore(c, "a");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("b","a","c","d","e","f"), result);
+    }
+
+    public void testOrderBeforeFirstNodeVariation3() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("a");
+        ContentUtil.orderBefore(c, "b");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","c","d","e","f"), result);
+    }
+
+    public void testOrderBeforeFirstNodeVariation4() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("f");
+        ContentUtil.orderBefore(c, "a");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("f","a","b","c","d","e"), result);
+    }
+
+    public void testOrderBeforeLastNodeVariation1() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("a");
+        ContentUtil.orderBefore(c, "f");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("b","c","d","e","a","f"), result);
+    }
+
+    public void testOrderBeforeLastNodeVariation2() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("c");
+        ContentUtil.orderBefore(c, "f");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","d","e","c","f"), result);
+    }
+
+    public void testOrderBeforeLastNodeVariation3() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("e");
+        ContentUtil.orderBefore(c, "f");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","c","d","e","f"), result);
+    }
+
+    public void testOrderBeforeMidNodeVariation1() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("b");
+        ContentUtil.orderBefore(c, "e");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","c","d","b","e","f"), result);
+    }
+
+    public void testOrderBeforeMidNodeVariation2() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("a");
+        ContentUtil.orderBefore(c, "e");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("b","c","d","a","e","f"), result);
+    }
+
+    public void testOrderBeforeMidNodeVariation3() throws RepositoryException, IOException{
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(
+            "/node/a\n" +
+            "/node/b\n" +
+            "/node/c\n" +
+            "/node/d\n" +
+            "/node/e\n" +
+            "/node/f\n");
+        Content node = hm.getContent("/node");
+        Content c = node.getContent("f");
+        ContentUtil.orderBefore(c, "e");
+        Collection<Content> result = node.getChildren();
+        CollectionUtils.transform(result, new Transformer() {
+            public Object transform(Object childObj) {
+                return ((Content)childObj).getName();
+            }
+        });
+        assertEquals(asList("a","b","c","d","f","e"), result);
     }
 
     public void testChangeNodeTypeReplaceFirstOccurrenceOnly() throws Exception {
@@ -182,11 +500,11 @@ public class ContentUtilTest extends RepositoryTestCase {
         src.createContent("foo");
         src.createContent("bar");
         final String oldUUID = src.getUUID();
-        
+
         assertEquals("wrong initial type", ItemType.CONTENT.getSystemName() , src.getNodeTypeName());
-        
+
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, false);
-        
+
         assertTrue(hm.isExist("/test"));
         assertEquals(oldUUID, hm.getContent("/test").getUUID());
         assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
@@ -203,9 +521,9 @@ public class ContentUtilTest extends RepositoryTestCase {
         assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), src.getNodeTypeName());
         assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
         assertEquals("wrong initial type", ItemType.CONTENT.getSystemName(), hm.getContent("/test/foo").getNodeTypeName());
-        
+
         ContentUtil.changeNodeType(src, ItemType.CONTENTNODE, true);
-        
+
         assertTrue(hm.isExist("/test"));
         assertEquals(oldUUID, hm.getContent("/test").getUUID());
         assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test").getNodeTypeName());
