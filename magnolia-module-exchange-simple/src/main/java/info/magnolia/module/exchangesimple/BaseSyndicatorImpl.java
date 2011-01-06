@@ -123,6 +123,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      */
     public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
 
+    public static final String UTF8_STATUS = "mgnlUTF8Status";
+
     /**
      * Name of the element in the resource file describing siblings of activated node.
      * Siblings element will contain all siblings of the same node type which are "before"
@@ -596,6 +598,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         activationContent.addProperty(ACTION, ACTIVATE);
         activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
         activationContent.addProperty(NODE_UUID, node.getUUID());
+        activationContent.addProperty(UTF8_STATUS, SystemProperty.getProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED));
 
 
         Document document = new Document();

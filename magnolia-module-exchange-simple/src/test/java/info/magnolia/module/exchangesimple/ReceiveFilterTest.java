@@ -97,6 +97,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();
@@ -104,6 +105,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
     public void testActivateShouldCreateNewNodeIfItDoesNotExist() throws Exception {
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {
+            @Override
             public void checkPermissions(HierarchyManager hm) {
                 // TODO : really, really, this should just crash
                 //  - and we should actually check permissions and assert the behaviour of ReceiveFilter when the user does not have the appropriate permissions
@@ -146,8 +148,8 @@ public class ReceiveFilterTest extends MgnlTestCase {
         // TODO : test when existing node has children ?
         expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.<Content>emptyList());
 
-//        expect(existingNode.getParent()).andReturn(existingParent);
-//        expect(existingParent.getHandle()).andReturn("/");
+        //        expect(existingNode.getParent()).andReturn(existingParent);
+        //        expect(existingParent.getHandle()).andReturn("/");
 
         // for the sake of this test we'll just pretend we have no properties on the existing node
         expect(existingNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
@@ -303,9 +305,6 @@ public class ReceiveFilterTest extends MgnlTestCase {
         // for the sake of this test we'll just pretend we have no properties on the imported node
         expect(importedNode.getNodeDataCollection()).andReturn(Collections.<NodeData>emptyList());
 
-//        expect(existingNode.getParent()).andReturn(existingParent);
-//        expect(existingParent.getHandle()).andReturn("/");
-
         // TODO : why are properties copied using the jcr api ??
         expect(existingNode.getJCRNode()).andReturn(null);
 
@@ -365,10 +364,12 @@ public class ReceiveFilterTest extends MgnlTestCase {
         replay(existingNode, tempNode);
         doTest("activate", "sa_failed", "Operation not permitted, /foo/bar is locked", new AbstractTestCallBack() {
 
+            @Override
             public Content getParentNode() {
                 return parentNode;
             }
 
+            @Override
             public void checkParent(HierarchyManager hm) throws Exception {
                 expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
                 expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
@@ -387,6 +388,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // won't be called as parent is locked
             }
 
+            @Override
             public void saveSession(HierarchyManager hm) throws Exception {
                 // don't save ... we've not activated anything
             }
@@ -398,11 +400,11 @@ public class ReceiveFilterTest extends MgnlTestCase {
         });
         verify(existingNode, tempNode);
     }
-/*
+    /*
     public void testCanUseAuthorizationOrUserId() {
         fail();
     }
-    */
+     */
 
     private void doTest(final String action, final String expectedStatus, final String expectedMessage, TestCallBack testCallBack) throws Exception {
         final HttpServletRequest request = createMock(HttpServletRequest.class); // not strict: we don't want to check method call order
@@ -427,6 +429,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         MgnlContext.setInstance(ctx);
 
         // checking headers
+        expect(request.getHeader("mgnlUTF8Status")).andReturn("true").anyTimes();
         expect(request.getHeader("mgnlExchangeAction")).andReturn(action).anyTimes();
         expect(request.getHeader("mgnlExchangeParentPath")).andReturn(PARENT_PATH).anyTimes();
         expect(request.getHeader("mgnlExchangeRepositoryName")).andReturn("some-repo").anyTimes();
@@ -489,34 +492,42 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
         // setAtomName("blah.xml");
 
+        @Override
         public String getType() {
             throw new IllegalStateException();
         }
 
+        @Override
         public String getAtomName() {
             throw new IllegalStateException();
         }
 
+        @Override
         public String getFileName() {
             throw new IllegalStateException();
         }
 
+        @Override
         public String getFileNameWithExtension() {
             throw new IllegalStateException();
         }
 
+        @Override
         public String getExtension() {
             throw new IllegalStateException();
         }
 
+        @Override
         public long getLength() {
             throw new IllegalStateException();
         }
 
+        @Override
         public File getFile() {
             throw new IllegalStateException();
         }
 
+        @Override
         public InputStream getStream() {
             return stream;
         }
