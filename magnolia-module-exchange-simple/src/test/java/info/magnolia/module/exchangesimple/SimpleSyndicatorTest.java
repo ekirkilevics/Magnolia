@@ -190,13 +190,13 @@ public class SimpleSyndicatorTest extends TestCase {
 
         expect(content.getUUID()).andReturn("some-real-uuid");
         Workspace wks = createStrictMock(Workspace.class);
-        expect(content.getWorkspace()).andReturn(wks);
+        expect(content.getWorkspace()).andReturn(wks).times(2);
         Session session = createStrictMock(Session.class);
         expect(wks.getSession()).andReturn(session);
+        expect(content.getHandle()).andReturn("/whatever/just/for/the/logs");
         expect(content.getUUID()).andReturn("some-real-uuid");
         // activating non versioned nodes!
         expect(content.isNodeType("nt:frozenNode")).andReturn(false);
-        expect(content.getWorkspace()).andReturn(wks);
         expect(wks.getName()).andReturn("dummy-wks");
         final boolean isFile = false;
         expect(content.isNodeType("nt:file")).andReturn(isFile);
@@ -205,7 +205,6 @@ public class SimpleSyndicatorTest extends TestCase {
         expect(jcr.getPath()).andReturn(path);
         session.exportSystemView(eq(path), isA(GZIPOutputStream.class), eq(false), eq(!isFile));
         expect(content.getName()).andReturn(path.substring(1));
-        expect(content.getUUID()).andReturn("some-real-uuid");
 
         expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
         expect(content.hasMixin("mgnl:deleted")).andReturn(false);

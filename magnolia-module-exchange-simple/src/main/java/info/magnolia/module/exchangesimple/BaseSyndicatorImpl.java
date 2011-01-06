@@ -59,6 +59,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -118,7 +119,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     public static final String VERSION_NAME = "mgnlExchangeVersionName";
 
     /**
-     * Mane of the resource containing reading sequence for importing the data in activation target.
+     * Name of the resource containing reading sequence for importing the data in activation target.
      */
     public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
 
@@ -344,7 +345,59 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     /**
      * Send request of activation of activationContent to the subscriber. Subscriber might choose not to react if it is not subscribed to the URI under which activationContent exists.
      */
-    public abstract String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException;
+    public String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException {
+        // FYI: this method is invoked from multiple threads at a same time (one for each subscriber, activationContent is assumed to be NOT shared between threads (cloned or by other means replicated) )
+        log.debug("activate");
+        if (null == subscriber) {
+            throw new ExchangeException("Null Subscriber");
+        }
+
+        String parentPath = null;
+
+        // concurrency: from path and repo name are same for all subscribers
+        Subscription subscription = subscriber.getMatchedSubscription(nodePath, this.repositoryName);
+        if (null != subscription) {
+            // its subscribed since we found the matching subscription
+            parentPath = this.getMappedPath(this.parent, subscription);
+            activationContent.setProperty(PARENT_PATH, parentPath);
+        } else {
+            log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), nodePath);
+            return "not subscribed";
+        }
+        log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName());
+
+        URLConnection urlConnection = null;
+        String versionName = null;
+        try {
+            urlConnection = prepareConnection(subscriber);
+            this.addActivationHeaders(urlConnection, activationContent);
+
+            Transporter.transport((HttpURLConnection) urlConnection, activationContent);
+
+            String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
+            versionName = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_VERSION);
+
+            // check if the activation failed
+            if (StringUtils.equals(status, ACTIVATION_FAILED)) {
+                String message = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_MESSAGE);
+                throw new ExchangeException("Message received from subscriber: " + message);
+            }
+            urlConnection.getContent();
+            log.debug("Exchange : activation request sent to {}", subscriber.getName());
+        }
+        catch (ExchangeException e) {
+            throw e;
+        }
+        catch (IOException e) {
+            log.debug("Failed to transport following activated content {" + StringUtils.join(activationContent.getProperties().keySet().iterator(), ',') + "} due to " + e.getMessage(), e);
+            throw new ExchangeException("Not able to send the activation request [" + (urlConnection == null ? null : urlConnection.getURL()) + "]: " + e.getMessage(), e);
+        }
+        catch (Exception e) {
+            throw new ExchangeException(e);
+        }
+        return versionName;
+    }
+
 
     /**
      * Cleans up temporary file store after activation.
@@ -584,12 +637,16 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         }
     }
 
-    protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
-        File file = File.createTempFile("exchange_" + content.getUUID(), ".xml.gz", Path.getTempDirectory());
+    protected void addResources(Element resourceElement, Session session, final Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
+        final String workspaceName = content.getWorkspace().getName();
+        log.debug("Preparing content {}:{} for publishing.", new String[] {workspaceName, content.getHandle()});
+        final String uuid = content.getUUID();
+
+        File file = File.createTempFile("exchange_" + uuid, ".xml.gz", Path.getTempDirectory());
         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
         // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
-        if (content.isNodeType("nt:frozenNode") || content.getWorkspace().getName().equals(ContentRepository.VERSION_STORE)) {
+        if (content.isNodeType("nt:frozenNode") || workspaceName.equals(ContentRepository.VERSION_STORE)) {
             XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
                     .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
             ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
@@ -613,7 +670,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         // add file entry in mapping.xml
         Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
         element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
-        element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, content.getUUID());
+        element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, uuid);
         element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
         resourceElement.addContent(element);
         // add this file element as resource in activation content
@@ -668,15 +725,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
             path = path.replaceFirst(fromURI, toURI);
             if (path.equals("")) {
                 path = "/";
-            }
-        }
-
-        if(SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
-            try {
-                path = URLEncoder.encode(path, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e) {
-                // do nothing
             }
         }
         return path;

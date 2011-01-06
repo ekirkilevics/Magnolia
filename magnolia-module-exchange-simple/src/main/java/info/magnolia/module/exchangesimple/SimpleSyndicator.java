@@ -40,7 +40,6 @@ import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.util.Collection;
@@ -129,63 +128,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             }
         };
         return r;
-    }
-
-    /**
-     * Send activation request if subscribed to the activated URI.
-     * @param subscriber
-     * @param activationContent
-     * @throws ExchangeException
-     */
-    @Override
-    public String activate(Subscriber subscriber, ActivationContent activationContent, String nodePath) throws ExchangeException {
-        log.debug("activate");
-        if (null == subscriber) {
-            throw new ExchangeException("Null Subscriber");
-        }
-
-        String parentPath = null;
-
-        Subscription subscription = subscriber.getMatchedSubscription(nodePath, this.repositoryName);
-        if (null != subscription) {
-            // its subscribed since we found the matching subscription
-            // unfortunately activationContent is not thread safe and is used by multiple threads in case of multiple subscribers so we can't use it as a vessel for transfer of parentPath value
-            parentPath = this.getMappedPath(this.parent, subscription);
-        } else {
-            log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), nodePath);
-            return null;
-        }
-        log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName()); //$NON-NLS-1$
-
-        URLConnection urlConnection = null;
-        try {
-            urlConnection = prepareConnection(subscriber);
-            this.addActivationHeaders(urlConnection, activationContent);
-            // set a parent path manually instead of via activationHeaders since it can differ between subscribers.
-            urlConnection.setRequestProperty(PARENT_PATH, parentPath);
-
-            Transporter.transport((HttpURLConnection) urlConnection, activationContent);
-
-            String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
-
-            // check if the activation failed
-            if (StringUtils.equals(status, ACTIVATION_FAILED)) {
-                String message = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_MESSAGE);
-                throw new ExchangeException("Message received from subscriber: " + message);
-            }
-            urlConnection.getContent();
-            log.debug("Exchange : activation request sent to {}", subscriber.getName()); //$NON-NLS-1$
-        }
-        catch (ExchangeException e) {
-            throw e;
-        }
-        catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" + (urlConnection == null ? null : urlConnection.getURL()) + "]: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new ExchangeException(e);
-        }
-        return null;
     }
 
     @Override
