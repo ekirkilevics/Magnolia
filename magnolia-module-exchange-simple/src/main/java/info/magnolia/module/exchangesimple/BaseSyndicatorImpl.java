@@ -307,13 +307,19 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
                 this.activate(subscriber, activationContent, path);
             }
             if (Boolean.parseBoolean(activationContent.getproperty(ItemType.DELETED_NODE_MIXIN))) {
-                if (content instanceof ContentVersion) {
-                    // replace versioned content with the real node
-                    content = content.getHierarchyManager().getContentByUUID(content.getUUID());
+                final HierarchyManager hm = content.getHierarchyManager();
+                String uuid = content.getUUID();
+                if (StringUtils.isNotBlank(uuid)) {
+                    if (content instanceof ContentVersion) {
+                        // replace versioned content with the real node
+                        content = hm.getContentByUUID(uuid);
+                    }
+                    Content parentContent = content.getParent();
+                    content.delete();
+                    parentContent.save();
+                } else {
+                    log.warn("Content {}:{} was already removed.", new String[] {hm.getName(), path});
                 }
-                Content parentContent = content.getParent();
-                content.delete();
-                parentContent.save();
             } else {
                 this.updateActivationDetails(path);
             }
