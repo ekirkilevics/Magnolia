@@ -34,7 +34,6 @@
 package info.magnolia.module.admininterface.commands;
 
 import java.util.Calendar;
-
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
@@ -43,6 +42,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.exchange.ActivationManagerFactory;
+import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ExclusiveWrite;
@@ -65,9 +66,21 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
     @Override
     public boolean execute(Context context) throws Exception {
 
-        Content parentNode = getNode(context);
-        Content node = parentNode.getContent((String) context.get(DELETED_NODE_PROP_NAME));
-        preDeleteNode(node, context);
+        final Content parentNode = getNode(context);
+        final Content node = parentNode.getContent((String) context.get(DELETED_NODE_PROP_NAME));
+        boolean hasActiveSubscriber = false;
+        for (Subscriber subscriber : ActivationManagerFactory.getActivationManager().getSubscribers()) {
+            if (subscriber.isActive()) {
+                hasActiveSubscriber = true;
+                break;
+            }
+        }
+        if (hasActiveSubscriber) {
+            preDeleteNode(node, context);
+        } else {
+            node.delete();
+            parentNode.save();
+        }
 
         return true;
     }
