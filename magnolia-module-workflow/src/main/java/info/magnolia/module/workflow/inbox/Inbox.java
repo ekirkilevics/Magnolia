@@ -57,6 +57,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -180,6 +181,9 @@ public class Inbox extends AbstractList {
                     if (content.hasMixin(ItemType.DELETED_NODE_MIXIN)) {
                         path = ItemType.DELETED_NODE_MIXIN;
                     }
+                } catch (ItemNotFoundException e) {
+                    log.debug("Item {}:{} does no longer exist in the workspace. Uuid: {}", new String[] {repository, path, uuid});
+
                 } catch (RepositoryException e) {
                     log.error("Failed to retrieve versioned node [path=" + path + ", uuid=" + uuid + ", version=" + version, e);
                 }
