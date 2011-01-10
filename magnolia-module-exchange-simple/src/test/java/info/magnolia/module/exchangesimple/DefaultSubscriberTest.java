@@ -113,7 +113,8 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         Subscriber subscriber = man.getSubscribers().iterator().next();
 
         TestSyndicator syndicator= new TestSyndicator();
-        URLConnection conn = syndicator.prepareConnection(subscriber);
+        String url = syndicator.getActivationURL(subscriber);
+        URLConnection conn = syndicator.prepareConnection(subscriber, url);
 
         assertEquals(10000, conn.getConnectTimeout());
         assertEquals(600000, conn.getReadTimeout());
@@ -142,8 +143,8 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         }
 
         @Override
-        public URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
-            return super.prepareConnection(subscriber);
+        public URLConnection prepareConnection(Subscriber subscriber, String url) throws ExchangeException {
+            return super.prepareConnection(subscriber, url);
         }
     }
 }

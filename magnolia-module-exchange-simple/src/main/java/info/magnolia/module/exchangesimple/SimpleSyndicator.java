@@ -119,7 +119,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             public void run() {
                 try {
                     activate(subscriber, activationContent, nodePath);
-                } catch (ExchangeException e) {
+                } catch (Exception e) {
                     log.error("Failed to activate content.", e);
                     errors.put(subscriber,e);
                 } finally {
@@ -173,7 +173,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             public void run() {
                 try {
                     doDeactivate(subscriber, nodeUUID, nodePath);
-                } catch (ExchangeException e) {
+                } catch (Exception e) {
                     log.error("Failed to deactivate content.", e);
                     errors.put(subscriber,e);
                 } finally {
@@ -193,9 +193,9 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     public String doDeactivate(Subscriber subscriber, String nodeUUID, String path) throws ExchangeException {
         Subscription subscription = subscriber.getMatchedSubscription(path, this.repositoryName);
         if (null != subscription) {
-            String handle = getDeactivationURL(subscriber);
+            String urlString = getDeactivationURL(subscriber);
             try {
-                URLConnection urlConnection = prepareConnection(subscriber);
+                URLConnection urlConnection = prepareConnection(subscriber, urlString);
 
                 this.addDeactivationHeaders(urlConnection, nodeUUID);
                 String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
@@ -210,10 +210,10 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
             }
             catch (MalformedURLException e) {
-                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
+                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + urlString + "]");
             }
             catch (IOException e) {
-                throw new ExchangeException("Not able to send the deactivation request [" + handle + "]: " + e.getMessage());
+                throw new ExchangeException("Not able to send the deactivation request [" + urlString + "]: " + e.getMessage());
             }
             catch (Exception e) {
                 throw new ExchangeException(e);

@@ -371,7 +371,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         URLConnection urlConnection = null;
         String versionName = null;
         try {
-            urlConnection = prepareConnection(subscriber);
+            urlConnection = prepareConnection(subscriber, getActivationURL(subscriber));
             this.addActivationHeaders(urlConnection, activationContent);
 
             Transporter.transport((HttpURLConnection) urlConnection, activationContent);
@@ -733,18 +733,18 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         return path;
     }
 
-    protected URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
+    protected URLConnection prepareConnection(Subscriber subscriber, String urlString) throws ExchangeException {
 
-        String handle = getActivationURL(subscriber);
+        //String handle = getActivationURL(subscriber);
 
         try {
             String authMethod = subscriber.getAuthenticationMethod();
             // authentication headers
             if (authMethod != null && "form".equalsIgnoreCase(authMethod)) {
-                handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
-                handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
+                urlString += (urlString.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
+                urlString += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
             }
-            URL url = new URL(handle);
+            URL url = new URL(urlString);
             URLConnection urlConnection = url.openConnection();
             urlConnection.setConnectTimeout(subscriber.getConnectTimeout());
             urlConnection.setReadTimeout(subscriber.getReadTimeout());
@@ -757,9 +757,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
             return urlConnection;
         } catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
+            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + urlString + "]");
         } catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
+            throw new ExchangeException("Not able to send the activation request [" + urlString + "]: " + e.getMessage());
         } catch (Exception e) {
             throw new ExchangeException(e);
         }
