@@ -39,18 +39,16 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 /**
@@ -176,8 +174,7 @@ public class MgnlServletContextListener implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
 
-        boolean unqualifiedServerName = BooleanUtils.toBoolean(context
-            .getInitParameter(MAGNOLIA_UNQUALIFIED_SERVER_NAME));
+        boolean unqualifiedServerName = BooleanUtils.toBoolean(context.getInitParameter(MAGNOLIA_UNQUALIFIED_SERVER_NAME));
 
         String servername = initServername(unqualifiedServerName);
 
@@ -212,16 +209,10 @@ public class MgnlServletContextListener implements ServletContextListener {
     protected String getPropertiesFilesString(ServletContext context, String servername, String webapp) {
         String propertiesFilesString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
         if (StringUtils.isEmpty(propertiesFilesString)) {
-            log.debug(
-                "{} value in web.xml is undefined, falling back to default: {}",
-                MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE,
-                PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER);
+            log.debug("{} value in web.xml is undefined, falling back to default: {}", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER);
             propertiesFilesString = PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER;
-        }
-        else {
-            log
-                .debug(
-                    "{} value in web.xml is :'{}'", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
+        } else {
+            log.debug("{} value in web.xml is :'{}'", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
         }
         return PropertiesInitializer.processPropertyFilesString(context, servername, webapp, propertiesFilesString);
     }
@@ -244,10 +235,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         if (realPath == null) {
             // don't use new java.io.File("x").getParentFile().getAbsolutePath() to find out real directory, could throw
             // a NPE for unexpanded war
-            throw new RuntimeException(
-                "Magnolia is not configured properly and therefore unable to start: real path can't be obtained [ctx real path:"
-                    + context.getRealPath(StringUtils.EMPTY)
-                    + "]. Please refer to the Magnolia documentation for installation instructions specific to your environment.");
+            throw new RuntimeException("Magnolia is not configured properly and therefore unable to start: real path can't be obtained [ctx real path:" + context.getRealPath(StringUtils.EMPTY) + "]. Please refer to the Magnolia documentation for installation instructions specific to your environment.");
         }
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, realPath);
         return realPath;
@@ -264,8 +252,7 @@ public class MgnlServletContextListener implements ServletContextListener {
             }
 
             SystemProperty.setProperty(SystemProperty.MAGNOLIA_SERVERNAME, servername);
-        }
-        catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             log.error(e.getMessage());
         }
         return servername;
