@@ -236,7 +236,12 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         if (path.equals("/")) { //$NON-NLS-1$
             return this.getRoot();
         }
-        return (new DefaultContent(this.getRootNode(), getNodePath(path), this));
+        try {
+            return (new DefaultContent(this.getRootNode(), getNodePath(path), this));
+        } catch (ItemNotFoundException e) {
+            this.getJcrSession().refresh(true);
+            return (new DefaultContent(this.getRootNode(), getNodePath(path), this));
+        }
     }
 
     /**
@@ -398,6 +403,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             return false;
         }
         try {
+            this.getJcrSession().refresh(true);
             return this.getJcrSession().itemExists(path);
         }
         catch (RepositoryException re) {
@@ -471,7 +477,13 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
         AccessDeniedException {
-        return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid), this);
+        try {
+            return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid), this);
+        } catch (ItemNotFoundException e) {
+            // retry in case session was not updated
+            this.getJcrSession().refresh(true);
+            return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid), this);
+        }
     }
 
     /**

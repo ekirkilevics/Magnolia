@@ -33,7 +33,6 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
@@ -42,15 +41,7 @@ import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,9 +54,6 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     private static final Logger log = LoggerFactory.getLogger(SystemRepositoryStrategy.class);
 
     private AccessManager accessManager;
-  
-    private Map<String, EventListener> observedHMs = new HashMap<String, EventListener>();
- 
 
     public SystemRepositoryStrategy(SystemContext context) {
     }
@@ -88,55 +76,12 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
         return acl;
     }
 
+    @Override
     protected String getUserId() {
         return SystemUserManager.SYSTEM_USER;
     }
 
     public void release() {
-        if (!observedHMs.isEmpty()) {
-            for (Map.Entry<String, EventListener> entry : observedHMs.entrySet()) {
-                final String[] key = entry.getKey().split("_");
-                final HierarchyManager hm = super.getHierarchyManager(key[0], key[1]);
-                try {
-                    hm.getWorkspace().getObservationManager().removeEventListener(entry.getValue());
-                } catch (UnsupportedRepositoryOperationException e) {
-                    log.error("Failed to remove listener from short living session. Session doesn't support listener removal.");
-                } catch (RepositoryException e) {
-                    log.error("Failed to remove listener from short living session. Will not be able to release this session.");
-                }
-            }
-            // release reference to listener so it can be GCed
-            observedHMs.clear();
-        }
         super.release(true);
-    }
-
-    @Override
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        final HierarchyManager hm = super.getHierarchyManager(repositoryId, workspaceId);
-        final String key = repositoryId + "_" + workspaceId;
-        if (!observedHMs.keySet().contains(key)) {
-            final EventListener listener = new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    try {
-                        hm.refresh(true);
-                    } catch (RepositoryException e) {
-                        log.error("Failed to refresh short living session after update. Session will not be able to see content changes if repository uses update-on-read strategy.");
-                    }
-                }
-            };
-            try {
-                hm.getWorkspace().getObservationManager().addEventListener(listener, Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/", true, null, null, false);
-                observedHMs.put(key, listener);
-            } catch (UnsupportedRepositoryOperationException e) {
-                log.warn("Repository doesn't support observation. Observers will not be notified of changes in repository.");
-            } catch (RepositoryException e) {
-                log.error("Failed to register observer for repository updates.");
-            }
-            //ObservationUtil.registerChangeListener(hm.getName(), "/", listener );
-        }
-        return hm;
     }
 }
