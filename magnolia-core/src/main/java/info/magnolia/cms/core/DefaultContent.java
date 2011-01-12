@@ -42,10 +42,9 @@ import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -149,9 +148,9 @@ public class DefaultContent extends AbstractContent {
      * operation
      */
     DefaultContent(Node rootNode, String path, String contentType, HierarchyManager hierarchyManager)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
+    throws PathNotFoundException,
+    RepositoryException,
+    AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
@@ -190,7 +189,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
+    AccessDeniedException {
         Content content = new DefaultContent(this.node, name, contentType, this.hierarchyManager);
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
@@ -210,6 +209,7 @@ public class DefaultContent extends AbstractContent {
         return false;
     }
 
+    @Override
     public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         try {
             Access.isGranted(getAccessManager(), Path.getAbsolutePath(getHandle(), name), Permission.READ);
@@ -272,14 +272,10 @@ public class DefaultContent extends AbstractContent {
         return StringUtils.EMPTY;
     }
 
+    @Override
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria) {
-        Collection<Content> children;
-        if (orderCriteria == null) {
-            children = new ArrayList<Content>();
-        }
-        else {
-            children = new TreeSet<Content>(orderCriteria);
-        }
+        List<Content> children;
+        children = new ArrayList<Content>();
 
         try {
             final NodeIterator nodeIterator;
@@ -309,6 +305,10 @@ public class DefaultContent extends AbstractContent {
             log.error("Exception caught", re);
         }
 
+        if (orderCriteria != null) {
+            // stable sort - do not reorder or remove equal items
+            Collections.sort(children, orderCriteria);
+        }
         return children;
     }
 
@@ -390,7 +390,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     public int getLevel() throws PathNotFoundException, RepositoryException {
-        return this.node.getDepth(); //$NON-NLS-1$
+        return this.node.getDepth(); 
     }
 
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
