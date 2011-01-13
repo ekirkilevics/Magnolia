@@ -58,6 +58,7 @@ import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerWebUI;
 import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -108,18 +109,22 @@ public class ModuleManagerImpl implements ModuleManager {
     private final ModuleDefinitionReader moduleDefinitionReader;
     private final DependencyChecker dependencyChecker;
 
-    public ModuleManagerImpl() {
+    /**
+     * @deprecated since 5.0 - use IoC - temporarily kept for tests ?
+     */
+    protected ModuleManagerImpl() {
         // load all definitions from classpath
         this(new InstallContextImpl(), new BetwixtModuleDefinitionReader());
     }
 
-    // for tests only
+    /**
+     * @deprecated since 5.0 - use IoC - temporarily kept for tests ?
+     */
     protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
         this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance(), new DependencyCheckerImpl());
     }
 
-    // for tests only
-    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker) {
+    public ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;
         this.registry = moduleRegistry;
@@ -300,6 +305,7 @@ public class ModuleManagerImpl implements ModuleManager {
                         final ClassFactory classFactory = Classes.getClassFactory();
                         final Class<?> moduleClass = classFactory.forName(moduleClassName);
                         moduleInstance = classFactory.newInstance(moduleClass);
+// TODO ? -- the module should be in a container  moduleInstance = Components.getSingleton(moduleClass);
                     } catch (Throwable t) {
                         log.error("Can't instantiate " + moduleClassName + " for module " + moduleName + " : " + t.getClass() + " : " + t.getMessage(), t);
                         continue;
