@@ -43,7 +43,7 @@ import info.magnolia.cms.core.Content;
  * @version $Id$
  *
  */
-public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel {
+public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel<RD> {
     protected final RenderingModel parentModel;
     protected final Content content;
     protected final RD definition;
