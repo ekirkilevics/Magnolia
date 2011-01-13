@@ -81,7 +81,7 @@ public class RegisterServletTask extends AbstractTask {
             final Content mappingsNode = servletNode.createContent("mappings", ItemType.CONTENTNODE);
             for (String pattern : servletDefinition.getMappings()) {
                 if (StringUtils.isBlank(pattern)) {
-                    installContext.warn("Empty mappings configuration is not supported and sevlet was not installed.");
+                    installContext.warn("Empty mappings configuration is not supported and servlet was not installed.");
                     continue;
                 }
                 String mappingNodeName = Path.getUniqueLabel(mappingsNode, Path.getValidatedLabel(pattern));
