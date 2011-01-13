@@ -59,7 +59,7 @@ public class RegisterServletTaskTest extends RepositoryTestCase {
 
     protected void setUp() throws Exception {
         ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
-        ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl(null,null,null,null));
+        ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl());
         super.setUp();
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager("config");
         ContentUtil.createPath(hm, "/server/filters/servlets", ItemType.CONTENT);
