@@ -58,7 +58,6 @@ import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerWebUI;
 import info.magnolia.objectfactory.ClassFactory;
 import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
