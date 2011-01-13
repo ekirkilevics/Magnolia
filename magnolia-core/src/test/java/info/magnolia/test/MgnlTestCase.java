@@ -37,11 +37,23 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleManagerImpl;
+import info.magnolia.module.ModuleRegistryImpl;
+import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
+import info.magnolia.module.model.reader.DependencyCheckerImpl;
+import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
@@ -75,7 +87,7 @@ public abstract class MgnlTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();        
+        SystemProperty.getProperties().clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
@@ -100,9 +112,20 @@ public abstract class MgnlTestCase extends TestCase {
         return "/test-magnolia.properties";
     }
 
-    protected void initDefaultImplementations() throws IOException {
-        PropertiesInitializer.getInstance().loadBeanProperties();
-        PropertiesInitializer.getInstance().loadAllModuleProperties();
+    protected void initDefaultImplementations() throws IOException, ModuleManagementException {
+        final List<ModuleDefinition> modules = getModuleDefinitionsForTests();
+        final ModuleManagerImpl mm = new ModuleManagerImpl(null, new DummyModuleDefinitionReader(modules), new ModuleRegistryImpl(), new DependencyCheckerImpl());
+        final PropertiesInitializer pi = new PropertiesInitializer(mm);
+        pi.loadBeanProperties();
+        pi.loadAllModuleProperties();
+    }
+
+    /**
+     * Override this method to provide the appropriate list of modules your tests need.
+     */
+    protected List<ModuleDefinition> getModuleDefinitionsForTests() throws ModuleManagementException {
+        final ModuleDefinition core = new BetwixtModuleDefinitionReader().readFromResource("/META-INF/magnolia/core.xml");
+        return Collections.singletonList(core);
     }
 
     protected MockHierarchyManager initMockConfigRepository(String properties) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
@@ -133,5 +156,29 @@ public abstract class MgnlTestCase extends TestCase {
         completeMessage.append("did not match regex:\n    ");
         completeMessage.append(regex);
         assertTrue(completeMessage.toString(), Pattern.compile(regex, flags).matcher(s).matches());
+    }
+
+    private static class DummyModuleDefinitionReader implements ModuleDefinitionReader {
+        private List<ModuleDefinition> modules;
+
+        public DummyModuleDefinitionReader(List<ModuleDefinition> modules) {
+            this.modules = modules;
+        }
+
+        public Map<String, ModuleDefinition> readAll() throws ModuleManagementException {
+            Map<String, ModuleDefinition> all = new LinkedHashMap<String, ModuleDefinition>();
+            for (ModuleDefinition module : modules) {
+                all.put(module.getName(), module);
+            }
+            return all;
+        }
+
+        public ModuleDefinition read(Reader in) throws ModuleManagementException {
+            throw new IllegalStateException("should not be called");
+        }
+
+        public ModuleDefinition readFromResource(String resourcePath) throws ModuleManagementException {
+            throw new IllegalStateException("should not be called");
+        }
     }
 }

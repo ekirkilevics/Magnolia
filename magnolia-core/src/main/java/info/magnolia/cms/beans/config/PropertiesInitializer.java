@@ -98,7 +98,12 @@ public class PropertiesInitializer {
      */
     public static final String CONTEXT_PARAM_PLACEHOLDER_PREFIX = "contextParam/"; //$NON-NLS-1$
 
+
+    /**
+     * @deprecated
+     */
     public static PropertiesInitializer getInstance() {
+//     TODO   throw new IllegalStateException("We use IoC now!!");
         return Components.getSingleton(PropertiesInitializer.class);
     }
 
@@ -111,6 +116,12 @@ public class PropertiesInitializer {
         + "WEB-INF/config/${webapp}/magnolia.properties," //$NON-NLS-1$
         + "WEB-INF/config/default/magnolia.properties," //$NON-NLS-1$
         + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
+
+    private final ModuleManager moduleManager;
+
+    public PropertiesInitializer(ModuleManager moduleManager) {
+        this.moduleManager = moduleManager;
+    }
 
     public void loadAllProperties(String propertiesFilesString, String rootPath) {
         // load mgnl-beans.properties first
@@ -143,7 +154,6 @@ public class PropertiesInitializer {
 
     public void loadAllModuleProperties() {
         // complete or override with modules' properties
-        final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
         try {
             final List<ModuleDefinition> moduleDefinitions = moduleManager.loadDefinitions();
             loadModuleProperties(moduleDefinitions);
