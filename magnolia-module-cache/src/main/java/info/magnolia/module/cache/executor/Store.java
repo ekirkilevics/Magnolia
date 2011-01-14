@@ -66,7 +66,6 @@ public class Store extends AbstractExecutor {
 
     public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
-        try {
 
             final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, false);
 
@@ -84,25 +83,18 @@ public class Store extends AbstractExecutor {
 
             cachedEntry = makeCachedEntry(request, responseWrapper);
 
-        } catch (Throwable t) {
-            log.error("Failed to process cache request [" + request.getRequestURL() + "] : " + t.getMessage(), t);
-        } finally {
             final Object key = cachePolicyResult.getCacheKey();
-            // have to put cache entry no matter what even if it is null to release lock.
+
             cache.put(key, cachedEntry);
-            if (cachedEntry == null ) {
-                cache.remove(cachePolicyResult.getCacheKey());
-            } else {
-                cachePolicyResult.setCachedEntry(cachedEntry);
-                // let policy know the uuid in case it wants to do something with it
-                final Content content = MgnlContext.getAggregationState().getCurrentContent();
-                if (content != null && content.isNodeType("mix:referenceable")) {
-                    final String uuid = content.getUUID();
-                    String repo = content.getHierarchyManager().getName();
-                    getCachePolicy(cache).persistCacheKey(repo, uuid, key);
-                }
+
+            cachePolicyResult.setCachedEntry(cachedEntry);
+            // let policy know the uuid in case it wants to do something with it
+            final Content content = MgnlContext.getAggregationState().getCurrentContent();
+            if (content != null && content.isNodeType("mix:referenceable")) {
+                final String uuid = content.getUUID();
+                String repo = content.getHierarchyManager().getName();
+                getCachePolicy(cache).persistCacheKey(repo, uuid, key);
             }
-        }
     }
 
     protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cachedResponse) throws IOException {

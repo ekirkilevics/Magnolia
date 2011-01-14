@@ -51,6 +51,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 import java.io.IOException;
@@ -120,7 +122,15 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final CachePolicyResult cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
+        final CachePolicyResult cachePolicyResult;
+        try{
+            cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
+            CachePolicyResult.setCurrent(cachePolicyResult);
+        }
+        catch(LockTimeoutException timeout){
+            log.warn("The following URL was blocked for longer than {} seconds and has timed-out. The request has been blocked as another request is already processing the same resource. [url={}]", new Object[]{blockingTimeout/1000, request.getRequestURL()} );
+            throw timeout;
+        }
 
         log.debug("Cache policy result: {}", cachePolicyResult);
 
@@ -138,16 +148,12 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             final long end = System.currentTimeMillis();
 
             if(blockingTimeout != -1 && (end-start) >= blockingTimeout){
-                log.warn("The following URL took longer than {} seconds to render. This might cause timout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
+                log.warn("The following URL took longer than {} seconds ({}) to render. This might cause timout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start)/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
             }
         }
-        catch(LockTimeoutException timeout){
-            log.warn("The following URL was blocked for longer than {} seconds. [url={}], [key={}]", new Object[]{blockingTimeout/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()} );
-            throw timeout;
-        }
         catch (Throwable th) {
-            if(cachePolicyResult.getBehaviour().equals(CachePolicyResult.store) && cache instanceof BlockingCache){
-                log.error("A request started to cache but never put a cache entry into the blocking cache. This would block the cache key for ever. We are removing the cache entry manually. [url={}], [key={}]", new Object[]{request.getRequestURL(), cachePolicyResult.getCacheKey()});
+            if(cachePolicyResult.getBehaviour() == CachePolicyResult.store && cache instanceof BlockingCache){
+                log.error("A request started to cache but failed with an exception ({}). [url={}], [key={}]", new Object[]{ExceptionUtils.getRootCauseMessage(th), request.getRequestURL(), cachePolicyResult.getCacheKey()});
                 ((BlockingCache) cache).unlock(cachePolicyResult.getCacheKey());
             }
             throw new RuntimeException(th);

@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.cache;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.cache.filter.CacheFilter;
+
 /**
  * CachePolicy returns instances of this class - depending on the value
  * of the behaviour property, the cacheKey and cachedEntry values might
@@ -97,6 +100,20 @@ public class CachePolicyResult {
 
     public void setCachedEntry(Object entry) {
         cachedEntry = entry;
+    }
+
+    /**
+     * Saves the result in the context and makes it available by {@link #getCurrent()}.
+     */
+    public static void setCurrent(CachePolicyResult cachePolicyResult) {
+        MgnlContext.setAttribute(CachePolicyResult.class.getName(), cachePolicyResult);
+    }
+
+    /**
+     * Returns the current {@link CachePolicyResult} which was set by the {@link CacheFilter}.
+     */
+    public static CachePolicyResult getCurrent(){
+        return (CachePolicyResult) MgnlContext.getAttribute(CachePolicyResult.class.getName());
     }
 
 }
