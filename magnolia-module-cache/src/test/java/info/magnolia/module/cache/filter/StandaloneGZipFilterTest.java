@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
 import info.magnolia.test.ComponentsTestUtil;
@@ -41,8 +45,6 @@ import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import info.magnolia.voting.voters.TrueVoter;
-import static org.easymock.EasyMock.*;
-import static info.magnolia.test.TestUtil.enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 

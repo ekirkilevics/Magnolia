@@ -33,10 +33,7 @@
  */
 package info.magnolia.module.cache.filter;
 
-import info.magnolia.module.cache.util.GZipUtil;
 import junit.framework.TestCase;
-
-import java.io.IOException;
 
 /**
  * Basic test for the cached page functionality.

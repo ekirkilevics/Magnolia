@@ -33,18 +33,22 @@
  */
 package info.magnolia.module.cache.filter;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import info.magnolia.cms.filters.WebContainerResources;
+import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTestCase;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
-
-import info.magnolia.cms.filters.WebContainerResources;
-import info.magnolia.cms.filters.WebContainerResourcesImpl;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.MgnlTestCase;
 
 
 /**

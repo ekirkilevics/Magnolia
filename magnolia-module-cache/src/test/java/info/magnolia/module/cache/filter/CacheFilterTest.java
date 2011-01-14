@@ -33,12 +33,21 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.getCurrentArguments;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.isNull;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.same;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.ModuleRegistry;
@@ -54,33 +63,30 @@ import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
-import info.magnolia.module.cache.util.GZipUtil;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import info.magnolia.voting.voters.ResponseContentTypeVoter;
 import info.magnolia.voting.voters.UserAgentVoter;
 import info.magnolia.voting.voters.VoterSet;
-import static info.magnolia.test.TestUtil.enumeration;
-import junit.framework.TestCase;
-import org.apache.commons.collections.map.MultiValueMap;
-import static org.easymock.EasyMock.*;
-import org.easymock.IAnswer;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Calendar;
-import java.util.Date;
+
+import junit.framework.TestCase;
+
+import org.easymock.IAnswer;
 
 /**
  * Basic cache filter test.

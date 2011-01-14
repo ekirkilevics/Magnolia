@@ -35,24 +35,8 @@ package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
-import info.magnolia.module.cache.util.GZipUtil;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
-import static org.easymock.EasyMock.*;
-
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Enumeration;
 
 /**
  * Basic tests for gzip filter.

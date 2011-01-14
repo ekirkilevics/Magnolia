@@ -33,14 +33,16 @@
  */
 package info.magnolia.module.cache.filter;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.DummyUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.CacheConfiguration;
@@ -49,19 +51,16 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.cachepolicy.Default;
 import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.CompositeExecutor;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
-import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.voting.voters.VoterSet;
-import static org.easymock.EasyMock.*;
 
-import javax.security.auth.Subject;
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Test for common cache configuration setup.

@@ -34,7 +34,6 @@
 package info.magnolia.module.cache;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.cache.filter.CacheFilter;
 
 /**
  * CachePolicy returns instances of this class - depending on the value
