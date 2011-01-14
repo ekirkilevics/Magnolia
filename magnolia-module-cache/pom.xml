@@ -9,9 +9,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-cache</artifactId>
   <name>magnolia-module-cache</name>
-  <properties>
-    <maven.test.skip>true</maven.test.skip>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
