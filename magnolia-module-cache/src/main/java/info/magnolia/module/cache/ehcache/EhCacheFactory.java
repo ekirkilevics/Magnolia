@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.management.MBeanServer;
 
+import info.magnolia.module.cache.mbean.CacheMonitor;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
@@ -58,13 +59,16 @@ import net.sf.ehcache.management.ManagementService;
  * @version $Revision: $ ($Author: $)
  */
 public class EhCacheFactory implements CacheFactory {
+    private final CacheMonitor cacheMonitor;
+
     private CacheManager cacheManager;
     private CacheConfiguration defaultCacheConfiguration;
     private String diskStorePath;
     // 0 == do not timeout ever, set to 10s by default.
     private int blockingTimeout = 10000;
 
-    public EhCacheFactory() {
+    public EhCacheFactory(CacheMonitor cacheMonitor) {
+        this.cacheMonitor = cacheMonitor;
         diskStorePath = Path.getCacheDirectoryPath();
     }
 
@@ -102,7 +106,7 @@ public class EhCacheFactory implements CacheFactory {
             createCache(name);
             return getCache(name);
         }
-        return new EhCacheWrapper(ehcache, name);
+        return new EhCacheWrapper(ehcache, cacheMonitor, name);
     }
 
     protected void createCache(String name) {

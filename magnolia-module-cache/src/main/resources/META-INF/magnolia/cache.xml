@@ -9,6 +9,10 @@
   <version>${project.version}</version>
   <properties>
     <property>
+      <name>info.magnolia.module.cache.mbean.CacheMonitor</name>
+      <value>info.magnolia.module.cache.mbean.CacheMonitor</value>
+    </property>
+    <property>
       <name>info.magnolia.module.cache.CachePolicyExecutor</name>
       <value>info.magnolia.module.cache.executor.CompositeExecutor</value>
     </property>

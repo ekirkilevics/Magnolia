@@ -55,14 +55,25 @@ public class ConfigLoader {
     private static final Logger log = LoggerFactory.getLogger(ConfigLoader.class);
     private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
 
+    private final ModuleManager moduleManager;
+    private final LicenseFileExtractor license;
+    private final MessagesManager messagesManager;
+    private final VersionConfig versionConfig;
+
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
      * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
      *
      * @param context ServletContext
      * @see info.magnolia.cms.core.SystemProperty
+     *
+     * TODO - some of the dependencies here don't belong, we're only calling init() on those, which should be moved to a lifecycle management api (pico has one)
      */
-    public ConfigLoader(ServletContext context) {
+    public ConfigLoader(ModuleManager moduleManager, LicenseFileExtractor licenseFileExtractor, MessagesManager messagesManager, VersionConfig versionConfig, ServletContext context) {
+        this.moduleManager = moduleManager;
+        this.license = licenseFileExtractor;
+        this.messagesManager = messagesManager;
+        this.versionConfig = versionConfig;
 
         if (StringUtils.isEmpty(System.getProperty(JAAS_PROPERTYNAME))) {
             try {
@@ -81,18 +92,28 @@ public class ConfigLoader {
         }
     }
 
+    /**
+     * @deprecated since 5.0, use {@link #unload()}, dependencies are injected.
+     */
     public void unload(ServletContext servletContext) {
+        unload();
+    }
+
+    public void unload() {
         ContentRepository.shutdown();
     }
 
     /**
-     * Load magnolia configuration from repositories.
-     *
-     * @param servletContext ServletContext
+     * @deprecated since 5.0, use {@link #load()}, dependencies are injected.
      */
     public void load(ServletContext servletContext) {
-        // first check for the license information, will fail if this class does not exist
-        LicenseFileExtractor license = LicenseFileExtractor.getInstance();
+        load();
+    }
+
+    /**
+     * Load magnolia configuration from repositories.
+     */
+    public void load() {
         license.init();
         license.printVersionInfo();
 
@@ -102,14 +123,15 @@ public class ConfigLoader {
         ContentRepository.init();
 
         try {
-            final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
             moduleManager.checkForInstallOrUpdates();
             moduleManager.getUI().onStartup();
 
             // TODO make these regular ObservedManagers
-            MessagesManager.getInstance().init(); // TODO this was done before module init??
+            // TODO use container lifecycle instead of manuylla calling init() ??
+            messagesManager.init();
+            // TODO : de-staticize MimeMapping
             MIMEMapping.init();
-            VersionConfig.getInstance().init();
+            versionConfig.init();
 
             // finished
             log.info("Configuration loaded (took {} seconds)", Long.toString((System.currentTimeMillis() - millis) / 1000)); //$NON-NLS-1$

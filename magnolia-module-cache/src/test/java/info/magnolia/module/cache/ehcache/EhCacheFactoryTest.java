@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
+import info.magnolia.module.cache.mbean.CacheMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class EhCacheFactoryTest extends TestCase {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "target/cacheTest");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
 
-        factory = new EhCacheFactory();
+        factory = new EhCacheFactory(new CacheMonitor(null));
         // init with ehCache 1.5
         CacheConfiguration config = new CacheConfiguration();
         // init with ehCache 2.0

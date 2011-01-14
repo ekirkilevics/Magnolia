@@ -70,6 +70,9 @@ import java.util.Set;
  */
 public class FreemarkerHelper {
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     public static FreemarkerHelper getInstance() {
         return Components.getSingleton(FreemarkerHelper.class);
     }

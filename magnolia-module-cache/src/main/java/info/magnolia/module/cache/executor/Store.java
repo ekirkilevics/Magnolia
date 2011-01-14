@@ -148,6 +148,9 @@ public class Store extends AbstractExecutor {
         return getModule().getConfiguration(cache.getName()).getCachePolicy();
     }
 
+    /**
+     * @deprecated since 5.0, use IoC/CDI
+     */
     protected CacheModule getModule() {
         return CacheModule.getInstance();
     }

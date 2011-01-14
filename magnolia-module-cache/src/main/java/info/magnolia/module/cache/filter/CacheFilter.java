@@ -67,7 +67,8 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
 
     private static final String DEFAULT_CACHE_CONFIG = "default";
 
-    private CacheMonitor monitor;
+    private final CacheModule cacheModule;
+    private final CacheMonitor monitor;
     private String cacheConfigurationName;
     private CacheConfiguration cacheConfig;
     private Cache cache;
@@ -75,6 +76,11 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     // to provide warning log messages when we run into timeouts we have to save the timeout
     private int blockingTimeout = -1;
 
+    // TODO : so this is how it SHOULD be - but for now, this seems to drive c2b crazy
+    public CacheFilter(CacheModule cacheModule, CacheMonitor cacheMonitor) {
+        this.cacheModule = cacheModule;
+        this.monitor = cacheMonitor;
+    }
 
     public String getCacheConfigurationName() {
         return cacheConfigurationName;
@@ -86,18 +92,18 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
 
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
-        CacheModule.getInstance().register(this);
+        cacheModule.register(this);
         // modules are started *after* filters - so we have to force a call onCacheModuleStart() here
         onCacheModuleStart();
     }
 
+    // TODO do we still need this mechanism at all, if module classes are proxied ?
     public void onCacheModuleStart() {
         if (cacheConfigurationName == null) {
             log.warn("The cacheConfigurationName property is not set for the {} CacheFilter, falling back to {}.", getName(), DEFAULT_CACHE_CONFIG);
             this.cacheConfigurationName = DEFAULT_CACHE_CONFIG;
         }
 
-        final CacheModule cacheModule = getModule();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
         this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
 
@@ -109,12 +115,10 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             log.error("The " + getName() + " CacheFilter is not properly configured, either cacheConfig(" + cacheConfig + ") or cache(" + cache + ") is null. Check if " + cacheConfigurationName + " is a valid cache configuration name. Will disable temporarily.");
             setEnabled(false);
         }
-
-        monitor = CacheMonitor.getInstance();
     }
 
     protected CacheModule getModule() {
-        return CacheModule.getInstance();
+        return cacheModule;
     }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

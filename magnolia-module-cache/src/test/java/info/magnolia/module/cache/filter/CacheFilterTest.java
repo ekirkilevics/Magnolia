@@ -37,6 +37,8 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.module.ModuleManagerImpl;
+import info.magnolia.module.cache.mbean.CacheMonitor;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
@@ -104,7 +106,8 @@ public class CacheFilterTest extends TestCase {
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
 
-        final CacheModule cacheModule = new CacheModule();
+        final CacheMonitor cacheMonitor = new CacheMonitor(null);
+        final CacheModule cacheModule = new CacheModule(null, cacheMonitor);
         final CacheConfiguration c1 = new CacheConfiguration();
         c1.setName("wrong");
         cacheModule.addConfiguration("fake-config", c1);
@@ -116,7 +119,7 @@ public class CacheFilterTest extends TestCase {
         expect(cacheFactory.getCache("the-config-name")).andReturn(createStrictMock(Cache.class));
         cacheModule.setCacheFactory(cacheFactory);
 
-        final CacheFilter filter = new CacheFilter();
+        final CacheFilter filter = new CacheFilter(cacheModule, cacheMonitor);
         filter.setName("the-filter-name");
         filter.setCacheConfigurationName("the-config-name");
 
@@ -688,7 +691,8 @@ public class CacheFilterTest extends TestCase {
         filterChain = createStrictMock(FilterChain.class);
 //        configHm = createStrictMock(HierarchyManager.class);
 
-        final CacheModule cacheModule = new CacheModule();
+        final CacheMonitor cacheMonitor = new CacheMonitor(null);
+        final CacheModule cacheModule = new CacheModule(null, cacheMonitor);
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         moduleRegistry.registerModuleInstance("cache", cacheModule);
@@ -725,7 +729,7 @@ public class CacheFilterTest extends TestCase {
         expect(cacheFactory.getCache("my-config")).andReturn(cache);
         replay(cacheFactory);
 
-        filter = new CacheFilter();
+        filter = new CacheFilter(cacheModule, cacheMonitor);
         filter.setName("cache-filter");
         filter.setCacheConfigurationName("my-config");
         filter.init(null);

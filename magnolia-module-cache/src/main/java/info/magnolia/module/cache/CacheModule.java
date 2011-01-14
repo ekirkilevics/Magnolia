@@ -56,11 +56,18 @@ import java.util.Set;
 public class CacheModule implements ModuleLifecycle {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheModule.class);
 
+    private final ModuleManager moduleManager;
+    private final CacheMonitor cacheMonitor;
+
     private final Set<CacheModuleLifecycleListener> listeners = new HashSet<CacheModuleLifecycleListener>();
     private CacheFactory cacheFactory;
     private Map<String, CacheConfiguration> configurations = new HashMap<String, CacheConfiguration>();
     private ContentCompression compression;
-    private static final CacheMonitor cacheMonitor = CacheMonitor.getInstance();
+
+    public CacheModule(ModuleManager moduleManager, CacheMonitor cacheMonitor) {
+        this.moduleManager = moduleManager;
+        this.cacheMonitor = cacheMonitor;
+    }
 
     public CacheFactory getCacheFactory() {
         return cacheFactory;
@@ -124,7 +131,7 @@ public class CacheModule implements ModuleLifecycle {
 
         // if we're starting up the system, flush caches if we the system has just been installed or updated
         if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
-            final InstallContext installContext = ModuleManager.Factory.getInstance().getInstallContext();
+            final InstallContext installContext = moduleManager.getInstallContext();
             // InstallContext.status is set by ModuleManagerImpl.performInstallOrUpdate()
             if (installContext.getStatus() != null) {
                 log.info("Flushing all caches ...");
@@ -160,6 +167,9 @@ public class CacheModule implements ModuleLifecycle {
         // }
     }
 
+    /**
+     * @deprecated since 5.0, use IoC/CDI
+     */
     public static CacheModule getInstance() {
         return ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class);
     }

@@ -63,6 +63,7 @@ public class FreemarkerConfig {
 
     /**
      * @deprecated since 4.3 should not be needed - components using this can keep their instance
+     * @deprecated since 5.0, use IoC !
      */
     public static FreemarkerConfig getInstance() {
         return Components.getSingleton(FreemarkerConfig.class);

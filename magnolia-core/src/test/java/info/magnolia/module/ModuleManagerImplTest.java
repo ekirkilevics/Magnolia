@@ -134,7 +134,7 @@ public class ModuleManagerImplTest extends TestCase {
         replay(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
 
         final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(mod, fromVersion, Arrays.asList(d1, d2));
-        new ModuleManagerImpl().installOrUpdateModule(moduleAndDeltas, ctx);
+        new ModuleManagerImpl(null,null,null,null).installOrUpdateModule(moduleAndDeltas, ctx);
 
         verify(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
     }
