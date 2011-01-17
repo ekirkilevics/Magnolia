@@ -59,6 +59,7 @@ import java.util.Stack;
  * @version $Id$
  */
 public class WebContextImpl extends UserContextImpl implements WebContext {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebContextImpl.class);
 
     private static final long serialVersionUID = 222L;
 
@@ -83,6 +84,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * Use init to initialize the object.
      */
     public WebContextImpl() {
+        log.debug("new WebContextImpl() {}", this);
     }
 
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
