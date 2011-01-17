@@ -111,7 +111,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         }
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                altOrTitle = MessagesUtil.get("status.cannotWrite");
+                altOrTitle = MessagesUtil.get("status.readOnly");
                 html.append("<img src=\"")
                     .append(treeColumn.getRequest().getContextPath())
                     .append(Tree.ICONDOCROOT)
