@@ -127,7 +127,7 @@ public class ConfigLoader {
             moduleManager.getUI().onStartup();
 
             // TODO make these regular ObservedManagers
-            // TODO use container lifecycle instead of manuylla calling init() ??
+            // TODO use container lifecycle instead of manually calling init() ??
             messagesManager.init();
             // TODO : de-staticize MimeMapping
             MIMEMapping.init();
