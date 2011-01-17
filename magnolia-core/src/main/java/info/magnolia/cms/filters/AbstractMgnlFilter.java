@@ -72,7 +72,7 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     private boolean enabled = true;
 
-    private DispatchRules dispatchRules = new DispatchRules();
+    private DispatchRules dispatching = new DispatchRules();
 
     private Mapping mapping = new Mapping();
 
@@ -108,7 +108,7 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         boolean toWebContainerResource = webContainerResources.isWebContainerResource(request);
         boolean toMagnoliaResource = !toWebContainerResource;
 
-        DispatchRule dispatchRule = getDispatchRules().getDispatchRule(ServletUtils.getDispatcherType(request));
+        DispatchRule dispatchRule = getDispatching().getDispatchRule(ServletUtils.getDispatcherType(request));
         if (toMagnoliaResource && dispatchRule.isToMagnoliaResources())
             return true;
         if (toWebContainerResource && dispatchRule.isToWebContainerResources())
@@ -153,12 +153,12 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         this.enabled = enabled;
     }
 
-    public DispatchRules getDispatchRules() {
-        return dispatchRules;
+    public DispatchRules getDispatching() {
+        return dispatching;
     }
 
-    public void setDispatchRules(DispatchRules dispatching) {
-        this.dispatchRules = dispatching;
+    public void setDispatching(DispatchRules dispatching) {
+        this.dispatching = dispatching;
     }
 
     public Collection<String> getMappings() {
