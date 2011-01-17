@@ -43,17 +43,13 @@ import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyCheckerImpl;
-import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
@@ -114,8 +110,10 @@ public abstract class MgnlTestCase extends TestCase {
 
     protected void initDefaultImplementations() throws IOException, ModuleManagementException {
         final List<ModuleDefinition> modules = getModuleDefinitionsForTests();
-        final ModuleManagerImpl mm = new ModuleManagerImpl(null, new DummyModuleDefinitionReader(modules), new ModuleRegistryImpl(), new DependencyCheckerImpl());
-        final PropertiesInitializer pi = new PropertiesInitializer(mm);
+        final ModuleRegistryImpl mr = new ModuleRegistryImpl();
+        final ModuleManagerImpl mm = new ModuleManagerImpl(null, new FixedModuleDefinitionReader(modules), mr, new DependencyCheckerImpl());
+        mm.loadDefinitions();
+        final PropertiesInitializer pi = new PropertiesInitializer(mr);
         pi.loadBeanProperties();
         pi.loadAllModuleProperties();
     }
@@ -158,27 +156,4 @@ public abstract class MgnlTestCase extends TestCase {
         assertTrue(completeMessage.toString(), Pattern.compile(regex, flags).matcher(s).matches());
     }
 
-    private static class DummyModuleDefinitionReader implements ModuleDefinitionReader {
-        private List<ModuleDefinition> modules;
-
-        public DummyModuleDefinitionReader(List<ModuleDefinition> modules) {
-            this.modules = modules;
-        }
-
-        public Map<String, ModuleDefinition> readAll() throws ModuleManagementException {
-            Map<String, ModuleDefinition> all = new LinkedHashMap<String, ModuleDefinition>();
-            for (ModuleDefinition module : modules) {
-                all.put(module.getName(), module);
-            }
-            return all;
-        }
-
-        public ModuleDefinition read(Reader in) throws ModuleManagementException {
-            throw new IllegalStateException("should not be called");
-        }
-
-        public ModuleDefinition readFromResource(String resourcePath) throws ModuleManagementException {
-            throw new IllegalStateException("should not be called");
-        }
-    }
 }

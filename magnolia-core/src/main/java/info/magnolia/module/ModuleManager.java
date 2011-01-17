@@ -58,6 +58,8 @@ public interface ModuleManager {
     /**
      * Loads modules definitions, validates dependencies and sorts modules
      * by dependencies.
+     *
+     * TODO - this should not be done by ModuleManager
      */
     List<ModuleDefinition> loadDefinitions() throws ModuleManagementException;
 

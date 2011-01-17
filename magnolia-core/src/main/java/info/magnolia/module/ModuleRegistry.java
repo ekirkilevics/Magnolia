@@ -33,6 +33,7 @@
  */
 package info.magnolia.module;
 
+import java.util.List;
 import java.util.Set;
 
 import info.magnolia.module.model.ModuleDefinition;
@@ -59,12 +60,14 @@ public interface ModuleRegistry {
      * can typically co-exist in a system and have the same module class).
      * @see #getModuleInstance(Class) for a type-safer method to get module instances
      * @throws IllegalArgumentException if no such module is registered.
+     * TODO ? @deprecated since 5.0, use IoC instead -- see not how this could still be useful --
      */
     Object getModuleInstance(String name);
 
     /**
      * Returns the module's instance. This is useful for modules of known type.
      * @throws IllegalArgumentException if no such module is registered or if multiple modules are registered for this class.
+     * TODO ? @deprecated since 5.0, use IoC instead
      */
     <T> T getModuleInstance(Class<T> moduleClass);
 
@@ -83,6 +86,12 @@ public interface ModuleRegistry {
      * @return unmodifiable set of module names
      */
     Set<String> getModuleNames();
+
+    /**
+     * Returns the list of known <tt>ModuleDefinition</tt>s, as ordered by the loading mechanism (typically in dependency order).
+     * @since 5.0
+     */
+    List<ModuleDefinition> getModuleDefinitions();
 
     /**
      * Use this to retrieve the configured singleton impl of ModuleRegistry.

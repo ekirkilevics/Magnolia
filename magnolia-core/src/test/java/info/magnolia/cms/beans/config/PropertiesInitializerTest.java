@@ -34,15 +34,11 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.ModuleManagementException;
-import info.magnolia.module.ModuleManagerImpl;
-import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.ModuleRegistryImpl;
 import junit.framework.TestCase;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
 
 import com.mockrunner.mock.web.MockServletContext;
 
@@ -59,12 +55,7 @@ public class PropertiesInitializerTest extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
 
         // load test properties
-        PropertiesInitializer pi = new PropertiesInitializer(new ModuleManagerImpl(null,null,null,null) {
-            @Override
-            public List<ModuleDefinition> loadDefinitions() throws ModuleManagementException {
-                return Collections.emptyList();
-            }
-        });
+        PropertiesInitializer pi = new PropertiesInitializer(new ModuleRegistryImpl());
 
         URL propertyUrl = this.getClass().getResource("/test-magnolia.properties");
         String propertyDir = new File(propertyUrl.toURI().getRawPath()).getParent();

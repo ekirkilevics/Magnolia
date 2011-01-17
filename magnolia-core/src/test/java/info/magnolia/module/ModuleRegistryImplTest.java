@@ -33,12 +33,16 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
+import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.setup.CoreModule;
+import info.magnolia.test.FixedModuleDefinitionReader;
 import junit.framework.TestCase;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author gjoseph
@@ -123,5 +127,26 @@ public class ModuleRegistryImplTest extends TestCase {
 
         assertTrue(reg.isModuleRegistered("bar"));
         assertFalse(reg.isModuleRegistered("chalala"));
+    }
+
+    public void testModuleDefinitionsAreListedInDependencyOrder() throws ModuleManagementException {
+        final ModuleDefinition a = new ModuleDefinition("a", Version.parseVersion("1.0"), null, null);
+        final ModuleDefinition b = new ModuleDefinition("b", Version.parseVersion("1.0"), null, null);
+        final ModuleDefinition c = new ModuleDefinition("c", Version.parseVersion("1.0"), null, null);
+        b.addDependency(new DependencyDefinition("a", "1.0", false));
+        c.addDependency(new DependencyDefinition("a", "1.0", false));
+        c.addDependency(new DependencyDefinition("b", "1.0", false));
+        // currently ModuleManager loads definitions and registers them in ModuleRegistry - perhaps this should change at some point ...
+        // Even if we register/load modules in a bogus order, ModuleRegistry should list them in dependency-order
+        final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
+        final ModuleManagerImpl moduleManager = new ModuleManagerImpl(null, new FixedModuleDefinitionReader(c, b, a), moduleRegistry, new DependencyCheckerImpl());
+        moduleManager.loadDefinitions();
+
+        final List<ModuleDefinition> result = moduleRegistry.getModuleDefinitions();
+        assertEquals(3, result.size());
+        assertEquals("a", result.get(0).getName());
+        assertEquals("b", result.get(1).getName());
+        assertEquals("c", result.get(2).getName());
+
     }
 }

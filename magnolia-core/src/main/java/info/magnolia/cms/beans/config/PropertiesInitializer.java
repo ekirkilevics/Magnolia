@@ -35,8 +35,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.ModuleManagementException;
-import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.PropertyDefinition;
 
@@ -117,10 +116,10 @@ public class PropertiesInitializer {
         + "WEB-INF/config/default/magnolia.properties," //$NON-NLS-1$
         + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
 
-    private final ModuleManager moduleManager;
+    private final ModuleRegistry moduleRegistry;
 
-    public PropertiesInitializer(ModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
+    public PropertiesInitializer(ModuleRegistry moduleRegistry) {
+        this.moduleRegistry = moduleRegistry;
     }
 
     public void loadAllProperties(String propertiesFilesString, String rootPath) {
@@ -154,14 +153,8 @@ public class PropertiesInitializer {
 
     public void loadAllModuleProperties() {
         // complete or override with modules' properties
-        try {
-            final List<ModuleDefinition> moduleDefinitions = moduleManager.loadDefinitions();
-            loadModuleProperties(moduleDefinitions);
-        }
-        catch (ModuleManagementException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e); // TODO
-        }
+        final List<ModuleDefinition> moduleDefinitions = moduleRegistry.getModuleDefinitions();
+        loadModuleProperties(moduleDefinitions);
     }
 
     /**
