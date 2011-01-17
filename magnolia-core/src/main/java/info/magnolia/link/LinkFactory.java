@@ -165,7 +165,8 @@ public class LinkFactory {
     }
 
     /**
-     * Creates link based on provided parameters. Should the uuid be non existent or the fallback handle invalid, creates nonetheless an <em>"undefined"</em> {@link Link} object.
+     * Creates link based on provided parameters. Should the uuid be non existent or the fallback handle invalid, creates nonetheless an <em>"undefined"</em> {@link Link} object,
+     * pointing to the non existing uuid so that broken link detection tools can find it.
      * @param uuid UUID of the content
      * @param repository Content repository name.
      * @param fallbackHandle Optional fallback content handle.
@@ -188,9 +189,11 @@ public class LinkFactory {
             } catch (PathNotFoundException pnfe) {
                 log.warn("Can't find node with uuid {} or handle {} in repository {}", new Object[]{ uuid, fallbackHandle, defaultRepository});
                 link = new Link();
+                link.setUUID(uuid);
             } catch (RepositoryException re) {
                 log.warn("Can't find node with uuid {} or handle {} in repository {}", new Object[]{ uuid, fallbackHandle, defaultRepository});
                 link = new Link();
+                link.setUUID(uuid);
             }
         }
         link.setFallbackHandle(fallbackHandle);
