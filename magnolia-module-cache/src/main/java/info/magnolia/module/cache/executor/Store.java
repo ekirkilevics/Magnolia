@@ -66,27 +66,27 @@ public class Store extends AbstractExecutor {
 
     public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
+        final Object key = cachePolicyResult.getCacheKey();
 
-            final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, false);
+        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, false);
 
-            // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
-            final long cacheStorageDate = System.currentTimeMillis();
-            responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
-            chain.doFilter(request, responseWrapper);
+        // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
+        final long cacheStorageDate = System.currentTimeMillis();
+        responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
+        chain.doFilter(request, responseWrapper);
 
-            if (responseWrapper.getStatus() == HttpServletResponse.SC_NOT_MODIFIED) {
-                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-                return;
-            }
-
+        if (responseWrapper.getStatus() == HttpServletResponse.SC_NOT_MODIFIED) {
+            response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+        }
+        else{
             responseWrapper.flushBuffer();
-
             cachedEntry = makeCachedEntry(request, responseWrapper);
+        }
 
-            final Object key = cachePolicyResult.getCacheKey();
+        // also put null to unblock the cache
+        cache.put(key, cachedEntry);
 
-            cache.put(key, cachedEntry);
-
+        if(cachedEntry != null){
             cachePolicyResult.setCachedEntry(cachedEntry);
             // let policy know the uuid in case it wants to do something with it
             final Content content = MgnlContext.getAggregationState().getCurrentContent();
@@ -95,6 +95,7 @@ public class Store extends AbstractExecutor {
                 String repo = content.getHierarchyManager().getName();
                 getCachePolicy(cache).persistCacheKey(repo, uuid, key);
             }
+        }
     }
 
     protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cachedResponse) throws IOException {
