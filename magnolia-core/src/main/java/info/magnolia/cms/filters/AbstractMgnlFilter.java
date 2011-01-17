@@ -53,6 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.picocontainer.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +77,8 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     private Mapping mapping = new Mapping();
 
-    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
+    @Inject
+    private WebContainerResources webContainerResources;
 
     protected AbstractMgnlFilter() {
     }
@@ -143,7 +145,6 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public boolean isEnabled() {
         return this.enabled;
