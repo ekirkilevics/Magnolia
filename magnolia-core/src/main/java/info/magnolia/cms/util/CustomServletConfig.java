@@ -50,11 +50,17 @@ public class CustomServletConfig implements ServletConfig {
     private final Map<String, String> initParameters;
 
     public CustomServletConfig(String servletName, ServletContext servletContext, Map<String, String> initParameters) {
+        if (initParameters == null) {
+            throw new IllegalArgumentException("initParameters can't be null. Something must be wrong.");
+        }
         this.servletName = servletName;
         this.servletContext = servletContext;
         this.initParameters = initParameters;
     }
 
+    /**
+     * @deprecated not used
+     */
     public CustomServletConfig(String servletName, ServletContext servletContext) {
         this(servletName, servletContext, new HashMap<String, String>());
     }
