@@ -41,7 +41,6 @@ import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.util.LazyInitPrintWriter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.engine.RenderingEngine;
-import info.magnolia.objectfactory.Components;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +72,11 @@ import org.slf4j.LoggerFactory;
 public class RenderingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RenderingFilter.class);
 
-    protected RenderingEngine renderingEngine = Components.getSingleton(RenderingEngine.class);
+    private final RenderingEngine renderingEngine;
+
+    public RenderingFilter(RenderingEngine renderingEngine) {
+        this.renderingEngine = renderingEngine;
+    }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         final AggregationState aggregationState = MgnlContext.getAggregationState();
