@@ -103,6 +103,12 @@ public class PropertiesInitializer {
      public static final String SYSTEM_PROPERTY_PLACEHOLDER_PREFIX = "systemProperty/"; //$NON-NLS-1$
 
     /**
+     * System property prefix, to obtain a property definition like ${systemProperty/property}, that can refer to any
+     * System property.
+     */
+     public static final String ENV_PROPERTY_PLACEHOLDER_PREFIX = "env/"; //$NON-NLS-1$
+
+    /**
      * @deprecated
      */
     public static PropertiesInitializer getInstance() {
@@ -282,11 +288,13 @@ public class PropertiesInitializer {
     /**
      * Returns the property files configuration string passed, replacing all the needed values: ${servername} will be
      * reaplced with the name of the server, ${webapp} will be replaced with webapp name, ${systemProperty/*} will be
-     * replaced with the corresponding system property,  and ${contextAttribute/*} and ${contextParam/*} will be replaced
-     * with the corresponding attributes or parameters taken from servlet context.
+     * replaced with the corresponding system property, ${env/*} will be replaced with the corresponding environment property,
+     * and ${contextAttribute/*} and ${contextParam/*} will be replaced with the corresponding attributes or parameters
+     * taken from servlet context.
      * This can be very useful for all those application servers that has multiple instances on the same server, like
      * WebSphere. Typical usage in this case:
      * <code>WEB-INF/config/${servername}/${contextAttribute/com.ibm.websphere.servlet.application.host}/magnolia.properties</code>
+     *
      * @param context Servlet context
      * @param servername Server name
      * @param webapp Webapp name
@@ -337,6 +345,20 @@ public class PropertiesInitializer {
                 if (StringUtils.isNotBlank(sysPropName)) {
                     final String originalPlaceHolder = PLACEHOLDER_PREFIX + SYSTEM_PROPERTY_PLACEHOLDER_PREFIX + sysPropName + PLACEHOLDER_SUFFIX;
                     final String paramValue = System.getProperty(sysPropName);
+                    if (paramValue != null) {
+                        propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
+                    }
+                }
+            }
+        }
+
+        // Replacing environment property (${env/something})
+        String[] envPropertiesNames = getNamesBetweenPlaceholders(propertiesFilesString, ENV_PROPERTY_PLACEHOLDER_PREFIX);
+        if (envPropertiesNames != null) {
+            for (String envPropName : envPropertiesNames) {
+                if (StringUtils.isNotBlank(envPropName)) {
+                    final String originalPlaceHolder = PLACEHOLDER_PREFIX + ENV_PROPERTY_PLACEHOLDER_PREFIX + envPropName + PLACEHOLDER_SUFFIX;
+                    final String paramValue = System.getenv(envPropName);
                     if (paramValue != null) {
                         propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
                     }
