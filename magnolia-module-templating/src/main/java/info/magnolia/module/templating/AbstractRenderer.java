@@ -81,6 +81,8 @@ public abstract class AbstractRenderer implements RenderingModelBasedRenderer {
             }
         } else {
             actionResult = (String) MgnlContext.getAttribute(ModelExecutionFilter.ACTION_RESULT_ATTRIBUTE_PREFIX + content.getUUID());
+            if (model instanceof EarlyExecutionAware)
+                ((EarlyExecutionAware)model).setParent(parentModel);
         }
 
         String templatePath = determineTemplatePath(content, definition, model, actionResult);

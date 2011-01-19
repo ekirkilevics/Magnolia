@@ -56,12 +56,16 @@ import info.magnolia.context.MgnlContext;
  * a temporary redirect, a permanent redirect or a forward respectively. For redirects the URI can be absolute or
  * relative within the web application (the context path is added automatically).
  * <p/>
+ * By implementing the {@link EarlyExecutionAware} interface the callback will instead be made to a dedicated method
+ * making it easier to separate functionality for the two scenarios.
+ * <p/>
  * To provide proper semantics this class mirrors functionality in RenderingEngine and AbstractRender, specifically in
  * how it sets up the current content in aggregation state and creation and execution of the model.
  *
  * @author tmattsson
  * @see info.magnolia.module.templating.AbstractRenderer
  * @see info.magnolia.cms.util.RequestDispatchUtil
+ * @see EarlyExecutionAware
  */
 public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
 
@@ -115,7 +119,12 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
                 throw new ServletException(e.getMessage(), e);
             }
 
-            String actionResult = renderingModel.execute();
+            String actionResult;
+            if (renderingModel instanceof EarlyExecutionAware) {
+                actionResult = ((EarlyExecutionAware)renderingModel).executeEarly();
+            } else {
+                actionResult = renderingModel.execute();
+            }
 
             // If the model rendered something on its own or sent a redirect we will not proceed with rendering.
             if (response.isCommitted())

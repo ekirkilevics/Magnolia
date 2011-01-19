@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,56 +33,27 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.core.Content;
-
-
 /**
- * The default concrete rendering definition used for templates and paragraphs.
- * @author pbracher
- * @param <RD> - an instance of {@link RenderableDefinition}
- * @version $Id$
+ * Implemented by models that want to handle early execution in a separate callback. Also adds a setter for the parent
+ * model. It is called after early execution and before rendering.
  *
+ * @author tmattsson
+ * @see RenderingModel
+ * @see ModelExecutionFilter
  */
-public class RenderingModelImpl<RD extends RenderableDefinition> implements RenderingModel<RD> {
-    protected RenderingModel parentModel;
-    protected final Content content;
-    protected final RD definition;
-
-    public RenderingModelImpl(Content content, RD definition, RenderingModel parent) {
-        this.content = content;
-        this.definition = definition;
-        this.parentModel = parent;
-    }
-
-    public RenderingModel getParent() {
-        return this.parentModel;
-    }
-
-    public RenderingModel getRoot(){
-        RenderingModel model = this;
-        while(model.getParent() != null){
-            model = model.getParent();
-        }
-        return model;
-    }
-
-    public Content getContent() {
-        return this.content;
-    }
+public interface EarlyExecutionAware {
 
     /**
-     * Shortname for templates: model.def.
+     * Called before rendering of the paragraph.
+     *
+     * @param parentModel
      */
-    public RD getDef() {
-        return getDefinition();
-    }
+    void setParent(RenderingModel parentModel);
 
-    public RD getDefinition() {
-        return this.definition;
-    }
-
-    public String execute() {
-        return null;
-    }
-
+    /**
+     * Called after all properties were set. Can return a string which is passed
+     * to the method.
+     * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
+     */
+    String executeEarly();
 }
