@@ -65,6 +65,7 @@ public class PropertiesInitializerTest extends TestCase {
 
     protected void tearDown() throws Exception {
         SystemProperty.getProperties().clear();
+        System.getProperties().remove("testProp");
         super.tearDown();
     }
 
@@ -118,5 +119,20 @@ public class PropertiesInitializerTest extends TestCase {
             "WEB-INF/${contextParam/param}/${contextAttribute/attribute}");
 
         assertEquals("WEB-INF/paramvalue/attributevalue", replaced);
+    }
+
+    public void testSystemPropertiesCanBeUsed() {
+        System.setProperty("testProp", "hello");
+        final String res = PropertiesInitializer.processPropertyFilesString(null, null, null, "WEB-INF/${systemProperty/testProp}/magnolia.properties");
+        assertEquals("WEB-INF/hello/magnolia.properties", res);
+    }
+
+    public void testEnvironmentPropertiesCanBeUsed() {
+        // since we can't add properties to System.env, we just an env property whose value we can know otherwise.
+        // This test will most likely fail on Windows (where the env property seems to be USERNAME), unless someone comes up with a brighter idea.
+        final String user = System.getProperty("user.name");
+
+        final String res = PropertiesInitializer.processPropertyFilesString(null, null, null, "WEB-INF/${env/USER}/magnolia.properties");
+        assertEquals("WEB-INF/"+user+"/magnolia.properties", res);
     }
 }
