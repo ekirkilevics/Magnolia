@@ -34,8 +34,10 @@
 package info.magnolia.cms.util;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 
@@ -92,6 +94,8 @@ public class InheritanceContentWrapperTest extends TestCase {
         assertEquals("/page1/page11/para", page11.getContent("para").getHandle());
         assertEquals("/page1/para", page12.getContent("para").getHandle());
 
+        assertFalse(((InheritanceContentWrapper)page11.getContent("para")).isInherited());
+        assertTrue(((InheritanceContentWrapper)page12.getContent("para")).isInherited());
     }
 
     public void testNestedParagraphInheritance() throws Exception {
@@ -115,19 +119,35 @@ public class InheritanceContentWrapperTest extends TestCase {
         Content page12 = getWrapped("/page1/page12");
         Content page13 = getWrapped("/page1/page13");
 
-        Collection col1 = page11.getContent("collection").getChildren();
-        asertEquals(col1, new String[]{"para11","para12"});
+        List<Content> col1 = new ArrayList<Content>(page11.getContent("collection").getChildren());
+        assertEquals(2, col1.size());
+        assertEquals("para11", col1.get(0).getName());
+        assertTrue(((InheritanceContentWrapper)col1.get(0)).isInherited());
+        assertEquals("para12", col1.get(1).getName());
+        assertTrue(((InheritanceContentWrapper)col1.get(1)).isInherited());
 
-        Collection col2 = page12.getContent("collection").getChildren();
-        asertEquals(col2, new String[]{"para11","para12", "para121", "para122"});
+        List<Content> col2 = new ArrayList<Content>(page12.getContent("collection").getChildren());
+        assertEquals(4, col2.size());
+        assertEquals("para11", col2.get(0).getName());
+        assertTrue(((InheritanceContentWrapper)col2.get(0)).isInherited());
+        assertEquals("para12", col2.get(1).getName());
+        assertTrue(((InheritanceContentWrapper)col2.get(1)).isInherited());
+        assertEquals("para121", col2.get(2).getName());
+        assertFalse(((InheritanceContentWrapper)col2.get(2)).isInherited());
+        assertEquals("para122", col2.get(3).getName());
+        assertFalse(((InheritanceContentWrapper)col2.get(3)).isInherited());
 
         // this page has no collection container
-        Collection col3 = page13.getContent("collection").getChildren();
-        asertEquals(col3, new String[]{"para11","para12"});
+        List<Content> col3 = new ArrayList<Content>(page13.getContent("collection").getChildren());
+        assertEquals(2, col3.size());
+        assertEquals("para11", col3.get(0).getName());
+        assertTrue(((InheritanceContentWrapper)col3.get(0)).isInherited());
+        assertEquals("para12", col3.get(1).getName());
+        assertTrue(((InheritanceContentWrapper)col3.get(1)).isInherited());
 
     }
 
-    private void asertEquals(Collection col, String[] names) {
+    private void assertEquals(Collection col, String[] names) {
         final String msg = "wrong set of paragraphs found. expected <" + ArrayUtils.toString(names)+ "> actual:<" + col + ">";
 
         if(col.size() != names.length){

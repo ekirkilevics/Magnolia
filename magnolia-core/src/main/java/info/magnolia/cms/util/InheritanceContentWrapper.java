@@ -75,25 +75,23 @@ public class InheritanceContentWrapper extends ContentWrapper {
     private static Logger log = LoggerFactory.getLogger(InheritanceContentWrapper.class);
 
     /**
-     * True if this node were achieved through inheritance.
+     * From where the inheritance started.
      */
-    private boolean inherited;
+    private Content start;
 
     /**
      * Used if in the {@link #wrap(Content)} method.
-     * @param wrappedContent
-     * @param inherited true if this node is in the chain of inheritance.
      */
-    public InheritanceContentWrapper(Content wrappedContent, boolean inherited) {
+    public InheritanceContentWrapper(Content wrappedContent, Content start) {
         super(wrappedContent);
-        this.inherited = inherited;
+        this.start = start;
     }
 
     /**
      * Starts the inheritance.
      */
     public InheritanceContentWrapper(Content node) {
-        this(node, false);
+        this(node, node);
     }
 
     @Override
@@ -112,7 +110,7 @@ public class InheritanceContentWrapper extends ContentWrapper {
 
     @Override
     public Collection<Content> getChildren(ContentFilter filter, String namePattern, Comparator<Content> orderCriteria){
-        List children = new ArrayList();
+        List<Content> children = new ArrayList<Content>();
 
         // add inherited children
         try {
@@ -236,19 +234,14 @@ public class InheritanceContentWrapper extends ContentWrapper {
         if(node instanceof InheritanceContentWrapper){
             return node;
         }
-        // set the inherited flag
-        boolean inherited = !isSubNode(node);
-        return new InheritanceContentWrapper(node, inherited);
+        return new InheritanceContentWrapper(node, start);
     }
 
     /**
-     * True if the current node is an ancestor of node.
+     * True if this is not a sub node of the starting point.
      */
-    protected boolean isSubNode(Content node) {
-        return node.getHandle().startsWith(getWrappedContent().getHandle());
+    public boolean isInherited() {
+        return !getWrappedContent().getHandle().startsWith(start.getHandle());
     }
 
-    public boolean isInherited() {
-        return this.inherited;
-    }
 }
