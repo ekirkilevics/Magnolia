@@ -38,6 +38,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.PropertyDefinition;
+import info.magnolia.objectfactory.Components;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,13 +54,11 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import info.magnolia.objectfactory.Components;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * This class is responsible for loading the various "magnolia.properties" files, merging them,
@@ -97,6 +96,11 @@ public class PropertiesInitializer {
      */
     public static final String CONTEXT_PARAM_PLACEHOLDER_PREFIX = "contextParam/"; //$NON-NLS-1$
 
+     /**
+      * System property prefix, to obtain a property definition like ${systemProperty/property}, that can refer to any
+      * System property.
+      */
+     public static final String SYSTEM_PROPERTY_PLACEHOLDER_PREFIX = "systemProperty/"; //$NON-NLS-1$
 
     /**
      * @deprecated
@@ -277,8 +281,9 @@ public class PropertiesInitializer {
 
     /**
      * Returns the property files configuration string passed, replacing all the needed values: ${servername} will be
-     * reaplced with the name of the server, ${webapp} will be replaced with webapp name, and ${contextAttribute/*} and
-     * ${contextParam/*} will be replaced with the corresponding attributes or parameters taken from servlet context.
+     * reaplced with the name of the server, ${webapp} will be replaced with webapp name, ${systemProperty/*} will be
+     * replaced with the corresponding system property,  and ${contextAttribute/*} and ${contextParam/*} will be replaced
+     * with the corresponding attributes or parameters taken from servlet context.
      * This can be very useful for all those application servers that has multiple instances on the same server, like
      * WebSphere. Typical usage in this case:
      * <code>WEB-INF/config/${servername}/${contextAttribute/com.ibm.websphere.servlet.application.host}/magnolia.properties</code>
@@ -318,6 +323,20 @@ public class PropertiesInitializer {
                     // Some implementation may not accept a null as param key, but an empty string? TODO Check.
                     final String originalPlaceHolder = PLACEHOLDER_PREFIX + CONTEXT_PARAM_PLACEHOLDER_PREFIX + ctxParamName + PLACEHOLDER_SUFFIX;
                     final String paramValue = context.getInitParameter(ctxParamName);
+                    if (paramValue != null) {
+                        propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
+                    }
+                }
+            }
+        }
+
+        // Replacing system property (${systemProperty/something})
+        String[] systemPropertiesNames = getNamesBetweenPlaceholders(propertiesFilesString, SYSTEM_PROPERTY_PLACEHOLDER_PREFIX);
+        if (systemPropertiesNames != null) {
+            for (String sysPropName : systemPropertiesNames) {
+                if (StringUtils.isNotBlank(sysPropName)) {
+                    final String originalPlaceHolder = PLACEHOLDER_PREFIX + SYSTEM_PROPERTY_PLACEHOLDER_PREFIX + sysPropName + PLACEHOLDER_SUFFIX;
+                    final String paramValue = System.getProperty(sysPropName);
                     if (paramValue != null) {
                         propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
                     }
