@@ -37,7 +37,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
-import info.magnolia.module.ModuleManagerImpl;
 import info.magnolia.module.cache.mbean.CacheMonitor;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
