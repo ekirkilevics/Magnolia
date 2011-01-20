@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -122,6 +123,11 @@ public class InstallFilter extends AbstractMgnlFilter {
 
         public Locale getLocale() {
             return MgnlContext.getSystemContext().getLocale();
+        }
+
+        @Override
+        protected AggregationState newAggregationState() {
+            throw new IllegalStateException("AggregationState is not meant to be used during the installation process.");
         }
     }
 }

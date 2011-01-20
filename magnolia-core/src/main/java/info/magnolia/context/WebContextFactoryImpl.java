@@ -33,19 +33,37 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.core.AggregationState;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 
 /**
+ * Default WebContextFactory, providing a hook to instantiate custom implementations of {@link AggregationState}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class WebContextFactoryImpl implements WebContextFactory {
+public class WebContextFactoryImpl implements WebContextFactory, Serializable {
+    /* TODO - do we really need to implement Serializable - see MAGNOLIA-3523 */
+
     public WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
-        final WebContext ctx = new WebContextImpl();
+        final WebContext ctx = new WebContextImpl() {
+            @Override
+            protected AggregationState newAggregationState() {
+                return WebContextFactoryImpl.this.newAggregationState();
+            }
+        };
         ctx.init(request, response, servletContext);
         return ctx;
+    }
+
+    /**
+     * Override this method if you need to provide a specific subclass of AggregationState.
+     */
+    protected AggregationState newAggregationState() {
+        return new AggregationState();
     }
 }
