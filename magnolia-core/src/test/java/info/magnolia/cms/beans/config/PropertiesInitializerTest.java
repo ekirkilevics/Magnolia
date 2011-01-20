@@ -141,6 +141,7 @@ public class PropertiesInitializerTest extends TestCase {
     }
     
     public void testValuesForNestedPropertiesAreTrimmed() throws Exception {
-        assertEquals("foo", SystemProperty.getProperty("test.whitespaces.nested"));
+        // TODO : i get the feeling this passes by accident, and would not pass if .nested was iterated on first
+        assertEquals("bar foo", SystemProperty.getProperty("test.whitespaces.nested"));
     }
 }
