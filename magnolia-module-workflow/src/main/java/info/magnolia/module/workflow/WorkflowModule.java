@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.workflow;
 
+import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
@@ -58,6 +59,9 @@ public class WorkflowModule implements ModuleLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     private static WorkflowModule instance;
 
     /**
@@ -176,7 +180,11 @@ public class WorkflowModule implements ModuleLifecycle {
         this.cleanup = cleanup;
     }
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     public static WorkflowModule getInstance() {
+        DeprecationUtil.isDeprecated("Use IoC!");
         return instance;
     }
 
