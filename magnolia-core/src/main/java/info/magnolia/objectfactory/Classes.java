@@ -36,8 +36,10 @@ package info.magnolia.objectfactory;
 import info.magnolia.cms.core.SystemProperty;
 import org.apache.commons.lang.StringUtils;
 
+import java.lang.reflect.Modifier;
+
 /**
- * Entry point to the currently configured ClassFactory.
+ * Entry point to the currently configured ClassFactory, as well as some additional utility methods for manipulating Class objects.
  *
  * @see info.magnolia.objectfactory.ClassFactory
  *
@@ -46,6 +48,10 @@ import org.apache.commons.lang.StringUtils;
  */
 public class Classes {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Classes.class);
+
+    public static boolean isConcrete(Class<?> clazz) {
+        return !Modifier.isAbstract(clazz.getModifiers());
+    }
 
     /**
      * Convenience/shortcut method for instantiating new classes.
