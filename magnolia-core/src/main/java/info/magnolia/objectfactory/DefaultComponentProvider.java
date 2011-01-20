@@ -33,13 +33,10 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -52,6 +49,9 @@ import java.util.Properties;
  * <code>repository:/path/to/node</code> or <code>/path/to/node</code>, which defaults to the <code>config</code>
  * repository). In the latter case, the component is constructed via {@link info.magnolia.objectfactory.ObservedComponentFactory}
  * and reflects (through observation) the contents of the given path.
+ *
+ * @deprecated since 5.0, use IoC, i.e another implementation of ComponentProvider.
+ * @see info.magnolia.objectfactory.pico.PicoComponentProvider
  *
  * @author Philipp Bracher
  * @version $Revision: 25238 $ ($Author: pbaerfuss $)
@@ -71,7 +71,7 @@ public class DefaultComponentProvider implements ComponentProvider {
 
     private final Properties mappings;
 
-    DefaultComponentProvider(Properties mappings) {
+    public DefaultComponentProvider(Properties mappings) {
         // Ideally, the dependency should be on SystemProperty or other relevant object.
         // Hopefully, we'll de-staticize SystemProperty soon.
         this.mappings = mappings;
@@ -112,19 +112,14 @@ public class DefaultComponentProvider implements ComponentProvider {
 
             final String className = getImplementationName(type);
             if (isInRepositoryDefinition(className)) {
-                String repository = ContentRepository.CONFIG;
-                String path = className;
-                if (className.indexOf(':') >= 0) {
-                    repository = StringUtils.substringBefore(className, ":");
-                    path = StringUtils.substringAfter(className, ":");
-                }
-                final ObservedComponentFactory<T> factory = new ObservedComponentFactory<T>(repository, path, type);
+                final ComponentConfigurationPath path = new ComponentConfigurationPath(className);
+                final ObservedComponentFactory<T> factory = new ObservedComponentFactory<T>(path.getRepository(), path.getPath(), type);
                 setInstanceFactory(type, factory);
                 // now that the factory is registered, we call ourself again
                 return newInstance(type);
             } else {
                 final Class<?> clazz = Classes.getClassFactory().forName(className);
-                if (!isConcrete(clazz)) {
+                if (!Classes.isConcrete(clazz)) {
                     throw new MgnlInstantiationException("No concrete implementation defined for " + clazz); 
                 }
                 final Object instance = Classes.getClassFactory().newInstance(clazz);
@@ -144,8 +139,11 @@ public class DefaultComponentProvider implements ComponentProvider {
         }
     }
 
+    /**
+     * @deprecated since 5.0, use {@link Classes#isConcrete(Class)}
+     */
     protected boolean isConcrete(Class<?> clazz) {
-        return !Modifier.isAbstract(clazz.getModifiers());
+        return Classes.isConcrete(clazz);
     }
 
     // TODO - is this needed / correct ?
@@ -163,8 +161,11 @@ public class DefaultComponentProvider implements ComponentProvider {
         return mappings.getProperty(name, name);
     }
 
-    private boolean isInRepositoryDefinition(String className) {
-        return className.startsWith("/") || className.indexOf(':') >= 0;
+    /**
+     * @deprecated since 5.0, use {@link ComponentConfigurationPath#isComponentConfigurationPath(String)}
+     */
+    static boolean isInRepositoryDefinition(String className) {
+        return ComponentConfigurationPath.isComponentConfigurationPath(className);
     }
 
     /**
