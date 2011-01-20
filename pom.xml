@@ -223,6 +223,17 @@ for Java Content Repositories (JCR).
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.4</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.jcr</groupId>
+        <artifactId>jcr</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
         <version>1.6.2</version>
@@ -242,6 +253,31 @@ for Java Content Repositories (JCR).
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>
         <version>10.3.1.4</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.inject</groupId>
+        <artifactId>javax.inject</artifactId>
+        <version>1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.picocontainer</groupId>
+        <artifactId>picocontainer</artifactId>
+        <version>2.12</version>
+      </dependency>
+      <dependency>
+        <groupId>org.picocontainer</groupId>
+        <artifactId>picocontainer-gems</artifactId>
+        <version>2.12</version>
+      </dependency>
+      <dependency>
+        <groupId>org.picocontainer.web</groupId>
+        <artifactId>picocontainer-web-core</artifactId>
+        <version>2.5.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.picocontainer</groupId>
+        <artifactId>picocontainer-logging</artifactId>
+        <version>2.0.1</version>
       </dependency>
       <dependency>
         <groupId>concurrent</groupId>
@@ -330,6 +366,12 @@ for Java Content Repositories (JCR).
       </dependency>
       <dependency>
         <groupId>javax.servlet</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>2.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.1.2</version>
       </dependency>
@@ -339,26 +381,9 @@ for Java Content Repositories (JCR).
         <version>1.1.2</version>
       </dependency>
       <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.4</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jsp-api</artifactId>
-        <version>2.0</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
         <groupId>javax.mail</groupId>
         <artifactId>mail</artifactId>
         <version>1.4.1</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.jcr</groupId>
-        <artifactId>jcr</artifactId>
-        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>commons-lang</groupId>
@@ -433,18 +458,18 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.5.11</version>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.11</version>
+        <version>1.6.1</version>
       </dependency>
       <!-- required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of commons-logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
-        <version>1.5.11</version>
+        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
