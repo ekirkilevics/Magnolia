@@ -135,4 +135,12 @@ public class PropertiesInitializerTest extends TestCase {
         final String res = PropertiesInitializer.processPropertyFilesString(null, null, null, "WEB-INF/${env/USER}/magnolia.properties");
         assertEquals("WEB-INF/"+user+"/magnolia.properties", res);
     }
+
+    public void testValuesAreTrimmed() throws Exception {
+        assertEquals("foo", SystemProperty.getProperty("test.whitespaces"));
+    }
+    
+    public void testValuesForNestedPropertiesAreTrimmed() throws Exception {
+        assertEquals("foo", SystemProperty.getProperty("test.whitespaces.nested"));
+    }
 }

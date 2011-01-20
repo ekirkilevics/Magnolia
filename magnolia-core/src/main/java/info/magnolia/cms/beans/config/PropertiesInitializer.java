@@ -155,7 +155,7 @@ public class PropertiesInitializer {
             String key = (String) it.next();
             String oldValue = (String) sysProps.get(key);
             String value = parseStringValue(oldValue, new HashSet<String>());
-            SystemProperty.getProperties().put(key, value);
+            SystemProperty.getProperties().put(key, value.trim());
         }
 
     }
