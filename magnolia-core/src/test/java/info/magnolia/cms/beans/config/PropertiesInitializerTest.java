@@ -118,4 +118,8 @@ public class PropertiesInitializerTest extends TestCase {
 
         assertEquals("WEB-INF/paramvalue/attributevalue", replaced);
     }
+
+    public void testValuesAreTrimmed() throws Exception {
+        assertEquals("foo", SystemProperty.getProperty("test.whitespaces"));
+    }
 }
