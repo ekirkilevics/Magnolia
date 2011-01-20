@@ -109,10 +109,9 @@ public class PropertiesInitializer {
      public static final String ENV_PROPERTY_PLACEHOLDER_PREFIX = "env/"; //$NON-NLS-1$
 
     /**
-     * @deprecated
+     * @deprecated since 5.0, use IoC
      */
     public static PropertiesInitializer getInstance() {
-//     TODO   throw new IllegalStateException("We use IoC now!!");
         return Components.getSingleton(PropertiesInitializer.class);
     }
 
@@ -298,7 +297,7 @@ public class PropertiesInitializer {
      * @param context Servlet context
      * @param servername Server name
      * @param webapp Webapp name
-     * @param propertiesFilesString Property file configuration string.
+     * @param propertiesFilesString a comma separated list of paths.
      * @return Property file configuration string with everything replaced.
      */
     public static String processPropertyFilesString(ServletContext context, String servername, String webapp,
