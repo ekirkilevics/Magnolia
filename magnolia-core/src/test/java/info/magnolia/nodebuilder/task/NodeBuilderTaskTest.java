@@ -87,7 +87,7 @@ public class NodeBuilderTaskTest extends RepositoryTestCase {
                                         addProperty("name", "xxxChronicleTeaser"))),
                         remove("opener/paragraphs/stkTeaserOpener"))
         );
-        configurateTemplateStkSection.execute(new InstallContextImpl());
+        configurateTemplateStkSection.execute(new InstallContextImpl(null));
     }
 
     private void assertPathNotFoundExceptionFor(final String path) throws RepositoryException {

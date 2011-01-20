@@ -36,6 +36,10 @@ package info.magnolia.test;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.content2bean.Content2BeanProcessor;
+import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
+import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManagerImpl;
@@ -116,6 +120,13 @@ public abstract class MgnlTestCase extends TestCase {
         final PropertiesInitializer pi = new PropertiesInitializer(mr);
         pi.loadBeanProperties();
         pi.loadAllModuleProperties();
+
+        // these are not in mgnl-beans.properties anymore at the moment, they are registered via info.magnolia.cms.servlets.MgnlServletContextListener#populateRootContainer
+        final TypeMappingImpl typeMapping = new TypeMappingImpl();
+        ComponentsTestUtil.setInstance(TypeMapping.class, typeMapping);
+        ComponentsTestUtil.setInstance(Content2BeanProcessor.class, new Content2BeanProcessorImpl(typeMapping));
+        ComponentsTestUtil.setImplementation(info.magnolia.content2bean.Content2BeanTransformer.class, info.magnolia.content2bean.impl.Content2BeanTransformerImpl.class);
+        // ComponentsTestUtil.setImplementation(info.magnolia.content2bean.Bean2ContentProcessor.class, info.magnolia.content2bean.Bean2ContentProcessorImpl.class);
     }
 
     /**

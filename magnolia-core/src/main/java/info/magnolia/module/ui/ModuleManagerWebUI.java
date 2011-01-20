@@ -36,6 +36,7 @@ package info.magnolia.module.ui;
 import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.module.InstallContext;
@@ -137,7 +138,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
 
     protected void render(String templateName, Writer out) throws ModuleManagementException {
         // a special instance of FreemarkerHelper which does not use Magnolia components
-        final FreemarkerHelper freemarkerHelper = new FreemarkerHelper() {
+        final FreemarkerHelper freemarkerHelper = new FreemarkerHelper(new FreemarkerConfig()) {
             protected void addDefaultData(Map data, Locale locale, String i18nBasename) {
                 final WebContext webCtx = (WebContext) MgnlContext.getInstance();
                 // @deprecated (-> update all templates)

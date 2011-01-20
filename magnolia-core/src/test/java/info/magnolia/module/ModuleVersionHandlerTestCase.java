@@ -76,7 +76,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     }
 
     protected void initDefaultImplementations() throws IOException {
-        PropertiesInitializer.getInstance().loadBeanProperties();
+        new PropertiesInitializer(null).loadBeanProperties();
         // the super's implementation of this method also loads all module definition's properties, which is problematic
         // since we're trying to isolate this specific module (the properties aren't the problem as much as the fact
         // that this implies loading all module definitions, thusly checking module dependencies, etc.
@@ -191,15 +191,15 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         replay(readerMock);
 
         final ModuleVersionHandler versionHandlerUnderTest = newModuleVersionHandlerForTests();
-        final InstallContextImpl ctx = new InstallContextImpl() {
+        final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
+        final DependencyChecker depCheck = new NullDependencyChecker();
+        final InstallContextImpl ctx = new InstallContextImpl(moduleRegistry) {
             @Override
             public void error(String message, Throwable th) {
                 // let's fail the test if we encounter a logged error, because ModuleManagerImpl.applyDeltas() swallows TaskExecutionException and RuntimeException and logs errors instead
                 fail(message);
             }
         };
-        final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
-        final DependencyChecker depCheck = new NullDependencyChecker();
         final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry, depCheck) {
             protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
                 assertEquals("this test doesn't behave as expected", moduleDefinition, module);

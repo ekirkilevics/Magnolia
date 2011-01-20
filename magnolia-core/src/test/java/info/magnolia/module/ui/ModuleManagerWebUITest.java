@@ -42,6 +42,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.WarnTask;
@@ -84,7 +85,7 @@ public class ModuleManagerWebUITest extends TestCase {
     }
 
     public void testModuleManagementExceptionsArePropagatedEvenThoughTheUpdateIsRunningInASeparateThread() throws ModuleManagementException, InterruptedException {
-        final InstallContextImpl ctx = new InstallContextImpl();
+        final InstallContextImpl ctx = new InstallContextImpl(new ModuleRegistryImpl());
         final ModuleManager moduleManager = createStrictMock(ModuleManager.class);
         moduleManager.performInstallOrUpdate();
         expectLastCall().andThrow(new IllegalStateException("boo!"));
@@ -153,7 +154,7 @@ public class ModuleManagerWebUITest extends TestCase {
         final ModuleDefinition mod1 = new ModuleDefinition("foo", Version.parseVersion("1.0"), null, null);
         final ModuleDefinition mod2 = new ModuleDefinition("bar", Version.parseVersion("2.0"), null, null);
 
-        final InstallContextImpl ctx = new InstallContextImpl();
+        final InstallContextImpl ctx = new InstallContextImpl(new ModuleRegistryImpl());
         ctx.setCurrentModule(mod1);
         ctx.info("trala");
         ctx.info("trululu");

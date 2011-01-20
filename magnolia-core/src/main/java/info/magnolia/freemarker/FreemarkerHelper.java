@@ -83,6 +83,9 @@ public class FreemarkerHelper {
     private TaglibFactory taglibFactory;
     private ServletContextHashModel servletContextHashModel;
 
+    /**
+     * @deprecated since 5.0, use IoC, i.e use {@link #FreemarkerHelper(FreemarkerConfig)}
+     */
     public FreemarkerHelper() {
         this(Components.getSingleton(FreemarkerConfig.class));
     }

@@ -95,8 +95,12 @@ public interface ModuleRegistry {
 
     /**
      * Use this to retrieve the configured singleton impl of ModuleRegistry.
+     * @deprecated since 5.0, use IoC !
      */
     public class Factory {
+        /**
+         * @deprecated since 5.0, use IoC !
+         */
         public static ModuleRegistry getInstance() {
             return Components.getSingleton(ModuleRegistry.class);
         }
