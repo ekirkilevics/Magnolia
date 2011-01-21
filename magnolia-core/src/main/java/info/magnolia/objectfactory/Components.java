@@ -67,7 +67,7 @@ public class Components {
      * Consider using IoC instead.
      */
     public static <T> T getComponent(Class<T> type) {
-        return getComponentProvider().getSingleton(type);
+        return getComponentProvider().getComponent(type);
     }
 
     public static ComponentProvider getComponentProvider() {
