@@ -52,7 +52,6 @@ import info.magnolia.test.mock.MockMetaData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.jcr.Session;
 import javax.jcr.Workspace;
@@ -68,7 +67,7 @@ import org.apache.commons.collections.ListUtils;
  * @author had
  * @version $Id:$
  */
-public class AdminTreeMVCHandlerTestUtf8 extends TestCase
+public class AdminTreeMVCHandlerUTF8Test extends TestCase
 {
 
     private HttpServletRequest req;
@@ -98,7 +97,7 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
     public static final String TEXT_RUSSIAN_VALIDATED = "\u041D\u0430-\u0431\u0435\u0440\u0435\u0433\u0443-\u043F\u0443\u0441\u0442\u044B\u043D\u043D\u044B\u0445-\u0432\u043E\u043B\u043D";
 
     public static final String TEXT_SPECIAL = "utf8!?#{}$!\u00A3%()=@";
-    
+
     public static final String TEXT_SPECIAL_VALIDATED = "utf8---{}$-\u00A3-()=@";
 
     public static final String TEXT_ACCENTED = "citt\u00E0\u00E8\u00EC\u00F2\u00F9";
@@ -201,7 +200,7 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
 
         objs = new Object[]{req, res, ctx, hm, cnt, workspace, session };
         replay(objs);
-        String view = handler.execute("saveValue");
+        String view = handler.saveValue();
         verify(objs);
 
         assertEquals("value", view);
@@ -249,7 +248,7 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
 
         objs = new Object[]{req, res, ctx, hm, cnt, workspace, session };
         replay(objs);
-        String view = handler.execute("saveValue");
+        String view = handler.saveValue();
         verify(objs);
         assertEquals("value", view);
     }
