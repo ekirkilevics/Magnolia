@@ -143,7 +143,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected void instantiateDefault() {
-        if (isConcrete(interf)) {
+        if (Classes.isConcrete(interf)) {
             log.info("{} does not exist, will return a new instance of {}.", path, interf);
             final ClassFactory classFactory = Classes.getClassFactory();
             this.observedObject = classFactory.newInstance(interf);
@@ -152,8 +152,11 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         }
     }
 
+    /**
+     * @deprecated since 5.0, use {@link Classes#isConcrete(Class)}
+     */
     protected boolean isConcrete(Class<?> clazz) {
-        return !Modifier.isAbstract(clazz.getModifiers());
+        return Classes.isConcrete(clazz);
     }
 
     protected void onRegister(Content node) {
