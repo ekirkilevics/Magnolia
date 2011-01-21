@@ -113,7 +113,7 @@ public class ModuleManagerImpl implements ModuleManager {
      */
     protected ModuleManagerImpl() {
         // load all definitions from classpath
-        this(new InstallContextImpl(), new BetwixtModuleDefinitionReader());
+        this(new InstallContextImpl(ModuleRegistry.Factory.getInstance()), new BetwixtModuleDefinitionReader());
     }
 
     /**

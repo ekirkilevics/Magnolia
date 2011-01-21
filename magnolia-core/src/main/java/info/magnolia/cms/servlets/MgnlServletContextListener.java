@@ -35,7 +35,10 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
+import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
@@ -194,7 +197,7 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         Log4jConfigurer.initLogging();
 
-        this.loader = new ConfigLoader(context);
+        this.loader = new ConfigLoader(ModuleManager.Factory.getInstance(), LicenseFileExtractor.getInstance(), MessagesManager.getInstance(), VersionConfig.getInstance(), context);
         startServer(context);
     }
 
