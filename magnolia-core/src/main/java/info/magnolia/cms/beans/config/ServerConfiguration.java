@@ -78,6 +78,9 @@ public class ServerConfiguration {
         this.admin = admin;
     }
 
+    /**
+     * @deprecated since 5.0, use IoC
+     */
     public static ServerConfiguration getInstance() {
         return Components.getSingleton(ServerConfiguration.class);
     }

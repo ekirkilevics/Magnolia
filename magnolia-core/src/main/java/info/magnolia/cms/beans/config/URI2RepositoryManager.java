@@ -133,6 +133,9 @@ public class URI2RepositoryManager {
         mappings.add(mapping);
     }
 
+    /**
+     * @deprecated since 5.0, use IoC
+     */
     public static URI2RepositoryManager getInstance() {
         return Components.getSingleton(URI2RepositoryManager.class);
     }

@@ -76,7 +76,6 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     // to provide warning log messages when we run into timeouts we have to save the timeout
     private int blockingTimeout = -1;
 
-    // TODO : so this is how it SHOULD be - but for now, this seems to drive c2b crazy
     public CacheFilter(CacheModule cacheModule, CacheMonitor cacheMonitor) {
         this.cacheModule = cacheModule;
         this.monitor = cacheMonitor;

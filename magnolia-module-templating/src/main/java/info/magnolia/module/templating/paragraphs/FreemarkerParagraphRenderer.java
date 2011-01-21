@@ -69,12 +69,13 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
     /**
      * Constructs a FreemarkerParagraphRenderer that uses the default (singleton)
      * instance of FreemarkerHelper.
+     * @deprecated since 5.0, use {@link #FreemarkerParagraphRenderer(info.magnolia.freemarker.FreemarkerHelper)}
      */
     public FreemarkerParagraphRenderer() {
         this(FreemarkerHelper.getInstance());
     }
 
-    FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
+    public FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
         this.fmHelper = fmRenderer;
     }
 
