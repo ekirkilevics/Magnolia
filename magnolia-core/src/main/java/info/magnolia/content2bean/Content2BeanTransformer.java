@@ -52,9 +52,14 @@ public interface Content2BeanTransformer {
     public TransformationState newState();
 
     /**
-     * Resolves the class to use for the current node.
+     * @deprecated since 5.0, use {@link #resolveType(TypeMapping, TransformationState)}
      */
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
+
+    /**
+     * Resolves the class to use for the current node.
+     */
+    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException;
 
     /**
      * Returns the children of the node to be transformed. Those are normally the direct children but might differ.
@@ -72,9 +77,14 @@ public interface Content2BeanTransformer {
     public void initBean(TransformationState state, Map values) throws Content2BeanException;
 
     /**
-     * Set this property on that bean. Allows excluding of properties.
+     * @deprecated since 5.0, use {@link #setProperty(TypeMapping, TransformationState, PropertyTypeDescriptor, java.util.Map)}
      */
     public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values);
+
+    /**
+     * Set this property on that bean. Allows excluding of properties.
+     */
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values);
 
     /**
      * Transforms the simple basic jcr property value objects to more complex properties.
@@ -83,11 +93,14 @@ public interface Content2BeanTransformer {
 
     /**
      * The mapping to use.
+     *
+     * @deprecated since 5.0, do not use
      */
     public TypeMapping getTypeMapping();
 
     /**
      * Creates singleton instance of content2bean transformer.
+     * @deprecated since 5.0, we should use IoC...
      */
     class Factory {
         public static Content2BeanTransformer getDefaultTransformer() {

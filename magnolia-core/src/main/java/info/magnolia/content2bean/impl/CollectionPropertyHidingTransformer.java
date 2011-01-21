@@ -33,9 +33,11 @@
  */
 package info.magnolia.content2bean.impl;
 
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.TypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,25 +55,38 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
 
     private static Logger log = LoggerFactory.getLogger(CollectionPropertyHidingTransformer.class);
 
-    protected String collectionName;
+    private final Class beanClass;
+    private final String collectionName;
 
-    protected TypeDescriptor type;
+    private TypeDescriptor type;
 
-    protected PropertyTypeDescriptor propertyDescriptor;
+    private PropertyTypeDescriptor propertyDescriptor;
 
-    protected Method addMethod;
+    private Method addMethod;
 
-    protected TypeDescriptor propertyType;
+    private TypeDescriptor propertyType;
 
     public CollectionPropertyHidingTransformer(Class<?> beanClass, String collectionName) {
+        super();
+        this.beanClass = beanClass;
         this.collectionName = collectionName;
-        type =  getTypeMapping().getTypeDescriptor(beanClass);
-        propertyDescriptor = type.getPropertyTypeDescriptor(collectionName);
-        addMethod = propertyDescriptor.getAddMethod();
-        propertyType = propertyDescriptor.getCollectionEntryType();
+
+        // TODO won't work since this.typeMapping is @Inject or passed, we don't have it yet.
+//        type =  getTypeMapping().getTypeDescriptor(beanClass);
+//        propertyDescriptor = type.getPropertyTypeDescriptor(collectionName);
+//        addMethod = propertyDescriptor.getAddMethod();
+//        propertyType = propertyDescriptor.getCollectionEntryType();
     }
 
-    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType){
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType){
+        // lazy init, we need TypeMapping
+        if (type == null) {
+            type = typeMapping.getTypeDescriptor(beanClass);
+            propertyDescriptor = type.getPropertyTypeDescriptor(collectionName);
+            addMethod = propertyDescriptor.getAddMethod();
+            propertyType = propertyDescriptor.getCollectionEntryType();
+        }
+
         if(resolvedType == null){
             // if we are transforming a child node which does not define
             // the class to be used, return the type of the collection entries
@@ -87,7 +102,7 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
         return resolvedType;
     }
 
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         if(descriptor.getName().equals(collectionName)){
             Object bean = state.getCurrentBean();
 
@@ -110,7 +125,7 @@ public class CollectionPropertyHidingTransformer extends Content2BeanTransformer
             }
         }
         else{
-            super.setProperty(state, descriptor, values);
+            super.setProperty(typeMapping, state, descriptor, values);
         }
     }
 }

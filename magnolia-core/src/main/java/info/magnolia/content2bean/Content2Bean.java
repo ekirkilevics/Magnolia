@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,34 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.content2bean.impl;
+package info.magnolia.content2bean;
 
-import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.objectfactory.ClassFactory;
-import info.magnolia.objectfactory.Classes;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Properties;
+import info.magnolia.cms.core.Content;
 
 /**
- * Property file based type descriptor. Descriptor resolves the transformer class name from the property named "transformer".
- * @author pbracher
- * @version $Id$
+ * Entry point for content2bean. The implementation is responsible for instantiating the proper bean and populating it, using the appropriate {@link Content2BeanTransformer}.
  *
- * @deprecated since 5.0, unused. Custom Transformer should be enough.
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
+public interface Content2Bean {
+    Object toBean(Content node) throws Content2BeanException;
 
-    public PropertiesBasedTypeDescriptor(Properties properties) throws Exception {
-        String transformerClassName = properties.getProperty("transformer");
-        if (StringUtils.isNotEmpty(transformerClassName)) {
-            final ClassFactory cl = Classes.getClassFactory();
-            final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
-            final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
-            this.setTransformer(transformer);
-        }
-    }
-
+    // TODO - Content2BeanUtil seems to think the default behavior is to not recurse, but then again, all or most usage points do recurse. Maybe it's a transformer's job to stop recursion ?
+    // TODO implement if necessary - void transform(Object bean, Content data) throws Content2BeanException; - this is a replacement for Content2BeanProcessor.setProperties()
 
 }

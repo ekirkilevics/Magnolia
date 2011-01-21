@@ -50,6 +50,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
+import org.picocontainer.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
     private final BeanUtilsBean beanUtilsBean;
 
+    /**
+     * @deprecated should not be needed since we pass it around now... or will we ? ... TODO MAGNOLIA-3525
+     */
+    @Inject
+    private TypeMapping typeMapping;
+
     public Content2BeanTransformerImpl() {
         super();
 
@@ -86,6 +93,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
     }
 
+    @Deprecated
+    public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Resolves the <code>TypeDescriptor</code> from current transformation state.
      * Resolving happens in the following order:
@@ -97,7 +109,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * <li> otherwise use a Map
      * </ul>
      */
-    public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
+    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException {
         TypeDescriptor typeDscr = null;
         Content node = state.getCurrentContent();
 
@@ -108,7 +120,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                     throw new ClassNotFoundException("(no value for class property)");
                 }
                 Class<?> clazz = Classes.getClassFactory().forName(className);
-                typeDscr = getTypeMapping().getTypeDescriptor(clazz);
+                typeDscr = typeMapping.getTypeDescriptor(clazz);
             }
         }
         catch (RepositoryException e) {
@@ -137,22 +149,23 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             }
         }
 
-        typeDscr = onResolveType(state, typeDscr);
+        typeDscr = onResolveType(typeMapping, state, typeDscr);
 
         if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
             final Class<?> type = typeDscr.getType();
-            typeDscr = getTypeMapping().getTypeDescriptor(Components.getComponentProvider().getImplementation(type));
+            typeDscr = typeMapping.getTypeDescriptor(Components.getComponentProvider().getImplementation(type));
 
             // now that we know the property type we should delegate to the custom transformer if any defined
             Content2BeanTransformer customTransformer = typeDscr.getTransformer();
             if (customTransformer != null && customTransformer != this) {
-                TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(state);
+                TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(typeMapping, state);
                 // if no specific type has been provided by the
+                // TODO - is this comparison working ?
                 if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
                     // might be that the factory util defines a default implementation for interfaces
                     Class<?> implementation = Components.getComponentProvider().getImplementation(typeFoundByCustomTransformer.getType());
-                    typeDscr = getTypeMapping().getTypeDescriptor(implementation);
+                    typeDscr = typeMapping.getTypeDescriptor(implementation);
                 }
             }
         }
@@ -176,9 +189,17 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
      * custom transformers are used to get the final type.
      * TODO - check javadoc
      */
-    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
         return resolvedType;
     }
+
+    /**
+     * @deprecated  since 5.0, use {@link #onResolveType(info.magnolia.content2bean.TypeMapping, info.magnolia.content2bean.TransformationState, info.magnolia.content2bean.TypeDescriptor)}
+     */
+    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+        return onResolveType(getTypeMapping(), state, resolvedType);
+    }
+
 
     public Collection<Content> getChildren(Content node) {
         return node.getChildren(this);
@@ -191,12 +212,14 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         return ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER.accept(content);
     }
 
+    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Do not set class property. In case of a map/collection try to use adder method.
      */
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
-        TypeMapping mapping = getTypeMapping();
-
+    public void setProperty(TypeMapping mapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
         String propertyName = descriptor.getName();
         if (propertyName.equals("class")) {
             return;
@@ -323,6 +346,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         }
 
         if ((Collection.class.equals(propertyType)) && (value instanceof Map)) {
+            // TODO never used ?
             return ((Map) value).values();
         }
 
@@ -379,14 +403,18 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     public TransformationState newState() {
-        return Components.getComponentProvider().newInstance(TransformationState.class);
+        return new TransformationStateImpl();
+        // TODO - do we really need different impls for TransformationState ?
+        // if so, this was defined in mgnl-beans.properties
+        // Components.getComponentProvider().newInstance(TransformationState.class);
     }
 
     /**
      * Returns the default mapping.
+     * @deprecated since 5.0, do not use.
      */
     public TypeMapping getTypeMapping() {
-        return TypeMapping.Factory.getDefaultMapping();
+        return typeMapping;// TypeMapping.Factory.getDefaultMapping();
     }
 
 }

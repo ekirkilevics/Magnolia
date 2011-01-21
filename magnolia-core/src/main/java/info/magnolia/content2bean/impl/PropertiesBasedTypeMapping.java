@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  *
+ * @deprecated since 5.0 - register Transformers explicitly.
  */
 public class PropertiesBasedTypeMapping extends TypeMappingImpl {
 
@@ -67,6 +68,9 @@ public class PropertiesBasedTypeMapping extends TypeMappingImpl {
                     final ClassFactory cl = Classes.getClassFactory();
                     final Class<?> beanClass = cl.forName(className);
                     final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
+
+                    // TODO - we can't instantiate the bastards here, unless we fetch them from pico.
+
                     final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
 
                     getTypeDescriptor(beanClass).setTransformer(transformer);

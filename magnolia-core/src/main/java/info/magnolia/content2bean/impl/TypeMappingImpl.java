@@ -33,6 +33,7 @@
  */
 package info.magnolia.content2bean.impl;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TypeDescriptor;
@@ -65,12 +66,12 @@ public class TypeMappingImpl implements TypeMapping {
     /**
      * Property types already resolved.
      */
-    protected static Map<String, PropertyTypeDescriptor> propertyTypes = new HashMap<String, PropertyTypeDescriptor>();
+    private final Map<String, PropertyTypeDescriptor> propertyTypes = new HashMap<String, PropertyTypeDescriptor>();
 
     /**
      * Descriptors for types.
      **/
-    protected static Map<Class<?>, TypeDescriptor> types = new HashMap<Class<?>, TypeDescriptor>();
+    private final Map<Class<?>, TypeDescriptor> types = new HashMap<Class<?>, TypeDescriptor>();
 
     /**
      * Get a adder method. Transforms name to singular.
@@ -108,14 +109,15 @@ public class TypeMappingImpl implements TypeMapping {
         if(dscr != null){
             return dscr;
         }
-        TypeMapping defaultMapping = TypeMapping.Factory.getDefaultMapping();
 
-        if (this != defaultMapping) {
-            dscr = defaultMapping.getPropertyTypeDescriptor(beanClass, propName);
-            if (dscr.getType()  != null) {
-                return dscr;
-            }
-        }
+        //TypeMapping defaultMapping = TypeMapping.Factory.getDefaultMapping();
+        // TODO - is this used - or is the comparison correct ?
+//        if (this != defaultMapping) {
+//            dscr = defaultMapping.getPropertyTypeDescriptor(beanClass, propName);
+//            if (dscr.getType()  != null) {
+//                return dscr;
+//            }
+//        }
 
         dscr = new PropertyTypeDescriptor();
         dscr.setName(propName);
@@ -165,6 +167,7 @@ public class TypeMappingImpl implements TypeMapping {
 
     public TypeDescriptor getTypeDescriptor(Class<?> beanClass) {
         TypeDescriptor dscr = types.get(beanClass);
+        // eh, we know about this type, don't bother resolving any further.
         if(dscr != null){
             return dscr;
         }
@@ -175,26 +178,62 @@ public class TypeMappingImpl implements TypeMapping {
         types.put(beanClass, dscr);
 
         if (!beanClass.isArray() && !beanClass.isPrimitive()) { // don't bother looking for a transformer if the property is an array or a primitive type
+            Content2BeanTransformer transformer = null; // TODO ? transformerProvider.getTransformerFor(beanClass);
             try {
-                final ClassFactory classFactory = Classes.getClassFactory();
-                final Class<Content2BeanTransformer> transformerClass = classFactory.forName(beanClass.getName() + "Transformer");
-
-                if(Content2BeanTransformer.class.isAssignableFrom(transformerClass)){
-                    try {
-                        final Content2BeanTransformer transformer = classFactory.newInstance(transformerClass);
-                        dscr.setTransformer(transformer);
-                        log.debug("Found a custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]");
-                    } catch (Exception e) {
-                        log.error("Can't instantiate custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]", e);
-                    }
+                if (transformer == null) {
+                    transformer = findTransformerByNamingConvention(beanClass);
+                }
+                if (transformer == null) {
+                    transformer = findTransformerViaProperty(beanClass);
                 }
             } catch (Exception e) {
                 // this is fine because having a transformer class is optional
                 log.debug("No custom transformer class {}Transformer class found", beanClass.getName());
             }
+            dscr.setTransformer(transformer);
         }
-
         return dscr;
+    }
+
+    /**
+     * @deprecated since 5.0, transformers should be explicitly registered via the module descriptor.
+     */
+    protected Content2BeanTransformer findTransformerByNamingConvention(Class<?> beanClass) {
+        final String transformerClassName = beanClass.getName() + "Transformer";
+        try {
+            return instantiateTransformer(beanClass, transformerClassName);
+        } catch (ClassNotFoundException e) {
+            log.debug("No transformer found by naming convention for {} (attempted to load {})", beanClass, transformerClassName);
+            return null;
+        }
+    }
+
+    /**
+     * This was originally implemented by info.magnolia.content2bean.impl.PropertiesBasedTypeMapping
+     * @deprecated since 5.0, transformers should be explicitly registered via the module descriptor.
+     */
+    protected Content2BeanTransformer findTransformerViaProperty(Class<?> beanClass) throws ClassNotFoundException {
+        final String property = SystemProperty.getProperty(beanClass.getName() + ".transformer");
+        if (property != null) {
+            return instantiateTransformer(beanClass,property);
+        }
+        return null;
+    }
+
+    protected Content2BeanTransformer instantiateTransformer(Class<?> beanClass, String transformerClassName) throws ClassNotFoundException {
+        final ClassFactory classFactory = Classes.getClassFactory();
+        final Class<Content2BeanTransformer> transformerClass = classFactory.forName(transformerClassName);
+
+        if (Content2BeanTransformer.class.isAssignableFrom(transformerClass)) {
+            try {
+                log.debug("Found a custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]");
+                // TODO use components ?
+                return classFactory.newInstance(transformerClass);
+            } catch (Exception e) {
+                log.error("Can't instantiate custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]", e);
+            }
+        }
+        return null;
     }
 
     /**

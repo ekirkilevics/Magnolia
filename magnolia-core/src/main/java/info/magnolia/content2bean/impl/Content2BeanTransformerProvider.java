@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,31 +34,25 @@
 package info.magnolia.content2bean.impl;
 
 import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.objectfactory.ClassFactory;
-import info.magnolia.objectfactory.Classes;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.Properties;
+import java.util.Collection;
 
 /**
- * Property file based type descriptor. Descriptor resolves the transformer class name from the property named "transformer".
- * @author pbracher
- * @version $Id$
  *
- * @deprecated since 5.0, unused. Custom Transformer should be enough.
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
+public class Content2BeanTransformerProvider {
 
-    public PropertiesBasedTypeDescriptor(Properties properties) throws Exception {
-        String transformerClassName = properties.getProperty("transformer");
-        if (StringUtils.isNotEmpty(transformerClassName)) {
-            final ClassFactory cl = Classes.getClassFactory();
-            final Class<Content2BeanTransformer> transformerClass = cl.forName(transformerClassName);
-            final Content2BeanTransformer transformer = cl.newInstance(transformerClass);
-            this.setTransformer(transformer);
-        }
+    private final Collection<Content2BeanTransformer> transformers;
+
+    public Content2BeanTransformerProvider(Collection<Content2BeanTransformer> transformers) {
+        this.transformers = transformers;
     }
 
-
+    public Content2BeanTransformer getTransformerFor(Class c) {
+        // TODO return appropriate transformer -
+        // TODO - simply interface of transformers (2 methods: Class<T> forType(); Object transform(...)), move other methods to abstract ?
+        return null;
+    }
 }
