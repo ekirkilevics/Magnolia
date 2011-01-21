@@ -45,7 +45,13 @@ public interface ComponentProvider {
     // TODO - is this needed ?
     <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
 
+    /**
+     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
+     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
+     */
     <T> T getSingleton(Class<T> type);
+
+    <T> T getComponent(Class<T> type);
 
     <T> T newInstance(Class<T> type);
 

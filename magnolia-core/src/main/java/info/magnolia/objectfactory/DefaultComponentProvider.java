@@ -80,7 +80,12 @@ public class DefaultComponentProvider implements ComponentProvider {
         // since it might get swapped later
     }
 
+    @Deprecated
     public synchronized <T> T getSingleton(Class<T> type) {
+        return getComponent(type);
+    }
+
+    public synchronized <T> T getComponent(Class<T> type) {
         T instance = (T) instances.get(type);
         if (instance == null) {
             log.debug("No instance for {} yet, creating new one.", type);
