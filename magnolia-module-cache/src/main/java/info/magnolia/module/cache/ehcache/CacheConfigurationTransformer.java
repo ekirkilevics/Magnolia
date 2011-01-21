@@ -36,6 +36,7 @@ package info.magnolia.module.cache.ehcache;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
@@ -51,7 +52,7 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheConfigurationTransformer extends Content2BeanTransformerImpl {
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
         final TypeDescriptor typeDescriptor = descriptor.getType();
         final String propertyName = descriptor.getName();
         if ("memoryStoreEvictionPolicyFromObject".equals(propertyName)) {
@@ -63,7 +64,7 @@ public class CacheConfigurationTransformer extends Content2BeanTransformerImpl {
             final CacheConfiguration cfg = (CacheConfiguration) state.getCurrentBean();
             cfg.setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicyName);
         } else {
-            super.setProperty(state, descriptor, values);
+            super.setProperty(typeMapping, state, descriptor, values);
         }
     }
 }

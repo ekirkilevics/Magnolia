@@ -39,7 +39,6 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.objectfactory.Components;
 
@@ -61,7 +60,11 @@ public class CommandsManager extends ObservedManager {
 
     public static final String COMMAND_DELIM = "-";
 
-    protected static Content2BeanTransformer COMMAND_TRANSFORMER = new CommandTransformer();
+    private final CommandTransformer commandTransformer;
+
+    public CommandsManager() {
+        this.commandTransformer = new CommandTransformer();
+    }
 
     /**
      * Register observation for command catalogs.
@@ -80,7 +83,7 @@ public class CommandsManager extends ObservedManager {
 
     protected void registerCatalog(Content node) {
         try {
-            MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, COMMAND_TRANSFORMER);
+            MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, commandTransformer);
             CatalogFactory factory = CatalogFactory.getInstance();
             if (factory.getCatalog(catalog.getName()) == null) {
                 factory.addCatalog(catalog.getName(), catalog);
@@ -139,6 +142,7 @@ public class CommandsManager extends ObservedManager {
 
     /**
      * @return Returns the instance.
+     * @deprecated since 5.0, use IoC !
      */
     public static CommandsManager getInstance() {
         return Components.getSingleton(CommandsManager.class);
