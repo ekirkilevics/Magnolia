@@ -33,19 +33,23 @@
  */
 package info.magnolia.test;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
 
 /**
- * A utility to be used in tests which allows to set default implementations or instances.
- * This implementation assumes that we're using a {@link DefaultComponentProvider}, and
+ * A utility to be used in tests which allows to set default implementations or instances,
+ * when IoC can't be used yet.
+ * This implementation sets a new {@link DefaultComponentProvider}, and
  * delegates to its set* methods.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $) 
  */
 public class ComponentsTestUtil {
+
+    private static DefaultComponentProvider defaultComponentProvider;
 
     public static <T> void setImplementation(Class<T> interf, Class<? extends T> impl) {
         setImplementation(interf, impl.getName());
@@ -68,10 +72,16 @@ public class ComponentsTestUtil {
      * this means tests also have to call SystemProperty.clear()
      */
     public static void clear() {
-        getComponentProvider().clear();
+        // getComponentProvider().clear();
+        defaultComponentProvider = null;
     }
 
     private static DefaultComponentProvider getComponentProvider() {
+        if (defaultComponentProvider == null) {
+            defaultComponentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
+            Components.setProvider(defaultComponentProvider);
+        }
+
         return ((DefaultComponentProvider) Components.getComponentProvider());
     }
 }
