@@ -58,6 +58,7 @@ import javax.jcr.RepositoryException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -368,7 +369,20 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         // were the properties transformed?
         if (bean == properties) {
             try {
-                bean = Components.getComponentProvider().newInstance(state.getCurrentType().getType());
+                // TODO MAGNOLIA-2569 MAGNOLIA-3525 what is going on here ? (added the following if to avoid permanently requesting LinkedHashMaps to ComponentFactory)
+                final Class<?> type = state.getCurrentType().getType();
+                if (LinkedHashMap.class.equals(type)) {
+                    // TODO - as far as I can tell, "bean" and "properties" are already the same instance of a LinkedHashMap, so what are we doing in here ?
+                    bean = new LinkedHashMap();
+                } else if (Map.class.isAssignableFrom(type)) {
+                    // TODO
+                    throw new IllegalStateException("someone wants another type of map ? " + type);
+                } else if (type.isAssignableFrom(Map.class)) {
+                    // TODO
+                    throw new IllegalStateException("someone wants another type map ? " + type);
+                } else {
+                    bean = Components.getComponentProvider().newInstance(type);
+                }
             }
             catch (Throwable e) {
                 throw new Content2BeanException(e);
