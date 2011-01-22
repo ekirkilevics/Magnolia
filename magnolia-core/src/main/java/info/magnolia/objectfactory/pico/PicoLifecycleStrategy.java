@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,33 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.objectfactory.pico;
+
+import info.magnolia.objectfactory.AtStartup;
+import org.picocontainer.ComponentAdapter;
+import org.picocontainer.ComponentMonitor;
+import org.picocontainer.lifecycle.JavaEE5LifecycleStrategy;
 
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
+ * Magnolia's LifecycleStrategy strategy for PicoContainer: delegates to
+ * {@link JavaEE5LifecycleStrategy} then {@link StartableLifecycleStrategy}.
+ * Components will be started eagerly (i.e when their container starts) if they
+ * have the @AtStartup annotation, otherwise they will be started lazily (i.e
+ * when they are first requested)
  *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
+ * @see AtStartup
+ * @see javax.annotation.PostConstruct
+ * @see javax.annotation.PreDestroy
+ * @see info.magnolia.objectfactory.Startable
+ * @see info.magnolia.objectfactory.Disposable
+ * @see JavaEE5LifecycleStrategy
+ * @see StartableLifecycleStrategy
+ *
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ComponentProvider {
+public class PicoLifecycleStrategy extends CompositeLifecycleStrategy {
+    public PicoLifecycleStrategy(ComponentMonitor componentMonitor) {
+        super(
+                new JavaEE5LifecycleStrategy(componentMonitor),
+                new StartableLifecycleStrategy(componentMonitor)
+        );
+    }
 
-    /**
-     * @deprecated since 5.0 - this should ideally not be needed. TODO : investigate.
-     */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
-
-    /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
-     */
-    <T> T getSingleton(Class<T> type);
-
-    <T> T getComponent(Class<T> type);
-
-    <T> T newInstance(Class<T> type);
-
+    @Override
+    public boolean isLazy(ComponentAdapter<?> adapter) {
+        return !adapter.getComponentImplementation().isAnnotationPresent(AtStartup.class);
+    }
 }

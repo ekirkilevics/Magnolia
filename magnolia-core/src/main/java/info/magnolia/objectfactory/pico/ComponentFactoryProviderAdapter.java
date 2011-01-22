@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,33 +31,43 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.objectfactory.pico;
+
+import info.magnolia.objectfactory.ComponentFactory;
+import org.picocontainer.injectors.ProviderAdapter;
 
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
+ * A PicoContainer {@link org.picocontainer.ComponentAdapter} wrapping our {@link info.magnolia.objectfactory.ComponentFactory}
  *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
+ * TODO : there is definitely room for improvement, cleanup, and removal of unneeded code here.
+ *      : we might even go as far as deprecating ComponentFactory altogether.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ComponentProvider {
+public class ComponentFactoryProviderAdapter extends ProviderAdapter {
+    private final Class k;
+    private final Class<ComponentFactory> factoryClass;
 
-    /**
-     * @deprecated since 5.0 - this should ideally not be needed. TODO : investigate.
-     */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
+    public ComponentFactoryProviderAdapter(Class<Object> keyType, Class<ComponentFactory> valueType) {
+        this.k = keyType;
+        this.factoryClass = valueType;
+    }
 
-    /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
-     */
-    <T> T getSingleton(Class<T> type);
+    @Override
+    public Object getComponentKey() {
+        return k;
+    }
 
-    <T> T getComponent(Class<T> type);
-
-    <T> T newInstance(Class<T> type);
-
+    public Object provide() {
+        // TODO -- well this is completely wrong for now, those should be cached
+        try {
+            final ComponentFactory factory = factoryClass.newInstance();
+            return factory.newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e); // TODO
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
 }

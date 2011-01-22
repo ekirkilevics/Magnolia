@@ -46,6 +46,8 @@ import org.apache.commons.lang.StringUtils;
  * 
  * @author Sameer charles
  * @version 2.0 $Id$
+ *
+ * @deprecated since 5.0 - TODO : replace/move this.
  */
 public final class SystemProperty {
 

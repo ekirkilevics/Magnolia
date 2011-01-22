@@ -115,7 +115,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     protected FilterManager getInitializer(ServletContext servletContext) {
-        return Components.getSingleton(FilterManagerImpl.class);
+        return Components.getComponent(FilterManager.class);
     }
 
     /**

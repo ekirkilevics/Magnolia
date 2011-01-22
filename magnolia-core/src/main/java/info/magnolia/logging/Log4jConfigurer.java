@@ -35,12 +35,8 @@ package info.magnolia.logging;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ConfigUtil;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Collections;
-
+import info.magnolia.objectfactory.AtStartup;
+import info.magnolia.objectfactory.Startable;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
@@ -48,6 +44,10 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.w3c.dom.Document;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p>
@@ -74,22 +74,29 @@ import org.w3c.dom.Document;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public abstract class Log4jConfigurer {
+@AtStartup
+public class Log4jConfigurer implements Startable {
 
     /**
      * Init parameter specifying the location of the Log4J config file.
      */
     public static final String LOG4J_CONFIG = "log4j.config"; //$NON-NLS-1$
 
-    /**
-     * Utility class, don't instantiate.
-     */
-    private Log4jConfigurer() {
-        // unused
+    public Log4jConfigurer() {
+    }
+
+    public void start() {
+        initLogging();
+    }
+
+    public void stop() {
+        shutdownLogging();
     }
 
     /**
      * Initialize Log4J, including setting the web app root system property.
+     * @deprecated since 5.0, should not be public.
+     * @see #start()
      */
     public static void initLogging() {
 
@@ -126,7 +133,7 @@ public abstract class Log4jConfigurer {
                     properties.load(IOUtils.toInputStream(config));
                     PropertyConfigurator.configure(properties);
                 } catch (IOException e) {
-                    log("Unable to initialize Log4J from ["+ log4jFileName+ "], got an Exception during reading the properties file : " + e.getMessage());
+                    log("Unable to initialize Log4J from [" + log4jFileName + "], got an Exception during reading the properties file : " + e.getMessage());
                 }
             }
 
@@ -135,6 +142,8 @@ public abstract class Log4jConfigurer {
 
     /**
      * Shuts down Log4J.
+     * @deprecated since 5.0, should not be public.
+     * @see #stop()
      */
     public static void shutdownLogging() {
         log("Shutting down Log4J"); //$NON-NLS-1$

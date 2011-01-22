@@ -46,12 +46,12 @@ import javax.servlet.ServletContext;
  */
 public class MgnlServletContextListenerTest extends TestCase {
     private ServletContext servletContext;
-    private MgnlServletContextListener propInit;
+    private MgnlServletContextListener mscl;
 
     protected void setUp() throws Exception {
         super.setUp();
         servletContext = createStrictMock(ServletContext.class);
-        propInit = new MgnlServletContextListener();
+        mscl = new MgnlServletContextListener();
     }
 
     protected void tearDown() throws Exception {
@@ -59,48 +59,48 @@ public class MgnlServletContextListenerTest extends TestCase {
         verify(servletContext);
     }
 
-    public void testInitRootPathJustWorks() {
+    public void testDetermineRootPathJustWorks() {
         expectServletContextRealPath("/foo/bar");
-        assertEquals("/foo/bar", propInit.initRootPath(servletContext));
+        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
     }
 
-    public void testInitRootPathStripsTrailingSlash() {
+    public void testDetermineRootPathStripsTrailingSlash() {
         expectServletContextRealPath("/foo/bar/");
-        assertEquals("/foo/bar", propInit.initRootPath(servletContext));
+        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
     }
 
-    public void testInitRootPathTranslatesBackslashes() {
+    public void testDetermineRootPathTranslatesBackslashes() {
         expectServletContextRealPath("\\foo\\bar");
-        assertEquals("/foo/bar", propInit.initRootPath(servletContext));
+        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
     }
 
-    public void testInitRootPathTranslatesBackslashesAndStripsTrailingSlash() {
+    public void testDetermineRootPathTranslatesBackslashesAndStripsTrailingSlash() {
         expectServletContextRealPath("\\foo\\bar\\");
-        assertEquals("/foo/bar", propInit.initRootPath(servletContext));
+        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
     }
 
-    public void testInitWebappNameJustWorks() {
+    public void testDetermineWebappFolderNameJustWorks() {
         expectServletContextRealPath("/foo/bar");
-        final String rootPath = propInit.initRootPath(servletContext);
-        assertEquals("bar", propInit.initWebappName(rootPath));
+        final String rootPath = mscl.determineRootPath(servletContext);
+        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
     }
 
-    public void testInitWebappNameWorksWithTrailingSlashes() {
+    public void testDetermineWebappFolderNameWorksWithTrailingSlashes() {
         expectServletContextRealPath("/foo/bar/");
-        final String rootPath = propInit.initRootPath(servletContext);
-        assertEquals("bar", propInit.initWebappName(rootPath));
+        final String rootPath = mscl.determineRootPath(servletContext);
+        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
     }
 
-    public void testInitWebappNameWorksWithBackslashes() {
+    public void testDetermineWebappFolderNameWorksWithBackslashes() {
         expectServletContextRealPath("\\foo\\bar");
-        final String rootPath = propInit.initRootPath(servletContext);
-        assertEquals("bar", propInit.initWebappName(rootPath));
+        final String rootPath = mscl.determineRootPath(servletContext);
+        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
     }
 
-    public void testInitWebappNameWorksWithTrailingSlashesAndBackslashes() {
+    public void testDetermineWebappFolderNameWorksWithTrailingSlashesAndBackslashes() {
         expectServletContextRealPath("\\foo\\bar\\");
-        final String rootPath = propInit.initRootPath(servletContext);
-        assertEquals("bar", propInit.initWebappName(rootPath));
+        final String rootPath = mscl.determineRootPath(servletContext);
+        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
     }
 
     private void expectServletContextRealPath(String returnedPath) {

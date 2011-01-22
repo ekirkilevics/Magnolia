@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,30 +34,22 @@
 package info.magnolia.objectfactory;
 
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
+ * Custom lifecycle interface for components who need to be started/stopped
+ * with the container holding them.
+ * This method is called during start/stopping of the container holding this component.
+ * We need such an interface to avoid relying on container-specific interfaces.
+ * Alternatively, methods can be annotated with the @PostConstruct annotation.
  *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
+ * @see javax.annotation.PostConstruct
+ * @see Disposable
+ * @see org.picocontainer.Startable
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ComponentProvider {
+public interface Startable {
 
-    /**
-     * @deprecated since 5.0 - this should ideally not be needed. TODO : investigate.
-     */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
+    void start();
 
-    /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
-     */
-    <T> T getSingleton(Class<T> type);
-
-    <T> T getComponent(Class<T> type);
-
-    <T> T newInstance(Class<T> type);
-
+    void stop();
 }

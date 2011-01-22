@@ -350,6 +350,7 @@ public class MgnlContext {
 
     /**
      * Get Magnolia system context. This context has full permissions over all repositories/ workspaces.
+     * @deprecated since 5.0, use IoC, i.e., declare a dependency on SystemContext in your component.
      */
     public static SystemContext getSystemContext() {
         return ContextFactory.getInstance().getSystemContext();

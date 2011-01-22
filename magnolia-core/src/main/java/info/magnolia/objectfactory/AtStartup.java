@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,31 +33,22 @@
  */
 package info.magnolia.objectfactory;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
- *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
+ * A component marked with this annotation will be started at the startup of Magnolia.
+ * Such component must be otherwise startable, i.e. have a @PostConstruct annotation or implement the {@link Startable} interface.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ComponentProvider {
-
-    /**
-     * @deprecated since 5.0 - this should ideally not be needed. TODO : investigate.
-     */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
-
-    /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
-     */
-    <T> T getSingleton(Class<T> type);
-
-    <T> T getComponent(Class<T> type);
-
-    <T> T newInstance(Class<T> type);
-
+@Documented
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface AtStartup {
 }
