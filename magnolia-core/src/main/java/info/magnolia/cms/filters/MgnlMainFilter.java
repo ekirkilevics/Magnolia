@@ -69,6 +69,22 @@ public class MgnlMainFilter implements Filter {
 
     public static final String SERVER_FILTERS = "/server/filters";
 
+    public void init(FilterConfig filterConfig) throws ServletException {
+        instance = this;
+        initer = getInitializer(filterConfig.getServletContext());
+        initer.init(filterConfig);
+    }
+
+    public void destroy() {
+        if (initer != null) {
+            initer.destroyRootFilter();
+        }
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
+    }
+
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.debug("Handling URI: {} - Path info: {}", request.getRequestURI(), request.getPathInfo());
 
@@ -92,22 +108,6 @@ public class MgnlMainFilter implements Filter {
                 MgnlContext.pop();
             }
         }
-    }
-
-    public void init(FilterConfig filterConfig) throws ServletException {
-        instance = this;
-        initer = getInitializer(filterConfig.getServletContext());
-        initer.init(filterConfig);
-    }
-
-    public void destroy() {
-        if (initer != null) {
-            initer.destroyRootFilter();
-        }
-    }
-
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
     protected MgnlFilter getRootFilter() {
