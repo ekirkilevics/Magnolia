@@ -179,9 +179,13 @@ public class MgnlServletContextListener implements ServletContextListener {
     private ConfigLoader loader;
 
     public void contextDestroyed(final ServletContextEvent sce) {
+        final MutablePicoContainer rootContainer = getRootContainer(sce.getServletContext());
+        // just in case we weren't even able to create/store the root container ...
+        if (rootContainer != null) {
+            rootContainer.stop();
+        }
 
-        // TODO : pico.stop() instead !!
-
+        // TODO: this should be managed by pico - components being stopped:
         // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
         ModuleManager mm = ModuleManager.Factory.getInstance();
         if (mm != null) {
@@ -195,8 +199,6 @@ public class MgnlServletContextListener implements ServletContextListener {
                 }
             }, true);
         }
-
-        Log4jConfigurer.shutdownLogging();
     }
 
     /**
@@ -208,7 +210,7 @@ public class MgnlServletContextListener implements ServletContextListener {
 
             // the container used for startup - should not be referenced further
             // TODO : maybe we don't even need to store the root container ?
-            final MutablePicoContainer root = makeContainer(null, "Magnolia-Root");
+            final MutablePicoContainer root = makeContainer(null, "Magnolia-Root-Container");
             populateRootContainer(root, context);
             storeRootContainer(context, root);
 
@@ -220,12 +222,17 @@ public class MgnlServletContextListener implements ServletContextListener {
             final ApplicationPaths appPaths = determineApplicationPaths(context);
 
             // TODO: these were previously set in the various determine* methods (which in turn were previously called init*).
-            // TODO: -> find usage point, and replace by a dependency on ApplicationPaths
+            // TODO: -> find usage points, and replace by a dependency on ApplicationPaths (although they still need to be a property, for other properties to be resolved)
             SystemProperty.setProperty(SystemProperty.MAGNOLIA_WEBAPP, appPaths.getWebappFolderName());
             SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, appPaths.getRootPath());
             SystemProperty.setProperty(SystemProperty.MAGNOLIA_SERVERNAME, appPaths.getServerName());
 
-            final String propertiesFilesString = getPropertiesFilesString(context, appPaths);
+            // TODO - isn't the below completely bogus, since we already replace tokens when loading the log4j file ?
+            // expose server name as a system property, so it can be used in log4j configurations
+            // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
+            System.setProperty("server", appPaths.getServerName());
+
+            final String magnoliaPropertiesFiles = getPropertiesFilesString(context, appPaths);
 
             // Get ModuleManager and initialize properties from the root container
             final ModuleManager moduleManager = root.getComponent(ModuleManager.class);
@@ -234,14 +241,9 @@ public class MgnlServletContextListener implements ServletContextListener {
             // We need the properties to setup the container, i.e before we fire up ConfigLoader.
             // TODO - perhaps ConfigLoader could depend on PropertiesInitializer, to be checked.
             final PropertiesInitializer propertiesInitializer = root.getComponent(PropertiesInitializer.class);
-            propertiesInitializer.loadAllProperties(propertiesFilesString, appPaths.getRootPath());
+            propertiesInitializer.loadAllProperties(magnoliaPropertiesFiles, appPaths.getRootPath());
 
-            // TODO - isn't the below completely bogus, since we already replace tokens when loading the log4j file ?
-            // expose server name as a system property, so it can be used in log4j configurations
-            // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
-            System.setProperty("server", appPaths.getServerName());
-
-            final MutablePicoContainer mainContainer = makeContainer(root, "Magnolia-Main");
+            final MutablePicoContainer mainContainer = makeContainer(root, "Magnolia-Main-Container");
             // TODO extract population to a ContainerComposer interface - and get the composers out of pico ? (ordering problem? how about request-scope?)
             // TODO - extract container composers (one for properties, one for modules, etc)
             populateMainContainer(mainContainer, root.getComponent(ModuleRegistry.class), SystemProperty.getProperties());
@@ -372,7 +374,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         return pico;
     }
 
-    protected Slf4jComponentMonitor makeComponentMonitor() {
+    protected ComponentMonitor makeComponentMonitor() {
         // TODO - different monitor(s) ? LifecycleComponentMonitor might be interesting to "summarize" all failures ?
         // (the PrefuseDependencyGraph might be interesting too)
         return new Slf4jComponentMonitor(LoggerFactory.getLogger(Slf4jComponentMonitor.class));
@@ -380,6 +382,10 @@ public class MgnlServletContextListener implements ServletContextListener {
 
     protected PicoLifecycleStrategy makeLifecycleStrategy(ComponentMonitor componentMonitor) {
         return new PicoLifecycleStrategy(componentMonitor);
+    }
+
+    protected MutablePicoContainer getRootContainer(ServletContext context) {
+        return (MutablePicoContainer) context.getAttribute("pico-root");
     }
 
     protected void storeRootContainer(ServletContext context, PicoContainer pico) {
@@ -417,6 +423,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         return getPropertiesFilesString(context, new ApplicationPaths(servername, null, webapp, null));
     }
 
+    // TODO : move to MagnoliaPropertiesResolver
     protected String getPropertiesFilesString(ServletContext context, ApplicationPaths appPaths) {
         String propertiesFilesString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
         if (StringUtils.isEmpty(propertiesFilesString)) {
