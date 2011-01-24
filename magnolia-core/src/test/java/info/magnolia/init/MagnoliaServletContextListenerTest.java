@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.servlets;
+package info.magnolia.init;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
@@ -44,14 +44,14 @@ import javax.servlet.ServletContext;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class MgnlServletContextListenerTest extends TestCase {
+public class MagnoliaServletContextListenerTest extends TestCase {
     private ServletContext servletContext;
-    private MgnlServletContextListener mscl;
+    private MagnoliaServletContextListener mscl;
 
     protected void setUp() throws Exception {
         super.setUp();
         servletContext = createStrictMock(ServletContext.class);
-        mscl = new MgnlServletContextListener();
+        mscl = new MagnoliaServletContextListener();
     }
 
     protected void tearDown() throws Exception {
