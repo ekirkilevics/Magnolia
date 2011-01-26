@@ -53,6 +53,8 @@ import javax.servlet.ServletException;
 import java.util.Collections;
 
 /**
+ * Default {@link FilterManager} implementation; uses content2bean and observation
+ * to maintain the filter chain configured at {@value #SERVER_FILTERS}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -124,10 +126,10 @@ public class FilterManagerImpl implements FilterManager {
     private MgnlFilter createConfiguredFilters() {
         try {
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
-            final Content node = hm.getContent(MgnlMainFilter.SERVER_FILTERS);
+            final Content node = hm.getContent(SERVER_FILTERS);
             return (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
         } catch (PathNotFoundException e) {
-            log.warn("No filters configured at {}", MgnlMainFilter.SERVER_FILTERS);
+            log.warn("No filters configured at {}", SERVER_FILTERS);
         } catch (RepositoryException e) {
             log.error("Can't read filter definitions", e);
         } catch (Content2BeanException e) {
@@ -170,7 +172,7 @@ public class FilterManagerImpl implements FilterManager {
     protected void startObservation() {
         ObservationUtil.registerDeferredChangeListener(
                 ContentRepository.CONFIG,
-                MgnlMainFilter.SERVER_FILTERS,
+                SERVER_FILTERS,
                 filtersEventListener,
                 1000,
                 5000);

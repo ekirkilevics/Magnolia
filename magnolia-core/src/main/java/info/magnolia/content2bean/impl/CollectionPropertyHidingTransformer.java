@@ -33,7 +33,6 @@
  */
 package info.magnolia.content2bean.impl;
 
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;

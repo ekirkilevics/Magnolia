@@ -35,7 +35,7 @@ package info.magnolia.objectfactory;
 
 /**
  * Thrown by classes of this package when a component can't be instantiated.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -96,7 +95,8 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
         startObservation(path);
     }
 
-    @SuppressWarnings("unchecked") // until commons-proxy becomes generics-aware, we have to ignore this warning
+    @SuppressWarnings("unchecked")
+    // until commons-proxy becomes generics-aware, we have to ignore this warning
     public T newInstance() {
         if (getObservedObject() == null) {
             // TODO - replace this by a default implementation or some form of null proxy

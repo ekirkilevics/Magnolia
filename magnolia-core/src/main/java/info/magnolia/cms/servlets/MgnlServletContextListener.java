@@ -42,14 +42,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 /**
+ * This class is maintained for compatibility with releases prior to 5.0. Please use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
+ * @deprecated since 5.0 - use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
  *
  * @author Fabrizio Giustina
- *
- * @deprecated since 5.0 - use {@link info.magnolia.init.MagnoliaServletContextListener} instead.
  */
 public class MgnlServletContextListener extends MagnoliaServletContextListener {
-
     private static final Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
+
+    public static final String MAGNOLIA_INITIALIZATION_FILE = "magnolia.initialization.file";
+    public static final String MAGNOLIA_UNQUALIFIED_SERVER_NAME = "magnolia.unqualified.server.name";
 
     public void contextDestroyed(final ServletContextEvent sce) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
@@ -69,15 +71,15 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, use {@link MagnoliaServletContextListener#getPropertiesFilesString(javax.servlet.ServletContext, info.magnolia.init.MagnoliaServletContextListener.ApplicationPaths)}
+     * @deprecated since 5.0, use {@link MagnoliaServletContextListener#getPropertiesFilesString(javax.servlet.ServletContext, info.magnolia.init.MagnoliaInitPaths)}
      */
     protected String getPropertiesFilesString(ServletContext context, String servername, String webapp) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
-        return getPropertiesFilesString(context, new ApplicationPaths(servername, null, webapp, null));
+        return null;
     }
 
     /**
-     * @deprecated since 5.0, the method is {@link #determineServerName(javax.servlet.ServletContext)}.
+     * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
     protected String initServername(boolean unqualified) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
@@ -85,7 +87,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, the method is {@link #determineServerName(javax.servlet.ServletContext)}.
+     * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
     protected String initRootPath(final ServletContext context) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");
@@ -93,7 +95,7 @@ public class MgnlServletContextListener extends MagnoliaServletContextListener {
     }
 
     /**
-     * @deprecated since 5.0, the method is {@link #determineWebappFolderName(String, javax.servlet.ServletContext)}.
+     * @deprecated since 5.0, use or subclass {@link info.magnolia.init.MagnoliaInitPaths}.
      */
     protected String initWebappName(String rootPath) {
         DeprecationUtil.isDeprecated("Use info.magnolia.init.MagnoliaServletContextListener instead");

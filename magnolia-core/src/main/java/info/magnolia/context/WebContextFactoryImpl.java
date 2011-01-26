@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 /**
- * Default WebContextFactory, providing a hook to instantiate custom implementations of {@link AggregationState}.
+ * Default {@link WebContextFactory}, providing a hook to instantiate custom implementations of {@link AggregationState}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

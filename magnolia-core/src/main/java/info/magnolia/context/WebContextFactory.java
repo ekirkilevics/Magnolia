@@ -38,6 +38,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Simple factory class, whose implementations are responsible for instantiating and initializing {@link WebContext} instances.
+ *
+ * @see info.magnolia.cms.filters.ContextFilter
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

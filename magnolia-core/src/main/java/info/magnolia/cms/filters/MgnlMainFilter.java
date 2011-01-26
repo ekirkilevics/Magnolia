@@ -67,6 +67,9 @@ public class MgnlMainFilter implements Filter {
 
     private FilterManager initer;
 
+    /**
+     * @deprecated since 5.0, use {@link FilterManager#SERVER_FILTERS}.
+     */
     public static final String SERVER_FILTERS = "/server/filters";
 
     public void init(FilterConfig filterConfig) throws ServletException {

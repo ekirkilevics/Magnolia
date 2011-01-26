@@ -62,7 +62,7 @@ public class Content2BeanUtil {
 
     /**
      * Transforms all nodes to a map.
-     * @deprecated since 5.0 - use ToMapTransformer ?
+     * @deprecated since 5.0 - use {@link ToMapTransformer}.
      */
     public static final Content2BeanTransformerImpl TO_MAP_TRANSFORMER = new ToMapTransformer();
 
@@ -85,6 +85,9 @@ public class Content2BeanUtil {
         }
     }
 
+    /**
+     * A {@link Content2BeanTransformer} transforming all nodes to Maps.
+     */
     public static class ToMapTransformer extends Content2BeanTransformerImpl {
         public ToMapTransformer() {
         }
