@@ -365,7 +365,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
         // we try first to use conversion (Map --> primitive type)
         // this is the case when we flattening the hierarchy?
-        Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
+        final Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
         // were the properties transformed?
         if (bean == properties) {
             try {
@@ -373,16 +373,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                 final Class<?> type = state.getCurrentType().getType();
                 if (LinkedHashMap.class.equals(type)) {
                     // TODO - as far as I can tell, "bean" and "properties" are already the same instance of a LinkedHashMap, so what are we doing in here ?
-                    bean = new LinkedHashMap();
+                    return new LinkedHashMap();
                 } else if (Map.class.isAssignableFrom(type)) {
-                    // TODO
-                    throw new IllegalStateException("someone wants another type of map ? " + type);
-                } else if (type.isAssignableFrom(Map.class)) {
-                    // TODO
-                    throw new IllegalStateException("someone wants another type map ? " + type);
-                } else {
-                    bean = Components.getComponentProvider().newInstance(type);
+                    // TODO ?
+                    log.warn("someone wants another type of map ? " + type);
                 }
+                return Components.getComponentProvider().newInstance(type);
             }
             catch (Throwable e) {
                 throw new Content2BeanException(e);
