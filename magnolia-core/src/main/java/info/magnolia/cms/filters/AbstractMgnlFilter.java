@@ -35,7 +35,6 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.cms.util.ServletUtils;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
@@ -65,7 +64,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractMgnlFilter implements MgnlFilter {
 
-    private static Logger log =  LoggerFactory.getLogger(AbstractMgnlFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractMgnlFilter.class);
 
     private String name;
 
