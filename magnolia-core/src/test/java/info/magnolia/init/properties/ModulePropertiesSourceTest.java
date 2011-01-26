@@ -4,7 +4,7 @@
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License.
+ * Network Agreement and the GNU General Public License.¤   >
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
@@ -33,6 +33,9 @@
  */
 package info.magnolia.init.properties;
 
+import info.magnolia.module.ModuleRegistryImpl;
+import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.PropertyDefinition;
 import junit.framework.TestCase;
 
 /**
@@ -42,6 +45,43 @@ import junit.framework.TestCase;
  */
 public class ModulePropertiesSourceTest extends TestCase {
     public void testPropertiesCanBeOverriddenUsingDependencyOrderingOfModules() {
-        fail();
+        final ModuleDefinition m1 = new ModuleDefinition("m1", null, null, null);
+        final PropertyDefinition p1 = new PropertyDefinition();
+        p1.setName("myProperty");
+        p1.setValue("first value");
+        m1.addProperty(p1);
+        final ModuleDefinition m2 = new ModuleDefinition("m2", null, null, null);
+        final PropertyDefinition p2 = new PropertyDefinition();
+        p2.setName("myProperty");
+        p2.setValue("second value");
+        m2.addProperty(p2);
+
+        final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
+        // gotta register in the "correct" order here, as this is currently done by ModuleRegistryImpl
+        moduleRegistry.registerModuleDefinition(m1.getName(), m1);
+        moduleRegistry.registerModuleDefinition(m2.getName(), m2);
+        final ModulePropertiesSource ps = new ModulePropertiesSource(moduleRegistry);
+        assertEquals("second value", ps.getProperty("myProperty"));
+    }
+
+    public void testDifferentPropertiesCanRegisteredByDifferentModulesEllipsisDuh() {
+        final ModuleDefinition m1 = new ModuleDefinition("m1", null, null, null);
+        final PropertyDefinition p1 = new PropertyDefinition();
+        p1.setName("firstProperty");
+        p1.setValue("first value");
+        m1.addProperty(p1);
+        final ModuleDefinition m2 = new ModuleDefinition("m2", null, null, null);
+        final PropertyDefinition p2 = new PropertyDefinition();
+        p2.setName("secondProperty");
+        p2.setValue("second value");
+        m2.addProperty(p2);
+
+        final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
+        // gotta register in the "correct" order here, as this is currently done by ModuleRegistryImpl
+        moduleRegistry.registerModuleDefinition(m1.getName(), m1);
+        moduleRegistry.registerModuleDefinition(m2.getName(), m2);
+        final ModulePropertiesSource ps = new ModulePropertiesSource(moduleRegistry);
+        assertEquals("first value", ps.getProperty("firstProperty"));
+        assertEquals("second value", ps.getProperty("secondProperty"));
     }
 }
