@@ -34,12 +34,10 @@
 package info.magnolia.module;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingManager;
@@ -51,15 +49,16 @@ import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.module.model.reader.ModuleDependencyException;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
-import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * A base class for testing implementations of ModuleVersionHandler.
@@ -75,13 +74,10 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         ComponentsTestUtil.setInstance(AuditLoggingManager.class, new AuditLoggingManager());
     }
 
-    protected void initDefaultImplementations() throws IOException {
-        new PropertiesInitializer(null).loadBeanProperties();
-        // the super's implementation of this method also loads all module definition's properties, which is problematic
-        // since we're trying to isolate this specific module (the properties aren't the problem as much as the fact
-        // that this implies loading all module definitions, thusly checking module dependencies, etc.
-        // PropertiesInitializer should be CDI'd so that we could also make it behave the way we get the ModuleManager
-        // to behave below.
+    @Override
+    protected List<ModuleDefinition> getModuleDefinitionsForTests() throws ModuleManagementException {
+        final ModuleDefinition core = new BetwixtModuleDefinitionReader().readFromResource(getModuleDescriptorPath());
+        return Collections.singletonList(core);
     }
 
     /**

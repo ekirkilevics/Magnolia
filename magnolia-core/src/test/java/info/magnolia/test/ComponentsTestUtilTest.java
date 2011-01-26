@@ -49,14 +49,14 @@ public class ComponentsTestUtilTest extends TestCase {
         super.setUp();
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
     }
 
     public void testConfiguredImplementation() {

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,29 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.test;
 
-import info.magnolia.cms.core.SystemProperty;
-import junit.framework.TestCase;
+import info.magnolia.init.MagnoliaInitPaths;
 
 /**
+ * An implementation {@link MagnoliaInitPaths} which doesn't have any dependency and can easily be constructed in tests.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ObjectFactoryTest extends TestCase {
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        SystemProperty.clear();
+public class TestMagnoliaInitPaths implements MagnoliaInitPaths {
+    private final String serverName;
+    private final String rootPath;
+    private final String webapp;
+    private final String contextPath;
+
+    public TestMagnoliaInitPaths() {
+        this("test-host-name", "/tmp/magnoliaTests", "magnoliaTests", "/test");
     }
 
-    public void testInjectingSystemPropertyIntoDefaultComponentStillAllowsToSwapImplementationsLater() {
-        SystemProperty.setProperty("java.lang.Object", "java.lang.String");
-        final Object o1 = Components.getComponentProvider().newInstance(Object.class);
-        assertTrue(o1 instanceof String);
+    public TestMagnoliaInitPaths(String serverName, String rootPath, String webappFolderName, String contextPath) {
+        this.serverName = serverName;
+        this.rootPath = rootPath;
+        this.webapp = webappFolderName;
+        this.contextPath = contextPath;
+    }
 
-        SystemProperty.setProperty("java.lang.Object", "java.util.Date");
-        final Object o2 = Components.getComponentProvider().newInstance(Object.class);
-        assertTrue(o2 instanceof java.util.Date);
+    public String getServerName() {
+        return serverName;
+    }
 
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    public String getWebappFolderName() {
+        return webapp;
+    }
+
+    public String getContextPath() {
+        return contextPath;
     }
 }

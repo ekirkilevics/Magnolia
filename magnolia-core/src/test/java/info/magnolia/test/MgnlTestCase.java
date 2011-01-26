@@ -61,9 +61,6 @@ import javax.jcr.UnsupportedRepositoryOperationException;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Level;
-
 /**
  * @author philipp
  * @version $Id$
@@ -73,11 +70,11 @@ public abstract class MgnlTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // ignore mapping warnings
-        org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(Level.ERROR);
+        org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(org.apache.log4j.Level.ERROR);
 
         ComponentsTestUtil.clear();
-        initDefaultImplementations();
         setMagnoliaProperties();
+        initDefaultImplementations();
         initContext();
     }
 
@@ -87,7 +84,8 @@ public abstract class MgnlTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        // TODO - this does nothing anymore since getProperties recreates the props instance - SystemProperty.getProperties().clear();
+         SystemProperty.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
@@ -97,11 +95,7 @@ public abstract class MgnlTestCase extends TestCase {
     }
 
     protected void setMagnoliaProperties(InputStream propertiesStream) throws IOException {
-        try {
-            SystemProperty.getProperties().load(propertiesStream);
-        } finally {
-            IOUtils.closeQuietly(propertiesStream);
-        }
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties(propertiesStream));
     }
 
     protected InputStream getMagnoliaPropertiesStream() throws IOException {

@@ -34,9 +34,10 @@
 package info.magnolia.init;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import javax.servlet.ServletContext;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * TODO : we should also handle the cases when servletContext.getRealPath() returns null - see javadoc
@@ -44,14 +45,12 @@ import javax.servlet.ServletContext;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class MagnoliaServletContextListenerTest extends TestCase {
+public class DefaultMagnoliaInitPathsTest extends TestCase {
     private ServletContext servletContext;
-    private MagnoliaServletContextListener mscl;
 
     protected void setUp() throws Exception {
         super.setUp();
         servletContext = createStrictMock(ServletContext.class);
-        mscl = new MagnoliaServletContextListener();
     }
 
     protected void tearDown() throws Exception {
@@ -59,52 +58,52 @@ public class MagnoliaServletContextListenerTest extends TestCase {
         verify(servletContext);
     }
 
+    // TODO : test methods for retro-compat
+
     public void testDetermineRootPathJustWorks() {
-        expectServletContextRealPath("/foo/bar");
-        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar");
+        assertEquals("/foo/bar", paths.getRootPath());
     }
 
     public void testDetermineRootPathStripsTrailingSlash() {
-        expectServletContextRealPath("/foo/bar/");
-        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar/");
+        assertEquals("/foo/bar", paths.getRootPath());
     }
 
     public void testDetermineRootPathTranslatesBackslashes() {
-        expectServletContextRealPath("\\foo\\bar");
-        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar");
+        assertEquals("/foo/bar", paths.getRootPath());
     }
 
     public void testDetermineRootPathTranslatesBackslashesAndStripsTrailingSlash() {
-        expectServletContextRealPath("\\foo\\bar\\");
-        assertEquals("/foo/bar", mscl.determineRootPath(servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar\\");
+        assertEquals("/foo/bar", paths.getRootPath());
     }
 
     public void testDetermineWebappFolderNameJustWorks() {
-        expectServletContextRealPath("/foo/bar");
-        final String rootPath = mscl.determineRootPath(servletContext);
-        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar");
+        assertEquals("bar", paths.getWebappFolderName());
     }
 
     public void testDetermineWebappFolderNameWorksWithTrailingSlashes() {
-        expectServletContextRealPath("/foo/bar/");
-        final String rootPath = mscl.determineRootPath(servletContext);
-        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("/foo/bar/");
+        assertEquals("bar", paths.getWebappFolderName());
     }
 
     public void testDetermineWebappFolderNameWorksWithBackslashes() {
-        expectServletContextRealPath("\\foo\\bar");
-        final String rootPath = mscl.determineRootPath(servletContext);
-        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar");
+        assertEquals("bar", paths.getWebappFolderName());
     }
 
     public void testDetermineWebappFolderNameWorksWithTrailingSlashesAndBackslashes() {
-        expectServletContextRealPath("\\foo\\bar\\");
-        final String rootPath = mscl.determineRootPath(servletContext);
-        assertEquals("bar", mscl.determineWebappFolderName(rootPath, servletContext));
+        MagnoliaInitPaths paths = expectServletContextRealPath("\\foo\\bar\\");
+        assertEquals("bar", paths.getWebappFolderName());
     }
 
-    private void expectServletContextRealPath(String returnedPath) {
-        expect(servletContext.getRealPath("")).andReturn(returnedPath);
+    private MagnoliaInitPaths expectServletContextRealPath(String returnedPath) {
+        expect(servletContext.getInitParameter("magnolia.unqualified.server.name")).andReturn(null).once();
+        expect(servletContext.getRealPath("")).andReturn(returnedPath).once();
         replay(servletContext);
+        return new DefaultMagnoliaInitPaths(new MagnoliaServletContextListener(), servletContext);
     }
 }

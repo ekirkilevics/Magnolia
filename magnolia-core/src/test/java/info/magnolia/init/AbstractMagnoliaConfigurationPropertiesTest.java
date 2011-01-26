@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,53 +31,63 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.init;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import junit.framework.TestCase;
-
-import java.io.InputStream;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ContentRepositoryTest extends TestCase {
+public class AbstractMagnoliaConfigurationPropertiesTest extends TestCase {
+
+    private MagnoliaConfigurationProperties p;
 
     protected void setUp() throws Exception {
         super.setUp();
-        ComponentsTestUtil.clear();
-        final InputStream in = this.getClass().getResourceAsStream("/test-magnolia.properties");
-        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties(in));
+        p = new TestMagnoliaConfigurationProperties(getClass().getResourceAsStream("/test-init.properties"));
     }
 
     protected void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
-        // TODO - this does nothing anymore since getProperties recreates the props instance - SystemProperty.getProperties().clear();
         SystemProperty.clear();
-        MgnlContext.setInstance(null);
+        System.getProperties().remove("testProp");
         super.tearDown();
     }
 
-    public void testUnknownRepositoryShouldYieldMeaningfulExceptionMessage() {
-        try {
-            ContentRepository.getRepository("dummy");
-            fail("should have failed, since we haven't set any repository at all");
-        } catch (Throwable t) {
-            assertEquals("Failed to retrieve repository 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
-        }
+    public void testSimpleProperty() throws Exception {
+        assertEquals("property", p.getProperty("test.one"));
     }
 
-    public void testUnknownRepositoryShouldAlsoYieldMeaningfulExceptionMessageForRepositoryProviders() {
-        try {
-            ContentRepository.getRepositoryProvider("dummy");
-            fail("should have failed, since we haven't set any repository at all");
-        } catch (Throwable t) {
-            assertEquals("Failed to retrieve repository provider 'dummy' (mapped as 'dummy'). Your Magnolia instance might not have been initialized properly.", t.getMessage());
-        }
+    public void testNestedProperty() throws Exception {
+        assertEquals("nested property", p.getProperty("test.two"));
+    }
+
+    public void testNestedPropertyMoreLevels() throws Exception {
+        assertEquals("another nested property", p.getProperty("test.three"));
+    }
+
+    public void testNestedSomeMore() throws Exception {
+        assertEquals("nest property nested property another nested property", p.getProperty("test.four"));
+    }
+
+    public void testCircularProperty() throws Exception {
+        assertEquals("${test.circular2}", p.getProperty("test.circular1"));
+        assertEquals("${test.circular1}", p.getProperty("test.circular2"));
+    }
+
+    public void testSelfReferencingProperty() throws Exception {
+        assertEquals("${test.circular3}", p.getProperty("test.circular3"));
+    }
+
+    public void testValuesAreTrimmed() throws Exception {
+        assertEquals("foo", p.getProperty("test.whitespaces"));
+    }
+
+    public void testValuesForNestedPropertiesAreTrimmed() throws Exception {
+        // TODO : i get the feeling this passes by accident, and would not pass if .nested was iterated on first
+        assertEquals("bar foo", p.getProperty("test.whitespaces.nested"));
     }
 }

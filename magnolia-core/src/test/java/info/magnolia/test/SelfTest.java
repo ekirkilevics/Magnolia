@@ -39,15 +39,13 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.mock.MockContext;
 import junit.framework.TestCase;
-
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory;
 
+import javax.jcr.Repository;
+import javax.jcr.SimpleCredentials;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.jcr.SimpleCredentials;
-import javax.jcr.Repository;
-
 import java.util.Hashtable;
 import java.util.Locale;
 
@@ -58,6 +56,12 @@ import java.util.Locale;
  * @version $Revision: $ ($Author: $)
  */
 public class SelfTest extends TestCase {
+
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
 
     /**
      * Jackrabbit keeps a cache of jndi references since 1.4.6
@@ -90,9 +94,7 @@ public class SelfTest extends TestCase {
             RegistryHelper.unregisterRepository(context, key);
         }
     }
-    
 
-    
     /**
      * This test breaks currently when run against commons-beanutils 1.8, but works fine with version 1.7
      */
@@ -102,12 +104,7 @@ public class SelfTest extends TestCase {
         ComponentsTestUtil.setImplementation(SystemContext.class, MockContext.class);
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
         MgnlContext.setInstance(ctx);
-        new TestCommand().execute((org.apache.commons.chain.Context)ctx);
+        new TestCommand().execute((org.apache.commons.chain.Context) ctx);
     }
-    
-    protected void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
-        MgnlContext.setInstance(null);
-        super.tearDown();
-    }
+
 }

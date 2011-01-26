@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,29 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.init.properties;
 
-import info.magnolia.cms.core.SystemProperty;
 import junit.framework.TestCase;
 
 /**
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ObjectFactoryTest extends TestCase {
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        SystemProperty.clear();
-    }
-
-    public void testInjectingSystemPropertyIntoDefaultComponentStillAllowsToSwapImplementationsLater() {
-        SystemProperty.setProperty("java.lang.Object", "java.lang.String");
-        final Object o1 = Components.getComponentProvider().newInstance(Object.class);
-        assertTrue(o1 instanceof String);
-
-        SystemProperty.setProperty("java.lang.Object", "java.util.Date");
-        final Object o2 = Components.getComponentProvider().newInstance(Object.class);
-        assertTrue(o2 instanceof java.util.Date);
-
+public class ModulePropertiesSourceTest extends TestCase {
+    public void testPropertiesCanBeOverriddenUsingDependencyOrderingOfModules() {
+        fail();
     }
 }

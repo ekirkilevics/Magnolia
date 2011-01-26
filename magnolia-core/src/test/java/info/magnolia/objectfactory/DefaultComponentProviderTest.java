@@ -60,13 +60,13 @@ public class DefaultComponentProviderTest extends TestCase {
         super.setUp();
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
     }
 
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 
