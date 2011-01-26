@@ -33,6 +33,7 @@
  */
 package info.magnolia.objectfactory;
 
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * This {@link info.magnolia.objectfactory.ComponentProvider} is using the configuration provided by
@@ -70,6 +72,15 @@ public class DefaultComponentProvider implements ComponentProvider {
     private final Map<Class<?>, ComponentFactory<?>> factories = new HashMap<Class<?>, ComponentFactory<?>>();
 
     private final Properties mappings;
+
+    public DefaultComponentProvider(final MagnoliaConfigurationProperties mappings) {
+        this(new Properties() {{
+            final Set<String> keys = mappings.getKeys();
+            for (String key : keys) {
+                put(key, mappings.getProperty(key));
+            }
+        }});
+    }
 
     public DefaultComponentProvider(Properties mappings) {
         // Ideally, the dependency should be on SystemProperty or other relevant object.
@@ -125,7 +136,7 @@ public class DefaultComponentProvider implements ComponentProvider {
             } else {
                 final Class<?> clazz = Classes.getClassFactory().forName(className);
                 if (!Classes.isConcrete(clazz)) {
-                    throw new MgnlInstantiationException("No concrete implementation defined for " + clazz); 
+                    throw new MgnlInstantiationException("No concrete implementation defined for " + clazz);
                 }
                 final Object instance = Classes.getClassFactory().newInstance(clazz);
 

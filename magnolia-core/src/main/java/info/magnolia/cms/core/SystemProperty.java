@@ -36,6 +36,8 @@ package info.magnolia.cms.core;
 import java.util.Map;
 import java.util.Properties;
 
+import info.magnolia.cms.util.DeprecationUtil;
+import info.magnolia.init.MagnoliaConfigurationProperties;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -47,7 +49,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer charles
  * @version 2.0 $Id$
  *
- * @deprecated since 5.0 - TODO : replace/move this.
+ * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
  */
 public final class SystemProperty {
 
@@ -71,6 +73,8 @@ public final class SystemProperty {
 
     public static final String MAGNOLIA_SERVERNAME = "magnolia.servername";
 
+    public static final String MAGNOLIA_CONTEXTPATH = "magnolia.contextpath";
+
     private static Properties properties = new Properties();
 
     /**
@@ -91,8 +95,11 @@ public final class SystemProperty {
     /**
      * @param name
      * @param value
+     *
+     * @deprecated since 5.0, use {@link info.magnolia.init.MagnoliaConfigurationProperties}
      */
     public static void setProperty(String name, String value) {
+        DeprecationUtil.isDeprecated();
         properties.put(name, value);
     }
 
@@ -100,7 +107,12 @@ public final class SystemProperty {
      * @param name
      */
     public static String getProperty(String name) {
-        return (String) properties.get(name);
+        final String legacy = (String) properties.get(name);
+        if (legacy != null) {
+            // DeprecationUtil.isDeprecated("Property [" + name + "] was found with value ["+legacy+"] in the legacy Properties field of SystemProperty. Please consider using MagnoliaConfigurationProperties instead.");
+            return legacy;
+        }
+        return getMagnoliaConfigurationProperties().getProperty(name);
     }
 
     /**
@@ -125,7 +137,12 @@ public final class SystemProperty {
     }
 
     public static boolean hasProperty(String name) {
-        return properties.containsKey(name);
+        final boolean legacy = properties.containsKey(name);
+        if (legacy) {
+            DeprecationUtil.isDeprecated("Property [" + name + "] was found in the legacy Properties field of SystemProperty. Please consider using MagnoliaConfigurationProperties instead.");
+            return legacy;
+        }
+        return getMagnoliaConfigurationProperties().hasProperty(name);
     }
 
     /**
@@ -135,8 +152,35 @@ public final class SystemProperty {
         return properties;
     }
 
+    /**
+     * @deprecated since 5.0 - while this still "works" and returns an aggregate of the local properties and those provided by
+     * MagnoliaConfigurationProperties, writing to this Property object will not be reflected anywhere.
+     */
     public static Properties getProperties() {
-        return properties;
+        // DeprecationUtil.isDeprecated();
+        // providing a MagnoliaConfigurationProperties-compliant replacement...
+        final Properties p = new Properties(properties);
+        for (String k : magnoliaConfigurationProperties.getKeys()) {
+            p.put(k, magnoliaConfigurationProperties.getProperty(k));
+        }
+        return p;
     }
 
+    static MagnoliaConfigurationProperties magnoliaConfigurationProperties;
+    private static MagnoliaConfigurationProperties getMagnoliaConfigurationProperties() {
+        // can't do Components.getComponent(MagnoliaConfigurationProperties.class) because this currently gets used before Components is ready.
+        return magnoliaConfigurationProperties;
+    }
+
+    public static void setMagnoliaConfigurationProperties(MagnoliaConfigurationProperties magnoliaConfigurationProperties) {
+        SystemProperty.magnoliaConfigurationProperties = magnoliaConfigurationProperties;
+    }
+
+    /**
+     * @since 5.0 needed to clear up the hacks above, in tests.
+     */
+    public static void clear() {
+        properties.clear();
+        // magnoliaConfigurationProperties = null;
+    }
 }
