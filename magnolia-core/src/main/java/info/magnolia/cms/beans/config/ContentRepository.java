@@ -127,12 +127,17 @@ public final class ContentRepository {
     /**
      * repository user.
      */
-    public static String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+    public static String REPOSITORY_USER;
 
     /**
      * repository default password.
      */
-    public static String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+    public static String REPOSITORY_PSWD;
+
+    static {
+        REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+        REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+    }
 
     /**
      * All available repositories store.
@@ -295,6 +300,7 @@ public final class ContentRepository {
                 String value = param.getAttributeValue(ATTRIBUTE_VALUE);
                 parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), value);
             }
+            // TODO : it looks like params here are not interpolated
             map.setParameters(parameters);
             List workspaces = element.getChildren(ELEMENT_WORKSPACE);
             if (workspaces != null && !workspaces.isEmpty()) {
