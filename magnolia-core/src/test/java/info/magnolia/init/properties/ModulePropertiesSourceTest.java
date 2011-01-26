@@ -4,7 +4,7 @@
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License.¤   >
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
