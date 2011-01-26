@@ -45,9 +45,12 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
+import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -61,6 +64,15 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/admininterface.xml";
+    }
+
+    @Override
+    protected List<String> getModuleDescriptorPathsForTests() {
+        return Arrays.asList(
+                "/META-INF/magnolia/core.xml",
+                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/admininterface.xml"
+        );
     }
 
     @Override

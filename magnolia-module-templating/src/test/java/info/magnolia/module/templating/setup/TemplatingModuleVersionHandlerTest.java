@@ -45,6 +45,8 @@ import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -56,6 +58,13 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
         return "/META-INF/magnolia/templating.xml";
     }
 
+    @Override
+    protected List<String> getModuleDescriptorPathsForTests() {
+        return Arrays.asList(
+                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/core.xml"
+        );
+    }
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new TemplatingModuleVersionHandler();
     }

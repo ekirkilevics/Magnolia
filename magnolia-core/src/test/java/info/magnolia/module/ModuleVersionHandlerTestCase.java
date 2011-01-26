@@ -76,8 +76,18 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
     @Override
     protected List<ModuleDefinition> getModuleDefinitionsForTests() throws ModuleManagementException {
-        final ModuleDefinition core = new BetwixtModuleDefinitionReader().readFromResource(getModuleDescriptorPath());
-        return Collections.singletonList(core);
+        final BetwixtModuleDefinitionReader reader = new BetwixtModuleDefinitionReader();
+        final List<ModuleDefinition> modules = new ArrayList<ModuleDefinition>();
+        final List<String> moduleDescriptorPaths = getModuleDescriptorPathsForTests();
+        for (String moduleDescriptorPath : moduleDescriptorPaths) {
+            final ModuleDefinition module = reader.readFromResource(moduleDescriptorPath);
+            modules.add(module);
+        }
+        return modules;
+    }
+
+    protected List<String> getModuleDescriptorPathsForTests() {
+        return Collections.singletonList(getModuleDescriptorPath());
     }
 
     /**

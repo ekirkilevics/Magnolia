@@ -55,6 +55,9 @@ import static info.magnolia.nodebuilder.Ops.addProperty;
 
 import javax.jcr.RepositoryException;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.easymock.classextension.EasyMock.*;
 
 /**
@@ -69,6 +72,15 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         return "/META-INF/magnolia/workflow.xml";
     }
 
+    @Override
+    protected List<String> getModuleDescriptorPathsForTests() {
+        return Arrays.asList(
+                "/META-INF/magnolia/workflow.xml",
+                "/META-INF/magnolia/admininterface.xml",
+                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/core.xml"
+        );
+    }
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new WorkflowModuleVersionHandler();
     }

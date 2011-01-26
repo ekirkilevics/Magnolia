@@ -40,6 +40,7 @@ import info.magnolia.module.delta.Condition;
 import info.magnolia.module.mail.commands.MailCommand;
 import info.magnolia.module.model.Version;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,6 +56,16 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/mail.xml";
+    }
+
+    @Override
+    protected List<String> getModuleDescriptorPathsForTests() {
+        return Arrays.asList(
+                "/META-INF/magnolia/mail.xml",
+                "/META-INF/magnolia/admininterface.xml",
+                "/META-INF/magnolia/templating.xml",
+                "/META-INF/magnolia/core.xml"
+        );
     }
 
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
