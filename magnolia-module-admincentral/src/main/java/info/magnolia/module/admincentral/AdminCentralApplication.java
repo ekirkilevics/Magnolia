@@ -211,7 +211,7 @@ public class AdminCentralApplication extends Application {
 
             public void splitterClick(SplitterClickEvent event) {
                 if(event.isDoubleClick()){
-                	HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
+                    HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
                     if(panel.getSplitPosition() > 0){
                         panel.setSplitPosition(0);
                     }else {
