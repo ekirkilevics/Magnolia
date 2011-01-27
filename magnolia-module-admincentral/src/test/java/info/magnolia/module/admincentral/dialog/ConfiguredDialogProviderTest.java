@@ -53,7 +53,9 @@ import org.junit.Test;
  * @version $Id:$
  */
 public class ConfiguredDialogProviderTest extends RepositoryTestCase {
+    public void testDummy() throws Exception {
 
+    }
    /* private HierarchyManager hm;
 
     @Before
