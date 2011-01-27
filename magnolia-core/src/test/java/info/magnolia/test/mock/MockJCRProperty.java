@@ -34,8 +34,10 @@
 package info.magnolia.test.mock;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Calendar;
 
+import javax.jcr.Binary;
 import javax.jcr.InvalidItemStateException;
 import javax.jcr.Item;
 import javax.jcr.ItemExistsException;
@@ -62,9 +64,6 @@ import javax.jcr.version.VersionException;
  */
 public class MockJCRProperty implements Property {
 
-    /**
-     * 
-     */
     private final MockNodeData mockNodeData;
 
     /**
@@ -229,6 +228,28 @@ public class MockJCRProperty implements Property {
     }
 
     public PropertyDefinition getDefinition() throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public void setValue(Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    }
+
+    public void setValue(BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+    }
+
+    public Binary getBinary() throws ValueFormatException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public BigDecimal getDecimal() throws ValueFormatException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean isMultiple() throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
 }

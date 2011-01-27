@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventJournal;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
@@ -53,5 +54,16 @@ public class MockObservationManager implements ObservationManager {
     }
 
     public void removeEventListener(EventListener listener) throws RepositoryException {
+    }
+
+    public void setUserData(String userData) throws RepositoryException {
+    }
+
+    public EventJournal getEventJournal() throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public EventJournal getEventJournal(int eventTypes, String absPath, boolean isDeep, String[] uuid, String[] nodeTypeName) throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

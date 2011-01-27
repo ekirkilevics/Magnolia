@@ -49,6 +49,7 @@ import javax.jcr.LoginException;
 import javax.jcr.NamespaceException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -58,6 +59,8 @@ import javax.jcr.Workspace;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.retention.RetentionManager;
+import javax.jcr.security.AccessControlManager;
 import javax.jcr.version.VersionException;
 
 import org.slf4j.Logger;
@@ -73,9 +76,6 @@ import org.xml.sax.SAXException;
  */
 public class MockSession implements Session {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(MockSession.class);
 
     private Workspace workspace;
@@ -210,5 +210,44 @@ public class MockSession implements Session {
 
     public void setWorkspace(Workspace workspace) {
         this.workspace = workspace;
+    }
+
+    public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public Property getProperty(String absPath) throws PathNotFoundException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean nodeExists(String absPath) throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean propertyExists(String absPath) throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public void removeItem(String absPath) throws VersionException, LockException, ConstraintViolationException, AccessDeniedException, RepositoryException {
+    }
+
+    public boolean hasPermission(String absPath, String actions) throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean hasCapability(String methodName, Object target, Object[] arguments) throws RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public AccessControlManager getAccessControlManager() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public RetentionManager getRetentionManager() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

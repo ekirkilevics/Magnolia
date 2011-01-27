@@ -48,12 +48,14 @@ import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Workspace;
 import javax.jcr.lock.LockException;
+import javax.jcr.lock.LockManager;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NodeTypeManager;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.QueryManager;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
+import javax.jcr.version.VersionManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +69,6 @@ import org.xml.sax.ContentHandler;
  */
 public class MockWorkspace implements Workspace {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(MockWorkspace.class);
 
     private String name;
@@ -150,5 +149,22 @@ public class MockWorkspace implements Workspace {
 
     public void setObservationManager(ObservationManager observationManager) {
         this.observationManager = observationManager;
+    }
+
+    public LockManager getLockManager() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public VersionManager getVersionManager() throws UnsupportedRepositoryOperationException, RepositoryException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public void createWorkspace(String name) throws AccessDeniedException, UnsupportedRepositoryOperationException, RepositoryException {
+    }
+
+    public void createWorkspace(String name, String srcWorkspace) throws AccessDeniedException, UnsupportedRepositoryOperationException, NoSuchWorkspaceException, RepositoryException {
+    }
+
+    public void deleteWorkspace(String name) throws AccessDeniedException, UnsupportedRepositoryOperationException, NoSuchWorkspaceException, RepositoryException {
     }
 }
