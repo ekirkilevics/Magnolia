@@ -627,10 +627,6 @@ for Java Content Repositories (JCR).
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
-     <id>vaadin-addons</id>
-     <url>http://maven.vaadin.com/vaadin-addons</url>
-    </repository>
   </repositories>
 
   <modules>
