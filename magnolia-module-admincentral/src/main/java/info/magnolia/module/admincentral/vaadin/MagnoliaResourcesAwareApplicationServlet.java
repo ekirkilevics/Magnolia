@@ -33,58 +33,31 @@
  */
 package info.magnolia.module.admincentral.vaadin;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-
 import com.vaadin.terminal.gwt.server.ApplicationServlet;
+import info.magnolia.cms.util.CustomServletConfig;
+import info.magnolia.cms.util.ServletUtils;
 
 /**
  * We can set the "Resources" parameter for the {@link ApplicationServlet} only by defining the context path. To make this dynamic we manipulate the {@link ServletConfig}.
+ *
  * @version $Id$
  */
-public class MagnoliaResoucesAwareApplicationServlet extends ApplicationServlet {
-
+public class MagnoliaResourcesAwareApplicationServlet extends ApplicationServlet {
 
     @Override
-    public void init(final ServletConfig servletConfig) throws ServletException {
-        // read the parameters
-        final Map<String,String> parameters = new HashMap<String,String>();
+    public void init(ServletConfig servletConfig) throws ServletException {
 
-        Enumeration initParameterNames = servletConfig.getInitParameterNames();
-        while(initParameterNames.hasMoreElements()){
-            String name = (String) initParameterNames.nextElement();
-            parameters.put(name, servletConfig.getInitParameter(name));
-        }
+        // read the parameters
+        Map<String, String> parameters = ServletUtils.initParametersToMap(servletConfig);
 
         // add our resources parameter
         parameters.put("Resources", servletConfig.getServletContext().getContextPath() + "/.resources");
 
         // initialize
-        super.init(new ServletConfig() {
-
-            public String getServletName() {
-                return servletConfig.getServletName();
-            }
-
-            public ServletContext getServletContext() {
-                return servletConfig.getServletContext();
-            }
-
-            public Enumeration getInitParameterNames() {
-                return Collections.enumeration(parameters.keySet());
-            }
-
-            public String getInitParameter(String name) {
-                return parameters.get(name);
-            }
-        });
+        super.init(new CustomServletConfig(servletConfig.getServletName(), servletConfig.getServletContext(), parameters));
     }
-
 }

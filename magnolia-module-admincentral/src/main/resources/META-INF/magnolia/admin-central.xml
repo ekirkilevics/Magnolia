@@ -63,7 +63,7 @@
   <servlets>
     <servlet>
       <name>AdminCentral</name>
-      <class>info.magnolia.module.admincentral.vaadin.MagnoliaResoucesAwareApplicationServlet</class>
+      <class>info.magnolia.module.admincentral.vaadin.MagnoliaResourcesAwareApplicationServlet</class>
        <mappings>
          <mapping>/.magnolia/admin-central</mapping>
          <mapping>/.magnolia/admin-central/*</mapping>

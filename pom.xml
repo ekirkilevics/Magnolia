@@ -251,12 +251,12 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-dev</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>
@@ -626,6 +626,10 @@ for Java Content Repositories (JCR).
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
+    </repository>
+    <repository>
+     <id>vaadin-addons</id>
+     <url>http://maven.vaadin.com/vaadin-addons</url>
     </repository>
   </repositories>
 
