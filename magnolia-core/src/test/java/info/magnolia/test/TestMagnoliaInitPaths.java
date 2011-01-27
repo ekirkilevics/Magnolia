@@ -34,6 +34,7 @@
 package info.magnolia.test;
 
 import info.magnolia.init.MagnoliaInitPaths;
+import org.junit.Ignore;
 
 /**
  * An implementation {@link MagnoliaInitPaths} which doesn't have any dependency and can easily be constructed in tests.
@@ -41,6 +42,7 @@ import info.magnolia.init.MagnoliaInitPaths;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Ignore
 public class TestMagnoliaInitPaths implements MagnoliaInitPaths {
     private final String serverName;
     private final String rootPath;

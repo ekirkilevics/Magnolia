@@ -39,6 +39,7 @@ import info.magnolia.init.properties.AbstractPropertySource;
 import info.magnolia.init.properties.AbstractStreamBasedPropertySource;
 import info.magnolia.init.properties.ClasspathPropertySource;
 import info.magnolia.init.properties.InitPathsPropertySource;
+import org.junit.Ignore;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +54,7 @@ import java.util.Properties;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Ignore
 public class TestMagnoliaConfigurationProperties extends AbstractMagnoliaConfigurationProperties {
 
     public TestMagnoliaConfigurationProperties() throws IOException {

@@ -34,6 +34,7 @@
 package info.magnolia.test;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.junit.Ignore;
 
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -44,6 +45,7 @@ import java.util.Enumeration;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Ignore
 public class TestUtil {
 
     /**
