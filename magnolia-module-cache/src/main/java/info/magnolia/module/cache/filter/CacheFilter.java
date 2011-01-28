@@ -89,7 +89,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
         CacheModule.getInstance().register(this);
-        // modules are started *after* filters - so we have to force a call onCacheModuleStart() here
+        // filters are started *after* modules - so we have to force a call onCacheModuleStart() here
         onCacheModuleStart();
     }
 
@@ -148,7 +148,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             final long end = System.currentTimeMillis();
 
             if(blockingTimeout != -1 && (end-start) >= blockingTimeout){
-                log.warn("The following URL took longer than {} seconds ({}) to render. This might cause timout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start)/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
+                log.warn("The following URL took longer than {} seconds ({}) to render. This might cause timeout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, (end-start)/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
             }
         }
         catch (Throwable th) {
