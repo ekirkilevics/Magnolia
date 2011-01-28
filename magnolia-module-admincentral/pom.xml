@@ -9,61 +9,6 @@
   <artifactId>magnolia-module-admincentral</artifactId>
   <name>magnolia-module-admincentral</name>
   <packaging>jar</packaging>
-  <build>
-    <plugins>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-dependency-plugin</artifactId>
-         <version>2.1</version>
-         <executions>
-           <execution>
-             <id>unpack</id>
-             <phase>process-resources</phase>
-             <goals>
-               <goal>unpack</goal>
-             </goals>
-             <configuration>
-               <artifactItems>
-                 <artifactItem>
-                    <groupId>com.vaadin</groupId>
-                    <artifactId>vaadin</artifactId>
-                 </artifactItem>
-               </artifactItems>
-               <outputDirectory>${project.build.directory}/classes/mgnl-resources</outputDirectory>
-               <includes>VAADIN/themes/**</includes>
-             </configuration>
-           </execution>
-         </executions>
-       </plugin>
-
-      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.1.0-1</version>
-        <configuration>
-          <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder-->
-          <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
-          <!-- put the created resources on the classpath -->
-          <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
-          <!-- this is not a webapp -->
-          <noServer>true</noServer>
-          <module>info.magnolia.module.admincentral.widgetset.AdminCentralWidgetset</module>
-          <!-- <draftCompile>true</draftCompile> -->
-          <!-- <style>PRETTY</style> -->
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>resources</goal>
-              <goal>compile</goal>
-             </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <dependency>
       <groupId>com.vaadin</groupId>

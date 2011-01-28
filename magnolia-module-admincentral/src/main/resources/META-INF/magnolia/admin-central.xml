@@ -59,25 +59,4 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-
-  <servlets>
-    <servlet>
-      <name>AdminCentral</name>
-      <class>info.magnolia.module.admincentral.vaadin.MagnoliaResourcesAwareApplicationServlet</class>
-       <mappings>
-         <mapping>/.magnolia/admin-central</mapping>
-         <mapping>/.magnolia/admin-central/*</mapping>
-      </mappings>
-       <params>
-         <param>
-           <name>application</name>
-           <value>info.magnolia.module.admincentral.AdminCentralApplication</value>
-         </param>
-         <param>
-           <name>widgetset</name>
-           <value>info.magnolia.module.admincentral.widgetset.AdminCentralWidgetset</value>
-         </param>
-       </params>
-    </servlet>
-  </servlets>
 </module>

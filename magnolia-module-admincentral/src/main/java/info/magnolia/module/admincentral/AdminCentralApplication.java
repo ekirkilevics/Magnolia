@@ -86,7 +86,7 @@ public class AdminCentralApplication extends Application {
 
     @Override
     public void init() {
-        setTheme("magnolia");
+        setTheme("runo");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
