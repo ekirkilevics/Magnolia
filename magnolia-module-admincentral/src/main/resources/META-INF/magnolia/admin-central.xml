@@ -17,6 +17,10 @@
       <name>templating</name>
       <version>5.0/*</version>
     </dependency>
+    <dependency>
+      <name>vaadin</name>
+      <version>1.0/*</version>
+    </dependency>
     <!-- the dependency is just to ensure order of loading of modules -->
     <dependency>
       <name>adminInterface</name>
@@ -59,4 +63,24 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+  <servlets>
+    <servlet>
+      <name>AdminCentral</name>
+      <class>info.magnolia.module.admincentral.vaadin.MagnoliaResourcesAwareApplicationServlet</class>
+       <mappings>
+         <mapping>/.magnolia/admin-central</mapping>
+         <mapping>/.magnolia/admin-central/*</mapping>
+      </mappings>
+       <params>
+         <param>
+           <name>application</name>
+           <value>info.magnolia.module.admincentral.AdminCentralApplication</value>
+         </param>
+         <param>
+           <name>widgetset</name>
+           <value>info.magnolia.module.vaadin.widgetsets.MagnoliaWidgetset</value>
+         </param>
+       </params>
+    </servlet>
+  </servlets>
 </module>
