@@ -39,20 +39,18 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.BlockingCache;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
-import info.magnolia.module.cache.CacheModuleLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
+import info.magnolia.module.cache.CacheModuleLifecycleListener;
 import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.mbean.CacheMonitor;
+import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.ehcache.constructs.blocking.LockTimeoutException;
-
 import java.io.IOException;
 
 /**
@@ -92,7 +90,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
         cacheModule.register(this);
-        // modules are started *after* filters - so we have to force a call onCacheModuleStart() here
+        // filters are started *after* modules - so we have to force a call onCacheModuleStart() here
         onCacheModuleStart();
     }
 
@@ -141,7 +139,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
             final long end = System.currentTimeMillis();
 
             if(blockingTimeout != -1 && (end-start) >= blockingTimeout){
-                log.warn("The following URL took longer than {} seconds to render. This might cause timout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
+                log.warn("The following URL took longer than {} seconds to render. This might cause timeout exceptions on other requests to the same URI. [url={}], [key={}]", new Object[]{blockingTimeout/1000, request.getRequestURL(), cachePolicyResult.getCacheKey()});
             }
         }
         catch(LockTimeoutException timeout){
