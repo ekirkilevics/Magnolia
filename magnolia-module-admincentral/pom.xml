@@ -41,7 +41,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-vaadin</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${project.version}</version>
       </dependency>
     <dependency>
       <groupId>junit</groupId>

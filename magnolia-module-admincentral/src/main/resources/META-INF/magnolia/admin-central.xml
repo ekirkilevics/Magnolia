@@ -19,7 +19,7 @@
     </dependency>
     <dependency>
       <name>vaadin</name>
-      <version>1.0/*</version>
+      <version>5.0/*</version>
     </dependency>
     <!-- the dependency is just to ensure order of loading of modules -->
     <dependency>

@@ -3,41 +3,34 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>info.magnolia</groupId>
-    <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>19</version>
+    <artifactId>magnolia-project</artifactId>
+    <version>5.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-module-vaadin</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <name>magnolia-module-vaadin</name>
-  <properties>
-    <javaVersion>1.5</javaVersion>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <version>2.1.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.vaadin</groupId>
       <artifactId>vaadin</artifactId>
-      <version>6.5.0</version>
     </dependency>
     <dependency>
       <groupId>org.vaadin.addons</groupId>
       <artifactId>vaadin-treetable</artifactId>
-      <version>1.1.0</version>
     </dependency>
      <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
-        <version>2.5</version>
         <scope>provided</scope>
       </dependency>
   </dependencies>
