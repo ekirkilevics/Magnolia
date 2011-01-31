@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>info.magnolia</groupId>
+    <artifactId>magnolia-parent-pom-ce</artifactId>
+    <version>19</version>
+  </parent>
   <artifactId>magnolia-module-vaadin</artifactId>
-  <groupId>info.magnolia</groupId>
   <version>1.0-SNAPSHOT</version>
   <name>magnolia-module-vaadin</name>
+  <properties>
+    <javaVersion>1.5</javaVersion>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -27,6 +34,12 @@
       <artifactId>vaadin-treetable</artifactId>
       <version>1.1.0</version>
     </dependency>
+     <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+      </dependency>
   </dependencies>
   <description>Takes care of all gwt compilation for client side widgets.</description>
   <build>
