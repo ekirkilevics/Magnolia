@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>vaadin</name>
+  <displayName>Magnolia Vaadin Module</displayName>
+  <class>info.magnolia.module.vaadin.VaadinModule</class>
+  <version>${project.version}</version>
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.0/*</version>
+    </dependency>
+  </dependencies>
+</module>
