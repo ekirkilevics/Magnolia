@@ -635,6 +635,7 @@ for Java Content Repositories (JCR).
     <module>magnolia-gui</module>
     <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-fckeditor</module>
+    <module>magnolia-module-vaadin</module>
     <module>magnolia-module-admininterface</module>
     <module>magnolia-module-admincentral</module>
     <module>magnolia-module-cache</module>
