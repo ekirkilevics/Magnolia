@@ -35,8 +35,10 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
 import org.easymock.EasyMock;
 
@@ -77,7 +79,7 @@ public class FilterTest extends MgnlTestCase {
 
         initMockConfigRepository(conf);
 
-        MgnlMainFilter mf = initMainFilter();
+        MgnlMainFilter mf = initMainFilter(MockUtil.getSystemMockContext(false));
         CompositeFilter rootFilter = (CompositeFilter)  mf.getRootFilter();
 
         assertEquals("val1", ((TestFilter)rootFilter.getFilters()[0]).getProp1());
@@ -87,15 +89,11 @@ public class FilterTest extends MgnlTestCase {
         assertEquals("second", rootFilter.getFilters()[1].getName());
     }
 
-    protected MgnlMainFilter initMainFilter() throws ServletException {
+    protected MgnlMainFilter initMainFilter(final SystemContext sysCtx) throws ServletException {
         MgnlMainFilter mf = new MgnlMainFilter(){
-            protected boolean isSystemUIMode() {
-                return false;
-            }
-
             @Override
             protected FilterManager getInitializer(ServletContext servletContext) {
-                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, null) {
+                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, sysCtx) {
                     @Override
                     protected boolean isSystemUIMode() {
                         return false;
@@ -117,7 +115,7 @@ public class FilterTest extends MgnlTestCase {
         initMockConfigRepository(conf);
 
 
-        MgnlMainFilter mf = initMainFilter();
+        MgnlMainFilter mf = initMainFilter(MockUtil.getSystemMockContext(false));
 
         CompositeFilter rootFilter = (CompositeFilter) mf.getRootFilter();
         FilterDecorator fd = (FilterDecorator) rootFilter.getFilters()[0];
@@ -147,7 +145,7 @@ public class FilterTest extends MgnlTestCase {
 
         initMockConfigRepository(conf);
 
-        MgnlMainFilter mf = initMainFilter();
+        MgnlMainFilter mf = initMainFilter(MockUtil.getSystemMockContext(false));
 
         HttpServletRequest request = createMock(HttpServletRequest.class);
         // log statement
