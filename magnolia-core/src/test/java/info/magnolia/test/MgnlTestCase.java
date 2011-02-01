@@ -49,17 +49,15 @@ import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import junit.framework.TestCase;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
-
-import junit.framework.TestCase;
 
 /**
  * @author philipp
@@ -84,8 +82,7 @@ public abstract class MgnlTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
-        // TODO - this does nothing anymore since getProperties recreates the props instance - SystemProperty.getProperties().clear();
-         SystemProperty.clear();
+        SystemProperty.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
