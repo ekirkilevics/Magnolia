@@ -50,6 +50,7 @@ import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
 import info.magnolia.objectfactory.pico.ComponentFactoryProviderAdapter;
+import info.magnolia.objectfactory.pico.ModuleAdapterFactory;
 import info.magnolia.objectfactory.pico.ObservedComponentAdapter;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.objectfactory.pico.PicoLifecycleStrategy;
@@ -219,6 +220,10 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             final MagnoliaConfigurationProperties configurationProperties = root.getComponent(MagnoliaConfigurationProperties.class);
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
+            // This is a temporary ComponentProvider for components not behaving (groovy module) -- TODO: doesn't even work. claims it needs the SysCtx
+            // TODO : de-uglify this ? Also: get rid of DefaultComponentProvider here.
+            //Components.setProvider(new PicoComponentProvider(root, new DefaultComponentProvider(configurationProperties)));
+            // TODO - perhaps PicoComponentProvider can be constructed by pico itself
 
             final MutablePicoContainer mainContainer = makeContainer(root, "Magnolia-Main-Container");
             // TODO extract population to a ContainerComposer interface - and get the composers out of pico ? (ordering problem? how about request-scope?)
@@ -274,20 +279,17 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     }
 
     protected void populateMainContainer(MutablePicoContainer pico, ModuleRegistry moduleRegistry, MagnoliaConfigurationProperties configurationProperties) {
-        // Ideally, the dependency should be on SystemProperty or other relevant object, instead of this java.util.Properties instance
-        // Hopefully, we'll de-staticize SystemProperty soon.
 
-        // TODO : we have a dependency on ClassFactory, but we can't inject it here,
-        // since it might get swapped later
-
+        // Register module classes
         for (String moduleName : moduleRegistry.getModuleNames()) {
             final ModuleDefinition module = moduleRegistry.getDefinition(moduleName);
             if (module.getClassName() != null) {
-                pico.addComponent(classForName(module.getClassName()));
+                final Class<Object> moduleClass = classForName(module.getClassName());
+                pico.as(ModuleAdapterFactory.makeModuleProperties(moduleName)).addComponent(moduleClass);
             }
         }
 
-        // TODO - register components from module descriptors
+        // TODO - register components from module descriptors <components> instead.
         final Set<String> keys = configurationProperties.getKeys();
         for (String key : keys) {
             String value = configurationProperties.getProperty(key);
@@ -299,7 +301,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
                 final ComponentConfigurationPath path = new ComponentConfigurationPath(value);
                 // TODO - wrap in a caching adapter if that's not already the case ??
-                pico.addAdapter(new ObservedComponentAdapter(path, keyType, keyType));
+                pico.addAdapter(new ObservedComponentAdapter(path, keyType));
             } else {
                 final Class<?> valueType = classForName(value);
                 if (valueType == null) {
@@ -316,6 +318,8 @@ public class MagnoliaServletContextListener implements ServletContextListener {
         }
     }
 
+    // TODO : we have a dependency on ClassFactory, but we can't inject it here,
+    // since it might get swapped later
     // TODO use ClassloadingPicoContainer instead ?
     private Class<Object> classForName(String value) {
         try {
@@ -341,7 +345,9 @@ public class MagnoliaServletContextListener implements ServletContextListener {
                 // order of injection matters, so ConstructorInjection must be first. Yes, we could add more types of injection if needed.
                 .withConstructorInjection()
                 .withAnnotatedFieldInjection() // TODO: once PICO-380 is fixed, we can use javax.inject.@Inject instead of org.picocontainer.annotations.@Inject
+                // order of behaviors matters! we want to cache the decorated component, not re-decorate every time we get the cached instance
                 .withCaching()
+                .withBehaviors(new ModuleAdapterFactory())
                 .withMonitor(componentMonitor)
                 .withLifecycle(lifecycleStrategy);
         if (parent != null) {

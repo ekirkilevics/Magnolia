@@ -45,6 +45,7 @@ import java.lang.reflect.Type;
  * A PicoContainer {@link org.picocontainer.ComponentAdapter} wrapping our {@link ObservedComponentFactory}
  *
  * TODO : there is very likely room for improvement, cleanup, and removal of unneeded code here.
+ * TODO : check if these are ComponentMonitor'ed.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -55,6 +56,10 @@ public class ObservedComponentAdapter extends AbstractAdapter {
     private final ComponentConfigurationPath path;
     private ObservedComponentFactory factory;
     private Object o;
+
+    public ObservedComponentAdapter(ComponentConfigurationPath path, Class type) {
+        this(path, type, type);
+    }
 
     public ObservedComponentAdapter(ComponentConfigurationPath path, Object componentKey, Class type) {
         super(componentKey, type);
