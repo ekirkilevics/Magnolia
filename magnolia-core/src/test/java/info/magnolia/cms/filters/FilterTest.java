@@ -33,14 +33,12 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.easymock.classextension.EasyMock.*;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.voting.voters.URIStartsWithVoter;
-
-import java.io.IOException;
+import org.easymock.EasyMock;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.Filter;
@@ -52,8 +50,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import org.easymock.EasyMock;
+import static org.easymock.classextension.EasyMock.*;
 
 
 /**
@@ -96,7 +95,7 @@ public class FilterTest extends MgnlTestCase {
 
             @Override
             protected FilterManager getInitializer(ServletContext servletContext) {
-                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/) {
+                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, null) {
                     @Override
                     protected boolean isSystemUIMode() {
                         return false;

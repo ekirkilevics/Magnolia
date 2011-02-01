@@ -41,6 +41,7 @@ import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.module.ModuleManager;
 import org.apache.commons.lang.StringUtils;
 
@@ -73,11 +74,13 @@ public class FilterManagerImpl implements FilterManager {
     };
 
     private final ModuleManager moduleManager;
+    private final SystemContext systemContext;
     private MgnlFilter rootFilter;
     private FilterConfig filterConfig;
 
-    public FilterManagerImpl(ModuleManager moduleManager) {
+    public FilterManagerImpl(ModuleManager moduleManager, SystemContext systemContext) {
         this.moduleManager = moduleManager;
+        this.systemContext = systemContext;
     }
 
     public void init(final FilterConfig filterConfig) throws ServletException {
@@ -125,7 +128,7 @@ public class FilterManagerImpl implements FilterManager {
 
     private MgnlFilter createConfiguredFilters() {
         try {
-            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+            final HierarchyManager hm = systemContext.getHierarchyManager(ContentRepository.CONFIG);
             final Content node = hm.getContent(SERVER_FILTERS);
             return (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
         } catch (PathNotFoundException e) {
