@@ -40,13 +40,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Delegate to an other command at runtime.
+ *
  * @author Philipp Bracher
  * @version $Id$
- *
  */
 public class DelegateCommand implements Command {
-
-    Logger log = LoggerFactory.getLogger(DelegateCommand.class);
+    private final static Logger log = LoggerFactory.getLogger(DelegateCommand.class);
 
     /**
      * The command name used to delegate to.
@@ -54,14 +53,6 @@ public class DelegateCommand implements Command {
     private String commandName;
 
     public DelegateCommand() {
-    }
-
-    /**
-     * @param commandName
-     * @deprecated not used
-     */
-    public DelegateCommand(String commandName) {
-        this.commandName = commandName;
     }
 
     public boolean execute(Context ctx) throws Exception {
@@ -74,7 +65,6 @@ public class DelegateCommand implements Command {
         }
         return false;
     }
-
 
     public String getCommandName() {
         return this.commandName;
