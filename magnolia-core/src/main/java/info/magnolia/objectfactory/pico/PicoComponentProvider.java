@@ -87,11 +87,12 @@ public class PicoComponentProvider implements ComponentProvider {
     }
 
     public <T> T newInstance(Class<T> type) {
-        // TODO : this check unfortunately triggers org.picocontainer.ComponentMonitor.noComponentFound()
+        /** TODO : this check unfortunately triggers org.picocontainer.ComponentMonitor.noComponentFound()
         if (pico.getComponentAdapter(type) != null) {
-            // TODO - throw specific exception
+            // to do : throw specific exception
             throw new IllegalStateException("The powers that be have decided that it was illegal to instantiate a component that is already registered. (" + type + " in this case)");
         }
+        */
 
         // let's register the component in-place
         // TODO - the container building is copied from info.magnolia.cms.servlets.MgnlServletContextListener#makeContainer - remove redundancy.
