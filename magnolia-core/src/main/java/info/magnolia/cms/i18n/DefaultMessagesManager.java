@@ -73,7 +73,7 @@ public class DefaultMessagesManager extends MessagesManager {
     /**
      * List of the available locales.
      */
-    private final Collection availableLocales = new ArrayList();
+    private final Collection<Locale> availableLocales = new ArrayList<Locale>();
 
     /**
      * Map for the messages.
@@ -165,13 +165,12 @@ public class DefaultMessagesManager extends MessagesManager {
                 languagesNode = configNode.createContent(LANGUAGES_NODE_NAME, ItemType.CONTENT);
             }
 
-            Map languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LocaleDefinition.class);
+            final Map<String, LocaleDefinition> languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LocaleDefinition.class);
 
             // clear collection for reload
             availableLocales.clear();
 
-            for (Iterator iter = languageDefinitions.values().iterator(); iter.hasNext();) {
-                LocaleDefinition ld = (LocaleDefinition) iter.next();
+            for (LocaleDefinition ld : languageDefinitions.values()) {
                 if (ld.isEnabled()) {
                     availableLocales.add(ld.getLocale());
                 }
