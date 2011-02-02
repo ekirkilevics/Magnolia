@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,27 +33,24 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-/*import static org.junit.Assert.assertEquals;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-
-import java.util.Calendar;
-import java.util.Date;
+import org.junit.Test;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import java.util.Calendar;
+import java.util.Date;
 
-import org.junit.Test;
-*/
+import static org.junit.Assert.assertEquals;
 
 /**
- * Tests MetaDataColumn.
  *
  * @author daniellipp
  * @version $Id$
  */
 public class MetaDataColumnTest {
 
-   /* @Test
+    @Test
     public void testGetValue() throws RepositoryException {
         Node node = new MockNode();
         Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
@@ -76,5 +73,4 @@ public class MetaDataColumnTest {
         column.setValue(node, cal.getTime());
         assertEquals(metaData.getProperty(MetaDataColumn.PROPERTY_NAME).getDate(), cal);
     }
-    */
 }

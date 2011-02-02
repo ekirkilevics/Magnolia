@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,26 +33,22 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-/*import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import com.vaadin.ui.Field;
+import org.junit.Test;
 
 import javax.jcr.RepositoryException;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
-import com.vaadin.ui.Field;
-*/
 
 /**
- * Tests LabelColumn.
  *
  * @author daniellipp
  * @version $Id$
  */
 public class LabelColumnTest {
 
-   /* @Test
+    @Test
     public void testGetValue() throws RepositoryException {
         MockNode mock = new MockNode();
         String original = "Beckenbauer";
@@ -63,14 +59,14 @@ public class LabelColumnTest {
         assertEquals(original, result);
     }
 
-    @Test
+    /*@Test */
+    // TODO: uncomment as soon as setValue is properly implemented on that Column.
     public void testSetValue() throws RepositoryException {
         MockNode mock = new MockNode();
         LabelColumn column = new LabelColumn();
         String newValue = "Netzer";
-        // TODO: uncomment as soon as setValue is properly implemented on that Column.
-        // column.setValue(mock, "newValue");
-        // assertEquals(column.getValue(mock), newValue);
+        column.setValue(mock, "newValue");
+        assertEquals(column.getValue(mock), newValue);
     }
 
     @Test
@@ -84,5 +80,5 @@ public class LabelColumnTest {
         editableFlag = false;
         column.setEditable(editableFlag);
         assertNull(column.getEditField(null));
-    }*/
+    }
 }

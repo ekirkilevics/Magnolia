@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,20 +33,18 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
-//import org.junit.Test;
-//import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 
 /**
- * Tests for JCRUtility.
  *
  * @author daniellipp
  * @version $Id$
- *
  */
 public class JCRUtilTest {
 
-    /*@Test
+    @Test
     public void testGetRelativPath() {
         assertEquals("d", JCRUtil.getItemIdWithoutPath("/a/b/c/d"));
     }
@@ -60,5 +58,4 @@ public class JCRUtilTest {
     public void testGetPathWithoutItemId() {
         assertEquals("/childsPath", JCRUtil.getPathWithoutItemId("/thisIsTheParentsPath/childsPath"));
     }
-    */
 }
