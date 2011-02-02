@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.i18n;
 
-import java.util.Locale;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Locale;
 
 
 /**
@@ -59,14 +59,6 @@ public class LocaleDefinition {
 
     public LocaleDefinition() {
     }
-
-    // TODO : this constructor causes a little problem: since we're constructing all c2b components via info.magnolia.objectfactory.ComponentProvider#newInstance,
-    //      : picocontainer attempts to fulfill the "largest" constructor possible, hence wasting energy trying to fulfill this constructor (and the constructors of String...)
-    //      : So, TODO: is it possible to mark constructors to be avoided ? @DoNotInject? Is this going to be an issue elsewhere ? Is this going to be any issue
-    //      : for users or customers ?
-
-    // -- the magic happens in org.picocontainer.injectors.ConstructorInjector.getGreediestSatisfiableConstructor()
-    // annotations might also help - org.picocontainer.injectors.SingleMemberInjector.getBindings() ?
 
     // worked around by making the ctor protected and adding a public static factory method. discuss.
     protected LocaleDefinition(String language, String country, boolean enabled) {

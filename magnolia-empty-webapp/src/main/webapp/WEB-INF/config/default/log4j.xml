@@ -129,14 +129,8 @@ Number of occurrences: %o%n
   </appender>
 
   <!-- Magnolia categories -->
-  <category name="org.picocontainer">
-    <priority value="DEBUG"/>
-  </category>
   <category name="info.magnolia">
     <priority value="INFO" />
-  </category>
-  <category name="info.magnolia.objectfactory">
-    <priority value="DEBUG"/>
   </category>
   <category name="info.magnolia.cms.exchange" additivity="false">
     <priority value="INFO" />
@@ -148,6 +142,15 @@ Number of occurrences: %o%n
     <appender-ref ref="log-bootstrap" />
     <appender-ref ref="console" />
   </category>
+
+  <!-- for ioc:
+  <category name="org.picocontainer">
+    <priority value="DEBUG"/>
+  </category>
+  <category name="info.magnolia.objectfactory">
+    <priority value="DEBUG"/>
+  </category>
+  -->
 
   <!-- Custom log categories -->
   <category name="log-access" additivity="false">

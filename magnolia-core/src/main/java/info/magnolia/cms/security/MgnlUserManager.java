@@ -43,20 +43,18 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.context.MgnlContext;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.security.auth.Subject;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.security.auth.Subject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -116,7 +114,7 @@ public class MgnlUserManager implements UserManager {
         // this could be the case if no one is logged in yet
         if (subject == null) {
             log.debug("subject not set.");
-            return null;//new DummyUser();
+            return new DummyUser();
         }
 
         Set<Entity> principalSet = subject.getPrincipals(Entity.class);
@@ -124,7 +122,7 @@ public class MgnlUserManager implements UserManager {
         if (!entityIterator.hasNext()) {
             // happens when JCR authentication module set to optional and user doesn't exist in magnolia
             log.debug("user name not contained in principal set.");
-            return null;// new DummyUser();
+            return new DummyUser();
         }
         Entity userDetails = entityIterator.next();
         String name = (String) userDetails.getProperty(Entity.NAME);
@@ -138,7 +136,7 @@ public class MgnlUserManager implements UserManager {
             log.error("can't get jcr-node of current user", e);
         }
 
-        return null;//new DummyUser();
+        return new DummyUser();
     }
 
     protected User getFromRepository(String name) throws RepositoryException {

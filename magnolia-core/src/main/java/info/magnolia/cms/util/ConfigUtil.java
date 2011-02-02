@@ -33,24 +33,8 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.Path;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import info.magnolia.cms.core.SystemProperty;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.JDOMException;
@@ -61,6 +45,20 @@ import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Util used to process config files.
@@ -178,7 +176,6 @@ public class ConfigUtil {
      * @throws IOException
      */
     public static String replaceTokens(String config) throws IOException {
-        // TODO i suspect this doesn't work (jcr not loaded)
         for (Iterator iter = SystemProperty.getProperties().keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             config = StringUtils.replace(config, "${" + key + "}", SystemProperty.getProperty(key, ""));
