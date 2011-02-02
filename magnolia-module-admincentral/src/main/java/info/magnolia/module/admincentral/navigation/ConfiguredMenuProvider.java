@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.LazyContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+
+import javax.jcr.RepositoryException;
 
 /**
  * {@link MenuProvider} that instantiates a {@link MenuDefinition} from a configuration node.

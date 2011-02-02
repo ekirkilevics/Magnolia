@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,20 +33,6 @@
  */
 package info.magnolia.module.admincentral;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.security.User;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.DialogWindow;
-import info.magnolia.module.admincentral.navigation.Menu;
-
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
@@ -63,6 +49,18 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.navigation.Menu;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Magnolia's AdminCentral.

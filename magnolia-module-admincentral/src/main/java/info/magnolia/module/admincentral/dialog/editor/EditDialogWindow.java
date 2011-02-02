@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,8 +33,13 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
-import java.util.Collection;
-
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -43,20 +48,12 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.query.Query;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import javax.jcr.RepositoryException;
+import javax.jcr.query.Query;
+import java.util.Collection;
 
 /**
  * Dialog editor.

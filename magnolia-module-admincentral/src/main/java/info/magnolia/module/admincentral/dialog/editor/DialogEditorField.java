@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,12 +33,11 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
-import info.magnolia.module.admincentral.control.AbstractDialogControl;
-
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import info.magnolia.module.admincentral.control.AbstractDialogControl;
 
 /**
  * Special container used by the dialog editor to visualize controls.

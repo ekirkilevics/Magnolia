@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,15 +33,6 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import info.magnolia.module.admincentral.control.AbstractDialogControl;
-
 import com.vaadin.data.Property;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -49,6 +40,13 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.control.AbstractDialogControl;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Marker for template controls.

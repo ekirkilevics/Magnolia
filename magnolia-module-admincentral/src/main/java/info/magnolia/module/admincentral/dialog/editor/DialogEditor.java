@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,6 +33,18 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.SplitPanel;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.VerticalLayout;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.Messages;
@@ -51,27 +63,12 @@ import info.magnolia.module.admincentral.control.SliderControl;
 import info.magnolia.module.admincentral.control.UuidLinkControl;
 import info.magnolia.module.admincentral.dialog.DialogControl;
 import info.magnolia.module.admincentral.dialog.DialogTab;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.ui.Accordion;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.SplitPanel;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Dialog editor. Provides layout of the whole dialog editor and binds together different parts of the editor (dialog preview + field editing + trash + element selection).

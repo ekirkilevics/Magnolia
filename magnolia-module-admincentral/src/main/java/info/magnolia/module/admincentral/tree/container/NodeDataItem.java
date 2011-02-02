@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,20 +33,17 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.NodeDataWrapper;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-
-import java.util.Collection;
-
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.NodeDataWrapper;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.util.Collection;
 
 
 /**

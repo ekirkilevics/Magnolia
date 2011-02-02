@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,18 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
+import com.vaadin.data.Property;
 import info.magnolia.module.admincentral.tree.TreeColumn;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventObject;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.data.Property;
 
 
 /**

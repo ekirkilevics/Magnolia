@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,7 +36,6 @@ package info.magnolia.module.admincentral.navigation;
 import info.magnolia.objectfactory.Components;
 
 import javax.jcr.RepositoryException;
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

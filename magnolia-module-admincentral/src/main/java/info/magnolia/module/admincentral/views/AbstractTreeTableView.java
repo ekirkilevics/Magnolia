@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,18 +33,6 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.container.JcrContainer;
-import info.magnolia.module.admincentral.tree.container.NodeItem;
-
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
@@ -61,6 +49,16 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
+import info.magnolia.module.admincentral.tree.container.NodeItem;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
 
 
 /**

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,10 +33,10 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.ui.Field;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.Field;
 
 
 /**

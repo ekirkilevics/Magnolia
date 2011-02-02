@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,14 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.views.AbstractTreeTableView;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Window;
 
 
 /**

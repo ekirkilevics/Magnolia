@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,38 +25,13 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
 package info.magnolia.module.admincentral.tree.container;
-
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.PropertyIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Buffered;
@@ -66,6 +41,28 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PropertyIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,23 +33,20 @@
  */
 package info.magnolia.module.admincentral.views;
 
+import com.vaadin.event.Action;
+import com.vaadin.terminal.ExternalResource;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
-
-import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vaadin.event.Action;
-import com.vaadin.terminal.ExternalResource;
+import java.util.ArrayList;
 
 
 /**

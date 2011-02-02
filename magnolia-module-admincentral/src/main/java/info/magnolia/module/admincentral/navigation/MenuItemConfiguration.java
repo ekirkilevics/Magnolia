@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,17 +33,15 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import com.vaadin.terminal.ExternalResource;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.terminal.ExternalResource;
-
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Bean representing stored configuration of the menu item.

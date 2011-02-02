@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -44,12 +44,11 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
-
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
 
 /**
  * AdminCentral Page/Section/View (main container content) for testing dialog stuff, temporary stuff.

@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  * 
  * Any modifications to this file must keep this entire header
  * intact.
@@ -36,17 +36,16 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * A node data hiding the fact that node datas of type BINARY are stored as nodes of type {@link ItemType#NT_RESOURCE}.

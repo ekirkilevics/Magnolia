@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -37,7 +37,6 @@ import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-
 import info.magnolia.cms.core.Content;
 import org.apache.commons.lang.StringUtils;
 

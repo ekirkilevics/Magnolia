@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,18 +33,16 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.AdminCentralApplication;
 import info.magnolia.module.admincentral.views.GenericTreeTableView;
 import info.magnolia.module.admincentral.views.IFrameView;
 import info.magnolia.objectfactory.Classes;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 
 /**
  * Depending on the menu configuration, opens a tree, an iframe or a custom component in the application main view. The default implementations for the tree and iframe

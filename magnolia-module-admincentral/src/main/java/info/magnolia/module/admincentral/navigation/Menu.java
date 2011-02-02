@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,26 +33,6 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.admincentral.AdminCentralModule;
-import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
-import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
-import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
@@ -67,6 +47,23 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.admincentral.AdminCentralModule;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
+import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
+import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**

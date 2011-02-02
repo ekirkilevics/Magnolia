@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import com.vaadin.event.Action;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
@@ -41,8 +42,6 @@ import info.magnolia.module.admincentral.views.AbstractTreeTableView;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
-import com.vaadin.event.Action;
 
 
 /**

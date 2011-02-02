@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.admincentral.setup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
@@ -44,6 +41,9 @@ import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhC
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Module's version handler.

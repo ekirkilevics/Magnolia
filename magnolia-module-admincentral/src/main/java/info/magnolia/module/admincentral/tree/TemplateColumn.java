@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import com.vaadin.ui.Field;
+import com.vaadin.ui.Select;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
@@ -40,17 +42,13 @@ import info.magnolia.module.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.Field;
-import com.vaadin.ui.Select;
 
 
 /**

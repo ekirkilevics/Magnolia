@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  * 
  * Any modifications to this file must keep this entire header
  * intact.
@@ -39,20 +39,18 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Comparator;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.Workspace;
-
-import org.apache.commons.lang.StringUtils;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * A base class by implementing some default behavior.

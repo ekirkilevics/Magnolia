@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,20 +33,18 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-
-import java.io.Serializable;
-import java.security.AccessControlException;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import java.io.Serializable;
+import java.security.AccessControlException;
 
 
 /**

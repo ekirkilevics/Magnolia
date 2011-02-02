@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -36,18 +36,16 @@ package info.magnolia.cms.filters;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

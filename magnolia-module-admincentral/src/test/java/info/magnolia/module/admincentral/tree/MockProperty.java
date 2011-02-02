@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,17 +25,13 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
 package info.magnolia.module.admincentral.tree;
-
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
@@ -56,6 +52,9 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.VersionException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 
 /**

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,7 +36,6 @@ package info.magnolia.module.admincentral.control;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
-
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;

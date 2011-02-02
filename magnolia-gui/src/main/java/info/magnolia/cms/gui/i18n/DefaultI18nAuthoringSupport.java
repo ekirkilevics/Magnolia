@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -40,16 +40,14 @@ import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
-
-import java.util.List;
-import java.util.Locale;
-
 import info.magnolia.cms.util.BooleanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
-
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.List;
+import java.util.Locale;
 
 
 /**

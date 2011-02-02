@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,11 +33,10 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.Application;
 import com.vaadin.ui.Window.Notification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of the MenuAction. Converts old style of action (label + icon + js to be executed on click) into vaadin action
