@@ -33,30 +33,62 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.cms.core.SystemProperty;
-
 /**
- * Entry point to the ComponentProvider.
+ * Entry point to a ComponentProvider. The instance to be used must be set using {@link #setProvider(ComponentProvider)}.
+ * There should not be any good reason to change this at runtime.
  *
- * The ComponentProvider implementation can currently not be swapped, as opposed to the {@link info.magnolia.objectfactory.ClassFactory},
- * using {@link info.magnolia.objectfactory.Classes}.
- *
+ * @see info.magnolia.cms.servlets.MgnlServletContextListener
  * @see ComponentProvider
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class Components {
-    private static final ComponentProvider componentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
+    private static ComponentProvider componentProvider = new NullComponentProvider();
 
     /**
-     * Convenience method for retrieving a singleton our of the {@link ComponentProvider}.
+     * Are you sure you really need to do this ?
+     * @see info.magnolia.cms.servlets.MgnlServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     */
+    public static void setProvider(ComponentProvider provider) {
+        componentProvider = provider;
+    }
+
+    /**
+     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
+     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
      */
     public static <T> T getSingleton(Class<T> type) {
-        return getComponentProvider().getSingleton(type);
+        return getComponent(type);
+    }
+
+    /**
+     * Convenience method for retrieving a component out of the {@link ComponentProvider}.
+     * Consider using IoC instead.
+     */
+    public static <T> T getComponent(Class<T> type) {
+        return getComponentProvider().getComponent(type);
     }
 
     public static ComponentProvider getComponentProvider() {
         return componentProvider;
+    }
+
+    private static class NullComponentProvider implements ComponentProvider {
+        public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
+            throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
+        }
+
+        public <T> T getComponent(Class<T> type) {
+            throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
+        }
+
+        public <T> T getSingleton(Class<T> type) {
+            throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
+        }
+
+        public <T> T newInstance(Class<T> type) {
+            throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
+        }
     }
 }

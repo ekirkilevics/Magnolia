@@ -57,19 +57,26 @@ import org.apache.commons.chain.Command;
  */
 public class CacheMonitor implements CacheMonitorMBean {
 
-    private static CacheMonitor instance = new CacheMonitor();
+    private static CacheMonitor instance;
+
+    private final CommandsManager commandsManager;
     private int start;
     private int stop;
     private Map<String, Integer> calls = new HashMap<String, Integer>();
     private Map<String, Integer> caches = new HashMap<String, Integer>();
     private Map<String, Integer> domains = new HashMap<String, Integer>();
-    private CommandsManager commandsManager;
 
-    public CacheMonitor() {
+    public CacheMonitor(CommandsManager commandsManager) {
         MBeanUtil.registerMBean("CacheMonitor", this);
-        commandsManager = CommandsManager.getInstance();
+        this.commandsManager = commandsManager;
+
+        // TODO remove the need for this static !
+        instance = this;
     }
 
+    /**
+     * @deprecated since 5.0, use IoC instead
+     */
     private CacheFactory getCacheFactory() {
         CacheFactory factory = ModuleRegistry.Factory.getInstance().getModuleInstance(CacheModule.class).getCacheFactory();
         return factory;
@@ -88,6 +95,9 @@ public class CacheMonitor implements CacheMonitorMBean {
         return flush;
     }
 
+    /**
+     * @deprecated since 5.0, use IoC instead
+     */
     public static CacheMonitor getInstance() {
         return instance;
     }

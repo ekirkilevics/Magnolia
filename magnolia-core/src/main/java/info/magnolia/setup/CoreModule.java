@@ -47,11 +47,20 @@ import info.magnolia.module.ModuleLifecycleContext;
  * @content2bean.module name="core"
  */
 public class CoreModule implements ModuleLifecycle {
+    private final VirtualURIManager virtualURIManager;
+    private final CommandsManager commandsManager;
+    private final ShutdownManager shutdownManager;
+
+    public CoreModule(VirtualURIManager virtualURIManager, CommandsManager commandsManager, ShutdownManager shutdownManager) {
+        this.virtualURIManager = virtualURIManager;
+        this.commandsManager = commandsManager;
+        this.shutdownManager = shutdownManager;
+    }
 
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("virtualURIMapping", VirtualURIManager.getInstance());
-        ctx.registerModuleObservingComponent("commands", CommandsManager.getInstance());
-        ctx.registerModuleObservingComponent("shutdown", ShutdownManager.getInstance());
+        ctx.registerModuleObservingComponent("virtualURIMapping", virtualURIManager);
+        ctx.registerModuleObservingComponent("commands", commandsManager);
+        ctx.registerModuleObservingComponent("shutdown", shutdownManager);
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {

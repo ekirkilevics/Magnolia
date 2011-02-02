@@ -38,6 +38,7 @@ import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
@@ -105,6 +106,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
             super(ContentRepository.CONFIG, "/server/IPConfig", IPSecurityManager.class);
         }
 
+        @Override
         protected Content2BeanTransformer getContent2BeanTransformer() {
             return new IPSecurityManagerTransformer();
         }
@@ -115,7 +117,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
      */
     public static final class IPSecurityManagerTransformer extends Content2BeanTransformerImpl {
 
-        public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
+        public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
             final Object currentBean = state.getCurrentBean();
             if (currentBean instanceof IPSecurityManagerImpl) {
                 final IPSecurityManagerImpl ipSecMan = (IPSecurityManagerImpl) currentBean;
@@ -126,15 +128,15 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
                     }
                 }
             }
-            super.setProperty(state, descriptor, values);
+            super.setProperty(typeMapping, state, descriptor, values);
         }
 
-        protected TypeDescriptor onResolveType(TransformationState state,
+        protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state,
                 TypeDescriptor resolvedType) {
             if (state.getLevel() == 2 && resolvedType == null) {
-                return this.getTypeMapping().getTypeDescriptor(Rule.class);
+                return typeMapping.getTypeDescriptor(Rule.class);
             }
-            return super.onResolveType(state, resolvedType);
+            return super.onResolveType(typeMapping, state, resolvedType);
         }
 
     }

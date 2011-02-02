@@ -201,9 +201,9 @@ public abstract class AbstractJspTest extends TestCase {
         ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
         final DefaultI18nContentSupport i18nContentSupport = new DefaultI18nContentSupport();
         i18nContentSupport.setEnabled(true);
-        i18nContentSupport.addLocale(new LocaleDefinition("fr", "CH", true));
-        i18nContentSupport.addLocale(new LocaleDefinition("de", "CH", true));
-        i18nContentSupport.addLocale(new LocaleDefinition("de", null, true));
+        i18nContentSupport.addLocale(LocaleDefinition.make("fr", "CH", true));
+        i18nContentSupport.addLocale(LocaleDefinition.make("de", "CH", true));
+        i18nContentSupport.addLocale(LocaleDefinition.make("de", null, true));
         ComponentsTestUtil.setInstance(I18nContentSupport.class, i18nContentSupport);
         final DefaultI18nAuthoringSupport i18nAuthoringSupport = new DefaultI18nAuthoringSupport();
         i18nAuthoringSupport.setEnabled(true);

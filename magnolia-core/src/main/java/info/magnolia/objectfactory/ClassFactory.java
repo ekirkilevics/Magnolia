@@ -52,6 +52,7 @@ public interface ClassFactory {
      * Null arguments are not supported.
      *
      * @throws MgnlInstantiationException wrapping possible instantiation exceptions
+     * @deprecated since 5.0, only use ComponentProvider ?
      */
     <T> T newInstance(Class<T> c, Object... params);
 
@@ -62,6 +63,7 @@ public interface ClassFactory {
      * To pass "null" to a single-arg constructor,  use newInstance(c, new Object[]{null}) (otherwise the *array* itself will be considered null)
      *
      * @throws MgnlInstantiationException wrapping possible instantiation exceptions
+     * @deprecated since 5.0, only use ComponentProvider ?
      */
     <T> T newInstance(Class<T> c, Class<?>[] argTypes, Object... params);
 

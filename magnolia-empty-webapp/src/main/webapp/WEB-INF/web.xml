@@ -18,7 +18,7 @@
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
   <listener>
-    <listener-class>info.magnolia.cms.servlets.MgnlServletContextListener</listener-class>
+    <listener-class>info.magnolia.init.MagnoliaServletContextListener</listener-class>
   </listener>
   <!-- These are the default paths searched for magnolia configuration. Uncomment if you need to customize these.
        Your container might also do its own variables substitution here. Tomcat, for instance, allows you to use

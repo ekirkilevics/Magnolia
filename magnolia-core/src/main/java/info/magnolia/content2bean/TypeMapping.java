@@ -51,12 +51,19 @@ public interface TypeMapping {
 
     public TypeDescriptor getTypeDescriptor(Class<?> beanClass);
 
+    /**
+     * @deprecated since 5.0 - unused
+     */
     public void addPropertyTypeDescriptor(Class<?> beanClass, String propName, PropertyTypeDescriptor dscr);
 
+    /**
+     * @deprecated since 5.0 - should not be part of the interface
+     */
     public void addTypeDescriptor(Class<?> beanClass, TypeDescriptor dscr);
 
     /**
      * Get the default transformer.
+     * @deprecated since 5.0, use IoC.
      */
     class Factory{
         public static TypeMapping getDefaultMapping(){

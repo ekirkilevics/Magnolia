@@ -60,7 +60,7 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
 
     private ModuleDefinition currentModuleDefinition;
 
-    ModuleLifecycleContextImpl() {
+    public ModuleLifecycleContextImpl() {
         components = new LinkedHashMap<String, ObservedManager>();
     }
 

@@ -33,26 +33,28 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.easymock.classextension.EasyMock.*;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
-
-import java.io.IOException;
+import org.easymock.EasyMock;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import org.easymock.EasyMock;
+import static org.easymock.classextension.EasyMock.*;
 
 
 /**
@@ -77,7 +79,7 @@ public class FilterTest extends MgnlTestCase {
 
         initMockConfigRepository(conf);
 
-        MgnlMainFilter mf = initMainFilter();
+        MgnlMainFilter mf = initMainFilter(MockUtil.getSystemMockContext(false));
         CompositeFilter rootFilter = (CompositeFilter)  mf.getRootFilter();
 
         assertEquals("val1", ((TestFilter)rootFilter.getFilters()[0]).getProp1());
@@ -87,10 +89,16 @@ public class FilterTest extends MgnlTestCase {
         assertEquals("second", rootFilter.getFilters()[1].getName());
     }
 
-    protected MgnlMainFilter initMainFilter() throws ServletException {
+    protected MgnlMainFilter initMainFilter(final SystemContext sysCtx) throws ServletException {
         MgnlMainFilter mf = new MgnlMainFilter(){
-            protected boolean isSystemUIMode() {
-                return false;
+            @Override
+            protected FilterManager getInitializer(ServletContext servletContext) {
+                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, sysCtx) {
+                    @Override
+                    protected boolean isSystemUIMode() {
+                        return false;
+                    }
+                };
             }
         };
         mf.init(createMock(FilterConfig.class));
@@ -107,7 +115,7 @@ public class FilterTest extends MgnlTestCase {
         initMockConfigRepository(conf);
 
 
-        MgnlMainFilter mf = initMainFilter();
+        MgnlMainFilter mf = initMainFilter(MockUtil.getSystemMockContext(false));
 
         CompositeFilter rootFilter = (CompositeFilter) mf.getRootFilter();
         FilterDecorator fd = (FilterDecorator) rootFilter.getFilters()[0];
@@ -137,7 +145,7 @@ public class FilterTest extends MgnlTestCase {
 
         initMockConfigRepository(conf);
 
-        MgnlMainFilter mf = initMainFilter();
+        MgnlMainFilter mf = initMainFilter(MockUtil.getSystemMockContext(false));
 
         HttpServletRequest request = createMock(HttpServletRequest.class);
         // log statement

@@ -33,7 +33,13 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import junit.framework.TestCase;
+
+import java.io.InputStream;
 
 /**
  *
@@ -41,6 +47,22 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class ContentRepositoryTest extends TestCase {
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        ComponentsTestUtil.clear();
+        final InputStream in = this.getClass().getResourceAsStream("/test-magnolia.properties");
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties(in));
+    }
+
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        // TODO - this does nothing anymore since getProperties recreates the props instance - SystemProperty.getProperties().clear();
+        SystemProperty.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testUnknownRepositoryShouldYieldMeaningfulExceptionMessage() {
         try {
             ContentRepository.getRepository("dummy");

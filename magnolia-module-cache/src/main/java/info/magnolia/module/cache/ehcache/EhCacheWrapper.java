@@ -49,18 +49,20 @@ import net.sf.ehcache.constructs.blocking.LockTimeoutException;
  * @version $Revision: $ ($Author: $)
  */
 public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache {
-
     private static final Logger log = LoggerFactory.getLogger(EhCacheWrapper.class);
-    private final BlockingCache ehcache;
-    private String name;
 
-    public EhCacheWrapper(BlockingCache ehcache, String name) {
+    private final BlockingCache ehcache;
+    private final CacheMonitor cacheMonitor;
+    private final String name;
+
+    public EhCacheWrapper(BlockingCache ehcache, CacheMonitor cacheMonitor, String name) {
         this.ehcache = ehcache;
+        this.cacheMonitor = cacheMonitor;
         this.name = name;
     }
 
-    public EhCacheWrapper(Ehcache ehcache, String name) {
-        this(castToBlockingCacheOrThrowException(ehcache), name);
+    public EhCacheWrapper(Ehcache ehcache, CacheMonitor cacheMonitor, String name) {
+        this(castToBlockingCacheOrThrowException(ehcache), cacheMonitor, name);
     }
 
     private static BlockingCache castToBlockingCacheOrThrowException(Ehcache ehcache) {
@@ -108,7 +110,7 @@ public class EhCacheWrapper implements info.magnolia.module.cache.BlockingCache 
     }
 
     public void clear() {
-        CacheMonitor.getInstance().countFlush(this.name);
+        cacheMonitor.countFlush(this.name);
         ehcache.removeAll();
     }
 

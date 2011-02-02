@@ -36,7 +36,6 @@ package info.magnolia.context;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Security;
-import info.magnolia.objectfactory.Components;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -58,7 +57,8 @@ import java.util.Stack;
  * @author Sameer Charles
  * @version $Id$
  */
-public class WebContextImpl extends UserContextImpl implements WebContext {
+public abstract class WebContextImpl extends UserContextImpl implements WebContext {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebContextImpl.class);
 
     private static final long serialVersionUID = 222L;
 
@@ -83,6 +83,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * Use init to initialize the object.
      */
     public WebContextImpl() {
+        log.debug("new WebContextImpl() {}", this);
     }
 
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
@@ -97,10 +98,15 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     public AggregationState getAggregationState() {
         if (aggregationState == null) {
-            aggregationState = Components.getComponentProvider().newInstance(AggregationState.class);
+            aggregationState = newAggregationState();
         }
         return aggregationState;
     }
+
+    /**
+     * @see info.magnolia.context.WebContextFactoryImpl#newAggregationState()
+     */
+    protected abstract AggregationState newAggregationState();
 
     /**
      * This will only reset the original URI/URL by calling {@link AggregationState#resetURIs()}.

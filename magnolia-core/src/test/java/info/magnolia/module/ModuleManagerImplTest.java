@@ -63,9 +63,12 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleManagerImplTest extends TestCase {
+    private ModuleRegistry moduleRegistry;
+
     protected void setUp() throws Exception {
         super.setUp();
-        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        moduleRegistry = new ModuleRegistryImpl();
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         ComponentsTestUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
 
         // shunt log4j
@@ -134,7 +137,7 @@ public class ModuleManagerImplTest extends TestCase {
         replay(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
 
         final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(mod, fromVersion, Arrays.asList(d1, d2));
-        new ModuleManagerImpl().installOrUpdateModule(moduleAndDeltas, ctx);
+        new ModuleManagerImpl(null,null,null,null).installOrUpdateModule(moduleAndDeltas, ctx);
 
         verify(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
     }
@@ -230,7 +233,7 @@ public class ModuleManagerImplTest extends TestCase {
 
     public void testPerformCantBeCalledTwiceByDifferentThreads() throws Exception {
         final ModuleDefinitionReader modDefReader = createStrictMock(ModuleDefinitionReader.class);
-        final InstallContextImpl ctx = new InstallContextImpl();
+        final InstallContextImpl ctx = new InstallContextImpl(moduleRegistry);
         final ModuleVersionHandler mvh1 = createStrictMock(ModuleVersionHandler.class);
         final ModuleVersionHandler mvh2 = createStrictMock(ModuleVersionHandler.class);
         final Task t1 = new AbstractTask("sleep", "sleeeeep") {

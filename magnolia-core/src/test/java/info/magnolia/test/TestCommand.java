@@ -33,16 +33,18 @@
  */
 package info.magnolia.test;
 
-import java.util.List;
-
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
+import org.junit.Ignore;
+
+import java.util.List;
 
 /**
  * Test command with List type property.
  * @author had
  * @version $Id:$
  */
+@Ignore
 public class TestCommand extends MgnlCommand {
 
     private List versionMap;

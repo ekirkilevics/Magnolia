@@ -35,11 +35,12 @@ package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.content2bean.Bean2ContentProcessor;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
+import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
@@ -56,19 +57,18 @@ public class ObservedComponentFactoryTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // default impl's for content2bean TODO - refactor PropertiesInitializer
-        ComponentsTestUtil.setImplementation(Content2BeanProcessor.class, "info.magnolia.content2bean.impl.Content2BeanProcessorImpl");
+        final TypeMappingImpl typeMapping = new TypeMappingImpl();
+        ComponentsTestUtil.setInstance(TypeMapping.class, typeMapping);
+        ComponentsTestUtil.setInstance(Content2BeanProcessor.class, new Content2BeanProcessorImpl(typeMapping));
         ComponentsTestUtil.setImplementation(Content2BeanTransformer.class, "info.magnolia.content2bean.impl.Content2BeanTransformerImpl");
-        ComponentsTestUtil.setImplementation(Bean2ContentProcessor.class, "info.magnolia.content2bean.Bean2ContentProcessorImpl");
         ComponentsTestUtil.setImplementation(TransformationState.class, "info.magnolia.content2bean.impl.TransformationStateImpl");
-        ComponentsTestUtil.setImplementation(TypeMapping.class, "info.magnolia.content2bean.impl.PropertiesBasedTypeMapping");
-
     }
 
     @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 

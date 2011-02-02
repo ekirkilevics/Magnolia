@@ -181,6 +181,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         String action = request.getHeader(BaseSyndicatorImpl.ACTION);
         log.debug("action: " + action);
         String authorization = getUser(request);
+        // TODO : this variable is used in log messages to identify the instance - but its content is really the folder name into which Magnolia was deployed, which is irrelevant.
         String webapp = getWebappName();
 
         if (action.equalsIgnoreCase(BaseSyndicatorImpl.ACTIVATE)) {

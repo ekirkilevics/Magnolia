@@ -35,6 +35,7 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.gui.controlx.RenderKitFactory;
 import info.magnolia.cms.gui.dialog.ControlsManager;
+import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.admininterface.config.SecurityConfiguration;
@@ -49,6 +50,9 @@ public class AdminInterfaceModule implements ModuleLifecycle {
 
     private SecurityConfiguration securityConfiguration;
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     private static AdminInterfaceModule instance;
 
     public AdminInterfaceModule() {
@@ -76,7 +80,11 @@ public class AdminInterfaceModule implements ModuleLifecycle {
         this.securityConfiguration = securityConfiguration;
     }
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     public static AdminInterfaceModule getInstance() {
+        DeprecationUtil.isDeprecated("Use IoC!");
         return instance;
     }
 

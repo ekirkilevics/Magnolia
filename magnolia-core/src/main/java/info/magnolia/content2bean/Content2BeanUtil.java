@@ -43,6 +43,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.objectfactory.Components;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -61,39 +62,53 @@ public class Content2BeanUtil {
 
     /**
      * Transforms all nodes to a map.
+     * @deprecated since 5.0 - use {@link ToMapTransformer}.
      */
-    public static final Content2BeanTransformerImpl TO_MAP_TRANSFORMER = new Content2BeanTransformerImpl() {
-
-        public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
-            return TypeMapping.MAP_TYPE;
-        }
-    };
+    public static final Content2BeanTransformerImpl TO_MAP_TRANSFORMER = new ToMapTransformer();
 
     /**
      * Provide a default class.
      */
     public static final class DefaultClassTransformer extends Content2BeanTransformerImpl {
 
-        private TypeDescriptor defaultType;
-
+//        private TypeDescriptor defaultType;
+        private final Class defaultClass;
         public DefaultClassTransformer(Class defaultClass) {
-            this.defaultType = getTypeMapping().getTypeDescriptor(defaultClass);
+            // TODO - can't do this anymore since typeMapping is @Inject or passed, i.e not here yet.
+            // this.defaultType = getTypeMapping().getTypeDescriptor(defaultClass);
+            this.defaultClass = defaultClass;
         }
 
-        protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
-            return resolvedType==null? defaultType : resolvedType;
+        protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
+            // return resolvedType==null? defaultType : resolvedType;
+            return resolvedType==null? typeMapping.getTypeDescriptor(defaultClass) : resolvedType;
+        }
+    }
+
+    /**
+     * A {@link Content2BeanTransformer} transforming all nodes to Maps.
+     */
+    public static class ToMapTransformer extends Content2BeanTransformerImpl {
+        public ToMapTransformer() {
+        }
+
+        @Override
+        public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state) throws ClassNotFoundException {
+            return TypeMapping.MAP_TYPE;
         }
     }
 
     /**
      * Get the current processor.
+     * @deprecated since 5.0, use IoC. - TODO only used locally
      */
     public static Content2BeanProcessor getContent2BeanProcessor() {
-        return Content2BeanProcessor.Factory.getProcessor();
+        return Components.getSingleton(Content2BeanProcessor.class);
     }
 
     /**
      * Get the current processor.
+     * @deprecated since 5.0 - unused, Bean2Content is not implemented yet.
      */
     public static Bean2ContentProcessor getBean2ContentProcessor() {
         return Bean2ContentProcessor.Factory.getProcessor();
@@ -101,21 +116,24 @@ public class Content2BeanUtil {
 
     /**
      * Get the current mapping.
+     * @deprecated since 5.0, use IoC.
      */
     public static TypeMapping getTypeMapping() {
-        return TypeMapping.Factory.getDefaultMapping();
+        return Components.getSingleton(TypeMapping.class);
     }
 
     /**
      * Get the current transformer.
+     * @deprecated since 5.0, use IoC.
      */
     public static Content2BeanTransformer getContent2BeanTransformer() {
-        return Content2BeanTransformer.Factory.getDefaultTransformer();
+        return Components.getSingleton(Content2BeanTransformer.class);
     }
 
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - only used in tests - use {@link Content2Bean}
      */
     public static Object toBean(Content node) throws Content2BeanException {
         return toBean(node, false);
@@ -123,13 +141,15 @@ public class Content2BeanUtil {
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - only used in tests - use {@link Content2Bean}
      */
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException {
-        return toBean(node, false, new DefaultClassTransformer(defaultClass));
+        return toBean(node, false, new DefaultClassTransformer( defaultClass));
     }
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - TODO used in FilterManagerImpl, ParagraphManager and TemplateManager - use {@link Content2Bean}
      */
     public static Object toBean(Content node, boolean recursive, final Class defaultClass) throws Content2BeanException {
         return toBean(node, recursive, new DefaultClassTransformer(defaultClass));
@@ -137,6 +157,7 @@ public class Content2BeanUtil {
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0- only used in DelegateVoter - use {@link Content2Bean}
      */
     public static Object toBean(Content node, boolean recursive) throws Content2BeanException {
         return toBean(node, recursive, getContent2BeanTransformer());
@@ -144,6 +165,8 @@ public class Content2BeanUtil {
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 use {@link Content2Bean}
+     * TODO -- this method has a bunch of usage points
      */
     public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
         return getContent2BeanProcessor().toBean(node, recursive, transformer);
@@ -152,6 +175,7 @@ public class Content2BeanUtil {
     /**
      * Transforms the nodes data into a map containing the names and values.
      * @return a flat map
+     * @deprecated since 5.0 - not used - use {@link Content2Bean}
      */
     public static Map toMap(Content node) throws Content2BeanException {
         return toMap(node, false);
@@ -161,25 +185,31 @@ public class Content2BeanUtil {
     /**
      * Transforms the nodes data into a map containing the names and values. In case recursive is true the sub-nodes are
      * transformed to beans using the transformer. To avoid that use toMaps() instead
+     * @deprecated since 5.0 - only used in info.magnolia.setup.for3_5.UpdateI18nConfiguration - use {@link Content2Bean}
      */
     public static Map toMap(Content node, boolean recursive) throws Content2BeanException {
         return (Map) setProperties(new LinkedHashMap(), node, recursive);
     }
 
-    public static Map toMap(Content node, boolean recursive, Class defaultClass) throws Content2BeanException {
-        return (Map) setProperties(new LinkedHashMap(), node, recursive, defaultClass);
+    /**
+     * @deprecated since 5.0 - TODO only used in DefaultMessagesManager - use {@link Content2Bean}
+     */
+    public static <K, V> Map<K, V> toMap(Content node, boolean recursive, Class defaultClass) throws Content2BeanException {
+        return (Map<K, V>) setProperties(new LinkedHashMap(), node, recursive, defaultClass);
     }
 
     /**
      * Transforms the nodes data into a map containing the names and values. In case recursive is true the sub-nodes are
      * transformed to maps as well
+     * @deprecated since 5.0 - TODO only used in info.magnolia.setup.for3_5.CheckAndUpdateExistingFilters - use {@link Content2Bean}
      */
     public static Map toPureMaps(Content node, boolean recursive) throws Content2BeanException {
-        return (Map) toBean(node, recursive, TO_MAP_TRANSFORMER);
+        return (Map) toBean(node, recursive, new ToMapTransformer());
     }
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - unused - use {@link Content2Bean}
      */
     public static Object setProperties(Object bean, Content node) throws Content2BeanException {
         return setProperties(bean, node, false);
@@ -187,16 +217,22 @@ public class Content2BeanUtil {
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - TODO - only used locally and by ModuleManagerImpl and TreeHandlerManager
      */
     public static Object setProperties(Object bean, Content node, boolean recursive) throws Content2BeanException {
         return setProperties(bean, node, recursive, getContent2BeanTransformer());
     }
 
+    /**
+     * @deprecated since 5.0 - TODO - only used locally - use {@link Content2Bean}
+     */
     public static Object setProperties(Object bean, Content node, boolean recursive, Class defaultClass) throws Content2BeanException {
-        return setProperties(bean, node, recursive, new DefaultClassTransformer(defaultClass));
+        return setProperties(bean, node, recursive, new DefaultClassTransformer( defaultClass));
     }
+
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - use {@link Content2Bean}
      */
     public static Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
         return getContent2BeanProcessor().setProperties(bean, node, recursive, transformer);
@@ -204,6 +240,7 @@ public class Content2BeanUtil {
 
     /**
      * @see Content2BeanProcessor
+     * @deprecated since 5.0 - only used in tests
      */
     public static void addCollectionPropertyMapping(Class type, String name, Class mappedType) {
         TypeMapping mapping = getTypeMapping();
@@ -212,6 +249,7 @@ public class Content2BeanUtil {
 
     /**
      * TODO use the <code>Bean2ContentProcessor</code>.
+     * @deprecated since 5.0 - unused - use {@link Content2Bean}
      */
     public static void setNodeDatas(Content node, Object bean, String[] excludes) throws Content2BeanException {
         Map properties = toMap(bean);
@@ -226,6 +264,7 @@ public class Content2BeanUtil {
 
     /**
      * TODO use the <code>Bean2ContentProcessor</code>.
+     * @deprecated since 5.0 - unused - use {@link Content2Bean}
      */
     public static void setNodeDatas(Content node, Object obj) throws Content2BeanException {
         setNodeDatas(node, toMap(obj));
@@ -233,6 +272,7 @@ public class Content2BeanUtil {
 
     /**
      * TODO use the <code>Bean2ContentProcessor</code>.
+     * @deprecated since 5.0 - TODO - only used locally - use {@link Content2Bean}
      */
     public static void setNodeDatas(Content node, Map map) throws Content2BeanException {
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
@@ -248,6 +288,7 @@ public class Content2BeanUtil {
 
     /**
      * Used to fake the <code>setNodeDatas()</code> methods.
+     * @deprecated since 5.0 - TODO - only used locally - use {@link Content2Bean}
      */
     static private Map toMap(Object bean) throws Content2BeanException {
         try {

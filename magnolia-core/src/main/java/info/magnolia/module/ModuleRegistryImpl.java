@@ -35,8 +35,10 @@ package info.magnolia.module;
 
 import info.magnolia.module.model.ModuleDefinition;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +53,8 @@ public class ModuleRegistryImpl implements ModuleRegistry {
     private final Map<String, ModuleEntry> entries;
 
     public ModuleRegistryImpl() {
-        entries = new HashMap<String, ModuleEntry>();
+        // using a LinkedHashMap : module definitions are registered in dependency-order, and we need to keep that order.
+        entries = new LinkedHashMap<String, ModuleEntry>();
     }
 
     public void registerModuleDefinition(String name, ModuleDefinition moduleDefinition) {
@@ -100,6 +103,15 @@ public class ModuleRegistryImpl implements ModuleRegistry {
 
     public Set<String> getModuleNames() {
         return Collections.unmodifiableSet(entries.keySet());
+    }
+
+    public List<ModuleDefinition> getModuleDefinitions() {
+        // TODO - use something like a Transformer from commons-collections ?
+        final List<ModuleDefinition> defs = new ArrayList<ModuleDefinition>();
+        for (ModuleEntry mod : entries.values()) {
+            defs.add(mod.moduleDefinition);
+        }
+        return Collections.unmodifiableList(defs);
     }
 
     private ModuleEntry getOrCreateModuleEntry(String name) {

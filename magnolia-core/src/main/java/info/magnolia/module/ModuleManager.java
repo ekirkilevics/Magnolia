@@ -58,6 +58,8 @@ public interface ModuleManager {
     /**
      * Loads modules definitions, validates dependencies and sorts modules
      * by dependencies.
+     *
+     * TODO - this should not be done by ModuleManager
      */
     List<ModuleDefinition> loadDefinitions() throws ModuleManagementException;
 
@@ -84,8 +86,12 @@ public interface ModuleManager {
 
     /**
      * Use this to retrieve the configured singleton impl of ModuleManager.
+     * @deprecated since 5.0, use IoC.
      */
     public class Factory {
+        /**
+         * @deprecated since 5.0, use IoC.
+         */
         public static ModuleManager getInstance() {
             return Components.getSingleton(ModuleManager.class);
         }

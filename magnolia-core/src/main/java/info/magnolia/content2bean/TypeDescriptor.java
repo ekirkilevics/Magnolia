@@ -114,6 +114,7 @@ public class TypeDescriptor {
      * This method is not synchronized to avoid thread blocking, but the method guarantees that the returned map is not mutated afterward.
      */
     public Map<String, PropertyTypeDescriptor> getPropertyDescriptors() {
+         //TODO ---- moved this out to TypeDescriptorFactory or something ?
         if(this.descriptors == null){
             // TODO this breaks the usage of a custom mapping
             TypeMapping mapping = TypeMapping.Factory.getDefaultMapping();

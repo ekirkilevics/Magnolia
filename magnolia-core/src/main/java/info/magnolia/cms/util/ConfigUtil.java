@@ -178,6 +178,7 @@ public class ConfigUtil {
      * @throws IOException
      */
     public static String replaceTokens(String config) throws IOException {
+        // TODO i suspect this doesn't work (jcr not loaded)
         for (Iterator iter = SystemProperty.getProperties().keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             config = StringUtils.replace(config, "${" + key + "}", SystemProperty.getProperty(key, ""));

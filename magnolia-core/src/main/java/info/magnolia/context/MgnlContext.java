@@ -292,7 +292,7 @@ public class MgnlContext {
         Context context = localContext.get();
         // It should never fall back, We need to fix all false callers instead
         if (context == null) {
-            IllegalStateException ise = new IllegalStateException("MgnlContext is not set for this thread");
+            final IllegalStateException ise = new IllegalStateException("MgnlContext is not set for this thread");
             log.error("MgnlContext is not initialized. This could happen if the request does not go through the Magnolia default filters.", ise);
             throw ise;
         }
@@ -350,6 +350,7 @@ public class MgnlContext {
 
     /**
      * Get Magnolia system context. This context has full permissions over all repositories/ workspaces.
+     * @deprecated since 5.0, use IoC, i.e., declare a dependency on SystemContext in your component.
      */
     public static SystemContext getSystemContext() {
         return ContextFactory.getInstance().getSystemContext();
@@ -443,6 +444,7 @@ public class MgnlContext {
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @param servletContext ServletContext instance
+     * @deprecated since 5.0, use WebContextFactory.
      */
     public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         WebContext ctx = ContextFactory.getInstance().createWebContext(request, response, servletContext);

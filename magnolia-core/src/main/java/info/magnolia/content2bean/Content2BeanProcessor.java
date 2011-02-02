@@ -39,6 +39,9 @@ import info.magnolia.objectfactory.Components;
 
 /**
  * Transforms nodes to beans or maps. The transformer is use to resolve classes or to instantiate beans.
+ *
+ * @deprecated since 5.0, use {@link Content2Bean}.
+ *
  * @author philipp
  * @version $Id$
  */
@@ -57,6 +60,7 @@ public interface Content2BeanProcessor {
 
     /**
      * Creates a singleton instance of the content2bean processor.
+     * @deprecated since 5.0, we should use IoC. However, we'll leave the processor as is for now.
      */
     class Factory {
         public static Content2BeanProcessor getProcessor() {

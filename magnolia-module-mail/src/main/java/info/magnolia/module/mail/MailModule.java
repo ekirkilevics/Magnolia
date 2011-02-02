@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.mail.handlers.MgnlMailHandler;
@@ -54,6 +55,9 @@ import org.slf4j.LoggerFactory;
 public class MailModule implements ModuleLifecycle {
     private static final Logger log = LoggerFactory.getLogger(MailModule.class);
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     private static MailModule instance;
 
     private MgnlMailHandler handler;
@@ -69,7 +73,11 @@ public class MailModule implements ModuleLifecycle {
         instance = this;
     }
 
+    /**
+     * @deprecated since 5.0, use IoC !
+     */
     public static MailModule getInstance() {
+        DeprecationUtil.isDeprecated("Use IoC!");
         return instance;
     }
 

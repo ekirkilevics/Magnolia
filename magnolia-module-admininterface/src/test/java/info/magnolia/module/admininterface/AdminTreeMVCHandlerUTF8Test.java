@@ -41,6 +41,7 @@ import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -52,7 +53,6 @@ import info.magnolia.test.mock.MockMetaData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.jcr.Session;
 import javax.jcr.Workspace;
@@ -68,7 +68,7 @@ import org.apache.commons.collections.ListUtils;
  * @author had
  * @version $Id:$
  */
-public class AdminTreeMVCHandlerTestUtf8 extends TestCase
+public class AdminTreeMVCHandlerUTF8Test extends TestCase
 {
 
     private HttpServletRequest req;
@@ -98,7 +98,7 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
     public static final String TEXT_RUSSIAN_VALIDATED = "\u041D\u0430-\u0431\u0435\u0440\u0435\u0433\u0443-\u043F\u0443\u0441\u0442\u044B\u043D\u043D\u044B\u0445-\u0432\u043E\u043B\u043D";
 
     public static final String TEXT_SPECIAL = "utf8!?#{}$!\u00A3%()=@";
-    
+
     public static final String TEXT_SPECIAL_VALIDATED = "utf8---{}$-\u00A3-()=@";
 
     public static final String TEXT_ACCENTED = "citt\u00E0\u00E8\u00EC\u00F2\u00F9";
@@ -124,6 +124,13 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
         ComponentsTestUtil.setInstance(SystemContext.class, sysctx);
     }
 
+    public void tearDown()
+    {
+        MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
+        SystemProperty.getProperties().clear();
+    }
+    
     public void testMove() throws Exception
     {
         expect(ctx.getHierarchyManager("repo-name")).andReturn(hm);
@@ -201,7 +208,7 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
 
         objs = new Object[]{req, res, ctx, hm, cnt, workspace, session };
         replay(objs);
-        String view = handler.execute("saveValue");
+        String view = handler.saveValue();
         verify(objs);
 
         assertEquals("value", view);
@@ -210,7 +217,6 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
     /**
      * test on save value
      * @throws Exception
-     */
     public void testSaveUTF8ValueCommandContext() throws Exception
     {
         String parentHandle = "/foo";
@@ -249,10 +255,11 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
 
         objs = new Object[]{req, res, ctx, hm, cnt, workspace, session };
         replay(objs);
-        String view = handler.execute("saveValue");
+        String view = handler.saveValue();
         verify(objs);
         assertEquals("value", view);
     }
+    */
 
     /**
      * Make sure path is set for <b>every</b> command.
@@ -344,8 +351,4 @@ public class AdminTreeMVCHandlerTestUtf8 extends TestCase
         assertTrue(unactivated[0]);
     }
 
-    public void tearDown()
-    {
-        MgnlContext.setInstance(null);
-    }
 }

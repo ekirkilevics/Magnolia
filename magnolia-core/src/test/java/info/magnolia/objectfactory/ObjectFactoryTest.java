@@ -43,7 +43,7 @@ import junit.framework.TestCase;
 public class ObjectFactoryTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
     }
 
     public void testInjectingSystemPropertyIntoDefaultComponentStillAllowsToSwapImplementationsLater() {

@@ -50,6 +50,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.content2bean.TypeMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,13 @@ import org.slf4j.LoggerFactory;
 public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     private static final Logger log = LoggerFactory.getLogger(Content2BeanProcessorImpl.class);
 
+    private final TypeMapping typeMapping;
+
     private boolean forceCreation = true;
+
+    public Content2BeanProcessorImpl(TypeMapping typeMapping) {
+        this.typeMapping = typeMapping;
+    }
 
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
         return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState());
@@ -74,7 +81,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
         TypeDescriptor type = null;
         try {
-            type = transformer.resolveType(state);
+            type = transformer.resolveType(typeMapping, state);
         }
         catch (Throwable e) {
             if(isForceCreation()){
@@ -138,7 +145,8 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         state.pushBean(bean);
         state.pushContent(node);
 
-        TypeDescriptor type = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
+        // TODO -  MAGNOLIA-3525 TypeDescriptor type = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
+        TypeDescriptor type = typeMapping.getTypeDescriptor(bean.getClass());
 
         state.pushType(type);
 
@@ -213,11 +221,12 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         }
 
         else{
-            TypeDescriptor beanTypeDescriptor = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
+            // TypeDescriptor beanTypeDescriptor = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
+            TypeDescriptor beanTypeDescriptor = typeMapping.getTypeDescriptor(bean.getClass());
             final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors().values();
 
             for (PropertyTypeDescriptor descriptor : dscrs) {
-                transformer.setProperty(state, descriptor, values);
+                transformer.setProperty(typeMapping, state, descriptor, values);
             }
         }
     }
@@ -235,7 +244,9 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         return this.forceCreation;
     }
 
-
+    /**
+     * @deprecated only used in tests
+     */
     public void setForceCreation(boolean handleExceptions) {
         this.forceCreation = handleExceptions;
     }

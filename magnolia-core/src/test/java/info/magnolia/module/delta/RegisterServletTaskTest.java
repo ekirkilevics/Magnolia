@@ -56,10 +56,13 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class RegisterServletTaskTest extends RepositoryTestCase {
+    private InstallContextImpl installContext;
 
     protected void setUp() throws Exception {
-        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
-        ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl());
+        final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
+        ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl(null, null, null, null));
+        installContext = new InstallContextImpl(moduleRegistry);
         super.setUp();
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager("config");
         ContentUtil.createPath(hm, "/server/filters/servlets", ItemType.CONTENT);
@@ -71,13 +74,12 @@ public class RegisterServletTaskTest extends RepositoryTestCase {
         sd.setName("dummy");
 
         RegisterServletTask task = new RegisterServletTask(sd);
-        InstallContextImpl ctx = new InstallContextImpl();
         ModuleDefinition module = new ModuleDefinition();
         module.setName("test");
-        ctx.setCurrentModule(module);
-        task.execute(ctx);
-        assertEquals(1, ctx.getMessages().size());
-        final List<InstallContext.Message> messageForTestModule = ctx.getMessages().get(module.toString());
+        installContext.setCurrentModule(module);
+        task.execute(installContext);
+        assertEquals(1, installContext.getMessages().size());
+        final List<InstallContext.Message> messageForTestModule = installContext.getMessages().get(module.toString());
         assertEquals(1, messageForTestModule.size());
         assertEquals("Empty mappings configuration is not supported and servlet was not installed.", messageForTestModule.get(0).getMessage());
     }
@@ -88,13 +90,12 @@ public class RegisterServletTaskTest extends RepositoryTestCase {
         sd.setName("dummy");
 
         RegisterServletTask task = new RegisterServletTask(sd);
-        InstallContextImpl ctx = new InstallContextImpl();
         ModuleDefinition module = new ModuleDefinition();
         module.setName("test");
-        ctx.setCurrentModule(module);
-        task.execute(ctx);
-        assertEquals(1, ctx.getMessages().size());
-        final List<InstallContext.Message> messageForTestModule = ctx.getMessages().get(module.toString());
+        installContext.setCurrentModule(module);
+        task.execute(installContext);
+        assertEquals(1, installContext.getMessages().size());
+        final List<InstallContext.Message> messageForTestModule = installContext.getMessages().get(module.toString());
         assertEquals(1, messageForTestModule.size());
         assertEquals("Empty mappings configuration is not supported and servlet was not installed.", messageForTestModule.get(0).getMessage());
     }

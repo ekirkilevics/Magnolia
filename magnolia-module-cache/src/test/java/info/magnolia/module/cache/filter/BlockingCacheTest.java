@@ -33,17 +33,14 @@
  */
 package info.magnolia.module.cache.filter;
 
-import static org.easymock.EasyMock.anyLong;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.WebContainerResources;
 import info.magnolia.cms.filters.WebContainerResourcesImpl;
+import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.ModuleRegistryImpl;
+import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.ContentCompression;
@@ -52,6 +49,7 @@ import info.magnolia.module.cache.ehcache.EhCacheFactory;
 import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
+import info.magnolia.module.cache.mbean.CacheMonitor;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
@@ -62,6 +60,8 @@ import info.magnolia.voting.voters.VoterSet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,12 +76,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
-import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.easymock.classextension.EasyMock.*;
 
 public class BlockingCacheTest extends TestCase {
 
@@ -170,7 +171,8 @@ public class BlockingCacheTest extends TestCase {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR, "target/cacheTest");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
-        factory  = new EhCacheFactory();
+        final CacheMonitor cacheMonitor = new CacheMonitor(createStrictMock(CommandsManager.class));
+        factory  = new EhCacheFactory(cacheMonitor);
 
         MockUtil.initMockContext();
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
@@ -181,11 +183,11 @@ public class BlockingCacheTest extends TestCase {
         voters.addVoter(tVoter);
         cachePolicy.setVoters(voters);
 
-        final CacheModule cacheModule = new CacheModule();
+        final CacheModule cacheModule = new CacheModule(null, cacheMonitor);
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
         moduleRegistry.registerModuleInstance("cache", cacheModule);
-        final info.magnolia.module.cache.CacheConfiguration cfg = new info.magnolia.module.cache.CacheConfiguration();
+        final CacheConfiguration cfg = new CacheConfiguration();
         cfg.setName("my-config");
         cfg.setCachePolicy(cachePolicy);
         // add the default executors
@@ -196,7 +198,7 @@ public class BlockingCacheTest extends TestCase {
 
         cfg.addExecutor(CachePolicyResult.store.getName(), store);
 
-        final java.util.Map compressibleTypes = new java.util.HashMap();
+        final Map<String, String> compressibleTypes = new HashMap<String, String>();
         compressibleTypes.put("1", "text/html");
         cacheModule.addConfiguration("my-config", cfg);
 
@@ -204,19 +206,19 @@ public class BlockingCacheTest extends TestCase {
         compression.setVoters(new VoterSet());
         cacheModule.setCompression(compression);
 
-        CacheConfiguration config = new CacheConfiguration();
-        config.setName("my-config");
-        config.setMaxElementsInMemory(1000);
-        config.setEternal(true);
-        config.setDiskPersistent(false);
-        config.setOverflowToDisk(false);
+        net.sf.ehcache.config.CacheConfiguration ehConfig = new net.sf.ehcache.config.CacheConfiguration();
+        ehConfig.setName("my-config");
+        ehConfig.setMaxElementsInMemory(1000);
+        ehConfig.setEternal(true);
+        ehConfig.setDiskPersistent(false);
+        ehConfig.setOverflowToDisk(false);
 
-        factory.setDefaultCacheConfiguration(config);
+        factory.setDefaultCacheConfiguration(ehConfig);
         factory.setBlockingTimeout(1000);
         factory.start();
         cacheModule.setCacheFactory(factory);
 
-        filter = new CacheFilter();
+        filter = new CacheFilter(cacheModule, cacheMonitor);
         filter.setName("cache-filter");
         filter.setCacheConfigurationName("my-config");
         filter.init(null);

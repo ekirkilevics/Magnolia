@@ -35,7 +35,6 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.cms.util.ServletUtils;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
@@ -53,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.picocontainer.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractMgnlFilter implements MgnlFilter {
 
-    private static Logger log =  LoggerFactory.getLogger(AbstractMgnlFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractMgnlFilter.class);
 
     private String name;
 
@@ -76,7 +76,8 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     private Mapping mapping = new Mapping();
 
-    private WebContainerResources webContainerResources = Components.getSingleton(WebContainerResources.class);
+    @Inject
+    private WebContainerResources webContainerResources;
 
     protected AbstractMgnlFilter() {
     }
@@ -143,7 +144,6 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public boolean isEnabled() {
         return this.enabled;

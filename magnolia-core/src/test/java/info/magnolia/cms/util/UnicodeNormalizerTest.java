@@ -65,14 +65,14 @@ public class UnicodeNormalizerTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         ComponentsTestUtil.clear();
         SystemProperty.setProperty("info.magnolia.cms.util.UnicodeNormalizer$Normalizer", "info.magnolia.cms.util.UnicodeNormalizer$AutoDetectNormalizer");
         SystemProperty.setProperty("magnolia.utf8.enabled", "true");
     }
 
     protected void tearDown() throws Exception {
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         ComponentsTestUtil.clear();
         super.tearDown();
     }

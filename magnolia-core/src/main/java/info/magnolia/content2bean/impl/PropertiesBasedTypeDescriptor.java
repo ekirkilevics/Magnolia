@@ -45,6 +45,8 @@ import java.util.Properties;
  * Property file based type descriptor. Descriptor resolves the transformer class name from the property named "transformer".
  * @author pbracher
  * @version $Id$
+ *
+ * @deprecated since 5.0, unused. Custom Transformer should be enough.
  */
 public class PropertiesBasedTypeDescriptor extends TypeDescriptor {
 

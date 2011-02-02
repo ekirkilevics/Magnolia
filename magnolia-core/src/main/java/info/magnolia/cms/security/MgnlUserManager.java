@@ -116,7 +116,7 @@ public class MgnlUserManager implements UserManager {
         // this could be the case if no one is logged in yet
         if (subject == null) {
             log.debug("subject not set.");
-            return new DummyUser();
+            return null;//new DummyUser();
         }
 
         Set<Entity> principalSet = subject.getPrincipals(Entity.class);
@@ -124,7 +124,7 @@ public class MgnlUserManager implements UserManager {
         if (!entityIterator.hasNext()) {
             // happens when JCR authentication module set to optional and user doesn't exist in magnolia
             log.debug("user name not contained in principal set.");
-            return new DummyUser();
+            return null;// new DummyUser();
         }
         Entity userDetails = entityIterator.next();
         String name = (String) userDetails.getProperty(Entity.NAME);
@@ -138,7 +138,7 @@ public class MgnlUserManager implements UserManager {
             log.error("can't get jcr-node of current user", e);
         }
 
-        return new DummyUser();
+        return null;//new DummyUser();
     }
 
     protected User getFromRepository(String name) throws RepositoryException {

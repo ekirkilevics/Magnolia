@@ -55,6 +55,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -114,8 +115,10 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         if (this.isQuiet()) {
             logger.setLevel(Level.WARN);
         }
-        ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
-        ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+
+        // why was this needed ?
+//        ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+//        ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
         extractConfigFile(REPO_CONF_PROPERTY, getRepositoryConfigFileStream(), EXTRACTED_REPO_CONF_FILE);
         extractConfigFile(JACKRABBIT_REPO_CONF_PROPERTY, getJackrabbitRepositoryConfigFileStream(), EXTRACTED_JACKRABBIT_REPO_CONF_FILE);
@@ -138,7 +141,11 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected InputStream getRepositoryConfigFileStream() throws Exception {
         String configFile = getRepositoryConfigFileName();
-        return ClasspathResourcesUtil.getResource(configFile).openStream();
+        final URL resource = ClasspathResourcesUtil.getResource(configFile);
+        if (resource == null) {
+            throw new IllegalStateException("Resource not found: " + configFile);
+        }
+        return resource.openStream();
     }
 
     protected InputStream getJackrabbitRepositoryConfigFileStream() throws Exception {
@@ -164,7 +171,6 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         if (isAutoStart()) {
             shutdownRepository(true);
         }
-        SystemProperty.getProperties().clear();
         super.tearDown();
     }
 

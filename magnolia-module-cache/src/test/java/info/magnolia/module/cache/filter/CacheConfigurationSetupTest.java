@@ -33,10 +33,7 @@
  */
 package info.magnolia.module.cache.filter;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
@@ -45,19 +42,24 @@ import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.cachepolicy.Default;
 import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.CompositeExecutor;
+import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.voting.voters.VoterSet;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,9 +72,14 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
 
     private CacheConfiguration cacheConf;
 
+    protected List<ModuleDefinition> getModuleDefinitionsForTests() throws ModuleManagementException {
+        final ModuleDefinition core = new BetwixtModuleDefinitionReader().readFromResource("/META-INF/magnolia/core.xml");
+        final ModuleDefinition cache = new BetwixtModuleDefinitionReader().readFromResource("/META-INF/magnolia/cache.xml");
+        return Arrays.asList(core, cache);
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
-        ComponentsTestUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
         bootstrapSingleResource("/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml");
         Content content = ContentUtil.getContent("config", "/modules/cache/config/configurations/default");
 
@@ -128,7 +135,9 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
 
     private void setupRequest(String uri, boolean parameters, boolean admin) {
         MockWebContext ctx = ((MockWebContext)MgnlContext.getInstance());
-        ServerConfiguration.getInstance().setAdmin(admin);
+        final ServerConfiguration serverConfiguration = new ServerConfiguration();
+        serverConfiguration.setAdmin(admin);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ctx.setCurrentURI(uri);
         HttpServletRequest request = createNiceMock(HttpServletRequest.class);
         if(!parameters){

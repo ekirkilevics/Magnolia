@@ -77,11 +77,9 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         super.setUp();
 
         tplLoader = new StringTemplateLoader();
-        final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
-        fmTemplateLoader.addTemplateLoader(tplLoader);
-        ComponentsTestUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
-
-        final FreemarkerHelper freemarkerHelper = new FreemarkerHelper();
+        final FreemarkerConfig freemarkerConfig = new FreemarkerConfig();
+        freemarkerConfig.addTemplateLoader(tplLoader);
+        final FreemarkerHelper freemarkerHelper = new FreemarkerHelper(freemarkerConfig);
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
@@ -184,7 +182,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         par.setName("plop");
         par.setTemplatePath("do_not_render_me.ftl");
         par.setModelClass(SkippableTestState.class);
-        final FreemarkerParagraphRenderer renderer = new FreemarkerParagraphRenderer();
+        final FreemarkerParagraphRenderer renderer = new FreemarkerParagraphRenderer(new FreemarkerHelper(new FreemarkerConfig()));
         final StringWriter out = new StringWriter();
         renderer.render(c, par, out);
         assertTrue(out.getBuffer().length() == 0);

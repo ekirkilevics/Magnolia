@@ -129,8 +129,14 @@ Number of occurrences: %o%n
   </appender>
 
   <!-- Magnolia categories -->
+  <category name="org.picocontainer">
+    <priority value="DEBUG"/>
+  </category>
   <category name="info.magnolia">
     <priority value="INFO" />
+  </category>
+  <category name="info.magnolia.objectfactory">
+    <priority value="DEBUG"/>
   </category>
   <category name="info.magnolia.cms.exchange" additivity="false">
     <priority value="INFO" />

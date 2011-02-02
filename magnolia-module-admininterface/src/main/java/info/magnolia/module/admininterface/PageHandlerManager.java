@@ -211,6 +211,7 @@ public class PageHandlerManager extends ObservedManager {
                         throws Content2BeanException {
                         if (state.getLevel() == 1) {
                             try {
+                                // TODO - with ioc and a request-scope container, this can go away \o/
                                 return ConstructorUtils.invokeConstructor(
                                     state.getCurrentType().getType(),
                                     new Object[]{getName(), request, response});

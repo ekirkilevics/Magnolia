@@ -38,6 +38,7 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.objectfactory.Classes;
 import org.apache.commons.chain.Catalog;
@@ -55,14 +56,14 @@ import java.util.Map;
 * @author gjoseph
 * @version $Revision: $ ($Author: $)
 */
-class CommandTransformer extends Content2BeanTransformerImpl {
+public class CommandTransformer extends Content2BeanTransformerImpl {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CommandTransformer.class);
 
     private static final String DEPRECATED_CATALOG_NAME_NODE_DATA = "catalogName";
 
     private static final String DEPRECATED_IMPL_NODE_DATA = "impl";
 
-    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType) {
         if(resolvedType != null){
             return resolvedType;
         }
@@ -104,7 +105,7 @@ class CommandTransformer extends Content2BeanTransformerImpl {
             }
         }
         if(klass != null){
-            return this.getTypeMapping().getTypeDescriptor(klass);
+            return typeMapping.getTypeDescriptor(klass);
         }
         return resolvedType;
     }
@@ -149,7 +150,7 @@ class CommandTransformer extends Content2BeanTransformerImpl {
         super.initBean(state, values);
     }
 
-    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
         Object bean = state.getCurrentBean();
         if(bean instanceof MgnlCatalog){
             MgnlCatalog catalog = (MgnlCatalog) bean;
@@ -168,7 +169,7 @@ class CommandTransformer extends Content2BeanTransformerImpl {
             }
         }
 
-        super.setProperty(state, descriptor, values);
+        super.setProperty(typeMapping, state, descriptor, values);
     }
 
     protected boolean isCommandClass(Class<?> type) {

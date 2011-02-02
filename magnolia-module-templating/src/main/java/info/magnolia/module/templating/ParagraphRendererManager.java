@@ -96,6 +96,7 @@ public class ParagraphRendererManager extends ObservedManager {
             }
 
             try {
+                // TODO use IoC and/or C2B
                 final ParagraphRenderer renderer = Classes.newInstance(clazz);
                 registererParagraphRenderer(name, renderer);
                 log.debug("Registered template render [{}] with name {}.", clazz, name);

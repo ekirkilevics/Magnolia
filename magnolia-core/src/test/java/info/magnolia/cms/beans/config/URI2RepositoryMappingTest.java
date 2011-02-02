@@ -37,7 +37,9 @@ import static org.easymock.EasyMock.*;
 
 import javax.jcr.PropertyType;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import junit.framework.TestCase;
 
 import info.magnolia.cms.core.Content;
@@ -68,6 +70,7 @@ public class URI2RepositoryMappingTest extends TestCase {
         // some tests do not cleanup properly so we need to cleanup here before starting to be sure.
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
     }
 
     public void testGetUri() throws Exception {

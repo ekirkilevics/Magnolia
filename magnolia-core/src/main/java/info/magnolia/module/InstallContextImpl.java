@@ -58,6 +58,7 @@ public class InstallContextImpl implements InstallContext {
 
     private static final String DEFAULT_KEY = "General messages";
 
+    private final ModuleRegistry moduleRegistry;
     private ModuleDefinition currentModule;
     private InstallStatus status;
     private boolean restartNeeded;
@@ -65,6 +66,10 @@ public class InstallContextImpl implements InstallContext {
     private int totalTaskCount;
     // ensure we'll keep messages in the order they were added
     private final Map<String, List<Message>> messages = new LinkedHashMap<String, List<Message>>();
+
+    public InstallContextImpl(ModuleRegistry moduleRegistry) {
+        this.moduleRegistry = moduleRegistry;
+    }
 
     public void setCurrentModule(ModuleDefinition module) {
         this.currentModule = module;
@@ -128,7 +133,7 @@ public class InstallContextImpl implements InstallContext {
     }
 
     public boolean isModuleRegistered(String moduleName) {
-        return ModuleRegistry.Factory.getInstance().isModuleRegistered(moduleName);
+        return moduleRegistry.isModuleRegistered(moduleName);
     }
 
     public HierarchyManager getHierarchyManager(String workspace) {

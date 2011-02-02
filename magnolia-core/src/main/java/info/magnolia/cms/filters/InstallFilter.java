@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -63,12 +64,12 @@ public class InstallFilter extends AbstractMgnlFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallFilter.class);
 
     private final ModuleManager moduleManager;
-    private final MgnlMainFilter mainFilter;
+    private final FilterManager filterManager;
     private ServletContext servletContext;
 
-    public InstallFilter(ModuleManager moduleManager, MgnlMainFilter mainFilter) {
+    public InstallFilter(ModuleManager moduleManager, FilterManager filterManager) {
         this.moduleManager = moduleManager;
-        this.mainFilter = mainFilter;
+        this.filterManager = filterManager;
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -96,7 +97,7 @@ public class InstallFilter extends AbstractMgnlFilter {
                 final String command = StringUtils.defaultIfEmpty(StringUtils.substringAfter(uri, prefix + "/"), null);
                 final boolean installDone = ui.execute(out, command);
                 if (installDone) {
-                    mainFilter.reset();
+                    filterManager.resetRootFilter();
                     // invalidate session: MAGNOLIA-2611
                     request.getSession().invalidate();
                     // redirect to root
@@ -122,6 +123,11 @@ public class InstallFilter extends AbstractMgnlFilter {
 
         public Locale getLocale() {
             return MgnlContext.getSystemContext().getLocale();
+        }
+
+        @Override
+        protected AggregationState newAggregationState() {
+            throw new IllegalStateException("AggregationState is not meant to be used during the installation process.");
         }
     }
 }

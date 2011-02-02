@@ -49,18 +49,18 @@ import java.util.Date;
 public class ClassesTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         resetCFP();
     }
 
     protected void tearDown() throws Exception {
         resetCFP();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 
     private void resetCFP() throws NoSuchFieldException, IllegalAccessException {
-        // reset the classFactoryProvider field. TODO: really which i could have made this one final ...
+        // reset the classFactoryProvider field. TODO: really wish i could have made this one final ...
         final Field cfpField = Classes.class.getDeclaredField("cfp");
         cfpField.setAccessible(true);
         cfpField.set(null, new Classes.ClassFactoryProvider(new DefaultClassFactory()));

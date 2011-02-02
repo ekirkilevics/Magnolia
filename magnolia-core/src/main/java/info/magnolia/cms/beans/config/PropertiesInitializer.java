@@ -35,10 +35,10 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.ModuleManagementException;
-import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.PropertyDefinition;
+import info.magnolia.objectfactory.Components;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,19 +54,19 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import info.magnolia.objectfactory.Components;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * This class is responsible for loading the various "magnolia.properties" files, merging them,
  * and substituting variables in their values.
  * @author pbracher
  * @author fgiust
+ *
+ * @deprecated since 5.0 - replaced by classes in the {@link info.magnolia.init} package.
  */
 public class PropertiesInitializer {
     private static final Logger log = LoggerFactory.getLogger(PropertiesInitializer.class);
@@ -98,6 +98,21 @@ public class PropertiesInitializer {
      */
     public static final String CONTEXT_PARAM_PLACEHOLDER_PREFIX = "contextParam/"; //$NON-NLS-1$
 
+     /**
+      * System property prefix, to obtain a property definition like ${systemProperty/property}, that can refer to any
+      * System property.
+      */
+     public static final String SYSTEM_PROPERTY_PLACEHOLDER_PREFIX = "systemProperty/"; //$NON-NLS-1$
+
+    /**
+     * System property prefix, to obtain a property definition like ${systemProperty/property}, that can refer to any
+     * System property.
+     */
+     public static final String ENV_PROPERTY_PLACEHOLDER_PREFIX = "env/"; //$NON-NLS-1$
+
+    /**
+     * @deprecated since 5.0, use IoC
+     */
     public static PropertiesInitializer getInstance() {
         return Components.getSingleton(PropertiesInitializer.class);
     }
@@ -111,6 +126,12 @@ public class PropertiesInitializer {
         + "WEB-INF/config/${webapp}/magnolia.properties," //$NON-NLS-1$
         + "WEB-INF/config/default/magnolia.properties," //$NON-NLS-1$
         + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
+
+    private final ModuleRegistry moduleRegistry;
+
+    public PropertiesInitializer(ModuleRegistry moduleRegistry) {
+        this.moduleRegistry = moduleRegistry;
+    }
 
     public void loadAllProperties(String propertiesFilesString, String rootPath) {
         // load mgnl-beans.properties first
@@ -143,15 +164,8 @@ public class PropertiesInitializer {
 
     public void loadAllModuleProperties() {
         // complete or override with modules' properties
-        final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
-        try {
-            final List<ModuleDefinition> moduleDefinitions = moduleManager.loadDefinitions();
-            loadModuleProperties(moduleDefinitions);
-        }
-        catch (ModuleManagementException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e); // TODO
-        }
+        final List<ModuleDefinition> moduleDefinitions = moduleRegistry.getModuleDefinitions();
+        loadModuleProperties(moduleDefinitions);
     }
 
     /**
@@ -188,6 +202,10 @@ public class PropertiesInitializer {
         }
     }
 
+    /**
+     * @deprecated since 5.0, replaced by a new ClasspathPropertySource("/mgnl-beans.properties").
+     * @see info.magnolia.init.DefaultMagnoliaConfigurationProperties
+     */
     public void loadBeanProperties() {
         InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
 
@@ -274,16 +292,21 @@ public class PropertiesInitializer {
 
     /**
      * Returns the property files configuration string passed, replacing all the needed values: ${servername} will be
-     * reaplced with the name of the server, ${webapp} will be replaced with webapp name, and ${contextAttribute/*} and
-     * ${contextParam/*} will be replaced with the corresponding attributes or parameters taken from servlet context.
+     * reaplced with the name of the server, ${webapp} will be replaced with webapp name, ${systemProperty/*} will be
+     * replaced with the corresponding system property, ${env/*} will be replaced with the corresponding environment property,
+     * and ${contextAttribute/*} and ${contextParam/*} will be replaced with the corresponding attributes or parameters
+     * taken from servlet context.
      * This can be very useful for all those application servers that has multiple instances on the same server, like
      * WebSphere. Typical usage in this case:
      * <code>WEB-INF/config/${servername}/${contextAttribute/com.ibm.websphere.servlet.application.host}/magnolia.properties</code>
+     *
      * @param context Servlet context
      * @param servername Server name
      * @param webapp Webapp name
-     * @param propertiesFilesString Property file configuration string.
+     * @param propertiesFilesString a comma separated list of paths.
      * @return Property file configuration string with everything replaced.
+     *
+     * @deprecated since 5.0, this is done by {@link info.magnolia.init.DefaultMagnoliaPropertiesResolver#DefaultMagnoliaPropertiesResolver}.
      */
     public static String processPropertyFilesString(ServletContext context, String servername, String webapp,
         String propertiesFilesString) {
@@ -322,6 +345,34 @@ public class PropertiesInitializer {
             }
         }
 
+        // Replacing system property (${systemProperty/something})
+        String[] systemPropertiesNames = getNamesBetweenPlaceholders(propertiesFilesString, SYSTEM_PROPERTY_PLACEHOLDER_PREFIX);
+        if (systemPropertiesNames != null) {
+            for (String sysPropName : systemPropertiesNames) {
+                if (StringUtils.isNotBlank(sysPropName)) {
+                    final String originalPlaceHolder = PLACEHOLDER_PREFIX + SYSTEM_PROPERTY_PLACEHOLDER_PREFIX + sysPropName + PLACEHOLDER_SUFFIX;
+                    final String paramValue = System.getProperty(sysPropName);
+                    if (paramValue != null) {
+                        propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
+                    }
+                }
+            }
+        }
+
+        // Replacing environment property (${env/something})
+        String[] envPropertiesNames = getNamesBetweenPlaceholders(propertiesFilesString, ENV_PROPERTY_PLACEHOLDER_PREFIX);
+        if (envPropertiesNames != null) {
+            for (String envPropName : envPropertiesNames) {
+                if (StringUtils.isNotBlank(envPropName)) {
+                    final String originalPlaceHolder = PLACEHOLDER_PREFIX + ENV_PROPERTY_PLACEHOLDER_PREFIX + envPropName + PLACEHOLDER_SUFFIX;
+                    final String paramValue = System.getenv(envPropName);
+                    if (paramValue != null) {
+                        propertiesFilesString = propertiesFilesString.replace(originalPlaceHolder, paramValue);
+                    }
+                }
+            }
+        }
+
         return propertiesFilesString;
     }
 
@@ -336,6 +387,8 @@ public class PropertiesInitializer {
     /**
      * Parse the given String value recursively, to be able to resolve nested placeholders. Partly borrowed from
      * org.springframework.beans.factory.config.PropertyPlaceholderConfigurer (original author: Juergen Hoeller)
+     *
+     * @deprecated since 5.0 this is now done by {@link info.magnolia.init.AbstractMagnoliaConfigurationProperties#parseStringValue}.
      */
     protected String parseStringValue(String strVal, Set<String> visitedPlaceholders) {
 

@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  *
+ * @deprecated since 5.0, unused. Custom Transformer should be enough.
  */
 public class DescriptorFileBasedTypeMapping extends TypeMappingImpl {
 

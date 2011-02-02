@@ -46,6 +46,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import info.magnolia.context.WebContext;
+import info.magnolia.context.WebContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -60,7 +62,12 @@ public class ContextFilter extends AbstractMgnlFilter {
 
     public static Logger log = LoggerFactory.getLogger(ContextFilter.class);
 
+    private final WebContextFactory webContextFactory;
     private ServletContext servletContext;
+
+    public ContextFilter(WebContextFactory webContextFactory) {
+        this.webContextFactory = webContextFactory;
+    }
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
@@ -77,7 +84,8 @@ public class ContextFilter extends AbstractMgnlFilter {
         final Context originalContext = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
         boolean initializedContext = false;
         if (!MgnlContext.hasInstance() || MgnlContext.isSystemInstance()) {
-            MgnlContext.initAsWebContext(request, response, servletContext);
+            final WebContext webContext = webContextFactory.createWebContext(request, response, servletContext);
+            MgnlContext.setInstance(webContext);
             initializedContext = true;
             try {
                 String uri = request.getRequestURI();
