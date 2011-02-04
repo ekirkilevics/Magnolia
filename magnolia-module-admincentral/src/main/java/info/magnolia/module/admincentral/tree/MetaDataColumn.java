@@ -33,48 +33,35 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 /**
  * Column that displays a property for a nodes MetaData. Used to display the modification date of
  * content nodes.
  */
-public class MetaDataColumn extends TreeColumn<Date> implements Serializable {
-
-    public static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":creationdate";
+public class MetaDataColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -2788490588550009503L;
 
     @Override
-    public Class<Date> getType() {
-        return Date.class;
+    public Class<String> getType() {
+        return String.class;
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException {
-        // TODO dlipp: discuss whether we want to use the creationdate from the MetaData node or
-        // directly the jcr:created value on the node itself.
-        Node metaData = node.getNode(JCRMetadataUtil.META_DATA_NODE_NAME);
-        Property creation = metaData.getProperty(PROPERTY_NAME);
-        Calendar date = creation.getDate();
-        return date.getTime();
-    }
-
-    @Override
-    public void setValue(Node node, Object newValue) throws RepositoryException {
-        Node metaData = node.getNode(JCRMetadataUtil.META_DATA_NODE_NAME);
-        Property creation = metaData.getProperty(PROPERTY_NAME);
-        Calendar date = creation.getDate();
-        date.setTime((Date) newValue);
-        creation.setValue(date);
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
+            return date != null ? new SimpleDateFormat("yy-MM-dd, HH:mm").format(date.getTime()) : "";
+        }
+        return "";
     }
 }

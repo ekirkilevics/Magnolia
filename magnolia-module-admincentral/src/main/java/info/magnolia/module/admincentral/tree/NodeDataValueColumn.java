@@ -33,24 +33,23 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
-import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.module.admincentral.tree.container.PropertyMapper;
-
-import javax.jcr.Node;
+import java.io.Serializable;
+import javax.jcr.Item;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import java.io.Serializable;
+
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 
 
 /**
  * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
  * the TreeTable is a NodeData.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
 public class NodeDataValueColumn extends TreeColumn<String> implements Serializable {
-
-    public static final String PROPERTY_NAME = "value";
 
     private static final long serialVersionUID = -6032077132567486333L;
 
@@ -70,21 +69,25 @@ public class NodeDataValueColumn extends TreeColumn<String> implements Serializa
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException {
-        // TODO: find out what value to retrieve here...
-        Property value = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
-        return value.getString();
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            return property.getString();
+        }
+        return "";
     }
 
     @Override
-    public Field getEditField(Node ignored) {
-        return (editable) ? new TextField() : null;
+    public Field getEditField(Item item) {
+        return (editable && item instanceof Property) ? new TextField() : null;
     }
 
     @Override
-    public void setValue(Node node, Object newValue) throws RepositoryException {
-        Node metaData = JCRMetadataUtil.getMetaData(node);
-        node.getSession().save();
-        PropertyMapper.setValue(metaData, PROPERTY_NAME, newValue);
+    public void setValue(Item item, Object newValue) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            property.setValue((String) newValue);
+            property.getSession().save();
+        }
     }
 }

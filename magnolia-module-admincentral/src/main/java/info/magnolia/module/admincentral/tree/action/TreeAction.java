@@ -33,16 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import com.vaadin.event.Action;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.LifeTimeJCRSessionUtil;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.views.AbstractTreeTableView;
-
-import javax.jcr.Node;
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
+import com.vaadin.event.Action;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 /**
  * Base class for all tree actions.
@@ -55,21 +52,13 @@ public abstract class TreeAction extends Action {
         super(null);
     }
 
-    // TODO: Second param to be converted (e.g. in Property?) as we do no longer use the Content-API
-    public boolean isAvailable(Node content, NodeData nodeData) {
+    public boolean isAvailable(Item item) {
         return true;
     }
 
-    public void handleAction(AbstractTreeTableView treeTable, TreeDefinition treeDefinition, Object sender, Object target) throws RepositoryException {
-
-        String itemId = (String) target;
-
-        Session session = LifeTimeJCRSessionUtil.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
-        Node node = session.getNode(itemId);
-        handleAction(treeTable, node);
+    public void handleAction(JcrBrowser jcrBrowser, TreeDefinition treeDefinition, Object sender, Object target) throws RepositoryException {
+        handleAction(jcrBrowser, jcrBrowser.getContainer().getJcrItem((ContainerItemId) target));
     }
 
-    protected void handleAction(AbstractTreeTableView treeTable, Node content) throws RepositoryException {
-        System.out.println(content.getPath());
-    }
+    protected abstract void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
 }

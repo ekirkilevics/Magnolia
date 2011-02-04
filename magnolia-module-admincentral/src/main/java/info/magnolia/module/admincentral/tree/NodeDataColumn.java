@@ -33,50 +33,29 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
-
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import java.io.Serializable;
-
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 /**
  * A column that displays a NodeData value when viewing a content node. Used in the website tree for
  * the 'Title' column.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
 public class NodeDataColumn extends TreeColumn<String> implements Serializable {
-
-    public static final String PROPERTY_NAME = "title";
 
     private static final long serialVersionUID = 979787074349524725L;
 
     private boolean editable = false;
 
     private String nodeDataName;
-
-    @Override
-    public Field getEditField(Node unusedt) {
-        // TODO dlipp: check whether this editable flag makes sense. One has to define editing on
-        // the TreeTable level already...
-        return (editable) ? new TextField() : null;
-    }
-
-    public String getNodeDataName() {
-        return nodeDataName;
-    }
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public Object getValue(Node node) throws RepositoryException {
-        Property title = node.getProperty(PROPERTY_NAME);
-        return title.getString();
-    }
 
     public boolean isEditable() {
         return editable;
@@ -86,15 +65,46 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
         this.editable = editable;
     }
 
+    public String getNodeDataName() {
+        return nodeDataName;
+    }
+
     public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
     }
 
     @Override
-    public void setValue(Node node, Object newValue) throws RepositoryException {
-        Property title = node.getProperty(PROPERTY_NAME);
-        title.setValue((String) newValue);
-        // TODO: verify that this is desired
-        node.getSession().save();
+    public Field getEditField(Item item) {
+        if (item instanceof Node && editable)
+            return new TextField();
+        return null;
+    }
+
+    @Override
+    public Class<String> getType() {
+        return String.class;
+    }
+
+    @Override
+    public String getValue(Item item) throws RepositoryException {
+
+        if (item instanceof Node) {
+            Node node = (Node) item;
+
+            if (node.hasProperty(nodeDataName))
+                return node.getProperty(nodeDataName).getString();
+        }
+        return "";
+    }
+
+    @Override
+    public void setValue(Item item, Object newValue) throws RepositoryException {
+
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            node.setProperty(nodeDataName, (String) newValue);
+            JCRMetadataUtil.updateMetaData(node);
+            node.getSession().save();
+        }
     }
 }

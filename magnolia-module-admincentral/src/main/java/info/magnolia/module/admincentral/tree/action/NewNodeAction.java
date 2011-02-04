@@ -35,36 +35,62 @@ package info.magnolia.module.admincentral.tree.action;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+
 
 /**
- * Deletes a node from the repository.
+ * Action for adding a new folder.
  */
-public class DeleteAction extends TreeAction {
+public class NewNodeAction extends TreeAction {
 
-    private static final long serialVersionUID = -4485698706375056385L;
+    private static final long serialVersionUID = -7658689118638162334L;
+
+    private String nodeType = ItemType.CONTENT.getSystemName();
+
+    @Override
+    public boolean isAvailable(Item item) {
+        return item instanceof Node;
+    }
 
     @Override
     protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
-            node.remove();
+
+            String name = JCRUtil.getUniqueLabel(node, "untitled");
+            Node newChild = node.addNode(name, nodeType);
+
+            MetaData metaData = JCRMetadataUtil.getMetaData(newChild);
+            metaData.setAuthorId(MgnlContext.getUser().getName());
+            metaData.setCreationDate();
+            metaData.setModificationDate();
+
             node.getSession().save();
 
-            // At this point we need the JcrBrowser to reflect the changes.
+            // The getItem below doesn't do the trick...
+
+            // force reading and therefore realizing there's a new Node - eventually better implemented
+            // by using treeTable.addItem(String)
+            jcrBrowser.getItem(new ContainerItemId(newChild));
 
             jcrBrowser.getContainer().fireItemSetChange();
-
-        } else if (item instanceof Property) {
-            Property property = (Property) item;
-            property.remove();
-            property.getSession().save();
-
-            // At this point we need the JcrBrowser to reflect the changes.
         }
+    }
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
     }
 }

@@ -33,15 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-import org.junit.Test;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import java.util.Calendar;
 import java.util.Date;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.MetaData;
+import static junit.framework.Assert.*;
 
 /**
  *
@@ -53,24 +54,13 @@ public class MetaDataColumnTest {
     @Test
     public void testGetValue() throws RepositoryException {
         Node node = new MockNode();
-        Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
+        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
-        metaData.setProperty(MetaDataColumn.PROPERTY_NAME, cal);
+        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
         MetaDataColumn column = new MetaDataColumn();
         Object result = column.getValue(node);
         assertEquals(now, result);
-    }
-
-    @Test
-    public void testSetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(JCRMetadataUtil.META_DATA_NODE_NAME);
-        Calendar cal = Calendar.getInstance();
-        metaData.setProperty(MetaDataColumn.PROPERTY_NAME, cal);
-        TreeColumn< ? > column = new MetaDataColumn();
-        column.setValue(node, cal.getTime());
-        assertEquals(metaData.getProperty(MetaDataColumn.PROPERTY_NAME).getDate(), cal);
     }
 }

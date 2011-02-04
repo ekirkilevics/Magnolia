@@ -33,13 +33,14 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Window;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.AbstractTreeTableView;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 
 /**
@@ -50,9 +51,18 @@ public class OpenPageAction extends TreeAction {
     private static final long serialVersionUID = 751955514356448616L;
 
     @Override
-    protected void handleAction(AbstractTreeTableView treeTable, Node node) throws RepositoryException {
-        String uri = MgnlContext.getContextPath() + node.getPath() + ".html";
-        Window window = treeTable.getApplication().getMainWindow();
-        window.open(new ExternalResource(uri));
+    public boolean isAvailable(Item item) {
+        return item instanceof Node;
+    }
+
+    @Override
+    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
+
+            String uri = MgnlContext.getContextPath() + node.getPath() + ".html";
+            Window window = jcrBrowser.getApplication().getMainWindow();
+            window.open(new ExternalResource(uri));
+        }
     }
 }

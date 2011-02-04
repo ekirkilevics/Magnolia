@@ -33,8 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import com.vaadin.ui.Field;
-import com.vaadin.ui.Select;
+import com.vaadin.ui.NativeSelect;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
@@ -42,19 +50,13 @@ import info.magnolia.module.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-
 /**
- * A column that displays the currently selected template for a node and allows the editor to choose
+ * A column that displays the currently selected template for a page and allows the editor to choose
  * from a list of available templates. Used in the website tree. Be aware that the value displayed
  * in the Widget is the I18NTitle - the value stored is the templates name.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
 public class TemplateColumn extends TreeColumn<String> implements Serializable {
 
@@ -77,25 +79,27 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
         return map;
     }
 
-    public Field getEditField(Node node) {
-        Select select = new Select();
-        select.setNullSelectionAllowed(false);
-        select.setNewItemsAllowed(false);
-        Map<String, String> availableTemplates = getAvailableTemplates(node);
+    public Field getEditField(Item item) {
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            NativeSelect select = new NativeSelect();
+            select.setNullSelectionAllowed(false);
+            select.setNewItemsAllowed(false);
+            Map<String, String> availableTemplates = getAvailableTemplates(node);
 
-        for (String key : availableTemplates.keySet()) {
-            select.addItem(key);
-            select.setItemCaption(key, availableTemplates.get(key));
+            for (Map.Entry<String, String> entry : availableTemplates.entrySet()) {
+                select.addItem(entry.getValue());
+                select.setItemCaption(entry.getValue(), entry.getKey());
+            }
+
+            String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+            select.setValue(template); // TODO Doesn't render this choice as selected
+            select.focus(); // TODO isn't focused in gui
+            select.setImmediate(true);
+            select.setInvalidAllowed(false);
+            return select;
         }
-
-//        try {
-//            Property template = JCRMetadataUtil.getMetaDataProperty(node, JCRMetadataUtil.TEMPLATE);
-//            select.setValue(template.getString());
-//        }
-//        catch (RepositoryException e) {
-//            select = null;
-//        }
-       return select;
+        return null;
     }
 
     @Override
@@ -104,18 +108,25 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException {
-        Property template = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
-        TemplateManager templateManager = TemplateManager.getInstance();
-        Template definition = templateManager.getTemplateDefinition(template.getString());
-        return (definition != null) ? definition.getI18NTitle() : "";
+    public String getValue(Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+            TemplateManager templateManager = TemplateManager.getInstance();
+            Template definition = templateManager.getTemplateDefinition(template);
+            return (definition != null) ? definition.getI18NTitle() : "";
+        }
+        return "";
     }
 
     @Override
-    public void setValue(Node node, Object newValue) throws RepositoryException {
-        Property prop = JCRMetadataUtil.getMetaDataProperty(node, PROPERTY_NAME);
-        Map<String, String> availableTemplates = getAvailableTemplates(node);
-        String templateName = availableTemplates.get(newValue);
-        prop.setValue(templateName);
+    public void setValue(Item item, Object newValue) throws RepositoryException {
+
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            JCRMetadataUtil.getMetaData(node).setTemplate((String) newValue);
+            JCRMetadataUtil.updateMetaData(node);
+            node.getSession().save();
+        }
     }
 }

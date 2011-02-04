@@ -33,10 +33,11 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import javax.jcr.Node;
+import java.io.Serializable;
+import javax.jcr.Item;
+import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import java.io.Serializable;
 
 
 /**
@@ -44,8 +45,6 @@ import java.io.Serializable;
  * is a NodeData.
  */
 public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
-
-    public static final String PROPERTY_NAME = "name";
 
     private static final long serialVersionUID = -2594102704173600906L;
 
@@ -55,12 +54,11 @@ public class NodeDataTypeColumn extends TreeColumn<String> implements Serializab
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException {
-        return PropertyType.nameFromValue(node.getProperty(PROPERTY_NAME).getType());
-    }
-
-    @Override
-    public void setValue(Node node, Object newValue) throws RepositoryException {
-        node.getProperty(PROPERTY_NAME).setValue(PropertyType.valueFromName((String) newValue));
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            return PropertyType.nameFromValue(property.getType());
+        }
+        return "";
     }
 }

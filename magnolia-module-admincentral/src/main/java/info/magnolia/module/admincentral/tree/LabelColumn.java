@@ -33,23 +33,26 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import java.io.Serializable;
-
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 /**
  * Describes a column that contains the label of the item.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
 public class LabelColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 
-    // TODO dlipp: to be decided whether this should be kept (currently configured via Content2Bean)
-    // Beeing editable or not is also steered on the TreeTable level... Redundancy???
     private boolean editable = false;
 
     public boolean isEditable() {
@@ -66,19 +69,42 @@ public class LabelColumn extends TreeColumn<String> implements Serializable {
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException {
-        return node.getName();
+    public String getValue(Item item) throws RepositoryException {
+        return item.getName();
     }
 
     @Override
-    public Field getEditField(Node ignored) {
+    public Field getEditField(Item item) {
         return (editable) ? new TextField() : null;
     }
 
     @Override
-    public void setValue(Node node, Object value) throws RepositoryException {
-        //throw new RepositoryException("Do not yet know how to change Name of a node :-(");
-        System.out.println("WARN: Setting Label for Node " + node.getPath() + " to value " + value + " ignored for now..." );
-    }
+    public void setValue(Item item, Object newValue) throws RepositoryException {
 
+        if (item instanceof Node) {
+            Node node = (Node) item;
+
+            String newPath = (node.getParent().getDepth() > 0 ? node.getParent().getPath() : "") + "/" + newValue;
+
+            node.getSession().move(node.getPath(), newPath);
+
+            JCRMetadataUtil.updateMetaData(node);
+
+            node.getSession().save();
+
+        } else if (item instanceof Property) {
+            Property property = (Property) item;
+            Node node = property.getParent();
+
+            node.setProperty((String) newValue, property.getValue());
+            property.remove();
+
+            JCRMetadataUtil.updateMetaData(node);
+            node.getSession().save();
+
+            // TODO since the name of the property is part of the itemId in the container it needs to be removed and re-added
+
+            // Will that have any consequences on for instance focus and selection and so on?
+        }
+    }
 }

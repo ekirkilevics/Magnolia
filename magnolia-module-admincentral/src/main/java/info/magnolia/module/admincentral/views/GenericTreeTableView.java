@@ -33,90 +33,19 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import com.vaadin.event.Action;
-import com.vaadin.terminal.ExternalResource;
-import info.magnolia.context.LifeTimeJCRSessionUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.tree.MenuItem;
-import info.magnolia.module.admincentral.tree.TreeRegistry;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.util.ArrayList;
 
 
 /**
  * A generic tree table view which can show data from any repository.
- * 
+ *
  * @author fgrilli
  */
 public class GenericTreeTableView extends AbstractTreeTableView {
 
-    private static final Logger log = LoggerFactory.getLogger(GenericTreeTableView.class);
-
     private static final long serialVersionUID = 1704972467182396882L;
 
-    public GenericTreeTableView(String treeName) {
-        try {
-            setTreeDefinition(TreeRegistry.getInstance().getTree(treeName));
-        }
-        catch (RepositoryException e) {
-            // TODO: we need to somehow properly handle this
-            log.error(e.getMessage(), e);
-        }
-        getTreeTable().setContainerDataSource(createContainer(getTreeTable()));
-        addContextMenu();
-    }
-
-    void addContextMenu() {
-
-        getTreeTable().addActionHandler(new Action.Handler() {
-
-            private static final long serialVersionUID = 4311121075528949148L;
-
-            public Action[] getActions(Object target, Object sender) {
-
-                ArrayList<Action> actions = new ArrayList<Action>();
-                try {
-                    String itemId = (String) target;
-                    Session session = LifeTimeJCRSessionUtil.getHierarchyManager(getTreeDefinition().getRepository()).getWorkspace().getSession();
-                    Node node = session.getNode(itemId);
-
-                    for (MenuItem mi : getTreeDefinition().getContextMenuItems()) {
-                        TreeAction action = mi.getAction();
-
-                        if (!action.isAvailable(node, null))
-                            continue;
-
-                        action.setCaption(mi.getLabel());
-                        action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
-                        actions.add(action);
-
-                    }
-                }
-                catch (RepositoryException e) {
-                    log.error(e.getMessage(), e);
-                }
-
-                return actions.toArray(new Action[actions.size()]);
-            }
-
-            public void handleAction(Action action, Object sender, Object target) {
-                try {
-                    ((TreeAction) action).handleAction(GenericTreeTableView.this, getTreeDefinition(), sender, target);
-                }
-                catch (ClassCastException e) {
-                    // not our action
-                    log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());
-                }
-                catch (RepositoryException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        });
+    public GenericTreeTableView(String treeName) throws RepositoryException {
+        super(treeName);
     }
 }

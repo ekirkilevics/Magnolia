@@ -33,11 +33,11 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.objectfactory.Components;
-
-import javax.jcr.RepositoryException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.objectfactory.Components;
 
 /**
  * Maintains a registry of configured tree providers by name.

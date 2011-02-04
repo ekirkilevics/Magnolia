@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,419 +33,275 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
-import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Buffered;
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
+import com.vaadin.data.Container;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
 
 /**
- * Implementation of a JCR backed Vaadin <code>Container</code>.
+ * Vaadin container that reads its items from a JCR repository.
  *
- * All ID's must be Strings to comply with JCR identifiers.
- *
- * @author daniellipp
- * @version $Id$
+ * @author tmattsson
  */
-public class JcrContainer implements Serializable, Container.Hierarchical, Buffered {
+public class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
 
-    /**
-     * Keeps already used Resource in order to save resources/not create new Resource for every
-     * item.
-     */
-    private static ConcurrentHashMap<String, Resource> itemIcons = new ConcurrentHashMap<String, Resource>();
+    private Set<ItemSetChangeListener> itemSetChangeListeners;
 
-    private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
-
-    private static final long serialVersionUID = 240035255907683559L;
-
-    protected Map<String, PropertyDefinition> containerProperties = new LinkedHashMap<String, PropertyDefinition>();
-
-    private final TreeDefinition definition;
-
-    protected HashMap<String, NodeItem> nodeItems = new HashMap<String, NodeItem>();
-
-    protected JcrSessionProvider provider;
-
-    private final String[] roots;
-
-    private TreeTable tree;
-
-    /**
-     * Create JCR container with provided definition and root. Note that in this case (a single
-     * root) this root will not be added to the container on level 0 but its children.
-     *
-     * @param tree TreeTable to set itemIcon on (can only be set on TreeTable)
-     * @param definition the definition of the tree
-     * @param root the single root
-     */
-    public JcrContainer(TreeTable tree, TreeDefinition definition, String root) {
-        this(tree, definition, new String[]{root});
+    public void addListener(ItemSetChangeListener listener) {
+        if (itemSetChangeListeners == null)
+            itemSetChangeListeners = new LinkedHashSet<ItemSetChangeListener>();
+        itemSetChangeListeners.add(listener);
     }
 
-    public JcrContainer(TreeTable tree, TreeDefinition definition, String[] roots) {
-        this.provider = new SessionProviderImpl(definition.getName());
-        this.definition = definition;
-        this.roots = roots;
-        this.tree = tree;
-    }
-
-    public boolean addContainerProperty(Object propertyId, Class< ? > type,
-            Object defaultValue) {
-        assertIsString(propertyId);
-        containerProperties.put((String) propertyId, new PropertyDefinition(
-                (String) propertyId, type, defaultValue));
-        return false;
-    }
-
-    public Object addItem() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "JCR does not support empty Items");
-    }
-
-    public Item addItem(Object itemId) {
-        assertIsString(itemId);
-        String fullPath = (String) itemId;
-        try {
-            if (!containsId(itemId)
-                    && !getSession().nodeExists(fullPath)) {
-                String itemPath = JCRUtil.getItemIdWithoutPath(fullPath);
-                String parentPath = JCRUtil.getPathWithoutItemId(fullPath);
-                Node parent = getSession().getNode(parentPath);
-
-                Node newNode = parent.addNode(itemPath);
-                // not sure whether this is needed like that...
-                for (TreeColumn< ? > treeColumn : this.definition.getColumns()) {
-                    getContainerProperty(itemId, treeColumn.getLabel()).setValue(treeColumn.getValue(newNode));
-                }
-
-            }
-            return getItem(itemId);
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
+    public void removeListener(ItemSetChangeListener listener) {
+        if (itemSetChangeListeners != null) {
+            itemSetChangeListeners.remove(listener);
+            if (itemSetChangeListeners.isEmpty())
+                itemSetChangeListeners = null;
         }
     }
 
-    // is used to indicate in the TreeTable whether there're children or not
-    public boolean areChildrenAllowed(Object itemId) {
-        return hasChildren(itemId);
-    }
+    public void fireItemSetChange() {
 
-    protected void assertIsString(Object itemId) {
-        if (!(itemId instanceof String)) {
-            throw new IllegalArgumentException("JCR id's must be String");
-        }
-    }
-
-    public void commit() throws SourceException, InvalidValueException {
-        try {
-            getSession().save();
-        }
-        catch (RepositoryException e) {
-            throw new SourceException(this);
-        }
-    }
-
-    public boolean containsId(Object itemId) {
-        assertIsString(itemId);
-        return nodeItems.containsKey(itemId);
-    }
-
-    public void discard() throws SourceException {
-        // TODO Not sure how to revert
-    }
-
-    public Collection<String> getChildren(Object parentId) {
-        log.info("Now retrieving children id's for {}", parentId);
-        ArrayList<String> children = new ArrayList<String>();
-        try {
-            NodeItem parent = getNodeItem(parentId);
-            NodeIterator iterator = parent.getNodes();
-            Node node = null;
-            while (iterator.hasNext()) {
-                node = iterator.nextNode();
-                children.add(getNodeItem(node.getPath()).getItemId());
-            }
-
-            PropertyIterator properties = parent.getProperties();
-            javax.jcr.Property property;
-            while (properties.hasNext()) {
-                property = (javax.jcr.Property) properties.next();
-                log.info("Found " + property.toString());
-                // TODO: treat properties as well!
-            //    children.add(getNodePropertyItem())
+        System.out.println("Firing item set changed");
+        if (itemSetChangeListeners != null && !itemSetChangeListeners.isEmpty()) {
+            final Container.ItemSetChangeEvent event = new ItemSetChangeEvent();
+            Object[] array = itemSetChangeListeners.toArray();
+            for (Object anArray : array) {
+                ItemSetChangeListener listener = (ItemSetChangeListener) anArray;
+                listener.containerItemSetChange(event);
             }
         }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
+    }
+
+    private TreeDefinition treeDefinition;
+    public JcrContainer(TreeDefinition treeDefinition) {
+        this.treeDefinition = treeDefinition;
+        for (TreeColumn<?> treeColumn : treeDefinition.getColumns()) {
+            addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
-        return children;
+    }
+
+    // Container
+
+    public Item getItem(Object itemId) {
+        return getItem((ContainerItemId)itemId);
+    }
+
+    public Collection<ContainerItemId> getItemIds() {
+        return getRootItemIds();
     }
 
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        assertIsString(itemId);
-        assertIsString(propertyId);
-        try {
-            return new NodeProperty(getSession().getNode((String) itemId), definition,
-                    (String) propertyId);
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Collection<String> getContainerPropertyIds() {
-        return containerProperties.keySet();
-    }
-
-    public Item getItem(Object itemId) {
-        assertIsString(itemId);
-        NodeItem item;
-        try {
-            if (nodeItems.containsKey(itemId)) {
-                item = nodeItems.get(itemId);
-            }
-            else if (getSession().nodeExists((String) itemId)) {
-                log.info("Retrieving item with id {} from repository.", itemId);
-
-                Node content = getSession().getNode((String) itemId);
-                item = new NodeItem(content, provider);
-
-                // load all the parents
-                if (item.getDepth() > 1) {
-                    getItem(item.getParent().getPath());
-                }
-                nodeItems.put((String) itemId, item);
-                // TODO: simplify!
-                for (TreeItemType type : definition.getItemTypes()) {
-                    if (item.isNodeType(type.getItemType())) {
-                        log.info("Item has ItemType {}", type.getItemType());
-                        tree.setItemIcon(itemId, getItemIconFor(type.getIcon()));
-                    }
-                }
-            }
-            else {
-                throw new IllegalArgumentException("itemId not found");
-            }
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-        return item;
-    }
-
-    private Resource getItemIconFor(String pathToIcon) {
-        if (!itemIcons.containsKey(pathToIcon)) {
-            // check if this path starts or not with a /
-            String tmp = MgnlContext.getContextPath()
-                + (!pathToIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + pathToIcon : pathToIcon);
-            itemIcons.put(pathToIcon, new ExternalResource(tmp));
-        }
-        return itemIcons.get(pathToIcon);
-    }
-
-    public Collection<String> getItemIds() {
-        final Collection<String> col = new ArrayList<String>();
-        try {
-            Node root = getSession().getRootNode();
-            NodeIterator childIterator = root.getNodes();
-            while (childIterator.hasNext()) {
-                col.add(((Node) childIterator.next()).getPath());
-            }
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-
-        return Collections.unmodifiableCollection(col);
-    }
-
-    /**
-     * Casts the getItem() call to return a NodeItem.
-     *
-     * @param itemId
-     * @return NodeItem
-     */
-    public NodeItem getNodeItem(Object itemId) {
-        return (NodeItem) getItem(itemId);
-    }
-
-    /*
-     * This method is required by the interface. Unfortunately it's badly named as it has to return the id of the parent not the parent itself!
-     */
-    public Object getParent(Object itemId) {
-        return getParentId(itemId);
-    }
-
-    public Object getParentId(Object itemId) {
-        NodeItem item = getNodeItem(itemId);
-        try {
-            return (item.getDepth() > 0) ? item.getParent().getPath() : null;
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     *
-     * @return the Session associated with this container.
-     * @throws RepositoryException
-     */
-    public Session getSession() throws RepositoryException {
-        return provider.getSession();
-    }
-
-    public Class< ? > getType(Object propertyId) {
-        return containerProperties.get(propertyId).getType();
-    }
-
-    public boolean hasChildren(Object itemId) {
-        try {
-            return getNodeItem(itemId).hasNodes();
-        }
-        catch (RepositoryException e) {
-            log.warn(e.getLocalizedMessage());
-            return false;
-        }
-    }
-
-    public boolean isModified() {
-        try {
-            return getSession().hasPendingChanges();
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean isReadThrough() {
-        return false;
-    }
-
-    public boolean isRoot(Object itemId) {
-        if (!(itemId instanceof String)) {
-            return false;
-        }
-        for (int i = 0; i < roots.length; i++) {
-            if (roots[i].equals(itemId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isWriteThrough() {
-        return false;
-    }
-
-    public boolean removeAllItems() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "Use removeItem() at the Node level");
-    }
-
-    protected void removeChildItems(NodeItem item) throws RepositoryException {
-        for (String childId : nodeItems.keySet()) {
-            NodeItem child = nodeItems.get(childId);
-            for (int depth = 1; depth < child.getDepth(); depth++) {
-                if (child.getAncestor(depth).equals(item)) {
-                    nodeItems.remove(childId);
-                }
-            }
-        }
-    }
-
-    public boolean removeContainerProperty(Object propertyId)
-            throws UnsupportedOperationException {
-        containerProperties.remove(propertyId);
-        return true;
-    }
-
-    public boolean removeItem(Object itemId)
-            throws UnsupportedOperationException {
-        assertIsString(itemId);
-        try {
-            removeChildItems(nodeItems.get(itemId));
-            getNodeItem(itemId).remove();
-            nodeItems.remove(itemId);
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-        return true;
-    }
-
-    public Collection<String> rootItemIds() {
-        // in single root case we use children as in FilesystemContainer
-        if (roots.length == 1) {
-            return getChildren(roots[0]);
-        }
-        return Collections.unmodifiableCollection(Arrays.asList(roots));
-    }
-
-    public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "Cannot override Node Definition");
-    }
-
-    public boolean setParent(Object absoluteItemPath, Object newRelativePath)
-            throws UnsupportedOperationException {
-        try {
-            // next line is just required to get the itemIcon properly set...
-            // getNodeItem(absoluteItemPath);
-            String newid = (String) newRelativePath + JCRUtil.PATH_SEPARATOR + JCRUtil.getItemIdWithoutPath((String)absoluteItemPath);
-            nodeItems.remove(absoluteItemPath);
-
-            // TODO: all child paths have to be adapted!
-            // removeChildItems(item);
-            getSession().move((String) absoluteItemPath, newid);
-            getNodeItem(newid);
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-        return true;
-    }
-
-    public void setReadThrough(boolean readThrough) throws SourceException {
-        throw new SourceException(this);
-    }
-
-    public void setWriteThrough(boolean writeThrough) throws SourceException,
-            InvalidValueException {
-        throw new SourceException(this);
+        return new JcrContainerProperty((String)propertyId, (ContainerItemId)itemId, this);
     }
 
     public int size() {
-        return nodeItems.size();
+        return 0;
     }
 
+    public boolean containsId(Object itemId) {
+        return containsId((ContainerItemId)itemId);
+    }
+
+    public Item addItem(Object itemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public Object addItem() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean removeAllItems() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    // Container.Hierarchical
+
+    public Collection<ContainerItemId> getChildren(Object itemId) {
+        return getChildren((ContainerItemId)itemId);
+    }
+
+    public ContainerItemId getParent(Object itemId) {
+        return getParent((ContainerItemId) itemId);
+    }
+
+    public Collection<ContainerItemId> rootItemIds() {
+        return getRootItemIds();
+    }
+
+    public boolean setParent(Object itemId, Object newParentId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean areChildrenAllowed(Object itemId) {
+        return ((ContainerItemId) itemId).isNode();
+    }
+
+    public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isRoot(Object itemId) {
+        return isRoot((ContainerItemId)itemId);
+    }
+
+    public boolean hasChildren(Object itemId) {
+        return hasChildren((ContainerItemId) itemId);
+    }
+
+    public boolean removeItem(Object itemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    // Private
+
+    private ContainerItem getItem(ContainerItemId itemId) {
+        try {
+            getJcrItem(itemId);
+            return new ContainerItem(itemId, this);
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
+    }
+
+    private boolean containsId(ContainerItemId itemId) {
+        try {
+            getJcrItem(itemId);
+            return true;
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return false;
+        }
+    }
+
+    private Collection<ContainerItemId> getChildren(ContainerItemId itemId) {
+        try {
+            if (itemId.isProperty())
+                return Collections.emptySet();
+            Node node = getNode(itemId);
+            ArrayList<ContainerItemId> c = new ArrayList<ContainerItemId>();
+            NodeIterator iterator = node.getNodes();
+            while (iterator.hasNext()) {
+                Node next = (Node) iterator.next();
+                for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+                    if (itemType.getItemType().equals(next.getPrimaryNodeType().getName())) {
+                        c.add(new ContainerItemId(next));
+                        break;
+                    }
+                }
+            }
+
+            PropertyIterator propertyIterator = node.getProperties();
+            while (propertyIterator.hasNext()) {
+                javax.jcr.Property property = propertyIterator.nextProperty();
+                for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+                    if (!property.getName().startsWith("jcr:") && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+                        c.add(new ContainerItemId(node, property.getName()));
+                        break;
+                    }
+                }
+            }
+
+            return Collections.unmodifiableCollection(c);
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return Collections.emptySet();
+        }
+    }
+
+    private ContainerItemId getParent(ContainerItemId itemId) {
+        try {
+            if (itemId.isProperty())
+                return new ContainerItemId(itemId.getNodeIdentifier());
+            Node node = getNode(itemId);
+            return new ContainerItemId(node.getParent());
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
+    }
+
+    private Collection<ContainerItemId> getRootItemIds() {
+        try {
+            Session session = getSession();
+            Node rootNode = session.getRootNode();
+            return getChildren(new ContainerItemId(rootNode));
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return Collections.emptySet();
+        }
+    }
+
+    private boolean isRoot(ContainerItemId itemId) {
+        try {
+            if (itemId.isProperty())
+                return false;
+            return getNode(itemId).getDepth() == 0;
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return false;
+        }
+    }
+
+    private boolean hasChildren(ContainerItemId itemId) {
+        if (itemId.isProperty())
+            return false;
+        return !getChildren(itemId).isEmpty();
+    }
+
+    public Object getColumnValue(String propertyId, ContainerItemId itemId) {
+        try {
+            return treeDefinition.getColumn(propertyId).getValue(getJcrItem(itemId));
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return null;
+        }
+    }
+
+    public void setColumnValue(String propertyId, ContainerItemId itemId, Object newValue) {
+        try {
+            treeDefinition.getColumn(propertyId).setValue(getJcrItem(itemId), newValue);
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    public Node getNode(ContainerItemId itemId) throws RepositoryException {
+        try {
+            return getSession().getNodeByIdentifier(itemId.getNodeIdentifier());
+        } catch (NullPointerException e) {
+            throw e;
+        }
+    }
+
+    public javax.jcr.Property getProperty(ContainerItemId itemId) throws RepositoryException {
+        return getNode(itemId).getProperty(itemId.getPropertyName());
+    }
+
+    public Session getSession() {
+        return MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
+    }
+
+    public javax.jcr.Item getJcrItem(ContainerItemId containerItemId) throws RepositoryException {
+        Node node = getNode(containerItemId);
+        if (containerItemId.isProperty())
+            return node.getProperty(containerItemId.getPropertyName());
+        return node;
+    }
 }

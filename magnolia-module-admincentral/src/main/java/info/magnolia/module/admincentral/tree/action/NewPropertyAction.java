@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,27 +33,33 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.module.admincentral.views.AbstractTreeTableView;
-
+import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 /**
- * Action for adding a new folder.
+ * Action for creating a new property.
  */
-public class NewFolderAction extends TreeAction {
-
-    private static final long serialVersionUID = -7658689118638162334L;
+public class NewPropertyAction extends TreeAction {
 
     @Override
-    public boolean isAvailable(Node node, NodeData nodeData) {
-        // This action is not available for NodeData
-        return nodeData == null;
+    public boolean isAvailable(Item item) {
+        return item instanceof Node;
     }
 
     @Override
-    protected void handleAction(AbstractTreeTableView treeTable, Node node) {
+    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
 
+            String name = JCRUtil.getUniqueLabel(node, "untitled");
+            node.setProperty(name, "");
+            node.getSession().save();
+
+            jcrBrowser.getContainer().fireItemSetChange();
+        }
     }
 }

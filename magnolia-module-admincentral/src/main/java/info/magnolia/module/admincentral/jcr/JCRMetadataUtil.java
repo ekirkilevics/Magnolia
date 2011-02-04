@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
-import info.magnolia.cms.core.MetaData;
-
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
 
 /**
  * Collection of utilities to simplify working with the JCR API. To be checked how much this type
@@ -51,46 +51,37 @@ import javax.jcr.RepositoryException;
 public class JCRMetadataUtil {
 
     private static class JCRMetaData extends MetaData {
-        protected JCRMetaData(Node node) {
+
+        public JCRMetaData(Node node) {
             // do not use AccessManager for now
             super(node, null);
         }
     }
 
-    public static final String ACTIVATED = MetaData.ACTIVATED;
-
-    public static final String LAST_ACTION = MetaData.LAST_ACTION;
-
-    public static final String LAST_MODIFIED = MetaData.LAST_MODIFIED;
-
-    /**
-     * Name of the childnode hosting the metadata.
-     */
-    public static final String META_DATA_NODE_NAME = "MetaData";
-
-    public static final String TEMPLATE = MetaData.TEMPLATE;
+    public static MetaData getMetaData(Node node) {
+        return new JCRMetaData(node);
+    }
 
     public static String getActivationStatusIcon(Node parent) {
-        JCRMetaData metaData = new JCRMetaData(parent);
+        MetaData metaData = new JCRMetaData(parent);
         String imgSrc;
         switch (metaData.getActivationStatus()) {
-            case MetaData.ACTIVATION_STATUS_MODIFIED :
+            case MetaData.ACTIVATION_STATUS_MODIFIED:
                 imgSrc = "indicator_yellow.gif";
                 break;
-            case MetaData.ACTIVATION_STATUS_ACTIVATED :
+            case MetaData.ACTIVATION_STATUS_ACTIVATED:
                 imgSrc = "indicator_green.gif";
                 break;
-            default :
+            default:
                 imgSrc = "indicator_red.gif";
         }
         return imgSrc;
     }
 
-    public static Node getMetaData(Node parent) throws RepositoryException {
-        return parent.getNode(META_DATA_NODE_NAME);
-    }
-
-    public static Property getMetaDataProperty(Node parent, String propertyId) throws RepositoryException {
-        return getMetaData(parent).getProperty(propertyId);
+    public static void updateMetaData(Node node) throws RepositoryException {
+        MetaData md = getMetaData(node);
+        md.setModificationDate();
+        md.setAuthorId(MgnlContext.getUser().getName());
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node.getPrimaryNodeType().getName(), node.getName());
     }
 }

@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,17 +33,39 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
+import java.util.Collection;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.io.Serializable;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 
 /**
- * Convenience service for obtaining sessions.
+ * Item as held by JcrContainer. Does not support modifications and delegates to JcrContainer for everything else.
  *
- * @author daniellipp
- * @version $Id$
+ * @author tmattsson
  */
-public interface JcrSessionProvider extends Serializable {
-    public Session getSession() throws RepositoryException;
+public class ContainerItem implements Item {
+
+    private ContainerItemId itemId;
+    private JcrContainer jcrContainer;
+
+    public ContainerItem(ContainerItemId itemId, JcrContainer jcrContainer) {
+        this.itemId = itemId;
+        this.jcrContainer = jcrContainer;
+    }
+
+    public Property getItemProperty(Object id) {
+        return jcrContainer.getContainerProperty(itemId, id);
+    }
+
+    public Collection<?> getItemPropertyIds() {
+        return jcrContainer.getContainerPropertyIds();
+    }
+
+    public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
 }

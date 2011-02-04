@@ -33,10 +33,12 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
-import info.magnolia.cms.core.DefaultContent;
-
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.MetaData;
 
 /**
  * Hack implementation of a Content. Temporarily used as long as we don't have a clear vision where
@@ -50,5 +52,13 @@ public class HackContent extends DefaultContent {
     public HackContent(Node node) {
         super();
         setNode(node);
+    }
+
+    public Content getParent() throws RepositoryException {
+        return (new HackContent(this.node.getParent()));
+    }
+
+    public MetaData getMetaData() {
+        return JCRMetadataUtil.getMetaData(this.node);
     }
 }

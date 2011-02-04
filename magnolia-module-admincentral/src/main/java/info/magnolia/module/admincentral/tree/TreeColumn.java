@@ -33,16 +33,17 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.vaadin.ui.Field;
-
-import javax.jcr.Node;
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import com.vaadin.ui.Field;
 
 /**
  * Base class for tree columns.
- * 
+ *
  * @param <E> type of the hosted values of this column.
+ * @author dlipp
+ * @author tmattsson
  */
 public abstract class TreeColumn<E> {
 
@@ -50,17 +51,27 @@ public abstract class TreeColumn<E> {
 
     private int width = 1;
 
-    /**
-     * @return Field used when editing this column. Defaults to null.
-     */
-    public Field getEditField(Node node) {
-        // TODO: has to operate on vaadin's Item rather than on JCR-Node. Table could also contain
-        // e.g. NodePropertyItems...
-        return null;
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public String getLabel() {
         return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     * @return Field used when editing this column. Defaults to null.
+     */
+    public Field getEditField(Item item) {
+        return null;
     }
 
     /**
@@ -72,26 +83,11 @@ public abstract class TreeColumn<E> {
     /**
      * @return value to be displayed in the corresponding column (from the provided Node)
      */
-    public abstract Object getValue(Node node) throws RepositoryException;
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
+    public abstract Object getValue(Item item) throws RepositoryException;
 
     /**
      * Set value of Property for the provided node to the new value.
-     * 
-     * @param node node to set property for
-     * @param newValue value to set
      */
-    public abstract void setValue(Node node, Object newValue) throws RepositoryException;
-
-    public void setWidth(int width) {
-        this.width = width;
+    public void setValue(Item item, Object newValue) throws RepositoryException {
     }
-
 }

@@ -33,6 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.io.Serializable;
+import java.security.AccessControlException;
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
@@ -40,17 +47,14 @@ import com.vaadin.ui.HorizontalLayout;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import java.io.Serializable;
-import java.security.AccessControlException;
-
 
 /**
  * A column that displays icons for permissions and activation status.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
-public class StatusColumn extends TreeColumn<Embedded> implements Serializable {
+public class StatusColumn extends TreeColumn<Component> implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
@@ -75,36 +79,39 @@ public class StatusColumn extends TreeColumn<Embedded> implements Serializable {
     }
 
     @Override
-    public Class<Embedded> getType() {
-        return Embedded.class;
+    public Class<Component> getType() {
+        return Component.class;
     }
 
     @Override
-    public Object getValue(Node node) throws RepositoryException {
-        Component component = null;
-        if (activation) {
-            component =
-                createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + JCRMetadataUtil.getActivationStatusIcon(node));
-        }
-
-        if (permissions) {
-            try {
-                // TODO dlipp: verify, this shows the same behavior as old Content-API based
-                // implementation:
-                // if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE))
-                node.getSession().checkPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
-
+    public Component getValue(Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            Component component = null;
+            if (activation) {
+                component = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + JCRMetadataUtil.getActivationStatusIcon(node));
             }
-            catch (AccessControlException e) {
-                // does not have permission to set properties - in that case will return two Icons
-                // in a layout for being displayed...
-                HorizontalLayout horizontal = new HorizontalLayout();
-                horizontal.addComponent(component);
-                component = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
-                horizontal.addComponent(component);
+
+            if (permissions) {
+                try {
+                    // TODO dlipp: verify, this shows the same behavior as old Content-API based
+                    // implementation:
+                    // if (permissions && !node.isGranted(info.magnolia.cms.security.Permission.WRITE))
+                    node.getSession().checkPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
+
+                } catch (AccessControlException e) {
+                    // does not have permission to set properties - in that case will return two Icons
+                    // in a layout for being displayed...
+                    HorizontalLayout horizontal = new HorizontalLayout();
+                    horizontal.addComponent(component);
+                    component = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
+                    horizontal.addComponent(component);
+                    component = horizontal;
+                }
             }
+            return component;
         }
-        return component;
+        return null;
     }
 
     private Embedded createIcon(String resource) {
@@ -114,10 +121,5 @@ public class StatusColumn extends TreeColumn<Embedded> implements Serializable {
         embedded.setWidth("16px");
         embedded.setHeight("16px");
         return embedded;
-    }
-
-    @Override
-    public void setValue(Node node, Object newValue) throws RepositoryException {
-        // do nothing - we don't want to set the status directly....
     }
 }
