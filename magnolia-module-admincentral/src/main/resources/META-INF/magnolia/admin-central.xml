@@ -8,6 +8,25 @@
   <versionHandler>info.magnolia.module.admincentral.setup.AdminCentralModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
+  <properties>
+    <property>
+      <name>info.magnolia.module.admincentral.tree.TreeRegistry</name>
+      <value>info.magnolia.module.admincentral.tree.TreeRegistry</value>
+    </property>
+    <property>
+      <name>info.magnolia.module.admincentral.dialog.DialogRegistry</name>
+      <value>info.magnolia.module.admincentral.dialog.DialogRegistry</value>
+    </property>
+    <property>
+      <name>info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager</name>
+      <value>info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager</value>
+    </property>
+    <property>
+      <name>info.magnolia.module.admincentral.tree.ConfiguredTreeManager</name>
+      <value>info.magnolia.module.admincentral.tree.ConfiguredTreeManager</value>
+    </property>
+  </properties>
+
   <dependencies>
     <dependency>
       <name>core</name>
