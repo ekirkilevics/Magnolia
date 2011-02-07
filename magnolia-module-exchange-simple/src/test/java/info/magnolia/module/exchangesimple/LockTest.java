@@ -89,7 +89,7 @@ public class LockTest extends RepositoryTestCase {
                             hm.getContent("/page").unlock();
                             fail("This thead has to run in separate session, thus can't be allowed to unlock content locked by that other session. Either it is not running in separate session or if it is, the locking is not configured properly.");
                         } catch (LockException e) {
-                            assertTrue(e.getMessage().matches("Node not locked( by session)?: node /page"));
+                            assertTrue("Unexpected error message: " + e.getMessage(), e.getMessage().matches("Node not locked( by session)?: " + hm.getContent("/page").getUUID()));
                         }
                     }
                     Thread.sleep(500);
