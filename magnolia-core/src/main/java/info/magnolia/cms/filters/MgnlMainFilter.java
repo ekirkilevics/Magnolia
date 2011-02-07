@@ -65,7 +65,7 @@ public class MgnlMainFilter implements Filter {
      */
     private static MgnlMainFilter instance;
 
-    private FilterManager initer;
+    private FilterManager filterManager;
 
     /**
      * @deprecated since 5.0, use {@link FilterManager#SERVER_FILTERS}.
@@ -74,13 +74,13 @@ public class MgnlMainFilter implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         instance = this;
-        initer = getInitializer(filterConfig.getServletContext());
-        initer.init(filterConfig);
+        filterManager = getFilterManager(filterConfig.getServletContext());
+        filterManager.init(filterConfig);
     }
 
     public void destroy() {
-        if (initer != null) {
-            initer.destroyRootFilter();
+        if (filterManager != null) {
+            filterManager.destroyRootFilter();
         }
     }
 
@@ -114,10 +114,10 @@ public class MgnlMainFilter implements Filter {
     }
 
     protected MgnlFilter getRootFilter() {
-        return initer.getRootFilter();
+        return filterManager.getRootFilter();
     }
 
-    protected FilterManager getInitializer(ServletContext servletContext) {
+    protected FilterManager getFilterManager(ServletContext servletContext) {
         return Components.getComponent(FilterManager.class);
     }
 
