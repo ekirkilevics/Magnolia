@@ -356,23 +356,24 @@ public class DefaultContentTest extends RepositoryTestCase {
                 "/somepage/mypage/paragraphs/0/attachment1@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/attachment1.fileName=hello",
                 "/somepage/mypage/paragraphs/0/attachment1.extension=gif",
-                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:data=X",
+                // being a binary node, magnolia knows to store data as jcr:data w/o need to be explicitly told so
+                "/somepage/mypage/paragraphs/0/attachment1=binary:X",
                 "/somepage/mypage/paragraphs/0/attachment1.jcr\\:mimeType=image/gif",
-                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
                 "/somepage/mypage/paragraphs/0/attachment2@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/attachment2.fileName=test",
                 "/somepage/mypage/paragraphs/0/attachment2.extension=jpeg",
-                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/attachment2=binary:X",
                 "/somepage/mypage/paragraphs/0/attachment2.jcr\\:mimeType=image/jpeg",
-                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
                 "/somepage/mypage/paragraphs/0/image3@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/image3.fileName=third",
                 "/somepage/mypage/paragraphs/0/image3.extension=png",
-                "/somepage/mypage/paragraphs/0/image3.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/image3=binary:X",
                 "/somepage/mypage/paragraphs/0/image3.jcr\\:mimeType=image/png",
-                "/somepage/mypage/paragraphs/0/image3.jcr\\:lastModified=",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
                 // and more which should not match
                 "/somepage/mypage/paragraphs/0/foo=bar",
@@ -380,9 +381,9 @@ public class DefaultContentTest extends RepositoryTestCase {
                 "/somepage/mypage/paragraphs/0/rand@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/rand.fileName=randdddd",
                 "/somepage/mypage/paragraphs/0/rand.extension=png",
-                "/somepage/mypage/paragraphs/0/rand.jcr\\:data=X",
+                "/somepage/mypage/paragraphs/0/rand=binary:X",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
-                "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified="
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
         ), "\n");
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
@@ -431,9 +432,9 @@ public class DefaultContentTest extends RepositoryTestCase {
                 "/hello/bin@type=mgnl:resource",
                 "/hello/bin.fileName=hello",
                 "/hello/bin.extension=gif",
-                "/hello/bin.jcr\\:data=some-data",
+                "/hello/bin=binary:some-data",
                 "/hello/bin.jcr\\:mimeType=image/gif",
-        "/hello/bin.jcr\\:lastModified="), "\n");
+        "/hello/bin.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"), "\n");
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(contentProperties));
         hm.save();

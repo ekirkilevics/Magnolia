@@ -161,6 +161,8 @@ public class PropertiesImportExport {
             // there is no beanUtils converter for Calendar
             if (type.equalsIgnoreCase("date")) {
                 return ISO8601.parse(value);
+            } else if (type.equalsIgnoreCase("binary")) {
+                return new ByteArrayInputStream(value.getBytes());
             } else {
                 try {
                     final Class<?> typeCl;
