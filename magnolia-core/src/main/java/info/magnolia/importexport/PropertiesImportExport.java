@@ -47,6 +47,8 @@ import org.apache.jackrabbit.util.ISO8601;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -147,7 +149,7 @@ public class PropertiesImportExport {
             throw new UnsupportedOperationException("Can't see UUIDs on real node. Use MockUtil if you are using MockContent instances.");
         } else {
             Object valueObj = convertNodeDataStringToObject(valueStr);
-            c.createNodeData(name, valueObj);
+            c.setNodeData(name, valueObj);
         }
     }
 
@@ -191,6 +193,7 @@ public class PropertiesImportExport {
      *
      * For new applications use the contentToProperties methods instead.
      */
+    @Deprecated
     public static Properties toProperties(HierarchyManager hm) throws Exception {
         return toProperties(hm.getRoot());
     }
@@ -310,24 +313,24 @@ public class PropertiesImportExport {
         int propType = prop.getType();
 
         switch (propType) {
-            case (PropertyType.STRING): {
-                return prop.getString();
-            }
-            case (PropertyType.BOOLEAN): {
-                return convertBooleanToExportString(prop.getBoolean());
-            }
-            case (PropertyType.BINARY): {
-                return convertBinaryToExportString(prop.getValue());
-            }
-            case (PropertyType.PATH): {
-                return prop.getString();
-            }
-            case (PropertyType.DATE): {
-                return convertCalendarToExportString(prop.getDate());
-            }
-            default: {
-                return prop.getString();
-            }
+        case (PropertyType.STRING): {
+            return prop.getString();
+        }
+        case (PropertyType.BOOLEAN): {
+            return convertBooleanToExportString(prop.getBoolean());
+        }
+        case (PropertyType.BINARY): {
+            return convertBinaryToExportString(prop.getValue());
+        }
+        case (PropertyType.PATH): {
+            return prop.getString();
+        }
+        case (PropertyType.DATE): {
+            return convertCalendarToExportString(prop.getDate());
+        }
+        default: {
+            return prop.getString();
+        }
         }
     }
 
