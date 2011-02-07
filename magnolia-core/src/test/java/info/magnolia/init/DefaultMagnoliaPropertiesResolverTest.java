@@ -78,6 +78,16 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
         assertEquals(expected, locations);
     }
 
+    public void testLocationsAreTrimmed() {
+        final String valueInWebXml = "  location1 , location2\n\t,\tlocation3,,,location4\n,\nlocation5\t,\n\tlocation6   ,\n location7\n\n";
+        expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn(valueInWebXml);
+        replay(ctx);
+        final List<String> locations = new DefaultMagnoliaPropertiesResolver(ctx, initPaths).getLocations();
+        final List<String> expected = Arrays.asList("location1", "location2", "location3", "location4", "location5", "location6", "location7");
+        assertEquals(7, locations.size());
+        assertEquals(expected, locations);
+    }
+
     /**
      * Two tests in one:
      * testInitParamCanMixAbsoluteAndRelativePaths()

@@ -79,10 +79,10 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
         String propertiesFilesString = getInitParameter(context, MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
 
         final String propertiesLocationString = processPropertyFilesString(context, initPaths.getServerName(), initPaths.getWebappFolderName(), propertiesFilesString);
-        final String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
+        final String[] propertiesLocation = propertiesLocationString.trim().split("[,]+",0);
         this.locations = new ArrayList<String>(propertiesLocation.length);
         // TODO - order ?
-        // trim
+        // trim all:
         for (String loc : propertiesLocation) {
             locations.add(loc.trim());
         }
