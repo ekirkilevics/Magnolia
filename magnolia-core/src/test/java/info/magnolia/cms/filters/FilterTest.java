@@ -92,7 +92,7 @@ public class FilterTest extends MgnlTestCase {
     protected MgnlMainFilter initMainFilter(final SystemContext sysCtx) throws ServletException {
         MgnlMainFilter mf = new MgnlMainFilter(){
             @Override
-            protected FilterManager getInitializer(ServletContext servletContext) {
+            protected FilterManager getFilterManager(ServletContext servletContext) {
                 return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, sysCtx) {
                     @Override
                     protected boolean isSystemUIMode() {
