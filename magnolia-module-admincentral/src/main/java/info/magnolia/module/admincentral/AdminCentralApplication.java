@@ -76,7 +76,7 @@ public class AdminCentralApplication extends Application {
 
     private Messages messages;
 
-    private VerticalLayout mainContainer = new VerticalLayout();
+    private VerticalLayout mainContainer;
 
     public VerticalLayout getMainContainer() {
         return mainContainer;
@@ -126,7 +126,8 @@ public class AdminCentralApplication extends Application {
      * Creates the application layout and UI elements.
      */
     private void initLayout() {
-
+        mainContainer = new VerticalLayout();
+        mainContainer.setSizeFull();
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
 
@@ -185,22 +186,23 @@ public class AdminCentralApplication extends Application {
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
 
         final VerticalLayout leftPaneLayout = new VerticalLayout();
+        leftPaneLayout.setHeight("100%");
         Menu menu = null;
         try {
             menu = new Menu();
+            menu.setSizeFull();
         } catch (RepositoryException re) {
             re.printStackTrace();
             getMainWindow().showNotification("Application menu could not be created. Please contact site administrator.<br/>", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
             //don't go any further.
             return;
         }
-        menu.setSizeFull();
         leftPaneLayout.addComponent(menu);
 
-        final  HorizontalLayout bottomLeftCorner = new HorizontalLayout();
+        /*final  HorizontalLayout bottomLeftCorner = new HorizontalLayout();
+        bottomLeftCorner.setHeight("5%");
         bottomLeftCorner.setWidth("100%");
-        mainContainer.addComponent(bottomLeftCorner);
-        mainContainer.setSizeFull();
+        mainContainer.addComponent(bottomLeftCorner);*/
 
         final HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
         splitPanel.setSplitPosition(15);
@@ -220,7 +222,6 @@ public class AdminCentralApplication extends Application {
         });
         splitPanel.addComponent(leftPaneLayout);
         splitPanel.addComponent(mainContainer);
-
         outerContainer.addComponent(headerLayout);
         outerContainer.addComponent(splitPanel);
         outerContainer.setExpandRatio(splitPanel, 1.0f);

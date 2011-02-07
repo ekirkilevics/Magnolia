@@ -67,7 +67,7 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
     public AbstractTreeTableView(String treeName) throws RepositoryException {
         jcrBrowser = new JcrBrowser(treeName);
         setCompositionRoot(jcrBrowser);
-
+        setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
 
             private static final long serialVersionUID = 1L;
@@ -80,7 +80,6 @@ public abstract class AbstractTreeTableView extends MagnoliaBaseComponent {
                     if (tokens.length == 2) {
                         currentUriFragment = tokens[0];
                     }
-
 
                     try {
                         Item item = jcrBrowser.getContainer().getJcrItem((ContainerItemId) event.getItemId());
