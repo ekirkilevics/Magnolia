@@ -162,12 +162,16 @@ public class MagnoliaServletContextListener implements ServletContextListener {
         final MutablePicoContainer rootContainer = getRootContainer(sce.getServletContext());
         // just in case we weren't even able to create/store the root container ...
         if (rootContainer != null) {
+
+            // now stop all components
             rootContainer.stop();
+
+            rootContainer.dispose();
         }
 
         // TODO: this should be managed by pico - components being stopped:
-        // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
         ModuleManager mm = ModuleManager.Factory.getInstance();
+        // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
         if (mm != null) {
             mm.stopModules();
         }
@@ -220,10 +224,8 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             final MagnoliaConfigurationProperties configurationProperties = root.getComponent(MagnoliaConfigurationProperties.class);
             SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
 
-            // This is a temporary ComponentProvider for components not behaving (groovy module) -- TODO: doesn't even work. claims it needs the SysCtx
-            // TODO : de-uglify this ? Also: get rid of DefaultComponentProvider here.
+            // TODO: This is a temporary ComponentProvider attempting to get the groovy module to work -- currently fails (depends on SysCtx)
             //Components.setProvider(new PicoComponentProvider(root, new DefaultComponentProvider(configurationProperties)));
-            // TODO - perhaps PicoComponentProvider can be constructed by pico itself
 
             final MutablePicoContainer mainContainer = makeContainer(root, "Magnolia-Main-Container");
             // TODO extract population to a ContainerComposer interface - and get the composers out of pico ? (ordering problem? how about request-scope?)
