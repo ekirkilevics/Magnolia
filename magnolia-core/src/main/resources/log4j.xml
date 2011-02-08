@@ -17,14 +17,8 @@
   <category name="org">
     <priority value="WARN"/>
   </category>
-  <category name="org.picocontainer">
-    <priority value="DEBUG"/>
-  </category>
   <category name="com">
     <priority value="WARN"/>
-  </category>
-  <category name="info.magnolia.objectfactory">
-    <priority value="DEBUG"/>
   </category>
   <category name="info.magnolia.cms.servlets.MgnlServletContextListener">
     <priority value="DEBUG"/>
