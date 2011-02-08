@@ -33,6 +33,21 @@
  */
 package info.magnolia.module.admincentral;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.navigation.Menu;
+import info.magnolia.module.admincentral.views.TestDetailView;
+
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
@@ -42,24 +57,13 @@ import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.security.User;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.DialogWindow;
-import info.magnolia.module.admincentral.navigation.Menu;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
 
 /**
  * Magnolia's AdminCentral.
@@ -77,8 +81,14 @@ public class AdminCentralApplication extends Application {
 
     private VerticalLayout mainContainer;
 
+    private TestDetailView detailView;
+
     public VerticalLayout getMainContainer() {
         return mainContainer;
+    }
+
+    public TestDetailView getDetailView() {
+        return detailView;
     }
 
     @Override
@@ -127,8 +137,15 @@ public class AdminCentralApplication extends Application {
     private void initLayout() {
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
+
+        detailView = new TestDetailView();
+        detailView.setSizeFull();
+
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
+
+        final HorizontalLayout innerContainer = new HorizontalLayout();
+        innerContainer.setSizeFull();
 
         final Window mainWindow = new Window(messages.get("central.title"), outerContainer);
         setMainWindow(mainWindow);
@@ -198,14 +215,11 @@ public class AdminCentralApplication extends Application {
         }
         leftPaneLayout.addComponent(menu);
 
-        /*final  HorizontalLayout bottomLeftCorner = new HorizontalLayout();
-        bottomLeftCorner.setHeight("5%");
-        bottomLeftCorner.setWidth("100%");
-        mainContainer.addComponent(bottomLeftCorner);*/
 
-        final HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
-        splitPanel.setSplitPosition(15);
-        splitPanel.addListener(new SplitterClickListener() {
+        final HorizontalSplitPanel mainSplitPanel = new HorizontalSplitPanel();
+        mainSplitPanel.setSplitPosition(15);
+        mainSplitPanel.setSizeFull();
+        mainSplitPanel.addListener(new SplitterClickListener() {
             private static final long serialVersionUID = 4837023553542505515L;
 
             public void splitterClick(SplitterClickEvent event) {
@@ -219,10 +233,16 @@ public class AdminCentralApplication extends Application {
                 }
             }
         });
-        splitPanel.addComponent(leftPaneLayout);
-        splitPanel.addComponent(mainContainer);
+
+        mainSplitPanel.addComponent(leftPaneLayout);
+        mainSplitPanel.addComponent(mainContainer);
+        innerContainer.addComponent(mainSplitPanel);
+        innerContainer.addComponent(detailView);
+        innerContainer.setExpandRatio(mainSplitPanel, 1.0f);
+        innerContainer.setExpandRatio(detailView, .15f);
         outerContainer.addComponent(headerLayout);
-        outerContainer.addComponent(splitPanel);
-        outerContainer.setExpandRatio(splitPanel, 1.0f);
+        outerContainer.addComponent(innerContainer);
+        outerContainer.setExpandRatio(headerLayout, 1.0f);
+        outerContainer.setExpandRatio(innerContainer, 90.0f);
     }
 }

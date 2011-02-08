@@ -60,7 +60,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.AdminCentralApplication;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.navigation.TestDetailViewAction;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 import info.magnolia.module.admincentral.tree.container.JcrContainer;
@@ -317,6 +319,8 @@ public class JcrBrowser extends TreeTable {
             private static final long serialVersionUID = 1L;
 
             public void itemClick(ItemClickEvent event) {
+                //XXX remove me: here just for testing purposes
+                new TestDetailViewAction("").handleAction(event.getItemId(), ((AdminCentralApplication)getApplication()).getDetailView());
                 if (event.isDoubleClick()) {
 
                     // TODO we need to unset these somehow...
