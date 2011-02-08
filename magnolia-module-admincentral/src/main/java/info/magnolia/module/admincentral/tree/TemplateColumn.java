@@ -47,6 +47,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.module.admincentral.jcr.TemporaryHackUtil;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 
@@ -120,7 +121,7 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
     }
 
     @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;

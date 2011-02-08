@@ -40,6 +40,7 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 
 /**
@@ -83,7 +84,7 @@ public class NodeDataValueColumn extends TreeColumn<String> implements Serializa
     }
 
     @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
         if (item instanceof Property) {
             Property property = (Property) item;
             property.setValue((String) newValue);

@@ -37,6 +37,7 @@ import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * Base class for tree columns.
@@ -88,6 +89,6 @@ public abstract class TreeColumn<E> {
     /**
      * Set value of Property for the provided node to the new value.
      */
-    public void setValue(Item item, Object newValue) throws RepositoryException {
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
     }
 }

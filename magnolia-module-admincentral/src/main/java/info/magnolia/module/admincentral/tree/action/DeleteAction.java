@@ -39,6 +39,7 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 /**
  * Deletes a node from the repository.
@@ -55,16 +56,14 @@ public class DeleteAction extends TreeAction {
             node.remove();
             node.getSession().save();
 
-            // At this point we need the JcrBrowser to reflect the changes.
-
-            jcrBrowser.getContainer().fireItemSetChange();
+            jcrBrowser.removeItem(new ContainerItemId(item));
 
         } else if (item instanceof Property) {
             Property property = (Property) item;
             property.remove();
             property.getSession().save();
 
-            // At this point we need the JcrBrowser to reflect the changes.
+            jcrBrowser.removeItem(new ContainerItemId(item));
         }
     }
 }

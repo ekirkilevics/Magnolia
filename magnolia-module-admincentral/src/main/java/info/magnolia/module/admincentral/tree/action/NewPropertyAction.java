@@ -35,10 +35,12 @@ package info.magnolia.module.admincentral.tree.action;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 /**
  * Action for creating a new property.
@@ -56,10 +58,11 @@ public class NewPropertyAction extends TreeAction {
             Node node = (Node) item;
 
             String name = JCRUtil.getUniqueLabel(node, "untitled");
-            node.setProperty(name, "");
+            Property property = node.setProperty(name, "");
             node.getSession().save();
 
-            jcrBrowser.getContainer().fireItemSetChange();
+            jcrBrowser.addItem(new ContainerItemId(property));
+            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }
 }

@@ -119,7 +119,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public Item addItem(Object itemId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+        fireItemSetChange();
+        return getItem(itemId);
     }
 
     public Object addItem() throws UnsupportedOperationException {
@@ -145,7 +146,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public boolean setParent(Object itemId, Object newParentId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+        fireItemSetChange();
+        return true;
     }
 
     public boolean areChildrenAllowed(Object itemId) {
@@ -165,7 +167,9 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public boolean removeItem(Object itemId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        fireItemSetChange();
+        return true;
     }
 
     // Private
@@ -196,13 +200,13 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
                 return Collections.emptySet();
             Node node = getNode(itemId);
             ArrayList<ContainerItemId> c = new ArrayList<ContainerItemId>();
-            NodeIterator iterator = node.getNodes();
-            while (iterator.hasNext()) {
-                Node next = (Node) iterator.next();
-                for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+
+            for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+                NodeIterator iterator = node.getNodes();
+                while (iterator.hasNext()) {
+                    Node next = (Node) iterator.next();
                     if (itemType.getItemType().equals(next.getPrimaryNodeType().getName())) {
                         c.add(new ContainerItemId(next));
-                        break;
                     }
                 }
             }
@@ -218,7 +222,10 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
                 }
             }
 
+            // TODO returned items should be sorted by type then name
+
             return Collections.unmodifiableCollection(c);
+
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return Collections.emptySet();
@@ -276,7 +283,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public void setColumnValue(String propertyId, ContainerItemId itemId, Object newValue) {
         try {
-            treeDefinition.getColumn(propertyId).setValue(getJcrItem(itemId), newValue);
+            treeDefinition.getColumn(propertyId).setValue(this, getJcrItem(itemId), newValue);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

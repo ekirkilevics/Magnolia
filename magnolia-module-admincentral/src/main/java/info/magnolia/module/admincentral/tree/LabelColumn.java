@@ -42,6 +42,8 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * Describes a column that contains the label of the item.
@@ -79,7 +81,7 @@ public class LabelColumn extends TreeColumn<String> implements Serializable {
     }
 
     @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
@@ -102,9 +104,9 @@ public class LabelColumn extends TreeColumn<String> implements Serializable {
             JCRMetadataUtil.updateMetaData(node);
             node.getSession().save();
 
-            // TODO since the name of the property is part of the itemId in the container it needs to be removed and re-added
-
-            // Will that have any consequences on for instance focus and selection and so on?
+            // Since the name of the property is part of the itemId in the container it needs to be removed and re-added
+            // This might have negative impact on the selection and position of the TreeTable component
+            jcrContainer.fireItemSetChange();
         }
     }
 }

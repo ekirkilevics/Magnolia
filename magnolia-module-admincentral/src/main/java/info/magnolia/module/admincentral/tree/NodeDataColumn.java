@@ -41,6 +41,7 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * A column that displays a NodeData value when viewing a content node. Used in the website tree for
@@ -98,7 +99,7 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
     }
 
     @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;

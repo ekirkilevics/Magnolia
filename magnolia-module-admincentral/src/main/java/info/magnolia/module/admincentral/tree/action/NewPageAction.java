@@ -81,13 +81,8 @@ public class NewPageAction extends TreeAction {
 
             node.getSession().save();
 
-            // The getItem below doesn't do the trick...
-
-            // force reading and therefore realizing there's a new Node - eventually better implemented
-            // by using treeTable.addItem(String)
-            jcrBrowser.getItem(new ContainerItemId(newChild));
-
-            jcrBrowser.getContainer().fireItemSetChange();
+            jcrBrowser.addItem(new ContainerItemId(newChild));
+            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }
 }

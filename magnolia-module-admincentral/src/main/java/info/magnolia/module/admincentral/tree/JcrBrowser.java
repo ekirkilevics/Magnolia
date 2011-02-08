@@ -36,11 +36,13 @@ package info.magnolia.module.admincentral.tree;
 import java.util.ArrayList;
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
 import com.vaadin.data.Container;
 import com.vaadin.event.Action;
@@ -53,6 +55,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
@@ -92,6 +95,7 @@ public class JcrBrowser extends TreeTable {
         this.container = new JcrContainer(treeDefinition);
         setContainerDataSource(container);
         addContextMenu();
+        setPageLength(900);
     }
 
     private void addContextMenu() {
@@ -152,6 +156,10 @@ public class JcrBrowser extends TreeTable {
              * DragAndDropEvent)
              */
             public void drop(DragAndDropEvent event) {
+
+                try {
+
+
                 // Wrapper for the object that is dragged
                 Transferable t = event.getTransferable();
 
@@ -167,21 +175,18 @@ public class JcrBrowser extends TreeTable {
                 VerticalDropLocation location = target.getDropLocation();
 
                 log.debug("DropLocation: " + location.name());
-/*
-                HierarchicalContainerOrderedWrapper container = (HierarchicalContainerOrderedWrapper) treeTable.getContainerDataSource();
+
+                HierarchicalContainerOrderedWrapper container = (HierarchicalContainerOrderedWrapper) getContainerDataSource();
                 // Drop right on an item -> make it a child -
                 if (location == VerticalDropLocation.MIDDLE) {
-                    treeTable.setParent(sourceItemId, targetItemId);
-                    forceRefreshOfTreeTable();
+                    moveItem(sourceItemId, targetItemId);
                 }
                 // Drop at the top of a subtree -> make it previous
                 else if (location == VerticalDropLocation.TOP) {
                     Object parentId = container.getParent(targetItemId);
                     if (parentId != null) {
                         log.debug("Parent:" + container.getItem(parentId));
-                        container.setParent(sourceItemId, parentId);
-                        container.addItemAfter(parentId, sourceItemId);
-                        forceRefreshOfTreeTable();
+                        moveItemBefore(sourceItemId, targetItemId);
                     }
                 }
 
@@ -189,22 +194,85 @@ public class JcrBrowser extends TreeTable {
                 else if (location == VerticalDropLocation.BOTTOM) {
                     Object parentId = container.getParent(targetItemId);
                     if (parentId != null) {
-                        container.setParent(sourceItemId, parentId);
-                        // container.moveAfterSibling(sourceItemId,
-                        // targetItemId);
-                        container.removeItem(targetItemId);
-                        container.addItemAfter(sourceItemId, targetItemId);
-                        forceRefreshOfTreeTable();
+                        moveItemAfter(sourceItemId, targetItemId);
                     }
                 }
-*/
+                } catch (RepositoryException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
             }
 
-            private void forceRefreshOfTreeTable() {
-                // TODO replace this hack - get Table to be refreshed the proper
-                // way (Hack from Vaadin Demo-Sources... - TreeTableWorkLog)
-                Object tempId = container.addItem("/tempId");
-                removeItem(tempId);
+            private void moveItem(Object sourceItemId, Object targetItemId) throws RepositoryException {
+
+                Item source = container.getJcrItem((ContainerItemId) sourceItemId);
+                Item target = container.getJcrItem((ContainerItemId) targetItemId);
+
+                if (target instanceof Property)
+                    return;
+
+                if (source instanceof Property)
+                    // Not yet implemented
+                    return;
+
+                source.getSession().move(source.getPath(), target.getPath() + "/" + source.getName());
+                source.getSession().save();
+
+                setParent(sourceItemId, targetItemId);
+            }
+
+            private void moveItemBefore(Object sourceItemId, Object targetItemId) throws RepositoryException {
+
+                Item source = container.getJcrItem((ContainerItemId) sourceItemId);
+                Item target = container.getJcrItem((ContainerItemId) targetItemId);
+
+                if (target instanceof Property)
+                    return;
+
+                if (source instanceof Property)
+                    // Not yet implemented
+                    return;
+
+                // TODO: verify all this works for nodes under root node
+
+                Node targetParent = target.getParent();
+
+                if (!source.getParent().isSame(targetParent)) {
+                    source.getSession().move(source.getPath(), targetParent.getPath() + "/" + source.getName());
+                }
+
+                targetParent.orderBefore(source.getName(), target.getName());
+
+                source.getSession().save();
+
+                setParent(sourceItemId, new ContainerItemId(target));
+//                addItemAfter(targetItemId, sourceItemId);
+            }
+
+            private void moveItemAfter(Object sourceItemId, Object targetItemId) throws RepositoryException {
+                Item source = container.getJcrItem((ContainerItemId) sourceItemId);
+                Item target = container.getJcrItem((ContainerItemId) targetItemId);
+
+                if (target instanceof Property)
+                    return;
+
+                if (source instanceof Property)
+                    // Not yet implemented
+                    return;
+
+                // TODO: verify all this works for nodes under root node
+
+                Node targetParent = target.getParent();
+
+                if (!source.getParent().isSame(targetParent)) {
+                    source.getSession().move(source.getPath(), targetParent.getPath() + "/" + source.getName());
+                }
+
+                targetParent.orderBefore(target.getName(), source.getName());
+
+                source.getSession().save();
+
+                setParent(sourceItemId, new ContainerItemId(target));
+//                addItemAfter(sourceItemId, targetItemId);
             }
 
             /*
@@ -231,6 +299,8 @@ public class JcrBrowser extends TreeTable {
                             Field field = column.getEditField(JcrBrowser.this.container.getJcrItem(containerItemId));
                             if (field != null) {
                                 field.focus();
+                                if (field instanceof AbstractComponent)
+                                    ((AbstractComponent) field).setImmediate(true);
                                 return field;
                             }
                         }
@@ -256,7 +326,6 @@ public class JcrBrowser extends TreeTable {
                     setEditable(true);
                 } else if (isEditable()) {
                     setEditable(false);
-                    setValue(event.getItemId()); // Clicking a selected row still unselects it.. strange
                 }
             }
         });

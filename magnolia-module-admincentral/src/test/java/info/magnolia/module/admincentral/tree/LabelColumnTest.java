@@ -59,16 +59,16 @@ public class LabelColumnTest {
         assertEquals(original, result);
     }
 
-    /*@Test */
+    /*@Test
     // TODO: uncomment as soon as setValue is properly implemented on that Column.
     public void testSetValue() throws RepositoryException {
         MockNode mock = new MockNode();
         LabelColumn column = new LabelColumn();
         String newValue = "Netzer";
-        column.setValue(mock, "newValue");
+        column.setValue(this, mock, "newValue");
         assertEquals(column.getValue(mock), newValue);
     }
-
+*/
     @Test
     public void testGetEditField() {
         LabelColumn column = new LabelColumn();
