@@ -42,7 +42,6 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
