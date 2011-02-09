@@ -1,0 +1,5 @@
+@import "../runo/styles.css";
+
+.v-table-body {
+	overflow-y: scroll !important;
+}
