@@ -39,12 +39,11 @@ import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SystemUserManager;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Uses a single full access AccessManager. JCR sessions are only released if no event listener were registered.
@@ -53,14 +52,20 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
     private static final Logger log = LoggerFactory.getLogger(SystemRepositoryStrategy.class);
 
+    private final WorkspaceAccessUtil workspaceAccessUtil;
     private AccessManager accessManager;
 
     public SystemRepositoryStrategy(SystemContext context) {
+        this(context, WorkspaceAccessUtil.getInstance());
+    }
+
+    public SystemRepositoryStrategy(SystemContext context, WorkspaceAccessUtil workspaceAccessUtil) {
+        this.workspaceAccessUtil = workspaceAccessUtil;
     }
 
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         if (accessManager == null) {
-            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(getSystemPermissions(), repositoryId, workspaceId);
+            accessManager = workspaceAccessUtil.createAccessManager(getSystemPermissions(), repositoryId, workspaceId);
         }
 
         return accessManager;

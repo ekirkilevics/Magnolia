@@ -34,27 +34,26 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.DefaultHierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.core.DefaultHierarchyManager;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.objectfactory.Components;
 
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
-import javax.jcr.RepositoryException;
-import javax.jcr.Repository;
 import javax.security.auth.Subject;
-
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 
 /**
@@ -71,6 +70,9 @@ public class WorkspaceAccessUtil {
     public WorkspaceAccessUtil() {
     }
 
+    /**
+     * @deprecated since 5.0, use IoC.
+     */
     public static WorkspaceAccessUtil getInstance() {
         return Components.getSingleton(WorkspaceAccessUtil.class);
     }
