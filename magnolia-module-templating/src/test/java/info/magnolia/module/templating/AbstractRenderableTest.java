@@ -34,6 +34,8 @@
 package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 
@@ -46,6 +48,18 @@ public class AbstractRenderableTest extends TestCase {
     private MockContent dummyContent = new MockContent("");
     private Paragraph dummyDef = new Paragraph();
     private final RenderingModelImpl dummyParentModel = new RenderingModelImpl(null, null, null);
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        SystemProperty.clear();
+        super.tearDown();
+    }
 
     public void testCanInstantiateModel() throws Exception {
         final AbstractRenderable renderable = new AbstractRenderable() {

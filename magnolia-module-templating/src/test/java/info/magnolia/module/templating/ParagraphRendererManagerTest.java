@@ -34,6 +34,8 @@
 package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
@@ -47,6 +49,17 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class ParagraphRendererManagerTest extends TestCase {
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        SystemProperty.clear();
+        super.tearDown();
+    }
 
     public void testNotSpecifyingTheNamePropertyShouldMeanTheNodeNameIsUsedInstead() throws IOException, RepositoryException {
         final Content node = getConfigNode(CONFIGNODE2, "/modules/test2/paragraph-renderers");
