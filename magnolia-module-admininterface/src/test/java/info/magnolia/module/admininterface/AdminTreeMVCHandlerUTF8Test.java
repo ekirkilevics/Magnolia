@@ -33,11 +33,6 @@
  */
 package info.magnolia.module.admininterface;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
@@ -50,18 +45,17 @@ import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockMetaData;
-
-import java.util.ArrayList;
-import java.util.List;
+import junit.framework.TestCase;
+import org.apache.commons.collections.ListUtils;
 
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.collections.ListUtils;
+import static org.easymock.EasyMock.*;
 
 
 /**
@@ -128,7 +122,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
     {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
     }
     
     public void testMove() throws Exception

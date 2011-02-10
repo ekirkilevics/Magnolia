@@ -248,7 +248,7 @@ public abstract class AbstractJspTest extends TestCase {
         verify(ctx, req, accessManager);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
 
         runner.shutDown();
         runner = null;

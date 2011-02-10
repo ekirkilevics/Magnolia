@@ -34,14 +34,15 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.TemplateRenderer;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import java.io.StringWriter;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
@@ -51,7 +52,7 @@ public class ServletTemplateRendererTest extends TestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 

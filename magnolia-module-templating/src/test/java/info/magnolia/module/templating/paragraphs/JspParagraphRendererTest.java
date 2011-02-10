@@ -33,33 +33,36 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.templating.ModelExecutionFilter;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.RenderingModel;
-import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.AbstractRenderer;
+import info.magnolia.module.templating.ModelExecutionFilter;
 import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModel;
+import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.createNiceMock;
-import static org.easymock.classextension.EasyMock.replay;
 
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.createNiceMock;
+import static org.easymock.classextension.EasyMock.replay;
 
 /**
  * @author gjoseph
@@ -79,7 +82,7 @@ public class JspParagraphRendererTest extends TestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 

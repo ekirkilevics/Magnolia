@@ -93,7 +93,7 @@ public class AbstractAuthoringUiComponentTest extends TestCase {
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 

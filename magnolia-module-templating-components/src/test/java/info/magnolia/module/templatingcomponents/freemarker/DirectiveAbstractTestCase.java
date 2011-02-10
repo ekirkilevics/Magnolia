@@ -142,7 +142,7 @@ public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCa
         verify(accessManager, ctx, req);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 

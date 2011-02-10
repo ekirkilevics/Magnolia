@@ -41,11 +41,10 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
+import java.io.IOException;
+import java.io.StringWriter;
 
 import static org.easymock.classextension.EasyMock.*;
 
@@ -64,7 +63,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 

@@ -33,25 +33,26 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.AbstractRenderer;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.module.templating.paragraphs.JspParagraphRenderer;
 import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
@@ -62,7 +63,7 @@ public class JspTemplateRendererTest extends TestCase {
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         ComponentsTestUtil.clear();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
         super.tearDown();
     }
 
