@@ -34,6 +34,7 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import junit.framework.TestCase;
 import org.apache.commons.beanutils.ConstructorUtils;
 
@@ -50,12 +51,15 @@ public class ClassesTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.clear();
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
+        Components.setProvider(new DefaultComponentProvider(SystemProperty.getProperties()));
         resetCFP();
     }
 
     protected void tearDown() throws Exception {
         resetCFP();
         SystemProperty.clear();
+        Components.setProvider(null);
         super.tearDown();
     }
 
