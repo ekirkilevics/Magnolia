@@ -38,29 +38,36 @@ import java.util.Date;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.time.FastDateFormat;
+import org.junit.Before;
 import org.junit.Test;
+
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import static junit.framework.Assert.*;
 
 /**
- *
  * @author daniellipp
  * @version $Id$
  */
 public class MetaDataColumnTest {
+    private Calendar cal = Calendar.getInstance();
+    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
+    private Date now = new Date();
+
+    @Before
+    public void setUp (){
+        cal.setTime(now);
+    }
 
     @Test
     public void testGetValue() throws RepositoryException {
         Node node = new MockNode();
         Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
         metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
         MetaDataColumn column = new MetaDataColumn();
         Object result = column.getValue(node);
-        assertEquals(now, result);
+        assertEquals(dateFormat.format(now), result);
     }
 }

@@ -40,6 +40,9 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.FastDateFormat;
+
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 
 /**
@@ -49,6 +52,10 @@ import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 public class MetaDataColumn extends TreeColumn<String> implements Serializable {
 
     private static final long serialVersionUID = -2788490588550009503L;
+
+    private String datePattern;
+
+    protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
 
     @Override
     public Class<String> getType() {
@@ -60,8 +67,23 @@ public class MetaDataColumn extends TreeColumn<String> implements Serializable {
         if (item instanceof Node) {
             Node node = (Node) item;
             Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
-            return date != null ? new SimpleDateFormat("yy-MM-dd, HH:mm").format(date.getTime()) : "";
+            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
+            final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
+            return date != null ? DATE_FORMAT.format(date.getTime()) : "";
         }
         return "";
+    }
+
+    /**
+     * @param datePattern a {@link SimpleDateFormat} compatible pattern
+     */
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
+    }
+    /**
+     * @return {@link SimpleDateFormat} compatible pattern
+     */
+    public String getDatePattern() {
+        return datePattern;
     }
 }
