@@ -43,6 +43,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * A simple filter that strips jcr:uuid properties in MetaData nodes. Needed due to MAGNOLIA-1650 uuids in MetaData
  * nodes are changed during import. It also supports removal of non-standards namespaces, by setting the
  * <code>removeUnwantedNamespaces</code> flag in the constructor.
+ *
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
@@ -64,7 +65,7 @@ public class MetadataUuidFilter extends XMLFilterImpl {
     /**
      * Instantiates a new MetadataUuidFilter filter.
      * @param parent wrapped XMLReader
-     * @deprecated
+     * @deprecated since 4.2.2 (MAGNOLIA-2960)
      */
     public MetadataUuidFilter(XMLReader parent) {
         super(parent);
@@ -80,9 +81,6 @@ public class MetadataUuidFilter extends XMLFilterImpl {
         this.removeUnwantedNamespaces = removeUnwantedNamespaces;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void endPrefixMapping(String prefix) throws SAXException {
         if (!inSkippedNs) {
             super.endPrefixMapping(prefix);
@@ -103,9 +101,6 @@ public class MetadataUuidFilter extends XMLFilterImpl {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
         if (inMetadataElement > 0) {
@@ -122,18 +117,12 @@ public class MetadataUuidFilter extends XMLFilterImpl {
         super.endElement(uri, localName, qName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void characters(char[] ch, int start, int length) throws SAXException {
         if (!skipProperty) {
             super.characters(ch, start, length);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
         if (inMetadataElement > 0) {
