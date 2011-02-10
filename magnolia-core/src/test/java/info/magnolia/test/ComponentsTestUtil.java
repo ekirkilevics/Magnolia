@@ -35,6 +35,7 @@ package info.magnolia.test;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.DefaultComponentProvider;
 
@@ -92,8 +93,15 @@ public class ComponentsTestUtil {
      * this means tests also have to call SystemProperty.clear()
      */
     public static void clear() {
-        getComponentProvider().clear();
-        // defaultComponentProvider = null;
+        final ComponentProvider cp = Components.getComponentProvider();
+        if (cp != null) {
+            if (cp instanceof DefaultComponentProvider) {
+                ((DefaultComponentProvider)cp).clear();
+            } else {
+                org.slf4j.LoggerFactory.getLogger(ComponentsTestUtil.class).warn("Using ComponentsTestUtil with {} - this might be dangerous !?" , cp);
+            }
+        }
+        defaultComponentProvider = null;
         resetConf();
         // SystemProperty.setMagnoliaConfigurationProperties(null);
     }
