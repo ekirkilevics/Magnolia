@@ -9,6 +9,9 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>65f2b584-30bb-41ea-9720-c567346b4e56</sv:value>
   </sv:property>
+  <sv:property sv:name="customStyles" sv:type="String">
+    <sv:value>.scrollbar-y-visible</sv:value>
+  </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
   </sv:property>
@@ -35,7 +38,7 @@
       <sv:value>2010-09-08T11:41:04.409+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2010-09-08T12:11:54.715+02:00</sv:value>
+      <sv:value>2011-02-10T11:08:57.153+01:00</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="itemTypes">
@@ -404,6 +407,9 @@
       <sv:property sv:name="class" sv:type="String">
         <sv:value>info.magnolia.module.admincentral.tree.MetaDataColumn</sv:value>
       </sv:property>
+      <sv:property sv:name="datePattern" sv:type="String">
+        <sv:value>dd/MM/yyyy, HH:mm</sv:value>
+      </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
       </sv:property>
@@ -427,7 +433,7 @@
           <sv:value>2010-09-08T11:44:25.527+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2010-09-08T12:11:40.876+02:00</sv:value>
+          <sv:value>2011-02-10T11:38:11.121+01:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
