@@ -34,7 +34,6 @@
 package info.magnolia.module.admincentral.tree;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.jcr.Item;
 import javax.jcr.Node;
