@@ -33,22 +33,20 @@
  */
 package info.magnolia.module.cache.ehcache;
 
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.mbean.CacheMonitor;
+import junit.framework.TestCase;
+import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.constructs.blocking.LockTimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
-
-import info.magnolia.module.cache.mbean.CacheMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.constructs.blocking.LockTimeoutException;
-
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.cache.Cache;
-import junit.framework.TestCase;
 
 /**
  * Test to assert whether there are still any issues with cache failing to un-block on access from multiple threads.
@@ -59,7 +57,6 @@ public class EhCacheFactoryTest extends TestCase {
 
     private static final Logger log = LoggerFactory.getLogger(EhCacheFactoryTest.class);
     private EhCacheFactory factory;
-
 
     @Override
     public void setUp() throws Exception {
@@ -85,7 +82,7 @@ public class EhCacheFactoryTest extends TestCase {
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
-        SystemProperty.getProperties().clear();
+        SystemProperty.clear();
     }
 
     /**
