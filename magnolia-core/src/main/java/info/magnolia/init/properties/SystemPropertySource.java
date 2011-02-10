@@ -36,15 +36,13 @@ package info.magnolia.init.properties;
 /**
  * A {@link info.magnolia.init.PropertySource} exposing all {@link System#props} properties.
  *
- * @deprecated see TODO !!!
+ * Since Magnolia 5.0, all system properties are available, not only those overriding otherwise existing keys.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class SystemPropertySource extends AbstractPropertySource {
 
-    // TODO - this is not correct: the original code in info.magnolia.cms.beans.config.PropertiesInitializer#overloadWithSystemProperties
-    // TODO --- was only overriding properties that were already existing. Do we want this ? I guess this version can't hurt, it will only add a few more properties ...
     public SystemPropertySource() {
         super(System.getProperties());
     }
