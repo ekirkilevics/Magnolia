@@ -33,6 +33,8 @@
  */
 package info.magnolia.importexport;
 
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,17 +42,18 @@ import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Iterator;
+import java.util.Properties;
 
 
 /**
@@ -58,19 +61,21 @@ import java.util.Iterator;
  * @version $Revision$ ($Author$)
  */
 public class DataTransporterTest extends XMLTestCase {
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        final Properties properties = new Properties();
+        properties.put("magnolia.export.keep_extra_namespaces", "false");
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties(properties));
+    }
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DataTransporterTest.class);
+    @Override
+    protected void tearDown() throws Exception {
+        SystemProperty.clear();
+        super.tearDown();
+    }
 
-    /**
-     * Test method for
-     * {@link info.magnolia.importexport.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}
-     * .
-     */
     public void testParseAndFormat() throws Exception {
-
         File inputFile = new File(getClass().getResource("/test-formatted-input.xml").getFile());
         File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream outputStream = new FileOutputStream(outputFile);
@@ -81,9 +86,7 @@ public class DataTransporterTest extends XMLTestCase {
 
         IOUtils.closeQuietly(outputStream);
 
-        Reader expectedReader = new FileReader(new File(getClass()
-            .getResource("/test-formatted-expected.xml")
-            .getFile()));
+        Reader expectedReader = new InputStreamReader(getClass().getResourceAsStream("/test-formatted-expected.xml"));
         Reader actualReader = new FileReader(outputFile);
 
         DetailedDiff xmlDiff = new DetailedDiff(new Diff(expectedReader, actualReader));
@@ -92,31 +95,24 @@ public class DataTransporterTest extends XMLTestCase {
         IOUtils.closeQuietly(actualReader);
         outputFile.delete();
 
+        final StringBuilder diffLog = new StringBuilder();
         for (Iterator iter = xmlDiff.getAllDifferences().iterator(); iter.hasNext();) {
             Difference difference = (Difference) iter.next();
-
-            log.warn("expected> " + difference.getControlNodeDetail().getValue());
-            log.warn("actual  > " + difference.getTestNodeDetail().getValue());
-
+            diffLog.append("expected> ").append(difference.getControlNodeDetail().getValue()).append("\n");
+            diffLog.append("actual  > ").append(difference.getTestNodeDetail().getValue()).append("\n");
         }
 
-        assertTrue("Document is not formatted as expected", xmlDiff.identical());
+        assertTrue("Document is not formatted as expected:\n" + diffLog.toString(), xmlDiff.identical());
     }
 
-    /**
-     * Test method for
-     * {@link info.magnolia.importexport.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}
-     * .
-     */
     public void testRemoveNs() throws Exception {
-
-        File inputFile = new File(getClass().getResource("/test-unwantedns.xml").getFile());
+        InputStream input = getClass().getResourceAsStream("/test-unwantedns.xml");
         File outputFile = File.createTempFile("export-test-", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream outputStream = new FileOutputStream(outputFile);
 
         XMLReader reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
 
-        DataTransporter.readFormatted(reader, inputFile, outputStream);
+        DataTransporter.readFormatted(reader, input, outputStream);
 
         IOUtils.closeQuietly(outputStream);
 
@@ -126,6 +122,5 @@ public class DataTransporterTest extends XMLTestCase {
         assertFalse("'removeme' namespace still found in output file", StringUtils.contains(result, "xmlns:removeme"));
         assertTrue("'sv' namespace not found in output file", StringUtils.contains(result, "xmlns:sv"));
         assertTrue("'xsi' namespace not found in output file", StringUtils.contains(result, "xmlns:xsi"));
-
     }
 }
