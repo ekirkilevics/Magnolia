@@ -44,6 +44,7 @@ import info.magnolia.module.admincentral.activity.ShowContentActivity;
 import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
@@ -56,6 +57,8 @@ import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
 import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
+import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
 import info.magnolia.module.vaadin.region.ComponentContainerWrappingRegion;
 import info.magnolia.module.vaadin.region.Region;
 
@@ -122,6 +125,8 @@ public class AdminCentralApplication extends Application {
 
     private Messages messages;
 
+    private VerticalLayout outerContainer;
+
     private VerticalLayout mainContainer;
 
     private TestDetailView detailView;
@@ -187,7 +192,15 @@ public class AdminCentralApplication extends Application {
         mainActivityManager.setDisplay(new ComponentContainerWrappingRegion(mainContainer));
         menuActivityManager.setDisplay(new ComponentContainerWrappingRegion(menuDisplay));
 
-        placeController.goTo(new EditWorkspacePlace("website", null));
+        PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
+        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
+        // Browser history integration
+        final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website", null);
+        historyHandler.register(placeController, eventBus, defaultPlace);
+        //see PlaceHistoryHandler javadoc as to why we need to add it as a component
+        outerContainer.addComponent(historyHandler);
+        //FIXME historyHandler.handleCurrentHistory(); upon app startup throws NPE at AbstractPlaceHistoryMapper.java:49
+        placeController.goTo(defaultPlace);
     }
 
     /**
@@ -200,7 +213,7 @@ public class AdminCentralApplication extends Application {
         detailView = new TestDetailView();
         detailView.setSizeFull();
 
-        final VerticalLayout outerContainer = new VerticalLayout();
+        outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
 
         final HorizontalLayout innerContainer = new HorizontalLayout();

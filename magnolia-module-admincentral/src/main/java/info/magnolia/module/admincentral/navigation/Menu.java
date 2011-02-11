@@ -38,18 +38,15 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admincentral.AdminCentralModule;
-import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
 import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
 import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,13 +55,13 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
 
@@ -75,9 +72,8 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author fgrilli
  *
  */
-public class Menu extends MagnoliaBaseComponent {
+public class Menu extends CustomComponent {
 
-    private static final String STARTUP_URI_FRAGMENT = "___startup___";
     private static final long serialVersionUID = 1L;
     private static final String SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE = "Selected action is not available in Milestone 1";
 
@@ -86,12 +82,6 @@ public class Menu extends MagnoliaBaseComponent {
     private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
 
     private Accordion accordion = new Accordion();
-    /*
-     * TODO an ugly (temporary?) trick to make app bookmarking work. This variable's value is checked to execute a one-time code which will set the fragment uri correctly when
-     * entering the application via a bookmark. See SelectedMenuItemTabChangeListener.setUriFragmentOnSelectTabChange. The problem I was not able to solve in a more
-     * elegant way is that, dont'know how or why, when using a bookmark the uri fragment part after the semicolon disappears.
-     */
-    private boolean isMenuBeingAttachedToApp = false;
 
     /**
      * Presenter we have to inform about navigation events.
@@ -186,21 +176,6 @@ public class Menu extends MagnoliaBaseComponent {
         return new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon());
     }
 
-    @Override
-    public void attach() {
-        super.attach();
-        isMenuBeingAttachedToApp = true;
-        //fire an fragmentChangedEvent. This is needed when normally entering the app (e.g. not via a bookmark), so that we can set the initial fragment.
-        getUriFragmentUtility().setFragment(STARTUP_URI_FRAGMENT);
-    }
-
-    //open website view by default. TODO make it configurable
-    private void openViewOnFirstAccess() {
-//        MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
-//        menuItemConfiguration.setRepo("website");
-//        new OpenMainViewMenuAction("").handleAction(menuItemConfiguration, getApplication());
-    }
-
     /**
      * @param menuItem
      * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
@@ -255,44 +230,6 @@ public class Menu extends MagnoliaBaseComponent {
     }
 
     /**
-     * Analyzes uri fragment and select the appropriate menu tab.
-     *
-     */
-    public void fragmentChanged(FragmentChangedEvent source) {
-        String fragment = source.getUriFragmentUtility().getFragment();
-
-        if (fragment != null) {
-            if(isMenuBeingAttachedToApp && STARTUP_URI_FRAGMENT.equals(fragment)){
-                //the very first fragment, ignore
-                return;
-            }
-            final String[] tokens = fragment.split(";");
-            //do we have semicolon separated values in uri fragment? Then assume the first one is the tab name we want to select.
-            if(tokens.length == 2) {
-                fragment = tokens[0];
-            } else {
-                //this is likely first app entering and not via a bookmark.
-                if(isMenuBeingAttachedToApp){
-                    source.getUriFragmentUtility().setFragment("website", false);
-                     openViewOnFirstAccess();
-                    isMenuBeingAttachedToApp = false;
-                }
-            }
-            //TODO find a less convoluted way to achieve this.
-            for(Iterator<Component> iter = accordion.getComponentIterator(); iter.hasNext();){
-                Component tabContent = iter.next();
-                Tab tab = accordion.getTab(tabContent);
-                String value = menuItemKeys.get(tab);
-                if(value.equals(fragment)){
-                    accordion.setSelectedTab(tabContent);
-                    return;
-                }
-            }
-        }
-    }
-
-
-    /**
      * Trigger for all menu actions.
      * @author fgrilli
      *
@@ -307,34 +244,8 @@ public class Menu extends MagnoliaBaseComponent {
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
                 MenuItemConfiguration menuConfig = menuItems.get(tab);
-                String menuUriFragment = menuItemKeys.get(tab);
-                setUriFragmentOnSelectTabChange(menuUriFragment);
-
                 presenter.onMenuSelection(menuConfig);
-
-//
-//                try {
-//                    item.getAction().handleAction(item, getApplication());
-//                } catch (RuntimeException e) {
-//                    e.printStackTrace();
-//                    getApplication().getMainWindow().showNotification("Something bad happened. Please look at the application logs.<br/>", e.toString(), Notification.TYPE_ERROR_MESSAGE);
-//                }
-
             }
-        }
-
-        private void setUriFragmentOnSelectTabChange(String menuUriFragment) {
-            if(isMenuBeingAttachedToApp){
-                String fragment = getUriFragmentUtility().getFragment();
-                if(StringUtils.isNotEmpty(fragment)){
-                    String[] tokens = fragment.split(";");
-                    if(tokens.length == 2){
-                        menuUriFragment = fragment;
-                    }
-                }
-                isMenuBeingAttachedToApp = false;
-            }
-            getUriFragmentUtility().setFragment(menuUriFragment, false);
         }
     }
 }

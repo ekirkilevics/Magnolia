@@ -38,6 +38,8 @@ import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 /**
  * A base implementation for {@link MagnoliaComponent}. Subclasses need only to implement {@link MagnoliaComponent#fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent)}
+ * <p>
+ * @deprecated This way of handling browser's history will be replaced by the {@link Place} mechanism.
  * @author fgrilli
  *
  */

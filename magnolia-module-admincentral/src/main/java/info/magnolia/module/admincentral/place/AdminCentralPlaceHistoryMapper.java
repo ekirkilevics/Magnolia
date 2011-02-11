@@ -33,55 +33,51 @@
  */
 package info.magnolia.module.admincentral.place;
 
+
+import info.magnolia.module.vaadin.place.AbstractPlaceHistoryMapper;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceTokenizer;
 
-
 /**
- * Edit a workspace's content.
+ * This class is the hub of your application's navigation system. It links
+ * the {@link Place}s your user navigates to
+ * with the browser history system &mdash; that is, it makes the browser's back
+ * and forth buttons work for you, and also makes each spot in your app
+ * bookmarkable.
+ * TODO: do it better. This is a first sketchy attempt to write an implementation for {@link AbstractPlaceHistoryMapper}.
+ * In GWT this is usually carried out by the {@link PlaceHistoryMapperGenerator} during gwt compilation phase.
+ * @author fgrilli
+ *
  */
-public class EditWorkspacePlace extends Place {
+public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<TokenizerFactory> {
+       public AdminCentralPlaceHistoryMapper() {
+           setFactory(new TokenizerFactory());
+       }
 
-    /**
-     * TODO: write javadoc.
-     *
-     * @author fgrilli
-     *
-     */
-    public static class Tokenizer implements PlaceTokenizer<EditWorkspacePlace> {
-        static final String SEPARATOR = ";";
-
-        public EditWorkspacePlace getPlace(String token) {
-            String bits[] = token.split(SEPARATOR);
-
-            if (bits.length != 2) {
-                return null;
+        @Override
+        protected PrefixAndToken getPrefixAndToken(Place newPlace) {
+            if(newPlace instanceof EditWorkspacePlace){
+                return new PrefixAndToken("", new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace)newPlace));
             }
-
-            String workspace = bits[0];
-
-            return new EditWorkspacePlace(workspace, null);
+            return null;
         }
 
-        public String getToken(EditWorkspacePlace place) {
-            return place.getWorkspace();
+        @Override
+        protected PlaceTokenizer<?> getTokenizer(String prefix) {
+            return factory.getEditWorkspaceTokenizer();
         }
-    }
 
-    private String workspace;
-
-    private String viewName;
-
-    public EditWorkspacePlace(String workspace, String viewName) {
-        this.workspace = workspace;
-        this.viewName = viewName;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
 }
+
+        /**
+         * TODO: write javadoc.
+         *
+         * @author fgrilli
+         *
+         */
+        class TokenizerFactory {
+            public EditWorkspacePlace.Tokenizer getEditWorkspaceTokenizer() {
+                return new EditWorkspacePlace.Tokenizer();
+            }
+}
+

@@ -45,6 +45,8 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
  * <br/>
  * <br/>
  *<strong>This way of managing the application state is experimental and likely to change in the future.</strong>
+ *@deprecated This way of handling browser's history will be replaced by the {@link Place} mechanism.
+ *
  * @author fgrilli
  *
  */
