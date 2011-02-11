@@ -39,9 +39,25 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
+import info.magnolia.module.admincentral.activity.ShowContentActivity;
 import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.navigation.Menu;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.place.EditWorkspacePlace;
+import info.magnolia.module.admincentral.place.ShowContentPlace;
+import info.magnolia.module.admincentral.place.SomePlace;
 import info.magnolia.module.admincentral.views.TestDetailView;
+import info.magnolia.module.vaadin.activity.Activity;
+import info.magnolia.module.vaadin.activity.ActivityManager;
+import info.magnolia.module.vaadin.activity.ActivityMapper;
+import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceChangeEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.region.ComponentContainerWrappingRegion;
+import info.magnolia.module.vaadin.region.Region;
 
 import javax.jcr.RepositoryException;
 
@@ -62,7 +78,6 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
 
 /**
@@ -73,6 +88,34 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class AdminCentralApplication extends Application {
 
+    private final class MenuActivity implements Activity, Menu.Presenter {
+
+        public void start(Region region, EventBus eventBus) {
+            Menu menu;
+            try {
+                menu = new Menu(this);
+                menu.setSizeFull();
+                region.setComponent(menu);
+            }
+            catch (RepositoryException e) {
+                getMainWindow().showNotification(e.getMessage());
+            }
+        }
+
+        public void onMenuSelection(MenuItemConfiguration menuConfig) {
+            Place newPlace;
+            if(menuConfig.getRepo() != null){
+                newPlace = new EditWorkspacePlace(menuConfig.getRepo(), menuConfig.getView());
+            } else if(menuConfig.getViewTarget() != null) {
+                newPlace = new ShowContentPlace(menuConfig.getViewTarget(), menuConfig.getView());
+            }else {
+                newPlace = new SomePlace(menuConfig.getName());
+            }
+
+            placeController.goTo(newPlace);
+        }
+    }
+
     private static final Logger log = LoggerFactory.getLogger(AdminCentralApplication.class);
 
     private static final long serialVersionUID = 5773744599513735815L;
@@ -82,6 +125,12 @@ public class AdminCentralApplication extends Application {
     private VerticalLayout mainContainer;
 
     private TestDetailView detailView;
+
+    private VerticalLayout menuDisplay;
+
+    private EventBus eventBus;
+
+    private PlaceController placeController;
 
     public VerticalLayout getMainContainer() {
         return mainContainer;
@@ -98,38 +147,48 @@ public class AdminCentralApplication extends Application {
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
         initLayout();
         setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
+
+        eventBus = new EventBus();
+        eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
+
+        placeController = new PlaceController(eventBus);
+
+        ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
+            Activity menuActivity = new MenuActivity();
+            public Activity getActivity(Place place) {
+                return menuActivity;
+            }
+        }, eventBus);
+
+        ActivityManager mainActivityManager = new ActivityManager(new ActivityMapper() {
+
+            public Activity getActivity(final Place place) {
+                if(place instanceof EditWorkspacePlace){
+                    EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
+                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), editWorkspacePlace.getViewName());
+                }
+                else if(place instanceof ShowContentPlace){
+                    ShowContentPlace showContentPlace = (ShowContentPlace)place;
+                    return new ShowContentActivity(showContentPlace.getViewTarget(), showContentPlace.getViewName());
+                }
+                else if(place instanceof SomePlace){
+                    return new Activity() {
+                        public void start(Region region, EventBus eventBus) {
+                            region.setComponent(new Label(((SomePlace)place).getName()));
+                        }
+                    };
+                }
+                else{
+                    return null;
+                }
+            }
+        }, eventBus);
+
+        mainActivityManager.setDisplay(new ComponentContainerWrappingRegion(mainContainer));
+        menuActivityManager.setDisplay(new ComponentContainerWrappingRegion(menuDisplay));
+
+        placeController.goTo(new EditWorkspacePlace("website", null));
     }
-
-    /*@Override
-    public Window getWindow(String name) {
-       // If we already have the requested window, use it
-        Window w = super.getWindow(name);
-        if (w == null) {
-            // If no window found, create it. This happens e.g. when opening the app on a new browser tab (multitabs).
-            w = new Window(name);
-            // set windows name to the one requested
-            w.setName(name);
-            // add it to this application
-            addWindow(w);
-            // add some content
-           /* Window modal = new Window();
-            modal.setModal(true);
-            Label  label = new Label("Sorry, multitabs for Magnolia AdminCentral are not yet supported. Please close this browser's tab.");
-            modal.setHeight("200px");
-            modal.setWidth("300px");
-            modal.setCaption("Info message");
-            modal.setClosable(false);
-            modal.setDraggable(false);
-            modal.setResizable(false);
-            modal.center();
-            modal.addComponent(label);
-            // ensure use of window specific url
-            w.open(new ExternalResource(w.getURL().toString()));
-            w.addWindow(modal);
-        }
-        return w;
-
-    }*/
 
     /**
      * Creates the application layout and UI elements.
@@ -201,19 +260,8 @@ public class AdminCentralApplication extends Application {
         });
         headerLayout.addComponent(logout, "right: 10px; top: 10px;");
 
-        final VerticalLayout leftPaneLayout = new VerticalLayout();
-        leftPaneLayout.setHeight("100%");
-        Menu menu = null;
-        try {
-            menu = new Menu();
-            menu.setSizeFull();
-        } catch (RepositoryException re) {
-            re.printStackTrace();
-            getMainWindow().showNotification("Application menu could not be created. Please contact site administrator.<br/>", re.getMessage(), Notification.TYPE_ERROR_MESSAGE);
-            //don't go any further.
-            return;
-        }
-        leftPaneLayout.addComponent(menu);
+        menuDisplay = new VerticalLayout();
+        menuDisplay.setHeight("100%");
 
 
         final HorizontalSplitPanel mainSplitPanel = new HorizontalSplitPanel();
@@ -234,7 +282,7 @@ public class AdminCentralApplication extends Application {
             }
         });
 
-        mainSplitPanel.addComponent(leftPaneLayout);
+        mainSplitPanel.addComponent(menuDisplay);
         mainSplitPanel.addComponent(mainContainer);
         innerContainer.addComponent(mainSplitPanel);
         innerContainer.addComponent(detailView);

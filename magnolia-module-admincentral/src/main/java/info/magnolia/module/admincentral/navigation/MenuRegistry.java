@@ -35,11 +35,12 @@ package info.magnolia.module.admincentral.navigation;
 
 import info.magnolia.objectfactory.Components;
 
-import javax.jcr.RepositoryException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Maintains a registry of menu providers registered by name.

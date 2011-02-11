@@ -41,11 +41,12 @@ import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhC
 import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.tree.ConfiguredTreeManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Magnolia's AdminCentral Module.

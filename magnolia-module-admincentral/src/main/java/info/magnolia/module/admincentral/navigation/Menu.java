@@ -33,6 +33,26 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.admincentral.AdminCentralModule;
+import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
+import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
+import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
@@ -45,25 +65,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
-import com.vaadin.ui.Window.Notification;
 import com.vaadin.ui.themes.BaseTheme;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.admincentral.AdminCentralModule;
-import info.magnolia.module.admincentral.components.MagnoliaBaseComponent;
-import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
-import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 
 /**
@@ -91,7 +93,17 @@ public class Menu extends MagnoliaBaseComponent {
      */
     private boolean isMenuBeingAttachedToApp = false;
 
-    public Menu() throws RepositoryException {
+    /**
+     * Presenter we have to inform about navigation events.
+     */
+    public static interface Presenter{
+        void onMenuSelection(MenuItemConfiguration menuConf);
+    }
+
+    private Presenter presenter;
+
+    public Menu(Presenter presenter) throws RepositoryException {
+        this.presenter = presenter;
         setCompositionRoot(accordion);
         final Map<String, MenuItemConfiguration> menuConfig = ((AdminCentralModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
 
@@ -184,9 +196,9 @@ public class Menu extends MagnoliaBaseComponent {
 
     //open website view by default. TODO make it configurable
     private void openViewOnFirstAccess() {
-        MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
-        menuItemConfiguration.setRepo("website");
-        new OpenMainViewMenuAction("").handleAction(menuItemConfiguration, getApplication());
+//        MenuItemConfiguration menuItemConfiguration = new MenuItemConfiguration();
+//        menuItemConfiguration.setRepo("website");
+//        new OpenMainViewMenuAction("").handleAction(menuItemConfiguration, getApplication());
     }
 
     /**
@@ -262,7 +274,7 @@ public class Menu extends MagnoliaBaseComponent {
                 //this is likely first app entering and not via a bookmark.
                 if(isMenuBeingAttachedToApp){
                     source.getUriFragmentUtility().setFragment("website", false);
-                    openViewOnFirstAccess();
+                     openViewOnFirstAccess();
                     isMenuBeingAttachedToApp = false;
                 }
             }
@@ -294,16 +306,19 @@ public class Menu extends MagnoliaBaseComponent {
 
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
             if (tab != null) {
-                MenuItemConfiguration item = menuItems.get(tab);
+                MenuItemConfiguration menuConfig = menuItems.get(tab);
                 String menuUriFragment = menuItemKeys.get(tab);
                 setUriFragmentOnSelectTabChange(menuUriFragment);
 
-                try {
-                    item.getAction().handleAction(item, getApplication());
-                } catch (RuntimeException e) {
-                    e.printStackTrace();
-                    getApplication().getMainWindow().showNotification("Something bad happened. Please look at the application logs.<br/>", e.toString(), Notification.TYPE_ERROR_MESSAGE);
-                }
+                presenter.onMenuSelection(menuConfig);
+
+//
+//                try {
+//                    item.getAction().handleAction(item, getApplication());
+//                } catch (RuntimeException e) {
+//                    e.printStackTrace();
+//                    getApplication().getMainWindow().showNotification("Something bad happened. Please look at the application logs.<br/>", e.toString(), Notification.TYPE_ERROR_MESSAGE);
+//                }
 
             }
         }
