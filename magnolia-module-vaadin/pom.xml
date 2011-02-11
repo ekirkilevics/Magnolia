@@ -25,6 +25,11 @@
       <artifactId>vaadin</artifactId>
     </dependency>
     <dependency>
+		<groupId>org.vaadin.addons</groupId>
+		<artifactId>blackboard</artifactId>
+		<version>2.1.1</version>
+	</dependency>
+    <dependency>
       <groupId>org.vaadin.addons</groupId>
       <artifactId>vaadin-treetable</artifactId>
     </dependency>
