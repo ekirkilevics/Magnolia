@@ -192,9 +192,9 @@ public class AdminCentralApplication extends Application {
         mainActivityManager.setDisplay(new ComponentContainerWrappingRegion(mainContainer));
         menuActivityManager.setDisplay(new ComponentContainerWrappingRegion(menuDisplay));
 
+        // Browser history integration
         PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-        // Browser history integration
         final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website", null);
         historyHandler.register(placeController, eventBus, defaultPlace);
         //see PlaceHistoryHandler javadoc as to why we need to add it as a component
