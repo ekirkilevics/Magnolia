@@ -39,10 +39,10 @@ import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceTokenizer;
 
 /**
- * This class is the hub of your application's navigation system. It links
- * the {@link Place}s your user navigates to
+ * This class is the hub of the application's navigation system. It links
+ * the {@link Place}s a user navigates to
  * with the browser history system &mdash; that is, it makes the browser's back
- * and forth buttons work for you, and also makes each spot in your app
+ * and forth buttons work, and also makes each spot in the app
  * bookmarkable.
  * TODO: do it better. This is a first sketchy attempt to write an implementation for {@link AbstractPlaceHistoryMapper}.
  * In GWT this is usually carried out by the {@link PlaceHistoryMapperGenerator} during gwt compilation phase.
