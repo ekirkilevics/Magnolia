@@ -95,6 +95,8 @@ public class Menu extends CustomComponent {
     public Menu(Presenter presenter) throws RepositoryException {
         this.presenter = presenter;
         setCompositionRoot(accordion);
+        setSizeFull();
+
         final Map<String, MenuItemConfiguration> menuConfig = ((AdminCentralModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
 
         for (Entry<String, MenuItemConfiguration> menuItemEntry : menuConfig.entrySet()) {

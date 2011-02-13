@@ -110,7 +110,7 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
     eventBus.addListener(new PlaceChangeListener() {
         public void onPlaceChange(PlaceChangeEvent event) {
             Place newPlace = event.getNewPlace();
-            log.info("onPlaceChange...");
+            log.debug("onPlaceChange...");
             historian.setFragment(tokenForPlace(newPlace), false);
         }
     });

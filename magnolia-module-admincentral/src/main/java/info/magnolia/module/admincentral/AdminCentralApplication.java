@@ -64,6 +64,7 @@ import info.magnolia.module.vaadin.region.Region;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +98,6 @@ public class AdminCentralApplication extends Application {
             Menu menu;
             try {
                 menu = new Menu(this);
-                menu.setSizeFull();
                 region.setComponent(menu);
             }
             catch (RepositoryException e) {
@@ -107,9 +107,9 @@ public class AdminCentralApplication extends Application {
 
         public void onMenuSelection(MenuItemConfiguration menuConfig) {
             Place newPlace;
-            if(menuConfig.getRepo() != null){
+            if(StringUtils.isNotBlank(menuConfig.getRepo())){
                 newPlace = new EditWorkspacePlace(menuConfig.getRepo(), menuConfig.getView());
-            } else if(menuConfig.getViewTarget() != null) {
+            } else if(StringUtils.isNotBlank(menuConfig.getViewTarget())) {
                 newPlace = new ShowContentPlace(menuConfig.getViewTarget(), menuConfig.getView());
             }else {
                 newPlace = new SomePlace(menuConfig.getName());
