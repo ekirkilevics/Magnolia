@@ -50,34 +50,39 @@ import info.magnolia.module.vaadin.place.PlaceTokenizer;
  *
  */
 public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<TokenizerFactory> {
-       public AdminCentralPlaceHistoryMapper() {
-           setFactory(new TokenizerFactory());
-       }
+    protected static final String TREE_PREFIX = "tree";
 
-        @Override
-        protected PrefixAndToken getPrefixAndToken(Place newPlace) {
-            if(newPlace instanceof EditWorkspacePlace){
-                return new PrefixAndToken("", new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace)newPlace));
-            }
-            return null;
+    public AdminCentralPlaceHistoryMapper() {
+        setFactory(new TokenizerFactory());
+    }
+
+    @Override
+    protected PrefixAndToken getPrefixAndToken(Place newPlace) {
+        if (newPlace instanceof EditWorkspacePlace) {
+            return new PrefixAndToken(TREE_PREFIX, new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace) newPlace));
         }
+        return null;
+    }
 
-        @Override
-        protected PlaceTokenizer<?> getTokenizer(String prefix) {
+    @Override
+    protected PlaceTokenizer<?> getTokenizer(String prefix) {
+        if(TREE_PREFIX.equals(prefix)){
             return factory.getEditWorkspaceTokenizer();
         }
+        return null;
+    }
 
 }
 
-        /**
-         * TODO: write javadoc.
-         *
-         * @author fgrilli
-         *
-         */
-        class TokenizerFactory {
-            public EditWorkspacePlace.Tokenizer getEditWorkspaceTokenizer() {
-                return new EditWorkspacePlace.Tokenizer();
-            }
+/**
+ * TODO: write javadoc.
+ *
+ * @author fgrilli
+ *
+ */
+class TokenizerFactory {
+    public EditWorkspacePlace.Tokenizer getEditWorkspaceTokenizer() {
+        return new EditWorkspacePlace.Tokenizer();
+    }
 }
 

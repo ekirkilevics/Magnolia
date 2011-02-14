@@ -51,7 +51,6 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
  * <p>
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * <p>
- * FIXME: browser's back button doesn't work due to PlaceHistoryMapper.getPlace(token) wrong implementation.
  * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app component <strong>(except those wrapped in {@link ComponentContainerWrappingRegion} else it is removed!)</strong>.
  * This is because internally it uses {@link UriFragmentUtility} which MUST be attached to the application main window in order to work. An alternative to
  * using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides) to mimic GWT's {@link Historian}.
@@ -94,9 +93,9 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
 
   public void fragmentChanged(FragmentChangedEvent source) {
       String token = source.getUriFragmentUtility().getFragment();
-      log.info("fragmentChanged with token {}", token);
+      log.debug("fragmentChanged with token {}", token);
 
-      //handleHistoryToken(token); need to fix PlaceHistoryMapper.getPlace(token) to uncomment this
+      handleHistoryToken(token); //need to fix PlaceHistoryMapper.getPlace(token) to uncomment this
   }
 
   /**
@@ -160,9 +159,10 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
     }
 
     private String tokenForPlace(Place newPlace) {
-        if (defaultPlace.equals(newPlace)) {
+        //FIXME if uncommented the URI fragment won't be written
+        /*if (defaultPlace.equals(newPlace)) {
             return "";
-        }
+        }*/
 
         String token = mapper.getToken(newPlace);
         if (token != null) {
