@@ -45,7 +45,6 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 
 
-
 /**
  * Monitors {@link PlaceChangeEvent}s and
  * browser's history events (via Vaadin's {@link UriFragmentUtility}) and keep them in sync.
@@ -53,7 +52,7 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * <p>
  * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app component <strong>(except those wrapped in {@link ComponentContainerWrappingRegion} else it is removed!)</strong>.
- * This is because internally it uses {@link UriFragmentUtility} which MUST be attached to the application main window in order to work. An alternative to
+ * This is because internally it uses {@link UriFragmentUtility} which <strong>MUST</strong> be attached to the application main window in order to work. An alternative to
  * using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides) to mimic GWT's {@link Historian}.
  * @author fgrilli
  */
@@ -73,8 +72,6 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
   private PlaceController placeController;
 
   private Place defaultPlace = Place.NOWHERE;
-
-  private static final String INIT_FRAGMENT = "______init______";
 
   /**
    * Create a new PlaceHistoryHandler.
@@ -101,7 +98,7 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
      * With this trick we're forcing UriFragmentUtility to return us the actual fragment.
      */
     if(fragment == null){
-        historian.setFragment(INIT_FRAGMENT);
+        historian.setFragment("");
         fragment = historian.getFragment();
     }
     handleHistoryToken(fragment);
@@ -157,7 +154,7 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
 
         Place newPlace = null;
 
-        if ("".equals(token) || INIT_FRAGMENT.equals(token)) {
+        if ("".equals(token)) {
             newPlace = defaultPlace;
         }
 
