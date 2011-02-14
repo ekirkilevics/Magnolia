@@ -94,8 +94,7 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
   public void fragmentChanged(FragmentChangedEvent source) {
       String token = source.getUriFragmentUtility().getFragment();
       log.debug("fragmentChanged with token {}", token);
-
-      handleHistoryToken(token); //need to fix PlaceHistoryMapper.getPlace(token) to uncomment this
+      handleHistoryToken(token);
   }
 
   /**
