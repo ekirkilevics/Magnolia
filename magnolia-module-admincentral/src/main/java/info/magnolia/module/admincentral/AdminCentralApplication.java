@@ -197,10 +197,9 @@ public class AdminCentralApplication extends Application {
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
         final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website", null);
         historyHandler.register(placeController, eventBus, defaultPlace);
-        //see PlaceHistoryHandler javadoc as to why we need to add it as a component
         outerContainer.addComponent(historyHandler);
-        //FIXME historyHandler.handleCurrentHistory(); upon app startup throws NPE at AbstractPlaceHistoryMapper.java:49
-        placeController.goTo(defaultPlace);
+        historyHandler.handleCurrentHistory();
+        //placeController.goTo(defaultPlace);
     }
 
     /**
