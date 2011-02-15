@@ -52,18 +52,20 @@ public class EditWorkspacePlace extends Place {
         static final String SEPARATOR = ";";
 
         public EditWorkspacePlace getPlace(String token) {
-            /*String bits[] = token.split(SEPARATOR);
+            String bits[] = token.split(SEPARATOR);
 
-            if (bits.length != 2) {
-                return null;
+            if (bits.length == 1) {
+                return new EditWorkspacePlace(token, null);
             }
-
-            String workspace = bits[0];*/
-
+            if (bits.length == 2) {
+                return new EditWorkspacePlace(bits[0], bits[1]);
+            }
             return new EditWorkspacePlace(token, null);
         }
 
         public String getToken(EditWorkspacePlace place) {
+            if (place.getViewName() != null)
+                return place.getWorkspace() + SEPARATOR + place.getViewName();
             return place.getWorkspace();
         }
     }

@@ -33,35 +33,6 @@
  */
 package info.magnolia.module.admincentral;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.security.User;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
-import info.magnolia.module.admincentral.activity.ShowContentActivity;
-import info.magnolia.module.admincentral.dialog.DialogWindow;
-import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
-import info.magnolia.module.admincentral.place.EditWorkspacePlace;
-import info.magnolia.module.admincentral.place.ShowContentPlace;
-import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.module.admincentral.views.TestDetailView;
-import info.magnolia.module.vaadin.activity.Activity;
-import info.magnolia.module.vaadin.activity.ActivityManager;
-import info.magnolia.module.vaadin.activity.ActivityMapper;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeListener;
-import info.magnolia.module.vaadin.place.PlaceController;
-import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
-import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
-import info.magnolia.module.vaadin.region.ComponentContainerWrappingRegion;
-import info.magnolia.module.vaadin.region.Region;
-
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -83,6 +54,34 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.activity.ShowContentActivity;
+import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.navigation.Menu;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
+import info.magnolia.module.admincentral.place.EditWorkspacePlace;
+import info.magnolia.module.admincentral.place.ShowContentPlace;
+import info.magnolia.module.admincentral.place.SomePlace;
+import info.magnolia.module.admincentral.tree.TreeActivity;
+import info.magnolia.module.admincentral.views.TestDetailView;
+import info.magnolia.module.vaadin.activity.Activity;
+import info.magnolia.module.vaadin.activity.ActivityManager;
+import info.magnolia.module.vaadin.activity.ActivityMapper;
+import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceChangeEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
+import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
+import info.magnolia.module.vaadin.region.ComponentContainerWrappingRegion;
+import info.magnolia.module.vaadin.region.Region;
 
 /**
  * Magnolia's AdminCentral.
@@ -170,7 +169,7 @@ public class AdminCentralApplication extends Application {
             public Activity getActivity(final Place place) {
                 if(place instanceof EditWorkspacePlace){
                     EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), editWorkspacePlace.getViewName());
+                    return new TreeActivity(editWorkspacePlace.getWorkspace(), placeController);
                 }
                 else if(place instanceof ShowContentPlace){
                     ShowContentPlace showContentPlace = (ShowContentPlace)place;
