@@ -188,8 +188,8 @@ public class AdminCentralApplication extends Application {
             }
         }, eventBus);
 
-        mainActivityManager.setDisplay(new ComponentContainerWrappingRegion(mainContainer));
-        menuActivityManager.setDisplay(new ComponentContainerWrappingRegion(menuDisplay));
+        mainActivityManager.setDisplay(new ComponentContainerWrappingRegion("main", mainContainer));
+        menuActivityManager.setDisplay(new ComponentContainerWrappingRegion("navigation", menuDisplay));
 
         // Browser history integration
         PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
