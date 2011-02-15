@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,42 +25,37 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.vaadin.region;
+package info.magnolia.module.vaadin.place;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
- * A {@link Region} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
- * components could be added.
+ * A {@link Place} which is is build of several sub place. Used in combination of sub MVP containers
+ * build by {@link info.magnolia.module.vaadin.activity.AbstractMVPContainerActivity}.
  */
-public class ComponentContainerWrappingRegion implements Region {
+public class CompositePlace extends Place {
 
-    private String id;
+    final private Map<String, Place> subPlaces = new HashMap<String, Place>();
 
-    private ComponentContainer componentContainer;
-
-    public ComponentContainerWrappingRegion(String id, ComponentContainer componentContainer) {
-        this.id = id;
-        this.componentContainer = componentContainer;
+    public Place getSubPlace(String regionId) {
+        return subPlaces.get(regionId);
     }
 
-    public void setComponent(Component component) {
-        componentContainer.removeAllComponents();
-        if (component != null) {
-            componentContainer.addComponent(component);
-        }
+    public void setSubPlace(String regionId, Place newPlace) {
+        subPlaces.put(regionId, newPlace);
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public boolean equals(Object arg0) {
+        return subPlaces.equals(subPlaces);
     }
 
 }

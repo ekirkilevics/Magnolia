@@ -44,4 +44,6 @@ public interface Region {
 
     void setComponent(Component component);
 
+    String getId();
+
 }
