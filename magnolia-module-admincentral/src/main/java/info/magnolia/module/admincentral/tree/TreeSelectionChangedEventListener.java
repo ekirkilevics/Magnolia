@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import com.github.wolfie.blackboard.Listener;
+import info.magnolia.module.vaadin.event.Listener;
 
 /**
  * TODO: write javadoc.

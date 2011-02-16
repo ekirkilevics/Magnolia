@@ -33,7 +33,8 @@
  */
 package info.magnolia.module.vaadin.place;
 
-import com.github.wolfie.blackboard.Listener;
+import info.magnolia.module.vaadin.event.Listener;
+
 /**
  * Listens to {@link PlaceChangeRequestEvent}s.
  */

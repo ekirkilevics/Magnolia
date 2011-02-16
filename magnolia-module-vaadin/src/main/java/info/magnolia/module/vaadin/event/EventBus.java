@@ -37,7 +37,7 @@ import com.github.wolfie.blackboard.Blackboard;
 
 
 /**
- * Will dispatch fired {@link Event}s to the {@link com.github.wolfie.blackboard.Listener}s.
+ * Will dispatch fired {@link Event}s to the {@link Listener}s.
  *
  * Currently based on {@link Blackboard}.
  */

@@ -31,13 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.module.vaadin.place;
-
-import info.magnolia.module.vaadin.event.Listener;
+package info.magnolia.module.vaadin.event;
 
 /**
- * Listens to {@link PlaceChangeEvent}s.
+ * A marker interface for listeners used in the {@link EventBus}.
+ * @author fgrilli
  */
-public interface PlaceChangeListener extends Listener {
-    void onPlaceChange(PlaceChangeEvent event);
+public interface Listener extends com.github.wolfie.blackboard.Listener {
+
 }
