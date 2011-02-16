@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,44 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree.action;
+package info.magnolia.module.admincentral.tree;
 
 import javax.jcr.Item;
-import javax.jcr.RepositoryException;
 
-import com.vaadin.event.Action;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import info.magnolia.module.vaadin.event.Event;
 
 /**
- * Base class for all tree actions.
+ * TODO: write javadoc.
+ *
+ * @author tmattsson
+ *
  */
-public abstract class TreeAction extends Action {
+public class TreeSelectionChangedEvent implements Event {
 
-    private static final long serialVersionUID = -4170116352082513835L;
+    private final TreeView.Presenter treeViewPresenter;
+    private final String treeName;
+    private final Item item;
 
-    private String name;
-
-    public TreeAction() {
-        super(null);
+    public TreeSelectionChangedEvent(TreeView.Presenter presenter, String treeName, Item item) {
+        this.treeViewPresenter = presenter;
+        this.treeName = treeName;
+        this.item = item;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public TreeView.Presenter getTreeViewPresenter() {
+        return treeViewPresenter;
     }
 
-    public String getName() {
-        return name;
+    public String getTreeName() {
+        return treeName;
     }
 
-    public boolean isAvailable(Item item) {
-        return true;
+    public Item getItem() {
+        return item;
     }
-
-    public void handleAction(JcrBrowser jcrBrowser, TreeDefinition treeDefinition, Object sender, Object target) throws RepositoryException {
-        handleAction(jcrBrowser, jcrBrowser.getContainer().getJcrItem((ContainerItemId) target));
-    }
-
-    protected abstract void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
 }

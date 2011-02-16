@@ -33,10 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.util.List;
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.CustomComponent;
+import info.magnolia.module.admincentral.tree.action.TreeAction;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 /**
@@ -65,5 +68,13 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
                 }
             }
         });
+    }
+
+    public List<TreeAction> getActionsForItem(Item item) {
+        return jcrBrowser.getActionsForItem(item);
+    }
+
+    public void executeActionForSelectedItem(String actionName) {
+        jcrBrowser.executeActionForSelectedItem(actionName);
     }
 }

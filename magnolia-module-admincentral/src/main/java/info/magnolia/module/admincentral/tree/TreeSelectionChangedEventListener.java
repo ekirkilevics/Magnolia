@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,44 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree.action;
+package info.magnolia.module.admincentral.tree;
 
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.event.Action;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import com.github.wolfie.blackboard.Listener;
 
 /**
- * Base class for all tree actions.
+ * TODO: write javadoc.
+ *
+ * @author tmattsson
+ *
  */
-public abstract class TreeAction extends Action {
+public interface TreeSelectionChangedEventListener extends Listener {
 
-    private static final long serialVersionUID = -4170116352082513835L;
-
-    private String name;
-
-    public TreeAction() {
-        super(null);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isAvailable(Item item) {
-        return true;
-    }
-
-    public void handleAction(JcrBrowser jcrBrowser, TreeDefinition treeDefinition, Object sender, Object target) throws RepositoryException {
-        handleAction(jcrBrowser, jcrBrowser.getContainer().getJcrItem((ContainerItemId) target));
-    }
-
-    protected abstract void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
+    void onTreeSelectionChanged(TreeSelectionChangedEvent event);
 }

@@ -33,10 +33,12 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
+import info.magnolia.module.admincentral.tree.action.TreeAction;
 import info.magnolia.module.vaadin.activity.Activity;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
@@ -54,6 +56,7 @@ public class TreeActivity implements Activity, TreeView.Presenter {
     private final String treeName;
     private EventBus eventBus;
     private PlaceController placeController;
+    private TreeViewImpl treeView;
 
     public TreeActivity(String treeName, PlaceController placeController) {
         this.treeName = treeName;
@@ -63,15 +66,21 @@ public class TreeActivity implements Activity, TreeView.Presenter {
     public void start(Region region, EventBus eventBus) {
         this.eventBus = eventBus;
         try {
-            TreeViewImpl treeView = new TreeViewImpl(treeName, this);
+            treeView = new TreeViewImpl(treeName, this);
             region.setComponent(treeView);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
+    public List<TreeAction> getActionsForItem(Item jcrItem) {
+        return treeView.getActionsForItem(jcrItem);
+    }
+
     public void onItemSelection(Item jcrItem) {
         try {
+
+            eventBus.fire(new TreeSelectionChangedEvent(this, treeName, jcrItem));
 
             // TODO at this point we want to send a message to PlaceHistoryHandler to update the fragment, but the event also resets the view
 
@@ -80,6 +89,10 @@ public class TreeActivity implements Activity, TreeView.Presenter {
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    public void executeActionForSelectedItem(String actionName) {
+        treeView.executeActionForSelectedItem(actionName);
     }
 
     @Override

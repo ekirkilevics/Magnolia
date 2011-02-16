@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.tree;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -60,9 +61,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.AdminCentralApplication;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.navigation.TestDetailViewAction;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 import info.magnolia.module.admincentral.tree.container.JcrContainer;
@@ -112,18 +111,7 @@ public class JcrBrowser extends TreeTable {
                 try {
                     ContainerItemId itemId = (ContainerItemId) target;
                     Item item = container.getJcrItem(itemId);
-
-                    for (MenuItem mi : treeDefinition.getContextMenuItems()) {
-                        TreeAction action = mi.getAction();
-
-                        if (!action.isAvailable(item))
-                            continue;
-
-                        action.setCaption(mi.getLabel());
-                        action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
-                        actions.add(action);
-
-                    }
+                    actions.addAll(getActionsForItem(item));
                 } catch (RepositoryException e) {
                     log.error(e.getMessage(), e);
                 }
@@ -142,6 +130,23 @@ public class JcrBrowser extends TreeTable {
                 }
             }
         });
+    }
+
+    public List<TreeAction> getActionsForItem(Item item) {
+        ArrayList<TreeAction> actions = new ArrayList<TreeAction>();
+        for (MenuItem mi : treeDefinition.getContextMenuItems()) {
+            TreeAction action = mi.getAction();
+            action.setName(mi.getName());
+
+            if (!action.isAvailable(item))
+                continue;
+
+            action.setCaption(mi.getLabel());
+            action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
+            actions.add(action);
+
+        }
+        return actions;
     }
 
     /**
@@ -319,8 +324,6 @@ public class JcrBrowser extends TreeTable {
             private static final long serialVersionUID = 1L;
 
             public void itemClick(ItemClickEvent event) {
-                //XXX remove me: here just for testing purposes
-                new TestDetailViewAction("").handleAction(event.getItemId(), ((AdminCentralApplication)getApplication()).getDetailView());
                 if (event.isDoubleClick()) {
 
                     // TODO we need to unset these somehow...
@@ -393,5 +396,25 @@ public class JcrBrowser extends TreeTable {
             e.printStackTrace();
         }
         return super.getItemIcon(itemId);
+    }
+
+    public void executeActionForSelectedItem(String actionName) {
+        Item item = null;
+        try {
+            item = getContainer().getJcrItem((ContainerItemId) getValue());
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return;
+        }
+        List<TreeAction> actions = getActionsForItem(item);
+        for (TreeAction treeAction : actions) {
+            if (treeAction.getName().equals(actionName)) {
+                try {
+                    treeAction.handleAction(this, treeDefinition, this, new ContainerItemId(item));
+                } catch (RepositoryException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+        }
     }
 }

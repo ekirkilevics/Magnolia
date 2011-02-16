@@ -33,7 +33,10 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import java.util.List;
 import javax.jcr.Item;
+
+import info.magnolia.module.admincentral.tree.action.TreeAction;
 
 /**
  * TODO: write javadoc.
@@ -51,8 +54,13 @@ public interface TreeView {
      */
     public interface Presenter {
 
+        List<TreeAction> getActionsForItem(Item jcrItem);
+
         void onItemSelection(Item jcrItem);
+
+        void executeActionForSelectedItem(String actionName);
     }
 
-    
+    List<TreeAction> getActionsForItem(Item jcrItem);
+
 }

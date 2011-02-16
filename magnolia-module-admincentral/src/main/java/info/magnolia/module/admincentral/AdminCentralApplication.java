@@ -69,6 +69,8 @@ import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
 import info.magnolia.module.admincentral.tree.TreeActivity;
+import info.magnolia.module.admincentral.tree.TreeSelectionChangedEvent;
+import info.magnolia.module.admincentral.tree.TreeSelectionChangedEventListener;
 import info.magnolia.module.admincentral.views.TestDetailView;
 import info.magnolia.module.vaadin.activity.Activity;
 import info.magnolia.module.vaadin.activity.ActivityManager;
@@ -149,11 +151,14 @@ public class AdminCentralApplication extends Application {
         setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
-        initLayout();
-        setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
 
         eventBus = new EventBus();
         eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
+        eventBus.register(TreeSelectionChangedEventListener.class, TreeSelectionChangedEvent.class);
+
+        initLayout();
+        setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
+
 
         placeController = new PlaceController(eventBus);
 
@@ -208,7 +213,7 @@ public class AdminCentralApplication extends Application {
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
 
-        detailView = new TestDetailView();
+        detailView = new TestDetailView(eventBus);
         detailView.setSizeFull();
 
         outerContainer = new VerticalLayout();

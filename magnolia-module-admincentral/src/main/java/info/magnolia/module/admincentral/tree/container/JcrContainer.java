@@ -247,7 +247,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     private Collection<ContainerItemId> getRootItemIds() {
         try {
             Session session = getSession();
-            Node rootNode = session.getRootNode();
+            Node rootNode = session.getNode(treeDefinition.getPath());
             return getChildren(new ContainerItemId(rootNode));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
