@@ -64,7 +64,6 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.themes.BaseTheme;
 
-
 /**
  * The Application accordion Menu.
  * TODO rewrite it from the ground up as it's getting more and more messy and ugly?
@@ -75,7 +74,6 @@ import com.vaadin.ui.themes.BaseTheme;
 public class Menu extends CustomComponent {
 
     private static final long serialVersionUID = 1L;
-    private static final String SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE = "Selected action is not available in Milestone 1";
 
     private static final Logger log = LoggerFactory.getLogger(Menu.class);
     private final Map<Tab, MenuItemConfiguration> menuItems = new HashMap<Tab, MenuItemConfiguration>();
@@ -108,8 +106,8 @@ public class Menu extends CustomComponent {
 
             // register new top level menu
             addTab(menuItemEntry.getKey(), menuItem);
-
         }
+
         //TODO for testing only. To be removed.
         MenuItemConfiguration testDialogsMenu = new MenuItemConfiguration();
         testDialogsMenu.setLabel("Dialogs");
@@ -191,8 +189,10 @@ public class Menu extends CustomComponent {
      * @author fgrilli
      *
      */
-    public class MenuItem extends Button{
+    public class MenuItem extends Button {
+
         private static final long serialVersionUID = 1L;
+
         private MenuItemConfiguration item;
 
         public MenuItem(final MenuItemConfiguration item) {
@@ -219,15 +219,9 @@ public class Menu extends CustomComponent {
             this.addListener(new ClickListener() {
 
                 public void buttonClick(ClickEvent event) {
-                    if (action == null ) {
-                        return;
-                    }
-                    action.handleAction(SELECTED_ACTION_IS_NOT_AVAILABLE_IN_MILESTONE, getApplication());
+                    presenter.onMenuSelection(item);
                 }
             });
-            // this ain't working
-            //super.getActionManager().addAction(action);
-
        }
     }
 
