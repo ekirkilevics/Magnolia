@@ -35,7 +35,7 @@ package info.magnolia.module.admincentral.activity;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.module.vaadin.activity.Activity;
+import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.region.Region;
 import info.magnolia.objectfactory.Classes;
@@ -46,7 +46,7 @@ import com.vaadin.ui.Component;
 /**
  * Shows a target page in an iframe.
  */
-public class ShowContentActivity implements Activity {
+public class ShowContentActivity extends AbstractActivity {
 
     private String viewTarget;
 

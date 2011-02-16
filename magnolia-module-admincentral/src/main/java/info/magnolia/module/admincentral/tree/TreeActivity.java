@@ -39,7 +39,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
-import info.magnolia.module.vaadin.activity.Activity;
+import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceController;
@@ -51,7 +51,7 @@ import info.magnolia.module.vaadin.region.Region;
  * @author tmattsson
  *
  */
-public class TreeActivity implements Activity, TreeView.Presenter {
+public class TreeActivity extends AbstractActivity implements TreeView.Presenter {
 
     private final String treeName;
     private EventBus eventBus;

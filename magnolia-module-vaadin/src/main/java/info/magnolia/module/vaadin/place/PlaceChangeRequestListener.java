@@ -31,40 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.module.vaadin.place;
 
-import info.magnolia.module.admincentral.views.GenericTreeTableView;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.region.Region;
-import info.magnolia.objectfactory.Classes;
+import com.github.wolfie.blackboard.Listener;
 
-import com.vaadin.ui.Component;
+public interface PlaceChangeRequestListener extends Listener{
 
-
-/**
- * Edit a workspace. Shows the structure view.
- */
-public class EditWorkspaceActivity extends AbstractActivity {
-
-    private static final String defaultTreeClassName = GenericTreeTableView.class.getName();
-
-    private String workspace;
-
-    private String viewName;
-
-    public EditWorkspaceActivity(String workspace, String viewName) {
-        this.workspace = workspace;
-        this.viewName = viewName != null ? viewName : defaultTreeClassName;
-    }
-
-    public void start(Region region, EventBus eventBus) {
-        try {
-            region.setComponent((Component) Classes.newInstance(viewName, workspace));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+    void onPlaceChangeRequest(PlaceChangeRequestEvent event);
 
 }

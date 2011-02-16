@@ -42,7 +42,8 @@ import java.util.Map;
 
 
 /**
- * Definition of a tree.
+ * Definition of a tree: A tree is a perennial woody plant. It is most often defined as a woody plant that has many secondary
+ * branches supported clear of the ground on a single main stem or trunk with clear apical dominance.
  */
 public class TreeDefinition implements Serializable {
 
@@ -53,6 +54,8 @@ public class TreeDefinition implements Serializable {
     private String repository;
 
     private String path;
+
+    private String customStyles = "";
 
     /**
      * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show
@@ -142,5 +145,19 @@ public class TreeDefinition implements Serializable {
 
     public boolean addContextMenuItem(MenuItem menuItem) {
         return contextMenuItems.add(menuItem);
+    }
+    /**
+     * A white space separated String holding custom styles to apply to this tree.
+     * @see TreeTable#setStyleName(String)
+     */
+    public void setCustomStyles(String customStyles) {
+        this.customStyles = customStyles;
+    }
+    /**
+     * @return A white space separated String holding custom styles to apply to this tree.
+     * @see TreeTable#setStyleName(String)
+     */
+    public String getCustomStyles() {
+        return customStyles;
     }
 }

@@ -33,19 +33,49 @@
  */
 package info.magnolia.module.vaadin.place;
 
-import info.magnolia.module.vaadin.event.EventBus;
+import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.dialogs.ConfirmDialog.Listener;
 
+import com.vaadin.Application;
+
+import info.magnolia.module.vaadin.event.EventBus;
 
 /**
  * In charge of the user's location in the app.
  */
 public class PlaceController {
+
     private final EventBus eventBus;
+    private Delegate delegate;
 
     private Place where = Place.NOWHERE;
 
-    public PlaceController(EventBus eventBus) {
+    /**
+     * Optional delegate in charge of Window related events. Provides nice
+     * isolation for unit testing, and allows customization of confirmation
+     * handling.
+     */
+    public interface Delegate {
+      //HandlerRegistration addWindowClosingHandler(ClosingHandler handler);
+      void confirm(String message, ConfirmDialog.Listener listener);
+    }
+
+    public static class DefaultDelegate implements Delegate {
+
+        private Application application;
+
+        public DefaultDelegate(Application application) {
+            this.application = application;
+        }
+
+        public void confirm(String message, Listener listener) {
+            ConfirmDialog.show(application.getMainWindow(), message, listener);
+        }
+    }
+
+    public PlaceController(final EventBus eventBus, Delegate delegate) {
         this.eventBus = eventBus;
+        this.delegate = delegate;
     }
 
     /**
@@ -58,12 +88,29 @@ public class PlaceController {
     /**
      * Request a change to a new place.
      */
-    public void goTo(Place newPlace) {
+    public void goTo(final Place newPlace) {
       if (getWhere().equals(newPlace)) {
         return;
       }
+      PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
+      eventBus.fire(willChange);
+      if(willChange.getWarning() != null){
+          delegate.confirm(willChange.getWarning(), new ConfirmDialog.Listener() {
+              public void onClose(ConfirmDialog dialog) {
+                  if(dialog.isConfirmed()){
+                      goToWithoutChecks(newPlace);
+                  }
+               }
+           });
+      }
+      else{
+          goToWithoutChecks(newPlace);
+      }
 
-      where = newPlace;
-      eventBus.fire(new PlaceChangeEvent(newPlace));
+    }
+
+    protected void goToWithoutChecks(final Place newPlace) {
+        this.where = newPlace;
+        eventBus.fire(new PlaceChangeEvent(newPlace));
     }
 }

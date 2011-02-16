@@ -72,6 +72,7 @@ import info.magnolia.module.admincentral.tree.TreeActivity;
 import info.magnolia.module.admincentral.tree.TreeSelectionChangedEvent;
 import info.magnolia.module.admincentral.tree.TreeSelectionChangedEventListener;
 import info.magnolia.module.admincentral.views.TestDetailView;
+import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.activity.Activity;
 import info.magnolia.module.vaadin.activity.ActivityManager;
 import info.magnolia.module.vaadin.activity.ActivityMapper;
@@ -79,6 +80,8 @@ import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
 import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
 import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
@@ -93,7 +96,7 @@ import info.magnolia.module.vaadin.region.Region;
  */
 public class AdminCentralApplication extends Application {
 
-    private final class MenuActivity implements Activity, Menu.Presenter {
+    private final class MenuActivity extends AbstractActivity implements Menu.Presenter {
 
         public void start(Region region, EventBus eventBus) {
             Menu menu;
@@ -151,16 +154,15 @@ public class AdminCentralApplication extends Application {
         setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
-
-        eventBus = new EventBus();
-        eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
-        eventBus.register(TreeSelectionChangedEventListener.class, TreeSelectionChangedEvent.class);
-
         initLayout();
         setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
 
+        eventBus = new EventBus();
+        eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
+        eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
+        eventBus.register(TreeSelectionChangedEventListener.class, TreeSelectionChangedEvent.class);
 
-        placeController = new PlaceController(eventBus);
+        placeController = new PlaceController(eventBus, new PlaceController.DefaultDelegate(this));
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
             Activity menuActivity = new MenuActivity();
@@ -181,7 +183,7 @@ public class AdminCentralApplication extends Application {
                     return new ShowContentActivity(showContentPlace.getViewTarget(), showContentPlace.getViewName());
                 }
                 else if(place instanceof SomePlace){
-                    return new Activity() {
+                    return new AbstractActivity() {
                         public void start(Region region, EventBus eventBus) {
                             region.setComponent(new Label(((SomePlace)place).getName()));
                         }
@@ -203,7 +205,6 @@ public class AdminCentralApplication extends Application {
         historyHandler.register(placeController, eventBus, defaultPlace);
         outerContainer.addComponent(historyHandler);
         historyHandler.handleCurrentHistory();
-        //placeController.goTo(defaultPlace);
     }
 
     /**

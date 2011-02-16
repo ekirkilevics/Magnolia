@@ -33,10 +33,15 @@
  */
 package info.magnolia.module.vaadin.activity;
 
+import org.vaadin.dialogs.ConfirmDialog;
+
+
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.region.Region;
 
 /**
@@ -45,9 +50,9 @@ import info.magnolia.module.vaadin.region.Region;
  *
  * Inspired by {@link com.google.gwt.activity.shared.ActivityManager}.
  */
-public class ActivityManager implements PlaceChangeListener {
+public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestListener {
 
-    private static final Activity NULL_ACTIVITY = new Activity() {
+    private static final Activity NULL_ACTIVITY = new AbstractActivity() {
         public void start(Region region, EventBus eventBus) {
             region.setComponent(null);
         }
@@ -88,4 +93,13 @@ public class ActivityManager implements PlaceChangeListener {
         this.region = region;
     }
 
+    public void onPlaceChangeRequest(final PlaceChangeRequestEvent event) {
+
+        if (!currentActivity.equals(NULL_ACTIVITY)) {
+            final String message = currentActivity.mayStop();
+            if(message != null) {
+                event.setWarning(message);
+            }
+        }
+    }
 }

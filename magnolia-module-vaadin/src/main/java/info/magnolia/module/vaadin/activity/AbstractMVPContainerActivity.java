@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.vaadin.activity;
 
+import com.vaadin.Application;
+
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.CompositePlace;
 import info.magnolia.module.vaadin.place.Place;
@@ -77,8 +79,11 @@ public abstract class AbstractMVPContainerActivity {
 
     private PlaceController innerPlaceController;
 
-    public AbstractMVPContainerActivity(PlaceController outerPlaceController) {
+    private Application application;
+
+    public AbstractMVPContainerActivity(PlaceController outerPlaceController, Application application) {
         this.outerPlaceController = outerPlaceController;
+        this.application = application;
     }
 
     public void start(Region region, EventBus outerEventBus) {
@@ -86,7 +91,7 @@ public abstract class AbstractMVPContainerActivity {
 
         outerEventBus.addListener(new OuterPlaceChangeListerner());
         innerEventBus = new EventBus();
-        innerPlaceController = new PlaceController(innerEventBus);
+        innerPlaceController = new PlaceController(innerEventBus, new PlaceController.DefaultDelegate(application));
 
         innerEventBus.addListener(new InnerPlaceChangeListener());
 

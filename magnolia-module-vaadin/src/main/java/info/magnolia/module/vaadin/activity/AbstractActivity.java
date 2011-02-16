@@ -31,40 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
-
-import info.magnolia.module.admincentral.views.GenericTreeTableView;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.region.Region;
-import info.magnolia.objectfactory.Classes;
-
-import com.vaadin.ui.Component;
-
+package info.magnolia.module.vaadin.activity;
 
 /**
- * Edit a workspace. Shows the structure view.
+ * Simple Activity implementation that is always willing to stop.
+ * @author fgrilli
+ *
  */
-public class EditWorkspaceActivity extends AbstractActivity {
+public abstract class AbstractActivity implements Activity {
 
-    private static final String defaultTreeClassName = GenericTreeTableView.class.getName();
-
-    private String workspace;
-
-    private String viewName;
-
-    public EditWorkspaceActivity(String workspace, String viewName) {
-        this.workspace = workspace;
-        this.viewName = viewName != null ? viewName : defaultTreeClassName;
-    }
-
-    public void start(Region region, EventBus eventBus) {
-        try {
-            region.setComponent((Component) Classes.newInstance(viewName, workspace));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    public String mayStop() {
+        return null;
     }
 
 }

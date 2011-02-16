@@ -47,4 +47,11 @@ import info.magnolia.module.vaadin.region.Region;
  */
 public interface Activity {
     void start(Region region, EventBus eventBus);
+    /**
+     * Called when the user is trying to navigate away from this activity.
+     *
+     * @return A message to display to the user, e.g. to warn of unsaved work, or
+     *         null to say nothing
+     */
+    String mayStop();
 }
