@@ -154,7 +154,7 @@ public class AdminCentralApplication extends Application {
         setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
-        initLayout();
+        
         setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
 
         eventBus = new EventBus();
@@ -194,10 +194,12 @@ public class AdminCentralApplication extends Application {
                 }
             }
         }, eventBus);
-
+        
+        initLayout();
+        
         mainActivityManager.setDisplay(new ComponentContainerWrappingRegion("main", mainContainer));
         menuActivityManager.setDisplay(new ComponentContainerWrappingRegion("navigation", menuDisplay));
-
+        
         // Browser history integration
         PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
