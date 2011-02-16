@@ -34,7 +34,9 @@
 package info.magnolia.module.vaadin.place;
 
 import com.github.wolfie.blackboard.Listener;
-
+/**
+ * Listens to {@link PlaceChangeRequestEvent}s.
+ */
 public interface PlaceChangeRequestListener extends Listener{
 
     void onPlaceChangeRequest(PlaceChangeRequestEvent event);

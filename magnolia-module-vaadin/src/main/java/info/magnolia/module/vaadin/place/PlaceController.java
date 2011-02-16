@@ -59,7 +59,12 @@ public class PlaceController {
       //HandlerRegistration addWindowClosingHandler(ClosingHandler handler);
       void confirm(String message, ConfirmDialog.Listener listener);
     }
-
+    /**
+     *
+     * Default implementation for {@link Delegate}.
+     * @author fgrilli
+     *
+     */
     public static class DefaultDelegate implements Delegate {
 
         private Application application;

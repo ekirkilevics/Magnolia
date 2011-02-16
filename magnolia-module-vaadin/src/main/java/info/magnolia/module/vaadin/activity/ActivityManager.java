@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.vaadin.activity;
 
-import org.vaadin.dialogs.ConfirmDialog;
-
-
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
