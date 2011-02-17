@@ -96,6 +96,12 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     }
 
     @Override
+    public String mayStop() {
+    	//TODO retrieve this from properties file.
+    	return "Are you sure you want to leave this page?";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
