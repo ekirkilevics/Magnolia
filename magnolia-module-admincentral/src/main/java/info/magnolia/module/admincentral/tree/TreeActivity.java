@@ -33,17 +33,15 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import java.util.List;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.place.EditItemPlace;
+import info.magnolia.module.vaadin.activity.AbstractActivity;
+import info.magnolia.module.vaadin.component.HasComponent;
+import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.place.PlaceController;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.place.EditWorkspacePlace;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceController;
-import info.magnolia.module.vaadin.region.Region;
 
 /**
  * TODO: write javadoc.
@@ -57,35 +55,33 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private EventBus eventBus;
     private PlaceController placeController;
     private TreeViewImpl treeView;
+    private UIModel uiModel;
+    private String path;
 
-    public TreeActivity(String treeName, PlaceController placeController) {
+    public TreeActivity(String treeName, String path, PlaceController placeController, UIModel uiModel) {
+        this.uiModel = uiModel;
         this.treeName = treeName;
+        this.path = path;
         this.placeController = placeController;
     }
 
-    public void start(Region region, EventBus eventBus) {
+    public void start(HasComponent display, EventBus eventBus) {
         this.eventBus = eventBus;
         try {
-            treeView = new TreeViewImpl(treeName, this);
-            region.setComponent(treeView);
+            treeView = new TreeViewImpl(treeName, this, uiModel);
+            display.setComponent(treeView);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
-    public List<TreeAction> getActionsForItem(Item jcrItem) {
-        return treeView.getActionsForItem(jcrItem);
+    public UIModel getUIModel() {
+        return uiModel;
     }
 
     public void onItemSelection(Item jcrItem) {
         try {
-
-            eventBus.fire(new TreeSelectionChangedEvent(this, treeName, jcrItem));
-
-            // TODO at this point we want to send a message to PlaceHistoryHandler to update the fragment, but the event also resets the view
-
-//            this.placeController.goTo(new EditWorkspacePlace(treeName, jcrItem.getPath()));
-            this.eventBus.fire(new PlaceChangeEvent(new EditWorkspacePlace(treeName, jcrItem.getPath())));
+            placeController.goTo(new EditItemPlace(treeName, jcrItem.getPath()));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -93,12 +89,6 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void executeActionForSelectedItem(String actionName) {
         treeView.executeActionForSelectedItem(actionName);
-    }
-
-    @Override
-    public String mayStop() {
-        //TODO retrieve this from properties file.
-        return "Are you sure you want to leave this page?";
     }
 
     @Override

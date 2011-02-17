@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.LazyContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Provides the tree definition for a tree configured in the repository.

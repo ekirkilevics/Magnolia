@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,42 +25,24 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.vaadin.region;
+package info.magnolia.module.vaadin.component;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 
 
 /**
- * A {@link Region} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
- * components could be added.
+ * @author pbaerfuss
+ * @version $Id$
+ *
  */
-public class ComponentContainerWrappingRegion implements Region {
+public interface IsComponent {
 
-    private String id;
-
-    private ComponentContainer componentContainer;
-
-    public ComponentContainerWrappingRegion(String id, ComponentContainer componentContainer) {
-        this.id = id;
-        this.componentContainer = componentContainer;
-    }
-
-    public void setComponent(Component component) {
-        componentContainer.removeAllComponents();
-        if (component != null) {
-            componentContainer.addComponent(component);
-        }
-    }
-
-    public String getId() {
-        return id;
-    }
+    Component asComponent();
 
 }

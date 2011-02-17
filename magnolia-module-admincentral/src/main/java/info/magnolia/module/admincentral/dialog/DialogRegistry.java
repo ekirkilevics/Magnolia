@@ -35,9 +35,10 @@ package info.magnolia.module.admincentral.dialog;
 
 import info.magnolia.objectfactory.Components;
 
-import javax.jcr.RepositoryException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Maintains a registry of dialog providers registered by name.

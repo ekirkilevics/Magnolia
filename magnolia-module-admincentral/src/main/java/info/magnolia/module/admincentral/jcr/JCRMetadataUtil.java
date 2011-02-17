@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Collection of utilities to simplify working with the JCR API. To be checked how much this type

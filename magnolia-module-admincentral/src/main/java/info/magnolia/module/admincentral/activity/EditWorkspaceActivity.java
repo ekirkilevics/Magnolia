@@ -33,38 +33,68 @@
  */
 package info.magnolia.module.admincentral.activity;
 
-import info.magnolia.module.admincentral.views.GenericTreeTableView;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.place.EditItemPlace;
+import info.magnolia.module.admincentral.tree.TreeActivity;
+import info.magnolia.module.admincentral.views.EditWorkspaceView;
+import info.magnolia.module.vaadin.activity.Activity;
+import info.magnolia.module.vaadin.activity.ActivityManager;
+import info.magnolia.module.vaadin.activity.ActivityMapper;
+import info.magnolia.module.vaadin.activity.MVPSubContainerActivity;
+import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.region.Region;
-import info.magnolia.objectfactory.Classes;
+import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceController;
 
-import com.vaadin.ui.Component;
+import com.vaadin.Application;
 
 
 /**
  * Edit a workspace. Shows the structure view.
  */
-public class EditWorkspaceActivity extends AbstractActivity {
+public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
-    private static final String defaultTreeClassName = GenericTreeTableView.class.getName();
-
+    private UIModel uiModel;
     private String workspace;
 
-    private String viewName;
-
-    public EditWorkspaceActivity(String workspace, String viewName) {
+    public EditWorkspaceActivity(String workspace, PlaceController outerPlaceController, Application application, UIModel uiModel) {
+        super("edit-workspace", outerPlaceController, application);
         this.workspace = workspace;
-        this.viewName = viewName != null ? viewName : defaultTreeClassName;
+        this.uiModel = uiModel;
     }
 
-    public void start(Region region, EventBus eventBus) {
-        try {
-            region.setComponent((Component) Classes.newInstance(viewName, workspace));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    @Override
+    public String mayStop() {
+        //TODO retrieve this from properties file.
+        return "Are you sure you want to leave this page?";
+    }
+
+    @Override
+    protected void onStart(HasComponent display, EventBus innerEventBus) {
+
+        EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
+
+        ActivityManager treeActivityManager = new ActivityManager(new ActivityMapper() {
+
+            public Activity getActivity(final Place place) {
+                String path = ((EditItemPlace)place).getPath();
+                return new TreeActivity(workspace, path, getInnerPlaceController(), uiModel);
+            }
+        }, innerEventBus);
+
+        ActivityManager detailViewActivityManager = new ActivityManager(new ActivityMapper() {
+            public Activity getActivity(final Place place) {
+                String path = ((EditItemPlace)place).getPath();
+                return new DetailViewActivity(workspace, path, uiModel);
+            }
+        }, innerEventBus);
+
+        treeActivityManager.setDisplay(editWorkspaceView.getTreeDisplay());
+        detailViewActivityManager.setDisplay(editWorkspaceView.getDetailDisplay());
+
+        display.setComponent(editWorkspaceView.asComponent());
+
+        getInnerPlaceController().goTo(new EditItemPlace(workspace, "/"));
     }
 
 }

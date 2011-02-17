@@ -33,6 +33,11 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.objectfactory.Components;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,11 +45,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.objectfactory.Components;
 
 /**
  * ObservedManager for trees configured in the repository.

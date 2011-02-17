@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.MetaData;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Hack implementation of a Content. Temporarily used as long as we don't have a clear vision where

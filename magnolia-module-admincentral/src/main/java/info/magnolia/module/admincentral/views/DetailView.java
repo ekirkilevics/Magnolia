@@ -33,7 +33,14 @@
  */
 package info.magnolia.module.admincentral.views;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.tree.action.TreeAction;
+
 import java.util.List;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,45 +51,36 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
-import info.magnolia.module.admincentral.tree.TreeSelectionChangedEvent;
-import info.magnolia.module.admincentral.tree.TreeSelectionChangedEventListener;
-import info.magnolia.module.admincentral.tree.TreeView;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
-import info.magnolia.module.vaadin.event.EventBus;
 
 /**
  * XXX remove just for testing purposes.
  *
  * @author fgrilli
  */
-public class TestDetailView extends VerticalSplitPanel implements TreeSelectionChangedEventListener {
+public class DetailView extends VerticalSplitPanel {
 
-    private static final Logger log = LoggerFactory.getLogger(TestDetailView.class);
-    private TreeView.Presenter presenter;
+    private static final Logger log = LoggerFactory.getLogger(DetailView.class);
+    private CommandList commandList;
+    private UIModel uiModel;
+    private String workspace;
 
-    public TestDetailView(EventBus eventBus) {
-        setFirstComponent(new CommandList());
+    public DetailView(String workspace, UIModel uiModel) {
+        this.uiModel = uiModel;
+        this.workspace = workspace;
+        commandList = new CommandList();
+        setFirstComponent(commandList);
         setSecondComponent(new DetailForm());
-        eventBus.addListener(this);
     }
 
-    public CommandList getCommandList() {
-        return (CommandList) super.getFirstComponent();
-    }
-
-    public void onTreeSelectionChanged(TreeSelectionChangedEvent event) {
-        CommandList commandList = getCommandList();
-        commandList.removeAllItems();
-        List<TreeAction> actions = event.getTreeViewPresenter().getActionsForItem(event.getItem());
-
-        presenter = event.getTreeViewPresenter();
-
-        for (TreeAction action : actions) {
-            Object itemId = action.getName();
-            commandList.addItem(itemId);
-            Item item = commandList.getItem(itemId);
-            item.getItemProperty("Command").setValue(action.getCaption());
-            commandList.setItemIcon(itemId, action.getIcon());
+    public void showItem(String path) {
+        // FIXME a very ugly hack
+        try {
+            Session session = MgnlContext.getHierarchyManager(workspace).getWorkspace().getSession();
+            javax.jcr.Item item = session.getItem(path);
+            commandList.showCommandsFor(item);
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -92,6 +90,7 @@ public class TestDetailView extends VerticalSplitPanel implements TreeSelectionC
      * @author fgrilli
      */
     public class CommandList extends Table {
+
         public CommandList() {
             setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
             // create some dummy data
@@ -101,10 +100,24 @@ public class TestDetailView extends VerticalSplitPanel implements TreeSelectionC
             addListener(new ItemClickEvent.ItemClickListener() {
                 public void itemClick(ItemClickEvent event) {
                     if (event.isDoubleClick()) {
-                        presenter.executeActionForSelectedItem((String) event.getItemId());
+                        System.out.println("should tell the presenter which will get that action and execute it");
                     }
                 }
             });
+        }
+
+        public void showCommandsFor(javax.jcr.Item item) {
+            commandList.removeAllItems();
+            List<TreeAction> actions = uiModel.getActionsForItem(workspace, item);
+
+            for (TreeAction action : actions) {
+                Object itemId = action.getName();
+                commandList.addItem(itemId);
+                Item commandItem = commandList.getItem(itemId);
+                commandItem.getItemProperty("Command").setValue(action.getCaption());
+                commandList.setItemIcon(itemId, action.getIcon());
+            }
+
         }
 
         public void addCommand(Object command) {

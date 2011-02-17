@@ -33,14 +33,15 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Window;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 
 /**

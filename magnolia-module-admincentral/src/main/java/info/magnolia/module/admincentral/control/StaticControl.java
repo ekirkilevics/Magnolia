@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.dialog.DialogControl;
 
 import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 
 /**
  * Control for adding a static line of content to a dialog.

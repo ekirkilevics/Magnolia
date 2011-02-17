@@ -33,10 +33,6 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
@@ -47,6 +43,10 @@ import info.magnolia.module.admincentral.tree.JcrBrowser;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 
 /**

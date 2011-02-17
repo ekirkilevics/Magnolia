@@ -38,6 +38,8 @@ import info.magnolia.module.vaadin.place.AbstractPlaceHistoryMapper;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceTokenizer;
 
+import com.google.gwt.place.rebind.PlaceHistoryMapperGenerator;
+
 /**
  * This class is the hub of the application's navigation system. It links
  * the {@link Place}s a user navigates to

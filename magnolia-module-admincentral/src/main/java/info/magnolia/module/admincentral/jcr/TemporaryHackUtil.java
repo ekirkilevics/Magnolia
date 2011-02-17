@@ -33,9 +33,9 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
-import javax.jcr.Node;
-
 import info.magnolia.cms.core.Content;
+
+import javax.jcr.Node;
 
 
 /**

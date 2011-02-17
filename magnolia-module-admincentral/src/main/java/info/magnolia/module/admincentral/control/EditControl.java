@@ -33,14 +33,16 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import info.magnolia.cms.core.Content;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import info.magnolia.cms.core.Content;
-import org.apache.commons.lang.StringUtils;
-
-import javax.jcr.RepositoryException;
 
 /**
  * Control for editing text in dialogs.

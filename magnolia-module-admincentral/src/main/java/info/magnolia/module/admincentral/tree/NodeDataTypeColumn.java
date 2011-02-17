@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.tree;
 
 import java.io.Serializable;
+
 import javax.jcr.Item;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;

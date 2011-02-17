@@ -36,6 +36,7 @@ package info.magnolia.module.admincentral.dialog;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
+
 import org.apache.commons.lang.StringUtils;
 
 /**

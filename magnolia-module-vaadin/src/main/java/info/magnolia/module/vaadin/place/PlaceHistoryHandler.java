@@ -33,16 +33,18 @@
  */
 package info.magnolia.module.vaadin.place;
 
+import info.magnolia.module.vaadin.component.ComponentContainerBasedDisplay;
 import info.magnolia.module.vaadin.event.EventBus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
+import com.vaadin.ui.VerticalLayout;
 
 
 /**
@@ -51,7 +53,7 @@ import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
  * <p>
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * <p>
- * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app component <strong>(except those wrapped in {@link ComponentContainerWrappingRegion} else it is removed!)</strong>.
+ * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app component <strong>(except those wrapped in {@link ComponentContainerBasedDisplay} else it is removed!)</strong>.
  * This is because internally it uses {@link UriFragmentUtility} which <strong>MUST</strong> be attached to the application main window in order to work. An alternative to
  * using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides) to mimic GWT's {@link Historian}.
  * @author fgrilli

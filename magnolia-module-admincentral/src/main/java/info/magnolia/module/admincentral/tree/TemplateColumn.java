@@ -33,16 +33,6 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import java.io.Serializable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.Field;
-import com.vaadin.ui.NativeSelect;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
@@ -50,6 +40,18 @@ import info.magnolia.module.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.module.admincentral.tree.container.JcrContainer;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
+
+import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Field;
+import com.vaadin.ui.NativeSelect;
 
 /**
  * A column that displays the currently selected template for a page and allows the editor to choose

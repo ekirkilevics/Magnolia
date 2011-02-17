@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.vaadin.activity;
 
+import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.region.Region;
 
 
 /**
@@ -46,7 +46,7 @@ import info.magnolia.module.vaadin.region.Region;
  * Inspired by {@link com.google.gwt.activity.shared.Activity}.
  */
 public interface Activity {
-    void start(Region region, EventBus eventBus);
+    void start(HasComponent display, EventBus eventBus);
     /**
      * Called when the user is trying to navigate away from this activity.
      *

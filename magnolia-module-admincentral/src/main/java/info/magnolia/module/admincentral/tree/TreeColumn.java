@@ -33,11 +33,12 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
-import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * Base class for tree columns.

@@ -33,10 +33,11 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import com.vaadin.ui.GridLayout;
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.GridLayout;
 
 /**
  * Provides gui setup, validation and saving of dialog field.

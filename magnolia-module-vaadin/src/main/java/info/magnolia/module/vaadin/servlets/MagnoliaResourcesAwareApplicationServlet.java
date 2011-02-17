@@ -33,13 +33,15 @@
  */
 package info.magnolia.module.vaadin.servlets;
 
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
 import info.magnolia.cms.util.CustomServletConfig;
 import info.magnolia.cms.util.ServletUtils;
 
+import java.util.Map;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import java.util.Map;
+
+import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 /**
  * We can set the "Resources" parameter for the {@link ApplicationServlet} only by defining the context path. To make this dynamic we manipulate the {@link ServletConfig}.

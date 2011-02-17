@@ -33,7 +33,11 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
+
 import java.io.Serializable;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -41,8 +45,6 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
-import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * Describes a column that contains the label of the item.

@@ -39,7 +39,7 @@ import java.util.Map;
 
 /**
  * A {@link Place} which is is build of several sub place. Used in combination of sub MVP containers
- * build by {@link info.magnolia.module.vaadin.activity.AbstractMVPContainerActivity}.
+ * build by {@link info.magnolia.module.vaadin.activity.MVPSubContainerActivity}.
  */
 public class CompositePlace extends Place {
 

@@ -33,13 +33,13 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 /**
  * Deletes a node from the repository.

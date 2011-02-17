@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.vaadin.place;
 
+import info.magnolia.module.vaadin.event.EventBus;
+
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.dialogs.ConfirmDialog.Listener;
 
 import com.vaadin.Application;
-
-import info.magnolia.module.vaadin.event.EventBus;
 
 /**
  * In charge of the user's location in the app.

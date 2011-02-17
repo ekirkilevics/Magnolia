@@ -33,6 +33,38 @@
  */
 package info.magnolia.module.admincentral;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
+import info.magnolia.module.admincentral.activity.ShowContentActivity;
+import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.navigation.Menu;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
+import info.magnolia.module.admincentral.place.EditWorkspacePlace;
+import info.magnolia.module.admincentral.place.ShowContentPlace;
+import info.magnolia.module.admincentral.place.SomePlace;
+import info.magnolia.module.vaadin.activity.AbstractActivity;
+import info.magnolia.module.vaadin.activity.Activity;
+import info.magnolia.module.vaadin.activity.ActivityManager;
+import info.magnolia.module.vaadin.activity.ActivityMapper;
+import info.magnolia.module.vaadin.component.ComponentContainerBasedDisplay;
+import info.magnolia.module.vaadin.component.HasComponent;
+import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceChangeEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
+import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
+import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
+
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,8 +75,6 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbsoluteLayout;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
@@ -54,39 +84,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.security.User;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.activity.ShowContentActivity;
-import info.magnolia.module.admincentral.dialog.DialogWindow;
-import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
-import info.magnolia.module.admincentral.place.EditWorkspacePlace;
-import info.magnolia.module.admincentral.place.ShowContentPlace;
-import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.module.admincentral.tree.TreeActivity;
-import info.magnolia.module.admincentral.tree.TreeSelectionChangedEvent;
-import info.magnolia.module.admincentral.tree.TreeSelectionChangedEventListener;
-import info.magnolia.module.admincentral.views.TestDetailView;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.activity.Activity;
-import info.magnolia.module.vaadin.activity.ActivityManager;
-import info.magnolia.module.vaadin.activity.ActivityMapper;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeListener;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
-import info.magnolia.module.vaadin.place.PlaceController;
-import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
-import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
-import info.magnolia.module.vaadin.region.ComponentContainerWrappingRegion;
-import info.magnolia.module.vaadin.region.Region;
 
 /**
  * Magnolia's AdminCentral.
@@ -98,11 +95,11 @@ public class AdminCentralApplication extends Application {
 
     private final class MenuActivity extends AbstractActivity implements Menu.Presenter {
 
-        public void start(Region region, EventBus eventBus) {
+        public void start(HasComponent display, EventBus eventBus) {
             Menu menu;
             try {
                 menu = new Menu(this);
-                region.setComponent(menu);
+                display.setComponent(menu);
             }
             catch (RepositoryException e) {
                 getMainWindow().showNotification(e.getMessage());
@@ -112,7 +109,7 @@ public class AdminCentralApplication extends Application {
         public void onMenuSelection(MenuItemConfiguration menuConfig) {
             Place newPlace;
             if(StringUtils.isNotBlank(menuConfig.getRepo())){
-                newPlace = new EditWorkspacePlace(menuConfig.getRepo(), null);
+                newPlace = new EditWorkspacePlace(menuConfig.getRepo());
             } else if(StringUtils.isNotBlank(menuConfig.getViewTarget())) {
                 newPlace = new ShowContentPlace(menuConfig.getViewTarget(), menuConfig.getView());
             }else {
@@ -133,20 +130,17 @@ public class AdminCentralApplication extends Application {
 
     private VerticalLayout mainContainer;
 
-    private TestDetailView detailView;
-
     private VerticalLayout menuDisplay;
 
     private EventBus eventBus;
 
     private PlaceController placeController;
 
+    // FIXME should be a component
+    private UIModel uiModel = new UIModel();
+
     public VerticalLayout getMainContainer() {
         return mainContainer;
-    }
-
-    public TestDetailView getDetailView() {
-        return detailView;
     }
 
     @Override
@@ -161,7 +155,6 @@ public class AdminCentralApplication extends Application {
         initLayout();
         eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
         eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
-        eventBus.register(TreeSelectionChangedEventListener.class, TreeSelectionChangedEvent.class);
 
         placeController = new PlaceController(eventBus, new PlaceController.DefaultDelegate(this));
 
@@ -177,7 +170,7 @@ public class AdminCentralApplication extends Application {
             public Activity getActivity(final Place place) {
                 if(place instanceof EditWorkspacePlace){
                     EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-                    return new TreeActivity(editWorkspacePlace.getWorkspace(), placeController);
+                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), placeController, AdminCentralApplication.this, uiModel);
                 }
                 else if(place instanceof ShowContentPlace){
                     ShowContentPlace showContentPlace = (ShowContentPlace)place;
@@ -185,8 +178,8 @@ public class AdminCentralApplication extends Application {
                 }
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {
-                        public void start(Region region, EventBus eventBus) {
-                            region.setComponent(new Label(((SomePlace)place).getName()));
+                        public void start(HasComponent display, EventBus eventBus) {
+                            display.setComponent(new Label(((SomePlace)place).getName()));
                         }
                     };
                 }
@@ -197,13 +190,13 @@ public class AdminCentralApplication extends Application {
         }, eventBus);
 
 
-        mainActivityManager.setDisplay(new ComponentContainerWrappingRegion("main", mainContainer));
-        menuActivityManager.setDisplay(new ComponentContainerWrappingRegion("navigation", menuDisplay));
+        mainActivityManager.setDisplay(new ComponentContainerBasedDisplay("main", mainContainer));
+        menuActivityManager.setDisplay(new ComponentContainerBasedDisplay("navigation", menuDisplay));
 
         // Browser history integration
         PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
-        final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website", null);
+        final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
         historyHandler.register(placeController, eventBus, defaultPlace);
         outerContainer.addComponent(historyHandler);
         historyHandler.handleCurrentHistory();
@@ -216,8 +209,6 @@ public class AdminCentralApplication extends Application {
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
 
-        detailView = new TestDetailView(eventBus);
-        detailView.setSizeFull();
 
         outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
@@ -286,27 +277,10 @@ public class AdminCentralApplication extends Application {
         final HorizontalSplitPanel mainSplitPanel = new HorizontalSplitPanel();
         mainSplitPanel.setSplitPosition(15);
         mainSplitPanel.setSizeFull();
-        mainSplitPanel.addListener(new SplitterClickListener() {
-            private static final long serialVersionUID = 4837023553542505515L;
-
-            public void splitterClick(SplitterClickEvent event) {
-                if(event.isDoubleClick()){
-                    HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
-                    if(panel.getSplitPosition() > 0){
-                        panel.setSplitPosition(0);
-                    }else {
-                        panel.setSplitPosition(15);
-                    }
-                }
-            }
-        });
-
         mainSplitPanel.addComponent(menuDisplay);
         mainSplitPanel.addComponent(mainContainer);
         innerContainer.addComponent(mainSplitPanel);
-        innerContainer.addComponent(detailView);
         innerContainer.setExpandRatio(mainSplitPanel, 1.0f);
-        innerContainer.setExpandRatio(detailView, .15f);
         outerContainer.addComponent(headerLayout);
         outerContainer.addComponent(innerContainer);
         outerContainer.setExpandRatio(headerLayout, 1.0f);

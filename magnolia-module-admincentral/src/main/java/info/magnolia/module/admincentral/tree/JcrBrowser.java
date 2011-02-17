@@ -33,8 +33,16 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.tree.action.TreeAction;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
+
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -60,11 +68,6 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
-import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * User interface component that extends TreeTable and uses a TreeDefinition for layout and invoking command callbacks.
@@ -75,13 +78,16 @@ public class JcrBrowser extends TreeTable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private UIModel uiModel;
     private TreeDefinition treeDefinition;
     private JcrContainer container;
 
     private Object selectedItemId = null;
     private Object selectedPropertyId = null;
 
-    public JcrBrowser(String treeName) throws RepositoryException {
+
+    public JcrBrowser(String treeName, UIModel uiModel) throws RepositoryException {
+        this.uiModel = uiModel;
         setSizeFull();
         setEditable(false);
         setSelectable(true);
@@ -132,21 +138,9 @@ public class JcrBrowser extends TreeTable {
         });
     }
 
-    public List<TreeAction> getActionsForItem(Item item) {
-        ArrayList<TreeAction> actions = new ArrayList<TreeAction>();
-        for (MenuItem mi : treeDefinition.getContextMenuItems()) {
-            TreeAction action = mi.getAction();
-            action.setName(mi.getName());
 
-            if (!action.isAvailable(item))
-                continue;
-
-            action.setCaption(mi.getLabel());
-            action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
-            actions.add(action);
-
-        }
-        return actions;
+    private Collection<TreeAction> getActionsForItem(Item item) {
+        return uiModel.getActionsForItem(treeDefinition.getName(), item);
     }
 
     /**
@@ -406,7 +400,7 @@ public class JcrBrowser extends TreeTable {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return;
         }
-        List<TreeAction> actions = getActionsForItem(item);
+        Collection<TreeAction> actions = getActionsForItem(item);
         for (TreeAction treeAction : actions) {
             if (treeAction.getName().equals(actionName)) {
                 try {

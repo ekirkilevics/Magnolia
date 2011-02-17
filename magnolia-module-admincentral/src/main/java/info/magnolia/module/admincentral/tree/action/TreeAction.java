@@ -33,13 +33,14 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.Action;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 /**
  * Base class for all tree actions.

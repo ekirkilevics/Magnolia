@@ -33,11 +33,17 @@
  */
 package info.magnolia.module.admincentral.tree.container;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.tree.TreeColumn;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.TreeItemType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PropertyIterator;
@@ -47,10 +53,6 @@ import javax.jcr.Session;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.tree.TreeColumn;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeItemType;
 
 /**
  * Vaadin container that reads its items from a JCR repository.

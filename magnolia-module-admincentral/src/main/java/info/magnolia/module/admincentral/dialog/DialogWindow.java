@@ -33,6 +33,20 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.control.StaticControl;
+import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Validator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
@@ -43,18 +57,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.control.StaticControl;
-import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
 
 /**
  * Window for creating or editing content using a dialog.

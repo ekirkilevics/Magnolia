@@ -33,13 +33,16 @@
  */
 package info.magnolia.module.vaadin.activity;
 
+import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
-import info.magnolia.module.vaadin.region.Region;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
@@ -49,15 +52,17 @@ import info.magnolia.module.vaadin.region.Region;
  */
 public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestListener {
 
+    private static Logger log = LoggerFactory.getLogger(ActivityManager.class);
+
     private static final Activity NULL_ACTIVITY = new AbstractActivity() {
-        public void start(Region region, EventBus eventBus) {
-            region.setComponent(null);
+        public void start(HasComponent display, EventBus eventBus) {
+            display.setComponent(null);
         }
     };
 
     private final ActivityMapper mapper;
     private final EventBus eventBus;
-    private Region region;
+    private HasComponent display;
     private Activity currentActivity = NULL_ACTIVITY;
 
     public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
@@ -82,12 +87,14 @@ public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestL
 
         currentActivity = nextActivity;
 
-        currentActivity.start(region, eventBus);
+        log.debug("starting activity: {}", currentActivity);
+
+        currentActivity.start(display, eventBus);
 
    }
 
-    public void setDisplay(Region region){
-        this.region = region;
+    public void setDisplay(HasComponent display){
+        this.display = display;
     }
 
     public void onPlaceChangeRequest(final PlaceChangeRequestEvent event) {

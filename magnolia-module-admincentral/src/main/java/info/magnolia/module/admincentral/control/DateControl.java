@@ -33,10 +33,11 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import info.magnolia.cms.core.Content;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Window;
-import info.magnolia.cms.core.Content;
 
 /**
  * Control for selecting dates in a dialog.

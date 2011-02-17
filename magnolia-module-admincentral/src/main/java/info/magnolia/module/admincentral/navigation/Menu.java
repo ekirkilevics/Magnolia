@@ -112,12 +112,12 @@ public class Menu extends CustomComponent {
         MenuItemConfiguration testDialogsMenu = new MenuItemConfiguration();
         testDialogsMenu.setLabel("Dialogs");
         testDialogsMenu.setView(DialogSandboxPage.class.getName());
-        testDialogsMenu.setAction(new OpenMainViewMenuAction("testDialogs"));
+        //testDialogsMenu.setAction(new OpenMainViewMenuAction("testDialogs"));
         addTab("testDialogs", testDialogsMenu);
         MenuItemConfiguration testDialogEditorMenu = new MenuItemConfiguration();
         testDialogEditorMenu.setLabel("Dialog Editor");
         testDialogEditorMenu.setView(DraftDialogEditorPage.class.getName());
-        testDialogEditorMenu.setAction(new OpenMainViewMenuAction("testDialogEditor"));
+        //testDialogEditorMenu.setAction(new OpenMainViewMenuAction("testDialogEditor"));
         addTab("testDialogEditor", testDialogEditorMenu);
 
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items

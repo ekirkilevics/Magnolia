@@ -40,6 +40,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.addon.treetable.TreeTable;
+
 
 /**
  * Definition of a tree: A tree is a perennial woody plant. It is most often defined as a woody plant that has many secondary

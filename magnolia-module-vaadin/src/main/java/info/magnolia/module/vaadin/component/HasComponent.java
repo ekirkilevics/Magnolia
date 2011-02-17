@@ -31,19 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.vaadin.region;
+package info.magnolia.module.vaadin.component;
 
 import com.vaadin.ui.Component;
 
 
 /**
- * The region is a part of the UI. Menu, search box or main area are good examples. The
- * {@link info.magnolia.module.vaadin.activity.Activity} will replace the region's component on navigation.
+ * Implemented by displays that can be given accept an {@link IsComponent} to show.
  */
-public interface Region {
+public interface HasComponent {
 
+    /**
+     * Set the only component of the receiver, replacing the previous component if there was one.
+     */
     void setComponent(Component component);
-
-    String getId();
 
 }

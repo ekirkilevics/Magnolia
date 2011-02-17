@@ -33,18 +33,20 @@
  */
 package info.magnolia.module.admincentral.control;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.module.admincentral.dialog.DialogControl;
+import info.magnolia.module.admincentral.dialog.DialogTab;
+import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogControl;
-import info.magnolia.module.admincentral.dialog.DialogTab;
-import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
-import org.apache.commons.lang.StringUtils;
-
-import javax.jcr.RepositoryException;
 
 /**
  * Abstract base class for controls that have a label displayed to the left and a description placed below any

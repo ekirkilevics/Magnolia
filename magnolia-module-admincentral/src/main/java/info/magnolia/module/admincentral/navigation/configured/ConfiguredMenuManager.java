@@ -39,13 +39,14 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admincentral.navigation.ConfiguredMenuProvider;
 import info.magnolia.module.admincentral.navigation.MenuRegistry;
 import info.magnolia.objectfactory.Components;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ObservedManager for menu items configured in repository.

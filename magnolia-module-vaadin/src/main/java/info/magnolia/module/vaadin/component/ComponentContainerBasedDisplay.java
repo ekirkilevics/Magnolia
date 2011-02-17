@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.views;
+package info.magnolia.module.vaadin.component;
 
-import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 
 
 /**
- * A generic tree table view which can show data from any repository.
- *
- * @author fgrilli
+ * A {@link HasComponent} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
+ * components could be added.
  */
-public class GenericTreeTableView extends AbstractTreeTableView {
+public class ComponentContainerBasedDisplay implements HasComponent {
 
-    private static final long serialVersionUID = 1704972467182396882L;
+    private String id;
 
-    public GenericTreeTableView(String treeName) throws RepositoryException {
-        super(treeName);
+    private ComponentContainer componentContainer;
+
+    public ComponentContainerBasedDisplay(String id, ComponentContainer componentContainer) {
+        this.id = id;
+        this.componentContainer = componentContainer;
     }
+
+    public void setComponent(Component component) {
+        componentContainer.removeAllComponents();
+        if (component != null) {
+            componentContainer.addComponent(component);
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
 }

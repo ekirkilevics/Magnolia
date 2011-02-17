@@ -36,9 +36,10 @@ package info.magnolia.module.admincentral.dialog;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
-import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Dialog for creating or editing a paragraph. Uses the paragraphs dialog to find a dialog definition from DialogRegistry.

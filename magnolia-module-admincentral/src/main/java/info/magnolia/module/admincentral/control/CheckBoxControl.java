@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Window;
 import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Window;
 
 /**
  * Control for setting a value to true or false.

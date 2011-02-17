@@ -33,11 +33,11 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 /**
  * Opens a dialog for editing a node in a tree.

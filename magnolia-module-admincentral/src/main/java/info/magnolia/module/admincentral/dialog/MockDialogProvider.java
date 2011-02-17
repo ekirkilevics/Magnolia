@@ -45,9 +45,10 @@ import info.magnolia.module.admincentral.control.SliderControl;
 import info.magnolia.module.admincentral.control.StaticControl;
 import info.magnolia.module.admincentral.control.UuidLinkControl;
 
-import javax.jcr.RepositoryException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Mock DialogProvider that instantiates a dialog useful while prototyping.

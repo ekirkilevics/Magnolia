@@ -33,15 +33,17 @@
  */
 package info.magnolia.module.vaadin.activity;
 
-import com.vaadin.Application;
-
+import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.CompositePlace;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
-import info.magnolia.module.vaadin.region.Region;
+
+import com.vaadin.Application;
 
 
 /**
@@ -49,13 +51,13 @@ import info.magnolia.module.vaadin.region.Region;
  * {@link EventBus}. {@link PlaceChangeEvent} events are fired to the outer {@link PlaceController}
  * and visa versa.
  */
-public abstract class AbstractMVPContainerActivity {
+public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     private final class InnerPlaceChangeListener implements PlaceChangeListener {
 
         public void onPlaceChange(PlaceChangeEvent event) {
             CompositePlace outerPlace = (CompositePlace) outerPlaceController.getWhere();
-            outerPlace.setSubPlace(regionId, event.getNewPlace());
+            outerPlace.setSubPlace(id, event.getNewPlace());
             outerPlaceController.goTo(outerPlace);
         }
     }
@@ -65,13 +67,15 @@ public abstract class AbstractMVPContainerActivity {
         public void onPlaceChange(PlaceChangeEvent event) {
             Place placeToGo = event.getNewPlace();
             if (placeToGo instanceof CompositePlace) {
-                placeToGo = ((CompositePlace) placeToGo).getSubPlace(regionId);
-                innerPlaceController.goTo(placeToGo);
+                placeToGo = ((CompositePlace) placeToGo).getSubPlace(id);
+                if(placeToGo != null){
+                    innerPlaceController.goTo(placeToGo);
+                }
             }
         }
     }
 
-    private String regionId;
+    private String id;
 
     private PlaceController outerPlaceController;
 
@@ -81,27 +85,55 @@ public abstract class AbstractMVPContainerActivity {
 
     private Application application;
 
-    public AbstractMVPContainerActivity(PlaceController outerPlaceController, Application application) {
+    public MVPSubContainerActivity(String id, PlaceController outerPlaceController, Application application) {
+        this.id = id;
         this.outerPlaceController = outerPlaceController;
         this.application = application;
     }
 
-    public void start(Region region, EventBus outerEventBus) {
-        this.regionId = region.getId();
-
+    public void start(HasComponent display, EventBus outerEventBus) {
         outerEventBus.addListener(new OuterPlaceChangeListerner());
         innerEventBus = new EventBus();
         innerPlaceController = new PlaceController(innerEventBus, new PlaceController.DefaultDelegate(application));
 
+        //FIXME, we should not have to register all the events manually
+        innerEventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
+        innerEventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
+
         innerEventBus.addListener(new InnerPlaceChangeListener());
 
         // build the container
-        onStart(region, innerEventBus);
+        onStart(display, innerEventBus);
 
         // now navigate in the container to the correct place
-        innerPlaceController.goTo(((CompositePlace) outerPlaceController.getWhere()).getSubPlace(regionId));
+        Place currentPlace = outerPlaceController.getWhere();
+        if(currentPlace instanceof CompositePlace) {
+            Place subPlace = ((CompositePlace) currentPlace).getSubPlace(id);
+            // FIXME a better solution has to be found
+            if(subPlace != null){
+                innerPlaceController.goTo(subPlace);
+            }
+        }
+        else{
+            throw new IllegalStateException("Current place must be of type " + CompositePlace.class.getName());
+        }
     }
 
-    protected abstract void onStart(Region region, EventBus innerEventBus);
+    protected abstract void onStart(HasComponent display, EventBus innerEventBus);
+
+
+    public String getId() {
+        return id;
+    }
+
+
+    protected EventBus getInnerEventBus() {
+        return innerEventBus;
+    }
+
+
+    protected PlaceController getInnerPlaceController() {
+        return innerPlaceController;
+    }
 
 }
