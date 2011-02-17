@@ -97,8 +97,8 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     @Override
     public String mayStop() {
-    	//TODO retrieve this from properties file.
-    	return "Are you sure you want to leave this page?";
+        //TODO retrieve this from properties file.
+        return "Are you sure you want to leave this page?";
     }
 
     @Override
