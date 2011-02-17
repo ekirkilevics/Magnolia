@@ -43,7 +43,7 @@ import info.magnolia.module.vaadin.place.PlaceTokenizer;
 public class EditWorkspacePlace extends Place {
 
     /**
-     * TODO: write javadoc.
+     * Serializes and deserializes EditWorkspacePlace(s).
      *
      * @author fgrilli
      *
