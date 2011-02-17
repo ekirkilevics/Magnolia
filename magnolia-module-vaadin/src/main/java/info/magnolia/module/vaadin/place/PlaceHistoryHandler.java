@@ -33,13 +33,11 @@
  */
 package info.magnolia.module.vaadin.place;
 
-import info.magnolia.module.vaadin.component.ComponentContainerBasedDisplay;
 import info.magnolia.module.vaadin.event.EventBus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;

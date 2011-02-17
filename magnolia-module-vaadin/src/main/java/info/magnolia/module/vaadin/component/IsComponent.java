@@ -37,9 +37,7 @@ import com.vaadin.ui.Component;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Provides a component. Call {@link #asComponent()}.
  */
 public interface IsComponent {
 
