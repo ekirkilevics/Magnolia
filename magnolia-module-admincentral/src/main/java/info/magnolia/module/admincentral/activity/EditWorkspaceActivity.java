@@ -34,7 +34,7 @@
 package info.magnolia.module.admincentral.activity;
 
 import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.place.EditItemPlace;
+import info.magnolia.module.admincentral.place.ItemSelectedPlace;
 import info.magnolia.module.admincentral.tree.TreeActivity;
 import info.magnolia.module.admincentral.views.EditWorkspaceView;
 import info.magnolia.module.vaadin.activity.Activity;
@@ -77,14 +77,14 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         ActivityManager treeActivityManager = new ActivityManager(new ActivityMapper() {
 
             public Activity getActivity(final Place place) {
-                String path = ((EditItemPlace)place).getPath();
+                String path = ((ItemSelectedPlace)place).getPath();
                 return new TreeActivity(workspace, path, getInnerPlaceController(), uiModel);
             }
         }, innerEventBus);
 
         ActivityManager detailViewActivityManager = new ActivityManager(new ActivityMapper() {
             public Activity getActivity(final Place place) {
-                String path = ((EditItemPlace)place).getPath();
+                String path = ((ItemSelectedPlace)place).getPath();
                 return new DetailViewActivity(workspace, path, uiModel);
             }
         }, innerEventBus);
@@ -94,7 +94,7 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
         display.setComponent(editWorkspaceView.asComponent());
 
-        getInnerPlaceController().goTo(new EditItemPlace(workspace, "/"));
+        getInnerPlaceController().goTo(new ItemSelectedPlace(workspace, "/"));
     }
 
 }

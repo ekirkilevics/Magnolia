@@ -49,9 +49,7 @@ import com.vaadin.terminal.ExternalResource;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * The UI model provides all the definition for the trees, dialogs, commands and so on.
  */
 public class UIModel {
 

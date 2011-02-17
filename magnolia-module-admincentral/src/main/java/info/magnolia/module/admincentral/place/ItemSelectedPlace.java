@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,41 +25,36 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.module.admincentral.place;
 
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.views.DetailView;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.event.EventBus;
-
+import info.magnolia.module.vaadin.place.Place;
 
 /**
- * Shows the detail view and command list.
+ * A sub-place of {@link EditWorkspacePlace} if an item got selected.
  */
-public class DetailViewActivity extends AbstractActivity {
+public class ItemSelectedPlace extends Place {
 
     private String workspace;
 
-    private UIModel uiModel;
+    private String path;
 
-    private DetailView detailView;
-
-    public DetailViewActivity(String workspace, String path, UIModel uiModel) {
+    public ItemSelectedPlace(String workspace, String path) {
         this.workspace = workspace;
-        this.uiModel = uiModel;
-        detailView = new DetailView(workspace, uiModel);
-        detailView.showItem(path);
+        this.path = path;
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
-        display.setComponent(detailView);
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public String getPath() {
+        return path;
     }
 
 }

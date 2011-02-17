@@ -34,7 +34,7 @@
 package info.magnolia.module.admincentral.tree;
 
 import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.place.EditItemPlace;
+import info.magnolia.module.admincentral.place.ItemSelectedPlace;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
@@ -81,7 +81,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void onItemSelection(Item jcrItem) {
         try {
-            placeController.goTo(new EditItemPlace(treeName, jcrItem.getPath()));
+            placeController.goTo(new ItemSelectedPlace(treeName, jcrItem.getPath()));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

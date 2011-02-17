@@ -45,9 +45,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * The view to edit a workspace. Provides slots for the tree and detail view.
  */
 public class EditWorkspaceView implements IsComponent{
 
