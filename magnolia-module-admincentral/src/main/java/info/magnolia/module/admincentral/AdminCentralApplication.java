@@ -112,7 +112,7 @@ public class AdminCentralApplication extends Application {
         public void onMenuSelection(MenuItemConfiguration menuConfig) {
             Place newPlace;
             if(StringUtils.isNotBlank(menuConfig.getRepo())){
-                newPlace = new EditWorkspacePlace(menuConfig.getRepo(), menuConfig.getView());
+                newPlace = new EditWorkspacePlace(menuConfig.getRepo(), null);
             } else if(StringUtils.isNotBlank(menuConfig.getViewTarget())) {
                 newPlace = new ShowContentPlace(menuConfig.getViewTarget(), menuConfig.getView());
             }else {
@@ -154,10 +154,11 @@ public class AdminCentralApplication extends Application {
         setTheme("magnolia");
         //TODO: don't be lazy and make your own message bundle!
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
-        
+
         setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
 
         eventBus = new EventBus();
+        initLayout();
         eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
         eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
         eventBus.register(TreeSelectionChangedEventListener.class, TreeSelectionChangedEvent.class);
@@ -194,12 +195,11 @@ public class AdminCentralApplication extends Application {
                 }
             }
         }, eventBus);
-        
-        initLayout();
-        
+
+
         mainActivityManager.setDisplay(new ComponentContainerWrappingRegion("main", mainContainer));
         menuActivityManager.setDisplay(new ComponentContainerWrappingRegion("navigation", menuDisplay));
-        
+
         // Browser history integration
         PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);

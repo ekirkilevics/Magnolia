@@ -64,35 +64,33 @@ public class EditWorkspacePlace extends Place {
         }
 
         public String getToken(EditWorkspacePlace place) {
-            if (place.getViewName() != null)
-                return place.getWorkspace() + SEPARATOR + place.getViewName();
+            if (place.getPath() != null)
+                return place.getWorkspace() + SEPARATOR + place.getPath();
             return place.getWorkspace();
         }
     }
 
     private String workspace;
 
-    private String viewName;
+    private String path;
 
-    public EditWorkspacePlace(String workspace, String viewName) {
+    public EditWorkspacePlace(String workspace, String path) {
         this.workspace = workspace;
-        this.viewName = viewName;
+        this.path = path;
     }
 
     public String getWorkspace() {
         return workspace;
     }
 
-    public String getViewName() {
-        return viewName;
+    public String getPath() {
+        return path;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
-                + ((viewName == null) ? 0 : viewName.hashCode());
         result = prime * result
                 + ((workspace == null) ? 0 : workspace.hashCode());
         return result;
@@ -110,13 +108,7 @@ public class EditWorkspacePlace extends Place {
             return false;
         }
         EditWorkspacePlace other = (EditWorkspacePlace) obj;
-        if (viewName == null) {
-            if (other.viewName != null) {
-                return false;
-            }
-        } else if (!viewName.equals(other.viewName)) {
-            return false;
-        }
+
         if (workspace == null) {
             if (other.workspace != null) {
                 return false;
