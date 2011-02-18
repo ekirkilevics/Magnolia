@@ -98,7 +98,7 @@ public class JcrBrowser extends TreeTable {
 
         addEditingByDoubleClick();
         addDragAndDrop();
-        this.treeDefinition = TreeRegistry.getInstance().getTree(treeName);
+        this.treeDefinition = uiModel.getTreeDefinition(treeName);
         this.container = new JcrContainer(treeDefinition);
         setContainerDataSource(container);
         addContextMenu();

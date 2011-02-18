@@ -36,7 +36,6 @@ package info.magnolia.module.admincentral.views;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.TreeRegistry;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
 
 import java.util.List;
@@ -80,7 +79,7 @@ public class DetailView extends VerticalSplitPanel {
             if (!path.equals("/")) {
 
                 // In reality the workspace passed to this class is the tree name
-                TreeDefinition treeDefinition = TreeRegistry.getInstance().getTree(workspace);
+                TreeDefinition treeDefinition = uiModel.getTreeDefinition(workspace);
 
                 Session session = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
                 javax.jcr.Item item = session.getItem(path);

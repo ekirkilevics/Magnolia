@@ -58,7 +58,7 @@ public class UIModel {
 
         TreeDefinition treeDefinition;
         try {
-            treeDefinition = TreeRegistry.getInstance().getTree(treeName);
+            treeDefinition = getTreeDefinition(treeName);
         }
         catch (RepositoryException e) {
             throw new IllegalStateException(e);
@@ -78,6 +78,10 @@ public class UIModel {
 
         }
         return actions;
+    }
+
+    public TreeDefinition getTreeDefinition(String treeName) throws RepositoryException {
+        return TreeRegistry.getInstance().getTree(treeName);
     }
 
 
