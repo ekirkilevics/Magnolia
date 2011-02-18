@@ -53,7 +53,7 @@ public class NewPropertyAction extends TreeAction {
     }
 
     @Override
-    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
 
@@ -61,7 +61,9 @@ public class NewPropertyAction extends TreeAction {
             Property property = node.setProperty(name, "");
             node.getSession().save();
 
+            if (jcrBrowser != null)
             jcrBrowser.addItem(new ContainerItemId(property));
+            if (jcrBrowser != null)
             jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }

@@ -57,7 +57,7 @@ public class OpenDialogAction extends TreeAction {
     }
 
     @Override
-    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
         jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("howTo", (Node) item));
     }
 

@@ -33,13 +33,7 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
-
 import java.util.List;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -52,6 +46,10 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.tree.TreeDefinition;
+import info.magnolia.module.admincentral.tree.action.TreeAction;
 
 /**
  * XXX remove just for testing purposes.
@@ -60,10 +58,19 @@ import com.vaadin.ui.VerticalSplitPanel;
  */
 public class DetailView extends VerticalSplitPanel {
 
+    /**
+     * Listener that is called when the user selects a command.
+     */
+    public interface CommandSelectedListener {
+        void onCommandSelected(String commandName, String path);
+    }
+
     private static final Logger log = LoggerFactory.getLogger(DetailView.class);
     private CommandList commandList;
     private UIModel uiModel;
     private String workspace;
+    private String path;
+    private CommandSelectedListener commandSelectedListener;
 
     public DetailView(String workspace, UIModel uiModel) {
         this.uiModel = uiModel;
@@ -73,20 +80,26 @@ public class DetailView extends VerticalSplitPanel {
         setSecondComponent(new DetailForm());
     }
 
+    public void setCommandSelectedListener(CommandSelectedListener commandSelectedListener) {
+        this.commandSelectedListener = commandSelectedListener;
+    }
+
     public void showItem(String path) {
         // FIXME a very ugly hack
         try {
             if (!path.equals("/")) {
 
+                this.path = path;
+
                 // In reality the workspace passed to this class is the tree name
                 TreeDefinition treeDefinition = uiModel.getTreeDefinition(workspace);
 
-                Session session = MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
+                Session session = JCRUtil.getSession(treeDefinition.getRepository());
                 javax.jcr.Item item = session.getItem(path);
-                commandList.showCommandsFor(item);
+                List<TreeAction> actions = uiModel.getCommandsForItem(workspace, item);
+                commandList.showCommands(actions);
             }
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
     }
@@ -100,35 +113,36 @@ public class DetailView extends VerticalSplitPanel {
 
         public CommandList() {
             setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
-            // create some dummy data
             addContainerProperty("Command", String.class, "");
             setSizeFull();
             setSelectable(true);
             addListener(new ItemClickEvent.ItemClickListener() {
                 public void itemClick(ItemClickEvent event) {
-                    if (event.isDoubleClick()) {
-                        System.out.println("should tell the presenter which will get that action and execute it");
+                    if (event.isDoubleClick() && commandSelectedListener != null) {
+                        commandSelectedListener.onCommandSelected((String) event.getItemId(), path);
                     }
                 }
             });
         }
 
-        public void showCommandsFor(javax.jcr.Item item) {
-            commandList.removeAllItems();
-            List<TreeAction> actions = uiModel.getActionsForItem(workspace, item);
-
+        public void showCommands(List<TreeAction> actions) {
+            clearCommands();
             for (TreeAction action : actions) {
-                Object itemId = action.getName();
-                commandList.addItem(itemId);
-                Item commandItem = commandList.getItem(itemId);
-                commandItem.getItemProperty("Command").setValue(action.getCaption());
-                commandList.setItemIcon(itemId, action.getIcon());
+                addCommand(action);
             }
-
         }
 
-        public void addCommand(Object command) {
-            log.info("adding command {} to detail view", command);
+        public void clearCommands() {
+            commandList.removeAllItems();
+        }
+
+        public void addCommand(TreeAction command) {
+            Object itemId = command.getName();
+            commandList.addItem(itemId);
+            Item commandItem = commandList.getItem(itemId);
+            commandItem.getItemProperty("Command").setValue(command.getLabel());
+            commandList.setItemIcon(itemId, command.getIcon());
+            log.info("Added command {} to detail view", command);
         }
     }
 

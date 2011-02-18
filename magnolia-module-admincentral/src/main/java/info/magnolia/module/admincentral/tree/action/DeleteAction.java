@@ -49,21 +49,23 @@ public class DeleteAction extends TreeAction {
     private static final long serialVersionUID = -4485698706375056385L;
 
     @Override
-    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
             node.remove();
             node.getSession().save();
 
-            jcrBrowser.removeItem(new ContainerItemId(item));
+            if (jcrBrowser != null)
+                jcrBrowser.removeItem(new ContainerItemId(item));
 
         } else if (item instanceof Property) {
             Property property = (Property) item;
             property.remove();
             property.getSession().save();
 
-            jcrBrowser.removeItem(new ContainerItemId(item));
+            if (jcrBrowser != null)
+                jcrBrowser.removeItem(new ContainerItemId(item));
         }
     }
 }

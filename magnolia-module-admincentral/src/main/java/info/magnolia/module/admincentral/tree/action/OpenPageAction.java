@@ -57,7 +57,7 @@ public class OpenPageAction extends TreeAction {
     }
 
     @Override
-    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
 

@@ -33,19 +33,19 @@
  */
 package info.magnolia.module.admincentral.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import com.vaadin.terminal.ExternalResource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
 import info.magnolia.module.admincentral.tree.action.TreeAction;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.terminal.ExternalResource;
 
 
 /**
@@ -53,16 +53,35 @@ import com.vaadin.terminal.ExternalResource;
  */
 public class UIModel {
 
+    public void executeCommand(String commandName, String treeName, String path) throws RepositoryException {
 
-    public List<TreeAction> getActionsForItem(String treeName, Item item){
+        TreeDefinition treeDefinition = getTreeDefinition(treeName);
+        Session session = JCRUtil.getSession(treeDefinition.getRepository());
+        Item item = session.getItem(path);
 
-        TreeDefinition treeDefinition;
-        try {
-            treeDefinition = getTreeDefinition(treeName);
+        TreeAction action = getCommand(treeDefinition, commandName);
+        if (!action.isAvailable(item))
+            return;
+
+        action.handleAction(null, item);
+    }
+
+    public TreeAction getCommand(TreeDefinition treeDefinition, String commandName) {
+        for (MenuItem mi : treeDefinition.getContextMenuItems()) {
+            TreeAction action = mi.getAction();
+            if (mi.getName().equals(commandName)) {
+                action.setName(mi.getName());
+                action.setLabel(mi.getLabel());
+                action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
+                return action;
+            }
         }
-        catch (RepositoryException e) {
-            throw new IllegalStateException(e);
-        }
+        return null;
+    }
+
+    public List<TreeAction> getCommandsForItem(String treeName, Item item) {
+
+        TreeDefinition treeDefinition = getTreeDefinition(treeName);
 
         ArrayList<TreeAction> actions = new ArrayList<TreeAction>();
         for (MenuItem mi : treeDefinition.getContextMenuItems()) {
@@ -72,7 +91,7 @@ public class UIModel {
             if (!action.isAvailable(item))
                 continue;
 
-            action.setCaption(mi.getLabel());
+            action.setLabel(mi.getLabel());
             action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
             actions.add(action);
 
@@ -80,10 +99,17 @@ public class UIModel {
         return actions;
     }
 
-    public TreeDefinition getTreeDefinition(String treeName) throws RepositoryException {
-        return TreeRegistry.getInstance().getTree(treeName);
+    public TreeDefinition getTreeDefinition(String treeName) {
+        try {
+            return TreeRegistry.getInstance().getTree(treeName);
+        } catch (RepositoryException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-
-
+    public Item getItem(String treeName, String path) throws RepositoryException {
+        TreeDefinition treeDefinition = getTreeDefinition(treeName);
+        Session session = JCRUtil.getSession(treeDefinition.getRepository());
+        return session.getItem(path);
+    }
 }

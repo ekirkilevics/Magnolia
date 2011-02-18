@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.activity;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.views.DetailView;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
@@ -43,7 +45,7 @@ import info.magnolia.module.vaadin.event.EventBus;
 /**
  * Shows the detail view and command list.
  */
-public class DetailViewActivity extends AbstractActivity {
+public class DetailViewActivity extends AbstractActivity implements DetailView.CommandSelectedListener {
 
     private String workspace;
 
@@ -55,6 +57,7 @@ public class DetailViewActivity extends AbstractActivity {
         this.workspace = workspace;
         this.uiModel = uiModel;
         detailView = new DetailView(workspace, uiModel);
+        detailView.setCommandSelectedListener(this);
         detailView.showItem(path);
     }
 
@@ -62,4 +65,11 @@ public class DetailViewActivity extends AbstractActivity {
         display.setComponent(detailView);
     }
 
+    public void onCommandSelected(String commandName, String path) {
+        try {
+            uiModel.executeCommand(commandName, workspace, path);
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
 }

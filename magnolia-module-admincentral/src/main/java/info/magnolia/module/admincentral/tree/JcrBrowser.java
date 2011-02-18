@@ -42,6 +42,7 @@ import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
@@ -105,6 +106,19 @@ public class JcrBrowser extends TreeTable {
         setPageLength(900);
     }
 
+    private static class JcrBrowserAction extends Action {
+        private TreeAction command;
+
+        private JcrBrowserAction(TreeAction command) {
+            super(command.getLabel());
+            this.command = command;
+        }
+
+        public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+            command.handleAction(jcrBrowser, item);
+        }
+    }
+
     private void addContextMenu() {
 
         addActionHandler(new Action.Handler() {
@@ -113,21 +127,24 @@ public class JcrBrowser extends TreeTable {
 
             public Action[] getActions(Object target, Object sender) {
 
-                ArrayList<Action> actions = new ArrayList<Action>();
                 try {
                     ContainerItemId itemId = (ContainerItemId) target;
                     Item item = container.getJcrItem(itemId);
-                    actions.addAll(getActionsForItem(item));
+                    Collection<TreeAction> commands = getActionsForItem(item);
+                    List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
+                    for (TreeAction command : commands) {
+                        actions.add(new JcrBrowserAction(command));
+                    }
+                    return actions.toArray(new Action[actions.size()]);
                 } catch (RepositoryException e) {
-                    log.error(e.getMessage(), e);
+                    throw new IllegalStateException(e);
                 }
-
-                return actions.toArray(new Action[actions.size()]);
             }
 
             public void handleAction(Action action, Object sender, Object target) {
                 try {
-                    ((TreeAction) action).handleAction(JcrBrowser.this, treeDefinition, sender, target);
+                    ContainerItemId containerItemId = (ContainerItemId) target;
+                    ((JcrBrowserAction) action).handleAction(JcrBrowser.this, container.getJcrItem(containerItemId));
                 } catch (ClassCastException e) {
                     // not our action
                     log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());
@@ -140,7 +157,7 @@ public class JcrBrowser extends TreeTable {
 
 
     private Collection<TreeAction> getActionsForItem(Item item) {
-        return uiModel.getActionsForItem(treeDefinition.getName(), item);
+        return uiModel.getCommandsForItem(treeDefinition.getName(), item);
     }
 
     /**
@@ -404,7 +421,7 @@ public class JcrBrowser extends TreeTable {
         for (TreeAction treeAction : actions) {
             if (treeAction.getName().equals(actionName)) {
                 try {
-                    treeAction.handleAction(this, treeDefinition, this, new ContainerItemId(item));
+                    treeAction.handleAction(this, item);
                 } catch (RepositoryException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }

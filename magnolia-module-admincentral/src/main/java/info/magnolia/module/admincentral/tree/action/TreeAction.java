@@ -33,30 +33,34 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
-
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.event.Action;
+import com.vaadin.terminal.ExternalResource;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 /**
  * Base class for all tree actions.
  */
-public abstract class TreeAction extends Action {
+public abstract class TreeAction {
 
     private static final long serialVersionUID = -4170116352082513835L;
 
+    private String label;
     private String name;
+    // For now a vaadin resource, should be changed
+    private ExternalResource icon;
 
-    public TreeAction() {
-        super(null);
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
     }
 
     public String getName() {
@@ -67,9 +71,13 @@ public abstract class TreeAction extends Action {
         return true;
     }
 
-    public void handleAction(JcrBrowser jcrBrowser, TreeDefinition treeDefinition, Object sender, Object target) throws RepositoryException {
-        handleAction(jcrBrowser, jcrBrowser.getContainer().getJcrItem((ContainerItemId) target));
+    public void setIcon(ExternalResource icon) {
+        this.icon = icon;
     }
 
-    protected abstract void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
+    public ExternalResource getIcon() {
+        return icon;
+    }
+
+    public abstract void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
 }

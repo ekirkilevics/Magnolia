@@ -63,7 +63,7 @@ public class NewNodeAction extends TreeAction {
     }
 
     @Override
-    protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
@@ -80,7 +80,9 @@ public class NewNodeAction extends TreeAction {
 
             // TODO: the new node needs to appear in a specific order!
 
+            if (jcrBrowser != null)
             jcrBrowser.addItem(new ContainerItemId(newChild));
+            if (jcrBrowser != null)
             jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }
