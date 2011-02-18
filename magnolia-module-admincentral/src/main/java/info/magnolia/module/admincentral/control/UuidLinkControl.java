@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 /**
@@ -46,7 +45,7 @@ public class UuidLinkControl extends AbstractLinkControl {
 
     // TODO add repository
 
-    public void save(Content storageNode) throws RepositoryException {
+    public void save(Node storageNode) throws RepositoryException {
 
         // Save UUID
     }

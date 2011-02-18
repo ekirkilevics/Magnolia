@@ -33,14 +33,7 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.control.StaticControl;
-import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -53,10 +46,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.control.StaticControl;
+import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
 
 /**
  * Window for creating or editing content using a dialog.
@@ -68,7 +67,7 @@ public class DialogWindow extends Window {
      */
     public interface PostSaveListener {
 
-        void postSave(Content orCreateContentNode);
+        void postSave(Node orCreateContentNode);
 
     }
 
@@ -101,10 +100,10 @@ public class DialogWindow extends Window {
         initLayout(dialogName);
     }
 
-    public DialogWindow(String dialogName, Content content) throws RepositoryException {
+    public DialogWindow(String dialogName, Node node) throws RepositoryException {
 
-        this.repository = content.getHierarchyManager().getName();
-        this.path = content.getHandle();
+        this.repository = node.getSession().getWorkspace().getName();
+        this.path = node.getPath();
         this.dialog = DialogRegistry.getInstance().getDialog(dialogName);
 
         initLayout(dialogName);
@@ -123,11 +122,11 @@ public class DialogWindow extends Window {
             grid.setMargin(true);
             StaticControl warning = new StaticControl();
             warning.setLabel("Dialog \"" + dialogName + "\" for this paragraph cannot be found. Please contact system administrator.");
-            warning.create(null, grid);
+            warning.create((Node)null, grid);
             mainViewArea = grid;
         } else {
 
-            Content storageNode = getContentNode();
+            Node storageNode = getContentNode();
 
             setModal(true);
             setResizable(true);
@@ -135,7 +134,7 @@ public class DialogWindow extends Window {
             setClosable(false);
             setWidth("800px");
             setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
-
+/*
             TabSheet sheet = new TabSheet();
 
             for (DialogTab dialogTab : dialog.getTabs()) {
@@ -153,7 +152,7 @@ public class DialogWindow extends Window {
 
                 sheet.addTab(grid, dialogTab.getLabel(), null);
             }
-
+*/
             Button editDialogConfiguration = new Button(MessagesManager.getMessages("info.magnolia.module.admincentral.messages").getWithDefault("buttons.editDialogConfiguration", "buttons.editDialogConfiguration"), new Button.ClickListener() {
                 public void buttonClick(Button.ClickEvent event) {
                     getApplication().getMainWindow().addWindow(new EditDialogWindow(dialogName));
@@ -184,7 +183,26 @@ public class DialogWindow extends Window {
             buttons.addComponent(save);
             buttons.setComponentAlignment(save, "right");
 
-            mainViewArea = sheet;
+
+            VerticalTabSheet tabSheet = new VerticalTabSheet();
+            tabSheet.setSizeFull();
+            for (DialogTab dialogTab : dialog.getTabs()) {
+
+                GridLayout grid = new GridLayout(2, 1);
+                grid.setSpacing(true);
+                grid.setMargin(false);
+
+                for (DialogControl dialogItem : dialogTab.getFields()) {
+
+                    dialogItem.create(storageNode, grid);
+
+                    grid.newLine();
+                }
+
+                tabSheet.addTab(dialogTab.getLabel(), grid);
+            }
+
+            mainViewArea = tabSheet;
         }
 
         final String key = "buttons.cancel";
@@ -198,10 +216,15 @@ public class DialogWindow extends Window {
         buttons.addComponent(cancel);
         buttons.setComponentAlignment(cancel, "right");
 
+        HorizontalLayout description = new HorizontalLayout();
+        description.setSizeFull();
+        description.addComponent(new Label("This is the description of the currently focused field"));
+
         VerticalLayout layout = (VerticalLayout) getContent();
         layout.setMargin(true);
         layout.setSpacing(true);
         layout.addComponent(mainViewArea);
+        layout.addComponent(description);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, "right");
     }
@@ -218,7 +241,7 @@ public class DialogWindow extends Window {
     private boolean save() {
         try {
 
-            Content storageNode = getOrCreateContentNode();
+            Node storageNode = getOrCreateContentNode();
 
             // Validate
             for (DialogTab dialogTab : dialog.getTabs()) {
@@ -251,51 +274,49 @@ public class DialogWindow extends Window {
     /**
      * Steps up the node hierarchy to find the node at which level we need to perform save on.
      */
-    private void saveContent(Content content) throws RepositoryException {
-        while (content.getJCRNode().isNew())
-            content = content.getParent();
-        content.save();
+    private void saveContent(Node content) throws RepositoryException {
+        content.getSession().save();
     }
 
-    private Content getContentNode() throws RepositoryException {
+    private Node getContentNode() throws RepositoryException {
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
 
-        Content content = hm.getContent(path);
+        Node content = hm.getContent(path).getJCRNode();
 
         if (StringUtils.isNotEmpty(nodeCollection)) {
-            if (!content.hasContent(nodeCollection))
+            if (!content.hasNode(nodeCollection))
                 return null;
-            content = content.getContent(nodeCollection);
+            content = content.getNode(nodeCollection);
         }
 
         if (StringUtils.isNotEmpty(nodeName)) {
-            if (!content.hasContent(nodeName))
+            if (!content.hasNode(nodeName))
                 return null;
-            content = content.getContent(nodeName);
+            content = content.getNode(nodeName);
         }
 
         return content;
     }
 
-    private Content getOrCreateContentNode() throws RepositoryException {
+    private Node getOrCreateContentNode() throws RepositoryException {
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
 
-        Content content = hm.getContent(path);
+        Node content = hm.getContent(path).getJCRNode();
 
         if (StringUtils.isNotEmpty(nodeCollection)) {
-            if (!content.hasContent(nodeCollection))
-                content = content.createContent(nodeCollection, ItemType.CONTENTNODE);
+            if (!content.hasNode(nodeCollection))
+                content = content.addNode(nodeCollection, ItemType.CONTENTNODE.getSystemName());
             else
-                content = content.getContent(nodeCollection);
+                content = content.getNode(nodeCollection);
         }
 
         if (StringUtils.isNotEmpty(nodeName)) {
-            if (!content.hasContent(nodeName))
-                content = content.createContent(nodeName, ItemType.CONTENTNODE);
+            if (!content.hasNode(nodeName))
+                content = content.addNode(nodeName, ItemType.CONTENTNODE.getSystemName());
             else
-                content = content.getContent(nodeName);
+                content = content.getNode(nodeName);
         }
 
         return content;

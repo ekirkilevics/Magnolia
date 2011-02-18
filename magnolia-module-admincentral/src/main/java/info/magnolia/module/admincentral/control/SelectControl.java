@@ -33,10 +33,8 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
 import java.util.Map;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
  * Control for selecting one of a set of options from a drop down select box.
@@ -64,7 +63,7 @@ public class SelectControl extends AbstractOptionGroupControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException {
         if (comboBox != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -81,7 +80,7 @@ public class SelectControl extends AbstractOptionGroupControl {
         }
 
         if (storageNode != null) {
-            String value = storageNode.getNodeData(getName()).getString();
+            String value = JCRUtil.getPropertyString(storageNode, getName());
             if (StringUtils.isNotEmpty(value))
                 comboBox.select(value);
         } else {
@@ -99,8 +98,8 @@ public class SelectControl extends AbstractOptionGroupControl {
         comboBox.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
-        storageNode.setNodeData(getName(), (String)comboBox.getValue());
+    public void save(Node storageNode) throws RepositoryException {
+        storageNode.setProperty(getName(), (String) comboBox.getValue());
     }
 
     public String getInputPrompt() {

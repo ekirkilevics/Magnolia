@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
@@ -61,7 +60,7 @@ public class FileControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) {
         if (upload != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -76,7 +75,7 @@ public class FileControl extends AbstractDialogControl {
     public void validate() {
     }
 
-    public void save(Content storageNode) throws RepositoryException {
+    public void save(Node storageNode) throws RepositoryException {
     }
 
     public boolean isRequired() {

@@ -65,6 +65,7 @@ import info.magnolia.module.vaadin.place.PlaceController;
 import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
 import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -243,7 +244,7 @@ public class AdminCentralApplication extends Application {
             public void buttonClick(ClickEvent event) {
                 try {
                     if (user instanceof MgnlUser) {
-                        Content userNode = ((MgnlUser) user).getUserNode();
+                        Node userNode = ((MgnlUser) user).getUserNode().getJCRNode();
                         getMainWindow().addWindow(new DialogWindow("userpreferences", userNode));
                     }
                 } catch (RepositoryException e) {

@@ -33,13 +33,13 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
  * Control for editing rich text.
@@ -57,7 +57,7 @@ public class RichTextControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException {
         if (richTextArea != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -66,7 +66,7 @@ public class RichTextControl extends AbstractDialogControl {
         //richTextArea.setWordwrap(wordwrap);
         //richTextArea.setRows(rows);
         if (storageNode != null) {
-            richTextArea.setValue(storageNode.getNodeData(getName()).getString());
+            richTextArea.setValue(JCRUtil.getPropertyString(storageNode, getName()));
         }
 
         if (isFocus()) {
@@ -79,8 +79,8 @@ public class RichTextControl extends AbstractDialogControl {
         richTextArea.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
-        storageNode.setNodeData(getName(), (String) richTextArea.getValue());
+    public void save(Node storageNode) throws RepositoryException {
+        storageNode.setProperty(getName(), (String) richTextArea.getValue());
     }
 
     public boolean isWordwrap() {

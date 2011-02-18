@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import info.magnolia.cms.core.Content;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.GridLayout;
@@ -44,11 +44,11 @@ import com.vaadin.ui.GridLayout;
  */
 public interface DialogControl {
 
-    void create(Content storageNode, GridLayout layout);
+    void create(Node storageNode, GridLayout layout);
 
     void validate();
 
-    void save(Content storageNode) throws RepositoryException;
+    void save(Node storageNode) throws RepositoryException;
 
     void setFocus(boolean focus);
 

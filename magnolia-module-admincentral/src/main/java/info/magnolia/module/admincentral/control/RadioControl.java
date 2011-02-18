@@ -33,10 +33,8 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
 import java.util.Map;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
  * Radio control for selecting one of several options.
@@ -63,7 +62,7 @@ public class RadioControl extends AbstractOptionGroupControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException {
 
         if (group != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
@@ -82,7 +81,7 @@ public class RadioControl extends AbstractOptionGroupControl {
 
 
         if (storageNode != null) {
-            String value = storageNode.getNodeData(getName()).getString();
+            String value = JCRUtil.getPropertyString(storageNode, getName());
             if (StringUtils.isNotEmpty(value))
                 group.select(value);
         }
@@ -98,8 +97,8 @@ public class RadioControl extends AbstractOptionGroupControl {
         group.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
-        storageNode.setNodeData(getName(), (String)group.getValue());
+    public void save(Node storageNode) throws RepositoryException {
+        storageNode.setProperty(getName(), (String) group.getValue());
     }
 
     public boolean isRequired() {

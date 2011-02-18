@@ -136,6 +136,15 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
             // process submenus of the submenu (if any)
             transformSubmenus(hm, sub);
             hm.moveTo(sub.getHandle(), subMenus.getHandle() + "/" + sub.getName());
+
+            if (sub.getName().equals("usersAdmin")) {
+                sub.setNodeData("repo", "usersAdmin");
+                sub.setNodeData("actionClass", "info.magnolia.module.admincentral.navigation.OpenMainViewMenuAction");
+            } else if (sub.getName().equals("usersSystem")) {
+                sub.setNodeData("repo", "usersSystem");
+                sub.setNodeData("actionClass", "info.magnolia.module.admincentral.navigation.OpenMainViewMenuAction");
+            }
+
             hm.save();
         }
     }

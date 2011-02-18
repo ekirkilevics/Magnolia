@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Button;
@@ -61,7 +60,7 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, final Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, final Window mainWindow) {
 
         if (field != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
@@ -99,7 +98,7 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
         field.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
+    public void save(Node storageNode) throws RepositoryException {
     }
 
     public boolean isRequired() {

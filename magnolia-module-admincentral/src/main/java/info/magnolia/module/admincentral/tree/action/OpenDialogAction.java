@@ -33,14 +33,17 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+
 /**
  * Opens a dialog for editing a node in a tree.
+ *
+ * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
  *
  * @author tmattsson
  */
@@ -55,7 +58,7 @@ public class OpenDialogAction extends TreeAction {
 
     @Override
     protected void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-        jcrBrowser.getApplication().getMainWindow().showNotification("Editing node " + item.getPath() + " with dialog " + dialog);
+        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("howTo", (Node) item));
     }
 
     public String getDialog() {

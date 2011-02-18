@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.CheckBox;
@@ -54,7 +53,7 @@ public class CheckBoxControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) {
         if (checkBox != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -71,6 +70,6 @@ public class CheckBoxControl extends AbstractDialogControl {
         checkBox.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
+    public void save(Node storageNode) throws RepositoryException {
     }
 }

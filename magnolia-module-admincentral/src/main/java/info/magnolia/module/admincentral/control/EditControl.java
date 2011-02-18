@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +42,7 @@ import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
  * Control for editing text in dialogs.
@@ -67,7 +67,7 @@ public class EditControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException {
         if (field != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -83,7 +83,7 @@ public class EditControl extends AbstractDialogControl {
             field.addValidator(new RegexpValidator(validationPattern, validationMessage));
 
         if (storageNode != null) {
-            field.setValue(storageNode.getNodeData(getName()).getString());
+            field.setValue(JCRUtil.getPropertyString(storageNode, getName()));
         }
 
         if (isFocus()) {
@@ -97,8 +97,8 @@ public class EditControl extends AbstractDialogControl {
         field.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
-        storageNode.setNodeData(getName(), (String) field.getValue());
+    public void save(Node storageNode) throws RepositoryException {
+        storageNode.setProperty(getName(), (String) field.getValue());
     }
 
     public int getRows() {

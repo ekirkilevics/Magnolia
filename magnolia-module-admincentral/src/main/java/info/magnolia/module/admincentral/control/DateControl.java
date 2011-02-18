@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
+import javax.jcr.Node;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
@@ -60,7 +60,7 @@ public class DateControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) {
         if (dateField != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -77,7 +77,7 @@ public class DateControl extends AbstractDialogControl {
         dateField.validate();
     }
 
-    public void save(Content storageNode) {
+    public void save(Node storageNode) {
     }
 
     public boolean isTime() {

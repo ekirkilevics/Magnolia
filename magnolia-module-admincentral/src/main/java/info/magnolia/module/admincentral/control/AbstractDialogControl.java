@@ -33,11 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogControl;
-import info.magnolia.module.admincentral.dialog.DialogTab;
-import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +43,9 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.dialog.DialogControl;
+import info.magnolia.module.admincentral.dialog.DialogTab;
+import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 /**
  * Abstract base class for controls that have a label displayed to the left and a description placed below any
@@ -116,7 +115,7 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
         this.parent = parent;
     }
 
-    public final void create(Content storageNode, GridLayout grid) {
+    public final void create(Node storageNode, GridLayout grid) {
 
         grid.addComponent(new Label(getMessages().getWithDefault(label, label)));
 
@@ -134,28 +133,32 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
     /**
      * Creates new component representing element field. Implementing classes should ensure that call to this method returns always new component or fails when called multiple times and creating of multiple instances is not supported.
      */
-    protected abstract Component createFieldComponent(Content storageNode, Window mainWindow);
+    protected abstract Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException;
 
     /**
      * Gets an existing component representing element field or null if such component was not yet created.
      */
     protected abstract Component getFieldComponent();
 
-    public Component createField(Content storageNode, Window mainWindow) {
-        Component field = createFieldComponent(storageNode, mainWindow);
-        if (!StringUtils.isBlank(getWidth())) {
-            field.setWidth(getWidth() +"px");
+    public Component createField(Node storageNode, Window mainWindow) {
+        try {
+            Component field = createFieldComponent(storageNode, mainWindow);
+            if (!StringUtils.isBlank(getWidth())) {
+                field.setWidth(getWidth() +"px");
+            }
+            if (!StringUtils.isBlank(getHeight())) {
+                field.setWidth(getHeight() +"px");
+            }
+            return field;
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
-        if (!StringUtils.isBlank(getHeight())) {
-            field.setWidth(getHeight() +"px");
-        }
-        return field;
     }
 
     public void validate() {
     }
 
-    public void save(Content storageNode) throws RepositoryException {
+    public void save(Node storageNode) throws RepositoryException {
     }
 
     public void setFocus(boolean focus) {

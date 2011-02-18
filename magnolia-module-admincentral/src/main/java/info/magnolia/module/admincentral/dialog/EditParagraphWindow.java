@@ -33,10 +33,10 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -54,8 +54,8 @@ public class EditParagraphWindow extends DialogWindow {
         super(getDialogUsedByParagraph(paragraphName), repository, path);
     }
 
-    public EditParagraphWindow(String paragraphName, Content content) throws RepositoryException {
-        super(getDialogUsedByParagraph(paragraphName), content);
+    public EditParagraphWindow(String paragraphName, Node node) throws RepositoryException {
+        super(getDialogUsedByParagraph(paragraphName), node);
     }
 
     private static String getDialogUsedByParagraph(String paragraphName) {

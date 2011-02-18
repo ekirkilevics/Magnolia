@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.data.Property;
@@ -62,7 +61,7 @@ public class SliderControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Content storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode, Window mainWindow) {
         if (slider != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
@@ -100,8 +99,8 @@ public class SliderControl extends AbstractDialogControl {
         slider.validate();
     }
 
-    public void save(Content storageNode) throws RepositoryException {
-        storageNode.setNodeData(getName(), (Double)slider.getValue());
+    public void save(Node storageNode) throws RepositoryException {
+        storageNode.setProperty(getName(), (Double) slider.getValue());
     }
 
     public int getMin() {

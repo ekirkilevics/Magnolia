@@ -3,3 +3,35 @@
 .v-table-body {
 	overflow-y: scroll !important;
 }
+
+.m-vtabsheet-canvas {
+	background-color: #dddddd;
+}
+
+.v-panel-nocaption-vtabsheet-selectedtab {
+	display:none;
+}
+.v-panel-captionwrap-vtabsheet-selectedtab {
+	display:none;
+}
+.v-panel-content-vtabsheet-selectedtab {
+	background-color: #dddddd;
+	border:0;
+}
+.v-panel-deco-vtabsheet-selectedtab {
+	display:none;
+}
+
+.v-panel-nocaption-vtabsheet-tab {
+	display:none;
+}
+.v-panel-captionwrap-vtabsheet-tab {
+	display:none;
+}
+.v-panel-content-vtabsheet-tab {
+	background-color: white;
+	border:0;
+}
+.v-panel-deco-vtabsheet-tab {
+	display:none;
+}

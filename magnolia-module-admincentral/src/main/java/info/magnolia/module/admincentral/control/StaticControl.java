@@ -33,13 +33,12 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.admincentral.dialog.DialogControl;
-
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import info.magnolia.module.admincentral.dialog.DialogControl;
 
 /**
  * Control for adding a static line of content to a dialog.
@@ -48,7 +47,7 @@ public class StaticControl implements DialogControl {
 
     private String label;
 
-    public void create(Content storageNode, GridLayout layout) {
+    public void create(Node storageNode, GridLayout layout) {
 
         int rows = layout.getRows();
         layout.setRows(rows + 1);
@@ -62,7 +61,7 @@ public class StaticControl implements DialogControl {
     public void validate() {
     }
 
-    public void save(Content storageNode) throws RepositoryException {
+    public void save(Node storageNode) throws RepositoryException {
     }
 
     public String getLabel() {

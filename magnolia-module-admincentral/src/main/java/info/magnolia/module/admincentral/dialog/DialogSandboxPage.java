@@ -33,24 +33,23 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
-
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * AdminCentral Page/Section/View (main container content) for testing dialog stuff, temporary stuff.
@@ -92,8 +91,8 @@ public class DialogSandboxPage extends VerticalLayout {
                     if (StringUtils.isBlank(paragraphHandle)) {
                         return;
                     }
-                    Content paragraph = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(paragraphHandle);
-                    String paragraphTemplate = paragraph.getMetaData().getTemplate();
+                    Node paragraph = JCRUtil.getSession(ContentRepository.WEBSITE).getNode(paragraphHandle);
+                    String paragraphTemplate = JCRMetadataUtil.getMetaData(paragraph).getTemplate();
                     Paragraph paragraphDef = ParagraphManager.getInstance().getParagraphDefinition(paragraphTemplate);
                     String pageHandle = getPageHandle(paragraph);
                     String nodeCollection = StringUtils.substringBeforeLast(StringUtils.substringAfter(paragraphHandle, pageHandle + "/"), "/" + paragraph.getName());
@@ -122,10 +121,10 @@ public class DialogSandboxPage extends VerticalLayout {
         */
     }
 
-    private String getPageHandle(Content content) throws RepositoryException {
+    private String getPageHandle(Node content) throws RepositoryException {
         while (content != null) {
-            if (content.getItemType().equals(ItemType.CONTENT)) {
-                return content.getHandle();
+            if (content.getPrimaryNodeType().getName().equals(ItemType.CONTENT.getSystemName())) {
+                return content.getPath();
             }
             content = content.getParent();
         }
