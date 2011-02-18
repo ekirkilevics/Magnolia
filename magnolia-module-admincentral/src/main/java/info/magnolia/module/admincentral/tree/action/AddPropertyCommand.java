@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,51 +33,38 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+
 import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.terminal.ExternalResource;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
-
 /**
- * Base class for all tree actions.
+ * Action for creating a new property.
  */
-public abstract class TreeAction {
+public class AddPropertyCommand extends Command {
 
-    private static final long serialVersionUID = -4170116352082513835L;
-
-    private String label;
-    private String name;
-    // For now a vaadin resource, should be changed
-    private ExternalResource icon;
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public String getName() {
-        return name;
-    }
-
+    @Override
     public boolean isAvailable(Item item) {
-        return true;
+        return item instanceof Node;
     }
 
-    public void setIcon(ExternalResource icon) {
-        this.icon = icon;
-    }
+    @Override
+    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
 
-    public ExternalResource getIcon() {
-        return icon;
-    }
+            String name = JCRUtil.getUniqueLabel(node, "untitled");
+            Property property = node.setProperty(name, "");
+            node.getSession().save();
 
-    public abstract void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
+            if (jcrBrowser != null)
+            jcrBrowser.addItem(new ContainerItemId(property));
+            if (jcrBrowser != null)
+            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
+        }
+    }
 }

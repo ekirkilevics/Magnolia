@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,19 +33,29 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+
 /**
- * Action for creating a new property.
+ * Action for adding a new folder.
+ *
+ * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
  */
-public class NewPropertyAction extends TreeAction {
+public class AddNodeCommand extends Command {
+
+    private static final long serialVersionUID = -7658689118638162334L;
+
+    private String nodeType = ItemType.CONTENT.getSystemName();
 
     @Override
     public boolean isAvailable(Item item) {
@@ -53,18 +63,35 @@ public class NewPropertyAction extends TreeAction {
     }
 
     @Override
-    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+
         if (item instanceof Node) {
             Node node = (Node) item;
 
             String name = JCRUtil.getUniqueLabel(node, "untitled");
-            Property property = node.setProperty(name, "");
+            Node newChild = node.addNode(name, nodeType);
+
+            MetaData metaData = JCRMetadataUtil.getMetaData(newChild);
+            metaData.setAuthorId(MgnlContext.getUser().getName());
+            metaData.setCreationDate();
+            metaData.setModificationDate();
+
             node.getSession().save();
 
+            // TODO: the new node needs to appear in a specific order!
+
             if (jcrBrowser != null)
-            jcrBrowser.addItem(new ContainerItemId(property));
+            jcrBrowser.addItem(new ContainerItemId(newChild));
             if (jcrBrowser != null)
             jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
+    }
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
     }
 }

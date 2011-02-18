@@ -33,17 +33,9 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
-import info.magnolia.module.admincentral.tree.container.JcrContainer;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -69,6 +61,12 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.tree.action.Command;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import info.magnolia.module.admincentral.tree.container.JcrContainer;
 
 /**
  * User interface component that extends TreeTable and uses a TreeDefinition for layout and invoking command callbacks.
@@ -107,15 +105,16 @@ public class JcrBrowser extends TreeTable {
     }
 
     private static class JcrBrowserAction extends Action {
-        private TreeAction command;
+        private Command command;
 
-        private JcrBrowserAction(TreeAction command) {
+        private JcrBrowserAction(Command command) {
             super(command.getLabel());
+            super.setIcon(new ExternalResource(MgnlContext.getContextPath() + command.getIcon()));
             this.command = command;
         }
 
         public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-            command.handleAction(jcrBrowser, item);
+            command.execute(jcrBrowser, item);
         }
     }
 
@@ -130,9 +129,9 @@ public class JcrBrowser extends TreeTable {
                 try {
                     ContainerItemId itemId = (ContainerItemId) target;
                     Item item = container.getJcrItem(itemId);
-                    Collection<TreeAction> commands = getActionsForItem(item);
+                    Collection<Command> commands = uiModel.getCommandsForItem(treeDefinition.getName(), item);
                     List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
-                    for (TreeAction command : commands) {
+                    for (Command command : commands) {
                         actions.add(new JcrBrowserAction(command));
                     }
                     return actions.toArray(new Action[actions.size()]);
@@ -153,11 +152,6 @@ public class JcrBrowser extends TreeTable {
                 }
             }
         });
-    }
-
-
-    private Collection<TreeAction> getActionsForItem(Item item) {
-        return uiModel.getCommandsForItem(treeDefinition.getName(), item);
     }
 
     /**
@@ -417,11 +411,11 @@ public class JcrBrowser extends TreeTable {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return;
         }
-        Collection<TreeAction> actions = getActionsForItem(item);
-        for (TreeAction treeAction : actions) {
-            if (treeAction.getName().equals(actionName)) {
+        Collection<Command> commands = uiModel.getCommandsForItem(treeDefinition.getName(), item);
+        for (Command command : commands) {
+            if (command.getName().equals(actionName)) {
                 try {
-                    treeAction.handleAction(this, item);
+                    command.execute(this, item);
                 } catch (RepositoryException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }

@@ -427,7 +427,7 @@
           <sv:value>2011-02-16T13:34:01.263+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -438,7 +438,7 @@
           <sv:value>8804bdf0-d49b-4460-a83b-5c4f9606f646</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.OpenDialogAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.OpenDialogCommand</sv:value>
         </sv:property>
         <sv:property sv:name="dialog" sv:type="String">
           <sv:value>useredit</sv:value>
@@ -507,7 +507,7 @@
           <sv:value>2011-02-16T13:21:25.006+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -518,7 +518,7 @@
           <sv:value>4e8c24e5-17d7-4eee-9f5d-e0cb256c6c27</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.NewNodeAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.AddNodeCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -587,7 +587,7 @@
           <sv:value>2011-02-16T13:18:17.444+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -598,7 +598,7 @@
           <sv:value>ee22df62-caf6-4e71-8b6b-a8ee18f89034</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.NewNodeAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.AddNodeCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -664,7 +664,7 @@
           <sv:value>2011-02-16T13:14:12.897+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -675,7 +675,7 @@
           <sv:value>87cf0e43-8483-47fd-b3bf-709b75cf4e3f</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.DeleteAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.DeleteItemCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

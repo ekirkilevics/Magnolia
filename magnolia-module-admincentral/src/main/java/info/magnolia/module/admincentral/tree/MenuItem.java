@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.module.admincentral.tree.action.TreeAction;
+import info.magnolia.module.admincentral.tree.action.Command;
 
 /**
  * Describes an item on either a function menu or a context menu.
@@ -43,14 +43,22 @@ public class MenuItem {
     private String name;
     private String label;
     private String icon;
-    private TreeAction action;
+    private Command command;
 
-    public TreeAction getAction() {
-        return action;
+    public void init() {
+        if (command != null) {
+            command.setName(name);
+            command.setLabel(label);
+            command.setIcon(icon);
+        }
     }
 
-    public void setAction(TreeAction action) {
-        this.action = action;
+    public Command getCommand() {
+        return command;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
     }
 
     public String getName() {

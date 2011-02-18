@@ -33,39 +33,37 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
-import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-/**
- * Deletes a node from the repository.
- */
-public class DeleteAction extends TreeAction {
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
 
-    private static final long serialVersionUID = -4485698706375056385L;
+
+/**
+ * Opens the selected page for page editing.
+ */
+public class OpenPageCommand extends Command {
+
+    private static final long serialVersionUID = 751955514356448616L;
 
     @Override
-    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public boolean isAvailable(Item item) {
+        return item instanceof Node;
+    }
 
+    @Override
+    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
-            node.remove();
-            node.getSession().save();
 
-            if (jcrBrowser != null)
-                jcrBrowser.removeItem(new ContainerItemId(item));
-
-        } else if (item instanceof Property) {
-            Property property = (Property) item;
-            property.remove();
-            property.getSession().save();
-
-            if (jcrBrowser != null)
-                jcrBrowser.removeItem(new ContainerItemId(item));
+            String uri = MgnlContext.getContextPath() + node.getPath() + ".html";
+            Window window = jcrBrowser.getApplication().getMainWindow();
+            window.open(new ExternalResource(uri));
         }
     }
 }

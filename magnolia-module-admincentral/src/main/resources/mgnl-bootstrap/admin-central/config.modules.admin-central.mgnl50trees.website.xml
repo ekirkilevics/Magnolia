@@ -406,7 +406,7 @@
           <sv:value>2011-02-03T15:24:07.606+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -417,7 +417,7 @@
           <sv:value>dc77bed1-6beb-49f2-a588-4a7590bfe530</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.OpenPageAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.OpenPageCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -480,7 +480,7 @@
           <sv:value>2011-02-03T15:24:15.468+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -491,7 +491,7 @@
           <sv:value>3e11c503-55bb-464f-8593-32a324eabbaf</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.NewPageAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.AddPageCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -557,7 +557,7 @@
           <sv:value>2011-02-03T15:24:48.999+01:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="action">
+      <sv:node sv:name="command">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -568,7 +568,7 @@
           <sv:value>9b88211e-7682-4ba8-9900-8fabae052be2</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.DeleteAction</sv:value>
+          <sv:value>info.magnolia.module.admincentral.tree.action.DeleteItemCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

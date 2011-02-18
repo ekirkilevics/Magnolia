@@ -33,23 +33,28 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.jcr.HackContent;
+import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Window;
-
 
 /**
- * Opens the selected page for page editing.
+ * Tree action for adding a page to the website repository.
  */
-public class OpenPageAction extends TreeAction {
+public class AddPageCommand extends Command {
 
-    private static final long serialVersionUID = 751955514356448616L;
+    private static final long serialVersionUID = 7745378363506148188L;
 
     @Override
     public boolean isAvailable(Item item) {
@@ -57,13 +62,29 @@ public class OpenPageAction extends TreeAction {
     }
 
     @Override
-    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+
         if (item instanceof Node) {
             Node node = (Node) item;
 
-            String uri = MgnlContext.getContextPath() + node.getPath() + ".html";
-            Window window = jcrBrowser.getApplication().getMainWindow();
-            window.open(new ExternalResource(uri));
+            String name = JCRUtil.getUniqueLabel(node, "untitled");
+            Node newChild = node.addNode(name, ItemType.CONTENT.getSystemName());
+
+            MetaData metaData = JCRMetadataUtil.getMetaData(newChild);
+            metaData.setAuthorId(MgnlContext.getUser().getName());
+            metaData.setCreationDate();
+            metaData.setModificationDate();
+            Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newChild));
+            if (newTemplate != null) {
+                metaData.setTemplate(newTemplate.getName());
+            }
+
+            node.getSession().save();
+
+            if (jcrBrowser != null)
+            jcrBrowser.addItem(new ContainerItemId(newChild));
+            if (jcrBrowser != null)
+            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }
 }

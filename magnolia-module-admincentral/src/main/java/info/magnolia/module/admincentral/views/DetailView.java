@@ -42,14 +42,16 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
+import info.magnolia.module.admincentral.tree.action.Command;
 
 /**
  * XXX remove just for testing purposes.
@@ -96,8 +98,8 @@ public class DetailView extends VerticalSplitPanel {
 
                 Session session = JCRUtil.getSession(treeDefinition.getRepository());
                 javax.jcr.Item item = session.getItem(path);
-                List<TreeAction> actions = uiModel.getCommandsForItem(workspace, item);
-                commandList.showCommands(actions);
+                List<Command> commands = uiModel.getCommandsForItem(workspace, item);
+                commandList.showCommands(commands);
             }
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
@@ -125,10 +127,10 @@ public class DetailView extends VerticalSplitPanel {
             });
         }
 
-        public void showCommands(List<TreeAction> actions) {
+        public void showCommands(List<Command> commands) {
             clearCommands();
-            for (TreeAction action : actions) {
-                addCommand(action);
+            for (Command command : commands) {
+                addCommand(command);
             }
         }
 
@@ -136,12 +138,12 @@ public class DetailView extends VerticalSplitPanel {
             commandList.removeAllItems();
         }
 
-        public void addCommand(TreeAction command) {
+        public void addCommand(Command command) {
             Object itemId = command.getName();
             commandList.addItem(itemId);
             Item commandItem = commandList.getItem(itemId);
             commandItem.getItemProperty("Command").setValue(command.getLabel());
-            commandList.setItemIcon(itemId, command.getIcon());
+            commandList.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + command.getIcon()));
             log.info("Added command {} to detail view", command);
         }
     }

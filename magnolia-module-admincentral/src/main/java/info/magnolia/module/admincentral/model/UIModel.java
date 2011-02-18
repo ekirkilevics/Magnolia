@@ -39,13 +39,11 @@ import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import com.vaadin.terminal.ExternalResource;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
-import info.magnolia.module.admincentral.tree.action.TreeAction;
+import info.magnolia.module.admincentral.tree.action.Command;
 
 
 /**
@@ -59,44 +57,30 @@ public class UIModel {
         Session session = JCRUtil.getSession(treeDefinition.getRepository());
         Item item = session.getItem(path);
 
-        TreeAction action = getCommand(treeDefinition, commandName);
-        if (!action.isAvailable(item))
-            return;
-
-        action.handleAction(null, item);
+        Command action = getCommand(treeDefinition, commandName);
+        if (action.isAvailable(item))
+            action.execute(null, item);
     }
 
-    public TreeAction getCommand(TreeDefinition treeDefinition, String commandName) {
+    public Command getCommand(TreeDefinition treeDefinition, String commandName) {
         for (MenuItem mi : treeDefinition.getContextMenuItems()) {
-            TreeAction action = mi.getAction();
+            Command command = mi.getCommand();
             if (mi.getName().equals(commandName)) {
-                action.setName(mi.getName());
-                action.setLabel(mi.getLabel());
-                action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
-                return action;
+                return command;
             }
         }
         return null;
     }
 
-    public List<TreeAction> getCommandsForItem(String treeName, Item item) {
-
+    public List<Command> getCommandsForItem(String treeName, Item item) {
         TreeDefinition treeDefinition = getTreeDefinition(treeName);
-
-        ArrayList<TreeAction> actions = new ArrayList<TreeAction>();
+        List<Command> commands = new ArrayList<Command>();
         for (MenuItem mi : treeDefinition.getContextMenuItems()) {
-            TreeAction action = mi.getAction();
-            action.setName(mi.getName());
-
-            if (!action.isAvailable(item))
-                continue;
-
-            action.setLabel(mi.getLabel());
-            action.setIcon(new ExternalResource(MgnlContext.getContextPath() + mi.getIcon()));
-            actions.add(action);
-
+            Command command = mi.getCommand();
+            if (command.isAvailable(item))
+                commands.add(command);
         }
-        return actions;
+        return commands;
     }
 
     public TreeDefinition getTreeDefinition(String treeName) {

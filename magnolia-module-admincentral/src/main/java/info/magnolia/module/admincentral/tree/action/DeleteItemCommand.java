@@ -33,58 +33,39 @@
  */
 package info.magnolia.module.admincentral.tree.action;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.HackContent;
-import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-
 /**
- * Tree action for adding a page to the website repository.
+ * Deletes a node from the repository.
  */
-public class NewPageAction extends TreeAction {
+public class DeleteItemCommand extends Command {
 
-    private static final long serialVersionUID = 7745378363506148188L;
-
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
-    }
+    private static final long serialVersionUID = -4485698706375056385L;
 
     @Override
-    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
-
-            String name = JCRUtil.getUniqueLabel(node, "untitled");
-            Node newChild = node.addNode(name, ItemType.CONTENT.getSystemName());
-
-            MetaData metaData = JCRMetadataUtil.getMetaData(newChild);
-            metaData.setAuthorId(MgnlContext.getUser().getName());
-            metaData.setCreationDate();
-            metaData.setModificationDate();
-            Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newChild));
-            if (newTemplate != null) {
-                metaData.setTemplate(newTemplate.getName());
-            }
-
+            node.remove();
             node.getSession().save();
 
             if (jcrBrowser != null)
-            jcrBrowser.addItem(new ContainerItemId(newChild));
+                jcrBrowser.removeItem(new ContainerItemId(item));
+
+        } else if (item instanceof Property) {
+            Property property = (Property) item;
+            property.remove();
+            property.getSession().save();
+
             if (jcrBrowser != null)
-            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
+                jcrBrowser.removeItem(new ContainerItemId(item));
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,38 +34,48 @@
 package info.magnolia.module.admincentral.tree.action;
 
 import javax.jcr.Item;
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 /**
- * Opens a dialog for editing a node in a tree.
- *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
- *
- * @author tmattsson
+ * Base class for all tree actions.
  */
-public class OpenDialogAction extends TreeAction {
+public abstract class Command {
 
-    private String dialog;
+    private static final long serialVersionUID = -4170116352082513835L;
 
-    @Override
+    private String name;
+    private String label;
+    private String icon;
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
     public boolean isAvailable(Item item) {
-        return item instanceof Node;
+        return true;
     }
 
-    @Override
-    public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("howTo", (Node) item));
-    }
-
-    public String getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
+    public abstract void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
 }
