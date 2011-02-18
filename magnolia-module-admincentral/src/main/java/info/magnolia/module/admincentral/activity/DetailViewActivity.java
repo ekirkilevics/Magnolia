@@ -45,27 +45,37 @@ import info.magnolia.module.vaadin.event.EventBus;
 /**
  * Shows the detail view and command list.
  */
-public class DetailViewActivity extends AbstractActivity implements DetailView.CommandSelectedListener {
-
-    private String workspace;
+public class DetailViewActivity extends AbstractActivity implements DetailView.Presenter {
 
     private UIModel uiModel;
-
+    private String workspace;
+    private String path;
     private DetailView detailView;
 
     public DetailViewActivity(String workspace, String path, UIModel uiModel) {
         this.workspace = workspace;
         this.uiModel = uiModel;
-        detailView = new DetailView(workspace, uiModel);
-        detailView.setCommandSelectedListener(this);
-        detailView.showItem(path);
+        detailView = new DetailView(this);
+        showItem(path);
     }
 
     public void start(HasComponent display, EventBus eventBus) {
         display.setComponent(detailView);
     }
 
-    public void onCommandSelected(String commandName, String path) {
+    private void showItem(String path) {
+        try {
+            // Displaying commands for the root node makes no sense
+            if (!path.equals("/")) {
+                this.path = path;
+                detailView.showCommands(uiModel.getCommandsForItem(workspace, path));
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void onCommandSelected(String commandName) {
         try {
             uiModel.executeCommand(commandName, workspace, path);
         } catch (RepositoryException e) {

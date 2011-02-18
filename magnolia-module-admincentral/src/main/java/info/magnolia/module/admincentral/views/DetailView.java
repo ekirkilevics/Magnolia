@@ -34,8 +34,6 @@
 package info.magnolia.module.admincentral.views;
 
 import java.util.List;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,62 +46,36 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.action.Command;
 
 /**
- * XXX remove just for testing purposes.
+ * Displays commands and details about the currently selected item.
  *
  * @author fgrilli
+ * @author tmattsson
  */
 public class DetailView extends VerticalSplitPanel {
 
     /**
-     * Listener that is called when the user selects a command.
+     * Presenter that is called when the user selects a command.
      */
-    public interface CommandSelectedListener {
-        void onCommandSelected(String commandName, String path);
+    public interface Presenter {
+        void onCommandSelected(String commandName);
     }
 
     private static final Logger log = LoggerFactory.getLogger(DetailView.class);
     private CommandList commandList;
-    private UIModel uiModel;
-    private String workspace;
-    private String path;
-    private CommandSelectedListener commandSelectedListener;
+    private Presenter presenter;
 
-    public DetailView(String workspace, UIModel uiModel) {
-        this.uiModel = uiModel;
-        this.workspace = workspace;
+    public DetailView(Presenter presenter) {
+        this.presenter = presenter;
         commandList = new CommandList();
         setFirstComponent(commandList);
         setSecondComponent(new DetailForm());
     }
 
-    public void setCommandSelectedListener(CommandSelectedListener commandSelectedListener) {
-        this.commandSelectedListener = commandSelectedListener;
-    }
-
-    public void showItem(String path) {
-        // FIXME a very ugly hack
-        try {
-            if (!path.equals("/")) {
-
-                this.path = path;
-
-                // In reality the workspace passed to this class is the tree name
-                TreeDefinition treeDefinition = uiModel.getTreeDefinition(workspace);
-
-                Session session = JCRUtil.getSession(treeDefinition.getRepository());
-                javax.jcr.Item item = session.getItem(path);
-                List<Command> commands = uiModel.getCommandsForItem(workspace, item);
-                commandList.showCommands(commands);
-            }
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
+    public void showCommands(List<Command> commands) {
+        commandList.showCommands(commands);
     }
 
     /**
@@ -120,8 +92,8 @@ public class DetailView extends VerticalSplitPanel {
             setSelectable(true);
             addListener(new ItemClickEvent.ItemClickListener() {
                 public void itemClick(ItemClickEvent event) {
-                    if (event.isDoubleClick() && commandSelectedListener != null) {
-                        commandSelectedListener.onCommandSelected((String) event.getItemId(), path);
+                    if (event.isDoubleClick() && presenter != null) {
+                        presenter.onCommandSelected((String) event.getItemId());
                     }
                 }
             });

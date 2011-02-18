@@ -72,8 +72,21 @@ public class UIModel {
         return null;
     }
 
+    public List<Command> getCommandsForItem(String workspace, String path) throws RepositoryException {
+        TreeDefinition treeDefinition = getTreeDefinition(workspace);
+        return getCommandsForItem(workspace, getItem(treeDefinition, path));
+    }
+
     public List<Command> getCommandsForItem(String treeName, Item item) {
         TreeDefinition treeDefinition = getTreeDefinition(treeName);
+        return getCommandsForItem(treeDefinition, item);
+    }
+
+    private List<Command> getCommandsForItem(TreeDefinition treeDefinition, Item item) {
+
+        // For now the commands are configured directly on the context menu configuration with the tree. Should be
+        // configured in a more global scope and the context menu should only refer to them by name.
+
         List<Command> commands = new ArrayList<Command>();
         for (MenuItem mi : treeDefinition.getContextMenuItems()) {
             Command command = mi.getCommand();
@@ -92,8 +105,10 @@ public class UIModel {
     }
 
     public Item getItem(String treeName, String path) throws RepositoryException {
-        TreeDefinition treeDefinition = getTreeDefinition(treeName);
-        Session session = JCRUtil.getSession(treeDefinition.getRepository());
-        return session.getItem(path);
+        return getItem(getTreeDefinition(treeName), path);
+    }
+
+    public Item getItem(TreeDefinition treeDefinition, String path) throws RepositoryException {
+        return JCRUtil.getSession(treeDefinition.getRepository()).getItem(path);
     }
 }
