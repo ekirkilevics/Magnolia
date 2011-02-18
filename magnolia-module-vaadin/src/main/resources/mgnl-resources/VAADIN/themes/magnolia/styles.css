@@ -1,8 +1,9 @@
 @import "../runo/styles.css";
 
-.v-table-body {
+/*.v-table-body {
 	overflow-y: scroll !important;
 }
+*/
 
 .m-vtabsheet-canvas {
 	background-color: #dddddd;
