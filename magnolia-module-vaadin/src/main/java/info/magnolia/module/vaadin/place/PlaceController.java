@@ -36,9 +36,6 @@ package info.magnolia.module.vaadin.place;
 import info.magnolia.module.vaadin.event.EventBus;
 
 import org.vaadin.dialogs.ConfirmDialog;
-import org.vaadin.dialogs.ConfirmDialog.Listener;
-
-import com.vaadin.Application;
 
 /**
  * In charge of the user's location in the app.
@@ -58,24 +55,6 @@ public class PlaceController {
     public interface Delegate {
       //HandlerRegistration addWindowClosingHandler(ClosingHandler handler);
       void confirm(String message, ConfirmDialog.Listener listener);
-    }
-    /**
-     *
-     * Default implementation for {@link Delegate}.
-     * @author fgrilli
-     *
-     */
-    public static class DefaultDelegate implements Delegate {
-
-        private Application application;
-
-        public DefaultDelegate(Application application) {
-            this.application = application;
-        }
-
-        public void confirm(String message, Listener listener) {
-            ConfirmDialog.show(application.getMainWindow(), message, listener);
-        }
     }
 
     public PlaceController(final EventBus eventBus, Delegate delegate) {

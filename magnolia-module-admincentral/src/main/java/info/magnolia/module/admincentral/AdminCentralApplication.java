@@ -68,6 +68,8 @@ import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
+import info.magnolia.module.admincentral.shell.Shell;
+import info.magnolia.module.admincentral.shell.ShellImpl;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.activity.Activity;
 import info.magnolia.module.vaadin.activity.ActivityManager;
@@ -138,6 +140,8 @@ public class AdminCentralApplication extends Application {
     // FIXME should be a component
     private UIModel uiModel = new UIModel();
 
+    private Shell shell;
+
     public VerticalLayout getMainContainer() {
         return mainContainer;
     }
@@ -149,13 +153,14 @@ public class AdminCentralApplication extends Application {
         messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
 
         setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
-
-        eventBus = new EventBus();
         initLayout();
+
+        shell = new ShellImpl(this);
+        eventBus = new EventBus();
         eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
         eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
 
-        placeController = new PlaceController(eventBus, new PlaceController.DefaultDelegate(this));
+        placeController = new PlaceController(eventBus, shell.asPlaceControllerDelegate());
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
             Activity menuActivity = new MenuActivity();
@@ -169,7 +174,7 @@ public class AdminCentralApplication extends Application {
             public Activity getActivity(final Place place) {
                 if(place instanceof EditWorkspacePlace){
                     EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), placeController, AdminCentralApplication.this, uiModel);
+                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), placeController, shell, uiModel);
                 }
                 else if(place instanceof ShowContentPlace){
                     ShowContentPlace showContentPlace = (ShowContentPlace)place;
@@ -178,7 +183,7 @@ public class AdminCentralApplication extends Application {
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {
                         public void start(HasComponent display, EventBus eventBus) {
-                            display.setComponent(new Label(((SomePlace)place).getName()));
+                            shell.showMessage(((SomePlace)place).getName());
                         }
                     };
                 }

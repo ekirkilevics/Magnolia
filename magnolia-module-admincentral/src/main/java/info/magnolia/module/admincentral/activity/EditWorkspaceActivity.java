@@ -35,6 +35,7 @@ package info.magnolia.module.admincentral.activity;
 
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.ItemSelectedPlace;
+import info.magnolia.module.admincentral.shell.Shell;
 import info.magnolia.module.admincentral.tree.TreeActivity;
 import info.magnolia.module.admincentral.views.EditWorkspaceView;
 import info.magnolia.module.vaadin.activity.Activity;
@@ -46,8 +47,6 @@ import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceController;
 
-import com.vaadin.Application;
-
 
 /**
  * Edit a workspace. Shows the structure view.
@@ -57,8 +56,8 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     private UIModel uiModel;
     private String workspace;
 
-    public EditWorkspaceActivity(String workspace, PlaceController outerPlaceController, Application application, UIModel uiModel) {
-        super("edit-workspace", outerPlaceController, application);
+    public EditWorkspaceActivity(String workspace, PlaceController outerPlaceController, Shell shell, UIModel uiModel) {
+        super("edit-workspace", outerPlaceController, shell.asPlaceControllerDelegate());
         this.workspace = workspace;
         this.uiModel = uiModel;
     }
