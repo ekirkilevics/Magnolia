@@ -57,13 +57,13 @@ public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<T
     private Map<String, PlaceTokenizer<Place>> tokenizers = new HashMap<String, PlaceTokenizer<Place>>();
 
     public AdminCentralPlaceHistoryMapper(Class<? extends Place>... places) {
-        registerPrefixes(places);
+        registerTokenizers(places);
         //TODO do we still need a factory? Probably not.
         setFactory(new TokenizerFactory());
     }
 
     @SuppressWarnings("unchecked")
-    private void registerPrefixes(Class<? extends Place>... places) {
+    private void registerTokenizers(Class<? extends Place>... places) {
         for(Class<? extends Place> clazz: places){
             Prefix prefix = (Prefix) clazz.getAnnotation(Prefix.class);
             if(prefix == null){
