@@ -58,6 +58,7 @@ public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<T
 
     public AdminCentralPlaceHistoryMapper(Class<? extends Place>... places) {
         registerPrefixes(places);
+        //TODO do we still need a factory? Probably not.
         setFactory(new TokenizerFactory());
     }
 
@@ -69,10 +70,10 @@ public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<T
                 continue;
             }
             final Class<?>[] declaredClasses = clazz.getDeclaredClasses();
-            for(Class<?> declaredcClass : declaredClasses){
-                if(PlaceTokenizer.class.isAssignableFrom(declaredcClass)){
+            for(Class<?> declaredClass : declaredClasses){
+                if(PlaceTokenizer.class.isAssignableFrom(declaredClass)){
                     try {
-                        final PlaceTokenizer<Place> tokenizer = (PlaceTokenizer<Place>) declaredcClass.newInstance();
+                        final PlaceTokenizer<Place> tokenizer = (PlaceTokenizer<Place>) declaredClass.newInstance();
                         tokenizers.put(prefix.value(), tokenizer);
                     } catch (InstantiationException e) {
                         throw new IllegalStateException(e);
@@ -91,10 +92,11 @@ public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<T
         String prefix = null;
         if(prefixAnnotation != null){
             prefix = prefixAnnotation.value();
-            //TODO this method should not know about concrete Place implementations
+            //FIXME this method should not know about concrete Place implementations
             if (newPlace instanceof EditWorkspacePlace) {
                 return new PrefixAndToken(prefix, new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace) newPlace));
             }
+            //FIXME this always calls CompositePlace.Tokenizer.getToken() thus skipping subclass getToken(..) class which eventually results in wrong token.
             //return new PrefixAndToken(prefix, tokenizers.get(prefix).getToken(newPlace));
         }
         return null;
