@@ -95,13 +95,10 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
             //TODO Remove me. This is just for having a working configuration to start with during development
             if("website".equals(newMenuItem.getName())){
                 newMenuItem.setNodeData("repo", "website");
-                newMenuItem.setNodeData("actionClass", "info.magnolia.module.admincentral.navigation.OpenMainViewMenuAction");
             } else if("config".equals(newMenuItem.getName())){
                 newMenuItem.setNodeData("repo", "config");
-                newMenuItem.setNodeData("actionClass", "info.magnolia.module.admincentral.navigation.OpenMainViewMenuAction");
             } else if("store-client".equals(newMenuItem.getName())){
                 newMenuItem.setNodeData("viewTarget", "/.magnolia/pages/allModulesList.html");
-                newMenuItem.setNodeData("actionClass", "info.magnolia.module.admincentral.navigation.OpenMainViewMenuAction");
             }
             transformSubmenus(hm, newMenuItem);
             //TODO: onClick => viewTarget
