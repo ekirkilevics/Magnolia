@@ -116,7 +116,7 @@ public class DetailView extends VerticalSplitPanel {
             Item commandItem = commandList.getItem(itemId);
             commandItem.getItemProperty("Command").setValue(command.getLabel());
             commandList.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + command.getIcon()));
-            log.info("Added command {} to detail view", command);
+            log.debug("Added command {} to detail view", command);
         }
     }
 
