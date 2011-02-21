@@ -62,7 +62,7 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         }
     }
 
-    private final class OuterPlaceChangeListerner implements PlaceChangeListener {
+    private final class OuterPlaceChangeListener implements PlaceChangeListener {
 
         public void onPlaceChange(PlaceChangeEvent event) {
             Place placeToGo = event.getNewPlace();
@@ -92,7 +92,7 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
     }
 
     public void start(HasComponent display, EventBus outerEventBus) {
-        outerEventBus.addListener(new OuterPlaceChangeListerner());
+        outerEventBus.addListener(new OuterPlaceChangeListener());
         innerEventBus = new EventBus();
         innerPlaceController = new PlaceController(innerEventBus, delegate);
 
