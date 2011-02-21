@@ -198,7 +198,7 @@ public class AdminCentralApplication extends Application {
         menuActivityManager.setDisplay(new ComponentContainerBasedDisplay("navigation", menuDisplay));
 
         // Browser history integration
-        PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper();
+        PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper(EditWorkspacePlace.class);
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
         final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
         historyHandler.register(placeController, eventBus, defaultPlace);

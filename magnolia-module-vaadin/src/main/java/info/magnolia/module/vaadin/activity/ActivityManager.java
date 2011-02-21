@@ -58,6 +58,9 @@ public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestL
         public void start(HasComponent display, EventBus eventBus) {
             display.setComponent(null);
         }
+        public String toString() {
+            return "NULL_ACTIVITY";
+        }
     };
 
     private final ActivityMapper mapper;

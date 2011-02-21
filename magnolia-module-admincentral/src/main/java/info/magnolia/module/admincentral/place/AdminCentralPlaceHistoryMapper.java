@@ -34,9 +34,13 @@
 package info.magnolia.module.admincentral.place;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import info.magnolia.module.vaadin.place.AbstractPlaceHistoryMapper;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceTokenizer;
+import info.magnolia.module.vaadin.place.Prefix;
 
 /**
  * This class is the hub of the application's navigation system. It links
@@ -50,26 +54,55 @@ import info.magnolia.module.vaadin.place.PlaceTokenizer;
  *
  */
 public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<TokenizerFactory> {
-    protected static final String TREE_PREFIX = "tree";
+    private Map<String, PlaceTokenizer<Place>> tokenizers = new HashMap<String, PlaceTokenizer<Place>>();
 
-    public AdminCentralPlaceHistoryMapper() {
+    public AdminCentralPlaceHistoryMapper(Class<? extends Place>... places) {
+        registerPrefixes(places);
         setFactory(new TokenizerFactory());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerPrefixes(Class<? extends Place>... places) {
+        for(Class<? extends Place> clazz: places){
+            Prefix prefix = (Prefix) clazz.getAnnotation(Prefix.class);
+            if(prefix == null){
+                continue;
+            }
+            final Class<?>[] declaredClasses = clazz.getDeclaredClasses();
+            for(Class<?> declaredcClass : declaredClasses){
+                if(PlaceTokenizer.class.isAssignableFrom(declaredcClass)){
+                    try {
+                        final PlaceTokenizer<Place> tokenizer = (PlaceTokenizer<Place>) declaredcClass.newInstance();
+                        tokenizers.put(prefix.value(), tokenizer);
+                    } catch (InstantiationException e) {
+                        throw new IllegalStateException(e);
+                    } catch (IllegalAccessException e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
     protected PrefixAndToken getPrefixAndToken(Place newPlace) {
-        if (newPlace instanceof EditWorkspacePlace) {
-            return new PrefixAndToken(TREE_PREFIX, new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace) newPlace));
+        Prefix prefixAnnotation = newPlace.getClass().getAnnotation(Prefix.class);
+        String prefix = null;
+        if(prefixAnnotation != null){
+            prefix = prefixAnnotation.value();
+            //TODO this method should not know about concrete Place implementations
+            if (newPlace instanceof EditWorkspacePlace) {
+                return new PrefixAndToken(prefix, new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace) newPlace));
+            }
+            //return new PrefixAndToken(prefix, tokenizers.get(prefix).getToken(newPlace));
         }
         return null;
     }
 
     @Override
     protected PlaceTokenizer<?> getTokenizer(String prefix) {
-        if(TREE_PREFIX.equals(prefix)){
-            return factory.getEditWorkspaceTokenizer();
-        }
-        return null;
+        return tokenizers.get(prefix);
     }
 
 }

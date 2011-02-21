@@ -33,12 +33,34 @@
  */
 package info.magnolia.module.admincentral.place;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceTokenizer;
 
 /**
  * A sub-place of {@link EditWorkspacePlace} if an item got selected.
  */
 public class ItemSelectedPlace extends Place {
+    /**
+     * Tokenizer for ItemSelectedPlace.
+     * @author fgrilli
+     *
+     */
+    public static class Tokenizer implements PlaceTokenizer<ItemSelectedPlace> {
+
+        public ItemSelectedPlace getPlace(String token) {
+            final String[] bits = token.split(";");
+            if(bits.length != 2){
+                return null;
+            }
+            return new ItemSelectedPlace(bits[0], bits[1]);
+        }
+
+        public String getToken(ItemSelectedPlace place) {
+            return place.getPath();
+        }
+    }
 
     private String workspace;
 
@@ -49,6 +71,40 @@ public class ItemSelectedPlace extends Place {
         this.path = path;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((path == null) ? 0 : path.hashCode());
+        result = prime * result
+                + ((workspace == null) ? 0 : workspace.hashCode());
+        return result;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ItemSelectedPlace other = (ItemSelectedPlace) obj;
+        if (path == null) {
+            if (other.path != null)
+                return false;
+        } else if (!path.equals(other.path))
+            return false;
+        if (workspace == null) {
+            if (other.workspace != null)
+                return false;
+        } else if (!workspace.equals(other.workspace))
+            return false;
+        return true;
+    }
+
+
     public String getWorkspace() {
         return workspace;
     }
@@ -56,5 +112,11 @@ public class ItemSelectedPlace extends Place {
     public String getPath() {
         return path;
     }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
 
 }

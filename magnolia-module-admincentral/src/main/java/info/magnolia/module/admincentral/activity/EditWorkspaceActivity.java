@@ -65,7 +65,8 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     @Override
     public String mayStop() {
         //TODO retrieve this from properties file.
-        return "Are you sure you want to leave this page?";
+        //return "Are you sure you want to leave this page?";
+        return null;
     }
 
     @Override
@@ -84,6 +85,7 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         ActivityManager detailViewActivityManager = new ActivityManager(new ActivityMapper() {
             public Activity getActivity(final Place place) {
                 String path = ((ItemSelectedPlace)place).getPath();
+                String workspace = ((ItemSelectedPlace)place).getWorkspace();
                 return new DetailViewActivity(workspace, path, uiModel);
             }
         }, innerEventBus);
@@ -95,5 +97,33 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
         getInnerPlaceController().goTo(new ItemSelectedPlace(workspace, "/"));
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((workspace == null) ? 0 : workspace.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        EditWorkspaceActivity other = (EditWorkspaceActivity) obj;
+        if (workspace == null) {
+            if (other.workspace != null)
+                return false;
+        } else if (!workspace.equals(other.workspace))
+            return false;
+        return true;
+    }
+
+
 
 }

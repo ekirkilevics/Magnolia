@@ -56,8 +56,9 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
         public void onPlaceChange(PlaceChangeEvent event) {
             CompositePlace outerPlace = (CompositePlace) outerPlaceController.getWhere();
-            outerPlace.setSubPlace(id, event.getNewPlace());
-            outerPlaceController.goTo(outerPlace);
+            CompositePlace newOuterPlace = (CompositePlace) outerPlace.clone();
+            newOuterPlace.setSubPlace(id, event.getNewPlace());
+            outerPlaceController.goTo(newOuterPlace);
         }
     }
 
