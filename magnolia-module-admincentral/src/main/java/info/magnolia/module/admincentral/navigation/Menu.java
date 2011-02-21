@@ -214,8 +214,6 @@ public class Menu extends CustomComponent {
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
 
-            final AdminCentralAction action = item.getAction();
-            log.info("Attaching action {} to menu {}", action != null ? action.getCaption() : "null", item.getLabel());
             this.addListener(new ClickListener() {
 
                 public void buttonClick(ClickEvent event) {
