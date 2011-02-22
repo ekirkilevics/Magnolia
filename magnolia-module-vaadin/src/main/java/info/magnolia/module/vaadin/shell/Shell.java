@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.vaadin.shell;
 
-import org.vaadin.dialogs.ConfirmDialog;
-
 /**
  * Decouples the presenters and the Vaadin application. Provides methods to show messages and configuration dialogs.
  */

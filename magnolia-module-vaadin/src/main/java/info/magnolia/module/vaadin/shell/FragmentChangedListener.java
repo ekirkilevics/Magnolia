@@ -37,9 +37,7 @@ import info.magnolia.module.vaadin.event.Listener;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Called if a URI fragment of {@link Shell} has changed.
  */
 public interface FragmentChangedListener extends Listener {
 

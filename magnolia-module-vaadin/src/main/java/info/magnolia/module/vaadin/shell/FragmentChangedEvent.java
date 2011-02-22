@@ -38,9 +38,7 @@ import info.magnolia.module.vaadin.event.Event;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Fired if a URI fragment has changed.
  */
 public class FragmentChangedEvent implements Event {
     private String fragment;

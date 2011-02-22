@@ -37,8 +37,6 @@ import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.shell.ConfirmationListener;
 import info.magnolia.module.vaadin.shell.Shell;
 
-import org.vaadin.dialogs.ConfirmDialog;
-
 
 /**
  * In charge of the user's location in the app.

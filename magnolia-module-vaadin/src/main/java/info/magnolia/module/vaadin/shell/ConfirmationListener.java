@@ -37,13 +37,13 @@ import info.magnolia.module.vaadin.event.Listener;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Called after the user has answered a confirmation dialog issued by
+ * {@link Shell#askForConfirmation(String, ConfirmationListener)}.
  */
 public interface ConfirmationListener extends Listener {
 
     void onCancel();
+
     void onConfirm();
 
 }
