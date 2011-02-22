@@ -65,7 +65,7 @@ public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<T
     @SuppressWarnings("unchecked")
     private void registerTokenizers(Class<? extends Place>... places) {
         for(Class<? extends Place> clazz: places){
-            Prefix prefix = (Prefix) clazz.getAnnotation(Prefix.class);
+            Prefix prefix = clazz.getAnnotation(Prefix.class);
             if(prefix == null){
                 continue;
             }
