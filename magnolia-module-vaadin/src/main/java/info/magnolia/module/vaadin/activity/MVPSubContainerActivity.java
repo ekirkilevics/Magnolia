@@ -35,14 +35,16 @@ package info.magnolia.module.vaadin.activity;
 
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.place.CompositePlace;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
+import info.magnolia.module.vaadin.place.PlaceHistoryMapperImpl;
 import info.magnolia.module.vaadin.shell.Shell;
+import info.magnolia.module.vaadin.shell.SubShell;
 
 
 /**
@@ -52,32 +54,7 @@ import info.magnolia.module.vaadin.shell.Shell;
  */
 public abstract class MVPSubContainerActivity extends AbstractActivity {
 
-    private final class InnerPlaceChangeListener implements PlaceChangeListener {
-
-        public void onPlaceChange(PlaceChangeEvent event) {
-            CompositePlace outerPlace = (CompositePlace) outerPlaceController.getWhere();
-            CompositePlace newOuterPlace = (CompositePlace) outerPlace.clone();
-            newOuterPlace.setSubPlace(id, event.getNewPlace());
-            outerPlaceController.goTo(newOuterPlace);
-        }
-    }
-
-    private final class OuterPlaceChangeListener implements PlaceChangeListener {
-
-        public void onPlaceChange(PlaceChangeEvent event) {
-            Place placeToGo = event.getNewPlace();
-            if (placeToGo instanceof CompositePlace) {
-                placeToGo = ((CompositePlace) placeToGo).getSubPlace(id);
-                if(placeToGo != null){
-                    innerPlaceController.goTo(placeToGo);
-                }
-            }
-        }
-    }
-
     private String id;
-
-    private PlaceController outerPlaceController;
 
     private EventBus innerEventBus;
 
@@ -85,14 +62,15 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     private Shell shell;
 
-    public MVPSubContainerActivity(String id, PlaceController outerPlaceController, Shell shell) {
+    public MVPSubContainerActivity(String id, Shell shell) {
         this.id = id;
-        this.outerPlaceController = outerPlaceController;
         this.shell = shell;
     }
 
     public void start(HasComponent display, EventBus outerEventBus) {
-        outerEventBus.addListener(new OuterPlaceChangeListener());
+
+        Shell subShell = new SubShell(id, shell);
+
         innerEventBus = new EventBus();
         innerPlaceController = new PlaceController(innerEventBus, shell);
 
@@ -100,27 +78,19 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         innerEventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
         innerEventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
 
-        innerEventBus.addListener(new InnerPlaceChangeListener());
-
         // build the container
         onStart(display, innerEventBus);
 
-        // now navigate in the container to the correct place
-        Place currentPlace = outerPlaceController.getWhere();
-        if(currentPlace instanceof CompositePlace) {
-            Place subPlace = ((CompositePlace) currentPlace).getSubPlace(id);
-            // FIXME a better solution has to be found
-            if(subPlace != null){
-                innerPlaceController.goTo(subPlace);
-            }
-        }
-        else{
-            throw new IllegalStateException("Current place must be of type " + CompositePlace.class.getName());
-        }
+        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
+        historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
+        historyHandler.handleCurrentHistory();
     }
 
-    protected abstract void onStart(HasComponent display, EventBus innerEventBus);
+    protected abstract Class< ? extends Place>[] getSupportedPlaces();
 
+    protected abstract Place getDefaultPlace();
+
+    protected abstract void onStart(HasComponent display, EventBus innerEventBus);
 
     public String getId() {
         return id;

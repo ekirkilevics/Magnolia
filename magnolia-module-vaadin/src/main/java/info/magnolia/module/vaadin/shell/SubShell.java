@@ -33,30 +33,48 @@
  */
 package info.magnolia.module.vaadin.shell;
 
-import org.vaadin.dialogs.ConfirmDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vaadin.dialogs.ConfirmDialog.Listener;
 
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 
 
 /**
- * Decouples the presenters and the Vaadin application. Provides methods to show messages and configuration dialogs.
+ * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.module.vaadin.activity.MVPSubContainerActivity}.
  */
-public interface Shell {
+public class SubShell implements Shell {
+    private Logger log = LoggerFactory.getLogger(SubShell.class);
+    private String id;
+    private Shell parent;
 
-    //FIXME don't use vaadin classes/interfaces
-    void confirm(String message, ConfirmDialog.Listener listener);
+    public SubShell(String id, Shell parent) {
+        this.id = id;
+        this.parent = parent;
+    }
 
-    void notify(String message);
+    public void confirm(String message, Listener listener) {
+        parent.confirm(message, listener);
+    }
 
-    String getFragment();
+    public void notify(String message) {
+        parent.notify(message);
+    }
 
-    void setFragment(String fragment, boolean fireEvent);
+    public String getFragment() {
+        log.warn("SubShell not implemented");
+        return null;
+    }
 
-    //FIXME don't use vaadin classes/interfaces
-    void addListener(FragmentChangedListener listener);
+    public void setFragment(String fragment, boolean fireEvent) {
+        log.warn("SubShell not implemented");
+    }
 
-    //FIXME don't use vaadin classes/interfaces
-    void removeListener(FragmentChangedListener listener);
+    public void addListener(FragmentChangedListener listener) {
+        log.warn("SubShell not implemented");
+    }
 
-
+    public void removeListener(FragmentChangedListener listener) {
+        log.warn("SubShell not implemented");
+    }
 }

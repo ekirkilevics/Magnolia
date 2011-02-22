@@ -35,12 +35,8 @@ package info.magnolia.module.vaadin.place;
 
 /**
  * Abstract implementation of {@link PlaceHistoryMapper}.
- * <p>
- * Copied verbatim from {@link com.google.gwt.place.impl.AbstractPlaceHistoryMapper}
- * @param <F> factory type
  */
-public abstract class AbstractPlaceHistoryMapper<F> implements
-    PlaceHistoryMapperWithFactory<F> {
+public abstract class AbstractPlaceHistoryMapper implements PlaceHistoryMapper  {
 
   /**
    * Return value for
@@ -62,8 +58,6 @@ public abstract class AbstractPlaceHistoryMapper<F> implements
     }
   }
 
-  protected F factory;
-
   public Place getPlace(String token) {
     int colonAt = token.indexOf(':');
     if (colonAt > 0) {
@@ -83,10 +77,6 @@ public abstract class AbstractPlaceHistoryMapper<F> implements
       return token.toString();
     }
     return null;
-  }
-
-  public void setFactory(F factory) {
-    this.factory = factory;
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,21 +25,42 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.vaadin.place;
-/**
- * A PlaceHistoryMapper that can get its {@link PlaceTokenizer} instances from
- * a factory.
- *<p>
- * Copied verbatim from {@link com.google.gwt.place.shared.PlaceHistoryMapperWithFactory}
- * @param <F> factory type
- */
-public interface PlaceHistoryMapperWithFactory<F> extends PlaceHistoryMapper {
+package info.magnolia.module.vaadin.shell;
 
-  void setFactory(F factory);
+/**
+ * Allows tto get sub fragments of a url fragment. Each fragment is separated with the
+ * {@link #SEPARATOR} and has the format <code>id:subfragment</code>.
+ */
+public class Fragmenter {
+
+    public static final String SEPARATOR = ";";
+
+    private static class Fragment {
+
+        private String id;
+
+        private String fragment;
+    }
+
+    public Fragmenter(String fragment) {
+        String[] subFragments = fragment.split(SEPARATOR);
+        for (String subFragment : subFragments) {
+
+        }
+    }
+
+    public String getSubFragment(String id) {
+        return null;
+    }
+
+    public void setSubFragment(String id, String fragment) {
+
+    }
+
 }

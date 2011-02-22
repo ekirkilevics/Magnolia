@@ -34,15 +34,14 @@
 package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.shell.Shell;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.UriFragmentUtility;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
 import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
-import com.vaadin.ui.VerticalLayout;
 
 
 /**
@@ -57,15 +56,11 @@ import com.vaadin.ui.VerticalLayout;
  * @author fgrilli
  */
 @SuppressWarnings("serial")
-public class PlaceHistoryHandler extends CustomComponent implements FragmentChangedListener{
+// FIXME should not implement a Vaadin specific interface
+public class PlaceHistoryHandler implements FragmentChangedListener{
 
   private static final Logger log = LoggerFactory.getLogger(PlaceHistoryHandler.class.getName());
 
-  private final UriFragmentUtility historian = new UriFragmentUtility();
-  //We need this to set it as composition root else null parent exception arises.
-  //We cannot set historian itself as root else we get java.lang.UnsupportedOperationException
-  //at com.vaadin.ui.CustomComponent.removeComponent(CustomComponent.java:248)
-  private VerticalLayout layout = new VerticalLayout();
 
   private final PlaceHistoryMapper mapper;
 
@@ -73,17 +68,18 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
 
   private Place defaultPlace = Place.NOWHERE;
 
+
+private Shell shell;
+
   /**
    * Create a new PlaceHistoryHandler.
    *
    * @param mapper a {@link PlaceHistoryMapper} instance
    */
-  public PlaceHistoryHandler(PlaceHistoryMapper mapper) {
+  public PlaceHistoryHandler(PlaceHistoryMapper mapper, Shell shell) {
       this.mapper = mapper;
-      layout.setSizeFull();
-      layout.addComponent(historian);
-      setCompositionRoot(layout);
-      addListener(this);
+      this.shell = shell;
+      shell.addListener(this);
   }
 
   /**
@@ -91,17 +87,8 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
    * ensure bookmark launches work.
    */
   public void handleCurrentHistory() {
-    String fragment = historian.getFragment();
-    /*
-     * FIXME this hack is needed to make app entering via bookmarks work. The problem is that {@link UriFragmentUtility#getFragment()} will read the current uri fragment only when the Vaadin application
-     * is fully initialized (i.e. the init() method has completed). However we need (?) to add this component *inside* the init method() before it completes, thus on first calling, historian.getFragment() will return null.
-     * With this trick we're forcing UriFragmentUtility to return us the actual fragment.
-     */
-    if(fragment == null){
-        historian.setFragment("");
-        fragment = historian.getFragment();
-    }
-    handleHistoryToken(fragment);
+    String fragment = shell.getFragment();
+    handleHistoryToken(StringUtils.defaultString(fragment));
   }
 
   public void fragmentChanged(FragmentChangedEvent source) {
@@ -122,33 +109,19 @@ public class PlaceHistoryHandler extends CustomComponent implements FragmentChan
         public void onPlaceChange(PlaceChangeEvent event) {
             log.debug("onPlaceChange...");
             Place newPlace = event.getNewPlace();
-            historian.setFragment(tokenForPlace(newPlace), false);
+            shell.setFragment(tokenForPlace(newPlace), false);
         }
     });
   }
 
   public final void addListener(FragmentChangedListener fragmentChangedListener) {
-      historian.addListener(fragmentChangedListener);
+      shell.addListener(fragmentChangedListener);
   }
 
   public final void removeListener(FragmentChangedListener fragmentChangedListener) {
-      historian.removeListener(fragmentChangedListener);
+      shell.removeListener(fragmentChangedListener);
   }
 
-  @Override
-  public void detach() {
-      log.debug("detaching listener...");
-      super.detach();
-      removeListener(this);
-  }
-
-  @Override
-  public void attach() {
-      log.debug("attaching listener...");
-      super.attach();
-      //In order to work, UriFragmentUtility MUST be attached to the application main window
-      getApplication().getMainWindow().addComponent(historian);
-  }
 
     private void handleHistoryToken(String token) {
 
