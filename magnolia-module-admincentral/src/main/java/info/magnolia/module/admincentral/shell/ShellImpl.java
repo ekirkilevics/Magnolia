@@ -33,52 +33,52 @@
  */
 package info.magnolia.module.admincentral.shell;
 
-import info.magnolia.module.vaadin.shell.Shell;
+import info.magnolia.module.vaadin.shell.AbstractShell;
+import info.magnolia.module.vaadin.shell.ConfirmationListener;
 
 import org.vaadin.dialogs.ConfirmDialog;
-import org.vaadin.dialogs.ConfirmDialog.Listener;
 
 import com.vaadin.Application;
 import com.vaadin.ui.UriFragmentUtility;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 
 
 /**
  * Wraps the Vaadin application.
  */
-public class ShellImpl implements Shell {
+public class ShellImpl extends AbstractShell {
+
+    private static final String APPLICATION_FRAGMENT_ID = "app";
 
     private Application application;
 
-    private UriFragmentUtility historian = new UriFragmentUtility();
+    protected UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
 
     public ShellImpl(Application application) {
+        super(APPLICATION_FRAGMENT_ID);
         this.application = application;
-        application.getMainWindow().addComponent(historian);
+        application.getMainWindow().addComponent(uriFragmentUtility);
     }
 
-    public void confirm(String message, Listener listener) {
-        ConfirmDialog.show(application.getMainWindow(), message, listener);
+    public void askForConfirmation(String message, final ConfirmationListener listener) {
+        ConfirmDialog.show(application.getMainWindow(), message, new ConfirmDialog.Listener() {
+
+            public void onClose(ConfirmDialog dialog) {
+                if (dialog.isConfirmed()) {
+                    listener.onConfirm();
+                }
+                else{
+                    listener.onCancel();
+                }
+            }
+        });
     }
 
-    public void notify(String message) {
+    public void showNotification(String message) {
         application.getMainWindow().showNotification(message);
     }
 
-    public String getFragment() {
-        return historian.getFragment();
-    }
-
-    public void setFragment(String fragment, boolean fireEvent) {
-        historian.setFragment(fragment, fireEvent);
-    }
-
-    public void addListener(FragmentChangedListener listener) {
-        historian.addListener(listener);
-    }
-
-    public void removeListener(FragmentChangedListener listener) {
-        historian.removeListener(listener);
+    protected UriFragmentUtility getUriFragmentUtility() {
+        return uriFragmentUtility;
     }
 
 }

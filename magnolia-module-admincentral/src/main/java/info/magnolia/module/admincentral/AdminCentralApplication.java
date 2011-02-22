@@ -189,7 +189,7 @@ public class AdminCentralApplication extends Application {
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {
                         public void start(HasComponent display, EventBus eventBus) {
-                            shell.notify(((SomePlace)place).getName());
+                            shell.showNotification(((SomePlace)place).getName());
                         }
                     };
                 }
