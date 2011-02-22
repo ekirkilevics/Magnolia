@@ -34,6 +34,7 @@
 package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.shell.Shell;
 
 import org.vaadin.dialogs.ConfirmDialog;
 
@@ -43,23 +44,13 @@ import org.vaadin.dialogs.ConfirmDialog;
 public class PlaceController {
 
     private final EventBus eventBus;
-    private Delegate delegate;
+    private Shell shell;
 
     private Place where = Place.NOWHERE;
 
-    /**
-     * Optional delegate in charge of Window related events. Provides nice
-     * isolation for unit testing, and allows customization of confirmation
-     * handling.
-     */
-    public interface Delegate {
-      //HandlerRegistration addWindowClosingHandler(ClosingHandler handler);
-      void confirm(String message, ConfirmDialog.Listener listener);
-    }
-
-    public PlaceController(final EventBus eventBus, Delegate delegate) {
+    public PlaceController(final EventBus eventBus, Shell shell) {
         this.eventBus = eventBus;
-        this.delegate = delegate;
+        this.shell = shell;
     }
 
     /**
@@ -79,7 +70,7 @@ public class PlaceController {
       PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
       eventBus.fire(willChange);
       if(willChange.getWarning() != null){
-          delegate.confirm(willChange.getWarning(), new ConfirmDialog.Listener() {
+          shell.confirm(willChange.getWarning(), new ConfirmDialog.Listener() {
               public void onClose(ConfirmDialog dialog) {
                   if(dialog.isConfirmed()){
                       goToWithoutChecks(newPlace);

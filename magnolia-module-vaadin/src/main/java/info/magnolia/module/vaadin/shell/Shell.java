@@ -31,11 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.shell;
+package info.magnolia.module.vaadin.shell;
 
 import org.vaadin.dialogs.ConfirmDialog;
-
-import info.magnolia.module.vaadin.place.PlaceController;
 
 
 /**
@@ -45,8 +43,6 @@ public interface Shell {
 
     void confirm(String message, ConfirmDialog.Listener listener);
 
-    void showMessage(String message);
-
-    PlaceController.Delegate asPlaceControllerDelegate();
+    void notify(String message);
 
 }

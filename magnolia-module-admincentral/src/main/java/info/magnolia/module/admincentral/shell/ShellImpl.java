@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.shell;
 
-import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.shell.Shell;
 
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.dialogs.ConfirmDialog.Listener;
@@ -42,7 +42,7 @@ import com.vaadin.Application;
 
 
 /**
- * Wrapps the Vaadin application.
+ * Wraps the Vaadin application.
  */
 public class ShellImpl implements Shell {
 
@@ -56,16 +56,8 @@ public class ShellImpl implements Shell {
         ConfirmDialog.show(application.getMainWindow(), message, listener);
     }
 
-    public void showMessage(String message) {
+    public void notify(String message) {
         application.getMainWindow().showNotification(message);
-    }
-
-    public PlaceController.Delegate asPlaceControllerDelegate(){
-        return new PlaceController.Delegate(){
-            public void confirm(String message, Listener listener) {
-                ShellImpl.this.confirm(message, listener);
-            }
-        };
     }
 
 }

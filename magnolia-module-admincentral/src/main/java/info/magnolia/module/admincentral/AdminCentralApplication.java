@@ -68,7 +68,6 @@ import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.module.admincentral.shell.Shell;
 import info.magnolia.module.admincentral.shell.ShellImpl;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.activity.Activity;
@@ -85,6 +84,7 @@ import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
 import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
 import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
+import info.magnolia.module.vaadin.shell.Shell;
 
 /**
  * Magnolia's AdminCentral.
@@ -160,7 +160,7 @@ public class AdminCentralApplication extends Application {
         eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
         eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
 
-        placeController = new PlaceController(eventBus, shell.asPlaceControllerDelegate());
+        placeController = new PlaceController(eventBus, shell);
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
             Activity menuActivity = new MenuActivity();
@@ -183,7 +183,7 @@ public class AdminCentralApplication extends Application {
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {
                         public void start(HasComponent display, EventBus eventBus) {
-                            shell.showMessage(((SomePlace)place).getName());
+                            shell.notify(((SomePlace)place).getName());
                         }
                     };
                 }

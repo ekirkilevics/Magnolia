@@ -35,7 +35,6 @@ package info.magnolia.module.admincentral.activity;
 
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.ItemSelectedPlace;
-import info.magnolia.module.admincentral.shell.Shell;
 import info.magnolia.module.admincentral.tree.TreeActivity;
 import info.magnolia.module.admincentral.views.EditWorkspaceView;
 import info.magnolia.module.vaadin.activity.Activity;
@@ -46,6 +45,7 @@ import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.module.vaadin.shell.Shell;
 
 
 /**
@@ -57,16 +57,14 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     private String workspace;
 
     public EditWorkspaceActivity(String workspace, PlaceController outerPlaceController, Shell shell, UIModel uiModel) {
-        super("edit-workspace", outerPlaceController, shell.asPlaceControllerDelegate());
+        super("edit-workspace", outerPlaceController, shell);
         this.workspace = workspace;
         this.uiModel = uiModel;
     }
 
     @Override
     public String mayStop() {
-        //TODO retrieve this from properties file.
-        //return "Are you sure you want to leave this page?";
-        return null;
+        return "Are you sure you want to leave this page?";
     }
 
     @Override

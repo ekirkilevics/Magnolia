@@ -42,7 +42,7 @@ import info.magnolia.module.vaadin.place.PlaceChangeListener;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
-import info.magnolia.module.vaadin.place.PlaceController.Delegate;
+import info.magnolia.module.vaadin.shell.Shell;
 
 
 /**
@@ -83,18 +83,18 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     private PlaceController innerPlaceController;
 
-    private Delegate delegate;
+    private Shell shell;
 
-    public MVPSubContainerActivity(String id, PlaceController outerPlaceController, Delegate delegate) {
+    public MVPSubContainerActivity(String id, PlaceController outerPlaceController, Shell shell) {
         this.id = id;
         this.outerPlaceController = outerPlaceController;
-        this.delegate = delegate;
+        this.shell = shell;
     }
 
     public void start(HasComponent display, EventBus outerEventBus) {
         outerEventBus.addListener(new OuterPlaceChangeListener());
         innerEventBus = new EventBus();
-        innerPlaceController = new PlaceController(innerEventBus, delegate);
+        innerPlaceController = new PlaceController(innerEventBus, shell);
 
         //FIXME, we should not have to register all the events manually
         innerEventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
