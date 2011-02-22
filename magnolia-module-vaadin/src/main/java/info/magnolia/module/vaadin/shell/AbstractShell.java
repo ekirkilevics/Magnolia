@@ -61,7 +61,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         Fragmenter fragmenter = new Fragmenter(getUriFragmentUtility().getFragment());
         // only change the uri if the value has changed, other don't bother Vaadin
         String currentFragment = fragmenter.getSubFragment(id);
-        if(currentFragment != null && !currentFragment.equals(fragment)){
+        if(currentFragment == null || !currentFragment.equals(fragment)){
             fragmenter.setSubFragment(id, fragment);
             getUriFragmentUtility().setFragment(fragmenter.toString(), fireEvent);
         }
