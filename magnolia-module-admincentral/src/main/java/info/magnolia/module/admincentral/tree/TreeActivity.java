@@ -66,11 +66,19 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         this.placeController = placeController;
     }
 
+    // TODO is this good practice?
+    public void update(String path){
+        if(!this.path.equals(path)){
+            this.path = path;
+            treeView.select(path);
+        }
+    }
+
     public void start(HasComponent display, EventBus eventBus) {
         this.eventBus = eventBus;
         try {
             treeView = new TreeViewImpl(treeName, this, uiModel);
-            treeView.select(path);
+            update(path);
             display.setComponent(treeView);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -83,7 +91,9 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void onItemSelection(Item jcrItem) {
         try {
-            placeController.goTo(new ItemSelectedPlace(treeName, jcrItem.getPath()));
+            String path = jcrItem.getPath();
+            this.path = path;
+            placeController.goTo(new ItemSelectedPlace(treeName, path));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -94,19 +104,38 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TreeActivity that = (TreeActivity) o;
-        // FIXME this won't work if someone else changes the place -> the tree would not navigate, example: breadcrump
-        if (treeName != null ? !treeName.equals(that.treeName) : that.treeName != null) return false;
-
-        return true;
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((path == null) ? 0 : path.hashCode());
+        result = prime * result + ((treeName == null) ? 0 : treeName.hashCode());
+        return result;
     }
 
     @Override
-    public int hashCode() {
-        return treeName != null ? treeName.hashCode() : 0;
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof TreeActivity))
+            return false;
+        TreeActivity other = (TreeActivity) obj;
+        if (path == null) {
+            if (other.path != null)
+                return false;
+        }
+        else if (!path.equals(other.path))
+            return false;
+        if (treeName == null) {
+            if (other.treeName != null)
+                return false;
+        }
+        else if (!treeName.equals(other.treeName))
+            return false;
+        return true;
     }
+
+
+
 }

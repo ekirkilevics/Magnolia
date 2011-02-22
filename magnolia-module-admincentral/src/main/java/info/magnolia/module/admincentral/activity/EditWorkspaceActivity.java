@@ -71,11 +71,21 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
         EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
 
+        // FIXME does it make sense to have activity manager with a single activity? I think no.
         ActivityManager treeActivityManager = new ActivityManager(new ActivityMapper() {
+
+            private TreeActivity treeActivity;
 
             public Activity getActivity(final Place place) {
                 String path = ((ItemSelectedPlace)place).getPath();
-                return new TreeActivity(workspace, path, getInnerPlaceController(), uiModel);
+                if(treeActivity == null){
+                    treeActivity = new TreeActivity(workspace, path, getInnerPlaceController(), uiModel);
+                }
+                else{
+                    // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view
+                    treeActivity.update(path);
+                }
+                return treeActivity;
             }
         }, innerEventBus);
 
