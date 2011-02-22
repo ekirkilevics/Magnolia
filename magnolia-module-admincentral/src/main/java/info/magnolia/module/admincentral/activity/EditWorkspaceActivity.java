@@ -44,7 +44,6 @@ import info.magnolia.module.vaadin.activity.MVPSubContainerActivity;
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.PlaceController;
 import info.magnolia.module.vaadin.shell.Shell;
 
 
@@ -56,8 +55,8 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     private UIModel uiModel;
     private String workspace;
 
-    public EditWorkspaceActivity(String workspace, PlaceController outerPlaceController, Shell shell, UIModel uiModel) {
-        super("edit-workspace", outerPlaceController, shell);
+    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel) {
+        super("edit-workspace", shell);
         this.workspace = workspace;
         this.uiModel = uiModel;
     }
@@ -120,5 +119,16 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         } else if (!workspace.equals(other.workspace))
             return false;
         return true;
+    }
+
+    @Override
+    //FIXME can we use generics here?
+    protected Class[] getSupportedPlaces() {
+        return new Class[]{ItemSelectedPlace.class};
+    }
+
+    @Override
+    protected Place getDefaultPlace() {
+        return new ItemSelectedPlace(workspace, "/");
     }
 }

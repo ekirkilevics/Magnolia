@@ -33,9 +33,8 @@
  */
 package info.magnolia.module.admincentral.place;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.module.vaadin.place.CompositePlace;
+import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceTokenizer;
 import info.magnolia.module.vaadin.place.Prefix;
 
 
@@ -43,7 +42,7 @@ import info.magnolia.module.vaadin.place.Prefix;
  * Edit a workspace's content.
  */
 @Prefix("wks")
-public class EditWorkspacePlace extends CompositePlace {
+public class EditWorkspacePlace extends Place {
 
     /**
      * Serializes and deserializes EditWorkspacePlace(s).
@@ -51,27 +50,14 @@ public class EditWorkspacePlace extends CompositePlace {
      * @author fgrilli
      *
      */
-    public static class Tokenizer extends CompositePlace.Tokenizer {
-
-        private static final String SEPARATOR = ";";
+    public static class Tokenizer implements PlaceTokenizer<EditWorkspacePlace>{
 
         public EditWorkspacePlace getPlace(String token) {
-            final String[] bits = token.split(SEPARATOR);
-            if(bits.length == 2) {
-                EditWorkspacePlace place = new EditWorkspacePlace(bits[0]);
-                //FIXME get the Region id
-                place.setSubPlace("edit-workspace", new ItemSelectedPlace(bits[0],bits[1]));
-                return place;
-            }
             return new EditWorkspacePlace(token);
         }
 
         public String getToken(EditWorkspacePlace place) {
-            final String superClassToken = super.getToken(place);
-            if(StringUtils.isNotBlank(superClassToken)) {
-                return place.getWorkspace() + SEPARATOR + superClassToken;
-            }
-            return place.getWorkspace() + SEPARATOR +"/";
+            return place.getWorkspace();
         }
     }
 

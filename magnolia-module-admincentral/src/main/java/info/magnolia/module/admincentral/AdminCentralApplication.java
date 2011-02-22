@@ -64,7 +64,6 @@ import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.navigation.Menu;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.module.admincentral.place.AdminCentralPlaceHistoryMapper;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
@@ -76,6 +75,7 @@ import info.magnolia.module.vaadin.activity.ActivityMapper;
 import info.magnolia.module.vaadin.component.ComponentContainerBasedDisplay;
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.place.PlaceHistoryMapperImpl;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeListener;
@@ -174,7 +174,7 @@ public class AdminCentralApplication extends Application {
             public Activity getActivity(final Place place) {
                 if(place instanceof EditWorkspacePlace){
                     EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), placeController, shell, uiModel);
+                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel);
                 }
                 else if(place instanceof ShowContentPlace){
                     ShowContentPlace showContentPlace = (ShowContentPlace)place;
@@ -198,11 +198,11 @@ public class AdminCentralApplication extends Application {
         menuActivityManager.setDisplay(new ComponentContainerBasedDisplay("navigation", menuDisplay));
 
         // Browser history integration
-        PlaceHistoryMapper historyMapper = new AdminCentralPlaceHistoryMapper(EditWorkspacePlace.class);
-        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
+        // FIXME make this more dynamic, don't pass the place explicitely
+        PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
+        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
         final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
         historyHandler.register(placeController, eventBus, defaultPlace);
-        outerContainer.addComponent(historyHandler);
         historyHandler.handleCurrentHistory();
     }
 

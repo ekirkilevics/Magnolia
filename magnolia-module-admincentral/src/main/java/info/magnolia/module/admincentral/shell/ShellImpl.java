@@ -39,6 +39,8 @@ import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.dialogs.ConfirmDialog.Listener;
 
 import com.vaadin.Application;
+import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
 
 
 /**
@@ -48,8 +50,11 @@ public class ShellImpl implements Shell {
 
     private Application application;
 
+    private UriFragmentUtility historian = new UriFragmentUtility();
+
     public ShellImpl(Application application) {
         this.application = application;
+        application.getMainWindow().addComponent(historian);
     }
 
     public void confirm(String message, Listener listener) {
@@ -58,6 +63,22 @@ public class ShellImpl implements Shell {
 
     public void notify(String message) {
         application.getMainWindow().showNotification(message);
+    }
+
+    public String getFragment() {
+        return historian.getFragment();
+    }
+
+    public void setFragment(String fragment, boolean fireEvent) {
+        historian.setFragment(fragment, fireEvent);
+    }
+
+    public void addListener(FragmentChangedListener listener) {
+        historian.addListener(listener);
+    }
+
+    public void removeListener(FragmentChangedListener listener) {
+        historian.removeListener(listener);
     }
 
 }
