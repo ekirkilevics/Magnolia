@@ -34,94 +34,94 @@
 package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.shell.FragmentChangedEvent;
+import info.magnolia.module.vaadin.shell.FragmentChangedListener;
 import info.magnolia.module.vaadin.shell.Shell;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent;
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
-
 
 /**
- * Monitors {@link PlaceChangeEvent}s and
- * browser's history events (via Vaadin's {@link UriFragmentUtility}) and keep them in sync.
+ * Monitors {@link PlaceChangeEvent}s and browser's history events (via Vaadin's
+ * {@link UriFragmentUtility}) and keep them in sync.
  * <p>
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * <p>
- * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app component <strong>(except those wrapped in {@link ComponentContainerBasedDisplay} else it is removed!)</strong>.
- * This is because internally it uses {@link UriFragmentUtility} which <strong>MUST</strong> be attached to the application main window in order to work. An alternative to
- * using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides) to mimic GWT's {@link Historian}.
+ * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app
+ * component <strong>(except those wrapped in {@link ComponentContainerBasedDisplay} else it is
+ * removed!)</strong>. This is because internally it uses {@link UriFragmentUtility} which
+ * <strong>MUST</strong> be attached to the application main window in order to work. An alternative
+ * to using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides)
+ * to mimic GWT's {@link Historian}.
  * @author fgrilli
  */
 @SuppressWarnings("serial")
 // FIXME should not implement a Vaadin specific interface
-public class PlaceHistoryHandler implements FragmentChangedListener{
+public class PlaceHistoryHandler implements FragmentChangedListener {
 
-  private static final Logger log = LoggerFactory.getLogger(PlaceHistoryHandler.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(PlaceHistoryHandler.class.getName());
 
+    private final PlaceHistoryMapper mapper;
 
-  private final PlaceHistoryMapper mapper;
+    private PlaceController placeController;
 
-  private PlaceController placeController;
+    private Place defaultPlace = Place.NOWHERE;
 
-  private Place defaultPlace = Place.NOWHERE;
+    private Shell shell;
 
+    /**
+     * Create a new PlaceHistoryHandler.
+     *
+     * @param mapper a {@link PlaceHistoryMapper} instance
+     */
+    public PlaceHistoryHandler(PlaceHistoryMapper mapper, Shell shell) {
+        this.mapper = mapper;
+        this.shell = shell;
+        shell.addListener(this);
+    }
 
-private Shell shell;
+    /**
+     * Handle the current history token. Typically called at application start, to ensure bookmark
+     * launches work.
+     */
+    public void handleCurrentHistory() {
+        String fragment = shell.getFragment();
+        handleHistoryToken(StringUtils.defaultString(fragment));
+    }
 
-  /**
-   * Create a new PlaceHistoryHandler.
-   *
-   * @param mapper a {@link PlaceHistoryMapper} instance
-   */
-  public PlaceHistoryHandler(PlaceHistoryMapper mapper, Shell shell) {
-      this.mapper = mapper;
-      this.shell = shell;
-      shell.addListener(this);
-  }
+    public void onFragmentChanged(FragmentChangedEvent event) {
+        String token = event.getFragment();
+        log.debug("fragmentChanged with token {}", token);
+        handleHistoryToken(token);
+    }
 
-  /**
-   * Handle the current history token. Typically called at application start, to
-   * ensure bookmark launches work.
-   */
-  public void handleCurrentHistory() {
-    String fragment = shell.getFragment();
-    handleHistoryToken(StringUtils.defaultString(fragment));
-  }
+    /**
+     * Initialize this place history handler.
+     *
+     */
+    public void register(PlaceController placeController, EventBus eventBus, Place defaultPlace) {
+        this.placeController = placeController;
+        this.defaultPlace = defaultPlace;
 
-  public void fragmentChanged(FragmentChangedEvent source) {
-      String token = source.getUriFragmentUtility().getFragment();
-      log.debug("fragmentChanged with token {}", token);
-      handleHistoryToken(token);
-  }
+        eventBus.addListener(new PlaceChangeListener() {
 
-  /**
-   * Initialize this place history handler.
-   *
-   */
-  public void register(PlaceController placeController, EventBus eventBus, Place defaultPlace) {
-    this.placeController = placeController;
-    this.defaultPlace = defaultPlace;
+            public void onPlaceChange(PlaceChangeEvent event) {
+                log.debug("onPlaceChange...");
+                Place newPlace = event.getNewPlace();
+                shell.setFragment(tokenForPlace(newPlace), false);
+            }
+        });
+    }
 
-    eventBus.addListener(new PlaceChangeListener() {
-        public void onPlaceChange(PlaceChangeEvent event) {
-            log.debug("onPlaceChange...");
-            Place newPlace = event.getNewPlace();
-            shell.setFragment(tokenForPlace(newPlace), false);
-        }
-    });
-  }
+    public final void addListener(FragmentChangedListener fragmentChangedListener) {
+        shell.addListener(fragmentChangedListener);
+    }
 
-  public final void addListener(FragmentChangedListener fragmentChangedListener) {
-      shell.addListener(fragmentChangedListener);
-  }
-
-  public final void removeListener(FragmentChangedListener fragmentChangedListener) {
-      shell.removeListener(fragmentChangedListener);
-  }
-
+    public final void removeListener(FragmentChangedListener fragmentChangedListener) {
+        shell.removeListener(fragmentChangedListener);
+    }
 
     private void handleHistoryToken(String token) {
 
@@ -144,7 +144,7 @@ private Shell shell;
     }
 
     private String tokenForPlace(Place newPlace) {
-        //FIXME if uncommented the URI fragment won't be written
+        // FIXME if uncommented the URI fragment won't be written
         /*if (defaultPlace.equals(newPlace)) {
             return "";
         }*/

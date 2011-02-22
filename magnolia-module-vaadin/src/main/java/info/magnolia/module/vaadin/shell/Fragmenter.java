@@ -33,34 +33,71 @@
  */
 package info.magnolia.module.vaadin.shell;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Allows tto get sub fragments of a url fragment. Each fragment is separated with the
- * {@link #SEPARATOR} and has the format <code>id:subfragment</code>.
+ * {@link #FRAGMENT_SEPARATOR} and has the format <code>id:subfragment</code>.
  */
 public class Fragmenter {
 
-    public static final String SEPARATOR = ";";
+    private static final String ID_SEPARATOR = ":";
+
+    public static final String FRAGMENT_SEPARATOR = "|";
+
+    private Map<String, Fragment> fragments = new LinkedHashMap<String, Fragment>();
+
+
+    public Fragmenter(String fragment) {
+        String[] subFragments = fragment.split(FRAGMENT_SEPARATOR);
+        for (String subFragment : subFragments) {
+            String id = StringUtils.substringBefore(subFragment, ID_SEPARATOR);
+            String token = StringUtils.substringAfter(subFragment, ID_SEPARATOR);
+            fragments.put(id, new Fragment(id, token));
+        }
+    }
+
+    public String getSubFragment(String id) {
+        return fragments.get(id).getFragment();
+    }
+
+    public void setSubFragment(String id, String fragment) {
+        fragments.put(id, new Fragment(id, fragment));
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer();
+        for (Fragment fragment : fragments.values()) {
+            str.append(fragment.id).append(ID_SEPARATOR).append(fragment.fragment).append(FRAGMENT_SEPARATOR);
+        }
+        if(str.length()>0){
+            str.deleteCharAt(str.length()-1);
+        }
+        return str.toString();
+    }
 
     private static class Fragment {
 
         private String id;
 
         private String fragment;
-    }
 
-    public Fragmenter(String fragment) {
-        String[] subFragments = fragment.split(SEPARATOR);
-        for (String subFragment : subFragments) {
-
+        public Fragment(String id, String fragment) {
+            this.id = id;
+            this.fragment = fragment;
         }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getFragment() {
+            return fragment;
+        }
+
     }
-
-    public String getSubFragment(String id) {
-        return null;
-    }
-
-    public void setSubFragment(String id, String fragment) {
-
-    }
-
 }

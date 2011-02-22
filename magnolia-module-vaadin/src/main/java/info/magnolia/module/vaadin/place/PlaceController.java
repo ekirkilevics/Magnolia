@@ -34,9 +34,11 @@
 package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.shell.ConfirmationListener;
 import info.magnolia.module.vaadin.shell.Shell;
 
 import org.vaadin.dialogs.ConfirmDialog;
+
 
 /**
  * In charge of the user's location in the app.
@@ -44,6 +46,7 @@ import org.vaadin.dialogs.ConfirmDialog;
 public class PlaceController {
 
     private final EventBus eventBus;
+
     private Shell shell;
 
     private Place where = Place.NOWHERE;
@@ -57,30 +60,31 @@ public class PlaceController {
      * Returns the current place.
      */
     public Place getWhere() {
-      return where;
+        return where;
     }
 
     /**
      * Request a change to a new place.
      */
     public void goTo(final Place newPlace) {
-      if (getWhere().equals(newPlace)) {
-        return;
-      }
-      PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
-      eventBus.fire(willChange);
-      if(willChange.getWarning() != null){
-          shell.confirm(willChange.getWarning(), new ConfirmDialog.Listener() {
-              public void onClose(ConfirmDialog dialog) {
-                  if(dialog.isConfirmed()){
-                      goToWithoutChecks(newPlace);
-                  }
-               }
-           });
-      }
-      else{
-          goToWithoutChecks(newPlace);
-      }
+        if (getWhere().equals(newPlace)) {
+            return;
+        }
+        PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
+        eventBus.fire(willChange);
+        if (willChange.getWarning() != null) {
+            shell.askForConfirmation(willChange.getWarning(), new ConfirmationListener() {
+                public void onConfirm() {
+                    goToWithoutChecks(newPlace);
+                }
+
+                public void onCancel() {
+                }
+            });
+        }
+        else {
+            goToWithoutChecks(newPlace);
+        }
 
     }
 

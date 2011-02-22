@@ -33,36 +33,16 @@
  */
 package info.magnolia.module.vaadin.shell;
 
-
-import com.vaadin.ui.UriFragmentUtility;
+import info.magnolia.module.vaadin.event.Listener;
 
 
 /**
- * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.module.vaadin.activity.MVPSubContainerActivity}.
+ * @author pbaerfuss
+ * @version $Id$
+ *
  */
-public class SubShell extends AbstractShell {
-    private Shell parent;
+public interface FragmentChangedListener extends Listener {
 
-    public SubShell(String id, Shell parent) {
-        super(id);
-        this.parent = parent;
-    }
-
-    public void askForConfirmation(String message, ConfirmationListener listener) {
-        parent.askForConfirmation(message, listener);
-    }
-
-    public void showNotification(String message) {
-        parent.showNotification(message);
-    }
-
-    @Override
-    protected UriFragmentUtility getUriFragmentUtility() {
-        //FIXME we should obviously not cast, but also don't like to add the method to the clean interface
-        return ((AbstractShell)parent).getUriFragmentUtility();
-    }
-
+    void onFragmentChanged(FragmentChangedEvent event);
 
 }
-
-

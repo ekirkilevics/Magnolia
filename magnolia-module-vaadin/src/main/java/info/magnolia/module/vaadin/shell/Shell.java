@@ -35,27 +35,21 @@ package info.magnolia.module.vaadin.shell;
 
 import org.vaadin.dialogs.ConfirmDialog;
 
-import com.vaadin.ui.UriFragmentUtility.FragmentChangedListener;
-
-
 /**
  * Decouples the presenters and the Vaadin application. Provides methods to show messages and configuration dialogs.
  */
 public interface Shell {
 
-    //FIXME don't use vaadin classes/interfaces
-    void confirm(String message, ConfirmDialog.Listener listener);
+    void askForConfirmation(String message, ConfirmationListener listener);
 
-    void notify(String message);
+    void showNotification(String message);
 
     String getFragment();
 
     void setFragment(String fragment, boolean fireEvent);
 
-    //FIXME don't use vaadin classes/interfaces
     void addListener(FragmentChangedListener listener);
 
-    //FIXME don't use vaadin classes/interfaces
     void removeListener(FragmentChangedListener listener);
 
 
