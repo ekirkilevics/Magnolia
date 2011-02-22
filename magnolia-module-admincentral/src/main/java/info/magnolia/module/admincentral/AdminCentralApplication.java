@@ -90,9 +90,6 @@ import info.magnolia.module.vaadin.shell.Shell;
 
 /**
  * Magnolia's AdminCentral.
- *
- * @author dan
- * @author fgrilli
  */
 public class AdminCentralApplication extends Application {
 
@@ -156,8 +153,8 @@ public class AdminCentralApplication extends Application {
 
         setLogoutURL(MgnlContext.getContextPath() + "/?mgnlLogout=true");
         initLayout();
-
         shell = new ShellImpl(this);
+
         eventBus = new EventBus();
         eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
         eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);

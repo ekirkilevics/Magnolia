@@ -91,8 +91,6 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         detailViewActivityManager.setDisplay(editWorkspaceView.getDetailDisplay());
 
         display.setComponent(editWorkspaceView.asComponent());
-
-        getInnerPlaceController().goTo(new ItemSelectedPlace(workspace, "/"));
     }
 
     @Override

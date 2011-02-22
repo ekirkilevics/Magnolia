@@ -41,7 +41,7 @@ import info.magnolia.module.vaadin.place.Prefix;
 /**
  * Edit a workspace's content.
  */
-@Prefix("wks")
+@Prefix("edit-workspace")
 public class EditWorkspacePlace extends Place {
 
     /**

@@ -37,10 +37,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceTokenizer;
+import info.magnolia.module.vaadin.place.Prefix;
 
 /**
  * A sub-place of {@link EditWorkspacePlace} if an item got selected.
  */
+@Prefix("item-selected")
 public class ItemSelectedPlace extends Place {
     /**
      * Tokenizer for ItemSelectedPlace.
@@ -50,15 +52,15 @@ public class ItemSelectedPlace extends Place {
     public static class Tokenizer implements PlaceTokenizer<ItemSelectedPlace> {
 
         public ItemSelectedPlace getPlace(String token) {
-            final String[] bits = token.split(";");
+            final String[] bits = token.split(":");
             if(bits.length != 2){
-                return null;
+                throw new IllegalArgumentException("Invalid token: " + token);
             }
             return new ItemSelectedPlace(bits[0], bits[1]);
         }
 
         public String getToken(ItemSelectedPlace place) {
-            return place.getPath();
+            return place.getWorkspace() + ":" + place.getPath();
         }
     }
 

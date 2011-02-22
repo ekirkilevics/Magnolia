@@ -54,6 +54,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private final String treeName;
     private EventBus eventBus;
     private PlaceController placeController;
+    // FIXME use the interface not the implementation
     private TreeViewImpl treeView;
     private UIModel uiModel;
     private String path;
@@ -69,6 +70,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         this.eventBus = eventBus;
         try {
             treeView = new TreeViewImpl(treeName, this, uiModel);
+            treeView.select(path);
             display.setComponent(treeView);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -97,7 +99,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         if (o == null || getClass() != o.getClass()) return false;
 
         TreeActivity that = (TreeActivity) o;
-
+        // FIXME this won't work if someone else changes the place -> the tree would not navigate, example: breadcrump
         if (treeName != null ? !treeName.equals(that.treeName) : that.treeName != null) return false;
 
         return true;

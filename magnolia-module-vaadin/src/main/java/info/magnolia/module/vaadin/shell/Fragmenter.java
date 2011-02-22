@@ -46,13 +46,16 @@ public class Fragmenter {
 
     private static final String ID_SEPARATOR = ":";
 
-    public static final String FRAGMENT_SEPARATOR = "|";
+    public static final String FRAGMENT_SEPARATOR = "~";
 
     private Map<String, Fragment> fragments = new LinkedHashMap<String, Fragment>();
 
 
     public Fragmenter(String fragment) {
-        String[] subFragments = fragment.split(FRAGMENT_SEPARATOR);
+        if(fragment == null){
+            return;
+        }
+        String[] subFragments = StringUtils.split(fragment, FRAGMENT_SEPARATOR);
         for (String subFragment : subFragments) {
             String id = StringUtils.substringBefore(subFragment, ID_SEPARATOR);
             String token = StringUtils.substringAfter(subFragment, ID_SEPARATOR);
@@ -61,18 +64,28 @@ public class Fragmenter {
     }
 
     public String getSubFragment(String id) {
-        return fragments.get(id).getFragment();
+        Fragment fragment = fragments.get(id);
+        if(fragment != null){
+            return fragment.getFragment();
+        }
+        return null;
     }
 
     public void setSubFragment(String id, String fragment) {
-        fragments.put(id, new Fragment(id, fragment));
+        // updated the fragment and don't replace it to avoid re-ordering
+        if(fragments.containsKey(id)){
+            fragments.get(id).fragment = fragment;
+        }
+        else{
+            fragments.put(id, new Fragment(id, fragment));
+        }
     }
 
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
         for (Fragment fragment : fragments.values()) {
-            str.append(fragment.id).append(ID_SEPARATOR).append(fragment.fragment).append(FRAGMENT_SEPARATOR);
+            str.append(fragment.id).append(ID_SEPARATOR).append(fragment.getFragment()).append(FRAGMENT_SEPARATOR);
         }
         if(str.length()>0){
             str.deleteCharAt(str.length()-1);

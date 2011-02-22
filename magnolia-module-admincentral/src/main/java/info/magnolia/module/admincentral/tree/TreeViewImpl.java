@@ -69,6 +69,10 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
         });
     }
 
+    public void select(String path){
+        jcrBrowser.setExpanded(path, true);
+    }
+
     public void executeActionForSelectedItem(String actionName) {
         jcrBrowser.executeActionForSelectedItem(actionName);
     }

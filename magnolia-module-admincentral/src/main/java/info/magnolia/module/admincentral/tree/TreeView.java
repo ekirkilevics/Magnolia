@@ -57,4 +57,6 @@ public interface TreeView {
 
     }
 
+    public abstract void select(String path);
+
 }

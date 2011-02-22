@@ -40,22 +40,17 @@ import com.vaadin.ui.UriFragmentUtility;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Implements the methods to handle URI fragment changes.
  */
 public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentUtility.FragmentChangedListener{
 
     protected String id;
 
-
     private Collection<info.magnolia.module.vaadin.shell.FragmentChangedListener> listeners = new ArrayList<FragmentChangedListener>();
-
 
     public AbstractShell(String id) {
         this.id = id;
     }
-
 
     public String getFragment() {
         Fragmenter fragmenter = new Fragmenter(getUriFragmentUtility().getFragment());
@@ -64,8 +59,12 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
 
     public void setFragment(String fragment, boolean fireEvent) {
         Fragmenter fragmenter = new Fragmenter(getUriFragmentUtility().getFragment());
-        fragmenter.setSubFragment(id, fragment);
-        getUriFragmentUtility().setFragment(fragmenter.toString(), fireEvent);
+        // only change the uri if the value has changed, other don't bother Vaadin
+        String currentFragment = fragmenter.getSubFragment(id);
+        if(currentFragment != null && !currentFragment.equals(fragment)){
+            fragmenter.setSubFragment(id, fragment);
+            getUriFragmentUtility().setFragment(fragmenter.toString(), fireEvent);
+        }
     }
 
     public void addListener(FragmentChangedListener listener) {
