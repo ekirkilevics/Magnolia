@@ -60,6 +60,8 @@ import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
 import info.magnolia.module.admincentral.activity.ShowContentActivity;
+import info.magnolia.module.admincentral.dialog.DialogActivity;
+import info.magnolia.module.admincentral.dialog.DialogPlace;
 import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.navigation.Menu;
@@ -135,7 +137,7 @@ public class AdminCentralApplication extends Application {
 
     private EventBus eventBus;
 
-    private PlaceController placeController;
+    public static PlaceController placeController;
 
     // FIXME should be a component
     private UIModel uiModel = new UIModel();
@@ -179,6 +181,10 @@ public class AdminCentralApplication extends Application {
                 else if(place instanceof ShowContentPlace){
                     ShowContentPlace showContentPlace = (ShowContentPlace)place;
                     return new ShowContentActivity(showContentPlace.getViewTarget(), showContentPlace.getViewName());
+                }
+                else if(place instanceof DialogPlace){
+                    DialogPlace dialogPlace = (DialogPlace)place;
+                    return new DialogActivity(dialogPlace, uiModel);
                 }
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {

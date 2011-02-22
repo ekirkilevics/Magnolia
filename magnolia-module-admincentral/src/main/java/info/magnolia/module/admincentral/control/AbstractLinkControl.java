@@ -60,7 +60,7 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Node storageNode, final Window mainWindow) {
+    public Component createFieldComponent(Node storageNode) {
 
         if (field != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
@@ -79,7 +79,7 @@ public abstract class AbstractLinkControl extends AbstractDialogControl {
                 window.setModal(true);
                 window.setClosable(true);
 
-                mainWindow.addWindow(window);
+                field.getApplication().getMainWindow().addWindow(window);
             }
         });
 

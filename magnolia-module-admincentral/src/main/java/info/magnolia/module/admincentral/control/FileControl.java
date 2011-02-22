@@ -38,7 +38,6 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Window;
 
 /**
  * File upload control.
@@ -60,7 +59,7 @@ public class FileControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Node storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode) {
         if (upload != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }

@@ -44,6 +44,17 @@ import com.vaadin.ui.GridLayout;
  */
 public interface DialogControl {
 
+    /**
+     * Presenter for DialogControl.
+     */
+    public interface Presenter {
+        void onFocus();
+    }
+
+    void setPresenter(Presenter presenter);
+
+    String getDescription();
+
     void create(Node storageNode, GridLayout layout);
 
     void validate();

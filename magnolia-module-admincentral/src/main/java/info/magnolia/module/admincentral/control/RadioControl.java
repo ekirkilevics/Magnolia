@@ -41,7 +41,6 @@ import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Window;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
@@ -62,7 +61,7 @@ public class RadioControl extends AbstractOptionGroupControl {
     }
 
     @Override
-    public Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException {
+    public Component createFieldComponent(Node storageNode) throws RepositoryException {
 
         if (group != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");

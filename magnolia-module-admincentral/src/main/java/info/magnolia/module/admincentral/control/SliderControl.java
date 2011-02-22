@@ -42,7 +42,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Slider;
-import com.vaadin.ui.Window;
 
 /**
  * Slider control for selecting a number in a fixed range.
@@ -61,7 +60,7 @@ public class SliderControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Node storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode) {
         if (slider != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }

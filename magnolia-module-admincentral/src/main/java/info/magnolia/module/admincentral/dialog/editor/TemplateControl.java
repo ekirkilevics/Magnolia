@@ -67,7 +67,7 @@ public class TemplateControl extends Label {
 
     public DialogEditorField createControlComponent(Window window) {
         AbstractDialogControl actualControl = this.controlTemplate.clone();
-        final Component comp = actualControl.createField(null, window);
+        final Component comp = actualControl.createField(null);
         final String caption = StringUtils.isBlank(comp.getCaption()) ? (super.getValue() + ": ") : comp.getCaption();
 
         return new DialogEditorField(caption, comp, actualControl);

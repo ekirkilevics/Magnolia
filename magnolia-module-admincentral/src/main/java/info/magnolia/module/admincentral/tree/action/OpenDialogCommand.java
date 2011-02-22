@@ -37,7 +37,8 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.AdminCentralApplication;
+import info.magnolia.module.admincentral.dialog.DialogPlace;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 /**
@@ -58,7 +59,11 @@ public class OpenDialogCommand extends Command {
 
     @Override
     public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("howTo", (Node) item));
+
+        // We need to send the workspace as well
+
+//        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("howTo", (Node) item));
+        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
     }
 
     public String getDialog() {

@@ -39,6 +39,8 @@ import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import info.magnolia.module.admincentral.dialog.DialogDefinition;
+import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
@@ -110,5 +112,9 @@ public class UIModel {
 
     public Item getItem(TreeDefinition treeDefinition, String path) throws RepositoryException {
         return JCRUtil.getSession(treeDefinition.getRepository()).getItem(path);
+    }
+
+    public DialogDefinition getDialogDefinition(String dialogName) throws RepositoryException {
+        return DialogRegistry.getInstance().getDialog(dialogName);
     }
 }

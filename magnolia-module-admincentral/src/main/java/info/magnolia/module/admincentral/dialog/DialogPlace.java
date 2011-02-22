@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,44 +31,52 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.control;
+package info.magnolia.module.admincentral.dialog;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import org.apache.commons.lang.StringUtils;
 
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
+import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.module.vaadin.place.PlaceTokenizer;
 
 /**
- * Control for setting a value to true or false.
+ * Place for dialogs.
+ *
+ * TODO need to contain the name of the tree or the workspace also.
+ *
+ * @author tmattsson
  */
-public class CheckBoxControl extends AbstractDialogControl {
+public class DialogPlace extends Place {
 
-    private CheckBox checkBox;
+    private String dialogName;
+    private String path;
 
-    @Override
-    protected Component getFieldComponent() {
-        return checkBox;
+    public DialogPlace(String dialogName, String path) {
+        this.dialogName = dialogName;
+        this.path = path;
     }
 
-    @Override
-    public Component createFieldComponent(Node storageNode) {
-        if (checkBox != null) {
-            throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
+    public String getDialogName() {
+        return dialogName;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * Tokenizer for DialogPlace.
+     */
+    public static class Tokenizer implements PlaceTokenizer<DialogPlace> {
+
+        static final String SEPARATOR = ";";
+
+        public DialogPlace getPlace(String token) {
+            String[] split = StringUtils.split(token, SEPARATOR);
+            return new DialogPlace(split[0], split[1]);
         }
 
-        checkBox = new CheckBox();
-        if (isFocus()) {
-            checkBox.focus();
+        public String getToken(DialogPlace place) {
+            return place.getDialogName() + SEPARATOR + place.getPath();
         }
-
-        return checkBox;
-    }
-
-    public void validate() {
-        checkBox.validate();
-    }
-
-    public void save(Node storageNode) throws RepositoryException {
     }
 }

@@ -94,16 +94,18 @@ public class VerticalTabSheet extends CustomComponent {
         h.setSpacing(false);
         h.setMargin(false);
         canvas = new VerticalLayout();
-        canvas.setWidth("610px");
         canvas.setSpacing(false);
         canvas.setMargin(false);
+        canvas.setSizeFull();
         canvas.addStyleName("m-vtabsheet-canvas");
         tabList = new VerticalLayout();
-        tabList.setWidth("140px");
         tabList.setSpacing(false);
         tabList.setMargin(false);
+        tabList.setSizeFull();
         h.addComponent(canvas);
         h.addComponent(tabList);
+        h.setExpandRatio(canvas, 7);
+        h.setExpandRatio(tabList, 1);
         setCompositionRoot(h);
     }
 

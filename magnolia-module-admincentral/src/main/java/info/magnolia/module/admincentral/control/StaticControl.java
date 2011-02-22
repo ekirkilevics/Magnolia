@@ -47,6 +47,13 @@ public class StaticControl implements DialogControl {
 
     private String label;
 
+    public void setPresenter(Presenter presenter) {
+    }
+
+    public String getDescription() {
+        return null;
+    }
+
     public void create(Node storageNode, GridLayout layout) {
 
         int rows = layout.getRows();

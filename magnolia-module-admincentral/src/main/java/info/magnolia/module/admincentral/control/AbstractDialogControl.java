@@ -38,11 +38,12 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.vaadin.event.FieldEvents;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import info.magnolia.module.admincentral.dialog.DialogControl;
 import info.magnolia.module.admincentral.dialog.DialogTab;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
@@ -61,6 +62,12 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
 
     private String width;
     private String height;
+
+    private Presenter presenter;
+
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
 
     public String getWidth() {
         return width;
@@ -121,8 +128,27 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
 
         VerticalLayout verticalLayout = new VerticalLayout();
 
-        Window window = grid.getApplication() == null ? null : grid.getApplication().getMainWindow();
-        verticalLayout.addComponent(createField(storageNode, window));
+        Component field = createField(storageNode);
+
+        if (field instanceof AbstractComponent)
+            ((AbstractComponent)field).setImmediate(true);
+
+        if (field instanceof FieldEvents.FocusNotifier) {
+            ((FieldEvents.FocusNotifier)field).addListener(new FieldEvents.FocusListener() {
+                public void focus(FieldEvents.FocusEvent event) {
+                    presenter.onFocus();
+                }
+            });
+        }
+            field.addListener(new Component.Listener() {
+                public void componentEvent(Component.Event event) {
+                    if (event instanceof FieldEvents.FocusEvent) {
+                        presenter.onFocus();
+                    }
+                }
+            });
+
+        verticalLayout.addComponent(field);
 
         if (description != null)
             verticalLayout.addComponent(new Label(description));
@@ -133,16 +159,16 @@ public abstract class AbstractDialogControl extends I18nAwareComponent implement
     /**
      * Creates new component representing element field. Implementing classes should ensure that call to this method returns always new component or fails when called multiple times and creating of multiple instances is not supported.
      */
-    protected abstract Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException;
+    protected abstract Component createFieldComponent(Node storageNode) throws RepositoryException;
 
     /**
      * Gets an existing component representing element field or null if such component was not yet created.
      */
     protected abstract Component getFieldComponent();
 
-    public Component createField(Node storageNode, Window mainWindow) {
+    public Component createField(Node storageNode) {
         try {
-            Component field = createFieldComponent(storageNode, mainWindow);
+            Component field = createFieldComponent(storageNode);
             if (!StringUtils.isBlank(getWidth())) {
                 field.setWidth(getWidth() +"px");
             }

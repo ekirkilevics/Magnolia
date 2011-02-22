@@ -38,7 +38,6 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.Window;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
@@ -57,7 +56,7 @@ public class RichTextControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Node storageNode, Window mainWindow) throws RepositoryException {
+    public Component createFieldComponent(Node storageNode) throws RepositoryException {
         if (richTextArea != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }

@@ -37,7 +37,6 @@ import javax.jcr.Node;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.Window;
 
 /**
  * Control for selecting dates in a dialog.
@@ -60,7 +59,7 @@ public class DateControl extends AbstractDialogControl {
     }
 
     @Override
-    public Component createFieldComponent(Node storageNode, Window mainWindow) {
+    public Component createFieldComponent(Node storageNode) {
         if (dateField != null) {
             throw new UnsupportedOperationException("Multiple calls to component creation are not supported.");
         }
