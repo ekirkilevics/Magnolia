@@ -95,6 +95,6 @@ public class EditWorkspacePlace extends Place {
         } else if (!workspace.equals(other.workspace)) {
             return false;
         }
-        return super.equals(obj);
+        return true;
     }
 }
