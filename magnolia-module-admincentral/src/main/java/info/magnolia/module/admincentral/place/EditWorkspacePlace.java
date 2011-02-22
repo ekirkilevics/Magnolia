@@ -53,8 +53,10 @@ public class EditWorkspacePlace extends CompositePlace {
      */
     public static class Tokenizer extends CompositePlace.Tokenizer {
 
+        private static final String SEPARATOR = ";";
+
         public EditWorkspacePlace getPlace(String token) {
-            final String[] bits = token.split(";");
+            final String[] bits = token.split(SEPARATOR);
             if(bits.length == 2) {
                 EditWorkspacePlace place = new EditWorkspacePlace(bits[0]);
                 //FIXME get the Region id
@@ -67,9 +69,9 @@ public class EditWorkspacePlace extends CompositePlace {
         public String getToken(EditWorkspacePlace place) {
             final String superClassToken = super.getToken(place);
             if(StringUtils.isNotBlank(superClassToken)) {
-                return place.getWorkspace() + ";" + superClassToken;
+                return place.getWorkspace() + SEPARATOR + superClassToken;
             }
-            return place.getWorkspace() + ";/";
+            return place.getWorkspace() + SEPARATOR +"/";
         }
     }
 

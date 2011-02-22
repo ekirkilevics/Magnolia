@@ -39,11 +39,20 @@ package info.magnolia.module.vaadin.place;
  * methods.
  */
 public abstract class Place {
+    /**
+     * The null place.
+     */
+    public static final Place NOWHERE = new Place() {
+    };
 
-  /**
-   * The null place.
-   */
-  public static final Place NOWHERE = new Place() {
-  };
-
+    /**
+     * @return the prefix value for this place if a <code>Prefix</code> annotation exists, else <code>null</code>.
+     */
+    public final String getPrefixValue() {
+        Prefix prefix = getClass().getAnnotation(Prefix.class);
+        if(prefix != null){
+            return prefix.value();
+        }
+        return null;
+    }
 }

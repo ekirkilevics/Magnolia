@@ -123,7 +123,4 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
             return false;
         return true;
     }
-
-
-
 }

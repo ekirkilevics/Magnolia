@@ -83,15 +83,12 @@ public class AdminCentralPlaceHistoryMapper extends AbstractPlaceHistoryMapper<T
                 }
             }
         }
-
     }
 
     @Override
     protected PrefixAndToken getPrefixAndToken(Place newPlace) {
-        Prefix prefixAnnotation = newPlace.getClass().getAnnotation(Prefix.class);
-        String prefix = null;
-        if(prefixAnnotation != null){
-            prefix = prefixAnnotation.value();
+        final String prefix = newPlace.getPrefixValue();
+        if(prefix != null){
             //FIXME this method should not know about concrete Place implementations
             if (newPlace instanceof EditWorkspacePlace) {
                 return new PrefixAndToken(prefix, new EditWorkspacePlace.Tokenizer().getToken((EditWorkspacePlace) newPlace));

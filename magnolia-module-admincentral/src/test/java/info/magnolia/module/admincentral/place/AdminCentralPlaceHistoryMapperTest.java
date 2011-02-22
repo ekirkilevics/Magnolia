@@ -35,7 +35,6 @@ package info.magnolia.module.admincentral.place;
 
 import static junit.framework.Assert.*;
 import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.Prefix;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +55,7 @@ public class AdminCentralPlaceHistoryMapperTest {
         editWorkspacePlace = new EditWorkspacePlace("website");
         itemSelectedPlace = new ItemSelectedPlace("website", "/foo/bar");
         editWorkspacePlace.setSubPlace("edit-workspace", itemSelectedPlace);
-        prefix = editWorkspacePlace.getClass().getAnnotation(Prefix.class).value();
+        prefix = editWorkspacePlace.getPrefixValue();
     }
 
     @Test
