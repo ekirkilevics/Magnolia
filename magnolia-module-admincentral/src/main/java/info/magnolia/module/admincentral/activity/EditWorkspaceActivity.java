@@ -77,7 +77,8 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
             private TreeActivity treeActivity;
 
             public Activity getActivity(final Place place) {
-                String path = ((ItemSelectedPlace)place).getPath();
+                final String path = ((ItemSelectedPlace)place).getPath();
+                final String workspace = ((ItemSelectedPlace)place).getWorkspace();
                 if(treeActivity == null){
                     treeActivity = new TreeActivity(workspace, path, getInnerPlaceController(), uiModel);
                 }
@@ -91,8 +92,8 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
         ActivityManager detailViewActivityManager = new ActivityManager(new ActivityMapper() {
             public Activity getActivity(final Place place) {
-                String path = ((ItemSelectedPlace)place).getPath();
-                String workspace = ((ItemSelectedPlace)place).getWorkspace();
+                final String path = ((ItemSelectedPlace)place).getPath();
+                final String workspace = ((ItemSelectedPlace)place).getWorkspace();
                 return new DetailViewActivity(workspace, path, uiModel);
             }
         }, innerEventBus);
