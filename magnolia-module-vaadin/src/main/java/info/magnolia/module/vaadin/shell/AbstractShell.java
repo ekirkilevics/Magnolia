@@ -36,6 +36,9 @@ package info.magnolia.module.vaadin.shell;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.UriFragmentUtility;
 
 
@@ -43,49 +46,66 @@ import com.vaadin.ui.UriFragmentUtility;
  * Implements the methods to handle URI fragment changes.
  */
 public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentUtility.FragmentChangedListener{
-
-    protected String id;
+    private static final Logger log = LoggerFactory.getLogger(AbstractShell.class);
 
     private Collection<info.magnolia.module.vaadin.shell.FragmentChangedListener> listeners = new ArrayList<FragmentChangedListener>();
+
+    protected String id;
 
     public AbstractShell(String id) {
         this.id = id;
     }
 
     public String getFragment() {
-        Fragmenter fragmenter = new Fragmenter(getUriFragmentUtility().getFragment());
+        String fragment = getUriFragmentUtility().getFragment();
+        log.debug("complete uri fragment is {}", fragment);
+
+        Fragmenter fragmenter = new Fragmenter(fragment);
         return fragmenter.getSubFragment(id);
     }
 
     public void setFragment(String fragment, boolean fireEvent) {
-        Fragmenter fragmenter = new Fragmenter(getUriFragmentUtility().getFragment());
+        String currentCompleteFragment = getUriFragmentUtility().getFragment();
+        Fragmenter fragmenter = new Fragmenter(currentCompleteFragment);
+        log.debug("current uri fragment is {}", currentCompleteFragment);
+
         // only change the uri if the value has changed, other don't bother Vaadin
         String currentFragment = fragmenter.getSubFragment(id);
         if(currentFragment == null || !currentFragment.equals(fragment)){
             fragmenter.setSubFragment(id, fragment);
-            getUriFragmentUtility().setFragment(fragmenter.toString(), fireEvent);
+            final String newFragment = fragmenter.toString();
+            log.debug("setting uri fragment to {}", newFragment);
+            getUriFragmentUtility().setFragment(newFragment, fireEvent);
         }
     }
 
     public void addListener(FragmentChangedListener listener) {
+        log.debug("adding listener {}", listener);
+
         if(listeners.size()==0){
+            log.debug("adding listener {}", this);
             getUriFragmentUtility().addListener(this);
         }
         listeners.add(listener);
     }
 
     public void removeListener(FragmentChangedListener listener) {
+        log.debug("removing listener {}", listener);
+
         listeners.remove(listener);
         if(listeners.size()==0){
+            log.debug("removing listener {}", this);
             getUriFragmentUtility().removeListener(this);
         }
     }
 
     public void fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent event) {
         Fragmenter fragmenter = new Fragmenter(event.getUriFragmentUtility().getFragment());
-        if(fragmenter.getSubFragment(id) != null){
+        final String subFragment = fragmenter.getSubFragment(id);
+        if(subFragment != null){
             for (info.magnolia.module.vaadin.shell.FragmentChangedListener listener : listeners) {
-                listener.onFragmentChanged(new FragmentChangedEvent(fragmenter.getSubFragment(id)));
+                log.debug("firing info.magnolia.module.vaadin.shell.FragmentChangedEvent with sub fragment {}", subFragment);
+                listener.onFragmentChanged(new FragmentChangedEvent(subFragment));
             }
         }
     }
