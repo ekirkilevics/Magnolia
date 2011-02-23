@@ -76,7 +76,10 @@ public class PlaceHistoryHandler implements FragmentChangedListener {
     public PlaceHistoryHandler(PlaceHistoryMapper mapper, Shell shell) {
         this.mapper = mapper;
         this.shell = shell;
-        shell.addListener(this);
+    }
+
+    public void release() {
+        shell.removeListener(this);
     }
 
     /**
@@ -101,6 +104,7 @@ public class PlaceHistoryHandler implements FragmentChangedListener {
     public void register(PlaceController placeController, EventBus eventBus, Place defaultPlace) {
         this.placeController = placeController;
         this.defaultPlace = defaultPlace;
+        shell.addListener(this);
 
         eventBus.addListener(new PlaceChangeListener() {
 
@@ -155,4 +159,5 @@ public class PlaceHistoryHandler implements FragmentChangedListener {
         log.debug("Place not mapped to a token: {}", newPlace);
         return "";
     }
+
 }

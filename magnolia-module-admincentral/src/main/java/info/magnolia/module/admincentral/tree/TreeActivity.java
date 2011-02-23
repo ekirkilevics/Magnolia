@@ -121,12 +121,6 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         if (!(obj instanceof TreeActivity))
             return false;
         TreeActivity other = (TreeActivity) obj;
-        if (path == null) {
-            if (other.path != null)
-                return false;
-        }
-        else if (!path.equals(other.path))
-            return false;
         if (treeName == null) {
             if (other.treeName != null)
                 return false;

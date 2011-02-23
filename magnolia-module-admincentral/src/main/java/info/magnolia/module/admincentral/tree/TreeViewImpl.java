@@ -70,6 +70,7 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
     }
 
     public void select(String path){
+        // FIXME don't expand the last node and also support node datas
         jcrBrowser.setExpanded(path, true);
     }
 

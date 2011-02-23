@@ -38,20 +38,36 @@ import info.magnolia.module.vaadin.event.EventBus;
 
 
 /**
- * Implemented by objects that control a piece of user interface, with a life
- * cycle managed by an {@link ActivityManager}, in response to
- * {@link info.magnolia.module.vaadin.place.PlaceChangeEvent} events as the user
- * navigates through the app.
+ * Implemented by objects that control a piece of user interface, with a life cycle managed by an
+ * {@link ActivityManager}, in response to
+ * {@link info.magnolia.module.vaadin.place.PlaceChangeEvent} events as the user navigates through
+ * the app.
  *
  * Inspired by {@link com.google.gwt.activity.shared.Activity}.
  */
 public interface Activity {
+
+    /**
+     * Called when the Activity should ready its widget for the user. When the widget is ready it
+     * should present it by calling {@link HasComponent#setComponent(com.vaadin.ui.Component)} on
+     * the display.
+     * <p>
+     * Any handlers attached to the provided event bus will be de-registered when the activity is
+     * stopped.
+     */
     void start(HasComponent display, EventBus eventBus);
+
     /**
      * Called when the user is trying to navigate away from this activity.
      *
-     * @return A message to display to the user, e.g. to warn of unsaved work, or
-     *         null to say nothing
+     * @return A message to display to the user, e.g. to warn of unsaved work, or null to say
+     * nothing
      */
     String mayStop();
+
+    /**
+     * Called when the Activity's widget has been removed from view. All event handlers it
+     * registered will have been removed before this method is called.
+     */
+    void onStop();
 }

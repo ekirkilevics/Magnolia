@@ -62,6 +62,10 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     private Shell shell;
 
+    private PlaceHistoryHandler historyHandler;
+
+    private Shell subShell;
+
     public MVPSubContainerActivity(String id, Shell shell) {
         this.id = id;
         this.shell = shell;
@@ -69,7 +73,7 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     public void start(HasComponent display, EventBus outerEventBus) {
 
-        Shell subShell = new SubShell(id, shell);
+        subShell = new SubShell(id, shell);
 
         innerEventBus = new EventBus();
         innerPlaceController = new PlaceController(innerEventBus, shell);
@@ -81,9 +85,15 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         // build the container
         onStart(display, innerEventBus);
 
-        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
+        historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
         historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
         historyHandler.handleCurrentHistory();
+    }
+
+    @Override
+    public void onStop() {
+        historyHandler.release();
+        subShell.setFragment("", false);
     }
 
     protected abstract Class< ? extends Place>[] getSupportedPlaces();

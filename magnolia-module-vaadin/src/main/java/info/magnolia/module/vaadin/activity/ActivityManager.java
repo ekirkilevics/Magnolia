@@ -44,6 +44,7 @@ import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
  * {@link PlaceChangeEvent} events. Each activity provides a widget to be shown when it's ready to run.
@@ -65,8 +66,10 @@ public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestL
 
     private final ActivityMapper mapper;
     private final EventBus eventBus;
-    private HasComponent display;
+
     private Activity currentActivity = NULL_ACTIVITY;
+
+    private HasComponent display;
 
     public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
         this.mapper = mapper;
@@ -83,6 +86,10 @@ public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestL
         if (currentActivity.equals(nextActivity)) {
             return;
         }
+
+        display.setComponent(null);
+
+        currentActivity.onStop();
 
         if(nextActivity == null){
             nextActivity = NULL_ACTIVITY;

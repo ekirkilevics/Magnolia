@@ -44,4 +44,6 @@ public abstract class AbstractActivity implements Activity {
         return null;
     }
 
+    public void onStop() {
+    }
 }
