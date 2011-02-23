@@ -43,6 +43,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+
+/* FIXME should not implement a Vaadin specific interface
+ An alternative
+ * to using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides)
+ * to mimic GWT's {@link Historian}.
+ * */
 /**
  * Monitors {@link PlaceChangeEvent}s and browser's history events (via Vaadin's
  * {@link UriFragmentUtility}) and keep them in sync.
@@ -50,11 +56,6 @@ import org.slf4j.LoggerFactory;
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * @author fgrilli
  */
-/* FIXME should not implement a Vaadin specific interface
- An alternative
- * to using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides)
- * to mimic GWT's {@link Historian}.
- * */
 public class PlaceHistoryHandler implements FragmentChangedListener {
 
     private static final Logger log = LoggerFactory.getLogger(PlaceHistoryHandler.class.getName());
