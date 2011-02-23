@@ -57,16 +57,16 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
     }
 
     public String getFragment() {
-        String fragment = getUriFragmentUtility().getFragment();
+        final String fragment = getUriFragmentUtility().getFragment();
         log.debug("complete uri fragment is {}", fragment);
 
-        Fragmenter fragmenter = new Fragmenter(fragment);
+        final Fragmenter fragmenter = new Fragmenter(fragment);
         return fragmenter.getSubFragment(id);
     }
 
     public void setFragment(String fragment, boolean fireEvent) {
-        String currentCompleteFragment = getUriFragmentUtility().getFragment();
-        Fragmenter fragmenter = new Fragmenter(currentCompleteFragment);
+        final String currentCompleteFragment = getUriFragmentUtility().getFragment();
+        final Fragmenter fragmenter = new Fragmenter(currentCompleteFragment);
         log.debug("current uri fragment is {}", currentCompleteFragment);
 
         // only change the uri if the value has changed, other don't bother Vaadin
@@ -100,7 +100,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
     }
 
     public void fragmentChanged(com.vaadin.ui.UriFragmentUtility.FragmentChangedEvent event) {
-        Fragmenter fragmenter = new Fragmenter(event.getUriFragmentUtility().getFragment());
+        final Fragmenter fragmenter = new Fragmenter(event.getUriFragmentUtility().getFragment());
         final String subFragment = fragmenter.getSubFragment(id);
         if(subFragment != null){
             for (info.magnolia.module.vaadin.shell.FragmentChangedListener listener : listeners) {
