@@ -39,7 +39,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Allows tto get sub fragments of a url fragment. Each fragment is separated with the
+ * Allows to get sub fragments of a url fragment. Each fragment is separated with the
  * {@link #FRAGMENT_SEPARATOR} and has the format <code>id:subfragment</code>.
  */
 public class Fragmenter {
@@ -83,7 +83,7 @@ public class Fragmenter {
 
     @Override
     public String toString() {
-        StringBuffer str = new StringBuffer();
+        StringBuilder str = new StringBuilder();
         for (Fragment fragment : fragments.values()) {
             str.append(fragment.id).append(ID_SEPARATOR).append(fragment.getFragment()).append(FRAGMENT_SEPARATOR);
         }

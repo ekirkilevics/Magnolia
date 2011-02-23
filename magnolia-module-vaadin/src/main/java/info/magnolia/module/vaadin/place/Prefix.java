@@ -44,6 +44,8 @@ import java.lang.annotation.Target;
  * {@link UriFragmentUtility#setFragment(String)}.
  * Implementations of {@link AbstractPlaceHistoryMapper} look
  * for this annotation on the factory methods that return a tokenizer.
+ * <p>
+ * Copied verbatim from {@link com.google.gwt.place.shared.Prefix}
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

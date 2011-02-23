@@ -43,8 +43,6 @@ import java.util.Map;
  * with the browser history system &mdash; that is, it makes the browser's back
  * and forth buttons work, and also makes each spot in the app
  * bookmarkable.
- * TODO: do it better. This is a first sketchy attempt to write an implementation for {@link AbstractPlaceHistoryMapper}.
- * In GWT this is usually carried out by the {@link PlaceHistoryMapperGenerator} during gwt compilation phase.
  * @author fgrilli
  *
  */
@@ -91,5 +89,4 @@ public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
     protected PlaceTokenizer<?> getTokenizer(String prefix) {
         return tokenizers.get(prefix);
     }
-
 }

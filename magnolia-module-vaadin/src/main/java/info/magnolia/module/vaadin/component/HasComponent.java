@@ -37,7 +37,7 @@ import com.vaadin.ui.Component;
 
 
 /**
- * Implemented by displays that can be given accept an {@link IsComponent} to show.
+ * Implemented by displays that can be given an {@link IsComponent} to show.
  */
 public interface HasComponent {
 

@@ -48,17 +48,13 @@ import org.slf4j.LoggerFactory;
  * {@link UriFragmentUtility}) and keep them in sync.
  * <p>
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
- * <p>
- * TODO: At the moment this is a Vaadin's {@link CustomComponent} and must to be added to an app
- * component <strong>(except those wrapped in {@link ComponentContainerBasedDisplay} else it is
- * removed!)</strong>. This is because internally it uses {@link UriFragmentUtility} which
- * <strong>MUST</strong> be attached to the application main window in order to work. An alternative
- * to using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides)
- * to mimic GWT's {@link Historian}.
  * @author fgrilli
  */
-@SuppressWarnings("serial")
-// FIXME should not implement a Vaadin specific interface
+/* FIXME should not implement a Vaadin specific interface
+ An alternative
+ * to using UriFragmentUtility would be to implement our own Vaadin widget (server and client sides)
+ * to mimic GWT's {@link Historian}.
+ * */
 public class PlaceHistoryHandler implements FragmentChangedListener {
 
     private static final Logger log = LoggerFactory.getLogger(PlaceHistoryHandler.class.getName());
