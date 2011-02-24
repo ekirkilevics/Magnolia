@@ -71,7 +71,15 @@ public class Fragmenter {
         return null;
     }
 
+    /**
+     * Sets a sub-fragment. The fragment is removed if the passed value is null.
+     */
     public void setSubFragment(String id, String fragment) {
+
+        if(fragment == null){
+            fragments.remove(id);
+        }
+
         // updated the fragment and don't replace it to avoid re-ordering
         if(fragments.containsKey(id)){
             fragments.get(id).fragment = fragment;

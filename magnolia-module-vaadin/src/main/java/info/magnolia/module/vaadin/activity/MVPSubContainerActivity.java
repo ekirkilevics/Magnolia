@@ -75,18 +75,19 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         innerEventBus = new SimpleEventBus();
         innerPlaceController = new PlaceController(innerEventBus, shell);
 
+        historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
+        historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
+
         // build the container
         onStart(display, innerEventBus);
 
-        historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
-        historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
         historyHandler.handleCurrentHistory();
     }
 
     @Override
     public void onStop() {
         historyHandler.release();
-        subShell.setFragment("", false);
+        subShell.setFragment(null, false);
     }
 
     protected abstract Class< ? extends Place>[] getSupportedPlaces();

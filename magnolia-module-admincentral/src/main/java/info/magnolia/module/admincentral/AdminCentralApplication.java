@@ -152,6 +152,13 @@ public class AdminCentralApplication extends Application {
 
         placeController = new PlaceController(eventBus, shell);
 
+        // Browser history integration
+        // FIXME make this more dynamic, don't pass the place explicitely
+        PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
+        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
+        final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
+        historyHandler.register(placeController, eventBus, defaultPlace);
+
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
             Activity menuActivity = new MenuActivity();
             public Activity getActivity(Place place) {
@@ -191,12 +198,6 @@ public class AdminCentralApplication extends Application {
         mainActivityManager.setDisplay(new ComponentContainerBasedDisplay("main", mainContainer));
         menuActivityManager.setDisplay(new ComponentContainerBasedDisplay("navigation", menuDisplay));
 
-        // Browser history integration
-        // FIXME make this more dynamic, don't pass the place explicitely
-        PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
-        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
-        final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
-        historyHandler.register(placeController, eventBus, defaultPlace);
         historyHandler.handleCurrentHistory();
     }
 
