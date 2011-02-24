@@ -35,13 +35,11 @@ package info.magnolia.module.vaadin.event;
 
 /**
  * Will dispatch fired {@link Event}s to the {@link EventHandler}s.
- *
- * Currently based on {@link Blackboard}.
  */
 public interface EventBus  {
 
-    public <H extends EventHandler> void addHandler(Class<? extends Event<H>> eventClass, H handler);
+    public <H extends EventHandler> HandlerRegistration addHandler(Class<? extends Event<H>> eventClass, H handler);
 
-    public void fire(Event e);
+    public void fireEvent(Event event);
 
 }

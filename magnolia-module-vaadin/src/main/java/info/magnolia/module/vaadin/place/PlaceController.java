@@ -69,7 +69,7 @@ public class PlaceController {
             return;
         }
         PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
-        eventBus.fire(willChange);
+        eventBus.fireEvent(willChange);
         if (willChange.getWarning() != null) {
             shell.askForConfirmation(willChange.getWarning(), new ConfirmationHandler() {
                 public void onConfirm() {
@@ -88,6 +88,6 @@ public class PlaceController {
 
     protected void goToWithoutChecks(final Place newPlace) {
         this.where = newPlace;
-        eventBus.fire(new PlaceChangeEvent(newPlace));
+        eventBus.fireEvent(new PlaceChangeEvent(newPlace));
     }
 }

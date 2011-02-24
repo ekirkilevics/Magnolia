@@ -35,13 +35,13 @@ package info.magnolia.module.vaadin.activity;
 
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.event.ResettableEventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Manages {@link Activity} objects that should be kicked off in response to
@@ -63,7 +63,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     };
 
     private final ActivityMapper mapper;
-    private final EventBus eventBus;
+    private final ResettableEventBus isolatedEventBus;
 
     private Activity currentActivity = NULL_ACTIVITY;
 
@@ -71,7 +71,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
     public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
         this.mapper = mapper;
-        this.eventBus = eventBus;
+        this.isolatedEventBus = new ResettableEventBus(eventBus);
 
         eventBus.addHandler(PlaceChangeEvent.class, this);
     }
@@ -86,6 +86,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
         }
 
         display.setComponent(null);
+        isolatedEventBus.removeHandlers();
 
         currentActivity.onStop();
 
@@ -97,7 +98,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
         log.debug("starting activity: {}", currentActivity);
 
-        currentActivity.start(display, eventBus);
+        currentActivity.start(display, isolatedEventBus);
 
    }
 

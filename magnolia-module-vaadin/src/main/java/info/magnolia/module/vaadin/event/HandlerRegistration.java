@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,37 +33,17 @@
  */
 package info.magnolia.module.vaadin.event;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-
-
 /**
- * A very simplistic event bus.
- * FIXME is that thing threadsafe? prevent dispatching to freshly added/removed handlers while firing. Check event bus project: http://www.eventbus.org/
+ * Registration returned from a call to
+ * {@link HandlerManager#addHandler(com.google.gwt.event.shared.GwtEvent.Type, EventHandler)} . Use
+ * the handler registration to remove handlers when they are no longer needed.
+ *
+ * Inspired by {@link com.google.gwt.event.shared.HandlerRegistration}.
  */
-public class SimpleEventBus implements EventBus {
+public interface HandlerRegistration {
 
-    final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
-
-    public SimpleEventBus() {
-        ArrayListMultimap<Class<? extends Event>, EventHandler> multimap = ArrayListMultimap.create();
-        eventHandlers = Multimaps.synchronizedMultimap(multimap);
-    }
-
-    public <H extends EventHandler> HandlerRegistration addHandler(final Class< ? extends Event<H>> eventClass, final H handler) {
-        eventHandlers.put(eventClass, handler);
-        return new HandlerRegistration() {
-            public void removeHandler() {
-                eventHandlers.remove(eventClass, handler);
-            }
-        };
-    }
-
-    public void fireEvent(Event event) {
-        for (EventHandler eventHandler : eventHandlers.get(event.getClass())) {
-            event.dispatch(eventHandler);
-        }
-    }
-
+    /**
+     * Removes the given handler from its manager.
+     */
+    void removeHandler();
 }

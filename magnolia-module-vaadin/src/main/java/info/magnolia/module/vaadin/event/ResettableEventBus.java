@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,37 +33,44 @@
  */
 package info.magnolia.module.vaadin.event;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * A very simplistic event bus.
- * FIXME is that thing threadsafe? prevent dispatching to freshly added/removed handlers while firing. Check event bus project: http://www.eventbus.org/
+ * Wraps an EventBus to hold on to any HandlerRegistrations, so that they can
+ * easily all be cleared at once.
+ *
+ * Inspired by {@link com.google.gwt.event.shared.ResettableEventBus}.
  */
-public class SimpleEventBus implements EventBus {
+public class ResettableEventBus implements EventBus {
+  private final EventBus wrapped;
+  private final Set<HandlerRegistration> registrations = new HashSet<HandlerRegistration>();
 
-    final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
+  public ResettableEventBus(EventBus wrappedBus) {
+    this.wrapped = wrappedBus;
+  }
 
-    public SimpleEventBus() {
-        ArrayListMultimap<Class<? extends Event>, EventHandler> multimap = ArrayListMultimap.create();
-        eventHandlers = Multimaps.synchronizedMultimap(multimap);
+  public <H extends EventHandler> HandlerRegistration addHandler(Class< ? extends Event<H>> eventClass, H handler) {
+      HandlerRegistration rtn = wrapped.addHandler(eventClass, handler);
+      registrations.add(rtn);
+      return rtn;
+  }
+
+
+  public void fireEvent(Event event) {
+      wrapped.fireEvent(event);
+  }
+
+
+  /**
+   * Remove all handlers that have been added through this wrapper.
+   */
+  public void removeHandlers() {
+    for (HandlerRegistration r : registrations) {
+      r.removeHandler();
     }
+    registrations.clear();
+  }
 
-    public <H extends EventHandler> HandlerRegistration addHandler(final Class< ? extends Event<H>> eventClass, final H handler) {
-        eventHandlers.put(eventClass, handler);
-        return new HandlerRegistration() {
-            public void removeHandler() {
-                eventHandlers.remove(eventClass, handler);
-            }
-        };
-    }
-
-    public void fireEvent(Event event) {
-        for (EventHandler eventHandler : eventHandlers.get(event.getClass())) {
-            event.dispatch(eventHandler);
-        }
-    }
 
 }

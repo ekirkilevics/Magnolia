@@ -82,7 +82,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         try {
             uiModel.executeCommand(commandName, workspace, path);
             // FIXME this has to be more granular
-            eventBus.fire(new ContentChangedEvent(workspace, path));
+            eventBus.fireEvent(new ContentChangedEvent(workspace, path));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
