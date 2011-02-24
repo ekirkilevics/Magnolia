@@ -35,6 +35,7 @@ package info.magnolia.module.vaadin.activity;
 
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.event.HandlerRegistration;
 import info.magnolia.module.vaadin.event.SimpleEventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceController;
@@ -63,6 +64,8 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     private Shell subShell;
 
+    private HandlerRegistration historyReg;
+
     public MVPSubContainerActivity(String id, Shell shell) {
         this.id = id;
         this.shell = shell;
@@ -76,7 +79,7 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         innerPlaceController = new PlaceController(innerEventBus, shell);
 
         historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
-        historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
+        historyReg = historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
 
         // build the container
         onStart(display, innerEventBus);
@@ -86,7 +89,7 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     @Override
     public void onStop() {
-        historyHandler.release();
+        historyReg.removeHandler();
         subShell.setFragment(null, false);
     }
 

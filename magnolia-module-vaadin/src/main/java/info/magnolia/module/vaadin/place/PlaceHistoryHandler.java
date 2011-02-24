@@ -34,6 +34,7 @@
 package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.event.HandlerRegistration;
 import info.magnolia.module.vaadin.shell.FragmentChangedEvent;
 import info.magnolia.module.vaadin.shell.FragmentChangedHandler;
 import info.magnolia.module.vaadin.shell.Shell;
@@ -77,10 +78,6 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
         this.shell = shell;
     }
 
-    public void release() {
-        shell.removeFragmentChangedHandler(this);
-    }
-
     /**
      * Handle the current history token. Typically called at application start, to ensure bookmark
      * launches work.
@@ -98,14 +95,15 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
 
     /**
      * Initialize this place history handler.
+     * @return
      *
      */
-    public void register(PlaceController placeController, EventBus eventBus, Place defaultPlace) {
+    public HandlerRegistration register(PlaceController placeController, EventBus eventBus, Place defaultPlace) {
         this.placeController = placeController;
         this.defaultPlace = defaultPlace;
         shell.addFragmentChangedHandler(this);
 
-        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
+        return eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
 
             public void onPlaceChange(PlaceChangeEvent event) {
                 log.debug("onPlaceChange...");
@@ -113,14 +111,6 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
                 shell.setFragment(tokenForPlace(newPlace), false);
             }
         });
-    }
-
-    public final void addListener(FragmentChangedHandler fragmentChangedHandler) {
-        shell.addFragmentChangedHandler(fragmentChangedHandler);
-    }
-
-    public final void removeListener(FragmentChangedHandler fragmentChangedHandler) {
-        shell.removeFragmentChangedHandler(fragmentChangedHandler);
     }
 
     private void handleHistoryToken(String token) {

@@ -39,6 +39,7 @@ import com.vaadin.ui.CustomComponent;
 /**
  * A display which itself is a {@link CustomComponent}. Can be used as a display slot.
  */
+@SuppressWarnings("serial")
 public class ComponentDisplay extends CustomComponent implements HasComponent {
 
     public void setComponent(Component component) {

@@ -35,6 +35,7 @@ package info.magnolia.module.vaadin.shell;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -48,7 +49,7 @@ public class Fragmenter {
 
     public static final String FRAGMENT_SEPARATOR = "~";
 
-    private Map<String, Fragment> fragments = new LinkedHashMap<String, Fragment>();
+    private Map<String, String> fragments = new LinkedHashMap<String, String>();
 
 
     public Fragmenter(String fragment) {
@@ -59,16 +60,12 @@ public class Fragmenter {
         for (String subFragment : subFragments) {
             String id = StringUtils.substringBefore(subFragment, ID_SEPARATOR);
             String token = StringUtils.substringAfter(subFragment, ID_SEPARATOR);
-            fragments.put(id, new Fragment(id, token));
+            fragments.put(id, token);
         }
     }
 
     public String getSubFragment(String id) {
-        Fragment fragment = fragments.get(id);
-        if(fragment != null){
-            return fragment.getFragment();
-        }
-        return null;
+        return fragments.get(id);
     }
 
     /**
@@ -80,45 +77,20 @@ public class Fragmenter {
             fragments.remove(id);
         }
 
-        // updated the fragment and don't replace it to avoid re-ordering
-        if(fragments.containsKey(id)){
-            fragments.get(id).fragment = fragment;
-        }
-        else{
-            fragments.put(id, new Fragment(id, fragment));
-        }
+        fragments.put(id, fragment);
     }
 
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        for (Fragment fragment : fragments.values()) {
-            str.append(fragment.id).append(ID_SEPARATOR).append(fragment.getFragment()).append(FRAGMENT_SEPARATOR);
+        for (Entry<String, String> entry : fragments.entrySet()) {
+            final String id = entry.getKey();
+            final String fragment = entry.getValue();
+            str.append(id).append(ID_SEPARATOR).append(fragment).append(FRAGMENT_SEPARATOR);
         }
         if(str.length()>0){
             str.deleteCharAt(str.length()-1);
         }
         return str.toString();
-    }
-
-    private static class Fragment {
-
-        private String id;
-
-        private String fragment;
-
-        public Fragment(String id, String fragment) {
-            this.id = id;
-            this.fragment = fragment;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getFragment() {
-            return fragment;
-        }
-
     }
 }

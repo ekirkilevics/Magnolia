@@ -45,6 +45,4 @@ public interface Event<H extends EventHandler> {
      */
     void dispatch(H handler);
 
-    // FIXME should we add a getSource() method?
-
 }

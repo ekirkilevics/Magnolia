@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.vaadin.shell;
 
+import info.magnolia.module.vaadin.event.HandlerRegistration;
+
 /**
  * Decouples the presenters and the Vaadin application. Provides methods to show messages and configuration dialogs.
  */
@@ -42,15 +44,12 @@ public interface Shell {
 
     void showNotification(String message);
 
-    // FIXME should be encapsulated into an specific interface: FragmentUtility or so
+    // FIXME the following methods should be encapsulated into an specific interface: FragmentUtility or so
     String getFragment();
 
+    // TODO do we need the fireEvent parameter?
     void setFragment(String fragment, boolean fireEvent);
 
-    void addFragmentChangedHandler(FragmentChangedHandler handler);
-
-    // FIXME drop it, addFragmentChangedHandler should return an object to unregister the listener
-    void removeFragmentChangedHandler(FragmentChangedHandler handler);
-
+    HandlerRegistration addFragmentChangedHandler(FragmentChangedHandler handler);
 
 }

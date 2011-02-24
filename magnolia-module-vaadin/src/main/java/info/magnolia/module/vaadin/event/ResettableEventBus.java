@@ -57,7 +57,7 @@ public class ResettableEventBus implements EventBus {
   }
 
 
-  public void fireEvent(Event event) {
+  public void fireEvent(Event<?> event) {
       wrapped.fireEvent(event);
   }
 

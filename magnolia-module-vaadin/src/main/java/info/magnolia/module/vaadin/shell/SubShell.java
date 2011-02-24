@@ -40,6 +40,7 @@ import com.vaadin.ui.UriFragmentUtility;
 /**
  * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.module.vaadin.activity.MVPSubContainerActivity}.
  */
+@SuppressWarnings("serial")
 public class SubShell extends AbstractShell {
     private Shell parent;
 

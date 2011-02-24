@@ -44,8 +44,10 @@ import com.google.common.collect.Multimaps;
  */
 public class SimpleEventBus implements EventBus {
 
+    @SuppressWarnings("rawtypes")
     final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
 
+    @SuppressWarnings("rawtypes")
     public SimpleEventBus() {
         ArrayListMultimap<Class<? extends Event>, EventHandler> multimap = ArrayListMultimap.create();
         eventHandlers = Multimaps.synchronizedMultimap(multimap);
@@ -60,6 +62,7 @@ public class SimpleEventBus implements EventBus {
         };
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void fireEvent(Event event) {
         for (EventHandler eventHandler : eventHandlers.get(event.getClass())) {
             event.dispatch(eventHandler);
