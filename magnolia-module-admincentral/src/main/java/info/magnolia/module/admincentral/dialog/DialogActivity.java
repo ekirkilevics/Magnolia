@@ -33,9 +33,14 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import javax.jcr.Item;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.RuntimeRepositoryException;
+import info.magnolia.module.admincentral.editor.ContentDriver;
+import info.magnolia.module.admincentral.editor.vaadin.VaadinDialog;
+import info.magnolia.module.admincentral.editor.vaadin.VaadinDialogBuilder;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
 import info.magnolia.module.vaadin.component.HasComponent;
@@ -46,11 +51,11 @@ import info.magnolia.module.vaadin.event.EventBus;
  *
  * @author tmattsson
  */
-public class DialogActivity extends AbstractActivity implements DialogView.Presenter {
+public class DialogActivity extends AbstractActivity implements VaadinDialog.Presenter {
 
     private DialogPlace place;
     private UIModel uiModel;
-    private DialogView dialogView;
+    private ContentDriver driver;
 
     public DialogActivity(DialogPlace place, UIModel uiModel) {
         this.place = place;
@@ -60,15 +65,29 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
     public void start(HasComponent display, EventBus eventBus) {
         try {
 
+            Node node = getNode();
+
             String dialogName = place.getDialogName();
             DialogDefinition dialogDefinition = uiModel.getDialogDefinition(dialogName);
 
-            Item item = uiModel.getItem("usersAdmin", place.getPath());
-            dialogView = new DialogView(this, item.getSession().getWorkspace().getName(), item.getPath(), null, null, dialogName, dialogDefinition);
-            display.setComponent(dialogView);
+            VaadinDialogBuilder builder = new VaadinDialogBuilder();
+            VaadinDialog dialog = builder.getDialog();
+
+            driver = new ContentDriver();
+            driver.initialize(builder, dialogDefinition);
+            driver.edit(node);
+
+            dialog.setPresenter(this);
+
+            display.setComponent(dialog);
+
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new RuntimeRepositoryException(e);
         }
+    }
+
+    private Node getNode() throws RepositoryException {
+        return (Node) JCRUtil.getSession("users").getItem(this.place.getPath());
     }
 
     public String mayStop() {
@@ -76,12 +95,18 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
     }
 
     public void onSave() {
+        try {
+            driver.flush(getNode());
+
+            // TODO validation errors that occurred should be displayed here
+
+            // TODO if there was no errors then the dialog should close and we return to the previous place
+
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     public void onCancel() {
-    }
-
-    public void onClose() {
-        // TODO at this point we should go back to where we came from
     }
 }

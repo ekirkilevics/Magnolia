@@ -57,6 +57,7 @@ public class VerticalTabSheet extends CustomComponent {
         private String label;
         private Component tabComponent;
         private Component component;
+        private String name;
 
         public Component getTabComponent() {
             return tabComponent;
@@ -80,6 +81,14 @@ public class VerticalTabSheet extends CustomComponent {
 
         public void setComponent(Component component) {
             this.component = component;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 
@@ -109,17 +118,18 @@ public class VerticalTabSheet extends CustomComponent {
         setCompositionRoot(h);
     }
 
-    public void addTab(String label, final Component component) {
+    public void addTab(String name, String label, final Component component) {
 
         Panel tabComponent = new Panel();
         tabComponent.setWidth("100%");
         tabComponent.setSizeFull();
-        Label labelComponent = new Label(label);
+        Label labelComponent = new Label(name);
         labelComponent.setWidth("100%");
         labelComponent.setSizeFull();
         tabComponent.addComponent(labelComponent);
 
         Tab tab = new Tab();
+        tab.setName(name);
         tab.setLabel(label);
         tab.setComponent(component);
         tab.setTabComponent(tabComponent);
@@ -141,6 +151,14 @@ public class VerticalTabSheet extends CustomComponent {
 
         if (selected == -1)
             selectTab(index);
+    }
+
+    public Component getTab(String name) {
+        for (Tab tab : tabs) {
+            if (tab.getName().equals(name))
+                return tab.getComponent();
+        }
+        throw new IllegalArgumentException("No tab found for name [" + name+ "]");
     }
 
     public void selectTab(int position) {

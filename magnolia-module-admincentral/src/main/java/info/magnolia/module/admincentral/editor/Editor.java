@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,50 +25,34 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
-
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.GridLayout;
+package info.magnolia.module.admincentral.editor;
 
 /**
- * Provides gui setup, validation and saving of dialog field.
+ * Describes an editor.
+ * <p/>
+ * TODO gwt has a concept for arranging editors hierarchically.
  *
- * TODO field might be a better name for this as we move away from it being an actual ui component
- *
+ * @author tmattsson
  */
-public interface DialogControl {
+public interface Editor {
 
     /**
-     * Presenter for DialogControl.
+     * Sets the value.
+     *
+     * @param object
      */
-    public interface Presenter {
-        void onFocus();
-    }
+    void setValue(Object object);
 
-    void setPresenter(Presenter presenter);
-
-    String getName();
-
-    String getLabel();
-
-    String getDescription();
-
-    void create(Node storageNode, GridLayout layout);
-
-    void validate();
-
-    void save(Node storageNode) throws RepositoryException;
-
-    void setFocus(boolean focus);
-
-    boolean isFocus();
+    /**
+     * Gets the current value.
+     *
+     * @return the value currently held by the editor.
+     */
+    Object getValue();
 }

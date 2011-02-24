@@ -50,6 +50,10 @@ public class StaticControl implements DialogControl {
     public void setPresenter(Presenter presenter) {
     }
 
+    public String getName() {
+        return "static-" + System.identityHashCode(this);
+    }
+
     public String getDescription() {
         return null;
     }

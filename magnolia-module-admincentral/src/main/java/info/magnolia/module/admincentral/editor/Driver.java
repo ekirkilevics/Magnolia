@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,50 +25,49 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.module.admincentral.editor;
 
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.GridLayout;
+import java.util.List;
 
 /**
- * Provides gui setup, validation and saving of dialog field.
+ * Automates editing of entities defined by the content model.
  *
- * TODO field might be a better name for this as we move away from it being an actual ui component
- *
+ * @param <T> the type of entity to edit
+ * @author tmattsson
  */
-public interface DialogControl {
+public interface Driver<T> {
 
     /**
-     * Presenter for DialogControl.
+     * Push the data in an object into the dialog prepared by the initialize() method.
+     *
+     * @param object
      */
-    public interface Presenter {
-        void onFocus();
-    }
+    void edit(T object);
 
-    void setPresenter(Presenter presenter);
+    /**
+     * Update the object with values from the dialog.
+     *
+     * @param object
+     */
+    void flush(T object);
 
-    String getName();
+    /**
+     * Indicates if the last call to flush() resulted in any errors.
+     *
+     * @return
+     */
+    boolean hasErrors();
 
-    String getLabel();
-
-    String getDescription();
-
-    void create(Node storageNode, GridLayout layout);
-
-    void validate();
-
-    void save(Node storageNode) throws RepositoryException;
-
-    void setFocus(boolean focus);
-
-    boolean isFocus();
+    /**
+     * Returns any unconsumed(?) errors from the last call to flush().
+     *
+     * @return
+     */
+    List<EditorError> getErrors();
 }

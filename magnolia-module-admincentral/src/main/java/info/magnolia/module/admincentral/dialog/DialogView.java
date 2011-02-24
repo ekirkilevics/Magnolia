@@ -180,7 +180,7 @@ public class DialogView extends CustomComponent {
                     grid.newLine();
                 }
 
-                tabSheet.addTab(dialogTab.getLabel(), grid);
+                tabSheet.addTab(dialogTab.getLabel(), dialogTab.getLabel(), grid);
             }
 
             mainViewArea = tabSheet;
