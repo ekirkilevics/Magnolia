@@ -75,6 +75,7 @@ public class Fragmenter {
 
         if(fragment == null){
             fragments.remove(id);
+            return;
         }
 
         fragments.put(id, fragment);

@@ -47,7 +47,4 @@ import com.vaadin.ui.UriFragmentUtility;
 @SuppressWarnings("serial")
 @ClientWidget(value = VHistorian.class, loadStyle = LoadStyle.EAGER)
 public class Historian extends UriFragmentUtility{
-    public Historian() {
-        super();
-    }
 }

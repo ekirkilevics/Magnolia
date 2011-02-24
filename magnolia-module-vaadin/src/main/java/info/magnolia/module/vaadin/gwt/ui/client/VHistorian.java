@@ -40,21 +40,16 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility;
 
 /**
- * Client side implementation for UriFragmentUtility. Uses GWT's History object
- * as an implementation.
- *
+ * TODO open a ticket at Vaadin and provide a patch.
+ * Mostly a copy of {@link VUriFragmentUtility}
  */
 public class VHistorian extends VUriFragmentUtility {
 
+    // MAGNOLIA this is a copy because the variable are private
     private String fragment;
     private ApplicationConnection client;
     private String paintableId;
     private boolean immediate;
-
-    public VHistorian() {
-        super();
-
-    }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, false)) {
@@ -66,11 +61,14 @@ public class VHistorian extends VUriFragmentUtility {
             // initial paint has some special logic
             this.client = client;
             paintableId = uidl.getId();
-            if (!fragment.equals(uidlFragment)) {
-                // initial server side fragment (from link/bookmark/typed) does
-                // not equal the one on
-                // server, send initial fragment to server
-                //History.fireCurrentHistoryState();
+            fragment = History.getToken();
+
+            // MAGNOLIA: if the fragment on startup is not empty we have to inform the server
+            // otherwise we just add the received fragment.
+            if(!fragment.equals("")){
+                History.fireCurrentHistoryState();
+            }
+            else{
                 History.newItem(uidlFragment, false);
             }
         } else {
@@ -82,6 +80,7 @@ public class VHistorian extends VUriFragmentUtility {
         }
     }
 
+    // MAGNOLIA this is a copy because the variable are private
     public void onValueChange(ValueChangeEvent<String> event) {
         String historyToken = event.getValue();
         fragment = historyToken;

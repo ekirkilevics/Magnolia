@@ -84,6 +84,7 @@
           <module>info.magnolia.module.vaadin.widgetsets.MagnoliaWidgetset</module>
           <!-- <draftCompile>true</draftCompile> -->
           <!-- <style>PRETTY</style> -->
+          <runTarget>.magnolia/admin-central</runTarget>
         </configuration>
         <executions>
           <execution>
