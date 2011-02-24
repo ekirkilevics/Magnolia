@@ -50,8 +50,7 @@ import org.slf4j.LoggerFactory;
  * to mimic GWT's {@link Historian}.
  * */
 /**
- * Monitors {@link PlaceChangeEvent}s and browser's history events (via Vaadin's
- * {@link UriFragmentUtility}) and keep them in sync.
+ * Monitors {@link PlaceChangeEvent}s and browser's history events and keep them in sync.
  * <p>
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * @author fgrilli

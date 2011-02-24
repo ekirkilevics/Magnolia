@@ -138,10 +138,6 @@ public class AdminCentralApplication extends Application {
 
     private Shell shell;
 
-    public VerticalLayout getMainContainer() {
-        return mainContainer;
-    }
-
     @Override
     public void init() {
         setTheme("magnolia");
