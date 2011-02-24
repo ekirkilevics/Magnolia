@@ -37,9 +37,7 @@ import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeHandler;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *
  * Inspired by {@link com.google.gwt.activity.shared.ActivityManager}.
  */
-public class ActivityManager implements PlaceChangeHandler, PlaceChangeRequestHandler {
+public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeRequestEvent.Handler {
 
     private static Logger log = LoggerFactory.getLogger(ActivityManager.class);
 

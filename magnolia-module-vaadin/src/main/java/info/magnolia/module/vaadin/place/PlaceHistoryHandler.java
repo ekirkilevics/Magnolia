@@ -105,7 +105,7 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
         this.defaultPlace = defaultPlace;
         shell.addFragmentChangedHandler(this);
 
-        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeHandler() {
+        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeEvent.Handler() {
 
             public void onPlaceChange(PlaceChangeEvent event) {
                 log.debug("onPlaceChange...");
