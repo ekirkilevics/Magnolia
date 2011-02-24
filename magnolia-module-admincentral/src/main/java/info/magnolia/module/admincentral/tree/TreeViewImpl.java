@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.module.admincentral.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 
@@ -63,20 +64,18 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
                 try {
                     presenter.onItemSelection(jcrBrowser.getContainer().getJcrItem((ContainerItemId) event.getItemId()));
                 } catch (RepositoryException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    throw new RuntimeRepositoryException(e);
                 }
             }
         });
     }
 
+    /**
+     *
+     * @param path relative to the tree root, must start with /
+     */
     public void select(String path){
-        // FIXME don't expand the last node and also support node datas
-        jcrBrowser.setExpanded(path, true);
-    }
-
-    //FIXME we should not delegate to the jcrBrowser
-    public void executeActionForSelectedItem(String actionName) {
-        jcrBrowser.executeActionForSelectedItem(actionName);
+        jcrBrowser.select(path);
     }
 
     public void refresh() {

@@ -72,15 +72,16 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
 
         // FIXME does it make sense to have activity manager with a single activity? I think no.
+
         ActivityManager treeActivityManager = new ActivityManager(new ActivityMapper() {
 
             private TreeActivity treeActivity;
 
             public Activity getActivity(final Place place) {
                 final String path = ((ItemSelectedPlace)place).getPath();
-                final String workspace = ((ItemSelectedPlace)place).getWorkspace();
+                final String treeName = ((ItemSelectedPlace)place).getWorkspace();
                 if(treeActivity == null){
-                    treeActivity = new TreeActivity(workspace, path, getInnerPlaceController(), uiModel);
+                    treeActivity = new TreeActivity(treeName, path, getInnerPlaceController(), uiModel);
                 }
                 else{
                     // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view
@@ -93,8 +94,8 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         ActivityManager detailViewActivityManager = new ActivityManager(new ActivityMapper() {
             public Activity getActivity(final Place place) {
                 final String path = ((ItemSelectedPlace)place).getPath();
-                final String workspace = ((ItemSelectedPlace)place).getWorkspace();
-                return new DetailViewActivity(workspace, path, uiModel);
+                final String treeName = ((ItemSelectedPlace)place).getWorkspace();
+                return new DetailViewActivity(treeName, path, uiModel);
             }
         }, innerEventBus);
 
@@ -131,9 +132,10 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     }
 
     @Override
-    //FIXME can we use generics here?
-    protected Class[] getSupportedPlaces() {
-        return new Class[]{ItemSelectedPlace.class};
+    @SuppressWarnings("unchecked")
+    protected Class<? extends Place>[] getSupportedPlaces() {
+        // Casts since generic array creation doesn't exist
+        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class};
     }
 
     @Override

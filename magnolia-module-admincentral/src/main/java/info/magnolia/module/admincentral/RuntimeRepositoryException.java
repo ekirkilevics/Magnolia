@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,32 +25,31 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
+package info.magnolia.module.admincentral;
 
-import javax.jcr.Item;
+import javax.jcr.RepositoryException;
 
 /**
- * TODO: write javadoc.
+ * Wraps RepositoryException as a runtime exception. Useful in cases where a RepositoryException is an unrecoverable
+ * error. Prefer using this class to wrapping as a plain RuntimeException as this is easier to catch and handle in cases
+ * where it is necessary to unpack the cause to display an appropriate error message or rethrow it as a checked
+ * exception.
  *
- * @author tmattsson
+ * @author tmattson
  */
-public interface TreeView {
+public class RuntimeRepositoryException extends RuntimeException {
 
-    /**
-     * TODO: write javadoc.
-     *
-     * @author tmattsson
-     */
-    public interface Presenter {
-
-        void onItemSelection(Item tem);
+    public RuntimeRepositoryException(RepositoryException e) {
+        super(e);
     }
 
-    void select(String path);
+    public RuntimeRepositoryException(String message, RepositoryException e) {
+        super(message, e);
+    }
 }

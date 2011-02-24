@@ -37,7 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+
+import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.module.admincentral.dialog.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
@@ -56,8 +57,8 @@ public class UIModel {
     public void executeCommand(String commandName, String treeName, String path) throws RepositoryException {
 
         TreeDefinition treeDefinition = getTreeDefinition(treeName);
-        Session session = JCRUtil.getSession(treeDefinition.getRepository());
-        Item item = session.getItem(path);
+
+        Item item = getItem(treeDefinition, path);
 
         Command action = getCommand(treeDefinition, commandName);
         if (action.isAvailable(item))
@@ -74,9 +75,9 @@ public class UIModel {
         return null;
     }
 
-    public List<Command> getCommandsForItem(String workspace, String path) throws RepositoryException {
-        TreeDefinition treeDefinition = getTreeDefinition(workspace);
-        return getCommandsForItem(workspace, getItem(treeDefinition, path));
+    public List<Command> getCommandsForItem(String treeName, String path) throws RepositoryException {
+        TreeDefinition treeDefinition = getTreeDefinition(treeName);
+        return getCommandsForItem(treeName, getItem(treeDefinition, path));
     }
 
     public List<Command> getCommandsForItem(String treeName, Item item) {
@@ -111,10 +112,22 @@ public class UIModel {
     }
 
     public Item getItem(TreeDefinition treeDefinition, String path) throws RepositoryException {
+        String base = treeDefinition.getPath();
+        if (!base.equals("/"))
+            path = base + path;
         return JCRUtil.getSession(treeDefinition.getRepository()).getItem(path);
     }
 
     public DialogDefinition getDialogDefinition(String dialogName) throws RepositoryException {
         return DialogRegistry.getInstance().getDialog(dialogName);
+    }
+
+    public String getPathInTree(String treeName, Item item) throws RepositoryException {
+        TreeDefinition treeDefinition = getTreeDefinition(treeName);
+        String base = treeDefinition.getPath();
+        if (base.equals("/"))
+            return item.getPath();
+        else
+            return StringUtils.substringAfter(item.getPath(), base);
     }
 }

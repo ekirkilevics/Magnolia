@@ -49,13 +49,13 @@ import info.magnolia.module.vaadin.event.EventBus;
 public class DetailViewActivity extends AbstractActivity implements DetailView.Presenter {
 
     private UIModel uiModel;
-    private String workspace;
+    private String treeName;
     private String path;
     private DetailView detailView;
     private EventBus eventBus;
 
-    public DetailViewActivity(String workspace, String path, UIModel uiModel) {
-        this.workspace = workspace;
+    public DetailViewActivity(String treeName, String path, UIModel uiModel) {
+        this.treeName = treeName;
         this.uiModel = uiModel;
         detailView = new DetailView(this);
         showItem(path);
@@ -71,7 +71,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
             // Displaying commands for the root node makes no sense
             if (!path.equals("/")) {
                 this.path = path;
-                detailView.showCommands(uiModel.getCommandsForItem(workspace, path));
+                detailView.showCommands(uiModel.getCommandsForItem(treeName, path));
             }
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
@@ -80,9 +80,9 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
 
     public void onCommandSelected(String commandName) {
         try {
-            uiModel.executeCommand(commandName, workspace, path);
+            uiModel.executeCommand(commandName, treeName, path);
             // FIXME this has to be more granular
-            eventBus.fireEvent(new ContentChangedEvent(workspace, path));
+            eventBus.fireEvent(new ContentChangedEvent(treeName, path));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -94,7 +94,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         int result = 1;
         result = prime * result + ((path == null) ? 0 : path.hashCode());
         result = prime * result
-                + ((workspace == null) ? 0 : workspace.hashCode());
+                + ((treeName == null) ? 0 : treeName.hashCode());
         return result;
     }
 
@@ -112,10 +112,10 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
                 return false;
         } else if (!path.equals(other.path))
             return false;
-        if (workspace == null) {
-            if (other.workspace != null)
+        if (treeName == null) {
+            if (other.treeName != null)
                 return false;
-        } else if (!workspace.equals(other.workspace))
+        } else if (!treeName.equals(other.treeName))
             return false;
         return true;
     }

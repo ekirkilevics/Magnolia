@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.module.admincentral.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.event.ContentChangedEvent;
 import info.magnolia.module.admincentral.event.ContentChangedEvent.Handler;
 import info.magnolia.module.admincentral.model.UIModel;
@@ -81,12 +82,11 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         try {
             this.treeView = new TreeViewImpl(treeName, this, uiModel);
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new RuntimeRepositoryException(e);
         }
         treeView.select(path);
         eventBus.addHandler(ContentChangedEvent.class, this);
         display.setComponent(treeView);
-
     }
 
     public UIModel getUIModel() {
@@ -95,16 +95,11 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void onItemSelection(Item jcrItem) {
         try {
-            String path = jcrItem.getPath();
-            this.path = path;
+            String path = uiModel.getPathInTree(treeName, jcrItem);
             placeController.goTo(new ItemSelectedPlace(treeName, path));
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new RuntimeRepositoryException(e);
         }
-    }
-
-    public void executeActionForSelectedItem(String actionName) {
-        treeView.executeActionForSelectedItem(actionName);
     }
 
     public void onContentChanged(ContentChangedEvent event) {

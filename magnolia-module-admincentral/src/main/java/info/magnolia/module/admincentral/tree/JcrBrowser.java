@@ -343,34 +343,40 @@ public class JcrBrowser extends TreeTable {
         });
     }
 
-    /**
-     * Expand a tree from the node we want to show, up to the root. Expanding the single node won't suffice to show it
-     * as it will be hidden by the collapsed ancestors.
-     *
-     * @param path   the path to the node to expand.
-     * @param select if true will also select the corresponding row in the table.
-     */
-    public void setExpanded(String path, boolean select) {
+    public void select(String path) {
+
         try {
-            log.debug("expanding {}...", path);
 
-            Item item = container.getSession().getItem(path);
-
-            if (item instanceof Node && ((Node) item).getDepth() > 1)
-                setExpanded(((Node) item).getParent().getPath(), false);
-
+            String absPath = getPathInWorkspace(path);
+            Item item = container.getSession().getItem(absPath);
             ContainerItemId itemId = new ContainerItemId(item);
-            setCollapsed(itemId, false);
 
-            if (select) {
-                select(itemId);
-                setCurrentPageFirstItemId(itemId);
+            // Expand parent node all the way up to the root
+            if (item.getDepth() > 1) {
+                Item parent = item.getParent();
+                while (!parent.getPath().equals(treeDefinition.getPath())) {
+                    setCollapsed(new ContainerItemId(parent), false);
+                    parent = parent.getParent();
+                }
             }
-            log.debug("{} is expanded? {} and selected? {}", new Object[]{path, !isCollapsed(path), isSelected(path)});
+
+            // Select the item
+            select(itemId);
+
+            // Make sure its in view
+            setCurrentPageFirstItemId(itemId);
 
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    public String getPathInWorkspace(String pathInTree) {
+        String base = this.treeDefinition.getPath();
+        if (base.equals("/"))
+            return pathInTree;
+        else
+            return base + pathInTree;
     }
 
     public JcrContainer getContainer() {
@@ -401,25 +407,5 @@ public class JcrBrowser extends TreeTable {
             e.printStackTrace();
         }
         return super.getItemIcon(itemId);
-    }
-
-    public void executeActionForSelectedItem(String actionName) {
-        Item item = null;
-        try {
-            item = getContainer().getJcrItem((ContainerItemId) getValue());
-        } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            return;
-        }
-        Collection<Command> commands = uiModel.getCommandsForItem(treeDefinition.getName(), item);
-        for (Command command : commands) {
-            if (command.getName().equals(actionName)) {
-                try {
-                    command.execute(this, item);
-                } catch (RepositoryException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-            }
-        }
     }
 }
