@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.shell;
 
+import info.magnolia.module.vaadin.gwt.ui.Historian;
 import info.magnolia.module.vaadin.shell.AbstractShell;
 import info.magnolia.module.vaadin.shell.ConfirmationHandler;
 
@@ -51,7 +52,7 @@ public class ShellImpl extends AbstractShell {
 
     private Application application;
 
-    protected UriFragmentUtility uriFragmentUtility = new UriFragmentUtility();
+    protected UriFragmentUtility uriFragmentUtility = new Historian();
 
     public ShellImpl(Application application) {
         super(APPLICATION_FRAGMENT_ID);
