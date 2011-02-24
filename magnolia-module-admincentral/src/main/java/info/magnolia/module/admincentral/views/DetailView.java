@@ -92,7 +92,7 @@ public class DetailView extends VerticalSplitPanel {
             setSelectable(true);
             addListener(new ItemClickEvent.ItemClickListener() {
                 public void itemClick(ItemClickEvent event) {
-                    if (event.isDoubleClick() && presenter != null) {
+                    if (presenter != null) {
                         presenter.onCommandSelected((String) event.getItemId());
                     }
                 }

@@ -74,7 +74,12 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
         jcrBrowser.setExpanded(path, true);
     }
 
+    //FIXME we should not delegate to the jcrBrowser
     public void executeActionForSelectedItem(String actionName) {
         jcrBrowser.executeActionForSelectedItem(actionName);
+    }
+
+    public void refresh() {
+        jcrBrowser.getContainer().fireItemSetChange();
     }
 }

@@ -56,7 +56,7 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     private String workspace;
 
     public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel) {
-        super("edit-workspace", shell);
+        super("edit-workspace-" + workspace, shell);
         this.workspace = workspace;
         this.uiModel = uiModel;
     }

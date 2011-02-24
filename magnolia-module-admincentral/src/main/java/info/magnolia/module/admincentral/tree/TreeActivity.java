@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.module.admincentral.event.ContentChangedEvent;
+import info.magnolia.module.admincentral.event.ContentChangedEvent.Handler;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.ItemSelectedPlace;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
@@ -49,7 +51,7 @@ import javax.jcr.RepositoryException;
  * @author tmattsson
  *
  */
-public class TreeActivity extends AbstractActivity implements TreeView.Presenter {
+public class TreeActivity extends AbstractActivity implements TreeView.Presenter, Handler {
 
     private final String treeName;
     private EventBus eventBus;
@@ -77,12 +79,14 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     public void start(HasComponent display, EventBus eventBus) {
         this.eventBus = eventBus;
         try {
-            treeView = new TreeViewImpl(treeName, this, uiModel);
-            update(path);
-            display.setComponent(treeView);
+            this.treeView = new TreeViewImpl(treeName, this, uiModel);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+        treeView.select(path);
+        eventBus.addHandler(ContentChangedEvent.class, this);
+        display.setComponent(treeView);
+
     }
 
     public UIModel getUIModel() {
@@ -103,33 +107,9 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         treeView.executeActionForSelectedItem(actionName);
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
-        result = prime * result + ((treeName == null) ? 0 : treeName.hashCode());
-        return result;
+    public void onContentChanged(ContentChangedEvent event) {
+        // FIXME only if we are not the source!
+        treeView.refresh();
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof TreeActivity))
-            return false;
-        TreeActivity other = (TreeActivity) obj;
-        if (treeName == null) {
-            if (other.treeName != null)
-                return false;
-        }
-        else if (!treeName.equals(other.treeName))
-            return false;
-        return true;
-    }
-
-
 
 }

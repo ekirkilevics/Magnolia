@@ -35,6 +35,7 @@ package info.magnolia.module.admincentral.activity;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.event.ContentChangedEvent;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.views.DetailView;
 import info.magnolia.module.vaadin.activity.AbstractActivity;
@@ -51,6 +52,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private String workspace;
     private String path;
     private DetailView detailView;
+    private EventBus eventBus;
 
     public DetailViewActivity(String workspace, String path, UIModel uiModel) {
         this.workspace = workspace;
@@ -60,6 +62,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     }
 
     public void start(HasComponent display, EventBus eventBus) {
+        this.eventBus = eventBus;
         display.setComponent(detailView);
     }
 
@@ -78,6 +81,8 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     public void onCommandSelected(String commandName) {
         try {
             uiModel.executeCommand(commandName, workspace, path);
+            // FIXME this has to be more granular
+            eventBus.fire(new ContentChangedEvent(workspace, path));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
