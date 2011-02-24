@@ -35,7 +35,7 @@ package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.shell.FragmentChangedEvent;
-import info.magnolia.module.vaadin.shell.FragmentChangedListener;
+import info.magnolia.module.vaadin.shell.FragmentChangedHandler;
 import info.magnolia.module.vaadin.shell.Shell;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * Inspired by {@link com.google.gwt.place.shared.PlaceHistoryHandler}
  * @author fgrilli
  */
-public class PlaceHistoryHandler implements FragmentChangedListener {
+public class PlaceHistoryHandler implements FragmentChangedHandler {
 
     private static final Logger log = LoggerFactory.getLogger(PlaceHistoryHandler.class.getName());
 
@@ -79,7 +79,7 @@ public class PlaceHistoryHandler implements FragmentChangedListener {
     }
 
     public void release() {
-        shell.removeListener(this);
+        shell.removeFragmentChangedHandler(this);
     }
 
     /**
@@ -104,9 +104,9 @@ public class PlaceHistoryHandler implements FragmentChangedListener {
     public void register(PlaceController placeController, EventBus eventBus, Place defaultPlace) {
         this.placeController = placeController;
         this.defaultPlace = defaultPlace;
-        shell.addListener(this);
+        shell.addFragmentChangedHandler(this);
 
-        eventBus.addListener(new PlaceChangeListener() {
+        eventBus.addHandler(PlaceChangeEvent.class, new PlaceChangeHandler() {
 
             public void onPlaceChange(PlaceChangeEvent event) {
                 log.debug("onPlaceChange...");
@@ -116,12 +116,12 @@ public class PlaceHistoryHandler implements FragmentChangedListener {
         });
     }
 
-    public final void addListener(FragmentChangedListener fragmentChangedListener) {
-        shell.addListener(fragmentChangedListener);
+    public final void addListener(FragmentChangedHandler fragmentChangedHandler) {
+        shell.addFragmentChangedHandler(fragmentChangedHandler);
     }
 
-    public final void removeListener(FragmentChangedListener fragmentChangedListener) {
-        shell.removeListener(fragmentChangedListener);
+    public final void removeListener(FragmentChangedHandler fragmentChangedHandler) {
+        shell.removeFragmentChangedHandler(fragmentChangedHandler);
     }
 
     private void handleHistoryToken(String token) {

@@ -35,11 +35,8 @@ package info.magnolia.module.vaadin.activity;
 
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.event.SimpleEventBus;
 import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeListener;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
 import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
 import info.magnolia.module.vaadin.place.PlaceHistoryMapperImpl;
@@ -75,12 +72,8 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
         subShell = new SubShell(id, shell);
 
-        innerEventBus = new EventBus();
+        innerEventBus = new SimpleEventBus();
         innerPlaceController = new PlaceController(innerEventBus, shell);
-
-        //FIXME, we should not have to register all the events manually
-        innerEventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
-        innerEventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
 
         // build the container
         onStart(display, innerEventBus);

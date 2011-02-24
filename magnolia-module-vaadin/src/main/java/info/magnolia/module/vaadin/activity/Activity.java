@@ -52,7 +52,7 @@ public interface Activity {
      * should present it by calling {@link HasComponent#setComponent(com.vaadin.ui.Component)} on
      * the display.
      * <p>
-     * Any handlers attached to the provided event bus will be de-registered when the activity is
+     * Any eventHandlers attached to the provided event bus will be de-registered when the activity is
      * stopped.
      */
     void start(HasComponent display, EventBus eventBus);
@@ -66,7 +66,7 @@ public interface Activity {
     String mayStop();
 
     /**
-     * Called when the Activity's widget has been removed from view. All event handlers it
+     * Called when the Activity's widget has been removed from view. All event eventHandlers it
      * registered will have been removed before this method is called.
      */
     void onStop();

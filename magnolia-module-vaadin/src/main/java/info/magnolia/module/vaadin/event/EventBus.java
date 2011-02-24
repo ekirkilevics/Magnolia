@@ -33,14 +33,15 @@
  */
 package info.magnolia.module.vaadin.event;
 
-import com.github.wolfie.blackboard.Blackboard;
-
-
 /**
- * Will dispatch fired {@link Event}s to the {@link Listener}s.
+ * Will dispatch fired {@link Event}s to the {@link EventHandler}s.
  *
  * Currently based on {@link Blackboard}.
  */
-public class EventBus extends Blackboard  {
+public interface EventBus  {
+
+    public <H extends EventHandler> void addHandler(Class<? extends Event<H>> eventClass, H handler);
+
+    public void fire(Event e);
 
 }

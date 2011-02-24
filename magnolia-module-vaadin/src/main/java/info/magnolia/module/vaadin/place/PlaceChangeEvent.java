@@ -39,7 +39,7 @@ import info.magnolia.module.vaadin.event.Event;
 /**
  * Fired on UI navigation.
  */
-public class PlaceChangeEvent implements Event {
+public class PlaceChangeEvent implements Event<PlaceChangeHandler> {
 
     private final Place newPlace;
 
@@ -49,6 +49,10 @@ public class PlaceChangeEvent implements Event {
 
     public Place getNewPlace() {
       return newPlace;
+    }
+
+    public void dispatch(PlaceChangeHandler handler) {
+        handler.onPlaceChange(this);
     }
 
 }

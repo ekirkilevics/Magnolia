@@ -34,7 +34,7 @@
 package info.magnolia.module.admincentral.shell;
 
 import info.magnolia.module.vaadin.shell.AbstractShell;
-import info.magnolia.module.vaadin.shell.ConfirmationListener;
+import info.magnolia.module.vaadin.shell.ConfirmationHandler;
 
 import org.vaadin.dialogs.ConfirmDialog;
 
@@ -59,7 +59,7 @@ public class ShellImpl extends AbstractShell {
         application.getMainWindow().addComponent(uriFragmentUtility);
     }
 
-    public void askForConfirmation(String message, final ConfirmationListener listener) {
+    public void askForConfirmation(String message, final ConfirmationHandler listener) {
         ConfirmDialog.show(application.getMainWindow(), message, new ConfirmDialog.Listener() {
 
             public void onClose(ConfirmDialog dialog) {

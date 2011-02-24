@@ -40,7 +40,7 @@ import info.magnolia.module.vaadin.event.Event;
 /**
  * Fired if a URI fragment has changed.
  */
-public class FragmentChangedEvent implements Event {
+public class FragmentChangedEvent implements Event<FragmentChangedHandler> {
     private String fragment;
 
     public FragmentChangedEvent(String fragment) {
@@ -49,6 +49,10 @@ public class FragmentChangedEvent implements Event {
 
     public String getFragment() {
         return fragment;
+    }
+
+    public void dispatch(FragmentChangedHandler handler) {
+        handler.onFragmentChanged(this);
     }
 
 }

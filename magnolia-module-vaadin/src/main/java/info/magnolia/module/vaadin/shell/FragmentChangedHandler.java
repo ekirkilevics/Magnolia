@@ -33,13 +33,13 @@
  */
 package info.magnolia.module.vaadin.shell;
 
-import info.magnolia.module.vaadin.event.Listener;
+import info.magnolia.module.vaadin.event.EventHandler;
 
 
 /**
  * Called if a URI fragment of {@link Shell} has changed.
  */
-public interface FragmentChangedListener extends Listener {
+public interface FragmentChangedHandler extends EventHandler {
 
     void onFragmentChanged(FragmentChangedEvent event);
 

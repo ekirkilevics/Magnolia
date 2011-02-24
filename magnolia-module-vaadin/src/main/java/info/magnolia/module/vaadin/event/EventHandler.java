@@ -33,16 +33,10 @@
  */
 package info.magnolia.module.vaadin.event;
 
-
 /**
- * A marker interface for events used in the {@link EventBus}.
- * @param <H> The handler the events will be dispatched to.
+ * A marker interface for listeners used in the {@link EventBus}.
+ * @author fgrilli
  */
-public interface Event<H extends EventHandler> {
-
-    /**
-     * Invokes the the handler and passes itself.
-     */
-    void dispatch(H handler);
+public interface EventHandler {
 
 }

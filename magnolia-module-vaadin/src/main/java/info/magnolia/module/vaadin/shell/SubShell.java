@@ -48,7 +48,7 @@ public class SubShell extends AbstractShell {
         this.parent = parent;
     }
 
-    public void askForConfirmation(String message, ConfirmationListener listener) {
+    public void askForConfirmation(String message, ConfirmationHandler listener) {
         parent.askForConfirmation(message, listener);
     }
 

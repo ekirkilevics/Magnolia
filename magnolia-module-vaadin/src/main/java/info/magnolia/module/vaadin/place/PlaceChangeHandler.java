@@ -33,11 +33,11 @@
  */
 package info.magnolia.module.vaadin.place;
 
-import info.magnolia.module.vaadin.event.Listener;
+import info.magnolia.module.vaadin.event.EventHandler;
 
 /**
  * Listens to {@link PlaceChangeEvent}s.
  */
-public interface PlaceChangeListener extends Listener {
+public interface PlaceChangeHandler extends EventHandler {
     void onPlaceChange(PlaceChangeEvent event);
 }

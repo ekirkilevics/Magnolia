@@ -37,9 +37,9 @@ import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
 import info.magnolia.module.vaadin.place.Place;
 import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeListener;
+import info.magnolia.module.vaadin.place.PlaceChangeHandler;
 import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
+import info.magnolia.module.vaadin.place.PlaceChangeRequestHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  *
  * Inspired by {@link com.google.gwt.activity.shared.ActivityManager}.
  */
-public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestListener {
+public class ActivityManager implements PlaceChangeHandler, PlaceChangeRequestHandler {
 
     private static Logger log = LoggerFactory.getLogger(ActivityManager.class);
 
@@ -75,7 +75,7 @@ public class ActivityManager implements PlaceChangeListener, PlaceChangeRequestL
         this.mapper = mapper;
         this.eventBus = eventBus;
 
-        eventBus.addListener(this);
+        eventBus.addHandler(PlaceChangeEvent.class, this);
     }
 
     public void onPlaceChange(PlaceChangeEvent event) {

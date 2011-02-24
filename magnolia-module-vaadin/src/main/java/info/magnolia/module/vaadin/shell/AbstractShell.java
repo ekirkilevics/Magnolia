@@ -48,7 +48,7 @@ import com.vaadin.ui.UriFragmentUtility;
 public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentUtility.FragmentChangedListener{
     private static final Logger log = LoggerFactory.getLogger(AbstractShell.class);
 
-    private Collection<info.magnolia.module.vaadin.shell.FragmentChangedListener> listeners = new ArrayList<FragmentChangedListener>();
+    private Collection<info.magnolia.module.vaadin.shell.FragmentChangedHandler> listeners = new ArrayList<FragmentChangedHandler>();
 
     protected String id;
 
@@ -79,20 +79,20 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         }
     }
 
-    public void addListener(FragmentChangedListener listener) {
-        log.debug("adding listener {}", listener);
+    public void addFragmentChangedHandler(FragmentChangedHandler handler) {
+        log.debug("adding listener {}", handler);
 
         if(listeners.size()==0){
             log.debug("adding listener {}", this);
             getUriFragmentUtility().addListener(this);
         }
-        listeners.add(listener);
+        listeners.add(handler);
     }
 
-    public void removeListener(FragmentChangedListener listener) {
-        log.debug("removing listener {}", listener);
+    public void removeFragmentChangedHandler(FragmentChangedHandler handler) {
+        log.debug("removing listener {}", handler);
 
-        listeners.remove(listener);
+        listeners.remove(handler);
         if(listeners.size()==0){
             log.debug("removing listener {}", this);
             getUriFragmentUtility().removeListener(this);
@@ -103,7 +103,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         final Fragmenter fragmenter = new Fragmenter(event.getUriFragmentUtility().getFragment());
         final String subFragment = fragmenter.getSubFragment(id);
         if(subFragment != null){
-            for (info.magnolia.module.vaadin.shell.FragmentChangedListener listener : listeners) {
+            for (info.magnolia.module.vaadin.shell.FragmentChangedHandler listener : listeners) {
                 log.debug("firing info.magnolia.module.vaadin.shell.FragmentChangedEvent with sub fragment {}", subFragment);
                 listener.onFragmentChanged(new FragmentChangedEvent(subFragment));
             }

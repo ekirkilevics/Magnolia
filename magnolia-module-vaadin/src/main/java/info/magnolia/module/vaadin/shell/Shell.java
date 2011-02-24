@@ -38,17 +38,19 @@ package info.magnolia.module.vaadin.shell;
  */
 public interface Shell {
 
-    void askForConfirmation(String message, ConfirmationListener listener);
+    void askForConfirmation(String message, ConfirmationHandler listener);
 
     void showNotification(String message);
 
+    // FIXME should be encapsulated into an specific interface: FragmentUtility or so
     String getFragment();
 
     void setFragment(String fragment, boolean fireEvent);
 
-    void addListener(FragmentChangedListener listener);
+    void addFragmentChangedHandler(FragmentChangedHandler handler);
 
-    void removeListener(FragmentChangedListener listener);
+    // FIXME drop it, addFragmentChangedHandler should return an object to unregister the listener
+    void removeFragmentChangedHandler(FragmentChangedHandler handler);
 
 
 }

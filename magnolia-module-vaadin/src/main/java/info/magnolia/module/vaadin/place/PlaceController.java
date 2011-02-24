@@ -34,7 +34,7 @@
 package info.magnolia.module.vaadin.place;
 
 import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.shell.ConfirmationListener;
+import info.magnolia.module.vaadin.shell.ConfirmationHandler;
 import info.magnolia.module.vaadin.shell.Shell;
 
 
@@ -71,7 +71,7 @@ public class PlaceController {
         PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
         eventBus.fire(willChange);
         if (willChange.getWarning() != null) {
-            shell.askForConfirmation(willChange.getWarning(), new ConfirmationListener() {
+            shell.askForConfirmation(willChange.getWarning(), new ConfirmationHandler() {
                 public void onConfirm() {
                     goToWithoutChecks(newPlace);
                 }

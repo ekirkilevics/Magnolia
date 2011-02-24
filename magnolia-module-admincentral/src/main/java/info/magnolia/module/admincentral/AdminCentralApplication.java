@@ -77,12 +77,9 @@ import info.magnolia.module.vaadin.activity.ActivityMapper;
 import info.magnolia.module.vaadin.component.ComponentContainerBasedDisplay;
 import info.magnolia.module.vaadin.component.HasComponent;
 import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.module.vaadin.event.SimpleEventBus;
 import info.magnolia.module.vaadin.place.PlaceHistoryMapperImpl;
 import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.PlaceChangeEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeListener;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestEvent;
-import info.magnolia.module.vaadin.place.PlaceChangeRequestListener;
 import info.magnolia.module.vaadin.place.PlaceController;
 import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
 import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
@@ -155,9 +152,7 @@ public class AdminCentralApplication extends Application {
         initLayout();
         shell = new ShellImpl(this);
 
-        eventBus = new EventBus();
-        eventBus.register(PlaceChangeListener.class, PlaceChangeEvent.class);
-        eventBus.register(PlaceChangeRequestListener.class, PlaceChangeRequestEvent.class);
+        eventBus = new SimpleEventBus();
 
         placeController = new PlaceController(eventBus, shell);
 

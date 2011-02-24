@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,10 +33,32 @@
  */
 package info.magnolia.module.vaadin.event;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+
+
 /**
- * A marker interface for listeners used in the {@link EventBus}.
- * @author fgrilli
+ * A very simplistic event bus.
+ * FIXME is that thing threadsafe? prevent dispatching to freshly added/removed handlers while firing. Check event bus project: http://www.eventbus.org/
  */
-public interface Listener extends com.github.wolfie.blackboard.Listener {
+public class SimpleEventBus implements EventBus {
+
+    final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
+
+    public SimpleEventBus() {
+        ArrayListMultimap<Class<? extends Event>, EventHandler> multimap = ArrayListMultimap.create();
+        eventHandlers = Multimaps.synchronizedMultimap(multimap);
+    }
+
+    public <H extends EventHandler> void addHandler(Class< ? extends Event<H>> eventClass, H handler) {
+        eventHandlers.put(eventClass, handler);
+    }
+
+    public void fire(Event e) {
+        for (EventHandler eventHandler : eventHandlers.get(e.getClass())) {
+            e.dispatch(eventHandler);
+        }
+    }
 
 }
