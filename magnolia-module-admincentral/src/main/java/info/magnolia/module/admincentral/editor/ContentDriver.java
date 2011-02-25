@@ -40,11 +40,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.module.admincentral.RuntimeRepositoryException;
-import info.magnolia.module.admincentral.control.DateControl;
-import info.magnolia.module.admincentral.control.EditControl;
-import info.magnolia.module.admincentral.control.RichTextControl;
-import info.magnolia.module.admincentral.dialog.DialogControl;
 import info.magnolia.module.admincentral.dialog.DialogDefinition;
+import info.magnolia.module.admincentral.dialog.DialogField;
 import info.magnolia.module.admincentral.dialog.DialogTab;
 
 /**
@@ -92,13 +89,13 @@ public class ContentDriver extends AbstractDriver<Node> {
 
             builder.addTab(dialogTab.getLabel(), dialogTab.getLabel());
 
-            for (DialogControl dialogControl : dialogTab.getFields()) {
+            for (DialogField field : dialogTab.getFields()) {
 
                 // TODO passing the type to the builder is not enough
                 // TODO it also needs to be give more explicit instructions like 'richText' and things like options.
                 // TODO some things might not be a good match with a java type, for instance nt:file
 
-                Class<?> type = getTypeFromDialogControl(dialogControl);
+                Class<?> type = getTypeFromDialogControl(field);
 
                 // TODO for now we just skip things that we dont know about, later on we should fail instead
                 if (type == null)
@@ -106,22 +103,22 @@ public class ContentDriver extends AbstractDriver<Node> {
 
                 Editor editor = builder.addField(
                         dialogTab.getLabel(),
-                        dialogControl.getName(),
-                        dialogControl.getLabel(),
-                        dialogControl.getDescription(),
+                        field.getName(),
+                        field.getLabel(),
+                        field.getDescription(),
                         type);
 
-                editorMappings.add(new EditorMapping(dialogControl.getName(), editor, type));
+                editorMappings.add(new EditorMapping(field.getName(), editor, type));
             }
         }
     }
 
-    private Class<?> getTypeFromDialogControl(DialogControl dialogControl) {
-        if (dialogControl instanceof EditControl)
+    private Class<?> getTypeFromDialogControl(DialogField field) {
+        if (field.getControlType().equals("edit"))
             return String.class;
-        if (dialogControl instanceof DateControl)
+        if (field.getControlType().equals("date"))
             return Calendar.class;
-        if (dialogControl instanceof RichTextControl)
+        if (field.getControlType().equals("richText"))
             return String.class;
         return null;
 //        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());

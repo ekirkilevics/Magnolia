@@ -33,17 +33,7 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.context.MgnlContext;
-
 import java.util.Collection;
-
 import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
 
@@ -57,6 +47,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 
 /**
  * Dialog editor.

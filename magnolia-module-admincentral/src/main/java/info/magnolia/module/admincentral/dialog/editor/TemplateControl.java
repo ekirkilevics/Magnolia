@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
-import info.magnolia.module.admincentral.control.AbstractDialogControl;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -49,6 +47,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.control.AbstractDialogControl;
 
 /**
  * Marker for template controls.

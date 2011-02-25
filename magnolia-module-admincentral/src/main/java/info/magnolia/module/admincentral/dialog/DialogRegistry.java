@@ -33,12 +33,11 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import info.magnolia.objectfactory.Components;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.jcr.RepositoryException;
+
+import info.magnolia.objectfactory.Components;
 
 /**
  * Maintains a registry of dialog providers registered by name.
@@ -67,6 +66,7 @@ public class DialogRegistry {
      * @return dialog definition or null when dialog of requested name doesn't exist.
      */
     public DialogDefinition getDialog(String dialogName) throws RepositoryException {
+/*
         DialogProvider dialogProvider;
         synchronized (providers) {
             dialogProvider = providers.get(dialogName);
@@ -75,6 +75,37 @@ public class DialogRegistry {
             return null;
         }
         return dialogProvider.getDialogDefinition();
+*/
+        return mockDialog(dialogName);
+    }
+
+    private DialogDefinition mockDialog(String dialogName) {
+        DialogDefinition def = new DialogDefinition();
+        def.setName(dialogName);
+
+        DialogTab tab = new DialogTab();
+        tab.setLabel("Settings");
+        def.addTab(tab);
+
+        DialogField field1 = new DialogField();
+        field1.setName("title");
+        field1.setLabel("Title");
+        field1.setControlType("edit");
+        tab.addField(field1);
+
+        DialogField field2 = new DialogField();
+        field2.setName("text");
+        field2.setLabel("Text");
+        field2.setControlType("richText");
+        tab.addField(field2);
+
+        DialogField field3 = new DialogField();
+        field3.setName("date");
+        field3.setLabel("Date");
+        field3.setControlType("date");
+        tab.addField(field3);
+
+        return def;
     }
 
     public static DialogRegistry getInstance() {

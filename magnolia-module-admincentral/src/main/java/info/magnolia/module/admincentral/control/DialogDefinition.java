@@ -33,62 +33,35 @@
  */
 package info.magnolia.module.admincentral.control;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
+import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 /**
- * Control for adding a static line of content to a dialog.
+ * A definition of a configured dialog. Holds a list of tabs.
  */
-public class StaticControl implements DialogControl {
+public class DialogDefinition extends I18nAwareComponent {
 
-    private String label;
+    private List<DialogTab> tabs = new ArrayList<DialogTab>();
 
-    public void setPresenter(Presenter presenter) {
+    public List<DialogTab> getTabs() {
+        return tabs;
     }
 
-    public String getName() {
-        return "static-" + System.identityHashCode(this);
+    public void setTabs(List<DialogTab> tabs) {
+        this.tabs = tabs;
     }
 
-    public String getDescription() {
+    public boolean addTab(DialogTab dialogTab) {
+        // TODO: review - do we really want to do this? (enables possibility to inherit configuration from the parent, but delegates control over such inheritance down to the tab impl itself)
+        dialogTab.setParent(this);
+        return tabs.add(dialogTab);
+    }
+
+    @Override
+    public I18nAwareComponent getI18nAwareParent() {
+        // this is a root component in the dialog i18n awareness hierarchy
         return null;
     }
-
-    public void create(Node storageNode, GridLayout layout) {
-
-        int rows = layout.getRows();
-        layout.setRows(rows + 1);
-
-        layout.addComponent(
-                new Label(label),
-                0, rows,
-                1, rows);
-    }
-
-    public void validate() {
-    }
-
-    public void save(Node storageNode) throws RepositoryException {
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setFocus(boolean focus) {
-        // not supported
-    }
-
-    public boolean isFocus() {
-        // no way of focusing static comp.
-        return false;
-    }
-
 }

@@ -33,6 +33,13 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -44,12 +51,6 @@ import info.magnolia.module.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
  * AdminCentral Page/Section/View (main container content) for testing dialog stuff, temporary stuff.

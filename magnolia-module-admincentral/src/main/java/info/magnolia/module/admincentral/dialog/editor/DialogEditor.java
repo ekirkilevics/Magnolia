@@ -33,28 +33,8 @@
  */
 package info.magnolia.module.admincentral.dialog.editor;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.module.admincentral.control.AbstractDialogControl;
-import info.magnolia.module.admincentral.control.DateControl;
-import info.magnolia.module.admincentral.control.EditControl;
-import info.magnolia.module.admincentral.control.FileControl;
-import info.magnolia.module.admincentral.control.LinkControl;
-import info.magnolia.module.admincentral.control.RadioControl;
-import info.magnolia.module.admincentral.control.RichTextControl;
-import info.magnolia.module.admincentral.control.SelectControl;
-import info.magnolia.module.admincentral.control.SliderControl;
-import info.magnolia.module.admincentral.control.UuidLinkControl;
-import info.magnolia.module.admincentral.dialog.DialogControl;
-import info.magnolia.module.admincentral.dialog.DialogTab;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -72,6 +52,24 @@ import com.vaadin.ui.SplitPanel;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.VerticalLayout;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.module.admincentral.control.AbstractDialogControl;
+import info.magnolia.module.admincentral.control.DateControl;
+import info.magnolia.module.admincentral.control.DialogControl;
+import info.magnolia.module.admincentral.control.DialogTab;
+import info.magnolia.module.admincentral.control.EditControl;
+import info.magnolia.module.admincentral.control.FileControl;
+import info.magnolia.module.admincentral.control.LinkControl;
+import info.magnolia.module.admincentral.control.RadioControl;
+import info.magnolia.module.admincentral.control.RichTextControl;
+import info.magnolia.module.admincentral.control.SelectControl;
+import info.magnolia.module.admincentral.control.SliderControl;
+import info.magnolia.module.admincentral.control.UuidLinkControl;
 
 /**
  * Dialog editor. Provides layout of the whole dialog editor and binds together different parts of the editor (dialog preview + field editing + trash + element selection).

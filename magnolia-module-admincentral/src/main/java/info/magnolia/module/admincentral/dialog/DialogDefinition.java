@@ -39,9 +39,19 @@ import java.util.List;
 /**
  * A definition of a configured dialog. Holds a list of tabs.
  */
-public class DialogDefinition extends I18nAwareComponent {
+public class DialogDefinition {
 
+    private String name;
+    private String i18nBasename;
     private List<DialogTab> tabs = new ArrayList<DialogTab>();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public List<DialogTab> getTabs() {
         return tabs;
@@ -52,14 +62,14 @@ public class DialogDefinition extends I18nAwareComponent {
     }
 
     public boolean addTab(DialogTab dialogTab) {
-        // TODO: review - do we really want to do this? (enables possibility to inherit configuration from the parent, but delegates control over such inheritance down to the tab impl itself)
-        dialogTab.setParent(this);
         return tabs.add(dialogTab);
     }
 
-    @Override
-    public I18nAwareComponent getI18nAwareParent() {
-        // this is a root component in the dialog i18n awareness hierarchy
-        return null;
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
     }
 }

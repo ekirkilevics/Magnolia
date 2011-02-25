@@ -33,8 +33,14 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.module.admincentral.control.CheckBoxControl;
 import info.magnolia.module.admincentral.control.DateControl;
+import info.magnolia.module.admincentral.control.DialogDefinition;
+import info.magnolia.module.admincentral.control.DialogTab;
 import info.magnolia.module.admincentral.control.EditControl;
 import info.magnolia.module.admincentral.control.FileControl;
 import info.magnolia.module.admincentral.control.LinkControl;
@@ -44,11 +50,6 @@ import info.magnolia.module.admincentral.control.SelectControl;
 import info.magnolia.module.admincentral.control.SliderControl;
 import info.magnolia.module.admincentral.control.StaticControl;
 import info.magnolia.module.admincentral.control.UuidLinkControl;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
 
 /**
  * Mock DialogProvider that instantiates a dialog useful while prototyping.

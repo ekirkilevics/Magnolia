@@ -33,62 +33,42 @@
  */
 package info.magnolia.module.admincentral.control;
 
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
 
 /**
- * Control for adding a static line of content to a dialog.
+ * Provides gui setup, validation and saving of dialog field.
+ *
+ * TODO field might be a better name for this as we move away from it being an actual ui component
+ *
  */
-public class StaticControl implements DialogControl {
+public interface DialogControl {
 
-    private String label;
-
-    public void setPresenter(Presenter presenter) {
+    /**
+     * Presenter for DialogControl.
+     */
+    public interface Presenter {
+        void onFocus();
     }
 
-    public String getName() {
-        return "static-" + System.identityHashCode(this);
-    }
+    void setPresenter(Presenter presenter);
 
-    public String getDescription() {
-        return null;
-    }
+    String getName();
 
-    public void create(Node storageNode, GridLayout layout) {
+    String getLabel();
 
-        int rows = layout.getRows();
-        layout.setRows(rows + 1);
+    String getDescription();
 
-        layout.addComponent(
-                new Label(label),
-                0, rows,
-                1, rows);
-    }
+    void create(Node storageNode, GridLayout layout);
 
-    public void validate() {
-    }
+    void validate();
 
-    public void save(Node storageNode) throws RepositoryException {
-    }
+    void save(Node storageNode) throws RepositoryException;
 
-    public String getLabel() {
-        return label;
-    }
+    void setFocus(boolean focus);
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setFocus(boolean focus) {
-        // not supported
-    }
-
-    public boolean isFocus() {
-        // no way of focusing static comp.
-        return false;
-    }
-
+    boolean isFocus();
 }

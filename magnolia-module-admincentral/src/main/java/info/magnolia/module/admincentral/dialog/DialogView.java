@@ -54,6 +54,9 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.control.DialogControl;
+import info.magnolia.module.admincentral.control.DialogDefinition;
+import info.magnolia.module.admincentral.control.DialogTab;
 import info.magnolia.module.admincentral.control.StaticControl;
 import info.magnolia.module.admincentral.dialog.editor.EditDialogWindow;
 

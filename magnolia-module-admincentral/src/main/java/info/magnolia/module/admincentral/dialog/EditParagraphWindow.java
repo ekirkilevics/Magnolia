@@ -33,13 +33,13 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.ParagraphManager;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 
 /**
  * Dialog for creating or editing a paragraph. Uses the paragraphs dialog to find a dialog definition from DialogRegistry.

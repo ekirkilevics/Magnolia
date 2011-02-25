@@ -44,8 +44,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import info.magnolia.module.admincentral.dialog.DialogControl;
-import info.magnolia.module.admincentral.dialog.DialogTab;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 /**

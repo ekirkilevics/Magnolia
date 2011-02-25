@@ -35,6 +35,8 @@ package info.magnolia.module.admincentral.dialog;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.module.admincentral.control.DialogDefinition;
+
 /**
  * Provides a dialog definition.
  */

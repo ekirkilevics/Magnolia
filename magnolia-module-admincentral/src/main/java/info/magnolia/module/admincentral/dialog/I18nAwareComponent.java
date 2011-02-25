@@ -33,11 +33,11 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Provides functionality for hierarchical inheritance of i18n awareness of various UI components.

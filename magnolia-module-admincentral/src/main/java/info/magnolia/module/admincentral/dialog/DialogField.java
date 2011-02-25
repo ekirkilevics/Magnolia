@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,47 +31,45 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.control;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
+package info.magnolia.module.admincentral.dialog;
 
 /**
- * Control for adding a static line of content to a dialog.
+ * Describes a field in a dialog.
+ *
+ * @author tmattsson
  */
-public class StaticControl implements DialogControl {
+public class DialogField {
 
+    private String name;
     private String label;
+    private String description; /* not relevant for controlType=static */
+    private String i18nBasename;
+    private String controlType;
 
-    public void setPresenter(Presenter presenter) {
-    }
+/*
+    private boolean required;
+    private String requiredErrorMessage;
+    private int maxLength;
+
+    private boolean time;
+
+    private boolean rows;
+
+    private Map<String, String> options;
+
+    private int min, max;
+
+    private String defaultValue;
+
+    private String selectionText;
+*/
 
     public String getName() {
-        return "static-" + System.identityHashCode(this);
+        return name;
     }
 
-    public String getDescription() {
-        return null;
-    }
-
-    public void create(Node storageNode, GridLayout layout) {
-
-        int rows = layout.getRows();
-        layout.setRows(rows + 1);
-
-        layout.addComponent(
-                new Label(label),
-                0, rows,
-                1, rows);
-    }
-
-    public void validate() {
-    }
-
-    public void save(Node storageNode) throws RepositoryException {
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLabel() {
@@ -82,13 +80,27 @@ public class StaticControl implements DialogControl {
         this.label = label;
     }
 
-    public void setFocus(boolean focus) {
-        // not supported
+    public String getDescription() {
+        return description;
     }
 
-    public boolean isFocus() {
-        // no way of focusing static comp.
-        return false;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
+    }
+
+    public String getControlType() {
+        return controlType;
+    }
+
+    public void setControlType(String controlType) {
+        this.controlType = controlType;
+    }
 }
