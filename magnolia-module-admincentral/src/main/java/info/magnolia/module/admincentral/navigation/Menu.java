@@ -38,8 +38,6 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admincentral.AdminCentralModule;
-import info.magnolia.module.admincentral.dialog.DialogSandboxPage;
-import info.magnolia.module.admincentral.dialog.editor.DraftDialogEditorPage;
 
 import java.util.HashMap;
 import java.util.Map;
