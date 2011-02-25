@@ -42,5 +42,6 @@ public interface DialogBuilder {
 
     void addTab(String name, String label);
 
+    // TODO should take the actual field definition object
     Editor addField(String tabName, String name, String label, String description, Class<?> type);
 }

@@ -94,7 +94,9 @@ public class ContentDriver extends AbstractDriver<Node> {
 
             for (DialogControl dialogControl : dialogTab.getFields()) {
 
-                // TODO passing the type to the builder is not enough, it also needs to be give more explicit instructions like 'richText' and things like options.
+                // TODO passing the type to the builder is not enough
+                // TODO it also needs to be give more explicit instructions like 'richText' and things like options.
+                // TODO some things might not be a good match with a java type, for instance nt:file
 
                 Class<?> type = getTypeFromDialogControl(dialogControl);
 
