@@ -31,43 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.event;
+package info.magnolia.ui.event;
 
-import info.magnolia.ui.event.Event;
-import info.magnolia.ui.event.EventHandler;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 
 /**
- * Global event fired if content was changed, deleted, added.
- * FIXME introduce more granular events
+ * A very simplistic event bus.
+ * FIXME is that thing threadsafe? prevent dispatching to freshly added/removed handlers while firing. Check event bus project: http://www.eventbus.org/
  */
-public class ContentChangedEvent implements Event<ContentChangedEvent.Handler> {
+public class SimpleEventBus implements EventBus {
 
-    /**
-     * Handles {@link ContentChangedEvent} events.
-     */
-    public static interface Handler extends EventHandler {
-        void onContentChanged(ContentChangedEvent event);
+    @SuppressWarnings("rawtypes")
+    final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
+
+    @SuppressWarnings("rawtypes")
+    public SimpleEventBus() {
+        ArrayListMultimap<Class<? extends Event>, EventHandler> multimap = ArrayListMultimap.create();
+        eventHandlers = Multimaps.synchronizedMultimap(multimap);
     }
 
-    private String workspace;
-
-    private String path;
-
-    public void dispatch(Handler handler) {
-        handler.onContentChanged(this);
+    public <H extends EventHandler> HandlerRegistration addHandler(final Class< ? extends Event<H>> eventClass, final H handler) {
+        eventHandlers.put(eventClass, handler);
+        return new HandlerRegistration() {
+            public void removeHandler() {
+                eventHandlers.remove(eventClass, handler);
+            }
+        };
     }
 
-    public ContentChangedEvent(String workspace, String path) {
-        this.workspace = workspace;
-        this.path = path;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void fireEvent(Event event) {
+        for (EventHandler eventHandler : eventHandlers.get(event.getClass())) {
+            event.dispatch(eventHandler);
+        }
     }
 
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public String getPath() {
-        return path;
-    }
 }

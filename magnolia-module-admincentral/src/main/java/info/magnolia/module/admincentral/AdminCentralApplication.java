@@ -69,21 +69,21 @@ import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.module.admincentral.shell.ShellImpl;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.activity.Activity;
-import info.magnolia.module.vaadin.activity.ActivityManager;
-import info.magnolia.module.vaadin.activity.ActivityMapper;
-import info.magnolia.module.vaadin.component.ComponentContainerBasedDisplay;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.event.SimpleEventBus;
-import info.magnolia.module.vaadin.place.PlaceHistoryMapperImpl;
-import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.place.PlaceController;
-import info.magnolia.module.vaadin.place.PlaceHistoryHandler;
-import info.magnolia.module.vaadin.place.PlaceHistoryMapper;
-import info.magnolia.module.vaadin.shell.Shell;
+import info.magnolia.ui.activity.AbstractActivity;
+import info.magnolia.ui.activity.Activity;
+import info.magnolia.ui.activity.ActivityManager;
+import info.magnolia.ui.activity.ActivityMapper;
+import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.event.SimpleEventBus;
+import info.magnolia.ui.place.Place;
+import info.magnolia.ui.place.PlaceController;
+import info.magnolia.ui.place.PlaceHistoryHandler;
+import info.magnolia.ui.place.PlaceHistoryMapper;
+import info.magnolia.ui.place.PlaceHistoryMapperImpl;
+import info.magnolia.ui.shell.Shell;
+import info.magnolia.vaadin.component.ComponentContainerBasedDisplay;
+import info.magnolia.vaadin.shell.ShellImpl;
 
 /**
  * Magnolia's AdminCentral.

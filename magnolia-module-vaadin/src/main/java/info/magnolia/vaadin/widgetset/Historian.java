@@ -31,38 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.vaadin.widgetset;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
+import info.magnolia.vaadin.widgetset.client.VHistorian;
 
-import com.vaadin.ui.Component;
-
+import com.vaadin.ui.ClientWidget;
+import com.vaadin.ui.ClientWidget.LoadStyle;
+import com.vaadin.ui.UriFragmentUtility;
 
 /**
- * Shows a target page in an iframe.
+ * Historian.
+ * @author fgrilli
+ *
  */
-public class ShowContentActivity extends AbstractActivity {
-
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
-    }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
+@SuppressWarnings("serial")
+@ClientWidget(value = VHistorian.class, loadStyle = LoadStyle.EAGER)
+public class Historian extends UriFragmentUtility{
 }

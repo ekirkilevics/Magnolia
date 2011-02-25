@@ -31,38 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.ui.event;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
-
-import com.vaadin.ui.Component;
-
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Shows a target page in an iframe.
+ * Wraps an EventBus to hold on to any HandlerRegistrations, so that they can
+ * easily all be cleared at once.
+ *
+ * Inspired by {@link com.google.gwt.event.shared.ResettableEventBus}.
  */
-public class ShowContentActivity extends AbstractActivity {
+public class ResettableEventBus implements EventBus {
+  private final EventBus wrapped;
+  private final Set<HandlerRegistration> registrations = new HashSet<HandlerRegistration>();
 
-    private String viewTarget;
+  public ResettableEventBus(EventBus wrappedBus) {
+    this.wrapped = wrappedBus;
+  }
 
-    private String viewName;
+  public <H extends EventHandler> HandlerRegistration addHandler(Class< ? extends Event<H>> eventClass, H handler) {
+      HandlerRegistration rtn = wrapped.addHandler(eventClass, handler);
+      registrations.add(rtn);
+      return rtn;
+  }
 
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
+
+  public void fireEvent(Event<?> event) {
+      wrapped.fireEvent(event);
+  }
+
+
+  /**
+   * Remove all handlers that have been added through this wrapper.
+   */
+  public void removeHandlers() {
+    for (HandlerRegistration r : registrations) {
+      r.removeHandler();
     }
+    registrations.clear();
+  }
 
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
 
 }

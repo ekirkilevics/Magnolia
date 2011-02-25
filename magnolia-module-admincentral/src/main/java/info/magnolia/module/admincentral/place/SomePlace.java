@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.place;
 
-import info.magnolia.module.vaadin.place.Place;
+import info.magnolia.ui.place.Place;
 
 
 /**

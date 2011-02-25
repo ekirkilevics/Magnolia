@@ -37,14 +37,14 @@ import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.ItemSelectedPlace;
 import info.magnolia.module.admincentral.tree.TreeActivity;
 import info.magnolia.module.admincentral.views.EditWorkspaceView;
-import info.magnolia.module.vaadin.activity.Activity;
-import info.magnolia.module.vaadin.activity.ActivityManager;
-import info.magnolia.module.vaadin.activity.ActivityMapper;
-import info.magnolia.module.vaadin.activity.MVPSubContainerActivity;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.place.Place;
-import info.magnolia.module.vaadin.shell.Shell;
+import info.magnolia.ui.activity.Activity;
+import info.magnolia.ui.activity.ActivityManager;
+import info.magnolia.ui.activity.ActivityMapper;
+import info.magnolia.ui.activity.MVPSubContainerActivity;
+import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.place.Place;
+import info.magnolia.ui.shell.Shell;
 
 
 /**

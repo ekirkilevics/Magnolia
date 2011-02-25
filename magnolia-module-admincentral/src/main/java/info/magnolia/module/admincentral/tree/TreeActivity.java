@@ -38,10 +38,10 @@ import info.magnolia.module.admincentral.event.ContentChangedEvent;
 import info.magnolia.module.admincentral.event.ContentChangedEvent.Handler;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.ItemSelectedPlace;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.event.EventBus;
-import info.magnolia.module.vaadin.place.PlaceController;
+import info.magnolia.ui.activity.AbstractActivity;
+import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.place.PlaceController;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;

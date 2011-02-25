@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,44 +25,45 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.ui.shell;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
 
-import com.vaadin.ui.Component;
+import com.vaadin.ui.UriFragmentUtility;
 
 
 /**
- * Shows a target page in an iframe.
+ * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.activity.MVPSubContainerActivity}.
  */
-public class ShowContentActivity extends AbstractActivity {
+@SuppressWarnings("serial")
+public class SubShell extends AbstractShell {
+    private Shell parent;
 
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
+    public SubShell(String id, Shell parent) {
+        super(id);
+        this.parent = parent;
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    public void askForConfirmation(String message, ConfirmationHandler listener) {
+        parent.askForConfirmation(message, listener);
     }
+
+    public void showNotification(String message) {
+        parent.showNotification(message);
+    }
+
+    @Override
+    protected UriFragmentUtility getUriFragmentUtility() {
+        //FIXME we should obviously not cast, but also don't like to add the method to the clean interface
+        return ((AbstractShell)parent).getUriFragmentUtility();
+    }
+
 
 }
+
+

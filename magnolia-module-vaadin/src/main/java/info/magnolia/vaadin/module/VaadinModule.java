@@ -31,38 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.vaadin.module;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
-
-import com.vaadin.ui.Component;
-
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
 
 /**
- * Shows a target page in an iframe.
+ * Initializes the Vaadin module.
+ * @author fgrilli
+ * @version $Id$
+ *
  */
-public class ShowContentActivity extends AbstractActivity {
+public class VaadinModule  implements ModuleLifecycle {
 
-    private String viewTarget;
+    public void start(ModuleLifecycleContext ctx) {
 
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 
 }

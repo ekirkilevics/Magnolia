@@ -31,38 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.vaadin.component;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
 
 import com.vaadin.ui.Component;
-
+import com.vaadin.ui.CustomComponent;
 
 /**
- * Shows a target page in an iframe.
+ * A display which itself is a {@link CustomComponent}. Can be used as a display slot.
  */
-public class ShowContentActivity extends AbstractActivity {
+@SuppressWarnings("serial")
+public class ComponentDisplay extends CustomComponent implements HasComponent {
 
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
-    }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    public void setComponent(Component component) {
+        setCompositionRoot(component);
     }
 
 }

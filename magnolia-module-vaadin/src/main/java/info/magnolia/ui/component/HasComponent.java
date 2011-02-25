@@ -31,38 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
-
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
+package info.magnolia.ui.component;
 
 import com.vaadin.ui.Component;
 
 
 /**
- * Shows a target page in an iframe.
+ * Implemented by displays that can be given an {@link IsComponent} to show.
  */
-public class ShowContentActivity extends AbstractActivity {
+public interface HasComponent {
 
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
-    }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+    /**
+     * Set the only component of the receiver, replacing the previous component if there was one.
+     */
+    void setComponent(Component component);
 
 }

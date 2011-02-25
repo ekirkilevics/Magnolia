@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,38 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.vaadin.servlet;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
+import info.magnolia.cms.util.CustomServletConfig;
+import info.magnolia.cms.util.ServletUtils;
 
-import com.vaadin.ui.Component;
+import java.util.Map;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
+import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 /**
- * Shows a target page in an iframe.
+ * We can set the "Resources" parameter for the {@link ApplicationServlet} only by defining the context path. To make this dynamic we manipulate the {@link ServletConfig}.
  */
-public class ShowContentActivity extends AbstractActivity {
+@SuppressWarnings("serial")
+public class MagnoliaResourcesAwareApplicationServlet extends ApplicationServlet {
 
-    private String viewTarget;
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
 
-    private String viewName;
+        // read the parameters
+        Map<String, String> parameters = ServletUtils.initParametersToMap(servletConfig);
 
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
+        // add our resources parameter
+        parameters.put("Resources", servletConfig.getServletContext().getContextPath() + "/.resources");
+
+        // initialize
+        super.init(new CustomServletConfig(servletConfig.getServletName(), servletConfig.getServletContext(), parameters));
     }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
 }

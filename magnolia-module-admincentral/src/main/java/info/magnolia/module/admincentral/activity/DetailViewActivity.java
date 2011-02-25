@@ -38,9 +38,9 @@ import javax.jcr.RepositoryException;
 import info.magnolia.module.admincentral.event.ContentChangedEvent;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.views.DetailView;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.ui.activity.AbstractActivity;
+import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.event.EventBus;
 
 
 /**

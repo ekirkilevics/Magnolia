@@ -31,52 +31,63 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.ui.place;
 
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.shell.ConfirmationHandler;
+import info.magnolia.ui.shell.Shell;
 
-import info.magnolia.ui.place.Place;
-import info.magnolia.ui.place.PlaceTokenizer;
 
 /**
- * Place for dialogs.
- *
- * TODO need to contain the name of the tree or the workspace also.
- *
- * @author tmattsson
+ * In charge of the user's location in the app.
  */
-public class DialogPlace extends Place {
+public class PlaceController {
 
-    private String dialogName;
-    private String path;
+    private final EventBus eventBus;
 
-    public DialogPlace(String dialogName, String path) {
-        this.dialogName = dialogName;
-        this.path = path;
-    }
+    private Shell shell;
 
-    public String getDialogName() {
-        return dialogName;
-    }
+    private Place where = Place.NOWHERE;
 
-    public String getPath() {
-        return path;
+    public PlaceController(final EventBus eventBus, Shell shell) {
+        this.eventBus = eventBus;
+        this.shell = shell;
     }
 
     /**
-     * Tokenizer for DialogPlace.
+     * Returns the current place.
      */
-    public static class Tokenizer implements PlaceTokenizer<DialogPlace> {
+    public Place getWhere() {
+        return where;
+    }
 
-        static final String SEPARATOR = ";";
+    /**
+     * Request a change to a new place.
+     */
+    public void goTo(final Place newPlace) {
+        if (getWhere().equals(newPlace)) {
+            return;
+        }
+        PlaceChangeRequestEvent willChange = new PlaceChangeRequestEvent(newPlace);
+        eventBus.fireEvent(willChange);
+        if (willChange.getWarning() != null) {
+            shell.askForConfirmation(willChange.getWarning(), new ConfirmationHandler() {
+                public void onConfirm() {
+                    goToWithoutChecks(newPlace);
+                }
 
-        public DialogPlace getPlace(String token) {
-            String[] split = StringUtils.split(token, SEPARATOR);
-            return new DialogPlace(split[0], split[1]);
+                public void onCancel() {
+                }
+            });
+        }
+        else {
+            goToWithoutChecks(newPlace);
         }
 
-        public String getToken(DialogPlace place) {
-            return place.getDialogName() + SEPARATOR + place.getPath();
-        }
+    }
+
+    protected void goToWithoutChecks(final Place newPlace) {
+        this.where = newPlace;
+        eventBus.fireEvent(new PlaceChangeEvent(newPlace));
     }
 }

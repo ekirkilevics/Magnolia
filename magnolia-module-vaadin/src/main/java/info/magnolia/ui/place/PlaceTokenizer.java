@@ -31,38 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
-
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
-
-import com.vaadin.ui.Component;
-
+package info.magnolia.ui.place;
 
 /**
- * Shows a target page in an iframe.
+ * Implemented by objects responsible for text serialization and deserialization
+ * of Place objects.
+ * <p>
+ * Copied verbatim from {@link com.google.gwt.place.shared.PlaceTokenizer}
+ *
+ * @param <P>
  */
-public class ShowContentActivity extends AbstractActivity {
+public interface PlaceTokenizer<P extends Place> {
+  P getPlace(String token);
 
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
-    }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
+  String getToken(P place);
 }

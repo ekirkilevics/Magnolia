@@ -31,38 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.ui.place;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
-
-import com.vaadin.ui.Component;
+import info.magnolia.ui.event.Event;
+import info.magnolia.ui.event.EventHandler;
 
 
 /**
- * Shows a target page in an iframe.
+ * Fired on UI navigation.
  */
-public class ShowContentActivity extends AbstractActivity {
+public class PlaceChangeEvent implements Event<PlaceChangeEvent.Handler> {
 
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
+    /**
+     * Listens to {@link PlaceChangeEvent}s.
+     */
+    public interface Handler extends EventHandler {
+        void onPlaceChange(PlaceChangeEvent event);
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    private final Place newPlace;
+
+    public PlaceChangeEvent(Place newPlace) {
+      this.newPlace = newPlace;
+    }
+
+    public Place getNewPlace() {
+      return newPlace;
+    }
+
+    public void dispatch(Handler handler) {
+        handler.onPlaceChange(this);
     }
 
 }

@@ -31,38 +31,43 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.ui.activity;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
 
-import com.vaadin.ui.Component;
-
 
 /**
- * Shows a target page in an iframe.
+ * Implemented by objects that control a piece of user interface, with a life cycle managed by an
+ * {@link ActivityManager}, in response to
+ * {@link info.magnolia.ui.place.PlaceChangeEvent} events as the user navigates through
+ * the app.
+ *
+ * Inspired by {@link com.google.gwt.activity.shared.Activity}.
  */
-public class ShowContentActivity extends AbstractActivity {
+public interface Activity {
 
-    private String viewTarget;
+    /**
+     * Called when the Activity should ready its widget for the user. When the widget is ready it
+     * should present it by calling {@link HasComponent#setComponent(com.vaadin.ui.Component)} on
+     * the display.
+     * <p>
+     * Any eventHandlers attached to the provided event bus will be de-registered when the activity is
+     * stopped.
+     */
+    void start(HasComponent display, EventBus eventBus);
 
-    private String viewName;
+    /**
+     * Called when the user is trying to navigate away from this activity.
+     *
+     * @return A message to display to the user, e.g. to warn of unsaved work, or null to say
+     * nothing
+     */
+    String mayStop();
 
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
-    }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
+    /**
+     * Called when the Activity's widget has been removed from view. All event eventHandlers it
+     * registered will have been removed before this method is called.
+     */
+    void onStop();
 }

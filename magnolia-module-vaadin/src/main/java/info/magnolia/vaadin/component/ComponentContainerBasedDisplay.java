@@ -31,38 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.vaadin.component;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
+
 import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 
 
 /**
- * Shows a target page in an iframe.
+ * A {@link HasComponent} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
+ * components could be added.
  */
-public class ShowContentActivity extends AbstractActivity {
+public class ComponentContainerBasedDisplay implements HasComponent {
 
-    private String viewTarget;
+    private String id;
 
-    private String viewName;
+    private ComponentContainer componentContainer;
 
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
+    public ComponentContainerBasedDisplay(String id, ComponentContainer componentContainer) {
+        this.id = id;
+        this.componentContainer = componentContainer;
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
+    public void setComponent(Component component) {
+        componentContainer.removeAllComponents();
+        if (component != null) {
+            componentContainer.addComponent(component);
         }
+    }
+
+    public String getId() {
+        return id;
     }
 
 }

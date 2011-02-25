@@ -33,9 +33,9 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.module.vaadin.component.ComponentDisplay;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.component.IsComponent;
+import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.component.IsComponent;
+import info.magnolia.vaadin.component.ComponentDisplay;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;

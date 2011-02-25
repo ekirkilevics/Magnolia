@@ -81,7 +81,7 @@
           <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
           <!-- this is not a webapp -->
           <noServer>true</noServer>
-          <module>info.magnolia.module.vaadin.widgetsets.MagnoliaWidgetset</module>
+          <module>info.magnolia.vaadin.widgetset.MagnoliaWidgetset</module>
           <!-- <draftCompile>true</draftCompile> -->
           <!-- <style>PRETTY</style> -->
           <runTarget>.magnolia/admin-central</runTarget>

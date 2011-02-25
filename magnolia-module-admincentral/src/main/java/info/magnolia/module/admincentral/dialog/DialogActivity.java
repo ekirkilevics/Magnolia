@@ -42,9 +42,9 @@ import info.magnolia.module.admincentral.editor.vaadin.VaadinDialog;
 import info.magnolia.module.admincentral.editor.vaadin.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.vaadin.activity.AbstractActivity;
-import info.magnolia.module.vaadin.component.HasComponent;
-import info.magnolia.module.vaadin.event.EventBus;
+import info.magnolia.ui.activity.AbstractActivity;
+import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.event.EventBus;
 
 /**
  * Activity for dialogs.

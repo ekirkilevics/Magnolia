@@ -31,38 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.ui.place;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.views.IFrameView;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
-
-import com.vaadin.ui.Component;
-
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Shows a target page in an iframe.
+ * Indicates the prefix to use when the token written by
+ * {@link PlaceTokenizer#getToken(Place)} is written to
+ * {@link UriFragmentUtility#setFragment(String)}.
+ * Implementations of {@link AbstractPlaceHistoryMapper} look
+ * for this annotation on the factory methods that return a tokenizer.
+ * <p>
+ * Copied verbatim from {@link com.google.gwt.place.shared.Prefix}
  */
-public class ShowContentActivity extends AbstractActivity {
-
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
-    }
-
-    public void start(HasComponent display, EventBus eventBus) {
-        try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Prefix {
+  String value();
 }
