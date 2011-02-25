@@ -58,7 +58,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private EventBus eventBus;
     private PlaceController placeController;
     // FIXME use the interface not the implementation
-    private TreeViewImpl treeView;
+    private TreeView treeView;
     private UIModel uiModel;
     private String path;
 
@@ -86,7 +86,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         }
         treeView.select(path);
         eventBus.addHandler(ContentChangedEvent.class, this);
-        display.setComponent(treeView);
+        display.setComponent(treeView.asComponent());
     }
 
     public UIModel getUIModel() {

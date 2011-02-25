@@ -40,6 +40,7 @@ import info.magnolia.module.admincentral.tree.container.ContainerItemId;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 
 /**
@@ -80,5 +81,9 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
 
     public void refresh() {
         jcrBrowser.getContainer().fireItemSetChange();
+    }
+
+    public Component asComponent() {
+        return this;
     }
 }

@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
+import info.magnolia.ui.component.IsComponent;
+
 import javax.jcr.Item;
 
 /**
@@ -40,7 +42,7 @@ import javax.jcr.Item;
  *
  * @author tmattsson
  */
-public interface TreeView {
+public interface TreeView extends IsComponent {
 
     /**
      * TODO: write javadoc.
@@ -53,4 +55,6 @@ public interface TreeView {
     }
 
     void select(String path);
+
+    void refresh();
 }
