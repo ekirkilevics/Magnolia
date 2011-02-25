@@ -53,6 +53,8 @@ import javax.jcr.RepositoryException;
 
 /**
  * AdminCentral Page/Section/View (main container content) for testing dialog stuff, temporary stuff.
+ *
+ * TODO:
  */
 public class DialogSandboxPage extends VerticalLayout {
 
@@ -91,18 +93,13 @@ public class DialogSandboxPage extends VerticalLayout {
                     if (StringUtils.isBlank(paragraphHandle)) {
                         return;
                     }
+
                     Node paragraph = JCRUtil.getSession(ContentRepository.WEBSITE).getNode(paragraphHandle);
                     String paragraphTemplate = JCRMetadataUtil.getMetaData(paragraph).getTemplate();
                     Paragraph paragraphDef = ParagraphManager.getInstance().getParagraphDefinition(paragraphTemplate);
-                    String pageHandle = getPageHandle(paragraph);
-                    String nodeCollection = StringUtils.substringBeforeLast(StringUtils.substringAfter(paragraphHandle, pageHandle + "/"), "/" + paragraph.getName());
-                    if ("/".equals(nodeCollection)) {
-                        // no collection at all
-                        nodeCollection = null;
-                    }
 
-                    getApplication().getMainWindow().addWindow(new EditParagraphWindow(paragraphDef.getName(),
-                            ContentRepository.WEBSITE, pageHandle, nodeCollection, paragraph.getName()));
+                    getApplication().getMainWindow().addWindow(new EditParagraphWindow(paragraphDef.getName(), paragraph));
+
                 } catch (RepositoryException e) {
                     e.printStackTrace();
                 }

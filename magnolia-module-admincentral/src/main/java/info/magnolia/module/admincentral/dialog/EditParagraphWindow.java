@@ -46,16 +46,12 @@ import org.apache.commons.lang.StringUtils;
  */
 public class EditParagraphWindow extends DialogWindow {
 
-    public EditParagraphWindow(String paragraphName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
-        super(getDialogUsedByParagraph(paragraphName), repository, path, nodeCollectionName, nodeName);
-    }
-
     public EditParagraphWindow(String paragraphName, String repository, String path) throws RepositoryException {
         super(getDialogUsedByParagraph(paragraphName), repository, path);
     }
 
     public EditParagraphWindow(String paragraphName, Node node) throws RepositoryException {
-        super(getDialogUsedByParagraph(paragraphName), node);
+        super(getDialogUsedByParagraph(paragraphName), node.getSession().getWorkspace().getName(), node.getPath());
     }
 
     private static String getDialogUsedByParagraph(String paragraphName) {

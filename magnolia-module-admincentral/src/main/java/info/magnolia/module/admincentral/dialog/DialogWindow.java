@@ -40,62 +40,72 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Window;
+import info.magnolia.module.admincentral.RuntimeRepositoryException;
+import info.magnolia.module.admincentral.editor.ContentDriver;
+import info.magnolia.module.admincentral.editor.vaadin.VaadinDialog;
+import info.magnolia.module.admincentral.editor.vaadin.VaadinDialogBuilder;
+import info.magnolia.module.admincentral.jcr.JCRUtil;
 
 /**
  * Window for creating or editing content using a dialog.
  */
-public class DialogWindow extends Window implements DialogView.Presenter {
-
-    /**
-     * Called after saving and before closing the window.
-     */
-    public interface PostSaveListener {
-
-        void postSave(Node orCreateContentNode);
-
-    }
+public class DialogWindow extends Window implements VaadinDialog.Presenter {
 
     private static final Logger log = LoggerFactory.getLogger(EditParagraphWindow.class);
 
-    private String repository;
+    private String workspace;
     private String path;
-    private String nodeCollection;
-    private String nodeName;
-    private DialogDefinition dialog;
-    private PostSaveListener postSaveListener;
+    private ContentDriver driver;
 
-    public DialogWindow(String dialogName, String repository, String path, String nodeCollectionName, String nodeName) throws RepositoryException {
-        this.repository = repository;
+    public DialogWindow(String dialogName, String workspace, String path) {
+        this.workspace = workspace;
         this.path = path;
-        this.nodeCollection = nodeCollectionName;
-        this.nodeName = nodeName;
-        this.dialog = DialogRegistry.getInstance().getDialog(dialogName);
 
-        setModal(true);
-        setResizable(true);
-        setScrollable(false);
-        setClosable(false);
-        setWidth("800px");
+        try {
+            setModal(true);
+            setResizable(true);
+            setScrollable(false);
+            setClosable(false);
+            setWidth("800px");
 //        setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
 
-        super.getContent().addComponent(new DialogView(this, repository, path, nodeCollectionName, nodeName, dialogName, dialog));
-    }
+            Node node = getNode();
 
-    public DialogWindow(String dialogName, String repository, String path) throws RepositoryException {
-        this(dialogName, repository, path, null, null);
+            DialogDefinition dialogDefinition = DialogRegistry.getInstance().getDialog(dialogName);
+
+            VaadinDialogBuilder builder = new VaadinDialogBuilder();
+            VaadinDialog dialog = builder.getDialog();
+
+            driver = new ContentDriver();
+            driver.initialize(builder, dialogDefinition);
+            driver.edit(node);
+
+            dialog.setPresenter(this);
+
+            super.getContent().addComponent(dialog);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 
     public DialogWindow(String dialogName, Node node) throws RepositoryException {
-        this(dialogName, node.getSession().getWorkspace().getName(), node.getPath(), null, null);
+        this(dialogName, node.getSession().getWorkspace().getName(), node.getPath());
     }
 
     public void onSave() {
+        try {
+            driver.flush(getNode());
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+        getParent().removeWindow(this);
+    }
+
+    private Node getNode() throws RepositoryException {
+        return JCRUtil.getSession(workspace).getNode(path);
     }
 
     public void onCancel() {
-    }
-
-    public void onClose() {
-        ((Window) getParent()).removeWindow(this);
+        getParent().removeWindow(this);
     }
 }

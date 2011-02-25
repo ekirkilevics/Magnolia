@@ -120,7 +120,7 @@ public class SelectParagraphWindow extends Window {
     }
 
     private void openEditDialog(String selectedParagraph) throws RepositoryException {
-        Window window = new EditParagraphWindow(selectedParagraph, repository, path, nodeCollection, nodeName);
+        Window window = new EditParagraphWindow(selectedParagraph, repository, path);
         this.getApplication().getMainWindow().addWindow(window);
     }
 
