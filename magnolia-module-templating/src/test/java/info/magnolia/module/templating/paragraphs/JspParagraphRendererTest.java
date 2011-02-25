@@ -49,6 +49,7 @@ import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 
@@ -74,6 +75,7 @@ public class JspParagraphRendererTest extends TestCase {
         super.setUp();
 
         MgnlContext.setInstance(null);
+        SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
 
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
