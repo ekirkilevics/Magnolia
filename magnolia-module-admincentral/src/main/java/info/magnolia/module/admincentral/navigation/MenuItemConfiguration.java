@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
 
 import java.io.Serializable;
@@ -42,8 +41,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.vaadin.terminal.ExternalResource;
 
 /**
  * Bean representing stored configuration of the menu item.
@@ -58,14 +55,10 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
 
     private String icon;
     private String label;
-    private AdminCentralAction action;
     private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
     private MenuItemConfiguration parent;
     private String location;
-    /**
-     * @deprecated use viewTarget instead
-     */
-    private String onclick;
+
     private String actionClass;
     /**
      * The fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
@@ -99,35 +92,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     public void setLabel(String label) {
         this.label = label;
     }
-    public AdminCentralAction getAction() {
-        if (this.action == null) {
-            try {
-                Class<? extends AdminCentralAction> clazz = this.actionClass == null ? DefaultMenuAction.class : (Class<? extends AdminCentralAction>) Class.forName(this.actionClass);
-                // TODO: sucks action needs to have label set at the creation time :(
-                // TODO: refactor and make c2b friendly
-                this.action = clazz.getConstructor(String.class).newInstance(getMessages().getWithDefault(getLabel(), getLabel()));
-                // this.action.setCaption("X" + );
-                if (this.getIcon() != null) {
-                    // TODO: might be too slow or chatty and we might want to swap it with ApplicationResource instead\
-                    String iconPath = getIcon();
-                    this.action.setIcon(new ExternalResource(MgnlContext.getContextPath() + iconPath));
-                }
 
-                // TODO: transfer i18n as well ... or set this as a parent for i18n
-            } catch (Exception e) {
-                log.error("Failed to instantiate action " + actionClass, e);
-            }
-        }
-        return action;
-    }
-    public void setAction(AdminCentralAction action) {
-        this.action = action;
-    }
-
-    public void setActionClass(String className) {
-        this.action = null;
-        this.actionClass = className;
-    }
 
     public String getActionClass() {
         return this.actionClass;
@@ -171,20 +136,6 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    /**
-     * @deprecated use viewTarget instead
-     */
-    public String getOnclick() {
-        return this.onclick;
-    }
-
-    /**
-     * @deprecated use viewTarget instead
-     */
-    public void setOnclick(String action) {
-        this.onclick = action;
     }
 
     public String getView() {
