@@ -105,8 +105,8 @@ public class AdminCentralApplication extends Application {
 
         public void onMenuSelection(MenuItemConfiguration menuConfig) {
             Place newPlace;
-            if(StringUtils.isNotBlank(menuConfig.getRepo())){
-                newPlace = new EditWorkspacePlace(menuConfig.getRepo());
+            if(StringUtils.isNotBlank(menuConfig.getWorkspace())){
+                newPlace = new EditWorkspacePlace(menuConfig.getWorkspace());
             } else if(StringUtils.isNotBlank(menuConfig.getViewTarget())) {
                 newPlace = new ShowContentPlace(menuConfig.getViewTarget(), menuConfig.getView());
             }else {

@@ -69,7 +69,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private void showItem(String path) {
         try {
             // Displaying commands for the root node makes no sense
-            if (!path.equals("/")) {
+            if (!"/".equals(path)) {
                 this.path = path;
                 detailView.showCommands(uiModel.getCommandsForItem(treeName, path));
             }

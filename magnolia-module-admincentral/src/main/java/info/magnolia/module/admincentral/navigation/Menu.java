@@ -66,7 +66,6 @@ import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * The Application accordion Menu.
- * TODO rewrite it from the ground up as it's getting more and more messy and ugly?
  * TODO Add simple animation to make it look nicer.
  * @author fgrilli
  *
@@ -107,18 +106,6 @@ public class Menu extends CustomComponent {
             // register new top level menu
             addTab(menuItemEntry.getKey(), menuItem);
         }
-
-        //TODO for testing only. To be removed.
-        MenuItemConfiguration testDialogsMenu = new MenuItemConfiguration();
-        testDialogsMenu.setLabel("Dialogs");
-        testDialogsMenu.setView(DialogSandboxPage.class.getName());
-        //testDialogsMenu.setAction(new OpenMainViewMenuAction("testDialogs"));
-        addTab("testDialogs", testDialogsMenu);
-        MenuItemConfiguration testDialogEditorMenu = new MenuItemConfiguration();
-        testDialogEditorMenu.setLabel("Dialog Editor");
-        testDialogEditorMenu.setView(DraftDialogEditorPage.class.getName());
-        //testDialogEditorMenu.setAction(new OpenMainViewMenuAction("testDialogEditor"));
-        addTab("testDialogEditor", testDialogEditorMenu);
 
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
         accordion.addListener(new SelectedMenuItemTabChangeListener());
@@ -168,8 +155,6 @@ public class Menu extends CustomComponent {
     }
 
     protected Resource getIcon(MenuItemConfiguration menuItem){
-        // TODO: why isn't external resource working? Urls?
-        //return menuItem.getAction().getIcon();
         if (menuItem.getIcon() == null) {
             return null;
         }

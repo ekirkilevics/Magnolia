@@ -94,9 +94,9 @@ public class ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand extends Mgnl
             Content newMenuItem = hm.getContent(menuItemHandle);
             //TODO Remove me. This is just for having a working configuration to start with during development
             if("website".equals(newMenuItem.getName())){
-                newMenuItem.setNodeData("repo", "website");
+                newMenuItem.setNodeData("workspace", "website");
             } else if("config".equals(newMenuItem.getName())){
-                newMenuItem.setNodeData("repo", "config");
+                newMenuItem.setNodeData("workspace", "config");
             } else if("store-client".equals(newMenuItem.getName())){
                 newMenuItem.setNodeData("viewTarget", "/.magnolia/pages/allModulesList.html");
             }

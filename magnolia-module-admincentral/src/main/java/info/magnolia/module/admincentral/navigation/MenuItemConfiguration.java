@@ -59,7 +59,6 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     private MenuItemConfiguration parent;
     private String location;
 
-    private String actionClass;
     /**
      * The fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
      */
@@ -72,8 +71,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
 
     private String name;
 
-    private String repo;
-
+    private String workspace;
 
     @Override
     public I18nAwareComponent getI18nAwareParent() {
@@ -91,11 +89,6 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     }
     public void setLabel(String label) {
         this.label = label;
-    }
-
-
-    public String getActionClass() {
-        return this.actionClass;
     }
 
     public Map<String, MenuItemConfiguration> getMenuItems() {
@@ -154,12 +147,12 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
         this.viewTarget = viewTarget;
     }
 
-    public void setRepo(String repo) {
-        this.repo = repo;
+    public String getWorkspace() {
+        return workspace;
     }
 
-    public String getRepo() {
-        return repo;
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
     }
 
 }
