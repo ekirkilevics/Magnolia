@@ -67,7 +67,7 @@ public class DialogWindow extends Window implements VaadinDialog.Presenter {
             setScrollable(false);
             setClosable(false);
             setWidth("800px");
-//        setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
+//            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
 
             Node node = getNode();
 
@@ -82,7 +82,9 @@ public class DialogWindow extends Window implements VaadinDialog.Presenter {
 
             dialog.setPresenter(this);
 
+            super.setCaption(builder.getMessages(dialogDefinition).getWithDefault(dialogDefinition.getLabel(), dialogDefinition.getLabel()));
             super.getContent().addComponent(dialog);
+
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

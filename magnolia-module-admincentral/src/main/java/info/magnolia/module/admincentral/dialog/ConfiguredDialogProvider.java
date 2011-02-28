@@ -39,7 +39,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.LazyContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.module.admincentral.control.DialogDefinition;
 
 /**
  * DialogProvider that instantiates a dialog from a configuration node.

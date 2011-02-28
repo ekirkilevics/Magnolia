@@ -43,6 +43,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
+import info.magnolia.module.admincentral.dialog.DialogField;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -170,8 +171,14 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
         // 3rd time stage appearance for the famous clash of session vs. workspace ops (move down the line would fail w/o save here)
         hm.save();
         for (Content control : controls) {
-            String controlName = control.getNodeData("controlType").getString();
-            control.setNodeData("class", controlsMap.get(controlName));
+//            String controlName = control.getNodeData("controlType").getString();
+//            control.setNodeData("class", controlsMap.get(controlName));
+
+            String controlType = control.getNodeData("controlType").getString();
+            if ("fckEdit".equals(controlType))
+                control.setNodeData("controlType", "richText");
+
+            control.setNodeData("class", DialogField.class.getName());
             control.save();
             // and again
             hm.save();

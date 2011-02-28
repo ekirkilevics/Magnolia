@@ -66,7 +66,7 @@ public class DialogRegistry {
      * @return dialog definition or null when dialog of requested name doesn't exist.
      */
     public DialogDefinition getDialog(String dialogName) throws RepositoryException {
-/*
+
         DialogProvider dialogProvider;
         synchronized (providers) {
             dialogProvider = providers.get(dialogName);
@@ -75,10 +75,8 @@ public class DialogRegistry {
             return null;
         }
         return dialogProvider.getDialogDefinition();
-*/
-        return mockDialog(dialogName);
     }
-
+/*
     private DialogDefinition mockDialog(String dialogName) {
         DialogDefinition def = new DialogDefinition();
         def.setName(dialogName);
@@ -107,7 +105,7 @@ public class DialogRegistry {
 
         return def;
     }
-
+*/
     public static DialogRegistry getInstance() {
         return Components.getSingleton(DialogRegistry.class);
     }

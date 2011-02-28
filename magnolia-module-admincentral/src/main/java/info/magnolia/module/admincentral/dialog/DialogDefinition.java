@@ -42,6 +42,7 @@ import java.util.List;
 public class DialogDefinition {
 
     private String name;
+    private String label;
     private String i18nBasename;
     private List<DialogTab> tabs = new ArrayList<DialogTab>();
 
@@ -51,6 +52,14 @@ public class DialogDefinition {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public List<DialogTab> getTabs() {

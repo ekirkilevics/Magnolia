@@ -98,11 +98,13 @@ public class VaadinDialog extends CustomComponent {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
+        layout.setSizeFull();
         layout.addComponent(tabSheet);
         layout.addComponent(description);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, "right");
         super.setCompositionRoot(layout);
+        super.setSizeFull();
     }
 
     public void setPresenter(Presenter presenter) {
@@ -111,6 +113,7 @@ public class VaadinDialog extends CustomComponent {
 
     public void addTab(String name, String label) {
         GridLayout grid = new GridLayout(2, 1);
+        grid.setSizeFull();
         grid.setSpacing(true);
         grid.setMargin(false);
         tabSheet.addTab(name, label, grid);
@@ -120,5 +123,14 @@ public class VaadinDialog extends CustomComponent {
         GridLayout grid = (GridLayout) tabSheet.getTab(tabName);
         grid.addComponent(new Label(label));
         grid.addComponent(field);
+    }
+
+    public void addField(String tabName, String label) {
+        GridLayout grid = (GridLayout) tabSheet.getTab(tabName);
+        grid.setRows(grid.getRows() + 1);
+        grid.addComponent(
+                new Label(label),
+                0, grid.getCursorY(),
+                1, grid.getCursorY());
     }
 }

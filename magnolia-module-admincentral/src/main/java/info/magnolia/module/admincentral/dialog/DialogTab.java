@@ -41,9 +41,18 @@ import java.util.List;
  */
 public class DialogTab {
 
+    private String name;
     private String label;
     private String i18nBasename;
     private List<DialogField> fields = new ArrayList<DialogField>();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getLabel() {
         return label;

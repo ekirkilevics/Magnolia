@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.admincentral.editor;
 
+import info.magnolia.module.admincentral.dialog.DialogDefinition;
+import info.magnolia.module.admincentral.dialog.DialogField;
+import info.magnolia.module.admincentral.dialog.DialogTab;
+
 /**
  * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
  *
@@ -40,8 +44,7 @@ package info.magnolia.module.admincentral.editor;
  */
 public interface DialogBuilder {
 
-    void addTab(String name, String label);
+    void addTab(DialogDefinition dialogDefinition, DialogTab tab);
 
-    // TODO should take the actual field definition object
-    Editor addField(String tabName, String name, String label, String description, Class<?> type);
+    Editor addField(DialogDefinition dialogDefinition, DialogTab tab, DialogField field, Class<?> type);
 }

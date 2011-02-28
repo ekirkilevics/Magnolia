@@ -33,23 +33,7 @@
  */
 package info.magnolia.module.admincentral.dialog;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.control.CheckBoxControl;
-import info.magnolia.module.admincentral.control.DateControl;
-import info.magnolia.module.admincentral.control.DialogDefinition;
-import info.magnolia.module.admincentral.control.DialogTab;
-import info.magnolia.module.admincentral.control.EditControl;
-import info.magnolia.module.admincentral.control.FileControl;
-import info.magnolia.module.admincentral.control.LinkControl;
-import info.magnolia.module.admincentral.control.RadioControl;
-import info.magnolia.module.admincentral.control.RichTextControl;
-import info.magnolia.module.admincentral.control.SelectControl;
-import info.magnolia.module.admincentral.control.SliderControl;
-import info.magnolia.module.admincentral.control.StaticControl;
-import info.magnolia.module.admincentral.control.UuidLinkControl;
 
 /**
  * Mock DialogProvider that instantiates a dialog useful while prototyping.
@@ -59,7 +43,7 @@ public class MockDialogProvider implements DialogProvider {
     public DialogDefinition getDialogDefinition() throws RepositoryException {
 
         DialogDefinition dialog = new DialogDefinition();
-
+/*
         DialogTab tab1 = new DialogTab();
         tab1.setLabel("Content");
         tab1.addField(createCheckBox("visible", "Visible", "Toggle to show or hide this paragraph"));
@@ -79,10 +63,10 @@ public class MockDialogProvider implements DialogProvider {
         tab2.addField(createEditNumeric("rightMargin", "Right margin", "Margin on the right"));
         tab2.addField(createRichText("bodyText", "Body text", "Text in paragraph body"));
         dialog.addTab(tab2);
-
+*/
         return dialog;
     }
-
+/*
     private EditControl createEditNumeric(String name, String label, String description) {
         EditControl control = new EditControl();
         control.setName(name);
@@ -197,4 +181,5 @@ public class MockDialogProvider implements DialogProvider {
         options.put("es015", "Madrid");
         return options;
     }
+*/
 }

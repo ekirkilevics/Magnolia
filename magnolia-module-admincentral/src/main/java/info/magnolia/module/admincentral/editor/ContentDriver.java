@@ -87,28 +87,23 @@ public class ContentDriver extends AbstractDriver<Node> {
 
         for (DialogTab dialogTab : dialogDefinition.getTabs()) {
 
-            builder.addTab(dialogTab.getLabel(), dialogTab.getLabel());
+            builder.addTab(dialogDefinition, dialogTab);
 
             for (DialogField field : dialogTab.getFields()) {
 
-                // TODO passing the type to the builder is not enough
                 // TODO it also needs to be give more explicit instructions like 'richText' and things like options.
                 // TODO some things might not be a good match with a java type, for instance nt:file
 
                 Class<?> type = getTypeFromDialogControl(field);
 
-                // TODO for now we just skip things that we dont know about, later on we should fail instead
-                if (type == null)
-                    continue;
-
                 Editor editor = builder.addField(
-                        dialogTab.getLabel(),
-                        field.getName(),
-                        field.getLabel(),
-                        field.getDescription(),
+                        dialogDefinition,
+                        dialogTab,
+                        field,
                         type);
 
-                editorMappings.add(new EditorMapping(field.getName(), editor, type));
+                if (editor != null)
+                    editorMappings.add(new EditorMapping(field.getName(), editor, type));
             }
         }
     }
@@ -120,6 +115,10 @@ public class ContentDriver extends AbstractDriver<Node> {
             return Calendar.class;
         if (field.getControlType().equals("richText"))
             return String.class;
+        if (field.getControlType().equals("password"))
+            return String.class;
+        if (field.getControlType().equals("checkBoxSwitch"))
+            return Boolean.class;
         return null;
 //        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
     }
