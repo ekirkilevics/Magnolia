@@ -74,6 +74,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
         this.isolatedEventBus = new ResettableEventBus(eventBus);
 
         eventBus.addHandler(PlaceChangeEvent.class, this);
+        eventBus.addHandler(PlaceChangeRequestEvent.class, this);
     }
 
     public void onPlaceChange(PlaceChangeEvent event) {
@@ -107,7 +108,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     }
 
     public void onPlaceChangeRequest(final PlaceChangeRequestEvent event) {
-
+        log.debug("onPlaceChangeRequest...");
         if (!currentActivity.equals(NULL_ACTIVITY)) {
             final String message = currentActivity.mayStop();
             if(message != null) {
