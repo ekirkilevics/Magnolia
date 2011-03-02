@@ -42,8 +42,8 @@ import java.lang.annotation.Target;
  * Indicates the prefix to use when the token written by
  * {@link PlaceTokenizer#getToken(Place)} is written to
  * {@link UriFragmentUtility#setFragment(String)}.
- * Implementations of {@link AbstractPlaceHistoryMapper} look
- * for this annotation on the factory methods that return a tokenizer.
+ * Implementations of {@link AbstractPlaceHistoryMapper} can look
+ * for this annotation to retrieve the associated PlaceTokenizer.
  * <p>
  * Copied verbatim from {@link com.google.gwt.place.shared.Prefix}
  */
