@@ -33,39 +33,18 @@
  */
 package info.magnolia.module.admincentral;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.vaadin.Application;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
-import com.vaadin.ui.AbsoluteLayout;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.BaseTheme;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
+import info.magnolia.module.admincentral.activity.MenuActivity;
 import info.magnolia.module.admincentral.activity.ShowContentActivity;
 import info.magnolia.module.admincentral.dialog.DialogActivity;
 import info.magnolia.module.admincentral.dialog.DialogPlace;
 import info.magnolia.module.admincentral.dialog.DialogWindow;
 import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.navigation.Menu;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
@@ -85,37 +64,30 @@ import info.magnolia.ui.shell.Shell;
 import info.magnolia.vaadin.component.ComponentContainerBasedDisplay;
 import info.magnolia.vaadin.shell.ShellImpl;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vaadin.Application;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
+
 /**
  * Magnolia's AdminCentral.
  */
 public class AdminCentralApplication extends Application {
-
-    private final class MenuActivity extends AbstractActivity implements Menu.Presenter {
-
-        public void start(HasComponent display, EventBus eventBus) {
-            Menu menu;
-            try {
-                menu = new Menu(this);
-                display.setComponent(menu);
-            }
-            catch (RepositoryException e) {
-                getMainWindow().showNotification(e.getMessage());
-            }
-        }
-
-        public void onMenuSelection(MenuItemConfiguration menuConfig) {
-            Place newPlace;
-            if(StringUtils.isNotBlank(menuConfig.getWorkspace())){
-                newPlace = new EditWorkspacePlace(menuConfig.getWorkspace());
-            } else if(StringUtils.isNotBlank(menuConfig.getViewTarget())) {
-                newPlace = new ShowContentPlace(menuConfig.getViewTarget(), menuConfig.getView());
-            }else {
-                newPlace = new SomePlace(menuConfig.getName());
-            }
-
-            placeController.goTo(newPlace);
-        }
-    }
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralApplication.class);
 
@@ -153,14 +125,14 @@ public class AdminCentralApplication extends Application {
         placeController = new PlaceController(eventBus, shell);
 
         // Browser history integration
-        // FIXME make this more dynamic, don't pass the place explicitely
+        // FIXME make this more dynamic, don't pass the place explicitly
         PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
         PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
         final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
         historyHandler.register(placeController, eventBus, defaultPlace);
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
-            Activity menuActivity = new MenuActivity();
+            Activity menuActivity = new MenuActivity(uiModel, placeController);
             public Activity getActivity(Place place) {
                 return menuActivity;
             }

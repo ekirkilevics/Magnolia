@@ -34,6 +34,7 @@
 package info.magnolia.module.admincentral.navigation;
 
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+import info.magnolia.module.admincentral.navigation.action.MenuCommand;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -58,20 +59,8 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
     private MenuItemConfiguration parent;
     private String location;
-
-    /**
-     * The fully qualified classname for a custom component (e.g. the ConfigurationTreeTableView) providing management for app history and bookmarking.
-     */
-    private String view;
-
-    /**
-     * A html file in classpath which will be embedded in an iframe.
-     */
-    private String viewTarget;
-
+    private MenuCommand command;
     private String name;
-
-    private String workspace;
 
     @Override
     public I18nAwareComponent getI18nAwareParent() {
@@ -99,6 +88,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     }
 
     public void addMenuItem(String name, MenuItemConfiguration subMenuItem) {
+        log.debug("adding menu {}", name);
         subMenuItem.setParent(this);
         subMenuItem.setName(name);
         this.subMenuItems.put(name, subMenuItem);
@@ -131,28 +121,11 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
         this.location = location;
     }
 
-    public String getView() {
-        return view;
+    public MenuCommand getCommand() {
+        return command;
     }
-
-    public void setView(String view) {
-        this.view = view;
+    public void setCommand(MenuCommand command) {
+        log.debug("setting command {}", command.getName());
+        this.command=command;
     }
-
-    public String getViewTarget() {
-        return viewTarget;
-    }
-
-    public void setViewTarget(String viewTarget) {
-        this.viewTarget = viewTarget;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
 }

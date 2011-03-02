@@ -51,6 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * FIXME: does not work anymore as menu structure changed.
  * Convert old style menus to the new ones.
  * @author had
  * @version $Id: $

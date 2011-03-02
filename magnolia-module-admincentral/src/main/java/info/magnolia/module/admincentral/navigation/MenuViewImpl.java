@@ -36,8 +36,7 @@ package info.magnolia.module.admincentral.navigation;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleRegistry;
-import info.magnolia.module.admincentral.AdminCentralModule;
+import info.magnolia.module.admincentral.model.UIModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,33 +67,27 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author fgrilli
  *
  */
-public class Menu extends CustomComponent {
+public class MenuViewImpl extends CustomComponent implements MenuView{
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = LoggerFactory.getLogger(Menu.class);
+    private static final Logger log = LoggerFactory.getLogger(MenuViewImpl.class);
     private final Map<Tab, MenuItemConfiguration> menuItems = new HashMap<Tab, MenuItemConfiguration>();
     private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
 
     private Accordion accordion = new Accordion();
 
-    /**
-     * Presenter we have to inform about navigation events.
-     */
-    public static interface Presenter{
-        void onMenuSelection(MenuItemConfiguration menuConf);
-    }
-
     private Presenter presenter;
 
-    public Menu(Presenter presenter) throws RepositoryException {
+    private UIModel uiModel;
+
+    public MenuViewImpl(final Presenter presenter, final UIModel uiModel) throws RepositoryException {
         this.presenter = presenter;
+        this.uiModel = uiModel;
         setCompositionRoot(accordion);
         setSizeFull();
 
-        final Map<String, MenuItemConfiguration> menuConfig = ((AdminCentralModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
-
-        for (Entry<String, MenuItemConfiguration> menuItemEntry : menuConfig.entrySet()) {
+        for (Entry<String, MenuItemConfiguration> menuItemEntry : uiModel.getMenuDefinition().entrySet()) {
             MenuItemConfiguration menuItem = menuItemEntry.getValue();
             // check permission
             if (!isMenuItemRenderable(menuItem)) {
@@ -188,11 +181,11 @@ public class Menu extends CustomComponent {
         @Override
         public void attach() {
             super.attach();
-            Resource icon = Menu.this.getIcon(item);
+            Resource icon = MenuViewImpl.this.getIcon(item);
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(Menu.this.getLabel(item));
+            setCaption(MenuViewImpl.this.getLabel(item));
 
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
@@ -224,5 +217,9 @@ public class Menu extends CustomComponent {
                 presenter.onMenuSelection(menuConfig);
             }
         }
+    }
+
+    public Component asComponent() {
+        return this;
     }
 }

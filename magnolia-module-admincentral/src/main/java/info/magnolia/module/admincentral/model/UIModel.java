@@ -35,24 +35,37 @@ package info.magnolia.module.admincentral.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.admincentral.AdminCentralModule;
 import info.magnolia.module.admincentral.dialog.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.navigation.action.DefaultMenuCommand;
+import info.magnolia.module.admincentral.navigation.action.MenuCommand;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
 import info.magnolia.module.admincentral.tree.action.Command;
+import info.magnolia.ui.place.PlaceController;
 
 
 /**
  * The UI model provides all the definition for the trees, dialogs, commands and so on.
  */
 public class UIModel {
+
+    public void excuteCommand(MenuItemConfiguration menuItemConfiguration, PlaceController placeController) {
+        final MenuCommand action = getCommandForMenuItem(menuItemConfiguration);
+        action.execute(menuItemConfiguration, placeController);
+    }
 
     public void executeCommand(String commandName, String treeName, String path) throws RepositoryException {
 
@@ -130,4 +143,19 @@ public class UIModel {
         else
             return StringUtils.substringAfter(item.getPath(), base);
     }
+
+    public MenuCommand getCommandForMenuItem(final MenuItemConfiguration menuItem) {
+        MenuCommand command = menuItem.getCommand();
+        if(command == null){
+            return new DefaultMenuCommand();
+        }
+        return command;
+
+    }
+
+    public Map<String, MenuItemConfiguration> getMenuDefinition(){
+        return ((AdminCentralModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
+    }
+
+
 }

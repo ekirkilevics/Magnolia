@@ -37,7 +37,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
-import info.magnolia.module.admincentral.commands.ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.tree.ConfiguredTreeManager;
@@ -70,7 +69,8 @@ public class AdminCentralModule implements ModuleLifecycle {
             try {
                 // TODO: convert dialogs during upgrade process and not everytime on startup, but not on restart
                 new ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
-                new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
+                //FIXME command to convert old menu must be revised after architectural changes. For teh time being reads menug config from bootstrap file.
+                //new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
             } catch (Exception e) {
                 log.error("Failed to convert dialog structure.", e);
             }
