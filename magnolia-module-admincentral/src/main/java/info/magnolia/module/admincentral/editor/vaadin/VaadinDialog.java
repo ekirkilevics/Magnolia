@@ -120,7 +120,7 @@ public class VaadinDialog extends CustomComponent {
     }
 
     public VaadinDialogField addField(String tabName, String name, String label, String description, Component field) {
-        VaadinDialogField q = new VaadinDialogField(name, label, description, field);
+        VaadinDialogField q = new VaadinDialogField(label, description, field);
         ((Layout) tabSheet.getTab(tabName)).addComponent(q);
         return q;
     }

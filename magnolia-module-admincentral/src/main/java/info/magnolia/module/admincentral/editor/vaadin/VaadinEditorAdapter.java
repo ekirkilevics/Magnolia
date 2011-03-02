@@ -92,5 +92,6 @@ public class VaadinEditorAdapter implements Editor, HasEditorDelegate, HasEditor
                 vaadinDialogField.setError(error.getMessage());
             }
         }
+        // TODO should it clear any error(s) if there's none for this editor in the list?
     }
 }

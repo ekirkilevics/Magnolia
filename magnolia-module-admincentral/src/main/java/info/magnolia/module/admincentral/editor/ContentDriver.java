@@ -157,6 +157,9 @@ public class ContentDriver extends AbstractDriver<Node> {
     }
 
     public void flush(Node node) {
+
+        // TODO should clear previous errors
+
         try {
             for (EditorMapping mapping : editorMappings) {
                 String name = mapping.getName();

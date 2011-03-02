@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.admincentral.editor.vaadin;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.vaadin.terminal.UserError;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -50,13 +54,15 @@ public class VaadinDialogField extends CustomComponent {
 
     private String errorMessage;
     private Label errorLabel;
+    private Component field;
 
-    public VaadinDialogField(String name, String label, String description, Component field) {
+    public VaadinDialogField(String label, String description, Component field) {
+        this.field = field;
 
         Label labelLabel = new Label(label);
         errorLabel = new Label();
         errorLabel.setVisible(false);
-        Label descriptionLabel = new Label("description");
+        Label descriptionLabel = new Label(StringUtils.isNotBlank(description)? description : "(Description not specified)");
 
         VerticalLayout layout = new VerticalLayout();
         layout.addComponent(field);
@@ -85,9 +91,22 @@ public class VaadinDialogField extends CustomComponent {
     }
 
     void setError(String message) {
-        errorMessage = message;
+
+        // TODO what about multiple errors on the same editor?
+
+        this.errorMessage = message;
+        if (message != null) {
+            errorLabel.setVisible(true);
+            errorLabel.setCaption(message);
+            if (field instanceof AbstractComponent) {
+                ((AbstractComponent)field).setComponentError(new UserError(message));
+            }
+        } else {
+            errorLabel.setVisible(false);
+            if (field instanceof AbstractComponent) {
+                ((AbstractComponent)field).setComponentError(null); // ??
+            }
+        }
         requestRepaintAll();
-        errorLabel.setVisible(message != null);
-        errorLabel.setCaption(message);
     }
 }

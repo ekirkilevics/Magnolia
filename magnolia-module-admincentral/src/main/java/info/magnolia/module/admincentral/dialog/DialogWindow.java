@@ -99,7 +99,8 @@ public class DialogWindow extends Window implements VaadinDialog.Presenter {
             driver.flush(getNode());
 
             if (driver.hasErrors()) {
-                super.getApplication().getMainWindow().showNotification("You have errors");
+                    // TODO should check if there are unconsumed errors and display them
+//                super.getApplication().getMainWindow().showNotification("You have errors");
             } else {
                 getParent().removeWindow(this);
             }
