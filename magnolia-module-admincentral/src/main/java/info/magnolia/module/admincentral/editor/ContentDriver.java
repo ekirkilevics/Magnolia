@@ -89,21 +89,32 @@ public class ContentDriver extends AbstractDriver<Node> {
 
             builder.addTab(dialogDefinition, dialogTab);
 
-            for (DialogField field : dialogTab.getFields()) {
+            for (final DialogField field : dialogTab.getFields()) {
 
                 // TODO it also needs to be give more explicit instructions like 'richText' and things like options.
                 // TODO some things might not be a good match with a java type, for instance nt:file
+                // TODO some dialog fields dont even have a type, controlType=static for instance
 
                 Class<?> type = getTypeFromDialogControl(field);
 
-                Editor editor = builder.addField(
+                final Editor editor = builder.addField(
                         dialogDefinition,
                         dialogTab,
                         field,
                         type);
 
-                if (editor != null)
-                    editorMappings.add(new EditorMapping(field.getName(), editor, type));
+                if (editor == null)
+                    continue;
+
+                if (editor instanceof HasEditorDelegate) {
+                    ((HasEditorDelegate)editor).setDelegate(new EditorDelegate() {
+                        public void recordError(String message, Object value) {
+                            addError(field.getName(), editor, message, value);
+                        }
+                    });
+                }
+
+                editorMappings.add(new EditorMapping(field.getName(), editor, type));
             }
         }
     }
@@ -117,7 +128,7 @@ public class ContentDriver extends AbstractDriver<Node> {
             return String.class;
         if (field.getControlType().equals("password"))
             return String.class;
-        if (field.getControlType().equals("checkBoxSwitch"))
+        if (field.getControlType().equals("checkboxSwitch"))
             return Boolean.class;
         return null;
 //        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
@@ -151,23 +162,27 @@ public class ContentDriver extends AbstractDriver<Node> {
                 String name = mapping.getName();
                 Editor editor = mapping.getEditor();
                 Class<?> type = mapping.getType();
-                if (type.equals(String.class)) {
-                    node.setProperty(name, (String) editor.getValue());
-                } else if (type.equals(Calendar.class)) {
-                    node.setProperty(name, (Calendar) editor.getValue());
+                Object value = editor.getValue();
+                if (!hasErrors(name)) {
+                    if (type.equals(String.class)) {
+                        node.setProperty(name, (String) value);
+                    } else if (type.equals(Calendar.class)) {
+                        node.setProperty(name, (Calendar) value);
+                    }
                 }
             }
-            node.getSession().save();
+            if (!hasErrors())
+                node.getSession().save();
+            else {
+                for (EditorError error : super.getErrors()) {
+                    if (error.getEditor() instanceof HasEditorErrors) {
+                        HasEditorErrors has = (HasEditorErrors) error.getEditor();
+                        has.showErrors(getErrors());
+                    }
+                }
+            }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-    }
-
-    public boolean hasErrors() {
-        return false;
-    }
-
-    public List<EditorError> getErrors() {
-        return null;
     }
 }

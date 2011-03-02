@@ -95,6 +95,14 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         return !this.errors.isEmpty();
     }
 
+    public boolean hasErrors(String name) {
+        for (EditorError error : errors) {
+            if (error.getPath().equals(name))
+                return true;
+        }
+        return false;
+    }
+
     public List<EditorError> getErrors() {
         return Collections.unmodifiableList(this.errors);
     }

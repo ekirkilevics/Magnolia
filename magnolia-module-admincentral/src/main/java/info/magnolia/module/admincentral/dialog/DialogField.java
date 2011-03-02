@@ -36,18 +36,22 @@ package info.magnolia.module.admincentral.dialog;
 /**
  * Describes a field in a dialog.
  *
+ * TODO: FieldDefinition is probably a better name
+ *
  * @author tmattsson
  */
 public class DialogField {
 
     private String name;
     private String label;
-    private String description; /* not relevant for controlType=static */
+    private String description; // not relevant for controlType=static
     private String i18nBasename;
     private String controlType;
+    private String type; // JCR Property type name see javax.jcr.PropertyType
+
+    private boolean required;
 
 /*
-    private boolean required;
     private String requiredErrorMessage;
     private int maxLength;
 
@@ -102,5 +106,21 @@ public class DialogField {
 
     public void setControlType(String controlType) {
         this.controlType = controlType;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

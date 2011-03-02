@@ -37,9 +37,9 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import info.magnolia.module.admincentral.dialog.VerticalTabSheet;
 
@@ -112,25 +112,20 @@ public class VaadinDialog extends CustomComponent {
     }
 
     public void addTab(String name, String label) {
-        GridLayout grid = new GridLayout(2, 1);
+        VerticalLayout grid = new VerticalLayout();
         grid.setSizeFull();
         grid.setSpacing(true);
         grid.setMargin(false);
         tabSheet.addTab(name, label, grid);
     }
 
-    public void addField(String tabName, String name, String label, String description, Component field) {
-        GridLayout grid = (GridLayout) tabSheet.getTab(tabName);
-        grid.addComponent(new Label(label));
-        grid.addComponent(field);
+    public VaadinDialogField addField(String tabName, String name, String label, String description, Component field) {
+        VaadinDialogField q = new VaadinDialogField(name, label, description, field);
+        ((Layout) tabSheet.getTab(tabName)).addComponent(q);
+        return q;
     }
 
     public void addField(String tabName, String label) {
-        GridLayout grid = (GridLayout) tabSheet.getTab(tabName);
-        grid.setRows(grid.getRows() + 1);
-        grid.addComponent(
-                new Label(label),
-                0, grid.getCursorY(),
-                1, grid.getCursorY());
+        ((Layout) tabSheet.getTab(tabName)).addComponent(new Label(label));
     }
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,57 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.module.admincentral.editor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A tab in a dialog. Holds a list of controls contained in the tab.
+ * Editors that wish to be notified about ConstraintViolations in the value
+ * being edited should implement this interface.
  *
- * TODO rename to TabDefinition?
- *
+ * @author tmattsson
  */
-public class DialogTab {
+public interface HasEditorErrors {
 
-    private String name;
-    private String label;
-    private String i18nBasename;
-    private List<DialogField> fields = new ArrayList<DialogField>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getI18nBasename() {
-        return i18nBasename;
-    }
-
-    public void setI18nBasename(String i18nBasename) {
-        this.i18nBasename = i18nBasename;
-    }
-
-    public List<DialogField> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<DialogField> fields) {
-        this.fields = fields;
-    }
-
-    public boolean addField(DialogField dialogField) {
-        return fields.add(dialogField);
-    }
+    void showErrors(List<EditorError> errors);
 }

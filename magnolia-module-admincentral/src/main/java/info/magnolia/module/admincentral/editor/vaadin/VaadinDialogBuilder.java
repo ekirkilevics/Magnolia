@@ -57,28 +57,6 @@ import info.magnolia.module.admincentral.editor.Editor;
  */
 public class VaadinDialogBuilder implements DialogBuilder {
 
-    /**
-     * Adapter class that adapts a Vaadin Field as an Editor.
-     *
-     * @author tmattsson
-     */
-    private class EditorAdapter implements Editor {
-
-        private Field field;
-
-        private EditorAdapter(Field field) {
-            this.field = field;
-        }
-
-        public void setValue(Object object) {
-            field.setValue(object);
-        }
-
-        public Object getValue() {
-            return field.getValue();
-        }
-    }
-
     private VaadinDialog dialog = new VaadinDialog();
 
     public VaadinDialog getDialog() {
@@ -91,28 +69,30 @@ public class VaadinDialogBuilder implements DialogBuilder {
         dialog.addTab(tab.getName(), label);
     }
 
-    public Editor addField(DialogDefinition dialogDefinition, DialogTab tab, DialogField dialogField, Class<?> type) {
-        Messages messages = getMessages(dialogDefinition, tab, dialogField);
+    public Editor addField(DialogDefinition dialogDefinition, DialogTab tab, DialogField fieldDefinition, Class<?> type) {
+        Messages messages = getMessages(dialogDefinition, tab, fieldDefinition);
 
         // TODO for controlType=static we need something completely different, it isnt even an editor...
 
-        if (dialogField.getControlType().equals("static")) {
-            dialog.addField(tab.getName(), dialogField.getLabel());
+        if (fieldDefinition.getControlType().equals("static")) {
+            dialog.addField(tab.getName(), fieldDefinition.getLabel());
             return null;
         }
 
-        Field field = createFieldForType(dialogField, type);
+        Field field = createFieldForType(fieldDefinition, type);
 
         if (field == null) {
-            dialog.addField(tab.getName(), "Missing UI component for controlType=" + dialogField.getControlType());
+            dialog.addField(tab.getName(), "Missing UI component for controlType=" + fieldDefinition.getControlType());
             return null;
         }
 
-        String label = messages.getWithDefault(dialogField.getLabel(), dialogField.getLabel());
-        String description = messages.getWithDefault(dialogField.getDescription(), dialogField.getDescription());
-        dialog.addField(tab.getName(), dialogField.getName(), label, description, field);
+        String label = messages.getWithDefault(fieldDefinition.getLabel(), fieldDefinition.getLabel());
+        String description = messages.getWithDefault(fieldDefinition.getDescription(), fieldDefinition.getDescription());
+        VaadinDialogField vaadinDialogField = dialog.addField(tab.getName(), fieldDefinition.getName(), label, description, field);
 
-        return new EditorAdapter(field);
+        // XXX: the editor adapter has to keep references to more ui components than just the field because it needs to display error messages
+
+        return new VaadinEditorAdapter(field, fieldDefinition, type, vaadinDialogField);
     }
 
     private Field createFieldForType(DialogField field, Class<?> type) {
@@ -124,7 +104,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
             return new RichTextArea();
         if (field.getControlType().equals("password"))
             return new PasswordField();
-        if (field.getControlType().equals("checkBoxSwitch"))
+        if (field.getControlType().equals("checkboxSwitch"))
             return new CheckBox();
         return null;
     }

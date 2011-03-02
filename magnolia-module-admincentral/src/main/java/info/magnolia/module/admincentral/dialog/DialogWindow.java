@@ -97,10 +97,15 @@ public class DialogWindow extends Window implements VaadinDialog.Presenter {
     public void onSave() {
         try {
             driver.flush(getNode());
+
+            if (driver.hasErrors()) {
+                super.getApplication().getMainWindow().showNotification("You have errors");
+            } else {
+                getParent().removeWindow(this);
+            }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-        getParent().removeWindow(this);
     }
 
     private Node getNode() throws RepositoryException {
