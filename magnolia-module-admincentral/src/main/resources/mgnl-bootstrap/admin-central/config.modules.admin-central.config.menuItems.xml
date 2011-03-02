@@ -39,9 +39,6 @@
     <sv:property sv:name="label" sv:type="String">
       <sv:value>menu.website</sv:value>
     </sv:property>
-    <sv:property sv:name="workspace" sv:type="String">
-      <sv:value>website</sv:value>
-    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
@@ -62,7 +59,7 @@
         <sv:value>2006-02-14T17:58:04.716+01:00</sv:value>
       </sv:property>
     </sv:node>
-    <sv:node sv:name="command">
+    <sv:node sv:name="actionDefinition">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -70,10 +67,10 @@
         <sv:value>mix:lockable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>a7d48625-f0b2-4b12-937c-d90533539a63</sv:value>
+        <sv:value>873d4535-75aa-4603-8e5b-fa80032ae503</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.navigation.action.OpenMenuCommand</sv:value>
+        <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -88,6 +85,9 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
@@ -95,7 +95,7 @@
           <sv:value>2011-03-01T17:14:41.680+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-01T17:39:38.744+01:00</sv:value>
+          <sv:value>2011-03-02T17:41:57.439+01:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -348,7 +348,7 @@
             <sv:value>2011-03-01T17:14:30.853+01:00</sv:value>
           </sv:property>
         </sv:node>
-        <sv:node sv:name="command">
+        <sv:node sv:name="actionDefinition">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
@@ -356,10 +356,10 @@
             <sv:value>mix:lockable</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>87d45ecd-9d3a-4a52-b090-d093070a55dc</sv:value>
+            <sv:value>ee252fd7-e39f-42a0-9266-3256a9559933</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.admincentral.navigation.action.OpenMenuCommand</sv:value>
+            <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -374,8 +374,17 @@
             <sv:property sv:name="jcr:createdBy" sv:type="String">
               <sv:value>admin</sv:value>
             </sv:property>
+            <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
             <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-              <sv:value>2011-03-01T17:14:41.885+01:00</sv:value>
+              <sv:value>2011-03-01T17:14:41.680+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+              <sv:value>2011-03-02T17:51:51.863+01:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -410,7 +419,7 @@
             <sv:value>2011-03-01T17:14:30.854+01:00</sv:value>
           </sv:property>
         </sv:node>
-        <sv:node sv:name="command">
+        <sv:node sv:name="actionDefinition">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
@@ -418,10 +427,10 @@
             <sv:value>mix:lockable</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>11916180-99da-421a-9f11-588a3f094b56</sv:value>
+            <sv:value>109ad8f0-f424-402a-bceb-2183f14092e6</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.admincentral.navigation.action.OpenMenuCommand</sv:value>
+            <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -436,8 +445,17 @@
             <sv:property sv:name="jcr:createdBy" sv:type="String">
               <sv:value>admin</sv:value>
             </sv:property>
+            <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+              <sv:value>false</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:authorid" sv:type="String">
+              <sv:value>superuser</sv:value>
+            </sv:property>
             <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-              <sv:value>2011-03-01T17:14:41.894+01:00</sv:value>
+              <sv:value>2011-03-01T17:14:41.680+01:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+              <sv:value>2011-03-02T17:52:17.539+01:00</sv:value>
             </sv:property>
           </sv:node>
         </sv:node>
@@ -521,9 +539,6 @@
     </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>menu.config</sv:value>
-    </sv:property>
-    <sv:property sv:name="workspace" sv:type="String">
-      <sv:value>config</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -794,7 +809,7 @@
         </sv:node>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="command">
+    <sv:node sv:name="actionDefinition">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -802,10 +817,10 @@
         <sv:value>mix:lockable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>6f979c91-3f97-47fb-8d76-79735c98eba5</sv:value>
+        <sv:value>539e5aac-11c4-4a8c-9bec-5fcc44fb4099</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.navigation.action.OpenMenuCommand</sv:value>
+        <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -820,14 +835,17 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2011-03-01T17:14:41.948+01:00</sv:value>
+          <sv:value>2011-03-01T17:14:41.680+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-01T17:39:30.488+01:00</sv:value>
+          <sv:value>2011-03-02T17:42:07.234+01:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -1419,9 +1437,6 @@
     <sv:property sv:name="label" sv:type="String">
       <sv:value>Magnolia Store</sv:value>
     </sv:property>
-    <sv:property sv:name="viewTarget" sv:type="String">
-      <sv:value>/.magnolia/pages/allModulesList.html</sv:value>
-    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
@@ -1522,7 +1537,7 @@
         </sv:node>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="command">
+    <sv:node sv:name="actionDefinition">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -1530,10 +1545,10 @@
         <sv:value>mix:lockable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>b319ddbb-1ebe-4603-abc6-9ccf17b86ed6</sv:value>
+        <sv:value>3c01b040-604c-4d2d-b9d7-1c2f048a9a4a</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.navigation.action.OpenMenuCommand</sv:value>
+        <sv:value>info.magnolia.module.admincentral.navigation.action.ShowContentActionDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1548,14 +1563,17 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2011-03-01T17:14:42.170+01:00</sv:value>
+          <sv:value>2011-03-01T17:14:41.680+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-03-01T17:39:16.553+01:00</sv:value>
+          <sv:value>2011-03-02T17:42:23.920+01:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>

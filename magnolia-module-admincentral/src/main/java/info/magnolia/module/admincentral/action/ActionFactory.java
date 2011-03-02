@@ -31,46 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.module.admincentral.action;
 
-import javax.jcr.RepositoryException;
+import info.magnolia.module.admincentral.navigation.action.MenuAction;
+import info.magnolia.module.admincentral.navigation.action.AbstractMenuActionDefinition;
+import info.magnolia.ui.place.PlaceController;
 
-import info.magnolia.module.admincentral.action.Action;
-import info.magnolia.module.admincentral.action.ActionFactory;
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.navigation.MenuView;
-import info.magnolia.module.admincentral.navigation.MenuViewImpl;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
 /**
- * MenuActivity.
+ * A factory for {@link Action}s.
  * @author fgrilli
  *
  */
-public class MenuActivity extends AbstractActivity implements MenuView.Presenter {
-    private UIModel uiModel;
-    private ActionFactory actionFactory;
+public class ActionFactory {
 
-    public MenuActivity(UIModel uiModel, ActionFactory actionFactory) {
-        this.uiModel = uiModel;
-        this.actionFactory = actionFactory;
-    }
-    public void start(HasComponent display, EventBus eventBus) {
-        MenuViewImpl menu;
-        try {
-            menu = new MenuViewImpl(this, uiModel);
-            display.setComponent(menu);
-        }
-        catch (RepositoryException e) {
-            e.printStackTrace(); //TODO log
+    /**
+     * Default action does nothing.
+     * @author fgrilli
+     *
+     */
+    public static class DefaultAction implements Action {
+        public void perform() {
         }
     }
 
-    public void onMenuSelection(MenuItemConfiguration menuConfig) {
-        final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
-        action.perform();
+    private PlaceController placeController;
+
+    public ActionFactory(final PlaceController placeController) {
+        this.placeController = placeController;
+    }
+
+    public Action createAction(final ActionDefinition<? extends Action> definition){
+        if(definition == null){
+            //TODO throw exception?
+            return new DefaultAction();
+        }
+        if(definition instanceof AbstractMenuActionDefinition) {
+            return new MenuAction((AbstractMenuActionDefinition) definition, placeController);
+        }
+        return null;
     }
 
 }

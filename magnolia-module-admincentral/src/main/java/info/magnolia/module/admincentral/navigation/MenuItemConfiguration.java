@@ -33,8 +33,9 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
+import info.magnolia.module.admincentral.action.Action;
+import info.magnolia.module.admincentral.action.ActionDefinition;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
-import info.magnolia.module.admincentral.navigation.action.MenuCommand;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -59,7 +60,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
     private MenuItemConfiguration parent;
     private String location;
-    private MenuCommand command;
+    private ActionDefinition<? extends Action> actionDefinition;
     private String name;
 
     @Override
@@ -121,11 +122,11 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
         this.location = location;
     }
 
-    public MenuCommand getCommand() {
-        return command;
-    }
-    public void setCommand(MenuCommand command) {
-        log.debug("setting command {}", command.getName());
-        this.command=command;
-    }
+   public ActionDefinition<? extends Action> getActionDefinition() {
+       return actionDefinition;
+   }
+
+   public void setActionDefinition(ActionDefinition<? extends Action> actionDefinition) {
+       this.actionDefinition = actionDefinition;
+   }
 }

@@ -38,6 +38,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admincentral.action.ActionFactory;
 import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
 import info.magnolia.module.admincentral.activity.MenuActivity;
 import info.magnolia.module.admincentral.activity.ShowContentActivity;
@@ -108,6 +109,8 @@ public class AdminCentralApplication extends Application {
     // FIXME should be a component
     private UIModel uiModel = new UIModel();
 
+    private ActionFactory actionFactory;
+
     private Shell shell;
 
     @Override
@@ -123,7 +126,8 @@ public class AdminCentralApplication extends Application {
         eventBus = new SimpleEventBus();
 
         placeController = new PlaceController(eventBus, shell);
-
+        //FIXME this will have to use IoC
+        actionFactory = new ActionFactory(placeController);
         // Browser history integration
         // FIXME make this more dynamic, don't pass the place explicitly
         PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
@@ -132,7 +136,7 @@ public class AdminCentralApplication extends Application {
         historyHandler.register(placeController, eventBus, defaultPlace);
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
-            Activity menuActivity = new MenuActivity(uiModel, placeController);
+            Activity menuActivity = new MenuActivity(uiModel, actionFactory);
             public Activity getActivity(Place place) {
                 return menuActivity;
             }

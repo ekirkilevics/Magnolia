@@ -31,46 +31,30 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.module.admincentral.navigation.action;
 
-import javax.jcr.RepositoryException;
+import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.module.admincentral.action.Action;
-import info.magnolia.module.admincentral.action.ActionFactory;
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.navigation.MenuView;
-import info.magnolia.module.admincentral.navigation.MenuViewImpl;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
+import info.magnolia.module.admincentral.place.EditWorkspacePlace;
+import info.magnolia.ui.place.Place;
+
 /**
- * MenuActivity.
+ * EditWorkspace Action Definition.
  * @author fgrilli
  *
  */
-public class MenuActivity extends AbstractActivity implements MenuView.Presenter {
-    private UIModel uiModel;
-    private ActionFactory actionFactory;
-
-    public MenuActivity(UIModel uiModel, ActionFactory actionFactory) {
-        this.uiModel = uiModel;
-        this.actionFactory = actionFactory;
-    }
-    public void start(HasComponent display, EventBus eventBus) {
-        MenuViewImpl menu;
-        try {
-            menu = new MenuViewImpl(this, uiModel);
-            display.setComponent(menu);
+public class EditWorkspaceActionDefinition extends AbstractMenuActionDefinition {
+    private Place place;
+    @Override
+    public Place getPlace() {
+        if(place != null){
+            return place;
         }
-        catch (RepositoryException e) {
-            e.printStackTrace(); //TODO log
+        if(StringUtils.isNotBlank(getWorkspace())){
+            place = new EditWorkspacePlace(getWorkspace());
+            return place;
+        } else {
+            throw new IllegalStateException("workspace cannot be null");
         }
     }
-
-    public void onMenuSelection(MenuItemConfiguration menuConfig) {
-        final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
-        action.perform();
-    }
-
 }

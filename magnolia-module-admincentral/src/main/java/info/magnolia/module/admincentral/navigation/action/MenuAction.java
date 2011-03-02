@@ -33,21 +33,28 @@
  */
 package info.magnolia.module.admincentral.navigation.action;
 
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.module.admincentral.place.SomePlace;
+import info.magnolia.module.admincentral.action.Action;
+import info.magnolia.ui.place.Place;
 import info.magnolia.ui.place.PlaceController;
 
 /**
- * Default implementation for MenuCommand. Just show a label for the menu.
+ * Implements a menu action.
  * @author fgrilli
  *
  */
-public class DefaultMenuCommand extends MenuCommand {
+public class MenuAction implements Action  {
 
+    private AbstractMenuActionDefinition actionDefinition;
+    private PlaceController placeController;
 
-    @Override
-    public void execute(MenuItemConfiguration menuItemConfiguration, PlaceController placeController) {
-        placeController.goTo(new SomePlace(menuItemConfiguration.getName()));
+    public MenuAction(AbstractMenuActionDefinition definition, PlaceController placeController) {
+        this.actionDefinition = definition;
+        this.placeController = placeController;
+    }
+
+    public void perform() {
+        Place newPlace = actionDefinition.getPlace();
+        placeController.goTo(newPlace);
     }
 
 }

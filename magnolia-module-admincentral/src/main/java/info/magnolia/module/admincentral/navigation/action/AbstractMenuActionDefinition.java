@@ -33,33 +33,53 @@
  */
 package info.magnolia.module.admincentral.navigation.action;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.module.admincentral.place.EditWorkspacePlace;
-import info.magnolia.module.admincentral.place.ShowContentPlace;
-import info.magnolia.module.admincentral.place.SomePlace;
+import info.magnolia.module.admincentral.action.ActionDefinition;
 import info.magnolia.ui.place.Place;
-import info.magnolia.ui.place.PlaceController;
 
 /**
- * Go to a new place.
+ * A base menu action definition.
  * @author fgrilli
  *
  */
-public class OpenMenuCommand extends MenuCommand {
+public class AbstractMenuActionDefinition implements ActionDefinition<MenuAction> {
+    private String name;
+    private String workspace;
+    private String viewTarget;
+    private String view;
 
-    @Override
-    public void execute(MenuItemConfiguration menuItemConfiguration, PlaceController placeController) {
-        Place newPlace;
-        if(StringUtils.isNotBlank(getWorkspace())){
-            newPlace = new EditWorkspacePlace(getWorkspace());
-        } else if(StringUtils.isNotBlank(getViewTarget())) {
-            newPlace = new ShowContentPlace(getViewTarget(), getView());
-        } else {
-            newPlace = new SomePlace(menuItemConfiguration.getName());
-        }
-        placeController.goTo(newPlace);
+    public String getName() {
+        return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
+    }
+
+    public String getViewTarget() {
+        return viewTarget;
+    }
+
+    public void setViewTarget(String viewTarget) {
+        this.viewTarget = viewTarget;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
+
+    public Place getPlace() {
+        return Place.NOWHERE;
+    }
 }

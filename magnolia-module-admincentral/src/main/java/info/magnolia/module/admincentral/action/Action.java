@@ -31,54 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation.action;
+package info.magnolia.module.admincentral.action;
 
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.ui.place.PlaceController;
 
 /**
- * TODO: write javadoc.
+ * An action encapsulates the logic for some UI behavior, e.g. clicking on an app menu item would trigger an action which goes to a place associated with it.
+ * An action is bound to an {@link ActionDefinition}.
  * @author fgrilli
  *
  */
-public abstract class MenuCommand {
-
-    private String name;
-    private String workspace;
-    private String viewTarget;
-    private String view;
-
-    public abstract void execute(final MenuItemConfiguration menuItemConfiguration, final PlaceController placeController);
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public String getViewTarget() {
-        return viewTarget;
-    }
-
-    public void setViewTarget(String viewTarget) {
-        this.viewTarget = viewTarget;
-    }
-
-    public String getView() {
-        return view;
-    }
-
-    public void setView(String view) {
-        this.view = view;
-    }
+public interface Action {
+    void perform();
 }

@@ -81,6 +81,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
 
     private UIModel uiModel;
 
+
     public MenuViewImpl(final Presenter presenter, final UIModel uiModel) throws RepositoryException {
         this.presenter = presenter;
         this.uiModel = uiModel;
