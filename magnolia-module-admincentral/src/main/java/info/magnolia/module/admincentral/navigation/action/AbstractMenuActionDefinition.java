@@ -41,7 +41,7 @@ import info.magnolia.ui.place.Place;
  * @author fgrilli
  *
  */
-public class AbstractMenuActionDefinition implements ActionDefinition<MenuAction> {
+public abstract class AbstractMenuActionDefinition implements ActionDefinition<MenuAction> {
     private String name;
     private String workspace;
     private String viewTarget;
@@ -79,7 +79,5 @@ public class AbstractMenuActionDefinition implements ActionDefinition<MenuAction
         this.view = view;
     }
 
-    public Place getPlace() {
-        return Place.NOWHERE;
-    }
+    public abstract Place getPlace();
 }
