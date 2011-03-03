@@ -49,6 +49,9 @@ import info.magnolia.ui.shell.SubShell;
  * Builds an inner MVP container having its own {@link ActivityManager}, {@link PlaceController} and
  * {@link EventBus}. {@link PlaceChangeEvent} events are fired to the outer {@link PlaceController}
  * and vice versa.
+ *
+ * TODO it is not clear how we would provide IoC here. it is comparable to a sub-conversion scope.
+ *
  */
 public abstract class MVPSubContainerActivity extends AbstractActivity {
 

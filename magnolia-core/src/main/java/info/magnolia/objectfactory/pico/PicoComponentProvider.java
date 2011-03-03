@@ -113,4 +113,11 @@ public class PicoComponentProvider implements ComponentProvider {
         return adhocContainer.getComponent(type);
     }
 
+    public DefaultComponentProvider getDef() {
+        return def;
+    }
+
+    public PicoContainer getContainer() {
+        return pico;
+    }
 }

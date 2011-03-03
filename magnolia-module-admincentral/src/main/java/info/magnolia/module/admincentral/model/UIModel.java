@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admincentral.model;
 
-import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admincentral.AdminCentralModule;
 import info.magnolia.module.admincentral.dialog.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.DialogRegistry;
@@ -58,6 +57,16 @@ import org.apache.commons.lang.StringUtils;
  * The UI model provides all the definition for the trees, dialogs, commands and so on.
  */
 public class UIModel {
+
+    private DialogRegistry dialogRegistry;
+    private AdminCentralModule adminCentralModule;
+    private TreeRegistry treeRegistry;
+
+    public UIModel(DialogRegistry dialogRegistry, AdminCentralModule adminCentralModule, TreeRegistry treeRegistry) {
+        this.dialogRegistry = dialogRegistry;
+        this.adminCentralModule = adminCentralModule;
+        this.treeRegistry = treeRegistry;
+    }
 
     public void executeCommand(String commandName, String treeName, String path) throws RepositoryException {
 
@@ -106,7 +115,7 @@ public class UIModel {
 
     public TreeDefinition getTreeDefinition(String treeName) {
         try {
-            return TreeRegistry.getInstance().getTree(treeName);
+            return treeRegistry.getTree(treeName);
         } catch (RepositoryException e) {
             throw new IllegalStateException(e);
         }
@@ -124,7 +133,7 @@ public class UIModel {
     }
 
     public DialogDefinition getDialogDefinition(String dialogName) throws RepositoryException {
-        return DialogRegistry.getInstance().getDialog(dialogName);
+        return dialogRegistry.getDialog(dialogName);
     }
 
     public String getPathInTree(String treeName, Item item) throws RepositoryException {
@@ -137,7 +146,7 @@ public class UIModel {
     }
 
     public Map<String, MenuItemConfiguration> getMenuDefinition(){
-        return ((AdminCentralModule) ModuleRegistry.Factory.getInstance().getModuleInstance("admin-central")).getMenuItems();
+        return adminCentralModule.getMenuItems();
     }
 
 }

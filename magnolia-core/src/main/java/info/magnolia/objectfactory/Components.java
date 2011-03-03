@@ -71,8 +71,23 @@ public class Components {
     }
 
     public static ComponentProvider getComponentProvider() {
+        ComponentProvider scoped = scopes.get();
+        if (scoped != null)
+            return scoped;
         return componentProvider;
     }
+
+    public static void pushScope(ComponentProvider scope) {
+        if (scopes.get() != null)
+            throw new IllegalStateException("Only one additional scope is supported at this time");
+        scopes.set(scope);
+    }
+
+    public static void popScope(ComponentProvider scope) {
+        scopes.remove();
+    }
+
+    private static ThreadLocal<ComponentProvider> scopes = new ThreadLocal<ComponentProvider>();
 
     private static class NullComponentProvider implements ComponentProvider {
         public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
