@@ -41,9 +41,6 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Bean representing stored configuration of the menu item.
  * @author had
@@ -53,15 +50,13 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
 
     private static final long serialVersionUID = -1471102661627728596L;
 
-    private Logger log = LoggerFactory.getLogger(MenuItemConfiguration.class);
-
+    private String name;
     private String icon;
     private String label;
-    private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
-    private MenuItemConfiguration parent;
     private String location;
+    private MenuItemConfiguration parent;
     private ActionDefinition<? extends Action> actionDefinition;
-    private String name;
+    private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
 
     @Override
     public I18nAwareComponent getI18nAwareParent() {
@@ -89,7 +84,6 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     }
 
     public void addMenuItem(String name, MenuItemConfiguration subMenuItem) {
-        log.debug("adding menu {}", name);
         subMenuItem.setParent(this);
         subMenuItem.setName(name);
         this.subMenuItems.put(name, subMenuItem);
