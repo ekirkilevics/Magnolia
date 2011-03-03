@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.exchange;
 
-import info.magnolia.api.MgnlException;
+import info.magnolia.exception.MgnlException;
 
 import org.apache.commons.lang.StringUtils;
 
