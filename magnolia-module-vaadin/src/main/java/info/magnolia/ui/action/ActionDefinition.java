@@ -31,46 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.activity;
+package info.magnolia.ui.action;
 
-import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.navigation.MenuView;
-import info.magnolia.module.admincentral.navigation.MenuViewImpl;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.ui.action.Action;
-import info.magnolia.ui.action.ActionFactory;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.event.EventBus;
 /**
- * MenuActivity.
+ * An action definition is always associated with an {@link Action} and provides the latter with the context (i.e. dependencies) it needs to be executed.
+ * For instance, a place change action might provide a place object to move to via a place controller. An action definition is also used by {@link ActionFactory} implementations
+ * to look up and retrieve the associated Action.
  * @author fgrilli
  *
+ * @param <A>
  */
-public class MenuActivity extends AbstractActivity implements MenuView.Presenter {
-    private UIModel uiModel;
-    private ActionFactory actionFactory;
-
-    public MenuActivity(UIModel uiModel, ActionFactory actionFactory) {
-        this.uiModel = uiModel;
-        this.actionFactory = actionFactory;
-    }
-    public void start(HasComponent display, EventBus eventBus) {
-        MenuViewImpl menu;
-        try {
-            menu = new MenuViewImpl(this, uiModel);
-            display.setComponent(menu);
-        }
-        catch (RepositoryException e) {
-            e.printStackTrace(); //TODO log
-        }
-    }
-
-    public void onMenuSelection(MenuItemConfiguration menuConfig) {
-        final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
-        action.execute();
-    }
+public interface ActionDefinition<A extends Action> {
 
 }

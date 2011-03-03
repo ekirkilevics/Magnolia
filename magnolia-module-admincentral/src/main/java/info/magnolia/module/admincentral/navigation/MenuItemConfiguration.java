@@ -33,9 +33,9 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import info.magnolia.module.admincentral.action.Action;
-import info.magnolia.module.admincentral.action.ActionDefinition;
 import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+import info.magnolia.ui.action.Action;
+import info.magnolia.ui.action.ActionDefinition;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

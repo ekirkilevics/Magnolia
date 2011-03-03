@@ -88,7 +88,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
         setCompositionRoot(accordion);
         setSizeFull();
 
-        for (Entry<String, MenuItemConfiguration> menuItemEntry : uiModel.getMenuDefinition().entrySet()) {
+        for (Entry<String, MenuItemConfiguration> menuItemEntry : this.uiModel.getMenuDefinition().entrySet()) {
             MenuItemConfiguration menuItem = menuItemEntry.getValue();
             // check permission
             if (!isMenuItemRenderable(menuItem)) {
@@ -211,8 +211,8 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
 
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();
-
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
+
             if (tab != null) {
                 MenuItemConfiguration menuConfig = menuItems.get(tab);
                 presenter.onMenuSelection(menuConfig);

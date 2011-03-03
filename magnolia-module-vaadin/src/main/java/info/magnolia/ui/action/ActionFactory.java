@@ -31,53 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation.action;
+package info.magnolia.ui.action;
 
-import info.magnolia.module.admincentral.action.ActionDefinition;
-import info.magnolia.ui.place.Place;
 
 /**
- * A base menu action definition.
+ * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
  * @author fgrilli
  *
  */
-public abstract class AbstractMenuActionDefinition implements ActionDefinition<MenuAction> {
-    private String name;
-    private String workspace;
-    private String viewTarget;
-    private String view;
+public interface ActionFactory {
 
-    public String getName() {
-        return name;
-    }
+    Action createAction(final ActionDefinition<? extends Action> definition);
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public String getViewTarget() {
-        return viewTarget;
-    }
-
-    public void setViewTarget(String viewTarget) {
-        this.viewTarget = viewTarget;
-    }
-
-    public String getView() {
-        return view;
-    }
-
-    public void setView(String view) {
-        this.view = view;
-    }
-
-    public abstract Place getPlace();
 }

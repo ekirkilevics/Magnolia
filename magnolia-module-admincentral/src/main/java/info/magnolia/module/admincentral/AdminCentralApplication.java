@@ -38,7 +38,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.action.ActionFactory;
+import info.magnolia.module.admincentral.action.ActionFactoryImpl;
 import info.magnolia.module.admincentral.activity.EditWorkspaceActivity;
 import info.magnolia.module.admincentral.activity.MenuActivity;
 import info.magnolia.module.admincentral.activity.ShowContentActivity;
@@ -49,6 +49,7 @@ import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
+import info.magnolia.ui.action.ActionFactory;
 import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.activity.Activity;
 import info.magnolia.ui.activity.ActivityManager;
@@ -127,7 +128,7 @@ public class AdminCentralApplication extends Application {
 
         placeController = new PlaceController(eventBus, shell);
         //FIXME this will have to use IoC
-        actionFactory = new ActionFactory(placeController);
+        actionFactory = new ActionFactoryImpl(placeController);
         // Browser history integration
         // FIXME make this more dynamic, don't pass the place explicitly
         PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);

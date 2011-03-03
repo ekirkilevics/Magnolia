@@ -31,30 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation.action;
+package info.magnolia.ui.action;
 
-import info.magnolia.module.admincentral.action.Action;
-import info.magnolia.ui.place.Place;
-import info.magnolia.ui.place.PlaceController;
 
 /**
- * Implements a menu action.
+ * An action encapsulates the logic for some UI behavior, e.g. clicking on an app menu item would trigger an action which goes to a place associated with it.
+ * An action is bound to an {@link ActionDefinition}.
  * @author fgrilli
  *
  */
-public class MenuAction implements Action  {
-
-    private AbstractMenuActionDefinition actionDefinition;
-    private PlaceController placeController;
-
-    public MenuAction(AbstractMenuActionDefinition definition, PlaceController placeController) {
-        this.actionDefinition = definition;
-        this.placeController = placeController;
-    }
-
-    public void perform() {
-        Place newPlace = actionDefinition.getPlace();
-        placeController.goTo(newPlace);
-    }
-
+public interface Action {
+    void execute();
 }

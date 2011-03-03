@@ -33,9 +33,8 @@
  */
 package info.magnolia.module.admincentral.navigation.action;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.module.admincentral.place.ShowContentPlace;
+import info.magnolia.ui.action.AbstractPlaceChangeDefinition;
 import info.magnolia.ui.place.Place;
 
 /**
@@ -43,18 +42,32 @@ import info.magnolia.ui.place.Place;
  * @author fgrilli
  *
  */
-public class ShowContentActionDefinition extends AbstractMenuActionDefinition {
+public class ShowContentActionDefinition extends AbstractPlaceChangeDefinition {
     private Place place;
+    private String viewTarget;
+    private String view;
+
+    public String getViewTarget() {
+        return viewTarget;
+    }
+
+    public void setViewTarget(String viewTarget) {
+        this.viewTarget = viewTarget;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
     @Override
     public Place getPlace() {
         if(place != null){
             return place;
         }
-        if(StringUtils.isNotBlank(getViewTarget())){
-            place = new ShowContentPlace(getViewTarget(), getView());
-            return place;
-        } else {
-            throw new IllegalStateException("view target cannot be null");
-        }
+        place = new ShowContentPlace(viewTarget, view);
+        return place;
     }
 }

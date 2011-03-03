@@ -31,15 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.action;
+package info.magnolia.ui.action;
 
+import info.magnolia.ui.place.Place;
 
 /**
- * An action encapsulates the logic for some UI behavior, e.g. clicking on an app menu item would trigger an action which goes to a place associated with it.
- * An action is bound to an {@link ActionDefinition}.
+ * A base place change action definition.
  * @author fgrilli
  *
  */
-public interface Action {
-    void perform();
+public abstract class AbstractPlaceChangeDefinition implements ActionDefinition<PlaceChangeAction> {
+
+    protected abstract Place getPlace();
 }

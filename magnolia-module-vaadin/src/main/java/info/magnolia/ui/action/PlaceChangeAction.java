@@ -31,44 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.action;
+package info.magnolia.ui.action;
 
-import info.magnolia.module.admincentral.navigation.action.MenuAction;
-import info.magnolia.module.admincentral.navigation.action.AbstractMenuActionDefinition;
+import info.magnolia.ui.place.Place;
 import info.magnolia.ui.place.PlaceController;
 
 /**
- * A factory for {@link Action}s.
+ * Implements a place change action.
  * @author fgrilli
  *
  */
-public class ActionFactory {
+public class PlaceChangeAction implements Action  {
 
-    /**
-     * Default action does nothing.
-     * @author fgrilli
-     *
-     */
-    public static class DefaultAction implements Action {
-        public void perform() {
-        }
-    }
-
+    private AbstractPlaceChangeDefinition actionDefinition;
     private PlaceController placeController;
 
-    public ActionFactory(final PlaceController placeController) {
+    public PlaceChangeAction(final AbstractPlaceChangeDefinition definition, final PlaceController placeController) {
+        this.actionDefinition = definition;
         this.placeController = placeController;
     }
 
-    public Action createAction(final ActionDefinition<? extends Action> definition){
-        if(definition == null){
-            //TODO throw exception?
-            return new DefaultAction();
-        }
-        if(definition instanceof AbstractMenuActionDefinition) {
-            return new MenuAction((AbstractMenuActionDefinition) definition, placeController);
-        }
-        return null;
+    public void execute() {
+        Place newPlace = actionDefinition.getPlace();
+        placeController.goTo(newPlace);
     }
 
 }

@@ -33,12 +33,34 @@
  */
 package info.magnolia.module.admincentral.action;
 
+import info.magnolia.ui.action.AbstractPlaceChangeDefinition;
+import info.magnolia.ui.action.Action;
+import info.magnolia.ui.action.ActionDefinition;
+import info.magnolia.ui.action.ActionFactory;
+import info.magnolia.ui.action.PlaceChangeAction;
+import info.magnolia.ui.place.PlaceController;
+
 /**
- * Just a marker interface for now.
+ * A factory for {@link Action}s.
  * @author fgrilli
  *
- * @param <A>
  */
-public interface ActionDefinition<A extends Action> {
+public class ActionFactoryImpl implements ActionFactory {
+
+    private PlaceController placeController;
+
+    public ActionFactoryImpl(final PlaceController placeController) {
+        this.placeController = placeController;
+    }
+
+    public Action createAction(final ActionDefinition<? extends Action> definition){
+        if(definition == null){
+           throw new IllegalArgumentException("action definition cannot be null");
+        }
+        if(definition instanceof AbstractPlaceChangeDefinition) {
+            return new PlaceChangeAction((AbstractPlaceChangeDefinition) definition, placeController);
+        }
+        return null;
+    }
 
 }

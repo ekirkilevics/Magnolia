@@ -52,14 +52,17 @@ public class ShowContentActivity extends AbstractActivity {
 
     private String viewName;
 
+    private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
+
     public ShowContentActivity(String viewTarget, String viewName) {
         this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : IFrameView.class.getName();
+        this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
     }
 
     public void start(HasComponent display, EventBus eventBus) {
         try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));        }
+            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
+        }
         catch (ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }

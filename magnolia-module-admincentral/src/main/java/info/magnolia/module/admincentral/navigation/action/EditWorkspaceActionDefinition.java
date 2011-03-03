@@ -33,9 +33,8 @@
  */
 package info.magnolia.module.admincentral.navigation.action;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
+import info.magnolia.ui.action.AbstractPlaceChangeDefinition;
 import info.magnolia.ui.place.Place;
 
 /**
@@ -43,18 +42,25 @@ import info.magnolia.ui.place.Place;
  * @author fgrilli
  *
  */
-public class EditWorkspaceActionDefinition extends AbstractMenuActionDefinition {
+public class EditWorkspaceActionDefinition extends AbstractPlaceChangeDefinition {
+
     private Place place;
+    private String workspace;
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
+    }
+
     @Override
     public Place getPlace() {
         if(place != null){
             return place;
         }
-        if(StringUtils.isNotBlank(getWorkspace())){
-            place = new EditWorkspacePlace(getWorkspace());
-            return place;
-        } else {
-            throw new IllegalStateException("workspace cannot be null");
-        }
+        place = new EditWorkspacePlace(getWorkspace());
+        return place;
     }
 }

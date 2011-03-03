@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.place;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.ui.place.Place;
 import info.magnolia.ui.place.PlaceTokenizer;
 import info.magnolia.ui.place.Prefix;
@@ -64,6 +66,9 @@ public class EditWorkspacePlace extends Place {
     private String workspace;
 
     public EditWorkspacePlace(String workspace) {
+        if(StringUtils.isBlank(workspace)){
+            throw new IllegalArgumentException("workspace cannot be null");
+        }
         this.workspace = workspace;
     }
 

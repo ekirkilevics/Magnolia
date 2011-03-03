@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.place;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.ui.place.Place;
 
 
@@ -46,6 +48,9 @@ public class ShowContentPlace extends Place {
     private String viewName;
 
     public ShowContentPlace(String viewTarget, String viewName) {
+        if(StringUtils.isBlank(viewTarget)){
+            throw new IllegalArgumentException("view target cannot be null");
+        }
         this.viewTarget = viewTarget;
         this.viewName = viewName;
     }
