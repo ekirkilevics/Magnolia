@@ -36,11 +36,11 @@ package info.magnolia.ui.action;
 import info.magnolia.ui.place.Place;
 
 /**
- * A base place change action definition.
+ * Place change action definition.
  * @author fgrilli
  *
  */
-public abstract class AbstractPlaceChangeDefinition implements ActionDefinition<PlaceChangeAction> {
+public interface PlaceChangeDefinition extends ActionDefinition<PlaceChangeAction> {
 
-    protected abstract Place getPlace();
+    Place getPlace();
 }

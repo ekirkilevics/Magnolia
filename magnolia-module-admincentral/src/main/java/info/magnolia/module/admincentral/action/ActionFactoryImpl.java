@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.action;
 
-import info.magnolia.ui.action.AbstractPlaceChangeDefinition;
+import info.magnolia.ui.action.PlaceChangeDefinition;
 import info.magnolia.ui.action.Action;
 import info.magnolia.ui.action.ActionDefinition;
 import info.magnolia.ui.action.ActionFactory;
@@ -57,8 +57,8 @@ public class ActionFactoryImpl implements ActionFactory {
         if(definition == null){
            throw new IllegalArgumentException("action definition cannot be null");
         }
-        if(definition instanceof AbstractPlaceChangeDefinition) {
-            return new PlaceChangeAction((AbstractPlaceChangeDefinition) definition, placeController);
+        if(definition instanceof PlaceChangeDefinition) {
+            return new PlaceChangeAction((PlaceChangeDefinition) definition, placeController);
         }
         return null;
     }

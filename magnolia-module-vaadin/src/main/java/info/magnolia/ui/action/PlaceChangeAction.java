@@ -43,10 +43,10 @@ import info.magnolia.ui.place.PlaceController;
  */
 public class PlaceChangeAction implements Action  {
 
-    private AbstractPlaceChangeDefinition actionDefinition;
+    private PlaceChangeDefinition actionDefinition;
     private PlaceController placeController;
 
-    public PlaceChangeAction(final AbstractPlaceChangeDefinition definition, final PlaceController placeController) {
+    public PlaceChangeAction(final PlaceChangeDefinition definition, final PlaceController placeController) {
         this.actionDefinition = definition;
         this.placeController = placeController;
     }

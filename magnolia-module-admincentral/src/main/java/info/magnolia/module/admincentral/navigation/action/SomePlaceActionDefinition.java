@@ -34,7 +34,7 @@
 package info.magnolia.module.admincentral.navigation.action;
 
 import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.ui.action.AbstractPlaceChangeDefinition;
+import info.magnolia.ui.action.PlaceChangeDefinition;
 import info.magnolia.ui.place.Place;
 
 /**
@@ -42,7 +42,7 @@ import info.magnolia.ui.place.Place;
  * @author fgrilli
  *
  */
-public class SomePlaceActionDefinition extends AbstractPlaceChangeDefinition {
+public class SomePlaceActionDefinition implements PlaceChangeDefinition {
     private String name;
     private Place place;
 
@@ -54,7 +54,6 @@ public class SomePlaceActionDefinition extends AbstractPlaceChangeDefinition {
         this.name = name;
     }
 
-    @Override
     public Place getPlace() {
         if(place != null){
             return place;
