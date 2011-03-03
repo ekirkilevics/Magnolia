@@ -34,7 +34,7 @@
 package info.magnolia.module.admincentral.navigation.action;
 
 import info.magnolia.module.admincentral.place.ShowContentPlace;
-import info.magnolia.ui.action.PlaceChangeDefinition;
+import info.magnolia.ui.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.place.Place;
 
 /**
@@ -42,7 +42,7 @@ import info.magnolia.ui.place.Place;
  * @author fgrilli
  *
  */
-public class ShowContentActionDefinition implements PlaceChangeDefinition {
+public class ShowContentActionDefinition implements PlaceChangeActionDefinition {
     private Place place;
     private String viewTarget;
     private String view;

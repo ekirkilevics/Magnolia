@@ -34,7 +34,7 @@
 package info.magnolia.module.admincentral.navigation.action;
 
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
-import info.magnolia.ui.action.PlaceChangeDefinition;
+import info.magnolia.ui.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.place.Place;
 
 /**
@@ -42,7 +42,7 @@ import info.magnolia.ui.place.Place;
  * @author fgrilli
  *
  */
-public class EditWorkspaceActionDefinition implements PlaceChangeDefinition {
+public class EditWorkspaceActionDefinition implements PlaceChangeActionDefinition {
 
     private Place place;
     private String workspace;
