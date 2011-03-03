@@ -33,12 +33,10 @@
  */
 package info.magnolia.module.admincentral.activity;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.navigation.MenuView;
 import info.magnolia.module.admincentral.navigation.MenuViewImpl;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.ui.action.Action;
 import info.magnolia.ui.action.ActionFactory;
 import info.magnolia.ui.activity.AbstractActivity;
@@ -58,14 +56,8 @@ public class MenuActivity extends AbstractActivity implements MenuView.Presenter
         this.actionFactory = actionFactory;
     }
     public void start(HasComponent display, EventBus eventBus) {
-        MenuViewImpl menu;
-        try {
-            menu = new MenuViewImpl(this, uiModel);
-            display.setComponent(menu);
-        }
-        catch (RepositoryException e) {
-            e.printStackTrace(); //TODO log
-        }
+        MenuViewImpl menu = new MenuViewImpl(this, uiModel);
+        display.setComponent(menu);
     }
 
     public void onMenuSelection(MenuItemConfiguration menuConfig) {

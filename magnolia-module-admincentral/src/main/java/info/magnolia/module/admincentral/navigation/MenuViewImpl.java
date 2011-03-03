@@ -42,8 +42,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +80,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
     private UIModel uiModel;
 
 
-    public MenuViewImpl(final Presenter presenter, final UIModel uiModel) throws RepositoryException {
+    public MenuViewImpl(final Presenter presenter, final UIModel uiModel) {
         this.presenter = presenter;
         this.uiModel = uiModel;
         setCompositionRoot(accordion);
