@@ -33,7 +33,7 @@
  */
 package info.magnolia.content2bean;
 
-import info.magnolia.api.MgnlException;
+import info.magnolia.exception.MgnlException;
 
 /**
  * Exception thrown during execution of content to bean transformation.
