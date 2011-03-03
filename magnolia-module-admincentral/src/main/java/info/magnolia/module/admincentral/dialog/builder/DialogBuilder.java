@@ -31,46 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree.action;
+package info.magnolia.module.admincentral.dialog.builder;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.dialog.view.DialogWindow;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
+import info.magnolia.module.admincentral.dialog.view.DialogView;
 
 /**
- * Opens a dialog for editing a node in a tree.
- *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
+ * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
  *
  * @author tmattsson
  */
-public class OpenDialogCommand extends Command {
+public interface DialogBuilder {
 
-    private String dialog;
-
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
-    }
-
-    @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-
-        // We need to send the workspace as well
-
-        // FIXME we should not do this, shell.showDialog(dialog) or similar
-        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("userpreferences", (Node) item));
-//        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
-    }
-
-    public String getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
+    DialogView build(DialogDefinition dialogDefinition);
 }

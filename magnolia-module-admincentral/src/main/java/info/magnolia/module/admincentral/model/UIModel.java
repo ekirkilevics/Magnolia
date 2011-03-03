@@ -34,8 +34,8 @@
 package info.magnolia.module.admincentral.model;
 
 import info.magnolia.module.admincentral.AdminCentralModule;
-import info.magnolia.module.admincentral.dialog.DialogDefinition;
-import info.magnolia.module.admincentral.dialog.DialogRegistry;
+import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
+import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.tree.MenuItem;

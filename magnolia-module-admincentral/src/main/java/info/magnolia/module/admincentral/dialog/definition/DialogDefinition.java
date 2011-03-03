@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,46 +31,54 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree.action;
+package info.magnolia.module.admincentral.dialog.definition;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import info.magnolia.module.admincentral.dialog.view.DialogWindow;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Opens a dialog for editing a node in a tree.
- *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
- *
- * @author tmattsson
+ * A definition of a configured dialog. Holds a list of tabs.
  */
-public class OpenDialogCommand extends Command {
+public class DialogDefinition {
 
-    private String dialog;
+    private String name;
+    private String label;
+    private String i18nBasename;
+    private List<DialogTab> tabs = new ArrayList<DialogTab>();
 
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-
-        // We need to send the workspace as well
-
-        // FIXME we should not do this, shell.showDialog(dialog) or similar
-        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("userpreferences", (Node) item));
-//        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDialog() {
-        return dialog;
+    public String getLabel() {
+        return label;
     }
 
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public List<DialogTab> getTabs() {
+        return tabs;
+    }
+
+    public void setTabs(List<DialogTab> tabs) {
+        this.tabs = tabs;
+    }
+
+    public boolean addTab(DialogTab dialogTab) {
+        return tabs.add(dialogTab);
+    }
+
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
     }
 }

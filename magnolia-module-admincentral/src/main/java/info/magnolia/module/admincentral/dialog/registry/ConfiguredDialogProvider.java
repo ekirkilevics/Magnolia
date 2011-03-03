@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,46 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree.action;
+package info.magnolia.module.admincentral.dialog.registry;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.module.admincentral.dialog.view.DialogWindow;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 
 /**
- * Opens a dialog for editing a node in a tree.
- *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
- *
- * @author tmattsson
+ * DialogProvider that instantiates a dialog from a configuration node.
  */
-public class OpenDialogCommand extends Command {
+public class ConfiguredDialogProvider implements DialogProvider {
 
-    private String dialog;
+    private Content configNode;
 
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
+    public ConfiguredDialogProvider(Content configNode) {
+        // session that opened provided content might not be alive by the time we need to use this
+        this.configNode = new LazyContentWrapper(configNode);
     }
 
-    @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-
-        // We need to send the workspace as well
-
-        // FIXME we should not do this, shell.showDialog(dialog) or similar
-        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("userpreferences", (Node) item));
-//        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
-    }
-
-    public String getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
+    public DialogDefinition getDialogDefinition() throws RepositoryException {
+        try {
+            DialogDefinition definition = (DialogDefinition) Content2BeanUtil.toBean(configNode, true, DialogDefinition.class);
+            return definition;
+        } catch (Content2BeanException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

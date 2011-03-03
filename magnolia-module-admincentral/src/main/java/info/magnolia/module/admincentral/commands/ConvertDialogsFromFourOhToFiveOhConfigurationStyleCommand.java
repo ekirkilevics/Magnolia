@@ -43,7 +43,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
-import info.magnolia.module.admincentral.dialog.DialogField;
+import info.magnolia.module.admincentral.dialog.definition.DialogField;
 
 import java.util.Collection;
 import java.util.HashMap;

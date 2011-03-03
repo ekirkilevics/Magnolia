@@ -37,7 +37,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
-import info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager;
+import info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager;
 import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
 import info.magnolia.module.admincentral.tree.ConfiguredTreeManager;
 

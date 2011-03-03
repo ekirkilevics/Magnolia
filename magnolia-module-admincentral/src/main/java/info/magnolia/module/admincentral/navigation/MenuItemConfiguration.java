@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import info.magnolia.module.admincentral.dialog.I18nAwareComponent;
+import info.magnolia.module.admincentral.dialog.view.I18nAwareComponent;
 import info.magnolia.ui.action.Action;
 import info.magnolia.ui.action.ActionDefinition;
 

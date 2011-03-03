@@ -53,7 +53,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.DialogWindow;
+import info.magnolia.module.admincentral.dialog.view.DialogWindow;
 
 /**
  * Main application view layout.

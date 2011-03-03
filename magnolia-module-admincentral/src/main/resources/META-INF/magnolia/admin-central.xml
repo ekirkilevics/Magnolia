@@ -14,12 +14,12 @@
       <value>info.magnolia.module.admincentral.tree.TreeRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.module.admincentral.dialog.DialogRegistry</name>
-      <value>info.magnolia.module.admincentral.dialog.DialogRegistry</value>
+      <name>info.magnolia.module.admincentral.dialog.registry.DialogRegistry</name>
+      <value>info.magnolia.module.admincentral.dialog.registry.DialogRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager</name>
-      <value>info.magnolia.module.admincentral.dialog.configured.ConfiguredDialogManager</value>
+      <name>info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager</name>
+      <value>info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager</value>
     </property>
     <property>
       <name>info.magnolia.module.admincentral.tree.ConfiguredTreeManager</name>

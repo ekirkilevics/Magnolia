@@ -31,46 +31,52 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree.action;
+package info.magnolia.module.admincentral.dialog.place;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.module.admincentral.dialog.view.DialogWindow;
-import info.magnolia.module.admincentral.tree.JcrBrowser;
+import info.magnolia.ui.place.Place;
+import info.magnolia.ui.place.PlaceTokenizer;
 
 /**
- * Opens a dialog for editing a node in a tree.
+ * Place for dialogs.
  *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
+ * TODO need to contain the name of the tree or the workspace also.
  *
  * @author tmattsson
  */
-public class OpenDialogCommand extends Command {
+public class DialogPlace extends Place {
 
-    private String dialog;
+    private String dialogName;
+    private String path;
 
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
+    public DialogPlace(String dialogName, String path) {
+        this.dialogName = dialogName;
+        this.path = path;
     }
 
-    @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-
-        // We need to send the workspace as well
-
-        // FIXME we should not do this, shell.showDialog(dialog) or similar
-        jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("userpreferences", (Node) item));
-//        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
+    public String getDialogName() {
+        return dialogName;
     }
 
-    public String getDialog() {
-        return dialog;
+    public String getPath() {
+        return path;
     }
 
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
+    /**
+     * Tokenizer for DialogPlace.
+     */
+    public static class Tokenizer implements PlaceTokenizer<DialogPlace> {
+
+        static final String SEPARATOR = ";";
+
+        public DialogPlace getPlace(String token) {
+            String[] split = StringUtils.split(token, SEPARATOR);
+            return new DialogPlace(split[0], split[1]);
+        }
+
+        public String getToken(DialogPlace place) {
+            return place.getDialogName() + SEPARATOR + place.getPath();
+        }
     }
 }
