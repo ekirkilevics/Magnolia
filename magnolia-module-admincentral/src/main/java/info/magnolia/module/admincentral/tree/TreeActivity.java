@@ -95,8 +95,8 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void onItemSelection(Item jcrItem) {
         try {
-            String path = uiModel.getPathInTree(treeName, jcrItem);
-            placeController.goTo(new ItemSelectedPlace(treeName, path));
+            this.path = uiModel.getPathInTree(treeName, jcrItem);
+            placeController.goTo(new ItemSelectedPlace(treeName, this.path));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
