@@ -31,12 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.api;
+package info.magnolia.exception;
 
 /**
- * @deprecated since 5.0, use {@link info.magnolia.exception.MgnlException} instead.
+ * Generic, top-level exception thrown by various Magnolia subsystems.
+ * See subclasses.
+ *
+ * @author philipp
+ * @version $Id$
  */
-public class MgnlException extends info.magnolia.exception.MgnlException {
+public class MgnlException extends Exception {
 
     public MgnlException() {
         super();

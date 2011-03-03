@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,27 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.api;
+package info.magnolia.exception;
+
+import javax.jcr.RepositoryException;
 
 /**
- * @deprecated since 5.0, use {@link info.magnolia.exception.MgnlException} instead.
+ * Wraps RepositoryException as a runtime exception. Useful in cases where a RepositoryException is an unrecoverable
+ * error. Prefer using this class to wrapping as a plain RuntimeException as this is easier to catch and handle in cases
+ * where it is necessary to unpack the cause to display an appropriate error message or rethrow it as a checked
+ * exception.
+ *
+ * @author tmattson
  */
-public class MgnlException extends info.magnolia.exception.MgnlException {
+public class RuntimeRepositoryException extends RuntimeException {
 
-    public MgnlException() {
-        super();
+    public RuntimeRepositoryException(RepositoryException e) {
+        super(e);
     }
 
-    public MgnlException(String message, Throwable cause) {
-        super(message, cause);
+    public RuntimeRepositoryException(String message, RepositoryException e) {
+        super(message, e);
     }
-
-    public MgnlException(String message) {
-        super(message);
-    }
-
-    public MgnlException(Throwable cause) {
-        super(cause);
-    }
-
 }
