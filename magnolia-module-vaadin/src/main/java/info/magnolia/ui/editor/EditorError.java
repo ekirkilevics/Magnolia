@@ -31,17 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
-
-import java.util.List;
+package info.magnolia.ui.editor;
 
 /**
- * Editors that wish to be notified about ConstraintViolations in the value
- * being edited should implement this interface.
+ * Describes an error as reported to EditorDelegate.recordError().
+ * <p/>
+ * TODO gwt has a concept for errors being consumed
  *
  * @author tmattsson
  */
-public interface HasEditorErrors {
+public interface EditorError {
 
-    void showErrors(List<EditorError> errors);
+    String getPath();
+
+    Editor getEditor();
+
+    String getMessage();
+
+    Object getValue();
 }

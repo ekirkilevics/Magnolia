@@ -36,22 +36,23 @@ package info.magnolia.module.admincentral.dialog;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.module.admincentral.RuntimeRepositoryException;
-import info.magnolia.module.admincentral.editor.ContentDriver;
-import info.magnolia.module.admincentral.editor.vaadin.VaadinDialog;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.module.admincentral.editor.DialogBuilder;
 import info.magnolia.module.admincentral.editor.vaadin.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.component.HasComponent;
+import info.magnolia.ui.editor.ContentDriver;
 import info.magnolia.ui.event.EventBus;
 
 /**
  * Activity for dialogs.
+ * FIXME very similar to DialogWindow
  *
  * @author tmattsson
  */
-public class DialogActivity extends AbstractActivity implements VaadinDialog.Presenter {
+public class DialogActivity extends AbstractActivity implements DialogView.Presenter {
 
     private DialogPlace place;
     private UIModel uiModel;
@@ -70,16 +71,17 @@ public class DialogActivity extends AbstractActivity implements VaadinDialog.Pre
             String dialogName = place.getDialogName();
             DialogDefinition dialogDefinition = uiModel.getDialogDefinition(dialogName);
 
-            VaadinDialogBuilder builder = new VaadinDialogBuilder();
-            VaadinDialog dialog = builder.getDialog();
+            // We sould not construct it here
+            DialogBuilder builder = new VaadinDialogBuilder();
+            DialogView dialog = builder.build(dialogDefinition);
 
             driver = new ContentDriver();
-            driver.initialize(builder, dialogDefinition);
+            driver.initialize(dialog);
             driver.edit(node);
 
             dialog.setPresenter(this);
 
-            display.setComponent(dialog);
+            display.setComponent(dialog.asComponent());
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

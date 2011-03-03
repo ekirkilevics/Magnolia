@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.admincentral.editor.vaadin;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -41,30 +45,26 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
+
+import info.magnolia.module.admincentral.dialog.DialogView;
 import info.magnolia.module.admincentral.dialog.VerticalTabSheet;
+import info.magnolia.ui.editor.Editor;
 
 /**
  * Vaadin specific dialog implementation.
  *
  * @author tmattsson
  */
-public class VaadinDialog extends CustomComponent {
-
-    /**
-     * Presenter for VaadinDialog.
-     */
-    public static interface Presenter {
-
-        void onSave();
-
-        void onCancel();
-    }
+public class DialogViewImpl extends CustomComponent implements DialogView {
 
     private Presenter presenter;
     private VerticalTabSheet tabSheet;
     private HorizontalLayout description;
 
-    public VaadinDialog() {
+    private Map<String, Editor> editorMappings = new HashMap<String, Editor>();
+
+
+    public DialogViewImpl() {
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
@@ -128,4 +128,21 @@ public class VaadinDialog extends CustomComponent {
     public void addField(String tabName, String label) {
         ((Layout) tabSheet.getTab(tabName)).addComponent(new Label(label));
     }
+
+    public Component asComponent() {
+        return this;
+    }
+
+    public Collection<Editor> getEditors() {
+        return editorMappings.values();
+    }
+
+    public Editor getEditor(String name) {
+        return editorMappings.get(name);
+    }
+
+    public void addEditor(Editor editor) {
+        editorMappings.put(editor.getName(), editor);
+    }
+
 }

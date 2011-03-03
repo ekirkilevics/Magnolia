@@ -61,6 +61,7 @@ public class OpenDialogCommand extends Command {
 
         // We need to send the workspace as well
 
+        // FIXME we should not do this, shell.showDialog(dialog) or similar
         jcrBrowser.getApplication().getMainWindow().addWindow(new DialogWindow("userpreferences", (Node) item));
 //        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
     }

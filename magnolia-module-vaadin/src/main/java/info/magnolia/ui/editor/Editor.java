@@ -31,28 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
+package info.magnolia.ui.editor;
 
 /**
  * Describes an editor.
  * <p/>
  * TODO gwt has a concept for arranging editors hierarchically.
  *
+ * @param <T> type of the value the editor is editing
  * @author tmattsson
  */
-public interface Editor {
+public interface Editor<T> {
 
     /**
      * Sets the value.
      *
      * @param object
      */
-    void setValue(Object object);
+    void setValue(T object);
 
     /**
      * Gets the current value.
      *
      * @return the value currently held by the editor.
      */
-    Object getValue();
+    T getValue();
+
+    String getName();
+
+    // FIXME use reflection if possible
+    Class<T> getType();
 }

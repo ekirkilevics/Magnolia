@@ -31,22 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
+package info.magnolia.ui.editor;
 
 /**
- * Describes an error as reported to EditorDelegate.recordError().
- * <p/>
- * TODO gwt has a concept for errors being consumed
+ * This is basically the presenter for an Editor.
  *
  * @author tmattsson
  */
-public interface EditorError {
+public interface EditorDelegate {
 
-    String getPath();
-
-    Editor getEditor();
-
-    String getMessage();
-
-    Object getValue();
+    /**
+     * This method should be called from Editor.getValue() to record that there was an error.
+     *
+     * @param message a textual description of the editor
+     * @param value   the current value that the error relates to
+     */
+    void recordError(String message, Object value);
 }

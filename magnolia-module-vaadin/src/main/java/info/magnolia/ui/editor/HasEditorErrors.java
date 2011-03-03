@@ -31,14 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
+package info.magnolia.ui.editor;
+
+import java.util.List;
 
 /**
- * Indicates that an editor requires an EditorDelegate.
+ * Editors that wish to be notified about ConstraintViolations in the value
+ * being edited should implement this interface.
  *
  * @author tmattsson
  */
-public interface HasEditorDelegate extends Editor {
+public interface HasEditorErrors {
 
-    void setDelegate(EditorDelegate delegate);
+    void showErrors(List<EditorError> errors);
 }

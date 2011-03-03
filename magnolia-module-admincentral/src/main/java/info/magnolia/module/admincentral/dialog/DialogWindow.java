@@ -36,22 +36,17 @@ package info.magnolia.module.admincentral.dialog;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.vaadin.ui.Window;
-import info.magnolia.module.admincentral.RuntimeRepositoryException;
-import info.magnolia.module.admincentral.editor.ContentDriver;
-import info.magnolia.module.admincentral.editor.vaadin.VaadinDialog;
+
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.editor.vaadin.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.ui.editor.ContentDriver;
 
 /**
  * Window for creating or editing content using a dialog.
  */
-public class DialogWindow extends Window implements VaadinDialog.Presenter {
-
-    private static final Logger log = LoggerFactory.getLogger(EditParagraphWindow.class);
+public class DialogWindow extends Window implements DialogView.Presenter {
 
     private String workspace;
     private String path;
@@ -73,17 +68,18 @@ public class DialogWindow extends Window implements VaadinDialog.Presenter {
 
             DialogDefinition dialogDefinition = DialogRegistry.getInstance().getDialog(dialogName);
 
+            // FIXME inject the builder
             VaadinDialogBuilder builder = new VaadinDialogBuilder();
-            VaadinDialog dialog = builder.getDialog();
+            DialogView dialog = builder.build(dialogDefinition);
 
             driver = new ContentDriver();
-            driver.initialize(builder, dialogDefinition);
+            driver.initialize(dialog);
             driver.edit(node);
 
             dialog.setPresenter(this);
 
             super.setCaption(builder.getMessages(dialogDefinition).getWithDefault(dialogDefinition.getLabel(), dialogDefinition.getLabel()));
-            super.getContent().addComponent(dialog);
+            super.getContent().addComponent(dialog.asComponent());
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

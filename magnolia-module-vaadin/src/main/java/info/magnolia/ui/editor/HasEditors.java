@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,31 +25,24 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral;
+package info.magnolia.ui.editor;
 
-import javax.jcr.RepositoryException;
+import java.util.Collection;
 
 /**
- * Wraps RepositoryException as a runtime exception. Useful in cases where a RepositoryException is an unrecoverable
- * error. Prefer using this class to wrapping as a plain RuntimeException as this is easier to catch and handle in cases
- * where it is necessary to unpack the cause to display an appropriate error message or rethrow it as a checked
- * exception.
- *
- * @author tmattson
+ * Exposes editors. Used by the Driver to interact with a view.
  */
-public class RuntimeRepositoryException extends RuntimeException {
+public interface HasEditors {
 
-    public RuntimeRepositoryException(RepositoryException e) {
-        super(e);
-    }
+    Collection<Editor> getEditors();
 
-    public RuntimeRepositoryException(String message, RepositoryException e) {
-        super(message, e);
-    }
+    // FIXME is this used at all?
+    <T extends Class<?>> Editor<T> getEditor(String name);
+
 }

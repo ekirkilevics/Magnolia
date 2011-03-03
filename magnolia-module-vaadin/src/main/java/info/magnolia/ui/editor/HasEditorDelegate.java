@@ -31,43 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
-
-import java.util.List;
+package info.magnolia.ui.editor;
 
 /**
- * Automates editing of entities defined by the content model.
+ * Indicates that an editor requires an EditorDelegate.
  *
- * @param <T> the type of entity to edit
  * @author tmattsson
  */
-public interface Driver<T> {
+public interface HasEditorDelegate extends Editor {
 
-    /**
-     * Push the data in an object into the dialog prepared by the initialize() method.
-     *
-     * @param object
-     */
-    void edit(T object);
-
-    /**
-     * Update the object with values from the dialog.
-     *
-     * @param object
-     */
-    void flush(T object);
-
-    /**
-     * Indicates if the last call to flush() resulted in any errors.
-     *
-     * @return
-     */
-    boolean hasErrors();
-
-    /**
-     * Returns any unconsumed(?) errors from the last call to flush().
-     *
-     * @return
-     */
-    List<EditorError> getErrors();
+    void setDelegate(EditorDelegate delegate);
 }

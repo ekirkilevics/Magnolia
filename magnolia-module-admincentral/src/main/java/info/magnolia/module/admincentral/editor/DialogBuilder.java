@@ -34,8 +34,7 @@
 package info.magnolia.module.admincentral.editor;
 
 import info.magnolia.module.admincentral.dialog.DialogDefinition;
-import info.magnolia.module.admincentral.dialog.DialogField;
-import info.magnolia.module.admincentral.dialog.DialogTab;
+import info.magnolia.module.admincentral.dialog.DialogView;
 
 /**
  * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
@@ -44,7 +43,5 @@ import info.magnolia.module.admincentral.dialog.DialogTab;
  */
 public interface DialogBuilder {
 
-    void addTab(DialogDefinition dialogDefinition, DialogTab tab);
-
-    Editor addField(DialogDefinition dialogDefinition, DialogTab tab, DialogField field, Class<?> type);
+    DialogView build(DialogDefinition dialogDefinition);
 }

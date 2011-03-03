@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
+package info.magnolia.ui.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,6 +82,22 @@ public abstract class AbstractDriver<T> implements Driver<T> {
     }
 
     private List<EditorError> errors = new ArrayList<EditorError>();
+    private HasEditors view;
+
+    public void initialize(HasEditors view) {
+        this.view = view;
+
+        // TODO should this really happen here?
+        for (final Editor editor : view.getEditors()) {
+            if (editor instanceof HasEditorDelegate) {
+                ((HasEditorDelegate)editor).setDelegate(new EditorDelegate() {
+                    public void recordError(String message, Object value) {
+                        addError(editor.getName(), editor, message, value);
+                    }
+                });
+            }
+        }
+    }
 
     protected void addError(String path, Editor editor, String message, Object value) {
         this.errors.add(new SimpleEditorError(path, editor, message, value));
@@ -105,5 +121,10 @@ public abstract class AbstractDriver<T> implements Driver<T> {
 
     public List<EditorError> getErrors() {
         return Collections.unmodifiableList(this.errors);
+    }
+
+
+    protected HasEditors getView() {
+        return view;
     }
 }

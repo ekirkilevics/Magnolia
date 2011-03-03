@@ -39,11 +39,11 @@ import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.ui.Field;
 import info.magnolia.module.admincentral.dialog.DialogField;
-import info.magnolia.module.admincentral.editor.Editor;
-import info.magnolia.module.admincentral.editor.EditorDelegate;
-import info.magnolia.module.admincentral.editor.EditorError;
-import info.magnolia.module.admincentral.editor.HasEditorDelegate;
-import info.magnolia.module.admincentral.editor.HasEditorErrors;
+import info.magnolia.ui.editor.Editor;
+import info.magnolia.ui.editor.EditorDelegate;
+import info.magnolia.ui.editor.EditorError;
+import info.magnolia.ui.editor.HasEditorDelegate;
+import info.magnolia.ui.editor.HasEditorErrors;
 
 /**
  * Adapter class that adapts a Vaadin Field as an Editor.
@@ -93,5 +93,13 @@ public class VaadinEditorAdapter implements Editor, HasEditorDelegate, HasEditor
             }
         }
         // TODO should it clear any error(s) if there's none for this editor in the list?
+    }
+
+    public String getName() {
+        return fieldDefinition.getName();
+    }
+
+    public Class getType() {
+        return type;
     }
 }

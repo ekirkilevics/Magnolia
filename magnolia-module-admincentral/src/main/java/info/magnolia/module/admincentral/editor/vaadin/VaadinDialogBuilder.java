@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.editor.vaadin;
 
+import java.util.Calendar;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.ui.CheckBox;
@@ -47,29 +49,70 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.module.admincentral.dialog.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.DialogField;
 import info.magnolia.module.admincentral.dialog.DialogTab;
+import info.magnolia.module.admincentral.dialog.DialogView;
 import info.magnolia.module.admincentral.editor.DialogBuilder;
-import info.magnolia.module.admincentral.editor.Editor;
+import info.magnolia.ui.editor.Editor;
 
 /**
- * Builder for VaadinDialog.
+ * Builder for DialogViewImpl.
  *
  * @author tmattsson
  */
 public class VaadinDialogBuilder implements DialogBuilder {
 
-    private VaadinDialog dialog = new VaadinDialog();
+    public DialogView build(DialogDefinition dialogDefinition) {
+        DialogViewImpl dialog = new DialogViewImpl();
 
-    public VaadinDialog getDialog() {
+        for (DialogTab dialogTab : dialogDefinition.getTabs()) {
+
+            addTab(dialog, dialogDefinition, dialogTab);
+
+            for (final DialogField field : dialogTab.getFields()) {
+
+                // TODO it also needs to be give more explicit instructions like 'richText' and things like options.
+                // TODO some things might not be a good match with a java type, for instance nt:file
+                // TODO some dialog fields dont even have a type, controlType=static for instance
+
+                Class<?> type = getTypeFromDialogControl(field);
+
+                final Editor<?> editor = addField(
+                        dialog,
+                        dialogDefinition,
+                        dialogTab,
+                        field,
+                        type);
+
+                if(editor != null){
+                    //FIXME we add the field, so we could add the editor then?
+                    dialog.addEditor(editor);
+                }
+            }
+        }
         return dialog;
     }
 
-    public void addTab(DialogDefinition dialogDefinition, DialogTab tab) {
+    private Class<?> getTypeFromDialogControl(DialogField field) {
+        if (field.getControlType().equals("edit"))
+            return String.class;
+        if (field.getControlType().equals("date"))
+            return Calendar.class;
+        if (field.getControlType().equals("richText"))
+            return String.class;
+        if (field.getControlType().equals("password"))
+            return String.class;
+        if (field.getControlType().equals("checkboxSwitch"))
+            return Boolean.class;
+        return null;
+//        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
+    }
+
+    public void addTab(DialogViewImpl dialog, DialogDefinition dialogDefinition, DialogTab tab) {
         Messages messages = getMessages(dialogDefinition, tab);
         String label = messages.getWithDefault(tab.getLabel(), tab.getLabel());
         dialog.addTab(tab.getName(), label);
     }
 
-    public Editor addField(DialogDefinition dialogDefinition, DialogTab tab, DialogField fieldDefinition, Class<?> type) {
+    public Editor addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, DialogTab tab, DialogField fieldDefinition, Class<?> type) {
         Messages messages = getMessages(dialogDefinition, tab, fieldDefinition);
 
         // TODO for controlType=static we need something completely different, it isnt even an editor...

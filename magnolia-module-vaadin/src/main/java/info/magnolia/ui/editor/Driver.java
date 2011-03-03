@@ -31,20 +31,45 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.editor;
+package info.magnolia.ui.editor;
+
+import java.util.List;
 
 /**
- * This is basically the presenter for an Editor.
+ * Automates editing of entities defined by the content model.
  *
+ * @param <T> the type of entity to edit
  * @author tmattsson
  */
-public interface EditorDelegate {
+public interface Driver<T> {
+
+    void initialize(HasEditors editors);
 
     /**
-     * This method should be called from Editor.getValue() to record that there was an error.
+     * Push the data in an object into the dialog prepared by the initialize() method.
      *
-     * @param message a textual description of the editor
-     * @param value   the current value that the error relates to
+     * @param object
      */
-    void recordError(String message, Object value);
+    void edit(T object);
+
+    /**
+     * Update the object with values from the dialog.
+     *
+     * @param object
+     */
+    void flush(T object);
+
+    /**
+     * Indicates if the last call to flush() resulted in any errors.
+     *
+     * @return
+     */
+    boolean hasErrors();
+
+    /**
+     * Returns any unconsumed(?) errors from the last call to flush().
+     *
+     * @return
+     */
+    List<EditorError> getErrors();
 }

@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.module.admincentral.RuntimeRepositoryException;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.event.ContentChangedEvent;
 import info.magnolia.module.admincentral.event.ContentChangedEvent.Handler;
 import info.magnolia.module.admincentral.model.UIModel;
