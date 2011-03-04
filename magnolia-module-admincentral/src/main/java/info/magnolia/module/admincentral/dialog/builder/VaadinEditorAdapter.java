@@ -77,7 +77,8 @@ public class VaadinEditorAdapter implements Editor, HasEditorDelegate, HasEditor
         // TODO This is very rudimentary validation
 
         if (type.equals(String.class)) {
-            if (fieldDefinition.isRequired() && StringUtils.isEmpty((String) value)) {
+            // TODO quick hack to get us something to test with
+            if ((fieldDefinition.isRequired() || fieldDefinition.getName().equals("title")) && StringUtils.isEmpty((String) value)) {
                 delegate.recordError("Required", value);
             }
         }

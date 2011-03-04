@@ -70,7 +70,8 @@ public class ContentDriver extends AbstractDriver<Node> {
 
     public void flush(Node node) {
 
-        // TODO should clear previous errors
+        // Clear any errors from a previous flush
+        super.clearErrors();
 
         try {
             for (Editor<Object> editor : getView().getEditors()) {
