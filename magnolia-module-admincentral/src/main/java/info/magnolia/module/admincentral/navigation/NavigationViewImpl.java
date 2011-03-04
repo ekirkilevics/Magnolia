@@ -65,12 +65,12 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author fgrilli
  *
  */
-public class MenuViewImpl extends CustomComponent implements MenuView{
+public class NavigationViewImpl extends CustomComponent implements NavigationView{
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = LoggerFactory.getLogger(MenuViewImpl.class);
-    private final Map<Tab, MenuItemConfiguration> menuItems = new HashMap<Tab, MenuItemConfiguration>();
+    private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
+    private final Map<Tab, NavigationItemConfiguration> menuItems = new HashMap<Tab, NavigationItemConfiguration>();
     private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
 
     private Accordion accordion = new Accordion();
@@ -80,14 +80,14 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
     private UIModel uiModel;
 
 
-    public MenuViewImpl(final Presenter presenter, final UIModel uiModel) {
+    public NavigationViewImpl(final Presenter presenter, final UIModel uiModel) {
         this.presenter = presenter;
         this.uiModel = uiModel;
         setCompositionRoot(accordion);
         setSizeFull();
 
-        for (Entry<String, MenuItemConfiguration> menuItemEntry : this.uiModel.getMenuDefinition().entrySet()) {
-            MenuItemConfiguration menuItem = menuItemEntry.getValue();
+        for (Entry<String, NavigationItemConfiguration> menuItemEntry : this.uiModel.getMenuDefinition().entrySet()) {
+            NavigationItemConfiguration menuItem = menuItemEntry.getValue();
             // check permission
             if (!isMenuItemRenderable(menuItem)) {
                 continue;
@@ -107,7 +107,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
      * @param menuItemKey unique menu item key. The key is used for bookmarking and IS visible to the end users ... take care
      * @param menuItem menu item configuration entry
      */
-    public void addTab(String menuItemKey, MenuItemConfiguration menuItem) {
+    public void addTab(String menuItemKey, NavigationItemConfiguration menuItem) {
         // layout for sub menu entries
         Component subMenu = addSubMenuItemsIntoLayout(menuItem);
         Tab tab = accordion.addTab(subMenu == null ? new Label() : subMenu, getLabel(menuItem), getIcon(menuItem));
@@ -120,7 +120,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
      * Iterates over sub menu entries and adds them to the layout.
      * @return Component with all relevant sub menu entries or null when none exists.
      */
-    private Component addSubMenuItemsIntoLayout(MenuItemConfiguration menuItem) {
+    private Component addSubMenuItemsIntoLayout(NavigationItemConfiguration menuItem) {
         if (menuItem.getMenuItems().isEmpty()) {
             return null;
         }
@@ -128,7 +128,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
         layout.setSpacing(true);
         layout.setMargin(true);
         // sub menu items (2 levels only)
-        for (MenuItemConfiguration sub :  menuItem.getMenuItems().values()) {
+        for (NavigationItemConfiguration sub :  menuItem.getMenuItems().values()) {
             if (isMenuItemRenderable(sub)) {
                 layout.addComponent(new MenuItem(sub));
             }
@@ -140,11 +140,11 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
     /**
      * Converts label key into i18n-ized string.
      */
-    protected String getLabel(MenuItemConfiguration menuItem) {
+    protected String getLabel(NavigationItemConfiguration menuItem) {
         return menuItem.getMessages().getWithDefault(menuItem.getLabel(), menuItem.getLabel());
     }
 
-    protected Resource getIcon(MenuItemConfiguration menuItem){
+    protected Resource getIcon(NavigationItemConfiguration menuItem){
         if (menuItem.getIcon() == null) {
             return null;
         }
@@ -155,7 +155,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
      * @param menuItem
      * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
      */
-    protected boolean isMenuItemRenderable(MenuItemConfiguration menuItem) {
+    protected boolean isMenuItemRenderable(NavigationItemConfiguration menuItem) {
         return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(menuItem.getLocation(), Permission.READ);
     }
 
@@ -168,9 +168,9 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
 
         private static final long serialVersionUID = 1L;
 
-        private MenuItemConfiguration item;
+        private NavigationItemConfiguration item;
 
-        public MenuItem(final MenuItemConfiguration item) {
+        public MenuItem(final NavigationItemConfiguration item) {
             this.item = item;
         }
 
@@ -180,11 +180,11 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
         @Override
         public void attach() {
             super.attach();
-            Resource icon = MenuViewImpl.this.getIcon(item);
+            Resource icon = NavigationViewImpl.this.getIcon(item);
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(MenuViewImpl.this.getLabel(item));
+            setCaption(NavigationViewImpl.this.getLabel(item));
 
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
@@ -212,7 +212,7 @@ public class MenuViewImpl extends CustomComponent implements MenuView{
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
 
             if (tab != null) {
-                MenuItemConfiguration menuConfig = menuItems.get(tab);
+                NavigationItemConfiguration menuConfig = menuItems.get(tab);
                 presenter.onMenuSelection(menuConfig);
             }
         }

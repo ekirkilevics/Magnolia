@@ -38,7 +38,7 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.navigation.NavigationItemConfiguration;
 import info.magnolia.module.admincentral.tree.ConfiguredTreeManager;
 
 import java.util.LinkedHashMap;
@@ -56,7 +56,7 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralModule.class);
 
-    private Map<String, MenuItemConfiguration> menu = new LinkedHashMap<String, MenuItemConfiguration>();
+    private Map<String, NavigationItemConfiguration> menu = new LinkedHashMap<String, NavigationItemConfiguration>();
 
     private boolean stopCalled;
 
@@ -84,15 +84,15 @@ public class AdminCentralModule implements ModuleLifecycle {
         this.stopCalled = true;
     }
 
-    public Map<String, MenuItemConfiguration> getMenuItems() {
+    public Map<String, NavigationItemConfiguration> getMenuItems() {
         return menu;
     }
 
-    public void setMenuItems(Map<String, MenuItemConfiguration> menu) {
+    public void setMenuItems(Map<String, NavigationItemConfiguration> menu) {
         this.menu = menu;
     }
 
-    public void addMenuItem(String name, MenuItemConfiguration menuItem) {
+    public void addMenuItem(String name, NavigationItemConfiguration menuItem) {
         menuItem.setLocation("/modules/admin-central/config/menu/" + name);
         this.menu.put(name, menuItem);
     }

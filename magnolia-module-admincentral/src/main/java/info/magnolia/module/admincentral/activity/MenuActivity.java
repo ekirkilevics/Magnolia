@@ -34,9 +34,9 @@
 package info.magnolia.module.admincentral.activity;
 
 import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
-import info.magnolia.module.admincentral.navigation.MenuView;
-import info.magnolia.module.admincentral.navigation.MenuViewImpl;
+import info.magnolia.module.admincentral.navigation.NavigationItemConfiguration;
+import info.magnolia.module.admincentral.navigation.NavigationView;
+import info.magnolia.module.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.action.Action;
 import info.magnolia.ui.action.ActionFactory;
 import info.magnolia.ui.activity.AbstractActivity;
@@ -47,7 +47,7 @@ import info.magnolia.ui.event.EventBus;
  * @author fgrilli
  *
  */
-public class MenuActivity extends AbstractActivity implements MenuView.Presenter {
+public class MenuActivity extends AbstractActivity implements NavigationView.Presenter {
     private UIModel uiModel;
     private ActionFactory actionFactory;
 
@@ -56,11 +56,11 @@ public class MenuActivity extends AbstractActivity implements MenuView.Presenter
         this.actionFactory = actionFactory;
     }
     public void start(HasComponent display, EventBus eventBus) {
-        MenuViewImpl menu = new MenuViewImpl(this, uiModel);
+        NavigationViewImpl menu = new NavigationViewImpl(this, uiModel);
         display.setComponent(menu);
     }
 
-    public void onMenuSelection(MenuItemConfiguration menuConfig) {
+    public void onMenuSelection(NavigationItemConfiguration menuConfig) {
         final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
         action.execute();
     }

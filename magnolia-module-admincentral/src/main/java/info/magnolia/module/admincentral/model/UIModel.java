@@ -37,7 +37,7 @@ import info.magnolia.module.admincentral.AdminCentralModule;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.module.admincentral.navigation.MenuItemConfiguration;
+import info.magnolia.module.admincentral.navigation.NavigationItemConfiguration;
 import info.magnolia.module.admincentral.tree.MenuItem;
 import info.magnolia.module.admincentral.tree.TreeDefinition;
 import info.magnolia.module.admincentral.tree.TreeRegistry;
@@ -145,7 +145,7 @@ public class UIModel {
             return StringUtils.substringAfter(item.getPath(), base);
     }
 
-    public Map<String, MenuItemConfiguration> getMenuDefinition(){
+    public Map<String, NavigationItemConfiguration> getMenuDefinition(){
         return adminCentralModule.getMenuItems();
     }
 

@@ -40,11 +40,11 @@ import info.magnolia.ui.component.IsComponent;
  * @author fgrilli
  *
  */
-public interface MenuView extends IsComponent {
+public interface NavigationView extends IsComponent {
     /**
      * Presenter we have to inform about navigation events.
      */
     public static interface Presenter{
-        void onMenuSelection(MenuItemConfiguration menuConf);
+        void onMenuSelection(NavigationItemConfiguration menuConf);
     }
 }

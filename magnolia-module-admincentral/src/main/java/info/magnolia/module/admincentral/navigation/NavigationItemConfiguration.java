@@ -46,7 +46,7 @@ import java.util.Map;
  * @author had
  * @version $Id: $
  */
-public class MenuItemConfiguration extends I18nAwareComponent implements Serializable {
+public class NavigationItemConfiguration extends I18nAwareComponent implements Serializable {
 
     private static final long serialVersionUID = -1471102661627728596L;
 
@@ -54,9 +54,9 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
     private String icon;
     private String label;
     private String location;
-    private MenuItemConfiguration parent;
+    private NavigationItemConfiguration parent;
     private ActionDefinition<? extends Action> actionDefinition;
-    private Map<String, MenuItemConfiguration> subMenuItems = new LinkedHashMap<String, MenuItemConfiguration>();
+    private Map<String, NavigationItemConfiguration> subMenuItems = new LinkedHashMap<String, NavigationItemConfiguration>();
 
     @Override
     public I18nAwareComponent getI18nAwareParent() {
@@ -76,14 +76,14 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
         this.label = label;
     }
 
-    public Map<String, MenuItemConfiguration> getMenuItems() {
+    public Map<String, NavigationItemConfiguration> getMenuItems() {
         return subMenuItems;
     }
-    public void setMenuItems(Map<String, MenuItemConfiguration> subMenuItems) {
+    public void setMenuItems(Map<String, NavigationItemConfiguration> subMenuItems) {
         this.subMenuItems = subMenuItems;
     }
 
-    public void addMenuItem(String name, MenuItemConfiguration subMenuItem) {
+    public void addMenuItem(String name, NavigationItemConfiguration subMenuItem) {
         subMenuItem.setParent(this);
         subMenuItem.setName(name);
         this.subMenuItems.put(name, subMenuItem);
@@ -97,7 +97,7 @@ public class MenuItemConfiguration extends I18nAwareComponent implements Seriali
         return name;
     }
 
-    public void setParent(MenuItemConfiguration parent) {
+    public void setParent(NavigationItemConfiguration parent) {
         this.parent = parent;
     }
 
