@@ -50,7 +50,9 @@ public class ActionFactoryImpl implements ActionFactory {
 
     private PlaceController placeController;
 
-    //TODO remove me: just a quick workaround for M3 Sprint II release
+    /**
+     * TODO remove me: just a quick workaround for M3 Sprint II release.
+     */
     public static final class NowhereActionDefinition implements PlaceChangeActionDefinition {
 
         public Place getPlace() {
