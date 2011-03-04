@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.objectfactory.Components;
 
 /**
  * ObservedManager for dialogs configured in repository.
@@ -54,6 +53,11 @@ public class ConfiguredDialogManager extends ObservedManager {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredDialogs = new HashSet<String>();
+    private DialogRegistry dialogRegistry;
+
+    public ConfiguredDialogManager(DialogRegistry dialogRegistry) {
+        this.dialogRegistry = dialogRegistry;
+    }
 
     @Override
     protected void onRegister(Content node) {
@@ -70,7 +74,7 @@ public class ConfiguredDialogManager extends ObservedManager {
             synchronized (registeredDialogs) {
                 try {
                     ConfiguredDialogProvider dialogProvider = new ConfiguredDialogProvider(dialogNode);
-                    DialogRegistry.getInstance().registerDialog(name, dialogProvider);
+                    dialogRegistry.registerDialog(name, dialogProvider);
                     this.registeredDialogs.add(name);
                 } catch (IllegalStateException e) {
                     log.error("Unable to register dialog [" + name + "]", e);
@@ -83,13 +87,9 @@ public class ConfiguredDialogManager extends ObservedManager {
     protected void onClear() {
         synchronized (registeredDialogs) {
             for (String dialogName : registeredDialogs) {
-                DialogRegistry.getInstance().unregisterDialog(dialogName);
+                dialogRegistry.unregisterDialog(dialogName);
             }
             this.registeredDialogs.clear();
         }
-    }
-
-    public static ConfiguredDialogManager getInstance() {
-        return Components.getSingleton(ConfiguredDialogManager.class);
     }
 }

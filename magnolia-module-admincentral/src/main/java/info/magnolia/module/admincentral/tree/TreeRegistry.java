@@ -33,11 +33,8 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.objectfactory.Components;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.jcr.RepositoryException;
 
 /**
@@ -71,9 +68,5 @@ public class TreeRegistry {
             return null;
         }
         return treeProvider.getTreeDefinition();
-    }
-
-    public static TreeRegistry getInstance() {
-        return Components.getSingleton(TreeRegistry.class);
     }
 }

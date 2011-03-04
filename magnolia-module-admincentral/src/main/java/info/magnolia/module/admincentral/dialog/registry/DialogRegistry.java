@@ -38,7 +38,6 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
-import info.magnolia.objectfactory.Components;
 
 /**
  * Maintains a registry of dialog providers registered by name.
@@ -107,7 +106,4 @@ public class DialogRegistry {
         return def;
     }
 */
-    public static DialogRegistry getInstance() {
-        return Components.getSingleton(DialogRegistry.class);
-    }
 }

@@ -33,11 +33,6 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.objectfactory.Components;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +40,10 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 
 /**
  * ObservedManager for trees configured in the repository.
@@ -54,6 +53,11 @@ public class ConfiguredTreeManager extends ObservedManager {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Set<String> registeredTrees = new HashSet<String>();
+    private TreeRegistry treeRegistry;
+
+    public ConfiguredTreeManager(TreeRegistry treeRegistry) {
+        this.treeRegistry = treeRegistry;
+    }
 
     @Override
     protected void onRegister(Content node) {
@@ -72,7 +76,7 @@ public class ConfiguredTreeManager extends ObservedManager {
 
                     TreeProvider tree = new ConfiguredTreeProvider(treeNode);
 
-                    TreeRegistry.getInstance().registerTree(name, tree);
+                    treeRegistry.registerTree(name, tree);
                     this.registeredTrees.add(name);
                 } catch (IllegalStateException e) {
                     log.error("Unable to register tree [" + name + "]", e);
@@ -85,13 +89,9 @@ public class ConfiguredTreeManager extends ObservedManager {
     protected void onClear() {
         synchronized (registeredTrees) {
             for (String treeName : registeredTrees) {
-                TreeRegistry.getInstance().unregisterTree(treeName);
+                treeRegistry.unregisterTree(treeName);
             }
             this.registeredTrees.clear();
         }
-    }
-
-    public static ConfiguredTreeManager getInstance() {
-        return Components.getSingleton(ConfiguredTreeManager.class);
     }
 }

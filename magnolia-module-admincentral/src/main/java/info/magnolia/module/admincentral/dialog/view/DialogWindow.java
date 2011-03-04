@@ -43,6 +43,7 @@ import info.magnolia.module.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.ui.editor.ContentDriver;
 
 /**
@@ -68,7 +69,9 @@ public class DialogWindow extends Window implements DialogView.Presenter {
 
             Node node = getNode();
 
-            DialogDefinition dialogDefinition = DialogRegistry.getInstance().getDialog(dialogName);
+            DialogRegistry dialogRegistry = Components.getComponent(DialogRegistry.class);
+
+            DialogDefinition dialogDefinition = dialogRegistry.getDialog(dialogName);
 
             // FIXME inject the builder
             VaadinDialogBuilder builder = new VaadinDialogBuilder();
@@ -101,6 +104,8 @@ public class DialogWindow extends Window implements DialogView.Presenter {
 //                super.getApplication().getMainWindow().showNotification("You have errors");
             } else {
                 getParent().removeWindow(this);
+                // TODO we should fire a tree update event so changes are reflected in the tree view
+                // eventBus.fireEvent(new ContentChangedEvent(treeName, path));
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

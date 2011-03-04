@@ -33,6 +33,12 @@
  */
 package info.magnolia.module.admincentral;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
@@ -40,12 +46,6 @@ import info.magnolia.module.admincentral.commands.ConvertDialogsFromFourOhToFive
 import info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager;
 import info.magnolia.module.admincentral.navigation.NavigationItemConfiguration;
 import info.magnolia.module.admincentral.tree.ConfiguredTreeManager;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Magnolia's AdminCentral Module.
@@ -58,30 +58,32 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     private Map<String, NavigationItemConfiguration> menu = new LinkedHashMap<String, NavigationItemConfiguration>();
 
-    private boolean stopCalled;
+    private ConfiguredDialogManager configuredDialogManager;
+    private ConfiguredTreeManager configuredTreeManager;
+
+    public AdminCentralModule(ConfiguredDialogManager configuredDialogManager, ConfiguredTreeManager configuredTreeManager) {
+        this.configuredDialogManager = configuredDialogManager;
+        this.configuredTreeManager = configuredTreeManager;
+    }
 
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("mgnl50dialogs", ConfiguredDialogManager.getInstance());
-        ctx.registerModuleObservingComponent("mgnl50trees", ConfiguredTreeManager.getInstance());
+        ctx.registerModuleObservingComponent("mgnl50dialogs", configuredDialogManager);
+        ctx.registerModuleObservingComponent("mgnl50trees", configuredTreeManager);
 
-        // do not run import on every module restart
-        if (!this.stopCalled) {
+        if (ctx.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
             try {
                 // TODO: convert dialogs during upgrade process and not everytime on startup, but not on restart
                 new ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
-                //FIXME command to convert old menu must be revised after architectural changes. For teh time being reads menug config from bootstrap file.
+                //FIXME command to convert old menu must be revised after architectural changes. For the time being reads menu config from bootstrap file.
                 //new ConvertMenuFromFourOhToFiveOhConfigurationStyleCommand().execute(MgnlContext.getInstance());
             } catch (Exception e) {
                 log.error("Failed to convert dialog structure.", e);
             }
-            this.stopCalled = false;
         }
-
         // DialogRegistry.getInstance().registerDialog("mock", new MockDialogProvider());
     }
 
-    public void stop(ModuleLifecycleContext ctx) {
-        this.stopCalled = true;
+    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 
     public Map<String, NavigationItemConfiguration> getMenuItems() {
