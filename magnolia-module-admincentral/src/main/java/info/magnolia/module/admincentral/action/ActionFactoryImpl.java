@@ -38,6 +38,7 @@ import info.magnolia.ui.action.Action;
 import info.magnolia.ui.action.ActionDefinition;
 import info.magnolia.ui.action.ActionFactory;
 import info.magnolia.ui.action.PlaceChangeAction;
+import info.magnolia.ui.place.Place;
 import info.magnolia.ui.place.PlaceController;
 
 /**
@@ -49,13 +50,24 @@ public class ActionFactoryImpl implements ActionFactory {
 
     private PlaceController placeController;
 
+    //TODO remove me: just a quick workaround for M3 Sprint II release
+    public static final class NowhereActionDefinition implements PlaceChangeActionDefinition {
+
+        public Place getPlace() {
+            return Place.NOWHERE;
+        }
+
+    }
+
     public ActionFactoryImpl(final PlaceController placeController) {
         this.placeController = placeController;
     }
 
     public Action createAction(final ActionDefinition<? extends Action> definition){
         if(definition == null){
-           throw new IllegalArgumentException("action definition cannot be null");
+            //TODO this will actually have to throw an exception but as a quick workaround for the M3 Sprint II release we use a NowhereActionDefinition to avoid annoying IAE.
+           //throw new IllegalArgumentException("action definition cannot be null");
+            return new PlaceChangeAction((PlaceChangeActionDefinition) new NowhereActionDefinition(), placeController);
         }
         if(definition instanceof PlaceChangeActionDefinition) {
             return new PlaceChangeAction((PlaceChangeActionDefinition) definition, placeController);
