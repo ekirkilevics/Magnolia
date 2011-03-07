@@ -42,7 +42,7 @@ import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.EditWorkspacePlace;
 import info.magnolia.module.admincentral.place.ShowContentPlace;
 import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.activity.Activity;
 import info.magnolia.ui.activity.ActivityManager;
@@ -67,8 +67,10 @@ public class AdminCentralPresenter {
     private UIModel uiModel;
     private PlaceController placeController;
     private AdminCentralView adminCentralView;
+    private ComponentProvider componentProvider;
 
-    public AdminCentralPresenter(Shell shell, EventBus eventBus, UIModel uiModel, PlaceController placeController, AdminCentralView adminCentralView) {
+    public AdminCentralPresenter(ComponentProvider componentProvider, Shell shell, EventBus eventBus, UIModel uiModel, PlaceController placeController, AdminCentralView adminCentralView) {
+        this.componentProvider = componentProvider;
         this.shell = shell;
         this.eventBus = eventBus;
         this.uiModel = uiModel;
@@ -86,7 +88,7 @@ public class AdminCentralPresenter {
         historyHandler.register(placeController, eventBus, defaultPlace);
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
-            Activity menuActivity = Components.getComponentProvider().newInstance(MenuActivity.class);
+            Activity menuActivity = componentProvider.newInstance(MenuActivity.class);
             public Activity getActivity(Place place) {
                 return menuActivity;
             }

@@ -39,11 +39,10 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Window;
 
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.module.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.module.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
-import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
-import info.magnolia.objectfactory.Components;
 import info.magnolia.ui.editor.ContentDriver;
 
 /**
@@ -55,7 +54,7 @@ public class DialogWindow extends Window implements DialogView.Presenter {
     private String path;
     private ContentDriver driver;
 
-    public DialogWindow(String dialogName, String workspace, String path) {
+    public DialogWindow(String workspace, String path, DialogDefinition dialogDefinition) {
         this.workspace = workspace;
         this.path = path;
 
@@ -69,12 +68,8 @@ public class DialogWindow extends Window implements DialogView.Presenter {
 
             Node node = getNode();
 
-            DialogRegistry dialogRegistry = Components.getComponent(DialogRegistry.class);
-
-            DialogDefinition dialogDefinition = dialogRegistry.getDialog(dialogName);
-
             // FIXME inject the builder
-            VaadinDialogBuilder builder = new VaadinDialogBuilder();
+            DialogBuilder builder = new VaadinDialogBuilder();
             DialogView dialog = builder.build(dialogDefinition);
 
             driver = new ContentDriver();
@@ -91,8 +86,8 @@ public class DialogWindow extends Window implements DialogView.Presenter {
         }
     }
 
-    public DialogWindow(String dialogName, Node node) throws RepositoryException {
-        this(dialogName, node.getSession().getWorkspace().getName(), node.getPath());
+    public DialogWindow(Node node, DialogDefinition dialogDefinition) throws RepositoryException {
+        this(node.getSession().getWorkspace().getName(), node.getPath(), dialogDefinition);
     }
 
     public void onSave() {

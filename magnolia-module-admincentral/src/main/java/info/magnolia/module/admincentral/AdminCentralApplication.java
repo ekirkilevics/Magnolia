@@ -66,10 +66,10 @@ public class AdminCentralApplication extends Application implements HttpServletR
     public void init() {
 
         // Initialize the view first since ShellImpl depends on it being set up when it's constructor is called
-        Components.getComponent(AdminCentralView.class).init();
+        componentProvider.getComponent(AdminCentralView.class).init();
 
         // Now initialize the presenter to start up MVP
-        Components.getComponent(AdminCentralPresenter.class).init();
+        componentProvider.getComponent(AdminCentralPresenter.class).init();
     }
 
     private void createScopedContainer() {
@@ -78,6 +78,10 @@ public class AdminCentralApplication extends Application implements HttpServletR
         PicoBuilder builder = new PicoBuilder(provider.getContainer()).withConstructorInjection().withCaching();
 
         MutablePicoContainer container = builder.build();
+
+        componentProvider = new PicoComponentProvider(container, provider.getDef());
+
+        container.addComponent(ComponentProvider.class, componentProvider);
 
         container.addComponent(Application.class, this);
         container.addComponent(AdminCentralView.class, AdminCentralViewImpl.class);
@@ -91,13 +95,14 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified
-
-        componentProvider = new PicoComponentProvider(container, provider.getDef());
     }
 
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
         if (componentProvider == null)
             createScopedContainer();
+
+        // TODO keeping scopes in ThreadLocal is not necessary if we allow components to have their ComponentProvider injected, expect that since Content2Bean is a static service it needs to get it this way which is a shame..
+
         Components.pushScope(componentProvider);
     }
 

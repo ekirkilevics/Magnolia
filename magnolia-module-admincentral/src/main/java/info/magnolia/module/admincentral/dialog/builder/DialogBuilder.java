@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral.dialog.builder;
 
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.view.DialogView;
 
@@ -44,4 +45,6 @@ import info.magnolia.module.admincentral.dialog.view.DialogView;
 public interface DialogBuilder {
 
     DialogView build(DialogDefinition dialogDefinition);
+
+    Messages getMessages(DialogDefinition dialogDefinition);
 }

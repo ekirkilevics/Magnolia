@@ -33,6 +33,12 @@
  */
 package info.magnolia.ui.activity;
 
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
+
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
 import info.magnolia.ui.event.HandlerRegistration;
@@ -74,12 +80,26 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         this.shell = shell;
     }
 
+    private ComponentProvider componentProvider;
+
     public void start(HasComponent display, EventBus outerEventBus) {
 
-        subShell = new SubShell(id, shell);
+        PicoComponentProvider provider = (PicoComponentProvider) Components.getComponentProvider();
+        PicoBuilder builder = new PicoBuilder(provider.getContainer()).withConstructorInjection().withCaching();
 
-        innerEventBus = new SimpleEventBus();
-        innerPlaceController = new PlaceController(innerEventBus, shell);
+        MutablePicoContainer container = builder.build();
+
+        componentProvider = new PicoComponentProvider(container, provider.getDef());
+
+        container.addComponent(ComponentProvider.class, componentProvider);
+
+        container.addComponent(EventBus.class, SimpleEventBus.class);
+        container.addComponent(Shell.class, new SubShell(id, shell));
+        container.addComponent(PlaceController.class, PlaceController.class);
+
+        subShell = componentProvider.getComponent(Shell.class);
+        innerEventBus = componentProvider.getComponent(EventBus.class);
+        innerPlaceController = componentProvider.getComponent(PlaceController.class);
 
         historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
         historyReg = historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
@@ -106,14 +126,11 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         return id;
     }
 
-
     protected EventBus getInnerEventBus() {
         return innerEventBus;
     }
 
-
     protected PlaceController getInnerPlaceController() {
         return innerPlaceController;
     }
-
 }
