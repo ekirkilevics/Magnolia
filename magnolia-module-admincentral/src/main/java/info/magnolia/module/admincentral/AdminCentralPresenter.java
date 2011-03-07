@@ -107,7 +107,7 @@ public class AdminCentralPresenter {
                 }
                 else if(place instanceof DialogPlace){
                     DialogPlace dialogPlace = (DialogPlace)place;
-                    return new DialogActivity(dialogPlace, uiModel);
+                    return new DialogActivity(dialogPlace, uiModel, componentProvider);
                 }
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {

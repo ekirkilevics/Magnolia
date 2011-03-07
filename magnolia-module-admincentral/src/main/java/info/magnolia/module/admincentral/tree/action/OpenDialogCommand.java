@@ -37,10 +37,7 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.Application;
-import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
-import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
-import info.magnolia.module.admincentral.dialog.view.DialogWindow;
+import info.magnolia.module.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.module.admincentral.tree.JcrBrowser;
 
 /**
@@ -52,13 +49,11 @@ import info.magnolia.module.admincentral.tree.JcrBrowser;
  */
 public class OpenDialogCommand extends Command {
 
-    private Application application;
-    private DialogRegistry dialogRegistry;
+    private DialogPresenter dialogPresenter;
     private String dialog;
 
-    public OpenDialogCommand(Application application, DialogRegistry dialogRegistry) {
-        this.application = application;
-        this.dialogRegistry = dialogRegistry;
+    public OpenDialogCommand(DialogPresenter dialogPresenter) {
+        this.dialogPresenter = dialogPresenter;
     }
 
     @Override
@@ -71,10 +66,7 @@ public class OpenDialogCommand extends Command {
 
         // We need to send the workspace as well
 
-        DialogDefinition dialogDefinition = dialogRegistry.getDialog("userpreferences");
-
-        // FIXME we should not do this, shell.showDialog(dialog) or similar
-        application.getMainWindow().addWindow(new DialogWindow((Node) item, dialogDefinition));
+        dialogPresenter.showDialog((Node) item, "userpreferences");
 //        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
     }
 

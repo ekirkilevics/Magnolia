@@ -40,12 +40,12 @@ import java.util.Map;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 
+import com.vaadin.ui.Window;
 import info.magnolia.ui.editor.Editor;
 
 /**
@@ -53,7 +53,7 @@ import info.magnolia.ui.editor.Editor;
  *
  * @author tmattsson
  */
-public class DialogViewImpl extends CustomComponent implements DialogView {
+public class DialogViewImpl extends Window implements DialogView {
 
     private Presenter presenter;
     private VerticalTabSheet tabSheet;
@@ -61,8 +61,13 @@ public class DialogViewImpl extends CustomComponent implements DialogView {
 
     private Map<String, Editor> editorMappings = new HashMap<String, Editor>();
 
-
     public DialogViewImpl() {
+
+        setModal(true);
+        setResizable(true);
+        setScrollable(false);
+        setClosable(false);
+        setWidth("800px");
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
@@ -101,8 +106,8 @@ public class DialogViewImpl extends CustomComponent implements DialogView {
         layout.addComponent(description);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, "right");
-        super.setCompositionRoot(layout);
-        super.setSizeFull();
+
+        super.getContent().addComponent(layout);
     }
 
     public void setPresenter(Presenter presenter) {
@@ -143,4 +148,8 @@ public class DialogViewImpl extends CustomComponent implements DialogView {
         editorMappings.put(editor.getName(), editor);
     }
 
+    @Override
+    public void close() {
+        super.close();
+    }
 }

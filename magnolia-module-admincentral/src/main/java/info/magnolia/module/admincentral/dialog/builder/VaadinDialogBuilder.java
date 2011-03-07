@@ -37,6 +37,7 @@ import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.vaadin.Application;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
@@ -61,10 +62,22 @@ import info.magnolia.ui.editor.Editor;
  */
 public class VaadinDialogBuilder implements DialogBuilder {
 
+    private Application application;
+
+    public VaadinDialogBuilder(Application application) {
+        this.application = application;
+    }
+
     public DialogView build(DialogDefinition dialogDefinition) {
+
         DialogViewImpl dialog = new DialogViewImpl();
 
+        application.getMainWindow().addWindow(dialog);
+
+        dialog.setCaption(getMessages(dialogDefinition).getWithDefault(dialogDefinition.getLabel(), dialogDefinition.getLabel()));
+
         for (DialogTab dialogTab : dialogDefinition.getTabs()) {
+
 
             addTab(dialog, dialogDefinition, dialogTab);
 

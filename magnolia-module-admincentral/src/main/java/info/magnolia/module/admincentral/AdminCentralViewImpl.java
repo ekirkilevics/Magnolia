@@ -53,9 +53,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
-import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
-import info.magnolia.module.admincentral.dialog.view.DialogWindow;
+import info.magnolia.module.admincentral.dialog.view.DialogPresenter;
 
 /**
  * Main application view layout.
@@ -63,13 +61,14 @@ import info.magnolia.module.admincentral.dialog.view.DialogWindow;
 public class AdminCentralViewImpl implements AdminCentralView {
 
     private Application application;
-    private DialogRegistry dialogRegistry;
+    private DialogPresenter dialogPresenter;
+
     private VerticalLayout mainContainer;
     private VerticalLayout menuDisplay;
 
-    public AdminCentralViewImpl(Application application, DialogRegistry dialogRegistry) {
+    public AdminCentralViewImpl(Application application, DialogPresenter dialogPresenter) {
         this.application = application;
-        this.dialogRegistry = dialogRegistry;
+        this.dialogPresenter = dialogPresenter;
     }
 
     public void init() {
@@ -137,8 +136,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
                 try {
                     if (user instanceof MgnlUser) {
                         Node userNode = ((MgnlUser) user).getUserNode().getJCRNode();
-                        DialogDefinition dialogDefinition = dialogRegistry.getDialog("userpreferences");
-                        application.getMainWindow().addWindow(new DialogWindow(userNode, dialogDefinition));
+                        dialogPresenter.showDialog(userNode, "userpreferences");
                     }
                 } catch (RepositoryException e) {
                     e.printStackTrace();

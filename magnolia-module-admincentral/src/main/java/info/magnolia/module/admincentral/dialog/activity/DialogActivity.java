@@ -44,6 +44,7 @@ import info.magnolia.module.admincentral.dialog.place.DialogPlace;
 import info.magnolia.module.admincentral.dialog.view.DialogView;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.editor.ContentDriver;
@@ -57,13 +58,15 @@ import info.magnolia.ui.event.EventBus;
  */
 public class DialogActivity extends AbstractActivity implements DialogView.Presenter {
 
+    private ComponentProvider componentProvider;
     private DialogPlace place;
     private UIModel uiModel;
     private ContentDriver driver;
 
-    public DialogActivity(DialogPlace place, UIModel uiModel) {
+    public DialogActivity(DialogPlace place, UIModel uiModel, ComponentProvider componentProvider) {
         this.place = place;
         this.uiModel = uiModel;
+        this.componentProvider = componentProvider;
     }
 
     public void start(HasComponent display, EventBus eventBus) {
@@ -74,8 +77,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
             String dialogName = place.getDialogName();
             DialogDefinition dialogDefinition = uiModel.getDialogDefinition(dialogName);
 
-            // We sould not construct it here
-            DialogBuilder builder = new VaadinDialogBuilder();
+            DialogBuilder builder = componentProvider.newInstance(VaadinDialogBuilder.class);
             DialogView dialog = builder.build(dialogDefinition);
 
             driver = new ContentDriver();

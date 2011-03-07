@@ -42,6 +42,9 @@ import info.magnolia.ui.editor.HasEditors;
  * @author tmattsson
  */
 public interface DialogView extends IsComponent, HasEditors{
+
+    void close();
+
     /**
      * Presenter for DialogViewImpl.
      */

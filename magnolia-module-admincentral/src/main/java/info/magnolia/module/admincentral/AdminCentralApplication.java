@@ -42,6 +42,7 @@ import org.picocontainer.PicoBuilder;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import info.magnolia.module.admincentral.action.ActionFactoryImpl;
+import info.magnolia.module.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
@@ -86,6 +87,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(Application.class, this);
         container.addComponent(AdminCentralView.class, AdminCentralViewImpl.class);
         container.addComponent(AdminCentralPresenter.class, AdminCentralPresenter.class);
+        container.addComponent(DialogPresenter.class, DialogPresenter.class);
 
         container.addComponent(EventBus.class, SimpleEventBus.class);
         container.addComponent(Shell.class, ShellImpl.class);

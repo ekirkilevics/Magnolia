@@ -36,58 +36,62 @@ package info.magnolia.module.admincentral.dialog.view;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.Window;
-
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.module.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
+import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.editor.ContentDriver;
 
 /**
  * Window for creating or editing content using a dialog.
  */
-public class DialogWindow extends Window implements DialogView.Presenter {
+public class DialogPresenter implements DialogView.Presenter {
+
+    private DialogRegistry dialogRegistry;
+    private ComponentProvider componentProvider;
 
     private String workspace;
     private String path;
     private ContentDriver driver;
+    private DialogView dialogView;
 
-    public DialogWindow(String workspace, String path, DialogDefinition dialogDefinition) {
+    public DialogPresenter(DialogRegistry dialogRegistry, ComponentProvider componentProvider) {
+        this.dialogRegistry = dialogRegistry;
+        this.componentProvider = componentProvider;
+    }
+
+    public void showDialog(Node userNode, String dialogName) throws RepositoryException {
+        showDialog(userNode, dialogRegistry.getDialog(dialogName));
+    }
+
+    public void showDialog(Node node, DialogDefinition dialogDefinition) throws RepositoryException {
+        showDialog(node.getSession().getWorkspace().getName(), node.getPath(), dialogDefinition);
+    }
+
+    public void showDialog(String workspace, String path, DialogDefinition dialogDefinition) {
         this.workspace = workspace;
         this.path = path;
 
         try {
-            setModal(true);
-            setResizable(true);
-            setScrollable(false);
-            setClosable(false);
-            setWidth("800px");
 //            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
 
             Node node = getNode();
 
-            // FIXME inject the builder
-            DialogBuilder builder = new VaadinDialogBuilder();
-            DialogView dialog = builder.build(dialogDefinition);
+            DialogBuilder builder = componentProvider.newInstance(VaadinDialogBuilder.class);
+            dialogView = builder.build(dialogDefinition);
 
             driver = new ContentDriver();
-            driver.initialize(dialog);
+            driver.initialize(dialogView);
             driver.edit(node);
 
-            dialog.setPresenter(this);
-
-            super.setCaption(builder.getMessages(dialogDefinition).getWithDefault(dialogDefinition.getLabel(), dialogDefinition.getLabel()));
-            super.getContent().addComponent(dialog.asComponent());
+            dialogView.setPresenter(this);
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-    }
-
-    public DialogWindow(Node node, DialogDefinition dialogDefinition) throws RepositoryException {
-        this(node.getSession().getWorkspace().getName(), node.getPath(), dialogDefinition);
     }
 
     public void onSave() {
@@ -98,7 +102,7 @@ public class DialogWindow extends Window implements DialogView.Presenter {
                     // TODO should check if there are unconsumed errors and display them
 //                super.getApplication().getMainWindow().showNotification("You have errors");
             } else {
-                getParent().removeWindow(this);
+                dialogView.close();
                 // TODO we should fire a tree update event so changes are reflected in the tree view
                 // eventBus.fireEvent(new ContentChangedEvent(treeName, path));
             }
@@ -112,6 +116,6 @@ public class DialogWindow extends Window implements DialogView.Presenter {
     }
 
     public void onCancel() {
-        getParent().removeWindow(this);
+        dialogView.close();
     }
 }
