@@ -48,7 +48,7 @@ import info.magnolia.cms.core.MetaData;
 import static junit.framework.Assert.*;
 
 /**
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class MetaDataColumnTest {

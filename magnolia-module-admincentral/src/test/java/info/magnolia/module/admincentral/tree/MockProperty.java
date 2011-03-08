@@ -60,7 +60,7 @@ import java.util.Calendar;
 /**
  * Mock for a jcr-Property. Work in progress...
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  *
  */

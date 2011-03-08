@@ -45,7 +45,7 @@ import javax.jcr.RepositoryException;
  * should be based on current MetaData-support implemented in the Content-API. Right now it
  * delegates partly to the "old" MetaData-support.
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class JCRMetadataUtil {

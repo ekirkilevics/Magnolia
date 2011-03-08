@@ -43,7 +43,7 @@ import info.magnolia.context.MgnlContext;
 /**
  * JCR Utilities.
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class JCRUtil {

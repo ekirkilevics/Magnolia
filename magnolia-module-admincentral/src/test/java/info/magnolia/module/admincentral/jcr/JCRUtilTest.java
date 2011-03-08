@@ -39,7 +39,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class JCRUtilTest {

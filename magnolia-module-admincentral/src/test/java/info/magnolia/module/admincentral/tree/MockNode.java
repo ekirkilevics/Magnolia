@@ -74,7 +74,7 @@ import java.util.Map;
 /**
  * Mock Implementation of a Node. Work in progress...
  * 
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  * 
  * TODO: check how this implementation can/should be merged with or replaced by MockJCRNode from

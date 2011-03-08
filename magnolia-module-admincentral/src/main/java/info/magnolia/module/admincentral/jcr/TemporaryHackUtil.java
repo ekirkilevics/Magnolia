@@ -42,7 +42,7 @@ import javax.jcr.Node;
  * Collection of utilities temporarily needed as long as we have no clear vision of the future of
  * our Content API.
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class TemporaryHackUtil {

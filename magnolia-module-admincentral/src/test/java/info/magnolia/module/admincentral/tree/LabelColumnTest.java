@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class LabelColumnTest {

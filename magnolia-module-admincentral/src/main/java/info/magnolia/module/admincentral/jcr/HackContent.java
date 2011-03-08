@@ -44,7 +44,7 @@ import javax.jcr.RepositoryException;
  * Hack implementation of a Content. Temporarily used as long as we don't have a clear vision where
  * to go with the Content-API.
  *
- * @author daniellipp
+ * @author dlipp
  * @version $Id$
  */
 public class HackContent extends DefaultContent {
