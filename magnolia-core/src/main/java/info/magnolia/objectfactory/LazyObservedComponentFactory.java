@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,38 +34,29 @@
 package info.magnolia.objectfactory;
 
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
+ * ComponentFactory that provides an instance by reading it from a repository. The instance is created only when it is
+ * needed and is recreated if its configuration changes in the repository.
  *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @param <T> the type of component this factory instantiates.
+ * @author tmattsson
  */
-public interface ComponentProvider {
+public class LazyObservedComponentFactory<T> implements ComponentFactory<T> {
 
-    /**
-     * Returns the implementation type mapped for a given type.
-     *
-     * Used by Content2Bean.
-     */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
+    private String repository;
+    private String path;
+    private Class<T> type;
+    private ObservedComponentFactory<T> observedComponentFactory;
 
-    /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
-     */
-    <T> T getSingleton(Class<T> type);
+    public LazyObservedComponentFactory(String repository, String path, Class<T> type) {
+        this.repository = repository;
+        this.path = path;
+        this.type = type;
+    }
 
-    <T> T getComponent(Class<T> type);
-
-    /**
-     * Creates a new instance of the passed interface / class by using the registered implementation.
-     * If this fails a {@link MgnlInstantiationException} is thrown.
-     *
-     * @throws MgnlInstantiationException
-     */
-    <T> T newInstance(Class<T> type);
-
+    public T newInstance() {
+        if (observedComponentFactory == null) {
+            observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type);
+        }
+        return observedComponentFactory.newInstance();
+    }
 }

@@ -37,15 +37,17 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.DefaultComponentProvider;
+import info.magnolia.objectfactory.MockComponentProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * A utility to be used in tests which allows to set default implementations or instances,
  * when IoC can't be used yet.
- * This implementation sets a new {@link DefaultComponentProvider}, and
+ * This implementation sets a new {@link MockComponentProvider}, and
  * delegates to its set* methods.
  *
  * @author gjoseph
@@ -53,7 +55,7 @@ import java.io.InputStream;
  */
 public class ComponentsTestUtil {
 
-    private static DefaultComponentProvider defaultComponentProvider;
+    private static MockComponentProvider defaultComponentProvider;
 
     static {
         // Oh yeah, this is ugly !
@@ -95,8 +97,8 @@ public class ComponentsTestUtil {
     public static void clear() {
         final ComponentProvider cp = Components.getComponentProvider();
         if (cp != null) {
-            if (cp instanceof DefaultComponentProvider) {
-                ((DefaultComponentProvider)cp).clear();
+            if (cp instanceof MockComponentProvider) {
+                ((MockComponentProvider)cp).clear();
             } else {
                 org.slf4j.LoggerFactory.getLogger(ComponentsTestUtil.class).warn("Using ComponentsTestUtil with {} - this might be dangerous !?" , cp);
             }
@@ -106,12 +108,20 @@ public class ComponentsTestUtil {
         // SystemProperty.setMagnoliaConfigurationProperties(null);
     }
 
-    private static DefaultComponentProvider getComponentProvider() {
+    private static MockComponentProvider getComponentProvider() {
         if (defaultComponentProvider == null) {
-            defaultComponentProvider = new DefaultComponentProvider(SystemProperty.getProperties());
+
+            Map propertyList = SystemProperty.getPropertyList();
+            Properties properties = new Properties();
+            for (Object object : propertyList.entrySet()) {
+                Map.Entry entry = (Map.Entry) object;
+                properties.put(entry.getKey(), entry.getValue());
+            }
+
+            defaultComponentProvider = new MockComponentProvider(properties);
             Components.setProvider(defaultComponentProvider);
         }
 
-        return ((DefaultComponentProvider) Components.getComponentProvider());
+        return ((MockComponentProvider) Components.getComponentProvider());
     }
 }

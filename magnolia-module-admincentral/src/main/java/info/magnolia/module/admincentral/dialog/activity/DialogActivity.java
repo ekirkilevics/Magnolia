@@ -38,7 +38,6 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.dialog.builder.DialogBuilder;
-import info.magnolia.module.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.place.DialogPlace;
 import info.magnolia.module.admincentral.dialog.view.DialogView;
@@ -77,7 +76,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
             String dialogName = place.getDialogName();
             DialogDefinition dialogDefinition = uiModel.getDialogDefinition(dialogName);
 
-            DialogBuilder builder = componentProvider.newInstance(VaadinDialogBuilder.class);
+            DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
             DialogView dialog = builder.build(dialogDefinition);
 
             driver = new ContentDriver();

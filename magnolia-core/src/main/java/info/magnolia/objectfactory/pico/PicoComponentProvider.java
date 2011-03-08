@@ -33,9 +33,10 @@
  */
 package info.magnolia.objectfactory.pico;
 
-import info.magnolia.cms.util.DeprecationUtil;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.DefaultComponentProvider;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.HierarchicalComponentProvider;
+import info.magnolia.objectfactory.PropertiesComponentProvider;
+
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 import org.picocontainer.PicoContainer;
@@ -52,28 +53,19 @@ import org.picocontainer.PicoContainer;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PicoComponentProvider implements ComponentProvider {
+public class PicoComponentProvider extends PropertiesComponentProvider {
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PicoComponentProvider.class);
 
-    private final PicoContainer pico;
-    private final DefaultComponentProvider def;
+    private final MutablePicoContainer pico;
 
-    /**
-     * @deprecated TODO - we shouldn't need DefaultComponentProvider
-     */
-    public PicoComponentProvider(MutablePicoContainer pico, DefaultComponentProvider def) {
+    public PicoComponentProvider(MutablePicoContainer pico) {
         this.pico = pico;
-        this.def = def;
     }
 
-    public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
-        // TODO - do we need this ? If so, then implement properly.
-        return def.getImplementation(type);
-    }
-
-    public <T> T getSingleton(Class<T> type) {
-        DeprecationUtil.isDeprecated();
-        return getComponent(type);
+    public PicoComponentProvider(MutablePicoContainer pico, HierarchicalComponentProvider parent) {
+        super(parent);
+        this.pico = pico;
     }
 
     public <T> T getComponent(Class<T> type) {
@@ -86,13 +78,8 @@ public class PicoComponentProvider implements ComponentProvider {
         return found;
     }
 
-    public <T> T newInstance(Class<T> type) {
-        /** TODO : this check unfortunately triggers org.picocontainer.ComponentMonitor.noComponentFound()
-        if (pico.getComponentAdapter(type) != null) {
-            // to do : throw specific exception
-            throw new IllegalStateException("The powers that be have decided that it was illegal to instantiate a component that is already registered. (" + type + " in this case)");
-        }
-        */
+    @Override
+    protected <T> T createInstance(Class<T> type) {
 
         // let's register the component in-place
         // TODO - the container building is copied from info.magnolia.cms.servlets.MgnlServletContextListener#makeContainer - remove redundancy.
@@ -100,24 +87,41 @@ public class PicoComponentProvider implements ComponentProvider {
         //      - (PicoBuilder uses a container to build the container)
         //      - To check too: any gain in using a TransientPicoContainer instead of a DefaultPicoContainer ?
         final MutablePicoContainer adhocContainer = new PicoBuilder(pico)
-                // order of injection matters, so ConstructorInjection must be first. Yes, we could add more types of injection if needed.
-                .withConstructorInjection()
-                .withAnnotatedFieldInjection()
-                .withCaching()
-                // TODO : do we need monitor and lifecycle on such ad-hoc components ?
-                // .withMonitor(slf4jComponentMonitor)
-                // .withLifecycle(lifecycleStrategy)
-                .build();
+            // order of injection matters, so ConstructorInjection must be first. Yes, we could add more types of injection if needed.
+            .withConstructorInjection()
+            .withAnnotatedFieldInjection()
+            // TODO : do we need monitor and lifecycle on such ad-hoc components ?
+            // .withMonitor(slf4jComponentMonitor)
+            // .withLifecycle(lifecycleStrategy)
+            .build();
 
-        adhocContainer.addComponent(type);
+        adhocContainer.addComponent(type, type);
         return adhocContainer.getComponent(type);
-    }
-
-    public DefaultComponentProvider getDef() {
-        return def;
     }
 
     public PicoContainer getContainer() {
         return pico;
+    }
+
+    @Override
+    protected void registerComponent(Class<?> type, Class<?> implementationType) {
+        super.registerComponent(type, implementationType);
+        if (ComponentFactory.class.isAssignableFrom(implementationType)) {
+            pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory>) implementationType));
+        } else {
+            pico.addComponent(type, implementationType);
+        }
+    }
+
+    @Override
+    protected void registerComponentFactory(Class<?> type, ComponentFactory componentFactory) {
+        super.registerComponentFactory(type, componentFactory);
+        pico.addAdapter(new ComponentFactoryProviderAdapter(type, componentFactory));
+    }
+
+    @Override
+    protected void registerInstance(Class<?> type, Object instance) {
+        super.registerInstance(type, instance);
+        pico.addComponent(type, instance);
     }
 }

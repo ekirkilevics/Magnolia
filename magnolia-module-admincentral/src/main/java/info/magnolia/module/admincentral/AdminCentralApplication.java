@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admincentral;
 
+import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,6 +43,8 @@ import org.picocontainer.PicoBuilder;
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import info.magnolia.module.admincentral.action.ActionFactoryImpl;
+import info.magnolia.module.admincentral.dialog.builder.DialogBuilder;
+import info.magnolia.module.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.objectfactory.ComponentProvider;
@@ -61,7 +64,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
     private static final long serialVersionUID = 5773744599513735815L;
 
-    private ComponentProvider componentProvider;
+    private PicoComponentProvider componentProvider;
 
     @Override
     public void init() {
@@ -80,7 +83,10 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
         MutablePicoContainer container = builder.build();
 
-        componentProvider = new PicoComponentProvider(container, provider.getDef());
+        componentProvider = new PicoComponentProvider(container, provider);
+        Properties properties = new Properties();
+        properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
+        componentProvider.parseConfiguration(properties);
 
         container.addComponent(ComponentProvider.class, componentProvider);
 

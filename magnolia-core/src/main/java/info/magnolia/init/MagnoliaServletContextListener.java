@@ -45,13 +45,8 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.ComponentConfigurationPath;
-import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.DefaultComponentProvider;
-import info.magnolia.objectfactory.pico.ComponentFactoryProviderAdapter;
 import info.magnolia.objectfactory.pico.ModuleAdapterFactory;
-import info.magnolia.objectfactory.pico.ObservedComponentAdapter;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.objectfactory.pico.PicoLifecycleStrategy;
 import org.picocontainer.ComponentMonitor;
@@ -66,7 +61,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.Set;
+import java.util.Properties;
 
 
 /**
@@ -237,7 +232,13 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             root.start();
 
             // TODO : de-uglify this ? Also: get rid of DefaultComponentProvider here.
-            Components.setProvider(new PicoComponentProvider(mainContainer, new DefaultComponentProvider(configurationProperties)));
+            PicoComponentProvider provider = new PicoComponentProvider(mainContainer);
+            Properties properties = new Properties();
+            for (String key : configurationProperties.getKeys()) {
+                properties.put(key, configurationProperties.getProperty(key));
+            }
+            provider.parseConfiguration(properties);
+            Components.setProvider(provider);
             // TODO - perhaps PicoComponentProvider can be constructed by pico itself
 
             // Start from the main container (ConfigLoader needs LicenceFileExtractor for example, whose impl is set via a property)
@@ -290,7 +291,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
                 pico.as(ModuleAdapterFactory.makeModuleProperties(moduleName)).addComponent(moduleClass);
             }
         }
-
+/*
         // TODO - register components from module descriptors <components> instead.
         final Set<String> keys = configurationProperties.getKeys();
         for (String key : keys) {
@@ -318,6 +319,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
                 }
             }
         }
+*/
     }
 
     // TODO : we have a dependency on ClassFactory, but we can't inject it here,

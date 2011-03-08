@@ -46,23 +46,37 @@ import org.picocontainer.injectors.ProviderAdapter;
  * @version $Revision: $ ($Author: $)
  */
 public class ComponentFactoryProviderAdapter extends ProviderAdapter {
-    private final Class k;
-    private final Class<ComponentFactory> factoryClass;
 
-    public ComponentFactoryProviderAdapter(Class<Object> keyType, Class<ComponentFactory> valueType) {
-        this.k = keyType;
-        this.factoryClass = valueType;
+    private final Class componentKey;
+    private final Class<? extends ComponentFactory> factoryClass;
+    private ComponentFactory factory;
+
+    public ComponentFactoryProviderAdapter(Class<?> componentKey, Class<? extends ComponentFactory> factoryClass) {
+        this.componentKey = componentKey;
+        this.factoryClass = factoryClass;
+    }
+
+    public ComponentFactoryProviderAdapter(Class componentKey, ComponentFactory factory) {
+        this.componentKey = componentKey;
+        this.factoryClass = null;
+        this.factory = factory;
     }
 
     @Override
     public Object getComponentKey() {
-        return k;
+        return componentKey;
+    }
+
+    @Override
+    public Class getComponentImplementation() {
+        return componentKey;
     }
 
     public Object provide() {
         // TODO -- well this is completely wrong for now, those should be cached
         try {
-            final ComponentFactory factory = factoryClass.newInstance();
+            if (this.factory == null)
+                this.factory = factoryClass.newInstance();
             return factory.newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO

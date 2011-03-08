@@ -195,12 +195,12 @@ public class ModuleAdapterFactory extends AbstractBehaviorFactory {
                     final Content node = hm.getContent(path.getPath());
                     Content2BeanUtil.setProperties(instance, node, true);
                 } catch (RepositoryException e) {
-                    log.error("Can't read {}, can not populate {}.", new Object[]{path, instance, e});
+                    log.error("Can't read {}, can not populate {}.", new Object[]{path.getPath(), instance, e});
                 } catch (Content2BeanException e) {
                     throw new RuntimeException(e); // TODO
                 }
             } else {
-                log.warn("{} does not exist, can not populate {}.", path, instance);
+                log.warn("{} does not exist, can not populate {}.", path.getPath(), instance);
             }
         }
 

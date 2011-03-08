@@ -89,10 +89,9 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
         MutablePicoContainer container = builder.build();
 
-        componentProvider = new PicoComponentProvider(container, provider.getDef());
+        componentProvider = new PicoComponentProvider(container, provider);
 
         container.addComponent(ComponentProvider.class, componentProvider);
-
         container.addComponent(EventBus.class, SimpleEventBus.class);
         container.addComponent(Shell.class, new SubShell(id, shell));
         container.addComponent(PlaceController.class, PlaceController.class);

@@ -38,7 +38,6 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.dialog.builder.DialogBuilder;
-import info.magnolia.module.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
@@ -80,7 +79,7 @@ public class DialogPresenter implements DialogView.Presenter {
 
             Node node = getNode();
 
-            DialogBuilder builder = componentProvider.newInstance(VaadinDialogBuilder.class);
+            DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
             dialogView = builder.build(dialogDefinition);
 
             driver = new ContentDriver();

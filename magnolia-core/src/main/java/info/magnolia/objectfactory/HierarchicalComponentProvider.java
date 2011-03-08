@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,38 +34,13 @@
 package info.magnolia.objectfactory;
 
 /**
- * ComponentProvider is responsible for providing components, singletons or new instances.
- * Magnolia "beans", "managers" etc are all provided by this.
+ * ComponentProvider that can participate in a hierarchical structure.
  *
- * Since Magnolia 5.0, you are encouraged to use IoC, so the cases where this class
- * is needed should be limited. Think twice !
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @author tmattsson
  */
-public interface ComponentProvider {
+public interface HierarchicalComponentProvider extends ComponentProvider {
 
-    /**
-     * Returns the implementation type mapped for a given type.
-     *
-     * Used by Content2Bean.
-     */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
+    HierarchicalComponentProvider getParent();
 
-    /**
-     * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
-     * Additionally, it should not be up to the client to decide whether this component is a singleton or not.
-     */
-    <T> T getSingleton(Class<T> type);
-
-    <T> T getComponent(Class<T> type);
-
-    /**
-     * Creates a new instance of the passed interface / class by using the registered implementation.
-     * If this fails a {@link MgnlInstantiationException} is thrown.
-     *
-     * @throws MgnlInstantiationException
-     */
-    <T> T newInstance(Class<T> type);
-
+    boolean isConfiguredFor(Class<?> type);
 }

@@ -39,7 +39,6 @@ import junit.framework.TestCase;
 import org.apache.commons.beanutils.ConstructorUtils;
 
 import java.lang.reflect.Field;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -52,7 +51,7 @@ public class ClassesTest extends TestCase {
         super.setUp();
         SystemProperty.clear();
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
-        Components.setProvider(new DefaultComponentProvider(SystemProperty.getProperties()));
+        Components.setProvider(new MockComponentProvider(SystemProperty.getProperties()));
         resetCFP();
     }
 
@@ -87,8 +86,11 @@ public class ClassesTest extends TestCase {
         final ClassFactory cf = Classes.getClassFactory();
         assertTrue(cf instanceof TestClassFactory);
     }
-
+/*
     public void testCanSetupADifferentClassFactoryThatNeedsComponents() throws ClassNotFoundException {
+
+        // TODO This test is ignored for now since registering components via SystemProperty is no longer supported.
+
         SystemProperty.setProperty(ClassFactory.class.getName(), TestClassFactoryWithComponents.class.getName());
         SystemProperty.setProperty(Whatever.class.getName(), Chenanigans.class.getName());
         final String s = Classes.newInstance("chalala", "hello");
@@ -107,7 +109,7 @@ public class ClassesTest extends TestCase {
         then.setTime(cfc.getDate());
         assertEquals(now.get(Calendar.DAY_OF_YEAR), then.get(Calendar.DAY_OF_YEAR));
     }
-
+*/
     public static interface Whatever {
         int blah();
     }
