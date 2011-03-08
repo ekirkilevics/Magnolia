@@ -8,6 +8,10 @@
   <version>${project.version}</version>
   <properties>
     <property>
+      <name>info.magnolia.module.templating.MagnoliaTemplatingUtilities</name>
+      <value>info.magnolia.module.templating.MagnoliaTemplatingUtilities</value>
+    </property>
+    <property>
       <name>info.magnolia.module.templating.engine.RenderingEngine</name>
       <value>/server/rendering/engine</value>
     </property>
