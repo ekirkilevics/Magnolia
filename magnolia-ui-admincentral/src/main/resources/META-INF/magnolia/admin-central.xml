@@ -97,7 +97,7 @@
          </param>
          <param>
            <name>widgetset</name>
-           <value>info.magnolia.ui.vaadin.integration.widgetset.MagnoliaWidgetset</value>
+           <value>info.magnolia.ui.vaadin.widgetset.MagnoliaWidgetset</value>
          </param>
        </params>
     </servlet>
