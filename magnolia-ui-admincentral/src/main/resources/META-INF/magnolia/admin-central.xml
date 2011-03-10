@@ -93,7 +93,7 @@
        <params>
          <param>
            <name>application</name>
-           <value>info.magnolia.ui.admincentral.AdminCentralApplication</value>
+           <value>info.magnolia.ui.admincentral.application.AdminCentralApplication</value>
          </param>
          <param>
            <name>widgetset</name>

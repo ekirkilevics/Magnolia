@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral;
+package info.magnolia.ui.admincentral.application;
 
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;

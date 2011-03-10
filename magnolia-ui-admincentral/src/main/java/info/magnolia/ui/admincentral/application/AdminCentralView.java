@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral;
+package info.magnolia.ui.admincentral.application;
 
 import com.vaadin.ui.VerticalLayout;
 
