@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.vaadin.module;
+package info.magnolia.ui.vaadin.integration.module;
 
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;

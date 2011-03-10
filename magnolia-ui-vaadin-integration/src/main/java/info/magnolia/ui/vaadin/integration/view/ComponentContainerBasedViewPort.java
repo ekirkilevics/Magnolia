@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,34 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.vaadin.servlet;
+package info.magnolia.ui.vaadin.integration.view;
 
-import info.magnolia.cms.util.CustomServletConfig;
-import info.magnolia.cms.util.ServletUtils;
 
-import java.util.Map;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.view.ViewPort;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
+import com.vaadin.ui.ComponentContainer;
 
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 /**
- * We can set the "Resources" parameter for the {@link ApplicationServlet} only by defining the context path. To make this dynamic we manipulate the {@link ServletConfig}.
+ * A {@link ViewPort} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
+ * components could be added.
  */
-@SuppressWarnings("serial")
-public class MagnoliaResourcesAwareApplicationServlet extends ApplicationServlet {
+public class ComponentContainerBasedViewPort implements ViewPort {
 
-    @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
+    private String id;
 
-        // read the parameters
-        Map<String, String> parameters = ServletUtils.initParametersToMap(servletConfig);
+    private ComponentContainer componentContainer;
 
-        // add our resources parameter
-        parameters.put("Resources", servletConfig.getServletContext().getContextPath() + "/.resources");
-
-        // initialize
-        super.init(new CustomServletConfig(servletConfig.getServletName(), servletConfig.getServletContext(), parameters));
+    public ComponentContainerBasedViewPort(String id, ComponentContainer componentContainer) {
+        this.id = id;
+        this.componentContainer = componentContainer;
     }
+
+    public void setView(View view) {
+        componentContainer.removeAllComponents();
+        if (view != null) {
+            componentContainer.addComponent(VaadinComponentUtil.toVaadinComponent(view));
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
+
 }

@@ -35,8 +35,8 @@ package info.magnolia.module.admincentral.views;
 
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.vaadin.view.ComponentViewPort;
-import info.magnolia.vaadin.view.IsVaadinComponent;
+import info.magnolia.ui.vaadin.integration.view.ComponentViewPort;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;

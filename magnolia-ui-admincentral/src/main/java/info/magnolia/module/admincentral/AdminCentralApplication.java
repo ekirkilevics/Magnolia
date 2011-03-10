@@ -55,7 +55,7 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.vaadin.shell.ShellImpl;
+import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
 /**
  * Application class for AdminCentral. Provides a scoped IoC container and performs initialization of the UI.

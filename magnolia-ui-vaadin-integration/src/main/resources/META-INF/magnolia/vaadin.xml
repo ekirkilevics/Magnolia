@@ -3,7 +3,7 @@
 <module>
   <name>vaadin</name>
   <displayName>Magnolia Vaadin Module</displayName>
-  <class>info.magnolia.vaadin.module.VaadinModule</class>
+  <class>info.magnolia.ui.vaadin.integration.module.VaadinModule</class>
   <version>${project.version}</version>
   <dependencies>
     <dependency>

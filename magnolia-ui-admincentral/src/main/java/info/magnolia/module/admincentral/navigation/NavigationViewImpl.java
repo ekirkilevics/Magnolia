@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.model.UIModel;
-import info.magnolia.vaadin.view.IsVaadinComponent;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;
 import java.util.Map;

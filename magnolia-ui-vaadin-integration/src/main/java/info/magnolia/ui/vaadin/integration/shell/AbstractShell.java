@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.vaadin.shell;
+package info.magnolia.ui.vaadin.integration.shell;
 
 import info.magnolia.ui.framework.event.HandlerRegistration;
 import info.magnolia.ui.framework.shell.FragmentChangedEvent;

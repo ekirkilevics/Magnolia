@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.vaadin.view;
+package info.magnolia.ui.vaadin.integration.servlet;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.cms.util.CustomServletConfig;
+import info.magnolia.cms.util.ServletUtils;
 
-import com.vaadin.ui.CustomComponent;
+import java.util.Map;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
+import com.vaadin.terminal.gwt.server.ApplicationServlet;
 
 /**
- * A display which itself is a {@link CustomComponent}. Can be used as a display slot.
+ * We can set the "Resources" parameter for the {@link ApplicationServlet} only by defining the context path. To make this dynamic we manipulate the {@link ServletConfig}.
  */
 @SuppressWarnings("serial")
-public class ComponentViewPort extends CustomComponent implements ViewPort {
+public class MagnoliaResourcesAwareApplicationServlet extends ApplicationServlet {
 
-    public void setView(View view) {
-        setCompositionRoot(VaadinComponentUtil.toVaadinComponent(view));
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+
+        // read the parameters
+        Map<String, String> parameters = ServletUtils.initParametersToMap(servletConfig);
+
+        // add our resources parameter
+        parameters.put("Resources", servletConfig.getServletContext().getContextPath() + "/.resources");
+
+        // initialize
+        super.init(new CustomServletConfig(servletConfig.getServletName(), servletConfig.getServletContext(), parameters));
     }
 }

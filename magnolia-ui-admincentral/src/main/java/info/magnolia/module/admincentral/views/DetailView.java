@@ -49,7 +49,7 @@ import com.vaadin.ui.VerticalSplitPanel;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.action.Command;
 import info.magnolia.ui.framework.view.View;
-import info.magnolia.vaadin.view.IsVaadinComponent;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * Displays commands and details about the currently selected item.

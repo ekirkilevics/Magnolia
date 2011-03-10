@@ -55,7 +55,7 @@ import info.magnolia.ui.framework.place.PlaceHistoryMapper;
 import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.vaadin.view.ComponentContainerBasedViewPort;
+import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 
 /**
  * Provides the MVP infrastructure for AdminCentral.

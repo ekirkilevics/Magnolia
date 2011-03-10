@@ -31,20 +31,54 @@
  * intact.
  *
  */
-package info.magnolia.vaadin.widgetset;
+package info.magnolia.ui.vaadin.integration.shell;
 
-import info.magnolia.vaadin.widgetset.client.VHistorian;
+import info.magnolia.ui.framework.shell.ConfirmationHandler;
+import info.magnolia.ui.vaadin.widgetset.Historian;
 
-import com.vaadin.ui.ClientWidget;
-import com.vaadin.ui.ClientWidget.LoadStyle;
+import org.vaadin.dialogs.ConfirmDialog;
+
+import com.vaadin.Application;
 import com.vaadin.ui.UriFragmentUtility;
 
+
 /**
- * Historian.
- * @author fgrilli
- *
+ * Wraps the Vaadin application.
  */
-@SuppressWarnings("serial")
-@ClientWidget(value = VHistorian.class, loadStyle = LoadStyle.EAGER)
-public class Historian extends UriFragmentUtility{
+public class ShellImpl extends AbstractShell {
+
+    private static final String APPLICATION_FRAGMENT_ID = "app";
+
+    private Application application;
+
+    protected UriFragmentUtility uriFragmentUtility = new Historian();
+
+    public ShellImpl(Application application) {
+        super(APPLICATION_FRAGMENT_ID);
+        this.application = application;
+        application.getMainWindow().addComponent(uriFragmentUtility);
+    }
+
+    public void askForConfirmation(String message, final ConfirmationHandler listener) {
+        ConfirmDialog.show(application.getMainWindow(), message, new ConfirmDialog.Listener() {
+
+            public void onClose(ConfirmDialog dialog) {
+                if (dialog.isConfirmed()) {
+                    listener.onConfirm();
+                }
+                else{
+                    listener.onCancel();
+                }
+            }
+        });
+    }
+
+    public void showNotification(String message) {
+        application.getMainWindow().showNotification(message);
+    }
+
+    protected UriFragmentUtility getUriFragmentUtility() {
+        return uriFragmentUtility;
+    }
+
 }

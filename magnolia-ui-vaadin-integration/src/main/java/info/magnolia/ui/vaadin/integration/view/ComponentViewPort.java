@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,39 +25,27 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.vaadin.view;
+package info.magnolia.ui.vaadin.integration.view;
 
 import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.view.ViewPort;
 
-import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomComponent;
 
 
 /**
- * Util methods to transform views to Vaadin Components.
+ * A display which itself is a {@link CustomComponent}. Can be used as a display slot.
  */
-public class VaadinComponentUtil {
+@SuppressWarnings("serial")
+public class ComponentViewPort extends CustomComponent implements ViewPort {
 
-    /**
-     * Converts the abstract {@link View} object to a Vaadin specific {@link Component}. The passed
-     * view has to implement {@link IsVaadinComponent}. Throws an {@link IllegalArgumentException}
-     * if the cast is not possible.
-     */
-    public static Component toVaadinComponent(View view) {
-        if(view == null){
-            return null;
-        }
-
-        if (view instanceof IsVaadinComponent) {
-            return ((IsVaadinComponent) view).asVaadinComponent();
-        }
-
-        throw new IllegalArgumentException("View [" + view + "] must be of type " + IsVaadinComponent.class.getName());
+    public void setView(View view) {
+        setCompositionRoot(VaadinComponentUtil.toVaadinComponent(view));
     }
-
 }

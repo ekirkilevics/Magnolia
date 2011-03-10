@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,48 +25,20 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.vaadin.shell;
+package info.magnolia.ui.vaadin.integration.view;
 
-
-import info.magnolia.ui.framework.shell.ConfirmationHandler;
-import info.magnolia.ui.framework.shell.Shell;
-
-import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.Component;
 
 
 /**
- * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.framework.activity.MVPSubContainerActivity}.
+ * Implemented if a component is a Vaadin component.
  */
-@SuppressWarnings("serial")
-public class SubShell extends AbstractShell {
-    private Shell parent;
-
-    public SubShell(String id, Shell parent) {
-        super(id);
-        this.parent = parent;
-    }
-
-    public void askForConfirmation(String message, ConfirmationHandler listener) {
-        parent.askForConfirmation(message, listener);
-    }
-
-    public void showNotification(String message) {
-        parent.showNotification(message);
-    }
-
-    @Override
-    protected UriFragmentUtility getUriFragmentUtility() {
-        //FIXME we should obviously not cast, but also don't like to add the method to the clean interface
-        return ((AbstractShell)parent).getUriFragmentUtility();
-    }
-
-
+public interface IsVaadinComponent {
+    Component asVaadinComponent();
 }
-
-
