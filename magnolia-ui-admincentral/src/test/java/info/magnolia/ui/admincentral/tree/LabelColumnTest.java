@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.tree;
 
-import info.magnolia.ui.admincentral.tree.definition.LabelColumn;
+import info.magnolia.ui.model.tree.definition.LabelColumn;
 
 import com.vaadin.ui.Field;
 import org.junit.Test;

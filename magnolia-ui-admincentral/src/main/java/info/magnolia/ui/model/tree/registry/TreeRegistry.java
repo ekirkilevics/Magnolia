@@ -31,44 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.registry;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+
+import java.util.HashMap;
+import java.util.Map;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
-
 /**
- * @author dlipp
- * @version $Id$
+ * Maintains a registry of configured tree providers by name.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class TreeRegistry {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private final Map<String, TreeProvider> providers = new HashMap<String, TreeProvider>();
+
+    public void registerTree(String treeName, TreeProvider provider) {
+        synchronized (providers) {
+            if (providers.containsKey(treeName))
+                throw new IllegalStateException("Tree already registered for name [" + treeName + "]");
+            providers.put(treeName, provider);
+        }
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public void unregisterTree(String treeName) {
+        synchronized (providers) {
+            providers.remove(treeName);
+        }
+    }
+
+    public TreeDefinition getTree(String name) throws RepositoryException {
+
+        TreeProvider treeProvider;
+        synchronized (providers) {
+            treeProvider = providers.get(name);
+        }
+        if (treeProvider == null) {
+            return null;
+        }
+        return treeProvider.getTreeDefinition();
     }
 }

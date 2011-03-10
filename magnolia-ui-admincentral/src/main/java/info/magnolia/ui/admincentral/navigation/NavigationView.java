@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
 
 /**
  * TODO: write javadoc.

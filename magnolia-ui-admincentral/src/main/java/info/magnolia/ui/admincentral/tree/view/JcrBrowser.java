@@ -66,10 +66,10 @@ import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.action.Command;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.admincentral.tree.definition.TreeColumn;
-import info.magnolia.ui.admincentral.tree.definition.TreeDefinition;
-import info.magnolia.ui.admincentral.tree.definition.TreeItemType;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
+import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.tree.definition.TreeColumn;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.definition.TreeItemType;
 
 /**
  * User interface component that extends TreeTable and uses a TreeDefinition for layout and invoking command callbacks.

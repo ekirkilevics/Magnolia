@@ -31,44 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.definition;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
+import java.io.Serializable;
+
+import javax.jcr.Item;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
 
 /**
- * @author dlipp
- * @version $Id$
+ * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
+ * is a NodeData.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private static final long serialVersionUID = -2594102704173600906L;
+
+    @Override
+    public Class<String> getType() {
+        return String.class;
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    @Override
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            return PropertyType.nameFromValue(property.getType());
+        }
+        return "";
     }
 }

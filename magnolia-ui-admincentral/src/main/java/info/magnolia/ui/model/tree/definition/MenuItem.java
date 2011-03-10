@@ -31,44 +31,57 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.definition;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
+import info.magnolia.ui.admincentral.tree.action.Command;
 
 /**
- * @author dlipp
- * @version $Id$
+ * Describes an item on either a function menu or a context menu.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class MenuItem {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private String name;
+    private String label;
+    private String icon;
+    private Command command;
+
+    public void init() {
+        if (command != null) {
+            command.setName(name);
+            command.setLabel(label);
+            command.setIcon(icon);
+        }
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public Command getCommand() {
+        return command;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

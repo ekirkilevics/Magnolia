@@ -31,44 +31,59 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.definition;
 
+import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
+
+import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
+
+import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
 
 /**
- * @author dlipp
- * @version $Id$
+ * Column that displays a property for a nodes MetaData. Used to display the modification date of
+ * content nodes.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class MetaDataColumn extends TreeColumn<String> implements Serializable {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private static final long serialVersionUID = -2788490588550009503L;
+
+    private String datePattern;
+
+    protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
+
+    @Override
+    public Class<String> getType() {
+        return String.class;
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    @Override
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
+            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
+            final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
+            return date != null ? DATE_FORMAT.format(date.getTime()) : "";
+        }
+        return "";
+    }
+
+    /**
+     * @param datePattern a {@link SimpleDateFormat} compatible pattern
+     */
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
+    }
+    /**
+     * @return {@link SimpleDateFormat} compatible pattern
+     */
+    public String getDatePattern() {
+        return datePattern;
     }
 }

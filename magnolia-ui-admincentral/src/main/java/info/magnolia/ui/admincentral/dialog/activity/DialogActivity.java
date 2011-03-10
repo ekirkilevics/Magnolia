@@ -39,15 +39,15 @@ import javax.jcr.RepositoryException;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
-import info.magnolia.ui.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
  * Activity for dialogs.

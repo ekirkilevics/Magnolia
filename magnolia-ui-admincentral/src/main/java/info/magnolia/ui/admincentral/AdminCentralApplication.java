@@ -49,12 +49,12 @@ import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.action.ActionFactory;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
 /**

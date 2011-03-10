@@ -31,44 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.dialog.registry;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
-
 /**
- * @author dlipp
- * @version $Id$
+ * Provides a dialog definition.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public interface DialogProvider {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
-    }
-
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
-    }
+    DialogDefinition getDialogDefinition() throws RepositoryException;
 }

@@ -39,11 +39,11 @@ import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Han
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.UIModel;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;

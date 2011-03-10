@@ -239,7 +239,7 @@
         <sv:value>90d77b83-c6f9-41e9-b123-7bad0759d7ec</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.definition.LabelColumn</sv:value>
+        <sv:value>info.magnolia.ui.model.tree.definition.LabelColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -282,7 +282,7 @@
         <sv:value>02e4fdea-1665-4d48-913e-664400924bc9</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.definition.NodeDataValueColumn</sv:value>
+        <sv:value>info.magnolia.ui.model.tree.definition.NodeDataValueColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -325,7 +325,7 @@
         <sv:value>2ec1362b-d345-4667-9308-454a4c1f76b0</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.definition.NodeDataTypeColumn</sv:value>
+        <sv:value>info.magnolia.ui.model.tree.definition.NodeDataTypeColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -365,7 +365,7 @@
         <sv:value>c00ed4a6-e968-4263-a8e6-939a199d638b</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.definition.StatusColumn</sv:value>
+        <sv:value>info.magnolia.ui.model.tree.definition.StatusColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -405,7 +405,7 @@
         <sv:value>8e0e47aa-6736-42a1-bf97-c681cc356e8b</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.definition.MetaDataColumn</sv:value>
+        <sv:value>info.magnolia.ui.model.tree.definition.MetaDataColumn</sv:value>
       </sv:property>
       <sv:property sv:name="datePattern" sv:type="String">
         <sv:value>dd/MM/yyyy, HH:mm</sv:value>

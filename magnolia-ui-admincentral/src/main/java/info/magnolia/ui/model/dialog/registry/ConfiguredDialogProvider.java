@@ -31,44 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.dialog.registry;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
- * @author dlipp
- * @version $Id$
+ * DialogProvider that instantiates a dialog from a configuration node.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class ConfiguredDialogProvider implements DialogProvider {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private Content configNode;
+
+    public ConfiguredDialogProvider(Content configNode) {
+        // session that opened provided content might not be alive by the time we need to use this
+        this.configNode = new LazyContentWrapper(configNode);
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public DialogDefinition getDialogDefinition() throws RepositoryException {
+        try {
+            DialogDefinition definition = (DialogDefinition) Content2BeanUtil.toBean(configNode, true, DialogDefinition.class);
+            return definition;
+        } catch (Content2BeanException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

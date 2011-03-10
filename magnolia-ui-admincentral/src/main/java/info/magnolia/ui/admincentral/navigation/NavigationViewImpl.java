@@ -36,7 +36,8 @@ package info.magnolia.ui.admincentral.navigation;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
+import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.HashMap;

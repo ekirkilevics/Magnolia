@@ -34,8 +34,8 @@
 package info.magnolia.ui.admincentral.dialog.builder;
 
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.ui.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 
 /**
  * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.

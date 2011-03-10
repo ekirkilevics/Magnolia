@@ -47,13 +47,13 @@ import com.vaadin.ui.TextField;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.ui.admincentral.dialog.definition.DialogDefinition;
-import info.magnolia.ui.admincentral.dialog.definition.DialogField;
-import info.magnolia.ui.admincentral.dialog.definition.DialogTab;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.dialog.view.DialogViewImpl;
 import info.magnolia.ui.admincentral.dialog.view.VaadinDialogField;
 import info.magnolia.ui.framework.editor.Editor;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.DialogField;
+import info.magnolia.ui.model.dialog.definition.DialogTab;
 
 /**
  * Builder for DialogViewImpl.

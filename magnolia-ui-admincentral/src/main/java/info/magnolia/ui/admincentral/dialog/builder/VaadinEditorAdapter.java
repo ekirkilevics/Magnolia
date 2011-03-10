@@ -39,13 +39,13 @@ import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.ui.Field;
 
-import info.magnolia.ui.admincentral.dialog.definition.DialogField;
 import info.magnolia.ui.admincentral.dialog.view.VaadinDialogField;
 import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.EditorDelegate;
 import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.editor.HasEditorDelegate;
 import info.magnolia.ui.framework.editor.HasEditorErrors;
+import info.magnolia.ui.model.dialog.definition.DialogField;
 
 /**
  * Adapter class that adapts a Vaadin Field as an Editor.

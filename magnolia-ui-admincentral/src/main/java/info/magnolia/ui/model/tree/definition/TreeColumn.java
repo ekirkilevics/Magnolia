@@ -31,44 +31,65 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.definition;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
+import com.vaadin.ui.Field;
 
 /**
+ * Base class for tree columns.
+ *
+ * @param <E> type of the hosted values of this column.
  * @author dlipp
- * @version $Id$
+ * @author tmattsson
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public abstract class TreeColumn<E> {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private String label;
+
+    private int width = 1;
+
+    public int getWidth() {
+        return width;
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     * @return Field used when editing this column. Defaults to null.
+     */
+    public Field getEditField(Item item) {
+        return null;
+    }
+
+    /**
+     * Type of the column: Subclasses have to make sure the getValue methods return instances of
+     * this type!
+     */
+    public abstract Class<E> getType();
+
+    /**
+     * @return value to be displayed in the corresponding column (from the provided Node)
+     */
+    public abstract Object getValue(Item item) throws RepositoryException;
+
+    /**
+     * Set value of Property for the provided node to the new value.
+     */
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
     }
 }

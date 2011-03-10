@@ -31,44 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.registry;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
-
 /**
- * @author dlipp
- * @version $Id$
+ * Provides the tree definition for a tree configured in the repository.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class ConfiguredTreeProvider implements TreeProvider {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private Content configNode;
+
+    public ConfiguredTreeProvider(Content content) {
+        this.configNode = new LazyContentWrapper(content);
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public TreeDefinition getTreeDefinition() throws RepositoryException {
+        try {
+            return (TreeDefinition) Content2BeanUtil.toBean(configNode, true, TreeDefinition.class);
+        } catch (Content2BeanException e) {
+            throw new RepositoryException(e);
+        }
     }
 }

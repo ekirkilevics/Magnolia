@@ -42,7 +42,6 @@ import info.magnolia.ui.admincentral.navigation.NavigationActivity;
 import info.magnolia.ui.admincentral.showcontent.ShowContentActivity;
 import info.magnolia.ui.admincentral.showcontent.place.ShowContentPlace;
 import info.magnolia.ui.admincentral.showcontent.place.SomePlace;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
@@ -55,6 +54,7 @@ import info.magnolia.ui.framework.place.PlaceHistoryMapper;
 import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 
 /**

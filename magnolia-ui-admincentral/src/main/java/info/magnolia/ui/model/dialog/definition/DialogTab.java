@@ -31,44 +31,57 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.dialog.definition;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author dlipp
- * @version $Id$
+ * A tab in a dialog. Holds a list of controls contained in the tab.
+ *
+ * TODO rename to TabDefinition?
+ *
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class DialogTab {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private String name;
+    private String label;
+    private String i18nBasename;
+    private List<DialogField> fields = new ArrayList<DialogField>();
+
+    public String getName() {
+        return name;
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
+    }
+
+    public List<DialogField> getFields() {
+        return fields;
+    }
+
+    public void setFields(List<DialogField> fields) {
+        this.fields = fields;
+    }
+
+    public boolean addField(DialogField dialogField) {
+        return fields.add(dialogField);
     }
 }

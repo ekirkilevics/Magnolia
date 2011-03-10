@@ -37,10 +37,10 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.UIModel;
 
 
 /**

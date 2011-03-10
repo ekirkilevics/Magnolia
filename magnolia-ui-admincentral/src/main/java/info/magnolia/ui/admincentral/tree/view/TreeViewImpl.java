@@ -35,7 +35,7 @@ package info.magnolia.ui.admincentral.tree.view;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
+import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import javax.jcr.RepositoryException;

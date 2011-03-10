@@ -42,10 +42,10 @@ import org.slf4j.LoggerFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager;
 import info.magnolia.ui.admincentral.module.setup.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
-import info.magnolia.ui.admincentral.navigation.NavigationItemConfiguration;
-import info.magnolia.ui.admincentral.tree.registry.ConfiguredTreeManager;
+import info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager;
+import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.model.tree.registry.ConfiguredTreeManager;
 
 /**
  * Magnolia's AdminCentral Module.

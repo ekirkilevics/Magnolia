@@ -31,44 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.tree.definition;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
+import java.io.Serializable;
 
 /**
- * @author dlipp
- * @version $Id$
+ * Configuration for inclusion of a certain item type in a tree.
+ *
+ * @see info.magnolia.cms.core.ItemType
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class TreeItemType implements Serializable {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private static final long serialVersionUID = 815087827919184207L;
+
+    public static final String ITEM_TYPE_NODE_DATA = "nodeData";
+
+    /**
+     * The system name of the item type or 'nodeData' if it describes node data.
+     */
+    private String itemType;
+    private String icon;
+
+    public String getItemType() {
+        return itemType;
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

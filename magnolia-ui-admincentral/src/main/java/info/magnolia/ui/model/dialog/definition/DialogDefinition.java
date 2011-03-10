@@ -31,44 +31,54 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.model.dialog.definition;
 
-import java.util.Calendar;
-import java.util.Date;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.time.FastDateFormat;
-import org.junit.Before;
-import org.junit.Test;
-
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.model.tree.definition.MetaDataColumn;
-import static junit.framework.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author dlipp
- * @version $Id$
+ * A definition of a configured dialog. Holds a list of tabs.
  */
-public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
+public class DialogDefinition {
 
-    @Before
-    public void setUp (){
-        cal.setTime(now);
+    private String name;
+    private String label;
+    private String i18nBasename;
+    private List<DialogTab> tabs = new ArrayList<DialogTab>();
+
+    public String getName() {
+        return name;
     }
 
-    @Test
-    public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
-        Object result = column.getValue(node);
-        assertEquals(dateFormat.format(now), result);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public List<DialogTab> getTabs() {
+        return tabs;
+    }
+
+    public void setTabs(List<DialogTab> tabs) {
+        this.tabs = tabs;
+    }
+
+    public boolean addTab(DialogTab dialogTab) {
+        return tabs.add(dialogTab);
+    }
+
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
     }
 }

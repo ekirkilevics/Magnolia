@@ -36,7 +36,6 @@ package info.magnolia.ui.admincentral.editworkspace.activity;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
-import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
 import info.magnolia.ui.framework.activity.ActivityMapper;
@@ -45,6 +44,7 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.UIModel;
 
 
 /**

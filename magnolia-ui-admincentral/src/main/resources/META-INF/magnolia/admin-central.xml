@@ -10,20 +10,20 @@
 
   <properties>
     <property>
-      <name>info.magnolia.ui.admincentral.tree.registry.TreeRegistry</name>
-      <value>info.magnolia.ui.admincentral.tree.registry.TreeRegistry</value>
+      <name>info.magnolia.ui.model.tree.registry.TreeRegistry</name>
+      <value>info.magnolia.ui.model.tree.registry.TreeRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.ui.admincentral.dialog.registry.DialogRegistry</name>
-      <value>info.magnolia.ui.admincentral.dialog.registry.DialogRegistry</value>
+      <name>info.magnolia.ui.model.dialog.registry.DialogRegistry</name>
+      <value>info.magnolia.ui.model.dialog.registry.DialogRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager</name>
-      <value>info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager</value>
+      <name>info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager</name>
+      <value>info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager</value>
     </property>
     <property>
-      <name>info.magnolia.ui.admincentral.tree.registry.ConfiguredTreeManager</name>
-      <value>info.magnolia.ui.admincentral.tree.registry.ConfiguredTreeManager</value>
+      <name>info.magnolia.ui.model.tree.registry.ConfiguredTreeManager</name>
+      <value>info.magnolia.ui.model.tree.registry.ConfiguredTreeManager</value>
     </property>
   </properties>
 
