@@ -192,6 +192,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
             setHeight(20f, Button.UNITS_PIXELS);
 
             this.addListener(new ClickListener() {
+                private static final long serialVersionUID = -4407929312558995573L;
 
                 public void buttonClick(ClickEvent event) {
                     presenter.onMenuSelection(item);
