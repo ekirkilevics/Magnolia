@@ -44,10 +44,10 @@ import info.magnolia.module.admincentral.dialog.view.DialogView;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.editor.ContentDriver;
-import info.magnolia.ui.event.EventBus;
-import info.magnolia.ui.view.ViewPort;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.editor.ContentDriver;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.view.ViewPort;
 
 /**
  * Activity for dialogs.

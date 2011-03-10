@@ -48,7 +48,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.action.Command;
-import info.magnolia.ui.view.View;
+import info.magnolia.ui.framework.view.View;
 import info.magnolia.vaadin.view.IsVaadinComponent;
 
 /**

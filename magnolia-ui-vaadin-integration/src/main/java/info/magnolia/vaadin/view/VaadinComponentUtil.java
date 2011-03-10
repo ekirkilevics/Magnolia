@@ -33,7 +33,7 @@
  */
 package info.magnolia.vaadin.view;
 
-import info.magnolia.ui.view.View;
+import info.magnolia.ui.framework.view.View;
 
 import com.vaadin.ui.Component;
 

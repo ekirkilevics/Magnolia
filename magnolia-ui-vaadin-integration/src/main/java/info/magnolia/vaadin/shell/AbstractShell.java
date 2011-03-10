@@ -33,11 +33,11 @@
  */
 package info.magnolia.vaadin.shell;
 
-import info.magnolia.ui.event.HandlerRegistration;
-import info.magnolia.ui.shell.FragmentChangedEvent;
-import info.magnolia.ui.shell.FragmentChangedHandler;
-import info.magnolia.ui.shell.Fragmenter;
-import info.magnolia.ui.shell.Shell;
+import info.magnolia.ui.framework.event.HandlerRegistration;
+import info.magnolia.ui.framework.shell.FragmentChangedEvent;
+import info.magnolia.ui.framework.shell.FragmentChangedHandler;
+import info.magnolia.ui.framework.shell.Fragmenter;
+import info.magnolia.ui.framework.shell.Shell;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +55,7 @@ import com.vaadin.ui.UriFragmentUtility;
 public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentUtility.FragmentChangedListener{
     private static final Logger log = LoggerFactory.getLogger(AbstractShell.class);
 
-    private Collection<info.magnolia.ui.shell.FragmentChangedHandler> handlers = new ArrayList<FragmentChangedHandler>();
+    private Collection<info.magnolia.ui.framework.shell.FragmentChangedHandler> handlers = new ArrayList<FragmentChangedHandler>();
 
     protected String id;
 
@@ -115,8 +115,8 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         final Fragmenter fragmenter = new Fragmenter(event.getUriFragmentUtility().getFragment());
         final String subFragment = fragmenter.getSubFragment(id);
         if(subFragment != null){
-            for (info.magnolia.ui.shell.FragmentChangedHandler listener : handlers) {
-                log.debug("firing info.magnolia.ui.shell.FragmentChangedEvent with sub fragment {}", subFragment);
+            for (info.magnolia.ui.framework.shell.FragmentChangedHandler listener : handlers) {
+                log.debug("firing info.magnolia.ui.framework.shell.FragmentChangedEvent with sub fragment {}", subFragment);
                 listener.onFragmentChanged(new FragmentChangedEvent(subFragment));
             }
         }

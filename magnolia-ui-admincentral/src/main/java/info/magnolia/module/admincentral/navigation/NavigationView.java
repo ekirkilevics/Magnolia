@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.navigation;
 
-import info.magnolia.ui.view.View;
+import info.magnolia.ui.framework.view.View;
 
 /**
  * TODO: write javadoc.

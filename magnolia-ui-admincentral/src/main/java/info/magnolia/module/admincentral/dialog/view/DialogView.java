@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admincentral.dialog.view;
 
-import info.magnolia.ui.editor.HasEditors;
-import info.magnolia.ui.view.View;
+import info.magnolia.ui.framework.editor.HasEditors;
+import info.magnolia.ui.framework.view.View;
 
 /**
  * View for a dialog.

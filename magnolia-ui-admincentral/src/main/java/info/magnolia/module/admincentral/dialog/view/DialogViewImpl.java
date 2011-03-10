@@ -46,7 +46,8 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 
 import com.vaadin.ui.Window;
-import info.magnolia.ui.editor.Editor;
+
+import info.magnolia.ui.framework.editor.Editor;
 
 /**
  * Vaadin specific dialog implementation.

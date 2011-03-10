@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.ui.view.View;
-import info.magnolia.ui.view.ViewPort;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.vaadin.view.ComponentViewPort;
 import info.magnolia.vaadin.view.IsVaadinComponent;
 

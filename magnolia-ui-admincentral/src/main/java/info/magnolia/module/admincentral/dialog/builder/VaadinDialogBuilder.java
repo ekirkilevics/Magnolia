@@ -53,7 +53,7 @@ import info.magnolia.module.admincentral.dialog.definition.DialogTab;
 import info.magnolia.module.admincentral.dialog.view.DialogView;
 import info.magnolia.module.admincentral.dialog.view.DialogViewImpl;
 import info.magnolia.module.admincentral.dialog.view.VaadinDialogField;
-import info.magnolia.ui.editor.Editor;
+import info.magnolia.ui.framework.editor.Editor;
 
 /**
  * Builder for DialogViewImpl.

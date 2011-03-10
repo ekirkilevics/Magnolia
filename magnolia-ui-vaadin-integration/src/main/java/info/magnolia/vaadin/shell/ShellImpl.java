@@ -33,7 +33,7 @@
  */
 package info.magnolia.vaadin.shell;
 
-import info.magnolia.ui.shell.ConfirmationHandler;
+import info.magnolia.ui.framework.shell.ConfirmationHandler;
 import info.magnolia.vaadin.widgetset.Historian;
 
 import org.vaadin.dialogs.ConfirmDialog;

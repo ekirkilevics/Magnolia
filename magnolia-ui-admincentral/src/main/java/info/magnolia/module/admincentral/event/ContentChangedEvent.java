@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admincentral.event;
 
-import info.magnolia.ui.event.Event;
-import info.magnolia.ui.event.EventHandler;
+import info.magnolia.ui.framework.event.Event;
+import info.magnolia.ui.framework.event.EventHandler;
 
 
 /**

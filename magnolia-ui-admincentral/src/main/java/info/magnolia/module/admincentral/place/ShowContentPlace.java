@@ -35,7 +35,7 @@ package info.magnolia.module.admincentral.place;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.ui.place.Place;
+import info.magnolia.ui.framework.place.Place;
 
 
 /**

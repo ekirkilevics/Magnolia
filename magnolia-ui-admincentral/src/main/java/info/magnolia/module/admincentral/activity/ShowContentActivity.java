@@ -36,10 +36,10 @@ package info.magnolia.module.admincentral.activity;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.views.IFrameView;
 import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.event.EventBus;
-import info.magnolia.ui.view.View;
-import info.magnolia.ui.view.ViewPort;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.view.ViewPort;
 
 
 /**

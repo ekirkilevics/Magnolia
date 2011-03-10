@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.tree;
 
-import info.magnolia.ui.view.View;
+import info.magnolia.ui.framework.view.View;
 
 import javax.jcr.Item;
 

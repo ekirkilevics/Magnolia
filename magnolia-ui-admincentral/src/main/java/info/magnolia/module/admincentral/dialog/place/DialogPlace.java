@@ -35,8 +35,8 @@ package info.magnolia.module.admincentral.dialog.place;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.ui.place.Place;
-import info.magnolia.ui.place.PlaceTokenizer;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.place.PlaceTokenizer;
 
 /**
  * Place for dialogs.

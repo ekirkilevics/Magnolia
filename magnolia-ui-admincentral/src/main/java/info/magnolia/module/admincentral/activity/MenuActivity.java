@@ -37,11 +37,11 @@ import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.navigation.NavigationItemConfiguration;
 import info.magnolia.module.admincentral.navigation.NavigationView;
 import info.magnolia.module.admincentral.navigation.NavigationViewImpl;
-import info.magnolia.ui.action.Action;
-import info.magnolia.ui.action.ActionFactory;
-import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.event.EventBus;
-import info.magnolia.ui.view.ViewPort;
+import info.magnolia.ui.framework.action.Action;
+import info.magnolia.ui.framework.action.ActionFactory;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.view.ViewPort;
 /**
  * MenuActivity.
  * @author fgrilli

@@ -34,8 +34,8 @@
 package info.magnolia.vaadin.view;
 
 
-import info.magnolia.ui.view.View;
-import info.magnolia.ui.view.ViewPort;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.view.ViewPort;
 
 import com.vaadin.ui.ComponentContainer;
 

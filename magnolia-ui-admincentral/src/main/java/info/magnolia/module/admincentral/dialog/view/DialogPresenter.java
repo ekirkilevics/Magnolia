@@ -42,7 +42,7 @@ import info.magnolia.module.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.module.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.editor.ContentDriver;
+import info.magnolia.ui.framework.editor.ContentDriver;
 
 /**
  * Window for creating or editing content using a dialog.

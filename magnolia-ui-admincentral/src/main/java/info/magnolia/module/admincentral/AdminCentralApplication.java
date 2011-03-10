@@ -50,11 +50,11 @@ import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
-import info.magnolia.ui.action.ActionFactory;
-import info.magnolia.ui.event.EventBus;
-import info.magnolia.ui.event.SimpleEventBus;
-import info.magnolia.ui.place.PlaceController;
-import info.magnolia.ui.shell.Shell;
+import info.magnolia.ui.framework.action.ActionFactory;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.event.SimpleEventBus;
+import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.vaadin.shell.ShellImpl;
 
 /**

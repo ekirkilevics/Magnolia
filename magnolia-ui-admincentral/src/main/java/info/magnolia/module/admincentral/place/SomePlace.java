@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.admincentral.place;
 
-import info.magnolia.ui.place.Place;
+import info.magnolia.ui.framework.place.Place;
 
 
 /**

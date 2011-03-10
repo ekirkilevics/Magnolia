@@ -34,14 +34,14 @@
 package info.magnolia.vaadin.shell;
 
 
-import info.magnolia.ui.shell.ConfirmationHandler;
-import info.magnolia.ui.shell.Shell;
+import info.magnolia.ui.framework.shell.ConfirmationHandler;
+import info.magnolia.ui.framework.shell.Shell;
 
 import com.vaadin.ui.UriFragmentUtility;
 
 
 /**
- * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.activity.MVPSubContainerActivity}.
+ * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.framework.activity.MVPSubContainerActivity}.
  */
 @SuppressWarnings("serial")
 public class SubShell extends AbstractShell {

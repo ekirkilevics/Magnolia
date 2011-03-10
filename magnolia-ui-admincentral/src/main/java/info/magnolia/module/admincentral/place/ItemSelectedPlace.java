@@ -35,9 +35,9 @@ package info.magnolia.module.admincentral.place;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import info.magnolia.ui.place.Place;
-import info.magnolia.ui.place.PlaceTokenizer;
-import info.magnolia.ui.place.Prefix;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.place.PlaceTokenizer;
+import info.magnolia.ui.framework.place.Prefix;
 
 /**
  * A sub-place of {@link EditWorkspacePlace} if an item got selected.

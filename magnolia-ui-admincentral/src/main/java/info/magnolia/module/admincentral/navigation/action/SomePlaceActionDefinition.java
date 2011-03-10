@@ -34,8 +34,8 @@
 package info.magnolia.module.admincentral.navigation.action;
 
 import info.magnolia.module.admincentral.place.SomePlace;
-import info.magnolia.ui.action.PlaceChangeActionDefinition;
-import info.magnolia.ui.place.Place;
+import info.magnolia.ui.framework.action.PlaceChangeActionDefinition;
+import info.magnolia.ui.framework.place.Place;
 
 /**
  * SomePlace Action Definition.
