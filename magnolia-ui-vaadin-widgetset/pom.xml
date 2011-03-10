@@ -7,8 +7,8 @@
     <version>5.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>magnolia-vaadin-widgetset</artifactId>
-  <name>magnolia-vaadin-widgetset</name>
+  <artifactId>magnolia-ui-vaadin-widgetset</artifactId>
+  <name>magnolia-ui-vaadin-widgetset</name>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>

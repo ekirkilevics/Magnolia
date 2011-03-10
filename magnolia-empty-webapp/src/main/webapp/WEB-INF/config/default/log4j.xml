@@ -132,6 +132,11 @@ Number of occurrences: %o%n
   <category name="info.magnolia">
     <priority value="INFO" />
   </category>
+  <category name="info.magnolia.module.vaadin" additivity="false">
+    <priority value="DEBUG" />
+    <appender-ref ref="log-activation" />
+    <appender-ref ref="console" />
+  </category>
   <category name="info.magnolia.cms.exchange" additivity="false">
     <priority value="INFO" />
     <appender-ref ref="log-activation" />

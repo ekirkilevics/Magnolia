@@ -6,9 +6,10 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-module-admincentral</artifactId>
-  <name>magnolia-module-admincentral</name>
+  <artifactId>magnolia-ui-admincentral</artifactId>
+  <name>magnolia-ui-admincentral</name>
   <packaging>jar</packaging>
+  <description>AdminCentral</description>
   <dependencies>
     <dependency>
       <groupId>com.vaadin</groupId>
@@ -40,7 +41,7 @@
       </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-vaadin</artifactId>
+      <artifactId>magnolia-ui-vaadin-integration</artifactId>
       <version>${project.version}</version>
       </dependency>
     <dependency>
