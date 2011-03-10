@@ -682,6 +682,7 @@ for Java Content Repositories (JCR).
 
     <!-- New Magnolia 5.0 UI -->
     <module>magnolia-ui-framework</module>
+    <module>magnolia-ui-model</module>
     <module>magnolia-ui-vaadin-widgetset</module>
     <module>magnolia-ui-vaadin-integration</module>
     <module>magnolia-ui-admincentral</module>
