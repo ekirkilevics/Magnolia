@@ -31,33 +31,50 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.definition;
 
-import java.io.Serializable;
+import info.magnolia.ui.admincentral.tree.action.Command;
 
 /**
- * Configuration for inclusion of a certain item type in a tree.
- *
- * @see info.magnolia.cms.core.ItemType
+ * Describes an item on either a function menu or a context menu.
  */
-public class TreeItemType implements Serializable {
+public class MenuItem {
 
-    private static final long serialVersionUID = 815087827919184207L;
-
-    public static final String ITEM_TYPE_NODE_DATA = "nodeData";
-
-    /**
-     * The system name of the item type or 'nodeData' if it describes node data.
-     */
-    private String itemType;
+    private String name;
+    private String label;
     private String icon;
+    private Command command;
 
-    public String getItemType() {
-        return itemType;
+    public void init() {
+        if (command != null) {
+            command.setName(name);
+            command.setLabel(label);
+            command.setIcon(icon);
+        }
     }
 
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
+    public Command getCommand() {
+        return command;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getIcon() {

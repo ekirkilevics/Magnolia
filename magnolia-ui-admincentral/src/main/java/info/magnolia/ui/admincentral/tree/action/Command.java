@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.tree.action;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.admincentral.tree.JcrBrowser;
+import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 
 /**
  * Base class for all tree actions.

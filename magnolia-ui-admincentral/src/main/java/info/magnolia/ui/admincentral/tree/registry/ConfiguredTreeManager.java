@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.registry;
 
 import java.util.Collection;
 import java.util.HashSet;

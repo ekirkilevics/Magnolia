@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.definition;
 
 import java.io.Serializable;
 import java.util.ArrayList;

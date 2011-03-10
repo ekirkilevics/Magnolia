@@ -38,10 +38,10 @@ import info.magnolia.ui.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.module.AdminCentralModule;
 import info.magnolia.ui.admincentral.navigation.NavigationItemConfiguration;
-import info.magnolia.ui.admincentral.tree.MenuItem;
-import info.magnolia.ui.admincentral.tree.TreeDefinition;
-import info.magnolia.ui.admincentral.tree.TreeRegistry;
 import info.magnolia.ui.admincentral.tree.action.Command;
+import info.magnolia.ui.admincentral.tree.definition.MenuItem;
+import info.magnolia.ui.admincentral.tree.definition.TreeDefinition;
+import info.magnolia.ui.admincentral.tree.registry.TreeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -34,9 +34,9 @@
 package info.magnolia.ui.admincentral.tree.container;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.tree.TreeColumn;
-import info.magnolia.ui.admincentral.tree.TreeDefinition;
-import info.magnolia.ui.admincentral.tree.TreeItemType;
+import info.magnolia.ui.admincentral.tree.definition.TreeColumn;
+import info.magnolia.ui.admincentral.tree.definition.TreeDefinition;
+import info.magnolia.ui.admincentral.tree.definition.TreeItemType;
 
 import java.util.ArrayList;
 import java.util.Collection;

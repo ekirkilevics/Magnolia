@@ -31,35 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.registry;
 
-import java.io.Serializable;
+import info.magnolia.ui.admincentral.tree.definition.TreeDefinition;
 
-import javax.jcr.Item;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
+import java.util.HashMap;
+import java.util.Map;
 import javax.jcr.RepositoryException;
 
-
 /**
- * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
- * is a NodeData.
+ * Maintains a registry of configured tree providers by name.
  */
-public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
+public class TreeRegistry {
 
-    private static final long serialVersionUID = -2594102704173600906L;
+    private final Map<String, TreeProvider> providers = new HashMap<String, TreeProvider>();
 
-    @Override
-    public Class<String> getType() {
-        return String.class;
+    public void registerTree(String treeName, TreeProvider provider) {
+        synchronized (providers) {
+            if (providers.containsKey(treeName))
+                throw new IllegalStateException("Tree already registered for name [" + treeName + "]");
+            providers.put(treeName, provider);
+        }
     }
 
-    @Override
-    public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return PropertyType.nameFromValue(property.getType());
+    public void unregisterTree(String treeName) {
+        synchronized (providers) {
+            providers.remove(treeName);
         }
-        return "";
+    }
+
+    public TreeDefinition getTree(String name) throws RepositoryException {
+
+        TreeProvider treeProvider;
+        synchronized (providers) {
+            treeProvider = providers.get(name);
+        }
+        if (treeProvider == null) {
+            return null;
+        }
+        return treeProvider.getTreeDefinition();
     }
 }

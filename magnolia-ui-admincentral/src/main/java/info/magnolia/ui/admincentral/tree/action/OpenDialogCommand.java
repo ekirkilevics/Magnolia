@@ -38,7 +38,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.admincentral.tree.JcrBrowser;
+import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 
 /**
  * Opens a dialog for editing a node in a tree.

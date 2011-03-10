@@ -31,65 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.definition;
 
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.Field;
+import java.io.Serializable;
 
 /**
- * Base class for tree columns.
+ * Configuration for inclusion of a certain item type in a tree.
  *
- * @param <E> type of the hosted values of this column.
- * @author dlipp
- * @author tmattsson
+ * @see info.magnolia.cms.core.ItemType
  */
-public abstract class TreeColumn<E> {
+public class TreeItemType implements Serializable {
 
-    private String label;
+    private static final long serialVersionUID = 815087827919184207L;
 
-    private int width = 1;
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
+    public static final String ITEM_TYPE_NODE_DATA = "nodeData";
 
     /**
-     * @return Field used when editing this column. Defaults to null.
+     * The system name of the item type or 'nodeData' if it describes node data.
      */
-    public Field getEditField(Item item) {
-        return null;
+    private String itemType;
+    private String icon;
+
+    public String getItemType() {
+        return itemType;
     }
 
-    /**
-     * Type of the column: Subclasses have to make sure the getValue methods return instances of
-     * this type!
-     */
-    public abstract Class<E> getType();
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
 
-    /**
-     * @return value to be displayed in the corresponding column (from the provided Node)
-     */
-    public abstract Object getValue(Item item) throws RepositoryException;
+    public String getIcon() {
+        return icon;
+    }
 
-    /**
-     * Set value of Property for the provided node to the new value.
-     */
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

@@ -31,31 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.registry;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.ui.admincentral.tree.definition.TreeDefinition;
 
 import javax.jcr.RepositoryException;
 
 /**
- * Provides the tree definition for a tree configured in the repository.
+ * Provides a tree definition.
  */
-public class ConfiguredTreeProvider implements TreeProvider {
+public interface TreeProvider {
 
-    private Content configNode;
-
-    public ConfiguredTreeProvider(Content content) {
-        this.configNode = new LazyContentWrapper(content);
-    }
-
-    public TreeDefinition getTreeDefinition() throws RepositoryException {
-        try {
-            return (TreeDefinition) Content2BeanUtil.toBean(configNode, true, TreeDefinition.class);
-        } catch (Content2BeanException e) {
-            throw new RepositoryException(e);
-        }
-    }
+    TreeDefinition getTreeDefinition() throws RepositoryException;
 }

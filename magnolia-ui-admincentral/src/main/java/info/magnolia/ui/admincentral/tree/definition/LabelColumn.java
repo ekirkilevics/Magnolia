@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.definition;
 
 import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;

@@ -196,7 +196,7 @@
         <sv:value>b6d39ae1-2c0b-451b-901f-f3ba8855a488</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.LabelColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.definition.LabelColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -239,7 +239,7 @@
         <sv:value>af92c812-e8e6-4b80-806e-d28e4d343050</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.NodeDataColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.definition.NodeDataColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -285,7 +285,7 @@
         <sv:value>e0dc7cd0-1202-4bdc-b719-7189fb797b1d</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.StatusColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.definition.StatusColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -325,7 +325,7 @@
         <sv:value>9e1d72dc-5837-476f-aa1d-4dfbc029a9bd</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.tree.MetaDataColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.definition.MetaDataColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>

@@ -41,8 +41,8 @@ import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.admincentral.jcr.HackContent;
 import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.tree.JcrBrowser;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
+import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 
 import javax.jcr.Item;
 import javax.jcr.Node;

@@ -31,42 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.definition;
 
-import info.magnolia.ui.admincentral.tree.action.Command;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Field;
 
 /**
- * Describes an item on either a function menu or a context menu.
+ * Base class for tree columns.
+ *
+ * @param <E> type of the hosted values of this column.
+ * @author dlipp
+ * @author tmattsson
  */
-public class MenuItem {
+public abstract class TreeColumn<E> {
 
-    private String name;
     private String label;
-    private String icon;
-    private Command command;
 
-    public void init() {
-        if (command != null) {
-            command.setName(name);
-            command.setLabel(label);
-            command.setIcon(icon);
-        }
+    private int width = 1;
+
+    public int getWidth() {
+        return width;
     }
 
-    public Command getCommand() {
-        return command;
-    }
-
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public String getLabel() {
@@ -77,11 +69,27 @@ public class MenuItem {
         this.label = label;
     }
 
-    public String getIcon() {
-        return icon;
+    /**
+     * @return Field used when editing this column. Defaults to null.
+     */
+    public Field getEditField(Item item) {
+        return null;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    /**
+     * Type of the column: Subclasses have to make sure the getValue methods return instances of
+     * this type!
+     */
+    public abstract Class<E> getType();
+
+    /**
+     * @return value to be displayed in the corresponding column (from the provided Node)
+     */
+    public abstract Object getValue(Item item) throws RepositoryException;
+
+    /**
+     * Set value of Property for the provided node to the new value.
+     */
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
     }
 }

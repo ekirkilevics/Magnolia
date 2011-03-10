@@ -45,7 +45,7 @@ import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager;
 import info.magnolia.ui.admincentral.module.setup.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.ui.admincentral.navigation.NavigationItemConfiguration;
-import info.magnolia.ui.admincentral.tree.ConfiguredTreeManager;
+import info.magnolia.ui.admincentral.tree.registry.ConfiguredTreeManager;
 
 /**
  * Magnolia's AdminCentral Module.

@@ -31,31 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree;
+package info.magnolia.ui.admincentral.tree.definition;
 
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 import javax.jcr.Item;
-import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.FastDateFormat;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
+
 
 /**
- * Column that displays a property for a nodes MetaData. Used to display the modification date of
- * content nodes.
+ * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
+ * the TreeTable is a NodeData.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
-public class MetaDataColumn extends TreeColumn<String> implements Serializable {
+public class NodeDataValueColumn extends TreeColumn<String> implements Serializable {
 
-    private static final long serialVersionUID = -2788490588550009503L;
+    private static final long serialVersionUID = -6032077132567486333L;
 
-    private String datePattern;
+    private boolean editable = false;
 
-    protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     @Override
     public Class<String> getType() {
@@ -64,26 +73,24 @@ public class MetaDataColumn extends TreeColumn<String> implements Serializable {
 
     @Override
     public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Node) {
-            Node node = (Node) item;
-            Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
-            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
-            final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
-            return date != null ? DATE_FORMAT.format(date.getTime()) : "";
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            return property.getString();
         }
         return "";
     }
 
-    /**
-     * @param datePattern a {@link SimpleDateFormat} compatible pattern
-     */
-    public void setDatePattern(String datePattern) {
-        this.datePattern = datePattern;
+    @Override
+    public Field getEditField(Item item) {
+        return (editable && item instanceof Property) ? new TextField() : null;
     }
-    /**
-     * @return {@link SimpleDateFormat} compatible pattern
-     */
-    public String getDatePattern() {
-        return datePattern;
+
+    @Override
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            property.setValue((String) newValue);
+            property.getSession().save();
+        }
     }
 }
