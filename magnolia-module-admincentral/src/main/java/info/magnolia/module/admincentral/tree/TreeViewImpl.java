@@ -36,6 +36,7 @@ package info.magnolia.module.admincentral.tree;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.tree.container.ContainerItemId;
+import info.magnolia.vaadin.view.IsVaadinComponent;
 
 import javax.jcr.RepositoryException;
 
@@ -49,7 +50,8 @@ import com.vaadin.ui.CustomComponent;
  * @author tmattsson
  *
  */
-public class TreeViewImpl extends CustomComponent implements TreeView {
+// TODO don't extend CustomComponent, make it composite
+public class TreeViewImpl extends CustomComponent implements TreeView, IsVaadinComponent {
 
     private JcrBrowser jcrBrowser;
 
@@ -83,7 +85,8 @@ public class TreeViewImpl extends CustomComponent implements TreeView {
         jcrBrowser.getContainer().fireItemSetChange();
     }
 
-    public Component asComponent() {
+    public Component asVaadinComponent() {
         return this;
     }
+
 }

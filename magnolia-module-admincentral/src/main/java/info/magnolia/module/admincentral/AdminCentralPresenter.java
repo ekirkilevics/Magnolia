@@ -47,7 +47,6 @@ import info.magnolia.ui.activity.AbstractActivity;
 import info.magnolia.ui.activity.Activity;
 import info.magnolia.ui.activity.ActivityManager;
 import info.magnolia.ui.activity.ActivityMapper;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
 import info.magnolia.ui.place.Place;
 import info.magnolia.ui.place.PlaceController;
@@ -55,7 +54,8 @@ import info.magnolia.ui.place.PlaceHistoryHandler;
 import info.magnolia.ui.place.PlaceHistoryMapper;
 import info.magnolia.ui.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.shell.Shell;
-import info.magnolia.vaadin.component.ComponentContainerBasedDisplay;
+import info.magnolia.ui.view.ViewPort;
+import info.magnolia.vaadin.view.ComponentContainerBasedViewPort;
 
 /**
  * Provides the MVP infrastructure for AdminCentral.
@@ -111,7 +111,7 @@ public class AdminCentralPresenter {
                 }
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {
-                        public void start(HasComponent display, EventBus eventBus) {
+                        public void start(ViewPort viewPort, EventBus eventBus) {
                             shell.showNotification(((SomePlace)place).getName());
                         }
                     };
@@ -122,8 +122,8 @@ public class AdminCentralPresenter {
             }
         }, eventBus);
 
-        mainActivityManager.setDisplay(new ComponentContainerBasedDisplay("main", adminCentralView.getMainContainer()));
-        menuActivityManager.setDisplay(new ComponentContainerBasedDisplay("navigation", adminCentralView.getMenuDisplay()));
+        mainActivityManager.setDisplay(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
+        menuActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
 
         historyHandler.handleCurrentHistory();
     }

@@ -37,10 +37,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.views.IFrameView;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
-
-import com.vaadin.ui.Component;
+import info.magnolia.ui.view.View;
+import info.magnolia.ui.view.ViewPort;
 
 
 /**
@@ -59,9 +58,10 @@ public class ShowContentActivity extends AbstractActivity {
         this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
+    public void start(ViewPort viewPort, EventBus eventBus) {
         try {
-            display.setComponent((Component) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
+            // FIXME viewName = className? what name?
+            viewPort.setView((View) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
         }
         catch (ClassNotFoundException e) {
             throw new IllegalStateException(e);

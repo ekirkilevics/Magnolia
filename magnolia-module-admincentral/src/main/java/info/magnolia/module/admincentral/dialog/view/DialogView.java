@@ -33,15 +33,15 @@
  */
 package info.magnolia.module.admincentral.dialog.view;
 
-import info.magnolia.ui.component.IsComponent;
 import info.magnolia.ui.editor.HasEditors;
+import info.magnolia.ui.view.View;
 
 /**
  * View for a dialog.
  *
  * @author tmattsson
  */
-public interface DialogView extends IsComponent, HasEditors{
+public interface DialogView extends View, HasEditors{
 
     void close();
 

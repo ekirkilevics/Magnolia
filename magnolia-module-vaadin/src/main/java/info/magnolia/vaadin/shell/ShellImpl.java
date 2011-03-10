@@ -33,7 +33,6 @@
  */
 package info.magnolia.vaadin.shell;
 
-import info.magnolia.ui.shell.AbstractShell;
 import info.magnolia.ui.shell.ConfirmationHandler;
 import info.magnolia.vaadin.widgetset.Historian;
 

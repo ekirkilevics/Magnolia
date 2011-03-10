@@ -31,39 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.vaadin.component;
+package info.magnolia.vaadin.view;
 
+import info.magnolia.ui.view.View;
+import info.magnolia.ui.view.ViewPort;
 
-import info.magnolia.ui.component.HasComponent;
-
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.CustomComponent;
 
 
 /**
- * A {@link HasComponent} wrapping a Vaadin {@link ComponentContainer} to hide the fact that multiple
- * components could be added.
+ * A display which itself is a {@link CustomComponent}. Can be used as a display slot.
  */
-public class ComponentContainerBasedDisplay implements HasComponent {
+@SuppressWarnings("serial")
+public class ComponentViewPort extends CustomComponent implements ViewPort {
 
-    private String id;
-
-    private ComponentContainer componentContainer;
-
-    public ComponentContainerBasedDisplay(String id, ComponentContainer componentContainer) {
-        this.id = id;
-        this.componentContainer = componentContainer;
+    public void setView(View view) {
+        setCompositionRoot(VaadinComponentUtil.toVaadinComponent(view));
     }
-
-    public void setComponent(Component component) {
-        componentContainer.removeAllComponents();
-        if (component != null) {
-            componentContainer.addComponent(component);
-        }
-    }
-
-    public String getId() {
-        return id;
-    }
-
 }

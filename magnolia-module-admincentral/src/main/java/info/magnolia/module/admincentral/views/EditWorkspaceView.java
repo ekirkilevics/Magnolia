@@ -33,9 +33,10 @@
  */
 package info.magnolia.module.admincentral.views;
 
-import info.magnolia.ui.component.HasComponent;
-import info.magnolia.ui.component.IsComponent;
-import info.magnolia.vaadin.component.ComponentDisplay;
+import info.magnolia.ui.view.View;
+import info.magnolia.ui.view.ViewPort;
+import info.magnolia.vaadin.view.ComponentViewPort;
+import info.magnolia.vaadin.view.IsVaadinComponent;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
@@ -47,11 +48,11 @@ import com.vaadin.ui.HorizontalSplitPanel;
 /**
  * The view to edit a workspace. Provides slots for the tree and detail view.
  */
-public class EditWorkspaceView implements IsComponent{
+public class EditWorkspaceView implements View, IsVaadinComponent{
 
     private HorizontalSplitPanel splitPanel;
-    private ComponentDisplay treeDisplay;
-    private ComponentDisplay detailViewDisplay;
+    private ComponentViewPort treeDisplay;
+    private ComponentViewPort detailViewDisplay;
 
     public EditWorkspaceView() {
 
@@ -73,8 +74,8 @@ public class EditWorkspaceView implements IsComponent{
             }
         });
 
-        treeDisplay = new ComponentDisplay();
-        detailViewDisplay = new ComponentDisplay();
+        treeDisplay = new ComponentViewPort();
+        detailViewDisplay = new ComponentViewPort();
 
         treeDisplay.setSizeFull();
         detailViewDisplay.setSizeFull();
@@ -83,16 +84,16 @@ public class EditWorkspaceView implements IsComponent{
         splitPanel.addComponent(detailViewDisplay);
     }
 
-    public Component asComponent() {
+    public Component asVaadinComponent() {
         return splitPanel;
     }
 
-    public HasComponent getTreeDisplay() {
+    public ViewPort getTreeDisplay() {
         return treeDisplay;
 
     }
 
-    public HasComponent getDetailDisplay() {
+    public ViewPort getDetailDisplay() {
         return detailViewDisplay;
     }
 

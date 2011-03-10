@@ -41,10 +41,10 @@ import info.magnolia.ui.activity.Activity;
 import info.magnolia.ui.activity.ActivityManager;
 import info.magnolia.ui.activity.ActivityMapper;
 import info.magnolia.ui.activity.MVPSubContainerActivity;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
 import info.magnolia.ui.place.Place;
 import info.magnolia.ui.shell.Shell;
+import info.magnolia.ui.view.ViewPort;
 
 
 /**
@@ -67,7 +67,7 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     }
 
     @Override
-    protected void onStart(HasComponent display, EventBus innerEventBus) {
+    protected void onStart(ViewPort display, EventBus innerEventBus) {
 
         EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
 
@@ -102,7 +102,7 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         treeActivityManager.setDisplay(editWorkspaceView.getTreeDisplay());
         detailViewActivityManager.setDisplay(editWorkspaceView.getDetailDisplay());
 
-        display.setComponent(editWorkspaceView.asComponent());
+        display.setView(editWorkspaceView);
     }
 
     @Override

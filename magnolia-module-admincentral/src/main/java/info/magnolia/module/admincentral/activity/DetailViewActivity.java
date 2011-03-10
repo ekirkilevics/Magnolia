@@ -39,8 +39,8 @@ import info.magnolia.module.admincentral.event.ContentChangedEvent;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.views.DetailView;
 import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.view.ViewPort;
 
 
 /**
@@ -61,9 +61,9 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         showItem(path);
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
+    public void start(ViewPort viewPort, EventBus eventBus) {
         this.eventBus = eventBus;
-        display.setComponent(detailView);
+        viewPort.setView(detailView);
     }
 
     private void showItem(String path) {

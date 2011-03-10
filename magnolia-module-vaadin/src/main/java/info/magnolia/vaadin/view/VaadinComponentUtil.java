@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,26 +25,39 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation;
+package info.magnolia.vaadin.view;
 
 import info.magnolia.ui.view.View;
 
+import com.vaadin.ui.Component;
+
+
 /**
- * TODO: write javadoc.
- * @author fgrilli
- *
+ * Util methods to transform views to Vaadin Components.
  */
-public interface NavigationView extends View {
+public class VaadinComponentUtil {
+
     /**
-     * Presenter we have to inform about navigation events.
+     * Converts the abstract {@link View} object to a Vaadin specific {@link Component}. The passed
+     * view has to implement {@link IsVaadinComponent}. Throws an {@link IllegalArgumentException}
+     * if the cast is not possible.
      */
-    public static interface Presenter{
-        void onMenuSelection(NavigationItemConfiguration menuConf);
+    public static Component toVaadinComponent(View view) {
+        if(view == null){
+            return null;
+        }
+
+        if (view instanceof IsVaadinComponent) {
+            return ((IsVaadinComponent) view).asVaadinComponent();
+        }
+
+        throw new IllegalArgumentException("View [" + view + "] must be of type " + IsVaadinComponent.class.getName());
     }
+
 }

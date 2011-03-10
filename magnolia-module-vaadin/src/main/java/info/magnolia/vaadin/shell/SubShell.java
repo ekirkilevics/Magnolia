@@ -31,20 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.navigation;
+package info.magnolia.vaadin.shell;
 
-import info.magnolia.ui.view.View;
+
+import info.magnolia.ui.shell.ConfirmationHandler;
+import info.magnolia.ui.shell.Shell;
+
+import com.vaadin.ui.UriFragmentUtility;
+
 
 /**
- * TODO: write javadoc.
- * @author fgrilli
- *
+ * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.activity.MVPSubContainerActivity}.
  */
-public interface NavigationView extends View {
-    /**
-     * Presenter we have to inform about navigation events.
-     */
-    public static interface Presenter{
-        void onMenuSelection(NavigationItemConfiguration menuConf);
+@SuppressWarnings("serial")
+public class SubShell extends AbstractShell {
+    private Shell parent;
+
+    public SubShell(String id, Shell parent) {
+        super(id);
+        this.parent = parent;
     }
+
+    public void askForConfirmation(String message, ConfirmationHandler listener) {
+        parent.askForConfirmation(message, listener);
+    }
+
+    public void showNotification(String message) {
+        parent.showNotification(message);
+    }
+
+    @Override
+    protected UriFragmentUtility getUriFragmentUtility() {
+        //FIXME we should obviously not cast, but also don't like to add the method to the clean interface
+        return ((AbstractShell)parent).getUriFragmentUtility();
+    }
+
+
 }
+
+

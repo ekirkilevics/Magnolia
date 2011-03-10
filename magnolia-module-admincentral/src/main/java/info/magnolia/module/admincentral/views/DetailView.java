@@ -41,12 +41,15 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.tree.action.Command;
+import info.magnolia.ui.view.View;
+import info.magnolia.vaadin.view.IsVaadinComponent;
 
 /**
  * Displays commands and details about the currently selected item.
@@ -54,7 +57,9 @@ import info.magnolia.module.admincentral.tree.action.Command;
  * @author fgrilli
  * @author tmattsson
  */
-public class DetailView extends VerticalSplitPanel {
+// FIXME don't extend CustomComponent, make it composite.
+// FIXME should be DetailViewImpl, extract interface DetailView
+public class DetailView extends VerticalSplitPanel implements View, IsVaadinComponent {
 
     /**
      * Presenter that is called when the user selects a command.
@@ -130,5 +135,9 @@ public class DetailView extends VerticalSplitPanel {
             addField("Some prop", new TextField("Some value"));
             addField("Another prop", new TextField("Another value"));
         }
+    }
+
+    public Component asVaadinComponent() {
+        return this;
     }
 }

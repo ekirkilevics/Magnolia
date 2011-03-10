@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>info.magnolia</groupId>
+    <artifactId>magnolia-project</artifactId>
+    <version>5.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>magnolia-vaadin-widgetset</artifactId>
+  <name>magnolia-vaadin-widgetset</name>
+  <dependencies>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.vaadin.addons</groupId>
+      <artifactId>vaadin-treetable</artifactId>
+    </dependency>
+    <dependency>
+	  <groupId>org.vaadin.addons</groupId>
+	  <artifactId>confirmdialog</artifactId>
+     </dependency>
+     <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <scope>provided</scope>
+      </dependency>
+  </dependencies>
+  <description>Takes care of all gwt compilation for client side widgets.</description>
+  <build>
+    <plugins>
+      <!-- Compile custom GWT components or widget dependencies with the GWT compiler -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>2.1.0-1</version>
+        <configuration>
+          <!-- put the created resources on the classpath -->
+          <webappDirectory>target/classes/mgnl-resources/VAADIN/widgetsets</webappDirectory>
+          <!-- the target/classes directory is cleaned regularly. You can use mvn gwt:compile -Dgwt.inplace to store the output in the resource folder-->
+          <warSourceDirectory>src/main/resources/mgnl-resources/VAADIN/widgetsets</warSourceDirectory>
+          <!-- this is not a webapp -->
+          <noServer>true</noServer>
+          <module>info.magnolia.vaadin.widgetset.MagnoliaWidgetset</module>
+          <!-- <draftCompile>true</draftCompile> -->
+          <!-- <style>PRETTY</style> -->
+          <runTarget>.magnolia/admin-central</runTarget>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>resources</goal>
+              <goal>compile</goal>
+             </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+</build>
+</project>

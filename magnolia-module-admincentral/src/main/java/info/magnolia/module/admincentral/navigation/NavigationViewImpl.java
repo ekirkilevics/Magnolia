@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admincentral.model.UIModel;
+import info.magnolia.vaadin.view.IsVaadinComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +66,8 @@ import com.vaadin.ui.themes.BaseTheme;
  * @author fgrilli
  *
  */
-public class NavigationViewImpl extends CustomComponent implements NavigationView{
+// FIXME don't extend CustomComponent, make it composite.
+public class NavigationViewImpl extends CustomComponent implements NavigationView, IsVaadinComponent{
 
     private static final long serialVersionUID = 1L;
 
@@ -118,7 +120,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
 
     /**
      * Iterates over sub menu entries and adds them to the layout.
-     * @return Component with all relevant sub menu entries or null when none exists.
+     * @return View with all relevant sub menu entries or null when none exists.
      */
     private Component addSubMenuItemsIntoLayout(NavigationItemConfiguration menuItem) {
         if (menuItem.getMenuItems().isEmpty()) {
@@ -218,7 +220,8 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         }
     }
 
-    public Component asComponent() {
+    public Component asVaadinComponent() {
         return this;
     }
+
 }

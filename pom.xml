@@ -225,7 +225,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
-        <version>2.4</version>
+        <version>2.5</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
@@ -673,17 +673,27 @@ for Java Content Repositories (JCR).
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
+
+    <!-- Old Magnolia UI -->
     <module>magnolia-gui</module>
     <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-fckeditor</module>
-    <module>magnolia-module-vaadin</module>
     <module>magnolia-module-admininterface</module>
+
+    <!-- New Magnolia 5.0 UI -->
+    <module>magnolia-ui-framework</module>
+    <module>magnolia-ui-vaadin-widgetset</module>
+    <module>magnolia-module-vaadin</module>
     <module>magnolia-module-admincentral</module>
-    <module>magnolia-module-cache</module>
+
+	<!-- Templating -->
     <module>magnolia-module-templating-components</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
     <module>magnolia-module-templating</module>
+
+	<!-- Modules -->
+    <module>magnolia-module-cache</module>
     <module>magnolia-module-mail</module>
     <module>magnolia-module-workflow</module>
     <module>magnolia-module-samples</module>

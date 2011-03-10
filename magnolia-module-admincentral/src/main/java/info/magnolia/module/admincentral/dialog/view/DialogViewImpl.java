@@ -132,7 +132,7 @@ public class DialogViewImpl extends Window implements DialogView {
         ((Layout) tabSheet.getTab(tabName)).addComponent(new Label(label));
     }
 
-    public Component asComponent() {
+    public Component asView() {
         return this;
     }
 

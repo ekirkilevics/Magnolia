@@ -39,9 +39,9 @@ import info.magnolia.module.admincentral.event.ContentChangedEvent.Handler;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.module.admincentral.place.ItemSelectedPlace;
 import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
 import info.magnolia.ui.place.PlaceController;
+import info.magnolia.ui.view.ViewPort;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
@@ -77,7 +77,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         }
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
+    public void start(ViewPort viewPort, EventBus eventBus) {
         this.eventBus = eventBus;
         try {
             this.treeView = new TreeViewImpl(treeName, this, uiModel);
@@ -86,7 +86,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         }
         treeView.select(path);
         eventBus.addHandler(ContentChangedEvent.class, this);
-        display.setComponent(treeView.asComponent());
+        viewPort.setView(treeView);
     }
 
     public UIModel getUIModel() {

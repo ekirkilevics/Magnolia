@@ -40,8 +40,8 @@ import info.magnolia.module.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.action.Action;
 import info.magnolia.ui.action.ActionFactory;
 import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.view.ViewPort;
 /**
  * MenuActivity.
  * @author fgrilli
@@ -55,9 +55,9 @@ public class MenuActivity extends AbstractActivity implements NavigationView.Pre
         this.uiModel = uiModel;
         this.actionFactory = actionFactory;
     }
-    public void start(HasComponent display, EventBus eventBus) {
+    public void start(ViewPort viewPort, EventBus eventBus) {
         NavigationViewImpl menu = new NavigationViewImpl(this, uiModel);
-        display.setComponent(menu);
+        viewPort.setView(menu);
     }
 
     public void onMenuSelection(NavigationItemConfiguration menuConfig) {

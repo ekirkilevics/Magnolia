@@ -45,9 +45,9 @@ import info.magnolia.module.admincentral.jcr.JCRUtil;
 import info.magnolia.module.admincentral.model.UIModel;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.activity.AbstractActivity;
-import info.magnolia.ui.component.HasComponent;
 import info.magnolia.ui.editor.ContentDriver;
 import info.magnolia.ui.event.EventBus;
+import info.magnolia.ui.view.ViewPort;
 
 /**
  * Activity for dialogs.
@@ -68,7 +68,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
         this.componentProvider = componentProvider;
     }
 
-    public void start(HasComponent display, EventBus eventBus) {
+    public void start(ViewPort viewPort, EventBus eventBus) {
         try {
 
             Node node = getNode();
@@ -85,7 +85,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
 
             dialog.setPresenter(this);
 
-            display.setComponent(dialog.asComponent());
+            viewPort.setView(dialog);
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
