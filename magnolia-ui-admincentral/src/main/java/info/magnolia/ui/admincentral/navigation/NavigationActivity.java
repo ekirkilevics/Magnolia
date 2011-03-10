@@ -31,41 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.activity;
+package info.magnolia.ui.admincentral.navigation;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.admincentral.views.IFrameView;
+import info.magnolia.ui.admincentral.uimodel.UIModel;
+import info.magnolia.ui.framework.action.Action;
+import info.magnolia.ui.framework.action.ActionFactory;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
-
-
 /**
- * Shows a target page in an iframe.
+ * NavigationActivity.
+ * @author fgrilli
+ *
  */
-public class ShowContentActivity extends AbstractActivity {
+public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
+    private UIModel uiModel;
+    private ActionFactory actionFactory;
 
-    private String viewTarget;
-
-    private String viewName;
-
-    private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
+    public NavigationActivity(UIModel uiModel, ActionFactory actionFactory) {
+        this.uiModel = uiModel;
+        this.actionFactory = actionFactory;
+    }
+    public void start(ViewPort viewPort, EventBus eventBus) {
+        NavigationViewImpl menu = new NavigationViewImpl(this, uiModel);
+        viewPort.setView(menu);
     }
 
-    public void start(ViewPort viewPort, EventBus eventBus) {
-        try {
-            // FIXME viewName = className? what name?
-            viewPort.setView((View) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    public void onMenuSelection(NavigationItemConfiguration menuConfig) {
+        final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
+        action.execute();
     }
 
 }

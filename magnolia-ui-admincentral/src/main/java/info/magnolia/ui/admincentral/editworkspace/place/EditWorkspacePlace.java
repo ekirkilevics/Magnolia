@@ -31,94 +31,75 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.place;
+package info.magnolia.ui.admincentral.editworkspace.place;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceTokenizer;
 import info.magnolia.ui.framework.place.Prefix;
 
+
 /**
- * A sub-place of {@link EditWorkspacePlace} if an item got selected.
+ * Edit a workspace's content.
  */
-@Prefix("item-selected")
-public class ItemSelectedPlace extends Place {
+@Prefix("edit-workspace")
+public class EditWorkspacePlace extends Place {
+
     /**
-     * Tokenizer for ItemSelectedPlace.
+     * Serializes and deserializes EditWorkspacePlace(s).
+     *
      * @author fgrilli
      *
      */
-    public static class Tokenizer implements PlaceTokenizer<ItemSelectedPlace> {
+    public static class Tokenizer implements PlaceTokenizer<EditWorkspacePlace>{
 
-        public ItemSelectedPlace getPlace(String token) {
-            final String[] bits = token.split(":");
-            if(bits.length != 2){
-                throw new IllegalArgumentException("Invalid token: " + token);
-            }
-            return new ItemSelectedPlace(bits[0], bits[1]);
+        public EditWorkspacePlace getPlace(String token) {
+            return new EditWorkspacePlace(token);
         }
 
-        public String getToken(ItemSelectedPlace place) {
-            return place.getWorkspace() + ":" + place.getPath();
+        public String getToken(EditWorkspacePlace place) {
+            return place.getWorkspace();
         }
     }
 
     private String workspace;
 
-    private String path;
-
-    public ItemSelectedPlace(String workspace, String path) {
+    public EditWorkspacePlace(String workspace) {
+        if(StringUtils.isBlank(workspace)){
+            throw new IllegalArgumentException("workspace cannot be null");
+        }
         this.workspace = workspace;
-        this.path = path;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
-        result = prime * result
-                + ((workspace == null) ? 0 : workspace.hashCode());
-        return result;
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ItemSelectedPlace other = (ItemSelectedPlace) obj;
-        if (path == null) {
-            if (other.path != null)
-                return false;
-        } else if (!path.equals(other.path))
-            return false;
-        if (workspace == null) {
-            if (other.workspace != null)
-                return false;
-        } else if (!workspace.equals(other.workspace))
-            return false;
-        return true;
-    }
-
 
     public String getWorkspace() {
         return workspace;
     }
 
-    public String getPath() {
-        return path;
+    public int hashCode() {
+        return workspace.hashCode();
     }
 
     @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof EditWorkspacePlace)) {
+            return false;
+        }
+        EditWorkspacePlace other = (EditWorkspacePlace) obj;
+
+        if (workspace == null) {
+            if (other.workspace != null) {
+                return false;
+            }
+        } else if (!workspace.equals(other.workspace)) {
+            return false;
+        }
+        return true;
     }
-
-
 }

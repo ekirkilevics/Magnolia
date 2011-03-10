@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.action;
+package info.magnolia.ui.admincentral.navigation.action;
 
 import info.magnolia.ui.framework.action.Action;
 import info.magnolia.ui.framework.action.ActionDefinition;

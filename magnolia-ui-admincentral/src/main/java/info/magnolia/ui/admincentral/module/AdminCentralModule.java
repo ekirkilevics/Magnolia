@@ -42,8 +42,8 @@ import org.slf4j.LoggerFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.ui.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager;
+import info.magnolia.ui.admincentral.module.setup.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.ui.admincentral.navigation.NavigationItemConfiguration;
 import info.magnolia.ui.admincentral.tree.ConfiguredTreeManager;
 

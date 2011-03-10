@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,23 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.views;
+package info.magnolia.ui.admincentral.showcontent.place;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Embedded;
+import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.ui.framework.place.Place;
+
 
 /**
- * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
- *
- * @author fgrilli
- *
+ * Show a target page in the main region.
  */
-public class IFrameView extends Embedded {
-    private static final long serialVersionUID = 1L;
+public class ShowContentPlace extends Place {
 
-    public IFrameView(String url){
-        setSource(new ExternalResource(url));
-        setType(Embedded.TYPE_BROWSER);
-        setSizeFull();
+    private String viewTarget;
+
+    private String viewName;
+
+    public ShowContentPlace(String viewTarget, String viewName) {
+        if(StringUtils.isBlank(viewTarget)){
+            throw new IllegalArgumentException("view target cannot be null");
+        }
+        this.viewTarget = viewTarget;
+        this.viewName = viewName;
+    }
+
+    public String getViewTarget() {
+        return viewTarget;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

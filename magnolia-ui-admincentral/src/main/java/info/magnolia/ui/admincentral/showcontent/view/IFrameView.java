@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,43 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.event;
+package info.magnolia.ui.admincentral.showcontent.view;
 
-import info.magnolia.ui.framework.event.Event;
-import info.magnolia.ui.framework.event.EventHandler;
-
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Embedded;
 
 /**
- * Global event fired if content was changed, deleted, added.
- * FIXME introduce more granular events
+ * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
+ *
+ * @author fgrilli
+ *
  */
-public class ContentChangedEvent implements Event<ContentChangedEvent.Handler> {
+public class IFrameView extends Embedded {
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * Handles {@link ContentChangedEvent} events.
-     */
-    public static interface Handler extends EventHandler {
-        void onContentChanged(ContentChangedEvent event);
-    }
-
-    private String workspace;
-
-    private String path;
-
-    public void dispatch(Handler handler) {
-        handler.onContentChanged(this);
-    }
-
-    public ContentChangedEvent(String workspace, String path) {
-        this.workspace = workspace;
-        this.path = path;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public String getPath() {
-        return path;
+    public IFrameView(String url){
+        setSource(new ExternalResource(url));
+        setType(Embedded.TYPE_BROWSER);
+        setSizeFull();
     }
 }

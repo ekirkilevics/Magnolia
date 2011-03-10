@@ -34,10 +34,10 @@
 package info.magnolia.ui.admincentral.tree;
 
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.admincentral.event.ContentChangedEvent;
-import info.magnolia.ui.admincentral.event.ContentChangedEvent.Handler;
-import info.magnolia.ui.admincentral.model.UIModel;
-import info.magnolia.ui.admincentral.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
+import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Handler;
+import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;

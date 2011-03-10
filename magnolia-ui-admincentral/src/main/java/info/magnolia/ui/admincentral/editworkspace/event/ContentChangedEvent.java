@@ -31,23 +31,43 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.place;
+package info.magnolia.ui.admincentral.editworkspace.event;
 
-import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.event.Event;
+import info.magnolia.ui.framework.event.EventHandler;
 
 
 /**
- * A place without any action. Currently shows a notification.
+ * Global event fired if content was changed, deleted, added.
+ * FIXME introduce more granular events
  */
-public class SomePlace extends Place {
-    private String name;
+public class ContentChangedEvent implements Event<ContentChangedEvent.Handler> {
 
-    public String getName() {
-        return name;
+    /**
+     * Handles {@link ContentChangedEvent} events.
+     */
+    public static interface Handler extends EventHandler {
+        void onContentChanged(ContentChangedEvent event);
     }
 
-    public SomePlace(String name) {
-        this.name = name;
+    private String workspace;
+
+    private String path;
+
+    public void dispatch(Handler handler) {
+        handler.onContentChanged(this);
     }
 
+    public ContentChangedEvent(String workspace, String path) {
+        this.workspace = workspace;
+        this.path = path;
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public String getPath() {
+        return path;
+    }
 }

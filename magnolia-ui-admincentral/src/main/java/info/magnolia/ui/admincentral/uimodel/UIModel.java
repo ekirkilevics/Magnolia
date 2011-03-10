@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.model;
+package info.magnolia.ui.admincentral.uimodel;
 
 import info.magnolia.ui.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.ui.admincentral.dialog.registry.DialogRegistry;

@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.navigation.action;
 
-import info.magnolia.ui.admincentral.place.EditWorkspacePlace;
+import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.framework.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.framework.place.Place;
 

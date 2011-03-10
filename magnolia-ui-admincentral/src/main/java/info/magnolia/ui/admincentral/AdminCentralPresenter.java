@@ -34,15 +34,15 @@
 package info.magnolia.ui.admincentral;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.activity.EditWorkspaceActivity;
-import info.magnolia.ui.admincentral.activity.MenuActivity;
-import info.magnolia.ui.admincentral.activity.ShowContentActivity;
 import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
-import info.magnolia.ui.admincentral.model.UIModel;
-import info.magnolia.ui.admincentral.place.EditWorkspacePlace;
-import info.magnolia.ui.admincentral.place.ShowContentPlace;
-import info.magnolia.ui.admincentral.place.SomePlace;
+import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceActivity;
+import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
+import info.magnolia.ui.admincentral.navigation.NavigationActivity;
+import info.magnolia.ui.admincentral.showcontent.ShowContentActivity;
+import info.magnolia.ui.admincentral.showcontent.place.ShowContentPlace;
+import info.magnolia.ui.admincentral.showcontent.place.SomePlace;
+import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
@@ -88,7 +88,7 @@ public class AdminCentralPresenter {
         historyHandler.register(placeController, eventBus, defaultPlace);
 
         ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
-            Activity menuActivity = componentProvider.newInstance(MenuActivity.class);
+            Activity menuActivity = componentProvider.newInstance(NavigationActivity.class);
             public Activity getActivity(Place place) {
                 return menuActivity;
             }

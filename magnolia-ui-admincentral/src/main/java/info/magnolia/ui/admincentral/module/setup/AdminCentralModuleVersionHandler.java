@@ -39,7 +39,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
-import info.magnolia.ui.admincentral.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
+import info.magnolia.ui.admincentral.module.setup.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.views;
+package info.magnolia.ui.admincentral.editworkspace.view;
 
 import java.util.List;
 

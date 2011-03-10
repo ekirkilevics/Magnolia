@@ -31,13 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.activity;
+package info.magnolia.ui.admincentral.editworkspace.activity;
 
 import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.admincentral.event.ContentChangedEvent;
-import info.magnolia.ui.admincentral.model.UIModel;
-import info.magnolia.ui.admincentral.views.DetailView;
+import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
+import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
+import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;

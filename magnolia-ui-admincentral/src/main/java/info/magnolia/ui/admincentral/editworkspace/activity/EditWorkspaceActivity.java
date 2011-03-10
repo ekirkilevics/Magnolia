@@ -31,12 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.activity;
+package info.magnolia.ui.admincentral.editworkspace.activity;
 
-import info.magnolia.ui.admincentral.model.UIModel;
-import info.magnolia.ui.admincentral.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
 import info.magnolia.ui.admincentral.tree.TreeActivity;
-import info.magnolia.ui.admincentral.views.EditWorkspaceView;
+import info.magnolia.ui.admincentral.uimodel.UIModel;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
 import info.magnolia.ui.framework.activity.ActivityMapper;

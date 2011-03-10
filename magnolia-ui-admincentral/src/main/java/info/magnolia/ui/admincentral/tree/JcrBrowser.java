@@ -63,10 +63,10 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.model.UIModel;
 import info.magnolia.ui.admincentral.tree.action.Command;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.admincentral.uimodel.UIModel;
 
 /**
  * User interface component that extends TreeTable and uses a TreeDefinition for layout and invoking command callbacks.
