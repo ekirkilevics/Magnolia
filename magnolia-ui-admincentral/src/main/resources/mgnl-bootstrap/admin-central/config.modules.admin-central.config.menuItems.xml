@@ -70,7 +70,7 @@
         <sv:value>873d4535-75aa-4603-8e5b-fa80032ae503</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -359,7 +359,7 @@
             <sv:value>ee252fd7-e39f-42a0-9266-3256a9559933</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
+            <sv:value>info.magnolia.ui.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -430,7 +430,7 @@
             <sv:value>109ad8f0-f424-402a-bceb-2183f14092e6</sv:value>
           </sv:property>
           <sv:property sv:name="class" sv:type="String">
-            <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
+            <sv:value>info.magnolia.ui.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -820,7 +820,7 @@
         <sv:value>539e5aac-11c4-4a8c-9bec-5fcc44fb4099</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.navigation.action.EditWorkspaceActionDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -1548,7 +1548,7 @@
         <sv:value>3c01b040-604c-4d2d-b9d7-1c2f048a9a4a</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.navigation.action.ShowContentActionDefinition</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.navigation.action.ShowContentActionDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>

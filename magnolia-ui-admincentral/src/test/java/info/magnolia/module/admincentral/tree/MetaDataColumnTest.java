@@ -45,6 +45,7 @@ import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.ui.admincentral.tree.MetaDataColumn;
 import static junit.framework.Assert.*;
 
 /**

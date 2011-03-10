@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admincentral.jcr;
 
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

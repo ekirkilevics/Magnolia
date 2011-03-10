@@ -196,7 +196,7 @@
         <sv:value>c0ecd9a9-7e3d-490e-8d81-9f73dd768fc7</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.LabelColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.LabelColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -239,7 +239,7 @@
         <sv:value>7f564540-6ece-4d16-af8a-f76992056b4c</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.NodeDataColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.NodeDataColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -285,7 +285,7 @@
         <sv:value>df074e78-9bb7-416b-86b7-a1da61a5f870</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.StatusColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.StatusColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -325,7 +325,7 @@
         <sv:value>22f52697-7c56-42bd-b10c-edb124354e9a</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.MetaDataColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.MetaDataColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -438,7 +438,7 @@
           <sv:value>2ac8c90f-3586-4739-9ac3-0f732119969f</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.OpenDialogCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.OpenDialogCommand</sv:value>
         </sv:property>
         <sv:property sv:name="dialog" sv:type="String">
           <sv:value>useredit</sv:value>
@@ -518,7 +518,7 @@
           <sv:value>57bcb368-17de-4bab-83f8-dcde19cd14bd</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.AddNodeCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.AddNodeCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -598,7 +598,7 @@
           <sv:value>ee7ccf4e-223d-4191-9170-a745cfbb3181</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.AddNodeCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.AddNodeCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -675,7 +675,7 @@
           <sv:value>959da716-9475-414b-aef4-e4167c2a36f0</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.DeleteItemCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.DeleteItemCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

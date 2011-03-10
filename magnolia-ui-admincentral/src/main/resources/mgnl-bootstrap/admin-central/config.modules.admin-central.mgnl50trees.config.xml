@@ -239,7 +239,7 @@
         <sv:value>90d77b83-c6f9-41e9-b123-7bad0759d7ec</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.LabelColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.LabelColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -282,7 +282,7 @@
         <sv:value>02e4fdea-1665-4d48-913e-664400924bc9</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.NodeDataValueColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.NodeDataValueColumn</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -325,7 +325,7 @@
         <sv:value>2ec1362b-d345-4667-9308-454a4c1f76b0</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.NodeDataTypeColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.NodeDataTypeColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -365,7 +365,7 @@
         <sv:value>c00ed4a6-e968-4263-a8e6-939a199d638b</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.StatusColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.StatusColumn</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -405,7 +405,7 @@
         <sv:value>8e0e47aa-6736-42a1-bf97-c681cc356e8b</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.module.admincentral.tree.MetaDataColumn</sv:value>
+        <sv:value>info.magnolia.ui.admincentral.tree.MetaDataColumn</sv:value>
       </sv:property>
       <sv:property sv:name="datePattern" sv:type="String">
         <sv:value>dd/MM/yyyy, HH:mm</sv:value>
@@ -521,7 +521,7 @@
           <sv:value>1ef39d08-1d1a-4a88-b4cd-323ff893b618</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.AddNodeCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.AddNodeCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -598,7 +598,7 @@
           <sv:value>82036dce-35b7-4f0f-a081-bce4809abd1f</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.AddNodeCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.AddNodeCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -678,7 +678,7 @@
           <sv:value>ad5e8ef4-6c01-4022-92fa-526986f91df8</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.AddPropertyCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.AddPropertyCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -755,7 +755,7 @@
           <sv:value>c61059ce-8433-40ce-a3d3-00ddecc4645d</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.module.admincentral.tree.action.DeleteItemCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.tree.action.DeleteItemCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

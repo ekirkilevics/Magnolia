@@ -4,26 +4,26 @@
   <name>admin-central</name>
   <displayName>Magnolia GenUIne Admin Interface</displayName>
   <description>New Magnolia Administration GUI</description>
-  <class>info.magnolia.module.admincentral.AdminCentralModule</class>
-  <versionHandler>info.magnolia.module.admincentral.setup.AdminCentralModuleVersionHandler</versionHandler>
+  <class>info.magnolia.ui.admincentral.AdminCentralModule</class>
+  <versionHandler>info.magnolia.ui.admincentral.setup.AdminCentralModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <properties>
     <property>
-      <name>info.magnolia.module.admincentral.tree.TreeRegistry</name>
-      <value>info.magnolia.module.admincentral.tree.TreeRegistry</value>
+      <name>info.magnolia.ui.admincentral.tree.TreeRegistry</name>
+      <value>info.magnolia.ui.admincentral.tree.TreeRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.module.admincentral.dialog.registry.DialogRegistry</name>
-      <value>info.magnolia.module.admincentral.dialog.registry.DialogRegistry</value>
+      <name>info.magnolia.ui.admincentral.dialog.registry.DialogRegistry</name>
+      <value>info.magnolia.ui.admincentral.dialog.registry.DialogRegistry</value>
     </property>
     <property>
-      <name>info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager</name>
-      <value>info.magnolia.module.admincentral.dialog.registry.ConfiguredDialogManager</value>
+      <name>info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager</name>
+      <value>info.magnolia.ui.admincentral.dialog.registry.ConfiguredDialogManager</value>
     </property>
     <property>
-      <name>info.magnolia.module.admincentral.tree.ConfiguredTreeManager</name>
-      <value>info.magnolia.module.admincentral.tree.ConfiguredTreeManager</value>
+      <name>info.magnolia.ui.admincentral.tree.ConfiguredTreeManager</name>
+      <value>info.magnolia.ui.admincentral.tree.ConfiguredTreeManager</value>
     </property>
   </properties>
 
@@ -93,7 +93,7 @@
        <params>
          <param>
            <name>application</name>
-           <value>info.magnolia.module.admincentral.AdminCentralApplication</value>
+           <value>info.magnolia.ui.admincentral.AdminCentralApplication</value>
          </param>
          <param>
            <name>widgetset</name>

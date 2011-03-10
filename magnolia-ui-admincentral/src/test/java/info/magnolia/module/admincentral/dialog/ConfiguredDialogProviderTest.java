@@ -71,9 +71,9 @@ public class ConfiguredDialogProviderTest extends RepositoryTestCase {
             "/modules/test/dialogs/dummyDialog/tabs/main.label=TestDialog\n" +
             "/modules/test/dialogs/dummyDialog/tabs/main/fields.@type=mgnl:contentNode\n" +
             "/modules/test/dialogs/dummyDialog/tabs/main/fields/text.@type=mgnl:contentNode\n" +
-            "/modules/test/dialogs/dummyDialog/tabs/main/fields/text/class=info.magnolia.module.admincentral.control.EditControl\n" +
+            "/modules/test/dialogs/dummyDialog/tabs/main/fields/text/class=info.magnolia.ui.admincentral.control.EditControl\n" +
             "/modules/test/dialogs/dummyDialog/tabs/main/fields/link.@type=mgnl:contentNode\n" +
-            "/modules/test/dialogs/dummyDialog/tabs/main/fields/link/class=info.magnolia.module.admincentral.control.LinkControl";
+            "/modules/test/dialogs/dummyDialog/tabs/main/fields/link/class=info.magnolia.ui.admincentral.control.LinkControl";
 
         hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         new PropertiesImportExport().createContent(hm.getRoot(), IOUtils.toInputStream(dummyDialog));
