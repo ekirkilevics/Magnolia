@@ -103,6 +103,7 @@ public class DefaultMagnoliaInitPathsTest extends TestCase {
     private MagnoliaInitPaths expectServletContextRealPath(String returnedPath) {
         expect(servletContext.getInitParameter("magnolia.unqualified.server.name")).andReturn(null).once();
         expect(servletContext.getRealPath("")).andReturn(returnedPath).once();
+        expect(servletContext.getContextPath()).andReturn("/mycontext");
         replay(servletContext);
         return new DefaultMagnoliaInitPaths(new MagnoliaServletContextListener(), servletContext);
     }
