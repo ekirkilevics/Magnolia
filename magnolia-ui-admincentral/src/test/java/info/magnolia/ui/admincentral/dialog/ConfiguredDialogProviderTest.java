@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.dialog;
+package info.magnolia.ui.admincentral.dialog;
 
 /*import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;

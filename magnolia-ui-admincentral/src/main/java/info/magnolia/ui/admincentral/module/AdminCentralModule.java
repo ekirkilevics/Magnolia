@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral;
+package info.magnolia.ui.admincentral.module;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

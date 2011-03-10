@@ -31,9 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.jcr;
-
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
+package info.magnolia.ui.admincentral.jcr;
 
 import org.junit.Test;
 

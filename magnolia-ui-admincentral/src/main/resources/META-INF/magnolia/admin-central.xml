@@ -4,8 +4,8 @@
   <name>admin-central</name>
   <displayName>Magnolia GenUIne Admin Interface</displayName>
   <description>New Magnolia Administration GUI</description>
-  <class>info.magnolia.ui.admincentral.AdminCentralModule</class>
-  <versionHandler>info.magnolia.ui.admincentral.setup.AdminCentralModuleVersionHandler</versionHandler>
+  <class>info.magnolia.ui.admincentral.module.AdminCentralModule</class>
+  <versionHandler>info.magnolia.ui.admincentral.module.setup.AdminCentralModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <properties>

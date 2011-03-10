@@ -31,9 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
-
-import info.magnolia.ui.admincentral.tree.LabelColumn;
+package info.magnolia.ui.admincentral.tree;
 
 import com.vaadin.ui.Field;
 import org.junit.Test;

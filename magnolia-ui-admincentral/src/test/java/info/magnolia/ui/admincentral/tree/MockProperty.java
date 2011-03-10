@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
+package info.magnolia.ui.admincentral.tree;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;

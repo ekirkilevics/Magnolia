@@ -33,10 +33,10 @@
  */
 package info.magnolia.ui.admincentral.model;
 
-import info.magnolia.ui.admincentral.AdminCentralModule;
 import info.magnolia.ui.admincentral.dialog.definition.DialogDefinition;
 import info.magnolia.ui.admincentral.dialog.registry.DialogRegistry;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
+import info.magnolia.ui.admincentral.module.AdminCentralModule;
 import info.magnolia.ui.admincentral.navigation.NavigationItemConfiguration;
 import info.magnolia.ui.admincentral.tree.MenuItem;
 import info.magnolia.ui.admincentral.tree.TreeDefinition;

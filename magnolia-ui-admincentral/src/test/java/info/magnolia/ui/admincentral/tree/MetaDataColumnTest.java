@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admincentral.tree;
+package info.magnolia.ui.admincentral.tree;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +45,6 @@ import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.ui.admincentral.tree.MetaDataColumn;
 import static junit.framework.Assert.*;
 
 /**
