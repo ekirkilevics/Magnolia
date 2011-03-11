@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.application;
+package info.magnolia.ui.admincentral;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
