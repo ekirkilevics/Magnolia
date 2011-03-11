@@ -31,7 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.admincentral.tree.column;
+
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Binary;
@@ -52,9 +56,6 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.VersionException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.Calendar;
 
 
 /**
