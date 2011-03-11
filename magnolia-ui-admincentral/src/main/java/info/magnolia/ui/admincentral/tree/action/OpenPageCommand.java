@@ -34,8 +34,6 @@
 package info.magnolia.ui.admincentral.tree.action;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
-import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;

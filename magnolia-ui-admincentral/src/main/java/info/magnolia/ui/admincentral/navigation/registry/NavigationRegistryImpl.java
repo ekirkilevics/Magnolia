@@ -41,9 +41,7 @@ import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Binds the navigation configuration to the AdminCentral configuration.
  */
 public class NavigationRegistryImpl implements NavigationRegistry {
 

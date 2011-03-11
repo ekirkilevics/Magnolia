@@ -39,9 +39,7 @@ import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * Provides the main navigation.
  */
 public interface NavigationRegistry {
 

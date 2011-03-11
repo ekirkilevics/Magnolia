@@ -35,9 +35,7 @@ package info.magnolia.ui.model.tree.definition;
 
 
 /**
- * @author pbaerfuss
- * @version $Id$
- *
+ * A tree column definition.
  */
 public class TreeColumnDefinition {
     private String label;

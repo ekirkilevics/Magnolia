@@ -38,8 +38,6 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;

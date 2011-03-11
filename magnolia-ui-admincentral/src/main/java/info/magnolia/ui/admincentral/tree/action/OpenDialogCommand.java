@@ -33,13 +33,12 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
+import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.model.command.Command;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
-import info.magnolia.ui.model.command.Command;
 
 /**
  * Opens a dialog for editing a node in a tree.

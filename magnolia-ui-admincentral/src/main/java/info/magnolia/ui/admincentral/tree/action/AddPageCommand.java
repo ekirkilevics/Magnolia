@@ -41,8 +41,6 @@ import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;
