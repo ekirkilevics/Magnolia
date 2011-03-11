@@ -52,6 +52,9 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -62,14 +65,15 @@ import com.vaadin.data.Property;
  * @author tmattsson
  */
 public class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
+    private static final long serialVersionUID = 7567243386105952325L;
+
+    private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;
 
-
     private TreeDefinition treeDefinition;
 
-
-    private Map<String, TreeColumn< ? >> columns;
+    private Map<String, TreeColumn<?>> columns;
 
     public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?>> columns) {
 
@@ -97,7 +101,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public void fireItemSetChange() {
 
-        System.out.println("Firing item set changed");
+        log.debug("Firing item set changed");
         if (itemSetChangeListeners != null && !itemSetChangeListeners.isEmpty()) {
             final Container.ItemSetChangeEvent event = new ItemSetChangeEvent();
             Object[] array = itemSetChangeListeners.toArray();
@@ -111,7 +115,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     // Container
 
     public Item getItem(Object itemId) {
-        return getItem((ContainerItemId)itemId);
+        return getItem((ContainerItemId) itemId);
     }
 
     public Collection<ContainerItemId> getItemIds() {
@@ -119,7 +123,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        return new JcrContainerProperty((String)propertyId, (ContainerItemId)itemId, this);
+        return new JcrContainerProperty((String) propertyId, (ContainerItemId) itemId, this);
     }
 
     public int size() {
@@ -127,7 +131,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public boolean containsId(Object itemId) {
-        return containsId((ContainerItemId)itemId);
+        return containsId((ContainerItemId) itemId);
     }
 
     public Item addItem(Object itemId) throws UnsupportedOperationException {
@@ -146,7 +150,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     // Container.Hierarchical
 
     public Collection<ContainerItemId> getChildren(Object itemId) {
-        return getChildren((ContainerItemId)itemId);
+        return getChildren((ContainerItemId) itemId);
     }
 
     public ContainerItemId getParent(Object itemId) {
@@ -171,7 +175,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public boolean isRoot(Object itemId) {
-        return isRoot((ContainerItemId)itemId);
+        return isRoot((ContainerItemId) itemId);
     }
 
     public boolean hasChildren(Object itemId) {
@@ -179,7 +183,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public boolean removeItem(Object itemId) throws UnsupportedOperationException {
-//        throw new UnsupportedOperationException();
+        // throw new UnsupportedOperationException();
         fireItemSetChange();
         return true;
     }
@@ -191,7 +195,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             getJcrItem(itemId);
             return new ContainerItem(itemId, this);
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
             return null;
         }
     }
@@ -201,7 +205,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             getJcrItem(itemId);
             return true;
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
             return false;
         }
     }
@@ -227,7 +231,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             while (propertyIterator.hasNext()) {
                 javax.jcr.Property property = propertyIterator.nextProperty();
                 for (TreeItemType itemType : treeDefinition.getItemTypes()) {
-                    if (!property.getName().startsWith("jcr:") && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+                    if (!property.getName().startsWith("jcr:")
+                            && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
                         c.add(new ContainerItemId(node, property.getName()));
                         break;
                     }
@@ -239,7 +244,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             return Collections.unmodifiableCollection(c);
 
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
             return Collections.emptySet();
         }
     }
@@ -251,7 +256,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             Node node = getNode(itemId);
             return new ContainerItemId(node.getParent());
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
             return null;
         }
     }
@@ -262,7 +267,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             Node rootNode = session.getNode(treeDefinition.getPath());
             return getChildren(new ContainerItemId(rootNode));
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.warn("Could not get RootItemIds", e);
             return Collections.emptySet();
         }
     }
@@ -273,7 +278,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
                 return false;
             return getNode(itemId).getDepth() == 0;
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.warn("Could not determine whether id " + itemId + " is root or not", e);
             return false;
         }
     }
@@ -288,7 +293,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
         try {
             return getColumn(propertyId).getValue(getJcrItem(itemId));
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.warn("Could not determine columnValue", e);
             return null;
         }
     }
@@ -297,12 +302,12 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
         try {
             getColumn(propertyId).setValue(this, getJcrItem(itemId), newValue);
         } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
         }
     }
 
     // FIXME this is the job of a tree builder
-    private TreeColumn< ? > getColumn(String propertyId) {
+    private TreeColumn<?> getColumn(String propertyId) {
         return columns.get(propertyId);
     }
 
