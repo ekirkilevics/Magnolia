@@ -31,10 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 
 import java.io.Serializable;
 import java.security.AccessControlException;

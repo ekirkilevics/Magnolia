@@ -42,6 +42,7 @@ import info.magnolia.ui.admincentral.navigation.NavigationActivity;
 import info.magnolia.ui.admincentral.showcontent.ShowContentActivity;
 import info.magnolia.ui.admincentral.showcontent.place.ShowContentPlace;
 import info.magnolia.ui.admincentral.showcontent.place.SomePlace;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
@@ -99,7 +100,8 @@ public class AdminCentralPresenter {
             public Activity getActivity(final Place place) {
                 if(place instanceof EditWorkspacePlace){
                     EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel);
+                    // FIXME lets inject the tree builder! byt workspace is a paramter and we need something more flexible
+                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel, componentProvider.getComponent(TreeBuilder.class));
                 }
                 else if(place instanceof ShowContentPlace){
                     ShowContentPlace showContentPlace = (ShowContentPlace)place;

@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.tree.action;
 
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
+import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
@@ -49,23 +50,16 @@ public class DeleteItemCommand extends Command {
     private static final long serialVersionUID = -4485698706375056385L;
 
     @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(Item item) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
             node.remove();
             node.getSession().save();
-
-            if (jcrBrowser != null)
-                jcrBrowser.removeItem(new ContainerItemId(item));
-
         } else if (item instanceof Property) {
             Property property = (Property) item;
             property.remove();
             property.getSession().save();
-
-            if (jcrBrowser != null)
-                jcrBrowser.removeItem(new ContainerItemId(item));
         }
     }
 }

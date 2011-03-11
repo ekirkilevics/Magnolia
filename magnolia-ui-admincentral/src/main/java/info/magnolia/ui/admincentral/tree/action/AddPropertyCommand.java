@@ -33,9 +33,10 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
+import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
@@ -53,18 +54,18 @@ public class AddPropertyCommand extends Command {
     }
 
     @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
 
             String name = JCRUtil.getUniqueLabel(node, "untitled");
             Property property = node.setProperty(name, "");
             node.getSession().save();
-
-            if (jcrBrowser != null)
-            jcrBrowser.addItem(new ContainerItemId(property));
-            if (jcrBrowser != null)
-            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
+//
+//            if (jcrBrowser != null)
+//            jcrBrowser.addItem(new ContainerItemId(property));
+//            if (jcrBrowser != null)
+//            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }
 }

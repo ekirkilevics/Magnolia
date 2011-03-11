@@ -31,34 +31,50 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr;
+package info.magnolia.ui.model.command;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultContent;
-import info.magnolia.cms.core.MetaData;
-
-import javax.jcr.Node;
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+
 /**
- * Hack implementation of a Content. Temporarily used as long as we don't have a clear vision where
- * to go with the Content-API.
- *
- * @author dlipp
- * @version $Id$
+ * Base class for all tree actions.
  */
-public class HackContent extends DefaultContent {
+public abstract class Command {
 
-    public HackContent(Node node) {
-        super();
-        setNode(node);
+    private static final long serialVersionUID = -4170116352082513835L;
+
+    private String name;
+    private String label;
+    private String icon;
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public Content getParent() throws RepositoryException {
-        return (new HackContent(this.node.getParent()));
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public MetaData getMetaData() {
-        return JCRMetadataUtil.getMetaData(this.node);
+    public String getLabel() {
+        return label;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public boolean isAvailable(Item item) {
+        return true;
+    }
+
+    public abstract void execute(Item item) throws RepositoryException;
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,16 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.ui.framework.action;
+package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.MetaData;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
- * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
- * @author fgrilli
+ * Hack implementation of a Content. Temporarily used as long as we don't have a clear vision where
+ * to go with the Content-API.
  *
+ * @author dlipp
+ * @version $Id$
  */
-public interface ActionFactory {
+public class HackContent extends DefaultContent {
 
-    Action createAction(final ActionDefinition<? extends Action> definition);
+    public HackContent(Node node) {
+        super();
+        setNode(node);
+    }
 
+    public Content getParent() throws RepositoryException {
+        return (new HackContent(this.node.getParent()));
+    }
+
+    public MetaData getMetaData() {
+        return JCRMetadataUtil.getMetaData(this.node);
+    }
 }

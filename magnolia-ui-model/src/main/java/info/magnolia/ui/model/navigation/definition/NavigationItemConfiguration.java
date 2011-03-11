@@ -33,9 +33,8 @@
  */
 package info.magnolia.ui.model.navigation.definition;
 
-import info.magnolia.ui.admincentral.dialog.view.I18nAwareComponent;
-import info.magnolia.ui.framework.action.Action;
-import info.magnolia.ui.framework.action.ActionDefinition;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -46,7 +45,7 @@ import java.util.Map;
  * @author had
  * @version $Id: $
  */
-public class NavigationItemConfiguration extends I18nAwareComponent implements Serializable {
+public class NavigationItemConfiguration  implements Serializable {
 
     private static final long serialVersionUID = -1471102661627728596L;
 
@@ -57,11 +56,6 @@ public class NavigationItemConfiguration extends I18nAwareComponent implements S
     private NavigationItemConfiguration parent;
     private ActionDefinition<? extends Action> actionDefinition;
     private Map<String, NavigationItemConfiguration> subMenuItems = new LinkedHashMap<String, NavigationItemConfiguration>();
-
-    @Override
-    public I18nAwareComponent getI18nAwareParent() {
-        return this.parent;
-    }
 
     public String getIcon() {
         return icon;
@@ -122,5 +116,10 @@ public class NavigationItemConfiguration extends I18nAwareComponent implements S
 
    public void setActionDefinition(ActionDefinition<? extends Action> actionDefinition) {
        this.actionDefinition = actionDefinition;
+   }
+
+   //FIXME: i18n is broken
+   public String[] getI18nBasename() {
+        return new String[]{"info.magnolia.module.admininterface.messages"};
    }
 }

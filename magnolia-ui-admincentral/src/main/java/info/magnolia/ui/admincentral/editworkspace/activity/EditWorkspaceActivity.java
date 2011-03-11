@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.editworkspace.activity;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
 import info.magnolia.ui.framework.activity.ActivityMapper;
@@ -54,11 +55,13 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
     private UIModel uiModel;
     private String workspace;
+    private TreeBuilder builder;
 
-    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel) {
+    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel, TreeBuilder builder) {
         super("edit-workspace-" + workspace, shell);
         this.workspace = workspace;
         this.uiModel = uiModel;
+        this.builder = builder;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
                 final String path = ((ItemSelectedPlace)place).getPath();
                 final String treeName = ((ItemSelectedPlace)place).getWorkspace();
                 if(treeActivity == null){
-                    treeActivity = new TreeActivity(treeName, path, getInnerPlaceController(), uiModel);
+                    treeActivity = new TreeActivity(treeName, path, getInnerPlaceController(), uiModel, builder);
                 }
                 else{
                     // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view

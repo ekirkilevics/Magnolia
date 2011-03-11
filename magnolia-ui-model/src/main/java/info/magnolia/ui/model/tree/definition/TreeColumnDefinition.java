@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,22 +25,44 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.framework.action;
+package info.magnolia.ui.model.tree.definition;
+
 
 /**
- * An action definition is always associated with an {@link Action} and provides the latter with the context (i.e. dependencies) it needs to be executed.
- * For instance, a place change action might provide a place object to move to via a place controller. An action definition is also used by {@link ActionFactory} implementations
- * to look up and retrieve the associated Action.
- * @author fgrilli
+ * @author pbaerfuss
+ * @version $Id$
  *
- * @param <A>
  */
-public interface ActionDefinition<A extends Action> {
+public class TreeColumnDefinition {
+    private String label;
+
+    private int width = 1;
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    //FIXME make that again configurable
+    public Class< ? > getType() {
+        return String.class;
+    }
 
 }

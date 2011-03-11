@@ -33,12 +33,12 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
-import info.magnolia.ui.framework.action.Action;
-import info.magnolia.ui.framework.action.ActionFactory;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionFactory;
 import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
 /**
  * NavigationActivity.

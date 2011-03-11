@@ -64,7 +64,7 @@ public class TreeDefinition implements Serializable {
      */
     private boolean flatMode = false;
 
-    private Map<String, TreeColumn< ? >> columns = new LinkedHashMap<String, TreeColumn< ? >>();
+    private Map<String, TreeColumnDefinition> columns = new LinkedHashMap<String, TreeColumnDefinition>();
 
     private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
 
@@ -116,15 +116,15 @@ public class TreeDefinition implements Serializable {
         this.name = name;
     }
 
-    public TreeColumn< ? > getColumn(String columnId) {
+    public TreeColumnDefinition getColumn(String columnId) {
         return columns.get(columnId);
     }
 
-    public Collection<TreeColumn< ? >> getColumns() {
+    public Collection<TreeColumnDefinition> getColumns() {
         return columns.values();
     }
 
-    public void addColumn(TreeColumn< ? > treeColumn) {
+    public void addColumn(TreeColumnDefinition treeColumn) {
         columns.put(treeColumn.getLabel(), treeColumn);
     }
 

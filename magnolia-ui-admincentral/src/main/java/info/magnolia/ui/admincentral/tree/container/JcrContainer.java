@@ -34,7 +34,9 @@
 package info.magnolia.ui.admincentral.tree.container;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.model.tree.definition.TreeColumn;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.admincentral.tree.column.TreeColumn;
+import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.jcr.Node;
@@ -62,6 +65,22 @@ import com.vaadin.data.Property;
 public class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;
+
+
+    private TreeDefinition treeDefinition;
+
+
+    private Map<String, TreeColumn< ? >> columns;
+
+    public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?>> columns) {
+
+        this.treeDefinition = treeDefinition;
+        this.columns = columns;
+
+        for (TreeColumnDefinition treeColumn : treeDefinition.getColumns()) {
+            addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
+        }
+    }
 
     public void addListener(ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null)
@@ -87,14 +106,6 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
                 ItemSetChangeListener listener = (ItemSetChangeListener) anArray;
                 listener.containerItemSetChange(event);
             }
-        }
-    }
-
-    private TreeDefinition treeDefinition;
-    public JcrContainer(TreeDefinition treeDefinition) {
-        this.treeDefinition = treeDefinition;
-        for (TreeColumn<?> treeColumn : treeDefinition.getColumns()) {
-            addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
     }
 
@@ -276,7 +287,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public Object getColumnValue(String propertyId, ContainerItemId itemId) {
         try {
-            return treeDefinition.getColumn(propertyId).getValue(getJcrItem(itemId));
+            return getColumn(propertyId).getValue(getJcrItem(itemId));
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             return null;
@@ -285,10 +296,15 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public void setColumnValue(String propertyId, ContainerItemId itemId, Object newValue) {
         try {
-            treeDefinition.getColumn(propertyId).setValue(this, getJcrItem(itemId), newValue);
+            getColumn(propertyId).setValue(this, getJcrItem(itemId), newValue);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    // FIXME this is the job of a tree builder
+    private TreeColumn< ? > getColumn(String propertyId) {
+        return columns.get(propertyId);
     }
 
     public Node getNode(ContainerItemId itemId) throws RepositoryException {

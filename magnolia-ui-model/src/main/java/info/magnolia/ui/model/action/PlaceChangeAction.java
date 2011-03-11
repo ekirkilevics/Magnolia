@@ -31,15 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.ui.framework.action;
+package info.magnolia.ui.model.action;
 
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.place.PlaceController;
 
 /**
- * An action encapsulates the logic for some UI behavior, e.g. clicking on an app menu item would trigger an action which goes to a place associated with it.
- * An action is bound to an {@link ActionDefinition}.
+ * Implements a place change action.
  * @author fgrilli
  *
  */
-public interface Action {
-    void execute();
+public class PlaceChangeAction implements Action  {
+
+    private PlaceChangeActionDefinition actionDefinition;
+    private PlaceController placeController;
+
+    public PlaceChangeAction(final PlaceChangeActionDefinition definition, final PlaceController placeController) {
+        this.actionDefinition = definition;
+        this.placeController = placeController;
+    }
+
+    public void execute() {
+        Place newPlace = actionDefinition.getPlace();
+        placeController.goTo(newPlace);
+    }
+
 }

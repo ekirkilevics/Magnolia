@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,29 +31,45 @@
  * intact.
  *
  */
-package info.magnolia.ui.framework.action;
+package info.magnolia.ui.admincentral.tree.column;
 
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Field;
 
 /**
- * Implements a place change action.
- * @author fgrilli
+ * Base class for tree columns.
  *
+ * @param <E> type of the hosted values of this column.
+ * @author dlipp
+ * @author tmattsson
  */
-public class PlaceChangeAction implements Action  {
+public abstract class TreeColumn<E> {
 
-    private PlaceChangeActionDefinition actionDefinition;
-    private PlaceController placeController;
-
-    public PlaceChangeAction(final PlaceChangeActionDefinition definition, final PlaceController placeController) {
-        this.actionDefinition = definition;
-        this.placeController = placeController;
+    /**
+     * @return Field used when editing this column. Defaults to null.
+     */
+    public Field getEditField(Item item) {
+        return null;
     }
 
-    public void execute() {
-        Place newPlace = actionDefinition.getPlace();
-        placeController.goTo(newPlace);
-    }
+    /**
+     * Type of the column: Subclasses have to make sure the getValue methods return instances of
+     * this type!
+     */
+    public abstract Class<E> getType();
 
+    /**
+     * @return value to be displayed in the corresponding column (from the provided Node)
+     */
+    public abstract Object getValue(Item item) throws RepositoryException;
+
+    /**
+     * Set value of Property for the provided node to the new value.
+     */
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    }
 }

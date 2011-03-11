@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,35 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
-
-import java.io.Serializable;
-
-import javax.jcr.Item;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-
+package info.magnolia.ui.model.action;
 
 /**
- * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
- * is a NodeData.
+ * An action definition is always associated with an {@link Action} and provides the latter with the context (i.e. dependencies) it needs to be executed.
+ * For instance, a place change action might provide a place object to move to via a place controller. An action definition is also used by {@link ActionFactory} implementations
+ * to look up and retrieve the associated Action.
+ * @author fgrilli
+ *
+ * @param <A>
  */
-public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
+public interface ActionDefinition<A extends Action> {
 
-    private static final long serialVersionUID = -2594102704173600906L;
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return PropertyType.nameFromValue(property.getType());
-        }
-        return "";
-    }
 }

@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,41 +25,36 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.action;
+package info.magnolia.ui.admincentral.navigation.registry;
 
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import java.util.Map;
+
+import info.magnolia.ui.admincentral.module.AdminCentralModule;
+import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
+
 
 /**
- * EditWorkspace Action Definition.
- * @author fgrilli
+ * @author pbaerfuss
+ * @version $Id$
  *
  */
-public class EditWorkspaceActionDefinition implements PlaceChangeActionDefinition {
+public class NavigationRegistryImpl implements NavigationRegistry {
 
-    private Place place;
-    private String workspace;
+    private AdminCentralModule module;
 
-    public String getWorkspace() {
-        return workspace;
+    public NavigationRegistryImpl(AdminCentralModule module) {
+        this.module = module;
     }
 
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
+    public Map<String, NavigationItemConfiguration> getMenuDefinition() {
+        return module.getMenuItems();
     }
 
-    public Place getPlace() {
-        if(place != null){
-            return place;
-        }
-        place = new EditWorkspacePlace(getWorkspace());
-        return place;
-    }
 }

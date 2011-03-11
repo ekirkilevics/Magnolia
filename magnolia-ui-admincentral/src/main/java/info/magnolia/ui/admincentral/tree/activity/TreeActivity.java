@@ -37,6 +37,7 @@ import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Handler;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -63,12 +64,14 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private TreeView treeView;
     private UIModel uiModel;
     private String path;
+    private TreeBuilder builder;
 
-    public TreeActivity(String treeName, String path, PlaceController placeController, UIModel uiModel) {
+    public TreeActivity(String treeName, String path, PlaceController placeController, UIModel uiModel, TreeBuilder builder) {
         this.uiModel = uiModel;
         this.treeName = treeName;
         this.path = path;
         this.placeController = placeController;
+        this.builder = builder;
     }
 
     // TODO is this good practice?
@@ -82,7 +85,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     public void start(ViewPort viewPort, EventBus eventBus) {
         this.eventBus = eventBus;
         try {
-            this.treeView = new TreeViewImpl(treeName, this, uiModel);
+            this.treeView = new TreeViewImpl(treeName, this, uiModel, builder);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

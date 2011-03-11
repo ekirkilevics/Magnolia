@@ -37,11 +37,11 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.event.EventBus;

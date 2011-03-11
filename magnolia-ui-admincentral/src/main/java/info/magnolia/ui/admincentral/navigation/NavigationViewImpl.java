@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.model.UIModel;
@@ -144,7 +145,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
      * Converts label key into i18n-ized string.
      */
     protected String getLabel(NavigationItemConfiguration menuItem) {
-        return menuItem.getMessages().getWithDefault(menuItem.getLabel(), menuItem.getLabel());
+        return  MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
     }
 
     protected Resource getIcon(NavigationItemConfiguration menuItem){

@@ -45,6 +45,6 @@ import java.io.IOException;
  */
 public class ServletContextPropertySource extends AbstractStreamBasedPropertySource {
     public ServletContextPropertySource(ServletContext ctx, String path) throws IOException {
-        super(ctx.getResourceAsStream(path), path);
+        super(ctx.getResourceAsStream("/" + path), path);
     }
 }

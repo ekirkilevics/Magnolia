@@ -49,12 +49,14 @@ import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
-import info.magnolia.ui.framework.action.ActionFactory;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.admincentral.tree.builder.VaadinTreeBuilder;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.action.ActionFactory;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
 /**
@@ -86,6 +88,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         componentProvider = new PicoComponentProvider(container, provider);
         Properties properties = new Properties();
         properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
+        properties.put(TreeBuilder.class.getName(), VaadinTreeBuilder.class.getName());
         componentProvider.parseConfiguration(properties);
 
         container.addComponent(ComponentProvider.class, componentProvider);

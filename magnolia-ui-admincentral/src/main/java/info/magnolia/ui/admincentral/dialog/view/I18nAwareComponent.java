@@ -44,6 +44,7 @@ import info.magnolia.cms.i18n.MessagesUtil;
  * @author had
  * @version $Id: $
  */
+// TODO is this still needed?
 public abstract class I18nAwareComponent {
 
     // could also use static import if we want do depend on m-gui (DialogControlImpl)

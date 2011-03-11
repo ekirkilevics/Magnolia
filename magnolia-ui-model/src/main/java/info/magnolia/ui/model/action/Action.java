@@ -31,16 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.ui.framework.action;
+package info.magnolia.ui.model.action;
 
-import info.magnolia.ui.framework.place.Place;
 
 /**
- * Place change action definition.
+ * An action encapsulates the logic for some UI behavior, e.g. clicking on an app menu item would trigger an action which goes to a place associated with it.
+ * An action is bound to an {@link ActionDefinition}.
  * @author fgrilli
  *
  */
-public interface PlaceChangeActionDefinition extends ActionDefinition<PlaceChangeAction> {
-
-    Place getPlace();
+public interface Action {
+    void execute();
 }

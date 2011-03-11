@@ -31,35 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.action;
+package info.magnolia.ui.model.action;
 
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * EditWorkspace Action Definition.
+ * Place change action definition.
  * @author fgrilli
  *
  */
-public class EditWorkspaceActionDefinition implements PlaceChangeActionDefinition {
+public interface PlaceChangeActionDefinition extends ActionDefinition<PlaceChangeAction> {
 
-    private Place place;
-    private String workspace;
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public Place getPlace() {
-        if(place != null){
-            return place;
-        }
-        place = new EditWorkspacePlace(getWorkspace());
-        return place;
-    }
+    Place getPlace();
 }

@@ -39,6 +39,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
+import info.magnolia.ui.model.command.Command;
 
 /**
  * Opens a dialog for editing a node in a tree.
@@ -47,6 +48,7 @@ import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
  *
  * @author tmattsson
  */
+// TODO this is a typical action
 public class OpenDialogCommand extends Command {
 
     private DialogPresenter dialogPresenter;
@@ -62,7 +64,7 @@ public class OpenDialogCommand extends Command {
     }
 
     @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(Item item) throws RepositoryException {
 
         // We need to send the workspace as well
 

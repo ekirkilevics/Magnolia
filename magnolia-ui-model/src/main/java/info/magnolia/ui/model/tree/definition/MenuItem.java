@@ -33,7 +33,8 @@
  */
 package info.magnolia.ui.model.tree.definition;
 
-import info.magnolia.ui.admincentral.tree.action.Command;
+import info.magnolia.ui.model.command.Command;
+
 
 /**
  * Describes an item on either a function menu or a context menu.

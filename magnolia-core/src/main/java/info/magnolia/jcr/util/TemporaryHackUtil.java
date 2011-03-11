@@ -31,65 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.jcr.util;
 
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.cms.core.Content;
 
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
+import javax.jcr.Node;
 
-import com.vaadin.ui.Field;
 
 /**
- * Base class for tree columns.
+ * Collection of utilities temporarily needed as long as we have no clear vision of the future of
+ * our Content API.
  *
- * @param <E> type of the hosted values of this column.
  * @author dlipp
- * @author tmattsson
+ * @version $Id$
  */
-public abstract class TreeColumn<E> {
+public class TemporaryHackUtil {
 
-    private String label;
-
-    private int width = 1;
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    /**
-     * @return Field used when editing this column. Defaults to null.
-     */
-    public Field getEditField(Item item) {
-        return null;
-    }
-
-    /**
-     * Type of the column: Subclasses have to make sure the getValue methods return instances of
-     * this type!
-     */
-    public abstract Class<E> getType();
-
-    /**
-     * @return value to be displayed in the corresponding column (from the provided Node)
-     */
-    public abstract Object getValue(Item item) throws RepositoryException;
-
-    /**
-     * Set value of Property for the provided node to the new value.
-     */
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public static Content createHackContentFrom(Node node) {
+        return new HackContent(node);
     }
 }

@@ -35,11 +35,14 @@ package info.magnolia.ui.admincentral.tree.action;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Window;
 
@@ -51,18 +54,25 @@ public class OpenPageCommand extends Command {
 
     private static final long serialVersionUID = 751955514356448616L;
 
+    private Application application;
+
+    // FIXME use the shell instead!
+    public OpenPageCommand(Application application) {
+        this.application =  application;
+    }
+
     @Override
     public boolean isAvailable(Item item) {
         return item instanceof Node;
     }
 
     @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
 
             String uri = MgnlContext.getContextPath() + node.getPath() + ".html";
-            Window window = jcrBrowser.getApplication().getMainWindow();
+            Window window = application.getMainWindow();
             window.open(new ExternalResource(uri));
         }
     }

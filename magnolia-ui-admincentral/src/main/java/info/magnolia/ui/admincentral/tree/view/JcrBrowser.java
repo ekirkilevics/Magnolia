@@ -35,7 +35,10 @@ package info.magnolia.ui.admincentral.tree.view;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -62,12 +65,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.tree.action.Command;
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.admincentral.tree.column.TreeColumn;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.tree.definition.TreeColumn;
+import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
@@ -87,8 +92,13 @@ public class JcrBrowser extends TreeTable {
     private Object selectedItemId = null;
     private Object selectedPropertyId = null;
 
+    private TreeBuilder builder;
 
-    public JcrBrowser(String treeName, UIModel uiModel) throws RepositoryException {
+    private Map<String, TreeColumn<?>> columns = new LinkedHashMap<String, TreeColumn<?>>();
+
+
+    public JcrBrowser(String treeName, UIModel uiModel, TreeBuilder builder) throws RepositoryException {
+        this.builder = builder;
         this.uiModel = uiModel;
         setSizeFull();
         setEditable(false);
@@ -101,7 +111,13 @@ public class JcrBrowser extends TreeTable {
         addEditingByDoubleClick();
         addDragAndDrop();
         this.treeDefinition = uiModel.getTreeDefinition(treeName);
-        this.container = new JcrContainer(treeDefinition);
+
+        for (TreeColumnDefinition columnDefintion : treeDefinition.getColumns()) {
+            // FIXME use getName() not getLabel()
+            columns.put(columnDefintion.getLabel(), builder.createTreeColumn(columnDefintion));
+        }
+
+        this.container = new JcrContainer(treeDefinition, columns);
         setContainerDataSource(container);
         addContextMenu();
         setPageLength(900);
@@ -117,7 +133,7 @@ public class JcrBrowser extends TreeTable {
         }
 
         public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-            command.execute(jcrBrowser, item);
+            command.execute(item);
         }
     }
 
@@ -309,7 +325,7 @@ public class JcrBrowser extends TreeTable {
                 try {
                     if (selectedItemId != null) {
                         if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                            TreeColumn<?> column = treeDefinition.getColumn((String) propertyId);
+                            TreeColumn<?> column = columns.get((String) propertyId);
                             ContainerItemId containerItemId = (ContainerItemId) itemId;
                             Field field = column.getEditField(JcrBrowser.this.container.getJcrItem(containerItemId));
                             if (field != null) {

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr;
+package info.magnolia.jcr.util;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;

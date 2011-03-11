@@ -31,14 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 
 import java.io.Serializable;

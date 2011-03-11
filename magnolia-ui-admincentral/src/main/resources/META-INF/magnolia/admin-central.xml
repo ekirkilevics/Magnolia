@@ -25,6 +25,10 @@
       <name>info.magnolia.ui.model.tree.registry.ConfiguredTreeManager</name>
       <value>info.magnolia.ui.model.tree.registry.ConfiguredTreeManager</value>
     </property>
+    <property>
+      <name>info.magnolia.ui.model.navigation.registry.NavigationRegistry</name>
+      <value>info.magnolia.ui.admincentral.navigation.registry.NavigationRegistryImpl</value>
+    </property>
   </properties>
 
   <dependencies>

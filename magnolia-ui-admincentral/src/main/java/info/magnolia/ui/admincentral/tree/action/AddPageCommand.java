@@ -36,13 +36,14 @@ package info.magnolia.ui.admincentral.tree.action;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.HackContent;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.admincentral.jcr.HackContent;
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
+import info.magnolia.ui.model.command.Command;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
@@ -62,7 +63,7 @@ public class AddPageCommand extends Command {
     }
 
     @Override
-    public void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
+    public void execute(Item item) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
@@ -81,10 +82,10 @@ public class AddPageCommand extends Command {
 
             node.getSession().save();
 
-            if (jcrBrowser != null)
-            jcrBrowser.addItem(new ContainerItemId(newChild));
-            if (jcrBrowser != null)
-            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
+//            if (jcrBrowser != null)
+//            jcrBrowser.addItem(new ContainerItemId(newChild));
+//            if (jcrBrowser != null)
+//            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
         }
     }
 }

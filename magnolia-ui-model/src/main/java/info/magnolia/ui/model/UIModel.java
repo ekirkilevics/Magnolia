@@ -33,12 +33,12 @@
  */
 package info.magnolia.ui.model;
 
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.admincentral.module.AdminCentralModule;
-import info.magnolia.ui.admincentral.tree.action.Command;
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.model.command.Command;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
 import info.magnolia.ui.model.tree.definition.MenuItem;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.registry.TreeRegistry;
@@ -56,15 +56,16 @@ import org.apache.commons.lang.StringUtils;
 /**
  * The UI model provides all the definition for the trees, dialogs, commands and so on.
  */
+// TODO drop this class, depend on the registries
 public class UIModel {
 
     private DialogRegistry dialogRegistry;
-    private AdminCentralModule adminCentralModule;
+    private NavigationRegistry navigationRegistry;
     private TreeRegistry treeRegistry;
 
-    public UIModel(DialogRegistry dialogRegistry, AdminCentralModule adminCentralModule, TreeRegistry treeRegistry) {
+    public UIModel(DialogRegistry dialogRegistry, NavigationRegistry navigationRegistry, TreeRegistry treeRegistry) {
         this.dialogRegistry = dialogRegistry;
-        this.adminCentralModule = adminCentralModule;
+        this.navigationRegistry = navigationRegistry;
         this.treeRegistry = treeRegistry;
     }
 
@@ -76,7 +77,7 @@ public class UIModel {
 
         Command action = getCommand(treeDefinition, commandName);
         if (action.isAvailable(item))
-            action.execute(null, item);
+            action.execute(item);
     }
 
     public Command getCommand(TreeDefinition treeDefinition, String commandName) {
@@ -145,8 +146,9 @@ public class UIModel {
             return StringUtils.substringAfter(item.getPath(), base);
     }
 
+    // FIXME drop this method
     public Map<String, NavigationItemConfiguration> getMenuDefinition(){
-        return adminCentralModule.getMenuItems();
+        return navigationRegistry.getMenuDefinition();
     }
 
 }

@@ -31,35 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.action;
+package info.magnolia.ui.model.action;
 
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * EditWorkspace Action Definition.
+ * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
  * @author fgrilli
  *
  */
-public class EditWorkspaceActionDefinition implements PlaceChangeActionDefinition {
+public interface ActionFactory {
 
-    private Place place;
-    private String workspace;
+    Action createAction(final ActionDefinition<? extends Action> definition);
 
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public Place getPlace() {
-        if(place != null){
-            return place;
-        }
-        place = new EditWorkspacePlace(getWorkspace());
-        return place;
-    }
 }

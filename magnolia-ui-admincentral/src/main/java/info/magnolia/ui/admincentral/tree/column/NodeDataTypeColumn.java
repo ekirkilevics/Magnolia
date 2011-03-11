@@ -31,51 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.action;
+package info.magnolia.ui.admincentral.tree.column;
+
+import java.io.Serializable;
 
 import javax.jcr.Item;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.admincentral.tree.view.JcrBrowser;
 
 /**
- * Base class for all tree actions.
+ * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
+ * is a NodeData.
  */
-public abstract class Command {
+public class NodeDataTypeColumn extends TreeColumn<String> implements Serializable {
 
-    private static final long serialVersionUID = -4170116352082513835L;
+    private static final long serialVersionUID = -2594102704173600906L;
 
-    private String name;
-    private String label;
-    private String icon;
-
-    public void setLabel(String label) {
-        this.label = label;
+    @Override
+    public Class<String> getType() {
+        return String.class;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            return PropertyType.nameFromValue(property.getType());
+        }
+        return "";
     }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public boolean isAvailable(Item item) {
-        return true;
-    }
-
-    public abstract void execute(JcrBrowser jcrBrowser, Item item) throws RepositoryException;
 }

@@ -31,32 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.admincentral.tree.column;
 
+import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 
 import java.io.Serializable;
 
 import javax.jcr.Item;
-import javax.jcr.Property;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
-
 /**
- * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
- * the TreeTable is a NodeData.
+ * A column that displays a NodeData value when viewing a content node. Used in the website tree for
+ * the 'Title' column.
  *
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataValueColumn extends TreeColumn<String> implements Serializable {
+public class NodeDataColumn extends TreeColumn<String> implements Serializable {
 
-    private static final long serialVersionUID = -6032077132567486333L;
+    private static final long serialVersionUID = 979787074349524725L;
 
     private boolean editable = false;
+
+    private String nodeDataName;
 
     public boolean isEditable() {
         return editable;
@@ -66,31 +68,46 @@ public class NodeDataValueColumn extends TreeColumn<String> implements Serializa
         this.editable = editable;
     }
 
+    public String getNodeDataName() {
+        return nodeDataName;
+    }
+
+    public void setNodeDataName(String nodeDataName) {
+        this.nodeDataName = nodeDataName;
+    }
+
+    @Override
+    public Field getEditField(Item item) {
+        if (item instanceof Node && editable)
+            return new TextField();
+        return null;
+    }
+
     @Override
     public Class<String> getType() {
         return String.class;
     }
 
     @Override
-    public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return property.getString();
+    public String getValue(Item item) throws RepositoryException {
+
+        if (item instanceof Node) {
+            Node node = (Node) item;
+
+            if (node.hasProperty(nodeDataName))
+                return node.getProperty(nodeDataName).getString();
         }
         return "";
     }
 
     @Override
-    public Field getEditField(Item item) {
-        return (editable && item instanceof Property) ? new TextField() : null;
-    }
-
-    @Override
     public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            property.setValue((String) newValue);
-            property.getSession().save();
+
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            node.setProperty(nodeDataName, (String) newValue);
+            JCRMetadataUtil.updateMetaData(node);
+            node.getSession().save();
         }
     }
 }

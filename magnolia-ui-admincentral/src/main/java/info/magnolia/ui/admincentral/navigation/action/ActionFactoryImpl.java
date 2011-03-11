@@ -33,13 +33,13 @@
  */
 package info.magnolia.ui.admincentral.navigation.action;
 
-import info.magnolia.ui.framework.action.Action;
-import info.magnolia.ui.framework.action.ActionDefinition;
-import info.magnolia.ui.framework.action.ActionFactory;
-import info.magnolia.ui.framework.action.PlaceChangeAction;
-import info.magnolia.ui.framework.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.ActionFactory;
+import info.magnolia.ui.model.action.PlaceChangeAction;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
  * A factory for {@link Action}s.
