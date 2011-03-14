@@ -44,7 +44,7 @@ public class DialogDefinition {
     private String name;
     private String label;
     private String i18nBasename;
-    private List<DialogTab> tabs = new ArrayList<DialogTab>();
+    private List<TabDefinition> tabs = new ArrayList<TabDefinition>();
 
     public String getName() {
         return name;
@@ -62,16 +62,16 @@ public class DialogDefinition {
         this.label = label;
     }
 
-    public List<DialogTab> getTabs() {
+    public List<TabDefinition> getTabs() {
         return tabs;
     }
 
-    public void setTabs(List<DialogTab> tabs) {
+    public void setTabs(List<TabDefinition> tabs) {
         this.tabs = tabs;
     }
 
-    public boolean addTab(DialogTab dialogTab) {
-        return tabs.add(dialogTab);
+    public boolean addTab(TabDefinition tabDefinition) {
+        return tabs.add(tabDefinition);
     }
 
     public String getI18nBasename() {

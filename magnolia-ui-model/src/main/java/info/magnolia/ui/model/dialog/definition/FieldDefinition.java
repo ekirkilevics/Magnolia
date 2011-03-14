@@ -36,11 +36,9 @@ package info.magnolia.ui.model.dialog.definition;
 /**
  * Describes a field in a dialog.
  *
- * TODO: FieldDefinition is probably a better name
- *
  * @author tmattsson
  */
-public class DialogField {
+public class FieldDefinition {
 
     private String name;
     private String label;

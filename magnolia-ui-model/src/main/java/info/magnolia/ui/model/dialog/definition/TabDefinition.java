@@ -39,15 +39,14 @@ import java.util.List;
 /**
  * A tab in a dialog. Holds a list of controls contained in the tab.
  *
- * TODO rename to TabDefinition?
- *
+ * @author tmattsson
  */
-public class DialogTab {
+public class TabDefinition {
 
     private String name;
     private String label;
     private String i18nBasename;
-    private List<DialogField> fields = new ArrayList<DialogField>();
+    private List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
 
     public String getName() {
         return name;
@@ -73,15 +72,15 @@ public class DialogTab {
         this.i18nBasename = i18nBasename;
     }
 
-    public List<DialogField> getFields() {
+    public List<FieldDefinition> getFields() {
         return fields;
     }
 
-    public void setFields(List<DialogField> fields) {
+    public void setFields(List<FieldDefinition> fields) {
         this.fields = fields;
     }
 
-    public boolean addField(DialogField dialogField) {
-        return fields.add(dialogField);
+    public boolean addField(FieldDefinition fieldDefinition) {
+        return fields.add(fieldDefinition);
     }
 }
