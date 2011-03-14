@@ -85,7 +85,9 @@ public class DetailView extends VerticalSplitPanel implements View, IsVaadinComp
     }
 
     /**
-     * TODO.
+     * UI component that displays a list of actions available for the selected tree item.
+     *
+     * TODO should be renamed to action list?
      *
      * @author fgrilli
      */
@@ -130,7 +132,7 @@ public class DetailView extends VerticalSplitPanel implements View, IsVaadinComp
     }
 
     /**
-     * TODO.
+     * UI component that displays details about the selected tree item.
      *
      * @author fgrilli
      */

@@ -45,7 +45,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * TODO: write javadoc.
+ * TabSheet displays its tabs vertically to the left of the tab content.
  *
  * @author tmattsson
  *

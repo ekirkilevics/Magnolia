@@ -37,7 +37,8 @@ import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
 
 /**
- * TODO: write javadoc.
+ * UI component that displays the navigation on the left side in AdminCentral.
+ *
  * @author fgrilli
  *
  */

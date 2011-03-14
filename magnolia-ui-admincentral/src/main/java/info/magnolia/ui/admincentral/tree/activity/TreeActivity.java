@@ -50,17 +50,15 @@ import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 /**
- * TODO: write javadoc.
+ * Activity for displaying dialogs.
  *
  * @author tmattsson
- *
  */
 public class TreeActivity extends AbstractActivity implements TreeView.Presenter, Handler {
 
     private final String treeName;
     private EventBus eventBus;
     private PlaceController placeController;
-    // FIXME use the interface not the implementation
     private TreeView treeView;
     private UIModel uiModel;
     private String path;

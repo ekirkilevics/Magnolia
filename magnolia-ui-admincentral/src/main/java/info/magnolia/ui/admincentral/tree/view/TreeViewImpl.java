@@ -46,10 +46,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 
 /**
- * TODO: write javadoc.
+ * Vaadin UI component that displays a tree.
  *
  * @author tmattsson
- *
  */
 // TODO don't extend CustomComponent, make it composite
 public class TreeViewImpl extends CustomComponent implements TreeView, IsVaadinComponent {

@@ -38,14 +38,14 @@ import info.magnolia.ui.framework.view.View;
 import javax.jcr.Item;
 
 /**
- * TODO: write javadoc.
+ * UI component that displays a tree.
  *
  * @author tmattsson
  */
 public interface TreeView extends View {
 
     /**
-     * TODO: write javadoc.
+     * Presenter for the TreeView.
      *
      * @author tmattsson
      */

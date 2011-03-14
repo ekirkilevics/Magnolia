@@ -76,34 +76,4 @@ public class DialogRegistry {
         }
         return dialogProvider.getDialogDefinition();
     }
-/*
-    private DialogDefinition mockDialog(String dialogName) {
-        DialogDefinition def = new DialogDefinition();
-        def.setName(dialogName);
-
-        DialogTab tab = new DialogTab();
-        tab.setLabel("Settings");
-        def.addTab(tab);
-
-        DialogField field1 = new DialogField();
-        field1.setName("title");
-        field1.setLabel("Title");
-        field1.setControlType("edit");
-        tab.addField(field1);
-
-        DialogField field2 = new DialogField();
-        field2.setName("text");
-        field2.setLabel("Text");
-        field2.setControlType("richText");
-        tab.addField(field2);
-
-        DialogField field3 = new DialogField();
-        field3.setName("date");
-        field3.setLabel("Date");
-        field3.setControlType("date");
-        tab.addField(field3);
-
-        return def;
-    }
-*/
 }
