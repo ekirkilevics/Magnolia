@@ -196,7 +196,7 @@
         <sv:value>75e64d48-79fa-4f49-8638-f7fa472b264f</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.model.tree.definition.LabelDefinition</sv:value>
+        <sv:value>info.magnolia.ui.model.tree.definition.LabelColumnDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>

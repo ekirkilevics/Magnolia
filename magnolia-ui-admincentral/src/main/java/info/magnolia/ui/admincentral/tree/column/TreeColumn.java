@@ -45,6 +45,7 @@ import com.vaadin.ui.Field;
  * Base class for tree columns.
  *
  * @param <E> type of the hosted values of this column.
+ * @param <D> type of the definition for this column.
  * @author dlipp
  * @author tmattsson
  */
