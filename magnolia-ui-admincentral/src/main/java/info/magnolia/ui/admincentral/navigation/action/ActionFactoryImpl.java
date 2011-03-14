@@ -33,6 +33,11 @@
  */
 package info.magnolia.ui.admincentral.navigation.action;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.model.action.Action;
@@ -49,6 +54,7 @@ import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 public class ActionFactoryImpl implements ActionFactory {
 
     private PlaceController placeController;
+    private ComponentProvider componentProvider;
 
     /**
      * TODO remove me: just a quick workaround for M3 Sprint II release.
@@ -61,7 +67,8 @@ public class ActionFactoryImpl implements ActionFactory {
 
     }
 
-    public ActionFactoryImpl(final PlaceController placeController) {
+    public ActionFactoryImpl(ComponentProvider componentProvider, PlaceController placeController) {
+        this.componentProvider = componentProvider;
         this.placeController = placeController;
     }
 
@@ -71,10 +78,13 @@ public class ActionFactoryImpl implements ActionFactory {
            //throw new IllegalArgumentException("action definition cannot be null");
             return new PlaceChangeAction((PlaceChangeActionDefinition) new NowhereActionDefinition(), placeController);
         }
+
         if(definition instanceof PlaceChangeActionDefinition) {
-            return new PlaceChangeAction((PlaceChangeActionDefinition) definition, placeController);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("definition", definition);
+            return ((PicoComponentProvider)componentProvider).newInstance(PlaceChangeAction.class, map);
         }
+
         return null;
     }
-
 }

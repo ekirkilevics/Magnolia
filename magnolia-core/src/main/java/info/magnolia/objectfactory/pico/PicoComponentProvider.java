@@ -33,6 +33,8 @@
  */
 package info.magnolia.objectfactory.pico;
 
+import java.util.Map;
+
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.PropertiesComponentProvider;
@@ -123,5 +125,23 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     protected void registerInstance(Class<?> type, Object instance) {
         super.registerInstance(type, instance);
         pico.addComponent(type, instance);
+    }
+
+
+    public <T> T newInstance(Class<T> type, Map<String, Object> arguments) {
+
+        // Creates a temporary container, and adds all the arguments to it so they will be used for injection. Won't work with multiple arguments of the same type (like two strings).
+
+        final MutablePicoContainer adhocContainer = new PicoBuilder(pico)
+            // order of injection matters, so ConstructorInjection must be first. Yes, we could add more types of injection if needed.
+            .withConstructorInjection()
+            .build();
+
+        for (Map.Entry<String, Object> entry : arguments.entrySet()) {
+            adhocContainer.addComponent(entry.getValue(), entry.getValue());
+        }
+
+        adhocContainer.addComponent(type, type);
+        return adhocContainer.getComponent(type);
     }
 }
