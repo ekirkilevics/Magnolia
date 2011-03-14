@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -49,7 +50,7 @@ import org.apache.commons.lang.time.FastDateFormat;
  * Column that displays a property for a nodes MetaData. Used to display the modification date of
  * content nodes.
  */
-public class MetaDataColumn extends TreeColumn<String> implements Serializable {
+public class MetaDataColumn extends TreeColumn<String,MetaDataColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -2788490588550009503L;
 
@@ -57,6 +58,11 @@ public class MetaDataColumn extends TreeColumn<String> implements Serializable {
 
     protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
 
+    public MetaDataColumn(MetaDataColumnDefinition def) {
+        super(def);
+    }
+
+    // TODO check whether this couldn't be replaced by impl. from TreeColumn
     @Override
     public Class<String> getType() {
         return String.class;

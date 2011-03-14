@@ -34,7 +34,20 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 import info.magnolia.ui.admincentral.tree.column.LabelColumn;
+import info.magnolia.ui.admincentral.tree.column.MetaDataColumn;
+import info.magnolia.ui.admincentral.tree.column.NodeDataColumn;
+import info.magnolia.ui.admincentral.tree.column.NodeDataTypeColumn;
+import info.magnolia.ui.admincentral.tree.column.NodeDataValueColumn;
+import info.magnolia.ui.admincentral.tree.column.StatusColumn;
+import info.magnolia.ui.admincentral.tree.column.TemplateColumn;
 import info.magnolia.ui.admincentral.tree.column.TreeColumn;
+import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
+import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
+import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
+import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
+import info.magnolia.ui.model.tree.definition.StatusColumnDefinition;
+import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 
 /**
@@ -42,8 +55,42 @@ import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
  */
 public class VaadinTreeBuilder implements TreeBuilder {
 
-    public TreeColumn<?> createTreeColumn(TreeColumnDefinition definition){
-        return new LabelColumn();
+    public TreeColumn<?,?> createTreeColumn(TreeColumnDefinition definition) {
+
+        // TODO: quick hack - check how to make more nice/flexible
+        if (definition instanceof LabelColumnDefinition) {
+            return new LabelColumn((LabelColumnDefinition) definition);
+        }
+
+        if (definition instanceof TemplateColumnDefinition) {
+            return new TemplateColumn((TemplateColumnDefinition) definition);
+        }
+
+        if (definition instanceof StatusColumnDefinition) {
+            return new StatusColumn((StatusColumnDefinition) definition);
+        }
+
+        if (definition instanceof StatusColumnDefinition) {
+            return new StatusColumn((StatusColumnDefinition) definition);
+        }
+
+        if (definition instanceof NodeDataColumnDefinition) {
+            return new NodeDataColumn((NodeDataColumnDefinition) definition);
+        }
+
+        if (definition instanceof NodeDataValueColumnDefinition) {
+            return new NodeDataValueColumn((NodeDataValueColumnDefinition) definition);
+        }
+
+        if (definition instanceof NodeDataTypeColumnDefinition) {
+            return new NodeDataTypeColumn((NodeDataTypeColumnDefinition) definition);
+        }
+
+        if (definition instanceof MetaDataColumnDefinition) {
+            return new MetaDataColumn((MetaDataColumnDefinition) definition);
+        }
+
+        throw new IllegalArgumentException("Unkown definition type: " + definition.getClass());
     }
 
 }

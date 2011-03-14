@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
@@ -47,7 +48,17 @@ import com.vaadin.ui.Field;
  * @author dlipp
  * @author tmattsson
  */
-public abstract class TreeColumn<E> {
+public abstract class TreeColumn<E,D extends TreeColumnDefinition> {
+
+    private final D definition;
+
+    public TreeColumn(D def) {
+        this.definition = def;
+    }
+
+    public D getDefinition() {
+        return this.definition;
+    }
 
     /**
      * @return Field used when editing this column. Defaults to null.
@@ -61,7 +72,6 @@ public abstract class TreeColumn<E> {
      * this type!
      */
     public abstract Class<E> getType();
-
     /**
      * @return value to be displayed in the corresponding column (from the provided Node)
      */
@@ -71,5 +81,21 @@ public abstract class TreeColumn<E> {
      * Set value of Property for the provided node to the new value.
      */
     public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    }
+
+    public int getWidth() {
+        return getDefinition().getWidth();
+    }
+
+    public void setWidth(int newWidth) {
+        getDefinition().setWidth(newWidth);
+    }
+
+    public String getLabel() {
+        return getDefinition().getLabel();
+    }
+
+    public void setLabel(String newLabel) {
+        getDefinition().setLabel(newLabel);
     }
 }

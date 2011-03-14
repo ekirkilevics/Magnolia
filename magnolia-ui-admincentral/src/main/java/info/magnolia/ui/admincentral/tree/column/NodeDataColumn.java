@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
 
 import java.io.Serializable;
 
@@ -52,13 +53,15 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataColumn extends TreeColumn<String> implements Serializable {
+public class NodeDataColumn extends TreeColumn<String, NodeDataColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = 979787074349524725L;
 
     private boolean editable = false;
 
-    private String nodeDataName;
+    public NodeDataColumn(NodeDataColumnDefinition def) {
+        super(def);
+    }
 
     public boolean isEditable() {
         return editable;
@@ -69,11 +72,11 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
     }
 
     public String getNodeDataName() {
-        return nodeDataName;
+        return getDefinition().getNodeDataName();
     }
 
     public void setNodeDataName(String nodeDataName) {
-        this.nodeDataName = nodeDataName;
+        getDefinition().setNodeDataName(nodeDataName);
     }
 
     @Override
@@ -94,8 +97,8 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
         if (item instanceof Node) {
             Node node = (Node) item;
 
-            if (node.hasProperty(nodeDataName))
-                return node.getProperty(nodeDataName).getString();
+            if (node.hasProperty(getNodeDataName()))
+                return node.getProperty(getNodeDataName()).getString();
         }
         return "";
     }
@@ -105,7 +108,7 @@ public class NodeDataColumn extends TreeColumn<String> implements Serializable {
 
         if (item instanceof Node) {
             Node node = (Node) item;
-            node.setProperty(nodeDataName, (String) newValue);
+            node.setProperty(getNodeDataName(), (String) newValue);
             JCRMetadataUtil.updateMetaData(node);
             node.getSession().save();
         }

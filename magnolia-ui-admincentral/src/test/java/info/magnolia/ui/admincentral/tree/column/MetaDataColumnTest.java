@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.tree.column;
 import static junit.framework.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -66,7 +67,7 @@ public class MetaDataColumnTest {
         Node node = new MockNode();
         Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
         metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
-        MetaDataColumn column = new MetaDataColumn();
+        MetaDataColumn column = new MetaDataColumn(new MetaDataColumnDefinition());
         Object result = column.getValue(node);
         assertEquals(dateFormat.format(now), result);
     }

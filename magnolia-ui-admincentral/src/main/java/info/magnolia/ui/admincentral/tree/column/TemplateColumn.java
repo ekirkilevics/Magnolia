@@ -40,6 +40,7 @@ import info.magnolia.jcr.util.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -61,11 +62,15 @@ import com.vaadin.ui.NativeSelect;
  * @author dlipp
  * @author tmattsson
  */
-public class TemplateColumn extends TreeColumn<String> implements Serializable {
+public class TemplateColumn extends TreeColumn<String,TemplateColumnDefinition> implements Serializable {
 
     public static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":template";
 
     private static final long serialVersionUID = -4658046121169661806L;
+
+    public TemplateColumn(TemplateColumnDefinition def) {
+        super(def);
+    }
 
     private Map<String, String> getAvailableTemplates(Node node) {
         Map<String, String> map = new LinkedHashMap<String, String>();
@@ -106,11 +111,6 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
     }
 
     @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
     public String getValue(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
@@ -120,6 +120,11 @@ public class TemplateColumn extends TreeColumn<String> implements Serializable {
             return (definition != null) ? definition.getI18NTitle() : "";
         }
         return "";
+    }
+
+    @Override
+    public Class<String> getType() {
+        return String.class;
     }
 
     @Override

@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
 
 import java.io.Serializable;
 
@@ -52,11 +53,15 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class LabelColumn extends TreeColumn<String> implements Serializable {
+public class LabelColumn extends TreeColumn<String,LabelColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 
     private boolean editable = false;
+
+    public LabelColumn(LabelColumnDefinition def) {
+        super(def);
+    }
 
     public boolean isEditable() {
         return editable;

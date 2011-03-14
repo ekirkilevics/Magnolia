@@ -35,7 +35,6 @@ package info.magnolia.ui.admincentral.tree.container;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.tree.column.TreeColumn;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
@@ -73,14 +72,14 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private TreeDefinition treeDefinition;
 
-    private Map<String, TreeColumn<?>> columns;
+    private Map<String, TreeColumn<?,?>> columns;
 
-    public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?>> columns) {
+    public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?,?>> columns) {
 
         this.treeDefinition = treeDefinition;
         this.columns = columns;
 
-        for (TreeColumnDefinition treeColumn : treeDefinition.getColumns()) {
+        for (TreeColumn<?,?> treeColumn : columns.values()) {
             addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
     }
@@ -307,7 +306,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     // FIXME this is the job of a tree builder
-    private TreeColumn<?> getColumn(String propertyId) {
+    private TreeColumn<?,?> getColumn(String propertyId) {
         return columns.get(propertyId);
     }
 

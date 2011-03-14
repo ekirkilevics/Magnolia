@@ -82,6 +82,7 @@ import info.magnolia.ui.model.tree.definition.TreeItemType;
  * @author tmattsson
  */
 public class JcrBrowser extends TreeTable {
+    private static final long serialVersionUID = -6202685472650709855L;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -92,13 +93,10 @@ public class JcrBrowser extends TreeTable {
     private Object selectedItemId = null;
     private Object selectedPropertyId = null;
 
-    private TreeBuilder builder;
-
-    private Map<String, TreeColumn<?>> columns = new LinkedHashMap<String, TreeColumn<?>>();
+    private Map<String, TreeColumn<?,?>> columns = new LinkedHashMap<String, TreeColumn<?,?>>();
 
 
     public JcrBrowser(String treeName, UIModel uiModel, TreeBuilder builder) throws RepositoryException {
-        this.builder = builder;
         this.uiModel = uiModel;
         setSizeFull();
         setEditable(false);
@@ -124,6 +122,7 @@ public class JcrBrowser extends TreeTable {
     }
 
     private static class JcrBrowserAction extends Action {
+        private static final long serialVersionUID = -5358813017929951816L;
         private Command command;
 
         private JcrBrowserAction(Command command) {
@@ -140,7 +139,6 @@ public class JcrBrowser extends TreeTable {
     private void addContextMenu() {
 
         addActionHandler(new Action.Handler() {
-
             private static final long serialVersionUID = 4311121075528949148L;
 
             public Action[] getActions(Object target, Object sender) {
@@ -325,7 +323,7 @@ public class JcrBrowser extends TreeTable {
                 try {
                     if (selectedItemId != null) {
                         if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                            TreeColumn<?> column = columns.get((String) propertyId);
+                            TreeColumn<?,?> column = columns.get((String) propertyId);
                             ContainerItemId containerItemId = (ContainerItemId) itemId;
                             Field field = column.getEditField(JcrBrowser.this.container.getJcrItem(containerItemId));
                             if (field != null) {

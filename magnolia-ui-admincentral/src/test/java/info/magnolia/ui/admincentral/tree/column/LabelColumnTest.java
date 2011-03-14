@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.tree.column;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
 
 import javax.jcr.RepositoryException;
 
@@ -57,7 +58,7 @@ public class LabelColumnTest {
         String original = "Beckenbauer";
         mock.setName(original);
         mock.setProperty("name", original);
-        LabelColumn column = new LabelColumn();
+        LabelColumn column = new LabelColumn(new LabelColumnDefinition());
         Object result = column.getValue(mock);
         assertEquals(original, result);
     }
@@ -74,7 +75,7 @@ public class LabelColumnTest {
 */
     @Test
     public void testGetEditField() {
-        LabelColumn column = new LabelColumn();
+        LabelColumn column = new LabelColumn(new LabelColumnDefinition());
         boolean editableFlag = true;
         column.setEditable(editableFlag);
         assertEquals(editableFlag, column.isEditable());

@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,47 +25,29 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
-
-import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
-
-import java.io.Serializable;
-
-import javax.jcr.Item;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-
+package info.magnolia.ui.model.tree.definition;
 
 /**
- * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
- * is a NodeData.
+ * Definition for NodeDataColumns.
+ *
+ * @author dlipp
  */
-public class NodeDataTypeColumn extends TreeColumn<String, NodeDataTypeColumnDefinition> implements Serializable {
+public class NodeDataColumnDefinition extends TreeColumnDefinition {
 
-    private static final long serialVersionUID = -2594102704173600906L;
+    private String nodeDataName;
 
-    public NodeDataTypeColumn(NodeDataTypeColumnDefinition def) {
-        super(def);
+    public String getNodeDataName() {
+        return nodeDataName;
     }
 
-    @Override
-    public Class<String> getType() {
-        return String.class;
+    public void setNodeDataName(String nodeDataName) {
+        this.nodeDataName = nodeDataName;
     }
 
-    @Override
-    public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return PropertyType.nameFromValue(property.getType());
-        }
-        return "";
-    }
 }

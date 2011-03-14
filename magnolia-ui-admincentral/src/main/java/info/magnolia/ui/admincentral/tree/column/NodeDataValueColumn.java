@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
 
 import java.io.Serializable;
 
@@ -52,7 +53,7 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataValueColumn extends TreeColumn<String> implements Serializable {
+public class NodeDataValueColumn extends TreeColumn<String,NodeDataValueColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -6032077132567486333L;
 
@@ -64,6 +65,10 @@ public class NodeDataValueColumn extends TreeColumn<String> implements Serializa
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public NodeDataValueColumn(NodeDataValueColumnDefinition def) {
+        super(def);
     }
 
     @Override

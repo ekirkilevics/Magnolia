@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.tree.column;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.model.tree.definition.StatusColumnDefinition;
 
 import java.io.Serializable;
 import java.security.AccessControlException;
@@ -49,20 +50,23 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 
-
 /**
  * A column that displays icons for permissions and activation status.
  *
  * @author dlipp
  * @author tmattsson
  */
-public class StatusColumn extends TreeColumn<Component> implements Serializable {
+public class StatusColumn extends TreeColumn<Component,StatusColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
     private boolean activation = true;
 
     private boolean permissions = false;
+
+    public StatusColumn(StatusColumnDefinition def) {
+        super(def);
+    }
 
     public boolean isActivation() {
         return activation;
@@ -91,7 +95,9 @@ public class StatusColumn extends TreeColumn<Component> implements Serializable 
             Node node = (Node) item;
             Component component = null;
             if (activation) {
-                component = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + JCRMetadataUtil.getActivationStatusIcon(node));
+                component =
+                        createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/"
+                                + JCRMetadataUtil.getActivationStatusIcon(node));
             }
 
             if (permissions) {
@@ -106,7 +112,8 @@ public class StatusColumn extends TreeColumn<Component> implements Serializable 
                     // in a layout for being displayed...
                     HorizontalLayout horizontal = new HorizontalLayout();
                     horizontal.addComponent(component);
-                    component = createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
+                    component =
+                            createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
                     horizontal.addComponent(component);
                     component = horizontal;
                 }

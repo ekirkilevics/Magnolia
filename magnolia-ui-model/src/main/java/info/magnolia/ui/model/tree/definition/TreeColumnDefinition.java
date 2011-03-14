@@ -33,11 +33,12 @@
  */
 package info.magnolia.ui.model.tree.definition;
 
-
 /**
  * A tree column definition.
+ *
+ * @author dlipp
  */
-public class TreeColumnDefinition {
+public abstract class TreeColumnDefinition {
     private String label;
 
     private int width = 1;
@@ -57,10 +58,4 @@ public class TreeColumnDefinition {
     public void setLabel(String label) {
         this.label = label;
     }
-
-    //FIXME make that again configurable
-    public Class< ? > getType() {
-        return String.class;
-    }
-
 }
