@@ -56,8 +56,6 @@ public class TreeDefinition implements Serializable {
 
     private String path;
 
-    private String customStyles = "";
-
     /**
      * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show
      * their children. Used in the security trees.
@@ -146,19 +144,5 @@ public class TreeDefinition implements Serializable {
 
     public boolean addContextMenuItem(MenuItem menuItem) {
         return contextMenuItems.add(menuItem);
-    }
-    /**
-     * A white space separated String holding custom styles to apply to this tree.
-     * @see TreeTable#setStyleName(String)
-     */
-    public void setCustomStyles(String customStyles) {
-        this.customStyles = customStyles;
-    }
-    /**
-     * @return A white space separated String holding custom styles to apply to this tree.
-     * @see TreeTable#setStyleName(String)
-     */
-    public String getCustomStyles() {
-        return customStyles;
     }
 }
