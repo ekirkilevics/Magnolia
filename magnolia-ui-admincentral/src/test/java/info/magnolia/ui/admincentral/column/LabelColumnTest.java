@@ -33,17 +33,13 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import info.magnolia.ui.admincentral.column.LabelColumn;
-import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
-
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
 import com.vaadin.ui.Field;
+import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
+import static org.junit.Assert.*;
 
 
 /**
