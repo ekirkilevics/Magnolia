@@ -33,17 +33,9 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
-
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +53,12 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.themes.BaseTheme;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * The Application accordion Menu.
@@ -81,24 +79,19 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
 
     private Presenter presenter;
 
-    private UIModel uiModel;
-
-
-    public NavigationViewImpl(final Presenter presenter, final UIModel uiModel) {
+    public NavigationViewImpl(final Presenter presenter, Collection<NavigationItemConfiguration> navigationItems) {
         this.presenter = presenter;
-        this.uiModel = uiModel;
         setCompositionRoot(accordion);
         setSizeFull();
 
-        for (Entry<String, NavigationItemConfiguration> menuItemEntry : this.uiModel.getMenuDefinition().entrySet()) {
-            NavigationItemConfiguration menuItem = menuItemEntry.getValue();
+        for (NavigationItemConfiguration menuItem : navigationItems) {
             // check permission
             if (!isMenuItemRenderable(menuItem)) {
                 continue;
             }
 
             // register new top level menu
-            addTab(menuItemEntry.getKey(), menuItem);
+            addTab(menuItem.getName(), menuItem);
         }
 
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items

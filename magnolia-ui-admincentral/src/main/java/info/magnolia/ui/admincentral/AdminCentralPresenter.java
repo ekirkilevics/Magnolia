@@ -56,6 +56,7 @@ import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 
 /**
@@ -66,11 +67,12 @@ public class AdminCentralPresenter {
     private Shell shell;
     private EventBus eventBus;
     private UIModel uiModel;
+    private DialogRegistry dialogRegistry;
     private PlaceController placeController;
     private AdminCentralView adminCentralView;
     private ComponentProvider componentProvider;
 
-    public AdminCentralPresenter(ComponentProvider componentProvider, Shell shell, EventBus eventBus, UIModel uiModel, PlaceController placeController, AdminCentralView adminCentralView) {
+    public AdminCentralPresenter(ComponentProvider componentProvider, Shell shell, EventBus eventBus, UIModel uiModel, DialogRegistry dialogRegistry, PlaceController placeController, AdminCentralView adminCentralView) {
         this.componentProvider = componentProvider;
         this.shell = shell;
         this.eventBus = eventBus;
@@ -109,7 +111,7 @@ public class AdminCentralPresenter {
                 }
                 else if(place instanceof DialogPlace){
                     DialogPlace dialogPlace = (DialogPlace)place;
-                    return new DialogActivity(dialogPlace, uiModel, componentProvider);
+                    return new DialogActivity(componentProvider, dialogPlace, dialogRegistry);
                 }
                 else if(place instanceof SomePlace){
                     return new AbstractActivity() {

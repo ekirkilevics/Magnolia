@@ -46,8 +46,8 @@ import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 
 /**
  * Activity for dialogs.
@@ -59,13 +59,13 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
 
     private ComponentProvider componentProvider;
     private DialogPlace place;
-    private UIModel uiModel;
     private ContentDriver driver;
+    private DialogRegistry dialogRegistry;
 
-    public DialogActivity(DialogPlace place, UIModel uiModel, ComponentProvider componentProvider) {
-        this.place = place;
-        this.uiModel = uiModel;
+    public DialogActivity(ComponentProvider componentProvider, DialogPlace place, DialogRegistry dialogRegistry) {
         this.componentProvider = componentProvider;
+        this.place = place;
+        this.dialogRegistry = dialogRegistry;
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
@@ -74,7 +74,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
             Node node = getNode();
 
             String dialogName = place.getDialogName();
-            DialogDefinition dialogDefinition = uiModel.getDialogDefinition(dialogName);
+            DialogDefinition dialogDefinition = dialogRegistry.getDialog(dialogName);
 
             DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
             DialogView dialog = builder.build(dialogDefinition);

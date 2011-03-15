@@ -33,28 +33,34 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
+import java.util.Collection;
+
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionFactory;
 import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
+
 /**
  * NavigationActivity.
  * @author fgrilli
  *
  */
 public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
-    private UIModel uiModel;
-    private ActionFactory actionFactory;
 
-    public NavigationActivity(UIModel uiModel, ActionFactory actionFactory) {
-        this.uiModel = uiModel;
+    private ActionFactory actionFactory;
+    private NavigationRegistry navigationRegistry;
+
+    public NavigationActivity(ActionFactory actionFactory, NavigationRegistry navigationRegistry) {
         this.actionFactory = actionFactory;
+        this.navigationRegistry = navigationRegistry;
     }
+
     public void start(ViewPort viewPort, EventBus eventBus) {
-        NavigationViewImpl menu = new NavigationViewImpl(this, uiModel);
+        Collection<NavigationItemConfiguration> navigationItems = this.navigationRegistry.getMenuDefinition().values();
+        NavigationViewImpl menu = new NavigationViewImpl(this, navigationItems);
         viewPort.setView(menu);
     }
 
@@ -62,5 +68,4 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
         final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
         action.execute();
     }
-
 }
