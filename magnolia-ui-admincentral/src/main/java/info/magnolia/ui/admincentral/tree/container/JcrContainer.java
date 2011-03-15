@@ -33,18 +33,13 @@
  */
 package info.magnolia.ui.admincentral.tree.container;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.tree.column.TreeColumn;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.definition.TreeItemType;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PropertyIterator;
@@ -57,6 +52,11 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.tree.column.TreeColumn;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.definition.TreeItemType;
 
 /**
  * Vaadin container that reads its items from a JCR repository.
@@ -72,14 +72,14 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private TreeDefinition treeDefinition;
 
-    private Map<String, TreeColumn<?,?>> columns;
+    private Map<String, TreeColumn<?, ?>> columns;
 
-    public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?,?>> columns) {
+    public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?, ?>> columns) {
 
         this.treeDefinition = treeDefinition;
         this.columns = columns;
 
-        for (TreeColumn<?,?> treeColumn : columns.values()) {
+        for (TreeColumn<?, ?> treeColumn : columns.values()) {
             addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
     }
@@ -214,31 +214,63 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
             if (itemId.isProperty())
                 return Collections.emptySet();
             Node node = getNode(itemId);
+
             ArrayList<ContainerItemId> c = new ArrayList<ContainerItemId>();
 
             for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+                ArrayList<Node> nodes = new ArrayList<Node>();
                 NodeIterator iterator = node.getNodes();
                 while (iterator.hasNext()) {
                     Node next = (Node) iterator.next();
                     if (itemType.getItemType().equals(next.getPrimaryNodeType().getName())) {
-                        c.add(new ContainerItemId(next));
+                        nodes.add(next);
                     }
+                }
+                // TODO This behaviour is optional in old AdminCentral, you can set a custom comparator.
+                Collections.sort(nodes, new Comparator<Node>() {
+                    public int compare(Node lhs, Node rhs) {
+                        try {
+                            return lhs.getName().compareTo(rhs.getName());
+                        } catch (RepositoryException e) {
+                            throw new RuntimeRepositoryException(e);
+                        }
+                    }
+                });
+                for (Node n : nodes) {
+                    c.add(new ContainerItemId(n));
                 }
             }
 
-            PropertyIterator propertyIterator = node.getProperties();
-            while (propertyIterator.hasNext()) {
-                javax.jcr.Property property = propertyIterator.nextProperty();
-                for (TreeItemType itemType : treeDefinition.getItemTypes()) {
-                    if (!property.getName().startsWith("jcr:")
-                            && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
-                        c.add(new ContainerItemId(node, property.getName()));
-                        break;
-                    }
+            boolean includeProperties = false;
+            for (TreeItemType itemType : this.treeDefinition.getItemTypes()) {
+                if (itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+                    includeProperties = true;
+                    break;
                 }
             }
 
-            // TODO returned items should be sorted by type then name
+            if (includeProperties) {
+                ArrayList<javax.jcr.Property> properties = new ArrayList<javax.jcr.Property>();
+                PropertyIterator propertyIterator = node.getProperties();
+                while (propertyIterator.hasNext()) {
+                    javax.jcr.Property property = propertyIterator.nextProperty();
+                    if (!property.getName().startsWith("jcr:")) {
+                        properties.add(property);
+                    }
+                }
+                Collections.sort(properties, new Comparator<javax.jcr.Property>() {
+                    public int compare(javax.jcr.Property lhs, javax.jcr.Property rhs) {
+                        try {
+                            return lhs.getName().compareTo(rhs.getName());
+                        } catch (RepositoryException e) {
+                            throw new RuntimeRepositoryException(e);
+                        }
+                    }
+                });
+                for (javax.jcr.Property p : properties) {
+                    c.add(new ContainerItemId(node, p.getName()));
+                }
+            }
 
             return Collections.unmodifiableCollection(c);
 
@@ -306,7 +338,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     // FIXME this is the job of a tree builder
-    private TreeColumn<?,?> getColumn(String propertyId) {
+    private TreeColumn<?, ?> getColumn(String propertyId) {
         return columns.get(propertyId);
     }
 
