@@ -35,11 +35,10 @@ package info.magnolia.ui.admincentral.editworkspace.activity;
 
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
+import info.magnolia.ui.admincentral.tree.activity.TreeActivityManager;
+import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
-import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.activity.MVPSubContainerActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.Place;
@@ -72,35 +71,11 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
     @Override
     protected void onStart(ViewPort display, EventBus innerEventBus) {
 
-        EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
+        final EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
 
         // FIXME does it make sense to have activity manager with a single activity? I think no.
-
-        ActivityManager treeActivityManager = new ActivityManager(new ActivityMapper() {
-
-            private TreeActivity treeActivity;
-
-            public Activity getActivity(final Place place) {
-                final String path = ((ItemSelectedPlace)place).getPath();
-                final String treeName = ((ItemSelectedPlace)place).getWorkspace();
-                if(treeActivity == null){
-                    treeActivity = new TreeActivity(treeName, path, getInnerPlaceController(), uiModel, builder);
-                }
-                else{
-                    // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view
-                    treeActivity.update(path);
-                }
-                return treeActivity;
-            }
-        }, innerEventBus);
-
-        ActivityManager detailViewActivityManager = new ActivityManager(new ActivityMapper() {
-            public Activity getActivity(final Place place) {
-                final String path = ((ItemSelectedPlace)place).getPath();
-                final String treeName = ((ItemSelectedPlace)place).getWorkspace();
-                return new DetailViewActivity(treeName, path, uiModel);
-            }
-        }, innerEventBus);
+        final ActivityManager treeActivityManager = new TreeActivityManager(new TreeActivityMapper(getInnerPlaceController(), uiModel, builder), innerEventBus);
+        final ActivityManager detailViewActivityManager = new DetailViewActivityManager(new DetailViewActivityMapper(uiModel), innerEventBus);
 
         treeActivityManager.setDisplay(editWorkspaceView.getTreeDisplay());
         detailViewActivityManager.setDisplay(editWorkspaceView.getDetailDisplay());

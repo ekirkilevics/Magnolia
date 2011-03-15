@@ -34,21 +34,13 @@
 package info.magnolia.ui.admincentral;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
-import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
-import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceActivity;
+import info.magnolia.ui.admincentral.activity.MainActivityManager;
+import info.magnolia.ui.admincentral.activity.MainActivityMapper;
+import info.magnolia.ui.admincentral.activity.NavigationActivityManager;
+import info.magnolia.ui.admincentral.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.admincentral.navigation.NavigationActivity;
-import info.magnolia.ui.admincentral.showcontent.activity.ShowContentActivity;
-import info.magnolia.ui.admincentral.showcontent.activity.SomePlaceActivity;
-import info.magnolia.ui.admincentral.showcontent.place.ShowContentPlace;
-import info.magnolia.ui.admincentral.showcontent.place.SomePlace;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityManager;
-import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.place.PlaceHistoryHandler;
 import info.magnolia.ui.framework.place.PlaceHistoryMapper;
@@ -84,43 +76,14 @@ public class AdminCentralPresenter {
 
         // Browser history integration
         // FIXME make this more dynamic, don't pass the place explicitly
-        PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
-        PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
+        final PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
+        final PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
         final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
+
         historyHandler.register(placeController, eventBus, defaultPlace);
 
-        ActivityManager menuActivityManager = new ActivityManager(new ActivityMapper() {
-            Activity menuActivity = componentProvider.newInstance(NavigationActivity.class);
-            public Activity getActivity(Place place) {
-                return menuActivity;
-            }
-        }, eventBus);
-
-        ActivityManager mainActivityManager = new ActivityManager(new ActivityMapper() {
-
-            public Activity getActivity(final Place place) {
-                if(place instanceof EditWorkspacePlace){
-                    EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-                    // FIXME lets inject the tree builder! byt workspace is a paramter and we need something more flexible
-                    return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel, componentProvider.getComponent(TreeBuilder.class));
-                }
-                else if(place instanceof ShowContentPlace){
-                    ShowContentPlace showContentPlace = (ShowContentPlace)place;
-                    return new ShowContentActivity(showContentPlace.getViewTarget(), showContentPlace.getViewName());
-                }
-                else if(place instanceof DialogPlace){
-                    DialogPlace dialogPlace = (DialogPlace)place;
-                    return new DialogActivity(componentProvider, dialogPlace, dialogRegistry);
-                }
-                else if(place instanceof SomePlace){
-                    SomePlace somePlace = (SomePlace)place;
-                    return new SomePlaceActivity(shell, somePlace.getName());
-                }
-                else{
-                    return null;
-                }
-            }
-        }, eventBus);
+        final ActivityManager menuActivityManager = new NavigationActivityManager(new NavigationActivityMapper(componentProvider), eventBus);
+        final ActivityManager mainActivityManager = new MainActivityManager(new MainActivityMapper(shell, uiModel, dialogRegistry, componentProvider), eventBus);
 
         mainActivityManager.setDisplay(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
         menuActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
