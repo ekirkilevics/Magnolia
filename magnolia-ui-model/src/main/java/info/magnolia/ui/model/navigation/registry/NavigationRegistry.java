@@ -33,9 +33,8 @@
  */
 package info.magnolia.ui.model.navigation.registry;
 
-import java.util.Map;
 
-import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 
 
 /**
@@ -43,7 +42,6 @@ import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
  */
 public interface NavigationRegistry {
 
-    Map<String, NavigationItemConfiguration> getMenuDefinition();
-
+    NavigationDefinition getNavigation();
 
 }

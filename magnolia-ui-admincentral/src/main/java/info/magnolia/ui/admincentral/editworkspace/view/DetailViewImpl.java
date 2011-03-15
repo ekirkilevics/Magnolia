@@ -47,7 +47,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
@@ -61,21 +61,18 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
     private static final long serialVersionUID = -2952607345108242592L;
 
     private static final Logger log = LoggerFactory.getLogger(DetailViewImpl.class);
-    private CommandList commandList;
+    private CommandList actionList;
     private Presenter presenter;
 
     public DetailViewImpl(Presenter presenter) {
         this.presenter = presenter;
-        commandList = new CommandList();
-        setFirstComponent(commandList);
+        actionList = new CommandList();
+        setFirstComponent(actionList);
         setSecondComponent(new DetailForm());
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.ui.admincentral.editworkspace.view.DetailView#showCommands(java.util.List)
-     */
-    public void showCommands(List<Command> commands) {
-        commandList.showCommands(commands);
+    public void showActions(List<MenuItemDefinition> contextMenuItems) {
+        actionList.showActions(contextMenuItems);
     }
 
     /**
@@ -104,24 +101,24 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
             });
         }
 
-        public void showCommands(List<Command> commands) {
+        public void showActions(List<MenuItemDefinition> contextMenuItems) {
             clearCommands();
-            for (Command command : commands) {
-                addCommand(command);
+            for (MenuItemDefinition menuItem : contextMenuItems) {
+                addAction(menuItem);
             }
         }
 
         public void clearCommands() {
-            commandList.removeAllItems();
+            actionList.removeAllItems();
         }
 
-        public void addCommand(Command command) {
-            Object itemId = command.getName();
-            commandList.addItem(itemId);
-            Item commandItem = commandList.getItem(itemId);
-            commandItem.getItemProperty("Command").setValue(command.getLabel());
-            commandList.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + command.getIcon()));
-            log.debug("Added command {} to detail view", command);
+        public void addAction(MenuItemDefinition menuItem) {
+            Object itemId = menuItem.getName();
+            actionList.addItem(itemId);
+            Item commandItem = actionList.getItem(itemId);
+            commandItem.getItemProperty("Command").setValue(menuItem.getLabel());
+            actionList.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon()));
+            log.debug("Added command {} to detail view", menuItem);
         }
     }
 

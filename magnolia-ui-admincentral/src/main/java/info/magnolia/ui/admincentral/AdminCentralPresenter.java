@@ -33,10 +33,7 @@
  */
 package info.magnolia.ui.admincentral;
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.activity.MainActivityManager;
 import info.magnolia.ui.admincentral.activity.MainActivityMapper;
-import info.magnolia.ui.admincentral.activity.NavigationActivityManager;
 import info.magnolia.ui.admincentral.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.framework.activity.ActivityManager;
@@ -46,8 +43,6 @@ import info.magnolia.ui.framework.place.PlaceHistoryHandler;
 import info.magnolia.ui.framework.place.PlaceHistoryMapper;
 import info.magnolia.ui.framework.place.PlaceHistoryMapperImpl;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 import info.magnolia.ui.vaadin.integration.view.ComponentContainerBasedViewPort;
 
 /**
@@ -57,19 +52,18 @@ public class AdminCentralPresenter {
 
     private Shell shell;
     private EventBus eventBus;
-    private UIModel uiModel;
-    private DialogRegistry dialogRegistry;
     private PlaceController placeController;
     private AdminCentralView adminCentralView;
-    private ComponentProvider componentProvider;
+    private NavigationActivityMapper navigationActivityMapper;
+    private MainActivityMapper mainActivityMapper;
 
-    public AdminCentralPresenter(ComponentProvider componentProvider, Shell shell, EventBus eventBus, UIModel uiModel, DialogRegistry dialogRegistry, PlaceController placeController, AdminCentralView adminCentralView) {
-        this.componentProvider = componentProvider;
+    public AdminCentralPresenter(Shell shell, EventBus eventBus, PlaceController placeController, AdminCentralView adminCentralView, NavigationActivityMapper navigationActivityMapper, MainActivityMapper mainActivityMapper) {
         this.shell = shell;
         this.eventBus = eventBus;
-        this.uiModel = uiModel;
         this.placeController = placeController;
         this.adminCentralView = adminCentralView;
+        this.navigationActivityMapper = navigationActivityMapper;
+        this.mainActivityMapper = mainActivityMapper;
     }
 
     public void init() {
@@ -82,11 +76,11 @@ public class AdminCentralPresenter {
 
         historyHandler.register(placeController, eventBus, defaultPlace);
 
-        final ActivityManager navigationActivityManager = new NavigationActivityManager(new NavigationActivityMapper(componentProvider), eventBus);
-        final ActivityManager mainActivityManager = new MainActivityManager(new MainActivityMapper(shell, uiModel, dialogRegistry, componentProvider), eventBus);
+        final ActivityManager menuActivityManager = new ActivityManager(navigationActivityMapper, eventBus);
+        final ActivityManager mainActivityManager = new ActivityManager(mainActivityMapper, eventBus);
 
         mainActivityManager.setDisplay(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
-        navigationActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
+        menuActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
 
         historyHandler.handleCurrentHistory();
     }

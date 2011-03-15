@@ -40,13 +40,13 @@ import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +56,7 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +98,7 @@ public class JcrBrowser extends TreeTable {
     private Map<String, Column<?,?>> columns = new LinkedHashMap<String, Column<?,?>>();
 
 
+    // TODO just pass the tree definition
     public JcrBrowser(String treeName, UIModel uiModel, TreeBuilder builder) throws RepositoryException {
         this.uiModel = uiModel;
         setSizeFull();
@@ -124,16 +126,16 @@ public class JcrBrowser extends TreeTable {
 
     private static class JcrBrowserAction extends Action {
         private static final long serialVersionUID = -5358813017929951816L;
-        private Command command;
+        private ActionDefinition<info.magnolia.ui.model.action.Action> actionDefinition;
 
-        private JcrBrowserAction(Command command) {
-            super(command.getLabel());
-            super.setIcon(new ExternalResource(MgnlContext.getContextPath() + command.getIcon()));
-            this.command = command;
+        private JcrBrowserAction(MenuItemDefinition menuItemDefinition) {
+            super(menuItemDefinition.getLabel());
+            super.setIcon(new ExternalResource(MgnlContext.getContextPath() + menuItemDefinition.getIcon()));
+            this.actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
         public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-            command.execute(item);
+            throw new NotImplementedException("should execute" + actionDefinition);
         }
     }
 
@@ -147,11 +149,12 @@ public class JcrBrowser extends TreeTable {
                 try {
                     ContainerItemId itemId = (ContainerItemId) target;
                     Item item = container.getJcrItem(itemId);
-                    Collection<Command> commands = uiModel.getCommandsForItem(treeDefinition.getName(), item);
+                    // FIXME make that item type, security dependent
                     List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
-                    for (Command command : commands) {
-                        actions.add(new JcrBrowserAction(command));
+                    for(MenuItemDefinition menuItemDefinition: treeDefinition.getContextMenuItems()){
+                        actions.add(new JcrBrowserAction(menuItemDefinition));
                     }
+
                     return actions.toArray(new Action[actions.size()]);
                 } catch (RepositoryException e) {
                     throw new IllegalStateException(e);

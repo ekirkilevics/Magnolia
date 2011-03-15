@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.model.tree.definition;
 
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,9 +66,9 @@ public class TreeDefinition implements Serializable {
 
     private Map<String, TreeColumnDefinition> columns = new LinkedHashMap<String, TreeColumnDefinition>();
 
-    private List<MenuItem> functionMenu = new ArrayList<MenuItem>();
+    private List<MenuItemDefinition> functionMenu = new ArrayList<MenuItemDefinition>();
 
-    private List<MenuItem> contextMenuItems = new ArrayList<MenuItem>();
+    private List<MenuItemDefinition> contextMenuItems = new ArrayList<MenuItemDefinition>();
 
     private List<TreeItemType> itemTypes = new ArrayList<TreeItemType>();
 
@@ -126,23 +128,23 @@ public class TreeDefinition implements Serializable {
         columns.put(treeColumn.getLabel(), treeColumn);
     }
 
-    public List<MenuItem> getFunctionMenu() {
+    public List<MenuItemDefinition> getFunctionMenu() {
         return functionMenu;
     }
 
-    public void setFunctionMenu(List<MenuItem> functionMenu) {
+    public void setFunctionMenu(List<MenuItemDefinition> functionMenu) {
         this.functionMenu = functionMenu;
     }
 
-    public List<MenuItem> getContextMenuItems() {
+    public List<MenuItemDefinition> getContextMenuItems() {
         return contextMenuItems;
     }
 
-    public void setContextMenuItems(List<MenuItem> contextMenuItems) {
+    public void setContextMenuItems(List<MenuItemDefinition> contextMenuItems) {
         this.contextMenuItems = contextMenuItems;
     }
 
-    public boolean addContextMenuItem(MenuItem menuItem) {
+    public boolean addContextMenuItem(MenuItemDefinition menuItem) {
         return contextMenuItems.add(menuItem);
     }
 }

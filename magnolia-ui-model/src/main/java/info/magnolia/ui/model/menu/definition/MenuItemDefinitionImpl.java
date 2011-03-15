@@ -31,26 +31,68 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.registry;
+package info.magnolia.ui.model.menu.definition;
 
-import info.magnolia.ui.admincentral.module.AdminCentralModule;
-import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
+
 
 
 /**
- * Binds the navigation configuration to the AdminCentral configuration.
+ * Simple implementation of {@link MenuItemDefinition}.
  */
-public class NavigationRegistryImpl implements NavigationRegistry {
+public class MenuItemDefinitionImpl implements MenuItemDefinition {
 
-    private AdminCentralModule module;
+    private String i18nBasename;
 
-    public NavigationRegistryImpl(AdminCentralModule module) {
-        this.module = module;
+    private String name;
+
+    private String label;
+
+    private String icon;
+
+    private ActionDefinition<Action> actionDefinition;
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public NavigationDefinition getNavigation() {
-        return module.getNavigation();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public ActionDefinition<Action> getActionDefinition() {
+        return actionDefinition;
+    }
+
+    public void setActionDefinition(ActionDefinition<Action> actionDefinition) {
+        this.actionDefinition = actionDefinition;
+    }
+
+
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
     }
 
 }

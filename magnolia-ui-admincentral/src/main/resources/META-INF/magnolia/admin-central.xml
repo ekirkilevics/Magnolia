@@ -29,6 +29,15 @@
       <name>info.magnolia.ui.model.navigation.registry.NavigationRegistry</name>
       <value>info.magnolia.ui.admincentral.navigation.registry.NavigationRegistryImpl</value>
     </property>
+    <property>
+      <name>info.magnolia.ui.model.navigation.definition.NavigationDefinition</name>
+      <value>info.magnolia.ui.model.navigation.definition.NavigationDefinitionImpl</value>
+    </property>
+    <property>
+      <name>info.magnolia.ui.model.navigation.definition.NavigationItemDefinition</name>
+      <value>info.magnolia.ui.model.navigation.definition.NavigationItemDefinitionImpl</value>
+    </property>
+
   </properties>
 
   <dependencies>

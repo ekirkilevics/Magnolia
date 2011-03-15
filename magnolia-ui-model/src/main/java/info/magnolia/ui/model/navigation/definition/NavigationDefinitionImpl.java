@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,64 +25,31 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.navigation.definition;
 
-import info.magnolia.ui.model.command.Command;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
- * Describes an item on either a function menu or a context menu.
+ * Simple implementation fo {@link NavigationDefinition}.
  */
-public class MenuItem {
+public class NavigationDefinitionImpl implements NavigationDefinition {
 
-    private String name;
-    private String label;
-    private String icon;
-    private Command command;
+    private Collection<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
 
-    public void init() {
-        if (command != null) {
-            command.setName(name);
-            command.setLabel(label);
-            command.setIcon(icon);
-        }
+    public Collection<NavigationItemDefinition> getItems() {
+        return items;
     }
 
-    public Command getCommand() {
-        return command;
+    public void addItem(NavigationItemDefinition item) {
+        items.add(item);
     }
 
-    public void setCommand(Command command) {
-        this.command = command;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
 }

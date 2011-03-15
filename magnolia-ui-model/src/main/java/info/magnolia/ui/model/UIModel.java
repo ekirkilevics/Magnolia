@@ -33,18 +33,14 @@
  */
 package info.magnolia.ui.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.registry.TreeRegistry;
+
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.model.command.Command;
-import info.magnolia.ui.model.tree.definition.MenuItem;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 
 /**
@@ -59,51 +55,6 @@ public class UIModel {
         this.treeRegistry = treeRegistry;
     }
 
-    public void executeCommand(String commandName, String treeName, String path) throws RepositoryException {
-
-        TreeDefinition treeDefinition = getTreeDefinition(treeName);
-
-        Item item = getItem(treeDefinition, path);
-
-        Command action = getCommand(treeDefinition, commandName);
-        if (action.isAvailable(item))
-            action.execute(item);
-    }
-
-    public Command getCommand(TreeDefinition treeDefinition, String commandName) {
-        for (MenuItem mi : treeDefinition.getContextMenuItems()) {
-            Command command = mi.getCommand();
-            if (mi.getName().equals(commandName)) {
-                return command;
-            }
-        }
-        return null;
-    }
-
-    public List<Command> getCommandsForItem(String treeName, String path) throws RepositoryException {
-        TreeDefinition treeDefinition = getTreeDefinition(treeName);
-        return getCommandsForItem(treeName, getItem(treeDefinition, path));
-    }
-
-    public List<Command> getCommandsForItem(String treeName, Item item) {
-        TreeDefinition treeDefinition = getTreeDefinition(treeName);
-        return getCommandsForItem(treeDefinition, item);
-    }
-
-    private List<Command> getCommandsForItem(TreeDefinition treeDefinition, Item item) {
-
-        // For now the commands are configured directly on the context menu configuration with the tree. Should be
-        // configured in a more global scope and the context menu should only refer to them by name.
-
-        List<Command> commands = new ArrayList<Command>();
-        for (MenuItem mi : treeDefinition.getContextMenuItems()) {
-            Command command = mi.getCommand();
-            if (command.isAvailable(item))
-                commands.add(command);
-        }
-        return commands;
-    }
-
     public TreeDefinition getTreeDefinition(String treeName) {
         try {
             return treeRegistry.getTree(treeName);
@@ -112,10 +63,12 @@ public class UIModel {
         }
     }
 
+    // TODO drop or move method
     public Item getItem(String treeName, String path) throws RepositoryException {
         return getItem(getTreeDefinition(treeName), path);
     }
 
+    // TODO drop or move method
     public Item getItem(TreeDefinition treeDefinition, String path) throws RepositoryException {
         String base = treeDefinition.getPath();
         if (!base.equals("/"))
@@ -123,6 +76,7 @@ public class UIModel {
         return JCRUtil.getSession(treeDefinition.getRepository()).getItem(path);
     }
 
+    // TODO drop or move method
     public String getPathInTree(String treeName, Item item) throws RepositoryException {
         TreeDefinition treeDefinition = getTreeDefinition(treeName);
         String base = treeDefinition.getPath();

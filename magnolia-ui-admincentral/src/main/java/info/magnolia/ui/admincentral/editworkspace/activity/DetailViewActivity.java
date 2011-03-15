@@ -33,15 +33,14 @@
  */
 package info.magnolia.ui.admincentral.editworkspace.activity;
 
-import javax.jcr.RepositoryException;
-
-import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.UIModel;
+
+import org.apache.commons.lang.NotImplementedException;
 
 
 /**
@@ -53,7 +52,6 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private String treeName;
     private String path;
     private DetailView detailView;
-    private EventBus eventBus;
 
     public DetailViewActivity(String treeName, String path, UIModel uiModel) {
         this.treeName = treeName;
@@ -63,30 +61,28 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        this.eventBus = eventBus;
         viewPort.setView(detailView);
     }
 
     private void showItem(String path) {
-        try {
-            // Displaying commands for the root node makes no sense
-            if (!"/".equals(path)) {
-                this.path = path;
-                detailView.showCommands(uiModel.getCommandsForItem(treeName, path));
-            }
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+        // Displaying commands for the root node makes no sense
+        if (!"/".equals(path)) {
+            this.path = path;
+            // FIXME should be dependent on the item type
+            detailView.showActions(uiModel.getTreeDefinition(treeName).getContextMenuItems());
         }
     }
 
     public void onCommandSelected(String commandName) {
-        try {
-            uiModel.executeCommand(commandName, treeName, path);
-            // FIXME this has to be more granular
-            eventBus.fireEvent(new ContentChangedEvent(treeName, path));
-        } catch (RepositoryException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        throw new NotImplementedException("Execution of actions is not working!");
+
+//        try {
+//            uiModel.executeCommand(commandName, treeName, path);
+//            // FIXME this has to be more granular
+//            eventBus.fireEvent(new ContentChangedEvent(treeName, path));
+//        } catch (RepositoryException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
     }
 
     @Override

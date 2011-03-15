@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
  * UI component that displays the navigation on the left side in AdminCentral.
@@ -43,10 +43,14 @@ import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
  *
  */
 public interface NavigationView extends View {
+
+    void setPresenter(Presenter presenter);
+
     /**
      * Presenter we have to inform about navigation events.
      */
     public static interface Presenter{
-        void onMenuSelection(NavigationItemConfiguration menuConf);
+        void onMenuSelection(MenuItemDefinition menuItem);
     }
+
 }

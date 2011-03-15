@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.activity;
 
-import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.navigation.NavigationActivity;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
@@ -46,14 +45,15 @@ import info.magnolia.ui.framework.place.Place;
  *
  */
 public class NavigationActivityMapper implements ActivityMapper {
-    private ComponentProvider componentProvider;
 
-    public NavigationActivityMapper(ComponentProvider componentProvider) {
-        this.componentProvider = componentProvider;
+    private NavigationActivity navigationActivity;
+
+    public NavigationActivityMapper(NavigationActivity navigationActivity) {
+        this.navigationActivity = navigationActivity;
     }
 
     public Activity getActivity(Place place) {
-        return componentProvider.newInstance(NavigationActivity.class);
+        return navigationActivity;
     }
 
 }

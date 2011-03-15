@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,23 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.view;
+package info.magnolia.ui.model.menu.definition;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
 
-import java.util.List;
+
 /**
- * The detail view showing the list of available actions and some detail information.
+ * Menu item definition providing configuration for the label and icon. Also provides the
+ * {@link ActionDefinition} executed when the item is clicked.
  */
-public interface DetailView extends View{
-    /**
-     * Presenter that is called when the user selects a command.
-     */
-    public interface Presenter {
-        void onCommandSelected(String commandName);
-    }
+public interface MenuItemDefinition {
 
-    void showActions(List<MenuItemDefinition> contextMenuItems);
+    public String getIcon();
+
+    public String getName();
+
+    public String getLabel();
+
+    String getI18nBasename();
+
+    public ActionDefinition<Action> getActionDefinition();
 
 }

@@ -45,9 +45,14 @@ import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
+import info.magnolia.ui.admincentral.activity.MainActivityMapper;
+import info.magnolia.ui.admincentral.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.admincentral.navigation.NavigationActivity;
+import info.magnolia.ui.admincentral.navigation.NavigationView;
+import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.VaadinTreeBuilder;
@@ -57,6 +62,8 @@ import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.model.action.ActionFactory;
+import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
+import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
 /**
@@ -96,7 +103,15 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(Application.class, this);
         container.addComponent(AdminCentralView.class, AdminCentralViewImpl.class);
         container.addComponent(AdminCentralPresenter.class, AdminCentralPresenter.class);
+        container.addComponent(MainActivityMapper.class, MainActivityMapper.class);
+
+
         container.addComponent(DialogPresenter.class, DialogPresenter.class);
+
+        container.addComponent(NavigationView.class, NavigationViewImpl.class);
+        container.addComponent(NavigationPermissionSchema.class, NavigationPermissionSchemaImpl.class);
+        container.addComponent(NavigationActivityMapper.class, NavigationActivityMapper.class);
+        container.addComponent(NavigationActivity.class, NavigationActivity.class);
 
         container.addComponent(EventBus.class, SimpleEventBus.class);
         container.addComponent(Shell.class, ShellImpl.class);

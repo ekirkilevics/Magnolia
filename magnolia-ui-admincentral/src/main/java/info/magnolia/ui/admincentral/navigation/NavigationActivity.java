@@ -33,15 +33,12 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
-import java.util.Collection;
-
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionFactory;
-import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
-import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
  * NavigationActivity.
@@ -49,23 +46,21 @@ import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
  *
  */
 public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
-
+    private NavigationView view;
     private ActionFactory actionFactory;
-    private NavigationRegistry navigationRegistry;
 
-    public NavigationActivity(ActionFactory actionFactory, NavigationRegistry navigationRegistry) {
+    public NavigationActivity(NavigationView view, ActionFactory actionFactory) {
         this.actionFactory = actionFactory;
-        this.navigationRegistry = navigationRegistry;
+        this.view = view;
+        view.setPresenter(this);
     }
-
     public void start(ViewPort viewPort, EventBus eventBus) {
-        Collection<NavigationItemConfiguration> navigationItems = this.navigationRegistry.getMenuDefinition().values();
-        NavigationViewImpl menu = new NavigationViewImpl(this, navigationItems);
-        viewPort.setView(menu);
+        viewPort.setView(view);
     }
 
-    public void onMenuSelection(NavigationItemConfiguration menuConfig) {
-        final Action action = actionFactory.createAction(menuConfig.getActionDefinition());
+    public void onMenuSelection(MenuItemDefinition menuItem) {
+        final Action action = actionFactory.createAction(menuItem.getActionDefinition());
         action.execute();
     }
+
 }

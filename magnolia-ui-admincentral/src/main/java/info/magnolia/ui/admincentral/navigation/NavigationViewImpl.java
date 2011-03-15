@@ -33,7 +33,14 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
-import java.util.Collection;
+import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
+import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
+import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,12 +60,6 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.themes.BaseTheme;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.model.navigation.definition.NavigationItemConfiguration;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * The Application accordion Menu.
@@ -72,62 +73,64 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     private static final long serialVersionUID = 1L;
 
     private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
-    private final Map<Tab, NavigationItemConfiguration> menuItems = new HashMap<Tab, NavigationItemConfiguration>();
-    private final Map<Tab, String> menuItemKeys = new HashMap<Tab, String>();
+    private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
 
     private Accordion accordion = new Accordion();
 
     private Presenter presenter;
 
-    public NavigationViewImpl(final Presenter presenter, Collection<NavigationItemConfiguration> navigationItems) {
-        this.presenter = presenter;
+    //TODO don't pass the registry but the navigation itself
+    public NavigationViewImpl(NavigationRegistry navigationRegistry, NavigationPermissionSchema permissions) {
         setCompositionRoot(accordion);
         setSizeFull();
 
-        for (NavigationItemConfiguration menuItem : navigationItems) {
-            // check permission
-            if (!isMenuItemRenderable(menuItem)) {
-                continue;
-            }
+        final NavigationDefinition navigation = navigationRegistry.getNavigation();
 
-            // register new top level menu
-            addTab(menuItem.getName(), menuItem);
+        for (NavigationItemDefinition navigationItem : navigation.getItems()) {
+            if(permissions.hasPermission(navigationItem)){
+                // register new top level menu
+                addTab(navigationItem, permissions);
+            }
         }
 
         // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
-        accordion.addListener(new SelectedMenuItemTabChangeListener());
+        accordion.addListener(new SelectedNavigationItemTabChangeListener());
+    }
+
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
     }
 
 
     /**
      * The only way to add tabs to Magnolia menu - ensure he have references to all items.
-     * @param menuItemKey unique menu item key. The key is used for bookmarking and IS visible to the end users ... take care
-     * @param menuItem menu item configuration entry
+     * @param navigationItemDef menu item configuration entry
+     * @param permissions
      */
-    public void addTab(String menuItemKey, NavigationItemConfiguration menuItem) {
+    public void addTab(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
         // layout for sub menu entries
-        Component subMenu = addSubMenuItemsIntoLayout(menuItem);
-        Tab tab = accordion.addTab(subMenu == null ? new Label() : subMenu, getLabel(menuItem), getIcon(menuItem));
+        Component subNavigation = addSubNavigationItems(navigationItemDef, permissions);
+        Tab tab = accordion.addTab(subNavigation == null ? new Label() : subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
         // store tab reference
-        this.menuItems.put(tab, menuItem);
-        this.menuItemKeys.put(tab, menuItemKey);
+        this.navigationItems.put(tab, navigationItemDef);
     }
 
     /**
      * Iterates over sub menu entries and adds them to the layout.
+     * @param permissions
      * @return View with all relevant sub menu entries or null when none exists.
      */
-    private Component addSubMenuItemsIntoLayout(NavigationItemConfiguration menuItem) {
-        if (menuItem.getMenuItems().isEmpty()) {
+    private Component addSubNavigationItems(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
+        if (navigationItemDef.getItems().isEmpty()) {
             return null;
         }
         final GridLayout layout = new GridLayout(1,1);
         layout.setSpacing(true);
         layout.setMargin(true);
         // sub menu items (2 levels only)
-        for (NavigationItemConfiguration sub :  menuItem.getMenuItems().values()) {
-            if (isMenuItemRenderable(sub)) {
-                layout.addComponent(new MenuItem(sub));
+        for (NavigationItemDefinition sub :  navigationItemDef.getItems()) {
+            if (permissions.hasPermission(sub)) {
+                layout.addComponent(new NavigtionItem(sub));
             }
         }
 
@@ -137,11 +140,11 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     /**
      * Converts label key into i18n-ized string.
      */
-    protected String getLabel(NavigationItemConfiguration menuItem) {
+    protected String getLabel(NavigationItemDefinition menuItem) {
         return  MessagesUtil.getWithDefault(menuItem.getLabel(), menuItem.getLabel(), menuItem.getI18nBasename());
     }
 
-    protected Resource getIcon(NavigationItemConfiguration menuItem){
+    protected Resource getIcon(NavigationItemDefinition menuItem){
         if (menuItem.getIcon() == null) {
             return null;
         }
@@ -149,25 +152,17 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     }
 
     /**
-     * @param menuItem
-     * @return <code>true</code> if the the current user is granted access to this menu item, <code>false</code> otherwise
-     */
-    protected boolean isMenuItemRenderable(NavigationItemConfiguration menuItem) {
-        return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(menuItem.getLocation(), Permission.READ);
-    }
-
-    /**
      * Menu item button implementation.
      * @author fgrilli
      *
      */
-    public class MenuItem extends Button {
+    public class NavigtionItem extends Button {
 
         private static final long serialVersionUID = 1L;
 
-        private NavigationItemConfiguration item;
+        private NavigationItemDefinition item;
 
-        public MenuItem(final NavigationItemConfiguration item) {
+        public NavigtionItem(final NavigationItemDefinition item) {
             this.item = item;
         }
 
@@ -201,7 +196,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
      * @author fgrilli
      *
      */
-    public class SelectedMenuItemTabChangeListener implements SelectedTabChangeListener {
+    public class SelectedNavigationItemTabChangeListener implements SelectedTabChangeListener {
 
         private static final long serialVersionUID = 1L;
 
@@ -210,7 +205,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
 
             if (tab != null) {
-                NavigationItemConfiguration menuConfig = menuItems.get(tab);
+                NavigationItemDefinition menuConfig = navigationItems.get(tab);
                 presenter.onMenuSelection(menuConfig);
             }
         }
