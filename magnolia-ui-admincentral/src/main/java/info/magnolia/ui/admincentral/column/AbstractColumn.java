@@ -31,71 +31,72 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
-
-import java.io.Serializable;
+import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
 
 import javax.jcr.Item;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
-
 
 /**
- * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
- * the TreeTable is a NodeData.
+ * Base class for tree columns.
  *
+ * @param <E> type of the hosted values of this column.
+ * @param <D> type of the definition for this column.
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataValueColumn extends TreeColumn<String,NodeDataValueColumnDefinition> implements Serializable {
+public abstract class AbstractColumn<E,D extends TreeColumnDefinition> implements Column<E, TreeColumnDefinition> {
 
-    private static final long serialVersionUID = -6032077132567486333L;
+    private final D definition;
 
-    private boolean editable = false;
-
-    public boolean isEditable() {
-        return editable;
+    public AbstractColumn(D def) {
+        this.definition = def;
     }
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public D getDefinition() {
+        return this.definition;
     }
 
-    public NodeDataValueColumn(NodeDataValueColumnDefinition def) {
-        super(def);
-    }
-
-    @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return property.getString();
-        }
-        return "";
-    }
-
-    @Override
+    /**
+     * @return Field used when editing this column. Defaults to null.
+     */
     public Field getEditField(Item item) {
-        return (editable && item instanceof Property) ? new TextField() : null;
+        return null;
     }
 
-    @Override
+    /**
+     * Type of the column: Subclasses have to make sure the getValue methods return instances of
+     * this type!
+     */
+    public abstract Class<E> getType();
+    /**
+     * @return value to be displayed in the corresponding column (from the provided Node)
+     */
+    public abstract Object getValue(Item item) throws RepositoryException;
+
+    /**
+     * Set value of Property for the provided node to the new value.
+     */
     public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            property.setValue((String) newValue);
-            property.getSession().save();
-        }
+    }
+
+    public int getWidth() {
+        return getDefinition().getWidth();
+    }
+
+    public void setWidth(int newWidth) {
+        getDefinition().setWidth(newWidth);
+    }
+
+    public String getLabel() {
+        return getDefinition().getLabel();
+    }
+
+    public void setLabel(String newLabel) {
+        getDefinition().setLabel(newLabel);
     }
 }

@@ -31,37 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
+import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
 
 import java.io.Serializable;
 
 import javax.jcr.Item;
-import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
+
 /**
- * A column that displays a NodeData value when viewing a content node. Used in the website tree for
- * the 'Title' column.
+ * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
+ * the TreeTable is a NodeData.
  *
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataColumn extends TreeColumn<String, NodeDataColumnDefinition> implements Serializable {
+public class NodeDataValueColumn extends AbstractColumn<String,NodeDataValueColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = 979787074349524725L;
+    private static final long serialVersionUID = -6032077132567486333L;
 
     private boolean editable = false;
-
-    public NodeDataColumn(NodeDataColumnDefinition def) {
-        super(def);
-    }
 
     public boolean isEditable() {
         return editable;
@@ -71,19 +67,8 @@ public class NodeDataColumn extends TreeColumn<String, NodeDataColumnDefinition>
         this.editable = editable;
     }
 
-    public String getNodeDataName() {
-        return getDefinition().getNodeDataName();
-    }
-
-    public void setNodeDataName(String nodeDataName) {
-        getDefinition().setNodeDataName(nodeDataName);
-    }
-
-    @Override
-    public Field getEditField(Item item) {
-        if (item instanceof Node && editable)
-            return new TextField();
-        return null;
+    public NodeDataValueColumn(NodeDataValueColumnDefinition def) {
+        super(def);
     }
 
     @Override
@@ -92,25 +77,25 @@ public class NodeDataColumn extends TreeColumn<String, NodeDataColumnDefinition>
     }
 
     @Override
-    public String getValue(Item item) throws RepositoryException {
-
-        if (item instanceof Node) {
-            Node node = (Node) item;
-
-            if (node.hasProperty(getNodeDataName()))
-                return node.getProperty(getNodeDataName()).getString();
+    public Object getValue(Item item) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            return property.getString();
         }
         return "";
     }
 
     @Override
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public Field getEditField(Item item) {
+        return (editable && item instanceof Property) ? new TextField() : null;
+    }
 
-        if (item instanceof Node) {
-            Node node = (Node) item;
-            node.setProperty(getNodeDataName(), (String) newValue);
-            JCRMetadataUtil.updateMetaData(node);
-            node.getSession().save();
+    @Override
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+        if (item instanceof Property) {
+            Property property = (Property) item;
+            property.setValue((String) newValue);
+            property.getSession().save();
         }
     }
 }

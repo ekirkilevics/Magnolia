@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
@@ -53,7 +53,7 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class LabelColumn extends TreeColumn<String,LabelColumnDefinition> implements Serializable {
+public class LabelColumn extends AbstractColumn<String,LabelColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 

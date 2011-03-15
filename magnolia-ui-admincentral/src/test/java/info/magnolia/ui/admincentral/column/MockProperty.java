@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import java.io.InputStream;
 import java.math.BigDecimal;

@@ -31,65 +31,86 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.FastDateFormat;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
 
 /**
- * Column that displays a property for a nodes MetaData. Used to display the modification date of
- * content nodes.
+ * A column that displays a NodeData value when viewing a content node. Used in the website tree for
+ * the 'Title' column.
+ *
+ * @author dlipp
+ * @author tmattsson
  */
-public class MetaDataColumn extends TreeColumn<String,MetaDataColumnDefinition> implements Serializable {
+public class NodeDataColumn extends AbstractColumn<String, NodeDataColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -2788490588550009503L;
+    private static final long serialVersionUID = 979787074349524725L;
 
-    private String datePattern;
+    private boolean editable = false;
 
-    protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
-
-    public MetaDataColumn(MetaDataColumnDefinition def) {
+    public NodeDataColumn(NodeDataColumnDefinition def) {
         super(def);
     }
 
-    // TODO check whether this couldn't be replaced by impl. from TreeColumn
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public String getNodeDataName() {
+        return getDefinition().getNodeDataName();
+    }
+
+    public void setNodeDataName(String nodeDataName) {
+        getDefinition().setNodeDataName(nodeDataName);
+    }
+
+    @Override
+    public Field getEditField(Item item) {
+        if (item instanceof Node && editable)
+            return new TextField();
+        return null;
+    }
+
     @Override
     public Class<String> getType() {
         return String.class;
     }
 
     @Override
-    public Object getValue(Item item) throws RepositoryException {
+    public String getValue(Item item) throws RepositoryException {
+
         if (item instanceof Node) {
             Node node = (Node) item;
-            Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
-            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
-            final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
-            return date != null ? DATE_FORMAT.format(date.getTime()) : "";
+
+            if (node.hasProperty(getNodeDataName()))
+                return node.getProperty(getNodeDataName()).getString();
         }
         return "";
     }
 
-    /**
-     * @param datePattern a {@link SimpleDateFormat} compatible pattern
-     */
-    public void setDatePattern(String datePattern) {
-        this.datePattern = datePattern;
-    }
-    /**
-     * @return {@link SimpleDateFormat} compatible pattern
-     */
-    public String getDatePattern() {
-        return datePattern;
+    @Override
+    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            node.setProperty(getNodeDataName(), (String) newValue);
+            JCRMetadataUtil.updateMetaData(node);
+            node.getSession().save();
+        }
     }
 }

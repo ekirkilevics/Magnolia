@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
@@ -42,61 +42,43 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Field;
 
 /**
- * Base class for tree columns.
+ * Defines a Column - e.g. for lists or trees.
  *
- * @param <E> type of the hosted values of this column.
- * @param <D> type of the definition for this column.
+ * @param <E>
+ *            type of the hosted values of this column.
+ * @param <D>
+ *            type of the definition for this column.
  * @author dlipp
- * @author tmattsson
  */
-public abstract class TreeColumn<E,D extends TreeColumnDefinition> {
+public interface Column<E, D extends TreeColumnDefinition> {
 
-    private final D definition;
-
-    public TreeColumn(D def) {
-        this.definition = def;
-    }
-
-    public D getDefinition() {
-        return this.definition;
-    }
+    D getDefinition();
 
     /**
      * @return Field used when editing this column. Defaults to null.
      */
-    public Field getEditField(Item item) {
-        return null;
-    }
+    Field getEditField(Item item);
 
     /**
-     * Type of the column: Subclasses have to make sure the getValue methods return instances of
-     * this type!
+     * Type of the column: Subclasses have to make sure the getValue methods return instances of this type!
      */
-    public abstract Class<E> getType();
+    Class<E> getType();
+
     /**
      * @return value to be displayed in the corresponding column (from the provided Node)
      */
-    public abstract Object getValue(Item item) throws RepositoryException;
+    Object getValue(Item item) throws RepositoryException;
 
     /**
      * Set value of Property for the provided node to the new value.
      */
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
-    }
+    void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException;
 
-    public int getWidth() {
-        return getDefinition().getWidth();
-    }
+    int getWidth();
 
-    public void setWidth(int newWidth) {
-        getDefinition().setWidth(newWidth);
-    }
+    void setWidth(int newWidth);
 
-    public String getLabel() {
-        return getDefinition().getLabel();
-    }
+    String getLabel();
 
-    public void setLabel(String newLabel) {
-        getDefinition().setLabel(newLabel);
-    }
+    void setLabel(String newLabel);
 }

@@ -33,6 +33,18 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
+import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.definition.TreeItemType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -64,17 +76,6 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TableFieldFactory;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.admincentral.tree.column.TreeColumn;
-import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.command.Command;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.definition.TreeItemType;
 
 /**
  * User interface component that extends TreeTable and uses a TreeDefinition for layout and invoking command callbacks.
@@ -93,7 +94,7 @@ public class JcrBrowser extends TreeTable {
     private Object selectedItemId = null;
     private Object selectedPropertyId = null;
 
-    private Map<String, TreeColumn<?,?>> columns = new LinkedHashMap<String, TreeColumn<?,?>>();
+    private Map<String, Column<?,?>> columns = new LinkedHashMap<String, Column<?,?>>();
 
 
     public JcrBrowser(String treeName, UIModel uiModel, TreeBuilder builder) throws RepositoryException {
@@ -323,7 +324,7 @@ public class JcrBrowser extends TreeTable {
                 try {
                     if (selectedItemId != null) {
                         if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                            TreeColumn<?,?> column = columns.get((String) propertyId);
+                            Column<?,?> column = columns.get((String) propertyId);
                             ContainerItemId containerItemId = (ContainerItemId) itemId;
                             Field field = column.getEditField(JcrBrowser.this.container.getJcrItem(containerItemId));
                             if (field != null) {

@@ -417,7 +417,7 @@
           <sv:value>dc77bed1-6beb-49f2-a588-4a7590bfe530</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.OpenPageCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.action.OpenPageCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -491,7 +491,7 @@
           <sv:value>3e11c503-55bb-464f-8593-32a324eabbaf</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.AddPageCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.action.AddPageCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -568,7 +568,7 @@
           <sv:value>9b88211e-7682-4ba8-9900-8fabae052be2</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.DeleteItemCommand</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.action.DeleteItemCommand</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>

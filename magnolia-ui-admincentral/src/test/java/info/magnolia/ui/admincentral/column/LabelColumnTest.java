@@ -31,11 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import info.magnolia.ui.admincentral.column.LabelColumn;
 import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
 
 import javax.jcr.RepositoryException;

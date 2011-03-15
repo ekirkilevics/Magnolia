@@ -31,30 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.jcr.Item;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 
 /**
- * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
- * is a NodeData.
+ * Column that displays a property for a nodes MetaData. Used to display the modification date of
+ * content nodes.
  */
-public class NodeDataTypeColumn extends TreeColumn<String, NodeDataTypeColumnDefinition> implements Serializable {
+public class MetaDataColumn extends AbstractColumn<String,MetaDataColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -2594102704173600906L;
+    private static final long serialVersionUID = -2788490588550009503L;
 
-    public NodeDataTypeColumn(NodeDataTypeColumnDefinition def) {
+    private String datePattern;
+
+    protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
+
+    public MetaDataColumn(MetaDataColumnDefinition def) {
         super(def);
     }
 
+    // TODO check whether this couldn't be replaced by impl. from TreeColumn
     @Override
     public Class<String> getType() {
         return String.class;
@@ -62,10 +70,26 @@ public class NodeDataTypeColumn extends TreeColumn<String, NodeDataTypeColumnDef
 
     @Override
     public Object getValue(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return PropertyType.nameFromValue(property.getType());
+        if (item instanceof Node) {
+            Node node = (Node) item;
+            Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
+            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
+            final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
+            return date != null ? DATE_FORMAT.format(date.getTime()) : "";
         }
         return "";
+    }
+
+    /**
+     * @param datePattern a {@link SimpleDateFormat} compatible pattern
+     */
+    public void setDatePattern(String datePattern) {
+        this.datePattern = datePattern;
+    }
+    /**
+     * @return {@link SimpleDateFormat} compatible pattern
+     */
+    public String getDatePattern() {
+        return datePattern;
     }
 }

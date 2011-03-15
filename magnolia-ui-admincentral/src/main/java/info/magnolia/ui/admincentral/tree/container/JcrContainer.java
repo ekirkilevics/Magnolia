@@ -33,6 +33,12 @@
  */
 package info.magnolia.ui.admincentral.tree.container;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.definition.TreeItemType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,6 +46,7 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PropertyIterator;
@@ -52,11 +59,6 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.admincentral.tree.column.TreeColumn;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.definition.TreeItemType;
 
 /**
  * Vaadin container that reads its items from a JCR repository.
@@ -72,14 +74,14 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private TreeDefinition treeDefinition;
 
-    private Map<String, TreeColumn<?, ?>> columns;
+    private Map<String, Column<?, ?>> columns;
 
-    public JcrContainer(TreeDefinition treeDefinition, Map<String, TreeColumn<?, ?>> columns) {
+    public JcrContainer(TreeDefinition treeDefinition, Map<String, Column<?, ?>> columns) {
 
         this.treeDefinition = treeDefinition;
         this.columns = columns;
 
-        for (TreeColumn<?, ?> treeColumn : columns.values()) {
+        for (Column<?, ?> treeColumn : columns.values()) {
             addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
     }
@@ -338,7 +340,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     // FIXME this is the job of a tree builder
-    private TreeColumn<?, ?> getColumn(String propertyId) {
+    private Column<?, ?> getColumn(String propertyId) {
         return columns.get(propertyId);
     }
 

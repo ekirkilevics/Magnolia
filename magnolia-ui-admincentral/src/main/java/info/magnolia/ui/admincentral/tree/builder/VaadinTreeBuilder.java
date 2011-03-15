@@ -33,14 +33,14 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import info.magnolia.ui.admincentral.tree.column.LabelColumn;
-import info.magnolia.ui.admincentral.tree.column.MetaDataColumn;
-import info.magnolia.ui.admincentral.tree.column.NodeDataColumn;
-import info.magnolia.ui.admincentral.tree.column.NodeDataTypeColumn;
-import info.magnolia.ui.admincentral.tree.column.NodeDataValueColumn;
-import info.magnolia.ui.admincentral.tree.column.StatusColumn;
-import info.magnolia.ui.admincentral.tree.column.TemplateColumn;
-import info.magnolia.ui.admincentral.tree.column.TreeColumn;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.column.LabelColumn;
+import info.magnolia.ui.admincentral.column.MetaDataColumn;
+import info.magnolia.ui.admincentral.column.NodeDataColumn;
+import info.magnolia.ui.admincentral.column.NodeDataTypeColumn;
+import info.magnolia.ui.admincentral.column.NodeDataValueColumn;
+import info.magnolia.ui.admincentral.column.StatusColumn;
+import info.magnolia.ui.admincentral.column.TemplateColumn;
 import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
 import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
 import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
@@ -55,7 +55,7 @@ import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
  */
 public class VaadinTreeBuilder implements TreeBuilder {
 
-    public TreeColumn<?,?> createTreeColumn(TreeColumnDefinition definition) {
+    public Column<?,?> createTreeColumn(TreeColumnDefinition definition) {
 
         // TODO: quick hack - check how to make more nice/flexible
         if (definition instanceof LabelColumnDefinition) {

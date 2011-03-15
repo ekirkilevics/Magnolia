@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRMetadataUtil;
@@ -56,7 +56,7 @@ import com.vaadin.ui.HorizontalLayout;
  * @author dlipp
  * @author tmattsson
  */
-public class StatusColumn extends TreeColumn<Component,StatusColumnDefinition> implements Serializable {
+public class StatusColumn extends AbstractColumn<Component,StatusColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 

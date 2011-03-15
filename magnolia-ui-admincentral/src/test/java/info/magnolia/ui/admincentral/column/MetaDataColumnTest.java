@@ -31,11 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import static junit.framework.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.ui.admincentral.column.MetaDataColumn;
 import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
 
 import java.util.Calendar;

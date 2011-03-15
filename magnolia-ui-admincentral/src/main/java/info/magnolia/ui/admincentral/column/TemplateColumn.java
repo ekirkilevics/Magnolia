@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.column;
+package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
@@ -62,7 +62,7 @@ import com.vaadin.ui.NativeSelect;
  * @author dlipp
  * @author tmattsson
  */
-public class TemplateColumn extends TreeColumn<String,TemplateColumnDefinition> implements Serializable {
+public class TemplateColumn extends AbstractColumn<String,TemplateColumnDefinition> implements Serializable {
 
     public static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":template";
 
