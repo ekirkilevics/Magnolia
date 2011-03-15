@@ -31,41 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.showcontent;
+package info.magnolia.ui.admincentral.showcontent.activity;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.admincentral.showcontent.view.IFrameView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 
-
 /**
- * Shows a target page in an iframe.
+ * Some place activity.
+ * @author fgrilli
+ *
  */
-public class ShowContentActivity extends AbstractActivity {
-
-    private String viewTarget;
-
-    private String viewName;
-
-    private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
+public class SomePlaceActivity extends AbstractActivity{
+    private Shell shell;
+    private String placeName;
+    public SomePlaceActivity(Shell shell, String placeName) {
+        this.shell = shell;
+        this.placeName = placeName;
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        try {
-            // FIXME viewName = className? what name?
-            viewPort.setView((View) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+        shell.showNotification(placeName);
     }
-
 }
