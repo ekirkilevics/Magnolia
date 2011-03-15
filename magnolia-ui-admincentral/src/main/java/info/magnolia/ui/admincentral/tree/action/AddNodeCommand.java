@@ -77,8 +77,6 @@ public class AddNodeCommand extends Command {
 
             node.getSession().save();
 
-            // TODO: the new node needs to appear in a specific order!
-
 //            if (jcrBrowser != null)
 //            jcrBrowser.addItem(new ContainerItemId(newChild));
 //            if (jcrBrowser != null)
