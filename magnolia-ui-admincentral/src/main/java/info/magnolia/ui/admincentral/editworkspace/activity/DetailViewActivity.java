@@ -37,6 +37,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
+import info.magnolia.ui.admincentral.editworkspace.view.DetailViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
@@ -57,7 +58,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     public DetailViewActivity(String treeName, String path, UIModel uiModel) {
         this.treeName = treeName;
         this.uiModel = uiModel;
-        detailView = new DetailView(this);
+        detailView = new DetailViewImpl(this);
         showItem(path);
     }
 

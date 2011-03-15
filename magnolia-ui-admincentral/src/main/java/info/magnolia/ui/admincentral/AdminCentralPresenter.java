@@ -82,11 +82,11 @@ public class AdminCentralPresenter {
 
         historyHandler.register(placeController, eventBus, defaultPlace);
 
-        final ActivityManager menuActivityManager = new NavigationActivityManager(new NavigationActivityMapper(componentProvider), eventBus);
+        final ActivityManager navigationActivityManager = new NavigationActivityManager(new NavigationActivityMapper(componentProvider), eventBus);
         final ActivityManager mainActivityManager = new MainActivityManager(new MainActivityMapper(shell, uiModel, dialogRegistry, componentProvider), eventBus);
 
         mainActivityManager.setDisplay(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
-        menuActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
+        navigationActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
 
         historyHandler.handleCurrentHistory();
     }
