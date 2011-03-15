@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.dialog.activity;
 
+import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -44,6 +45,7 @@ import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.editor.ContentDriver;
+import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
@@ -104,7 +106,9 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
         try {
             driver.flush(getNode());
 
-            // TODO validation errors that occurred should be displayed here
+            List<EditorError> unconsumedErrors = driver.getErrors();
+
+            // TODO unconsumed validation errors that occurred should be displayed here
 
             // TODO if there was no errors then the dialog should close and we return to the previous place
 

@@ -50,7 +50,7 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.dialog.view.DialogViewImpl;
 import info.magnolia.ui.admincentral.dialog.view.VaadinDialogField;
-import info.magnolia.ui.framework.editor.Editor;
+import info.magnolia.ui.framework.editor.ValueEditor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
@@ -89,16 +89,16 @@ public class VaadinDialogBuilder implements DialogBuilder {
 
                 Class<?> type = getTypeFromDialogControl(fieldDefinition);
 
-                final Editor<?> editor = addField(
+                final ValueEditor<?> editor = addField(
                         dialog,
                         dialogDefinition,
                         tabDefinition,
                         fieldDefinition,
                         type);
 
-                if(editor != null){
+                if (editor != null){
                     //FIXME we add the field, so we could add the editor then?
-                    dialog.addEditor(editor);
+                    dialog.addEditor(tabDefinition, editor);
                 }
             }
         }
@@ -126,7 +126,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
         dialog.addTab(tabDefinition.getName(), label);
     }
 
-    public Editor addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, Class<?> type) {
+    public ValueEditor<?> addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, Class<?> type) {
         Messages messages = getMessages(dialogDefinition, tabDefinition, fieldDefinition);
 
         // TODO for controlType=static we need something completely different, it isnt even an editor...

@@ -33,11 +33,11 @@
  */
 package info.magnolia.ui.framework.editor;
 
-import info.magnolia.exception.RuntimeRepositoryException;
-
 import java.util.Calendar;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+
+import info.magnolia.exception.RuntimeRepositoryException;
 
 
 /**
@@ -47,57 +47,76 @@ import javax.jcr.RepositoryException;
  */
 public class ContentDriver extends AbstractDriver<Node> {
 
-    public void edit(Node node) {
+    public void edit(final Node node) {
 
-        // TODO default values should also be set here
+        // TODO default values also need to be set, but we don't have the definition available here
 
-        try {
-            for (Editor<Object> editor : getView().getEditors()) {
-                String name = editor.getName();
-                Class<?> type = editor.getType();
-                if (type.equals(String.class)) {
-                    if (node.hasProperty(name))
-                        editor.setValue(node.getProperty(name).getString());
-                } else if (type.equals(Calendar.class)) {
-                    if (node.hasProperty(name))
-                        editor.setValue(node.getProperty(name).getDate());
+        visitEditors(getView(), new EditorVisitor() {
+            public void visit(Editor editor) {
+                try {
+                    if (editor instanceof ValueEditor) {
+                        ValueEditor valueEditor = (ValueEditor) editor;
+                        String name = valueEditor.getPath();
+                        Class type = valueEditor.getType();
+                        if (type.equals(String.class)) {
+                            if (node.hasProperty(name))
+                                valueEditor.setValue(node.getProperty(name).getString());
+                        } else if (type.equals(Calendar.class)) {
+                            if (node.hasProperty(name))
+                                valueEditor.setValue(node.getProperty(name).getDate());
+                        }
+                    }
+
+                } catch (RepositoryException e) {
+                    throw new RuntimeRepositoryException(e);
                 }
             }
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        });
     }
 
-    public void flush(Node node) {
+    public void flush(final Node node) {
 
         // Clear any errors from a previous flush
         super.clearErrors();
 
         try {
-            for (Editor<Object> editor : getView().getEditors()) {
-                String name = editor.getName();
-                Class<?> type = editor.getType();
-                Object value = editor.getValue();
-                if (!hasErrors(name)) {
-                    if (type.equals(String.class)) {
-                        node.setProperty(name, (String) value);
-                    } else if (type.equals(Calendar.class)) {
-                        node.setProperty(name, (Calendar) value);
+            visitEditors(getView(), new EditorVisitor() {
+                public void visit(Editor editor) {
+                    if (editor instanceof ValueEditor) {
+                        ValueEditor valueEditor = (ValueEditor) editor;
+                        String path = valueEditor.getPath();
+                        Object value = valueEditor.getValue();
+                        if (!hasErrors(path)) {
+                            try {
+                                if (value instanceof String) {
+                                    node.setProperty(path, (String) value);
+                                } else if (value instanceof Calendar) {
+                                    node.setProperty(path, (Calendar) value);
+                                }
+                            } catch (RepositoryException e) {
+                                throw new RuntimeRepositoryException(e);
+                            }
+                        }
                     }
                 }
-            }
+            });
             if (!hasErrors())
                 node.getSession().save();
             else {
-                for (EditorError error : super.getErrors()) {
-                    if (error.getEditor() instanceof HasEditorErrors) {
-                        HasEditorErrors has = (HasEditorErrors) error.getEditor();
-                        has.showErrors(getErrors());
+
+                // TODO should we visit depth-first instead so editors can see if errors were consumed by sub-editors?
+
+                visitEditors(getView(), new EditorVisitor() {
+                    public void visit(Editor editor) {
+                        if (editor instanceof HasEditorErrors) {
+                            ((HasEditorErrors) editor).showErrors(getAllErrors());
+                        }
                     }
-                }
+                });
             }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
+
 }

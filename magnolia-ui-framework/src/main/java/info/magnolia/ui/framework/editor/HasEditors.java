@@ -38,11 +38,7 @@ import java.util.Collection;
 /**
  * Exposes editors. Used by the Driver to interact with a view.
  */
-public interface HasEditors {
+public interface HasEditors extends Editor {
 
-    Collection<Editor> getEditors();
-
-    // FIXME is this used at all?
-    <T extends Class<?>> Editor<T> getEditor(String name);
-
+    Collection<? extends Editor> getEditors();
 }

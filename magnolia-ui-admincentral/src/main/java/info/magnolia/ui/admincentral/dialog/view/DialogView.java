@@ -41,7 +41,7 @@ import info.magnolia.ui.framework.view.View;
  *
  * @author tmattsson
  */
-public interface DialogView extends View, HasEditors{
+public interface DialogView extends View, HasEditors {
 
     void close();
 

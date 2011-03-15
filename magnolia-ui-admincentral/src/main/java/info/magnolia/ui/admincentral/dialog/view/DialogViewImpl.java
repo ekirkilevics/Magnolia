@@ -33,8 +33,10 @@
  */
 package info.magnolia.ui.admincentral.dialog.view;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.event.ShortcutAction;
@@ -48,6 +50,11 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import info.magnolia.ui.framework.editor.Editor;
+import info.magnolia.ui.framework.editor.EditorError;
+import info.magnolia.ui.framework.editor.HasEditorErrors;
+import info.magnolia.ui.framework.editor.HasEditors;
+import info.magnolia.ui.framework.editor.ValueEditor;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Vaadin specific dialog implementation.
@@ -56,11 +63,39 @@ import info.magnolia.ui.framework.editor.Editor;
  */
 public class DialogViewImpl extends Window implements DialogView {
 
+    private class Tab implements HasEditors, HasEditorErrors {
+
+        private String name;
+        private List<Editor> editors = new ArrayList<Editor>();
+
+        public Tab(String name) {
+            this.name = name;
+        }
+
+        public void showErrors(List<EditorError> errors) {
+            for (EditorError error : errors) {
+                if (editors.indexOf(error.getEditor()) != -1) {
+                    System.out.println("Error in tab " + name);
+                    // TODO should highlight the tab to indicate the error
+                }
+            }
+            // TODO if no errors are found we must remove any previous highlighting
+        }
+
+        public Collection<Editor> getEditors() {
+            return editors;
+        }
+
+        public void addEditor(Editor editor) {
+            this.editors.add(editor);
+        }
+    }
+
     private Presenter presenter;
     private VerticalTabSheet tabSheet;
     private HorizontalLayout description;
 
-    private Map<String, Editor> editorMappings = new HashMap<String, Editor>();
+    private Map<String, Tab> tabs = new HashMap<String, Tab>();
 
     public DialogViewImpl() {
 
@@ -121,6 +156,7 @@ public class DialogViewImpl extends Window implements DialogView {
         grid.setSpacing(true);
         grid.setMargin(false);
         tabSheet.addTab(name, label, grid);
+        tabs.put(name, new Tab(name));
     }
 
     public VaadinDialogField addField(String tabName, String name, String label, String description, Component field) {
@@ -137,16 +173,12 @@ public class DialogViewImpl extends Window implements DialogView {
         return this;
     }
 
-    public Collection<Editor> getEditors() {
-        return editorMappings.values();
+    public Collection<? extends Editor> getEditors() {
+        return tabs.values();
     }
 
-    public Editor getEditor(String name) {
-        return editorMappings.get(name);
-    }
-
-    public void addEditor(Editor editor) {
-        editorMappings.put(editor.getName(), editor);
+    public void addEditor(TabDefinition tabDefinition, ValueEditor editor) {
+        tabs.get(tabDefinition.getName()).addEditor(editor);
     }
 
     @Override

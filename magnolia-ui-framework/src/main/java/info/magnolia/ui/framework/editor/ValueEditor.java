@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -34,9 +34,28 @@
 package info.magnolia.ui.framework.editor;
 
 /**
- * Describes an editor.
+ * Editor for editing a value.
  *
+ * @param <T>
  * @author tmattsson
  */
-public interface Editor {
+public interface ValueEditor<T> extends Editor {
+
+    /**
+     * Sets the value.
+     *
+     * @param object
+     */
+    void setValue(T object);
+
+    /**
+     * Gets the current value.
+     *
+     * @return the value currently held by the editor.
+     */
+    T getValue();
+
+    String getPath();
+
+    Class<T> getType();
 }

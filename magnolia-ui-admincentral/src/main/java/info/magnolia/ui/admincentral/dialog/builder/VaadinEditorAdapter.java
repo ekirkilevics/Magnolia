@@ -38,29 +38,29 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.ui.Field;
-
 import info.magnolia.ui.admincentral.dialog.view.VaadinDialogField;
-import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.EditorDelegate;
 import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.editor.HasEditorDelegate;
 import info.magnolia.ui.framework.editor.HasEditorErrors;
+import info.magnolia.ui.framework.editor.ValueEditor;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 
 /**
  * Adapter class that adapts a Vaadin Field as an Editor.
  *
+ * @param <T> the type of the value that the editor works with.
  * @author tmattsson
  */
-public class VaadinEditorAdapter implements Editor, HasEditorDelegate, HasEditorErrors {
+public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate, HasEditorErrors {
 
     private Field field;
     private FieldDefinition fieldDefinition;
     private EditorDelegate delegate;
-    private Class<?> type;
+    private Class<T> type;
     private VaadinDialogField vaadinDialogField;
 
-    public VaadinEditorAdapter(Field field, FieldDefinition fieldDefinition, Class<?> type, VaadinDialogField vaadinDialogField) {
+    public VaadinEditorAdapter(Field field, FieldDefinition fieldDefinition, Class<T> type, VaadinDialogField vaadinDialogField) {
         this.field = field;
         this.fieldDefinition = fieldDefinition;
         this.type = type;
@@ -71,8 +71,8 @@ public class VaadinEditorAdapter implements Editor, HasEditorDelegate, HasEditor
         field.setValue(object);
     }
 
-    public Object getValue() {
-        Object value = field.getValue();
+    public T getValue() {
+        T value = (T)field.getValue();
 
         // TODO This is very rudimentary validation
 
@@ -93,12 +93,13 @@ public class VaadinEditorAdapter implements Editor, HasEditorDelegate, HasEditor
         for (EditorError error : errors) {
             if (error.getEditor() == this) {
                 vaadinDialogField.setError(error.getMessage());
+                error.setConsumed(true);
             }
         }
         // TODO should it clear any error(s) if there's none for this editor in the list?
     }
 
-    public String getName() {
+    public String getPath() {
         return fieldDefinition.getName();
     }
 

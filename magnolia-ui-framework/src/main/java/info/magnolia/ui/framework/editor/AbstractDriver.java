@@ -56,6 +56,7 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         private Editor editor;
         private String message;
         private Object value;
+        private boolean consumed;
 
         private SimpleEditorError(String path, Editor editor, String message, Object value) {
             this.path = path;
@@ -79,6 +80,21 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         public Object getValue() {
             return value;
         }
+
+        public boolean isConsumed() {
+            return consumed;
+        }
+
+        public void setConsumed(boolean consumed) {
+            this.consumed = consumed;
+        }
+    }
+
+    /**
+     * Interface for use by subclasses when iterating the editor hierarchy.
+     */
+    protected static interface EditorVisitor {
+        void visit(Editor editor);
     }
 
     private List<EditorError> errors = new ArrayList<EditorError>();
@@ -88,15 +104,18 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         this.view = view;
 
         // TODO should this really happen here?
-        for (final Editor editor : view.getEditors()) {
-            if (editor instanceof HasEditorDelegate) {
-                ((HasEditorDelegate)editor).setDelegate(new EditorDelegate() {
-                    public void recordError(String message, Object value) {
-                        addError(editor.getName(), editor, message, value);
-                    }
-                });
+
+        visitEditors(view, new EditorVisitor() {
+            public void visit(final Editor editor) {
+                if ((editor instanceof HasEditorDelegate) && (editor instanceof ValueEditor)) {
+                    ((HasEditorDelegate)editor).setDelegate(new EditorDelegate() {
+                        public void recordError(String message, Object value) {
+                            addError(((ValueEditor)editor).getPath(), editor, message, value);
+                        }
+                    });
+                }
             }
-        }
+        });
     }
 
     protected void addError(String path, Editor editor, String message, Object value) {
@@ -120,11 +139,27 @@ public abstract class AbstractDriver<T> implements Driver<T> {
     }
 
     public List<EditorError> getErrors() {
-        return Collections.unmodifiableList(this.errors);
+        ArrayList<EditorError> unconsumedErrors = new ArrayList<EditorError>();
+        for (EditorError error : errors) {
+            if (!error.isConsumed())
+                unconsumedErrors.add(error);
+        }
+        return unconsumedErrors;
     }
 
+    public List<EditorError> getAllErrors() {
+        return Collections.unmodifiableList(errors);
+    }
 
     protected HasEditors getView() {
         return view;
+    }
+
+    protected void visitEditors(HasEditors hasEditors, EditorVisitor visitor) {
+        for (Editor editor : hasEditors.getEditors()) {
+            visitor.visit(editor);
+            if (editor instanceof HasEditors)
+                visitEditors((HasEditors) editor, visitor);
+        }
     }
 }

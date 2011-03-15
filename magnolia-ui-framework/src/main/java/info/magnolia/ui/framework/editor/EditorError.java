@@ -35,8 +35,6 @@ package info.magnolia.ui.framework.editor;
 
 /**
  * Describes an error as reported to EditorDelegate.recordError().
- * <p/>
- * TODO gwt has a concept for errors being consumed
  *
  * @author tmattsson
  */
@@ -49,4 +47,8 @@ public interface EditorError {
     String getMessage();
 
     Object getValue();
+
+    boolean isConsumed();
+
+    void setConsumed(boolean consumed);
 }
