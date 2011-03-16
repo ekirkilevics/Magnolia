@@ -33,40 +33,55 @@
  */
 package info.magnolia.ui.framework.event;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
-
 
 /**
  * A very simplistic event bus.
- * FIXME is that thing threadsafe? prevent dispatching to freshly added/removed handlers while firing. Check event bus project: http://www.eventbus.org/
+ * Check event bus project: http://www.eventbus.org/
  */
 public class SimpleEventBus implements EventBus {
 
-    @SuppressWarnings("rawtypes")
-    final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
+    private final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
 
-    @SuppressWarnings("rawtypes")
     public SimpleEventBus() {
-        ArrayListMultimap<Class<? extends Event>, EventHandler> multimap = ArrayListMultimap.create();
-        eventHandlers = Multimaps.synchronizedMultimap(multimap);
+        eventHandlers = ArrayListMultimap.create();
     }
 
-    public <H extends EventHandler> HandlerRegistration addHandler(final Class< ? extends Event<H>> eventClass, final H handler) {
+    public synchronized <H extends EventHandler> HandlerRegistration addHandler(final Class<? extends Event<H>> eventClass, final H handler) {
+
+        if (eventHandlers.containsEntry(eventClass, handler)) {
+            return new HandlerRegistration() {
+                public void removeHandler() {
+                    synchronized (SimpleEventBus.this) {
+                        eventHandlers.remove(eventClass, handler);
+                    }
+                }
+            };
+        }
+
         eventHandlers.put(eventClass, handler);
+
         return new HandlerRegistration() {
             public void removeHandler() {
-                eventHandlers.remove(eventClass, handler);
+                synchronized (SimpleEventBus.this) {
+                    eventHandlers.remove(eventClass, handler);
+                }
             }
         };
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void fireEvent(Event event) {
-        for (EventHandler eventHandler : eventHandlers.get(event.getClass())) {
+        Collection<EventHandler> eventHandlersSnapshot;
+        synchronized (this) {
+            eventHandlersSnapshot = new ArrayList<EventHandler>(eventHandlers.get(event.getClass()));
+        }
+        for (EventHandler eventHandler : eventHandlersSnapshot) {
             event.dispatch(eventHandler);
         }
     }
-
 }
