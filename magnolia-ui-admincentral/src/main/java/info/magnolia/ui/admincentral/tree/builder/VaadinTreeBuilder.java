@@ -48,14 +48,19 @@ import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
 import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
 import info.magnolia.ui.model.tree.definition.StatusColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Vaadin specific builder.
  */
 public class VaadinTreeBuilder implements TreeBuilder {
 
-    public Column<?,?> createTreeColumn(TreeColumnDefinition definition) {
+    private Map<ColumnDefinition,Column> definitionToColumnRegistry = new LinkedHashMap<ColumnDefinition, Column>();
+
+    public Column<?,?> createTreeColumn(ColumnDefinition definition) {
 
         // TODO: quick hack - check how to make more nice/flexible
         if (definition instanceof LabelColumnDefinition) {

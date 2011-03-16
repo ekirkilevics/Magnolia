@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
@@ -50,7 +50,7 @@ import com.vaadin.ui.Field;
  *            type of the definition for this column.
  * @author dlipp
  */
-public interface Column<E, D extends TreeColumnDefinition> {
+public interface Column<E, D extends ColumnDefinition> {
 
     D getDefinition();
 

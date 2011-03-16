@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
@@ -49,7 +49,7 @@ import com.vaadin.ui.Field;
  * @author dlipp
  * @author tmattsson
  */
-public abstract class AbstractColumn<E,D extends TreeColumnDefinition> implements Column<E, TreeColumnDefinition> {
+public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Column<E, ColumnDefinition> {
 
     private final D definition;
 

@@ -34,13 +34,13 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 /**
  * Used to transform tree and column definitions into components.
  */
 public interface TreeBuilder {
 
-    public abstract Column< ?,? > createTreeColumn(TreeColumnDefinition definition);
+    public abstract Column< ?,? > createTreeColumn(ColumnDefinition definition);
 
 }

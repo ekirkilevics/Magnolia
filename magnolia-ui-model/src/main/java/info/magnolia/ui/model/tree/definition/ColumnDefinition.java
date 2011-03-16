@@ -38,7 +38,7 @@ package info.magnolia.ui.model.tree.definition;
  *
  * @author dlipp
  */
-public abstract class TreeColumnDefinition {
+public abstract class ColumnDefinition {
     private String label;
 
     private int width = 1;

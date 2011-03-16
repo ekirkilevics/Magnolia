@@ -42,7 +42,7 @@ import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.model.tree.definition.TreeColumnDefinition;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
@@ -113,7 +113,7 @@ public class JcrBrowser extends TreeTable {
         addDragAndDrop();
         this.treeDefinition = uiModel.getTreeDefinition(treeName);
 
-        for (TreeColumnDefinition columnDefintion : treeDefinition.getColumns()) {
+        for (ColumnDefinition columnDefintion : treeDefinition.getColumns()) {
             // FIXME use getName() not getLabel()
             columns.put(columnDefintion.getLabel(), builder.createTreeColumn(columnDefintion));
         }

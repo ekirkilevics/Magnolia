@@ -38,5 +38,5 @@ package info.magnolia.ui.model.tree.definition;
  *
  * @author dlipp
  */
-public class NodeDataValueColumnDefinition extends TreeColumnDefinition {
+public class NodeDataValueColumnDefinition extends ColumnDefinition {
 }
