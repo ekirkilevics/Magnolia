@@ -41,6 +41,7 @@ import info.magnolia.ui.admincentral.column.NodeDataTypeColumn;
 import info.magnolia.ui.admincentral.column.NodeDataValueColumn;
 import info.magnolia.ui.admincentral.column.StatusColumn;
 import info.magnolia.ui.admincentral.column.TemplateColumn;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
 import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
 import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
@@ -48,54 +49,47 @@ import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
 import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
 import info.magnolia.ui.model.tree.definition.StatusColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
-import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
+import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Vaadin specific builder.
+ *
+ * TODO: Builder should be configurable.
+ * TODO: Naming - this is actually not tree-dependant
  */
 public class VaadinTreeBuilder implements TreeBuilder {
 
-    private Map<ColumnDefinition,Column> definitionToColumnRegistry = new LinkedHashMap<ColumnDefinition, Column>();
+    private Map<Class<?>, Class<?>> definitionToColumnRegistry = new LinkedHashMap<Class<?>, Class<?>>();
 
-    public Column<?,?> createTreeColumn(ColumnDefinition definition) {
-
-        // TODO: quick hack - check how to make more nice/flexible
-        if (definition instanceof LabelColumnDefinition) {
-            return new LabelColumn((LabelColumnDefinition) definition);
-        }
-
-        if (definition instanceof TemplateColumnDefinition) {
-            return new TemplateColumn((TemplateColumnDefinition) definition);
-        }
-
-        if (definition instanceof StatusColumnDefinition) {
-            return new StatusColumn((StatusColumnDefinition) definition);
-        }
-
-        if (definition instanceof StatusColumnDefinition) {
-            return new StatusColumn((StatusColumnDefinition) definition);
-        }
-
-        if (definition instanceof NodeDataColumnDefinition) {
-            return new NodeDataColumn((NodeDataColumnDefinition) definition);
-        }
-
-        if (definition instanceof NodeDataValueColumnDefinition) {
-            return new NodeDataValueColumn((NodeDataValueColumnDefinition) definition);
-        }
-
-        if (definition instanceof NodeDataTypeColumnDefinition) {
-            return new NodeDataTypeColumn((NodeDataTypeColumnDefinition) definition);
-        }
-
-        if (definition instanceof MetaDataColumnDefinition) {
-            return new MetaDataColumn((MetaDataColumnDefinition) definition);
-        }
-
-        throw new IllegalArgumentException("Unkown definition type: " + definition.getClass());
+    public VaadinTreeBuilder() {
+        register(LabelColumnDefinition.class, LabelColumn.class);
+        register(TemplateColumnDefinition.class, TemplateColumn.class);
+        register(StatusColumnDefinition.class, StatusColumn.class);
+        register(NodeDataColumnDefinition.class, NodeDataColumn.class);
+        register(NodeDataValueColumnDefinition.class, NodeDataValueColumn.class);
+        register(NodeDataTypeColumnDefinition.class, NodeDataTypeColumn.class);
+        register(MetaDataColumnDefinition.class, MetaDataColumn.class);
     }
 
+    public void register(Class<? extends ColumnDefinition> columnDef, Class<? extends Column<?, ?>> classOfColumn) {
+        this.definitionToColumnRegistry.put(columnDef, classOfColumn);
+    }
+
+    public Column<?, ?> createTreeColumn(ColumnDefinition definition) {
+        Class<?> classOfColumn = this.definitionToColumnRegistry.get(definition.getClass());
+        if (classOfColumn == null) {
+            throw new IllegalArgumentException("No Column-Type registered for definition of type "
+                    + definition.getClass());
+        }
+        try {
+            Constructor<?> columnConstructor = classOfColumn.getConstructor(definition.getClass());
+            Column<?, ?> column = (Column<?, ?>) columnConstructor.newInstance(definition);
+            return column;
+        } catch (Exception e) {
+            throw new RuntimeException("Error trying to create instance of type " + classOfColumn.getName(), e);
+        }
+    }
 }
