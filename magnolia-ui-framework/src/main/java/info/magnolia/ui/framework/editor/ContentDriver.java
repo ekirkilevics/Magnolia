@@ -104,8 +104,6 @@ public class ContentDriver extends AbstractDriver<Node> {
                 node.getSession().save();
             else {
 
-                // TODO should we visit depth-first instead so editors can see if errors were consumed by sub-editors?
-
                 visitEditors(getView(), new EditorVisitor() {
                     public void visit(Editor editor) {
                         if (editor instanceof HasEditorErrors) {

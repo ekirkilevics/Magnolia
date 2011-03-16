@@ -90,13 +90,16 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     }
 
     public void showErrors(List<EditorError> errors) {
+
+        // Clear any previous error
+        vaadinDialogField.setError(null);
+
         for (EditorError error : errors) {
             if (error.getEditor() == this) {
                 vaadinDialogField.setError(error.getMessage());
                 error.setConsumed(true);
             }
         }
-        // TODO should it clear any error(s) if there's none for this editor in the list?
     }
 
     public String getPath() {

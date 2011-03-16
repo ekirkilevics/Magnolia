@@ -155,11 +155,17 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         return view;
     }
 
+    /**
+     * Iterates an editor hierarchy in a depth-first bottom-up fashion.
+     *
+     * @param hasEditors editor to start iterating at
+     * @param visitor visitor to invoke for each editor
+     */
     protected void visitEditors(HasEditors hasEditors, EditorVisitor visitor) {
         for (Editor editor : hasEditors.getEditors()) {
-            visitor.visit(editor);
             if (editor instanceof HasEditors)
                 visitEditors((HasEditors) editor, visitor);
+            visitor.visit(editor);
         }
     }
 }
