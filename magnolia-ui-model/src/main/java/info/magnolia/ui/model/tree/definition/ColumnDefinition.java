@@ -34,7 +34,7 @@
 package info.magnolia.ui.model.tree.definition;
 
 /**
- * A tree column definition.
+ * Base implementation for all special ColumnDefinitions.
  *
  * @author dlipp
  */
