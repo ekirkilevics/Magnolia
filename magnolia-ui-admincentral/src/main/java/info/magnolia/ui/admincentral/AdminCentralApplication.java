@@ -50,10 +50,14 @@ import info.magnolia.ui.admincentral.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.admincentral.editworkspace.activity.DetailViewActivity;
+import info.magnolia.ui.admincentral.editworkspace.activity.DetailViewActivityMapper;
 import info.magnolia.ui.admincentral.navigation.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
+import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
+import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.VaadinTreeBuilder;
 import info.magnolia.ui.framework.event.EventBus;
@@ -118,6 +122,11 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(PlaceController.class, PlaceController.class);
         container.addComponent(ActionFactory.class, ActionFactoryImpl.class);
         container.addComponent(UIModel.class, UIModel.class);
+
+        container.addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
+        container.addComponent(DetailViewActivity.class, DetailViewActivity.class);
+        container.addComponent(TreeActivityMapper.class, TreeActivityMapper.class);
+        container.addComponent(TreeActivity.class, TreeActivity.class);
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified

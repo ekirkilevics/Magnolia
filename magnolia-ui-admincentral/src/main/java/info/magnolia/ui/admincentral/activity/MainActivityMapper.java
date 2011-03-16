@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.activity;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
+import info.magnolia.ui.admincentral.editworkspace.activity.DetailViewActivityMapper;
 import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceActivity;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.admincentral.showcontent.activity.ShowContentActivity;
@@ -57,22 +58,26 @@ import info.magnolia.ui.model.dialog.registry.DialogRegistry;
  */
 public class MainActivityMapper implements ActivityMapper {
     private Shell shell;
-    private UIModel uiModel;
     private DialogRegistry dialogRegistry;
     private ComponentProvider componentProvider;
+    private DetailViewActivityMapper detailViewActivityMapper;
+    private UIModel uiModel;
+    private TreeBuilder builder;
 
-    public MainActivityMapper(Shell shell, UIModel uiModel, DialogRegistry dialogRegistry, ComponentProvider componentProvider) {
+    public MainActivityMapper(Shell shell, DialogRegistry dialogRegistry, UIModel uiModel, ComponentProvider componentProvider,DetailViewActivityMapper detailViewActivityMapper, TreeBuilder builder) {
         this.shell = shell;
-        this.uiModel = uiModel;
         this.dialogRegistry = dialogRegistry;
+        this.detailViewActivityMapper = detailViewActivityMapper;
+        this.uiModel = uiModel;
         this.componentProvider = componentProvider;
+        this.builder = builder;
     }
 
     public Activity getActivity(final Place place) {
         if(place instanceof EditWorkspacePlace){
             EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
             // FIXME lets inject the tree builder! byt workspace is a paramter and we need something more flexible
-            return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel, componentProvider.getComponent(TreeBuilder.class));
+            return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel, detailViewActivityMapper, builder);
         }
         else if(place instanceof ShowContentPlace){
             ShowContentPlace showContentPlace = (ShowContentPlace)place;

@@ -35,7 +35,6 @@ package info.magnolia.ui.admincentral.editworkspace.activity;
 
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivityManager;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.framework.activity.ActivityManager;
@@ -52,14 +51,16 @@ import info.magnolia.ui.model.UIModel;
  */
 public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
-    private UIModel uiModel;
     private String workspace;
+    private UIModel uiModel;
+    private DetailViewActivityMapper detailViewActivityMapper;
     private TreeBuilder builder;
 
-    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel, TreeBuilder builder) {
+    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel, DetailViewActivityMapper detailViewActivityMapper, TreeBuilder builder) {
         super("edit-workspace-" + workspace, shell);
         this.workspace = workspace;
         this.uiModel = uiModel;
+        this.detailViewActivityMapper = detailViewActivityMapper;
         this.builder = builder;
     }
 
@@ -74,8 +75,9 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         final EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
 
         // FIXME does it make sense to have activity manager with a single activity? I think no.
-        final ActivityManager treeActivityManager = new TreeActivityManager(new TreeActivityMapper(getInnerPlaceController(), uiModel, builder), innerEventBus);
-        final ActivityManager detailViewActivityManager = new DetailViewActivityManager(new DetailViewActivityMapper(uiModel), innerEventBus);
+        // FIXME injecting TreeActivityMapper here breaks changing place: e.g. from website to configuration does not work. How do we inject innerPlaceController?
+        final ActivityManager treeActivityManager = new ActivityManager(new TreeActivityMapper(getInnerPlaceController(), uiModel, builder), innerEventBus);
+        final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, innerEventBus);
 
         treeActivityManager.setDisplay(editWorkspaceView.getTreeDisplay());
         detailViewActivityManager.setDisplay(editWorkspaceView.getDetailDisplay());
