@@ -56,14 +56,14 @@ public class ContentDriver extends AbstractDriver<Node> {
                 try {
                     if (editor instanceof ValueEditor) {
                         ValueEditor valueEditor = (ValueEditor) editor;
-                        String name = valueEditor.getPath();
+                        String path = valueEditor.getPath();
                         Class type = valueEditor.getType();
                         if (type.equals(String.class)) {
-                            if (node.hasProperty(name))
-                                valueEditor.setValue(node.getProperty(name).getString());
+                            if (node.hasProperty(path))
+                                valueEditor.setValue(node.getProperty(path).getString());
                         } else if (type.equals(Calendar.class)) {
-                            if (node.hasProperty(name))
-                                valueEditor.setValue(node.getProperty(name).getDate());
+                            if (node.hasProperty(path))
+                                valueEditor.setValue(node.getProperty(path).getDate());
                         }
                     }
 

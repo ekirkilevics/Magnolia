@@ -130,9 +130,9 @@ public abstract class AbstractDriver<T> implements Driver<T> {
         return !this.errors.isEmpty();
     }
 
-    public boolean hasErrors(String name) {
+    public boolean hasErrors(String path) {
         for (EditorError error : errors) {
-            if (error.getPath().equals(name))
+            if (error.getPath().equals(path))
                 return true;
         }
         return false;
