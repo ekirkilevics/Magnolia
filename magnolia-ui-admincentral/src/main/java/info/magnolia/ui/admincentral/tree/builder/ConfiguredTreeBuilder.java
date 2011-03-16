@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,54 +34,40 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.column.LabelColumn;
-import info.magnolia.ui.admincentral.column.MetaDataColumn;
-import info.magnolia.ui.admincentral.column.NodeDataColumn;
-import info.magnolia.ui.admincentral.column.NodeDataTypeColumn;
-import info.magnolia.ui.admincentral.column.NodeDataValueColumn;
-import info.magnolia.ui.admincentral.column.StatusColumn;
-import info.magnolia.ui.admincentral.column.TemplateColumn;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
-import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
-import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
-import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
-import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
-import info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition;
-import info.magnolia.ui.model.tree.definition.StatusColumnDefinition;
-import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
+
 /**
- * Vaadin specific builder.
+ * TreeBuild configured via content to bean.
  *
- * TODO: Builder should be configurable.
- * TODO: Naming - this is actually not tree-dependant
- *
- * @deprecated - use info.magnolia.ui.admincentral.tree.builder.ConfiguredTreeBuilder instead.
+ * TODO: properly configure via Content2Bean
  */
-public class VaadinTreeBuilder implements TreeBuilder {
+public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
 
-    private Map<Class<?>, Class<?>> definitionToColumnRegistry = new LinkedHashMap<Class<?>, Class<?>>();
+    private static final long serialVersionUID = 6702977290186078418L;
 
-    public VaadinTreeBuilder() {
-        register(LabelColumnDefinition.class, LabelColumn.class);
-        register(TemplateColumnDefinition.class, TemplateColumn.class);
-        register(StatusColumnDefinition.class, StatusColumn.class);
-        register(NodeDataColumnDefinition.class, NodeDataColumn.class);
-        register(NodeDataValueColumnDefinition.class, NodeDataValueColumn.class);
-        register(NodeDataTypeColumnDefinition.class, NodeDataTypeColumn.class);
-        register(MetaDataColumnDefinition.class, MetaDataColumn.class);
+    private Map<Class<?>, Class<?>> columnRegistrations = new LinkedHashMap<Class<?>, Class<?>>();
+
+    public Map<Class<?>, Class<?>> getColumnRegistrations() {
+        return this.columnRegistrations;
     }
 
-    public void register(Class<? extends ColumnDefinition> columnDef, Class<? extends Column<?, ?>> classOfColumn) {
-        this.definitionToColumnRegistry.put(columnDef, classOfColumn);
+    public void setColumnRegistrations(Map<Class<?>, Class<?>> columnRegistrations) {
+        this.columnRegistrations = columnRegistrations;
+    }
+
+    public void addColumnRegistration(ColumnRegistryDefinition definition) {
+        columnRegistrations.put(definition.getFromClass(), definition.getToClass());
     }
 
     public Column<?, ?> createTreeColumn(ColumnDefinition definition) {
-        Class<?> classOfColumn = this.definitionToColumnRegistry.get(definition.getClass());
+        Class<?> classOfColumn = this.columnRegistrations.get(definition.getClass());
         if (classOfColumn == null) {
             throw new IllegalArgumentException("No Column-Type registered for definition of type "
                     + definition.getClass());
