@@ -313,9 +313,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>9653d21d-cb2d-451a-8cd3-40d311a15fd8</sv:value>
       </sv:property>
-      <sv:property sv:name="i18nBasename" sv:type="String">
-        <sv:value>info.magnolia.modules.admininterface.messages</sv:value>
-      </sv:property>
       <sv:property sv:name="icon" sv:type="String">
         <sv:value>/.resources/icons/24/key1.gif</sv:value>
       </sv:property>
