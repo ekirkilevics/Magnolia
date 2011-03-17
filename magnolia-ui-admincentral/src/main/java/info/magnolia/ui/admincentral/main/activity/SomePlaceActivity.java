@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.main.activity;
 
+import info.magnolia.ui.admincentral.main.place.SomePlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;
@@ -46,9 +47,10 @@ import info.magnolia.ui.framework.view.ViewPort;
 public class SomePlaceActivity extends AbstractActivity{
     private Shell shell;
     private String placeName;
-    public SomePlaceActivity(Shell shell, String placeName) {
+
+    public SomePlaceActivity(SomePlace place, Shell shell) {
         this.shell = shell;
-        this.placeName = placeName;
+        this.placeName = place.getName();
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {

@@ -79,8 +79,8 @@ public class AdminCentralPresenter {
         final ActivityManager menuActivityManager = new ActivityManager(navigationActivityMapper, eventBus);
         final ActivityManager mainActivityManager = new ActivityManager(mainActivityMapper, eventBus);
 
-        mainActivityManager.setDisplay(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
-        menuActivityManager.setDisplay(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
+        mainActivityManager.setViewPort(new ComponentContainerBasedViewPort("main", adminCentralView.getMainContainer()));
+        menuActivityManager.setViewPort(new ComponentContainerBasedViewPort("navigation", adminCentralView.getMenuDisplay()));
 
         historyHandler.handleCurrentHistory();
     }

@@ -67,7 +67,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
     private Activity currentActivity = NULL_ACTIVITY;
 
-    private ViewPort display;
+    private ViewPort viewPort;
 
     public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
         this.mapper = mapper;
@@ -86,7 +86,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
             return;
         }
 
-        display.setView(null);
+        viewPort.setView(null);
         isolatedEventBus.removeHandlers();
 
         currentActivity.onStop();
@@ -99,12 +99,12 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
 
         log.debug("starting activity: {}", currentActivity);
 
-        currentActivity.start(display, isolatedEventBus);
+        currentActivity.start(viewPort, isolatedEventBus);
 
    }
 
-    public void setDisplay(ViewPort display){
-        this.display = display;
+    public void setViewPort(ViewPort viewPort){
+        this.viewPort = viewPort;
     }
 
     public void onPlaceChangeRequest(final PlaceChangeRequestEvent event) {

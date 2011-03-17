@@ -34,7 +34,6 @@
 package info.magnolia.ui.framework.activity;
 
 import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.Parameter;
 import org.picocontainer.PicoBuilder;
 
 import info.magnolia.objectfactory.ComponentProvider;
@@ -59,7 +58,14 @@ import info.magnolia.ui.framework.view.ViewPort;
  * TODO it is not clear how we would provide IoC here. it is comparable to a sub-conversion scope.
  *
  */
-public abstract class MVPSubContainerActivity extends AbstractActivity {
+public abstract class MVPSubContainer extends AbstractActivity {
+
+    /**
+     * Used in the {@link MVPSubContainer#populateComponentProvider(MutableComponentProvider)} to hide the pico specifics.
+     */
+    protected interface MutableComponentProvider {
+        void addComponent(Object componentKey, Object componentImplementationOrInstance);
+    }
 
     private String id;
 
@@ -75,15 +81,12 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     private HandlerRegistration historyReg;
 
-    public MVPSubContainerActivity(String id, Shell shell) {
+    private Activity activity;
+
+
+    public MVPSubContainer(String id, Shell shell) {
         this.id = id;
         this.shell = shell;
-    }
-
-    private ComponentProvider componentProvider;
-
-    public ComponentProvider getComponentProvider() {
-        return componentProvider;
     }
 
     public void start(ViewPort viewPort, EventBus outerEventBus) {
@@ -91,9 +94,9 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         PicoComponentProvider provider = (PicoComponentProvider) Components.getComponentProvider();
         PicoBuilder builder = new PicoBuilder(provider.getContainer()).withConstructorInjection().withCaching();
 
-        MutablePicoContainer container = builder.build();
+        final MutablePicoContainer container = builder.build();
 
-        componentProvider = new PicoComponentProvider(container, provider);
+        ComponentProvider componentProvider = new PicoComponentProvider(container, provider);
 
         container.addComponent(ComponentProvider.class, componentProvider);
         container.addComponent(EventBus.class, SimpleEventBus.class);
@@ -101,47 +104,59 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
         container.addComponent(Shell.class, shell.createSubShell(id));
         container.addComponent(PlaceController.class, PlaceController.class);
 
+        populateComponentProvider(new MutableComponentProvider(){
+            public void addComponent(Object componentKey, Object componentImplementationOrInstance) {
+                container.addComponent(componentKey, componentImplementationOrInstance);
+            }
+        });
+
         subShell = componentProvider.getComponent(Shell.class);
         innerEventBus = componentProvider.getComponent(EventBus.class);
         innerPlaceController = componentProvider.getComponent(PlaceController.class);
 
+        final Class<? extends Activity> activityClass = getActivityClass();
+
+        activity = componentProvider.newInstance(activityClass, getAdditionalConstructorParameters());
+        // add the activity we built so that sub components can ask for injection
+        container.addComponent(activityClass, activity);
+
+        activity.start(viewPort, innerEventBus);
+
         historyHandler = new PlaceHistoryHandler(new PlaceHistoryMapperImpl(getSupportedPlaces()), subShell);
         historyReg = historyHandler.register(innerPlaceController, innerEventBus, getDefaultPlace());
-
-        // build the container
-        onStart(viewPort, innerEventBus);
 
         historyHandler.handleCurrentHistory();
     }
 
     @Override
     public void onStop() {
+        activity.onStop();
         historyReg.removeHandler();
         subShell.setFragment(null, false);
     }
 
-    protected abstract Class< ? extends Place>[] getSupportedPlaces();
-
-    protected abstract Place getDefaultPlace();
-
-    protected abstract void onStart(ViewPort display, EventBus innerEventBus);
+    @Override
+    public String mayStop() {
+        return activity.mayStop();
+    }
 
     public String getId() {
         return id;
     }
 
-    protected EventBus getInnerEventBus() {
-        return innerEventBus;
-    }
+    protected abstract Class< ? extends Activity> getActivityClass();
 
-    protected PlaceController getInnerPlaceController() {
-        return innerPlaceController;
-    }
+    protected abstract Object[] getAdditionalConstructorParameters();
+
     /**
-     * FIXME: this is a hack. We should come up with a better solution.
-     * Allows subclasses adding additional components to the parent container.
+     * Prepare the IoC container.
+     * TODO should this really relay on the Pico API
      */
-    protected MutablePicoContainer addComponent(Object componentKey, Object componentImplementationOrInstance, Parameter... parameters){
-        return ((MutablePicoContainer)((PicoComponentProvider)componentProvider).getContainer()).addComponent(componentKey, componentImplementationOrInstance, parameters);
-    }
+    protected abstract void populateComponentProvider(MutableComponentProvider mutableComponentProvider);
+
+    protected abstract Class< ? extends Place>[] getSupportedPlaces();
+
+    protected abstract Place getDefaultPlace();
+
+
 }

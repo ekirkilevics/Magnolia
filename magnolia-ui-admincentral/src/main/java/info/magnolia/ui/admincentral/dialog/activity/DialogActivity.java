@@ -64,7 +64,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
     private ContentDriver driver;
     private DialogRegistry dialogRegistry;
 
-    public DialogActivity(ComponentProvider componentProvider, DialogPlace place, DialogRegistry dialogRegistry) {
+    public DialogActivity(DialogPlace place, ComponentProvider componentProvider, DialogRegistry dialogRegistry) {
         this.componentProvider = componentProvider;
         this.place = place;
         this.dialogRegistry = dialogRegistry;
@@ -78,6 +78,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
             String dialogName = place.getDialogName();
             DialogDefinition dialogDefinition = dialogRegistry.getDialog(dialogName);
 
+            // TODO get the builder injected
             DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
             DialogView dialog = builder.build(dialogDefinition);
 

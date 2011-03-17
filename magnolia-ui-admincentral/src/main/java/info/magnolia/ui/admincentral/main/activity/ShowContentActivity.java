@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.main.activity;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
 import info.magnolia.ui.admincentral.main.view.IFrameView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
@@ -52,6 +53,10 @@ public class ShowContentActivity extends AbstractActivity {
     private String viewName;
 
     private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
+
+    public ShowContentActivity(ShowContentPlace place){
+        this(place.getViewTarget(), place.getViewName());
+    }
 
     public ShowContentActivity(String viewTarget, String viewName) {
         this.viewTarget = viewTarget;

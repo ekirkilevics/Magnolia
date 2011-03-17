@@ -33,61 +33,46 @@
  */
 package info.magnolia.ui.admincentral.main.activity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
-import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceActivity;
+import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceMVPSubContainer;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
 import info.magnolia.ui.admincentral.main.place.SomePlace;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 
 /**
- * TODO: write javadoc.
- * @author fgrilli
- *
+ * Maps the main places to main activities.
+ * TODO: this should be a generic mapper
  */
 public class MainActivityMapper implements ActivityMapper {
-    private Shell shell;
-    private DialogRegistry dialogRegistry;
-    private ComponentProvider componentProvider;
-    private UIModel uiModel;
-    private TreeBuilder builder;
 
-    public MainActivityMapper(Shell shell, DialogRegistry dialogRegistry, UIModel uiModel, ComponentProvider componentProvider, TreeBuilder builder) {
-        this.shell = shell;
-        this.dialogRegistry = dialogRegistry;
-        this.uiModel = uiModel;
+    private ComponentProvider componentProvider;
+
+    private static Map<Class<? extends Place>, Class<? extends Activity>> mapping = new HashMap<Class<? extends Place>, Class<? extends Activity>>();
+
+    static{
+        mapping.put(EditWorkspacePlace.class, EditWorkspaceMVPSubContainer.class);
+        mapping.put(ShowContentPlace.class, ShowContentActivity.class);
+        mapping.put(DialogPlace.class, DialogActivity.class);
+        mapping.put(SomePlace.class, SomePlaceActivity.class);
+    }
+
+    public MainActivityMapper(ComponentProvider componentProvider) {
         this.componentProvider = componentProvider;
-        this.builder = builder;
     }
 
     public Activity getActivity(final Place place) {
-        if(place instanceof EditWorkspacePlace){
-            EditWorkspacePlace editWorkspacePlace = (EditWorkspacePlace)place;
-            // FIXME lets inject the tree builder! byt workspace is a paramter and we need something more flexible
-            return new EditWorkspaceActivity(editWorkspacePlace.getWorkspace(), shell, uiModel, builder);
+        final Class< ? extends Activity> activityClass = mapping.get(place.getClass());
+        if(activityClass != null){
+            return componentProvider.newInstance(activityClass, place);
         }
-        else if(place instanceof ShowContentPlace){
-            ShowContentPlace showContentPlace = (ShowContentPlace)place;
-            return new ShowContentActivity(showContentPlace.getViewTarget(), showContentPlace.getViewName());
-        }
-        else if(place instanceof DialogPlace){
-            DialogPlace dialogPlace = (DialogPlace)place;
-            return new DialogActivity(componentProvider, dialogPlace, dialogRegistry);
-        }
-        else if(place instanceof SomePlace){
-            SomePlace somePlace = (SomePlace)place;
-            return new SomePlaceActivity(shell, somePlace.getName());
-        }
-        else{
-            return null;
-        }
+        return null;
     }
 }

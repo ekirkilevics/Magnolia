@@ -33,31 +33,29 @@
  */
 package info.magnolia.ui.admincentral.editworkspace.activity;
 
-import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.activity.ActivityManager;
-import info.magnolia.ui.framework.activity.MVPSubContainerActivity;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.UIModel;
 
 
 /**
  * Edit a workspace. Shows the structure view.
  */
-public class EditWorkspaceActivity extends MVPSubContainerActivity {
-
+public class EditWorkspaceActivity extends AbstractActivity {
     private String workspace;
+    private TreeActivityMapper treeActivityMapper;
+    private DetailViewActivityMapper detailViewActivityMapper;
+    private EditWorkspaceView view;
 
-    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel, TreeBuilder builder) {
-        super("edit-workspace-" + workspace, shell);
-        this.workspace = workspace;
+    public EditWorkspaceActivity(EditWorkspacePlace place, EditWorkspaceView view, TreeActivityMapper treeActivityMapper, DetailViewActivityMapper detailViewActivityMapper) {
+        this.workspace = place.getWorkspace();
+        this.view = view;
+        this.treeActivityMapper = treeActivityMapper;
+        this.detailViewActivityMapper = detailViewActivityMapper;
     }
 
     @Override
@@ -65,28 +63,15 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         return "Are you sure you want to leave this page?";
     }
 
-    @Override
-    protected void onStart(ViewPort display, EventBus innerEventBus) {
+    public void start(ViewPort display, EventBus eventBus) {
 
-        final EditWorkspaceView editWorkspaceView = new EditWorkspaceView();
+        final ActivityManager treeActivityManager = new ActivityManager(treeActivityMapper, eventBus);
+        final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, eventBus);
 
-        addComponent(TreeActivityMapper.class, TreeActivityMapper.class);
-        addComponent(TreeActivity.class, TreeActivity.class);
-        addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
-        addComponent(DetailViewActivity.class, DetailViewActivity.class);
-        addComponent(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
+        treeActivityManager.setViewPort(view.getTreeDisplay());
+        detailViewActivityManager.setViewPort(view.getDetailDisplay());
 
-        TreeActivityMapper treeActivityMapper = getComponentProvider().getComponent(TreeActivityMapper.class);
-        DetailViewActivityMapper detailViewActivityMapper = getComponentProvider().getComponent(DetailViewActivityMapper.class);
-
-        // FIXME does it make sense to have activity manager with a single activity? I think no.
-        final ActivityManager treeActivityManager = new ActivityManager(treeActivityMapper, innerEventBus);
-        final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, innerEventBus);
-
-        treeActivityManager.setDisplay(editWorkspaceView.getTreeDisplay());
-        detailViewActivityManager.setDisplay(editWorkspaceView.getDetailDisplay());
-
-        display.setView(editWorkspaceView);
+        display.setView(view);
     }
 
     @Override
@@ -115,15 +100,5 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
         return true;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected Class<? extends Place>[] getSupportedPlaces() {
-        // Casts since generic array creation doesn't exist
-        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class};
-    }
 
-    @Override
-    protected Place getDefaultPlace() {
-        return new ItemSelectedPlace(workspace, "/");
-    }
 }
