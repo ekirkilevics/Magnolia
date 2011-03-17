@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 
@@ -49,12 +48,12 @@ import javax.jcr.Item;
  */
 public class EditWorkspaceActionFactory {
 
-    private PicoComponentProvider componentProvider;
+    private ComponentProvider componentProvider;
     private Map<Class<? extends ActionDefinition>, Class<? extends Action>> mapping = new HashMap<Class<? extends ActionDefinition>, Class<? extends Action>>();
 
     public EditWorkspaceActionFactory(ComponentProvider componentProvider) {
         // FIXME don't cast
-        this.componentProvider = (PicoComponentProvider)componentProvider;
+        this.componentProvider = componentProvider;
 
         // TODO this should be configured
         mapping.put(AddNodeActionDefinition.class, AddNodeAction.class);

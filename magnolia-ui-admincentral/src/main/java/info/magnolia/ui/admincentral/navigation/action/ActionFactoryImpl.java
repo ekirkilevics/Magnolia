@@ -33,11 +33,8 @@
  */
 package info.magnolia.ui.admincentral.navigation.action;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.model.action.Action;
@@ -80,9 +77,7 @@ public class ActionFactoryImpl implements ActionFactory {
         }
 
         if(definition instanceof PlaceChangeActionDefinition) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("definition", definition);
-            return ((PicoComponentProvider)componentProvider).newInstance(PlaceChangeAction.class, map);
+            return componentProvider.newInstance(PlaceChangeAction.class, definition);
         }
 
         return null;
