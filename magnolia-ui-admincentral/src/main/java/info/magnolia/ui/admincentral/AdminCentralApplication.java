@@ -33,15 +33,6 @@
  */
 package info.magnolia.ui.admincentral;
 
-import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
-import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
@@ -56,8 +47,6 @@ import info.magnolia.ui.admincentral.navigation.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.VaadinTreeBuilder;
 import info.magnolia.ui.framework.event.EventBus;
@@ -69,6 +58,17 @@ import info.magnolia.ui.model.action.ActionFactory;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
+
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
+
+import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 
 /**
  * Application class for AdminCentral. Provides a scoped IoC container and performs initialization of the UI.
@@ -125,8 +125,6 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
         container.addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
         container.addComponent(DetailViewActivity.class, DetailViewActivity.class);
-        container.addComponent(TreeActivityMapper.class, TreeActivityMapper.class);
-        container.addComponent(TreeActivity.class, TreeActivity.class);
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified
