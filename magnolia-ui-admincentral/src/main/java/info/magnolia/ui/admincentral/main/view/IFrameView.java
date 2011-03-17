@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,36 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation;
+package info.magnolia.ui.admincentral.main.view;
 
-import info.magnolia.ui.framework.activity.AbstractActivity;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.action.Action;
-import info.magnolia.ui.model.action.ActionFactory;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Embedded;
 
 /**
- * NavigationActivity.
+ * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
+ *
  * @author fgrilli
  *
  */
-public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
-    private NavigationView view;
-    private ActionFactory actionFactory;
+public class IFrameView extends Embedded {
+    private static final long serialVersionUID = 1L;
 
-    public NavigationActivity(NavigationView view, ActionFactory actionFactory) {
-        this.actionFactory = actionFactory;
-        this.view = view;
-        view.setPresenter(this);
+    public IFrameView(String url){
+        setSource(new ExternalResource(url));
+        setType(Embedded.TYPE_BROWSER);
+        setSizeFull();
     }
-    public void start(ViewPort viewPort, EventBus eventBus) {
-        viewPort.setView(view);
-    }
-
-    public void onMenuSelection(MenuItemDefinition menuItem) {
-        final Action action = actionFactory.createAction(menuItem.getActionDefinition());
-        action.execute();
-    }
-
 }

@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.navigation.action;
 
-import info.magnolia.ui.admincentral.showcontent.place.SomePlace;
+import info.magnolia.ui.admincentral.main.place.SomePlace;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 

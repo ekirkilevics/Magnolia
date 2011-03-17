@@ -31,27 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.showcontent.activity;
+package info.magnolia.ui.admincentral.navigation.activity;
 
+import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionFactory;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
- * Some place activity.
+ * NavigationActivity.
  * @author fgrilli
  *
  */
-public class SomePlaceActivity extends AbstractActivity{
-    private Shell shell;
-    private String placeName;
-    public SomePlaceActivity(Shell shell, String placeName) {
-        this.shell = shell;
-        this.placeName = placeName;
+public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
+    private NavigationView view;
+    private ActionFactory actionFactory;
+
+    public NavigationActivity(NavigationView view, ActionFactory actionFactory) {
+        this.actionFactory = actionFactory;
+        this.view = view;
+        view.setPresenter(this);
+    }
+    public void start(ViewPort viewPort, EventBus eventBus) {
+        viewPort.setView(view);
     }
 
-    public void start(ViewPort viewPort, EventBus eventBus) {
-        shell.showNotification(placeName);
+    public void onMenuSelection(MenuItemDefinition menuItem) {
+        final Action action = actionFactory.createAction(menuItem.getActionDefinition());
+        action.execute();
     }
+
 }

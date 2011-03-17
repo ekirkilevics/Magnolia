@@ -33,9 +33,9 @@
  */
 package info.magnolia.ui.admincentral;
 
-import info.magnolia.ui.admincentral.activity.MainActivityMapper;
-import info.magnolia.ui.admincentral.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
+import info.magnolia.ui.admincentral.main.activity.MainActivityMapper;
+import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
 import info.magnolia.ui.framework.activity.ActivityManager;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;

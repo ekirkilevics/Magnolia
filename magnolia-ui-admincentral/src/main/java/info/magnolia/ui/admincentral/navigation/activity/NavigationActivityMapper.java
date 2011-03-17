@@ -31,41 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.showcontent.activity;
+package info.magnolia.ui.admincentral.navigation.activity;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.admincentral.showcontent.view.IFrameView;
-import info.magnolia.ui.framework.activity.AbstractActivity;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
-
+import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.framework.activity.ActivityMapper;
+import info.magnolia.ui.framework.place.Place;
 
 /**
- * Shows a target page in an iframe.
+ * TODO: write javadoc.
+ * TODO: is this the right package?
+ * @author fgrilli
+ *
  */
-public class ShowContentActivity extends AbstractActivity {
+public class NavigationActivityMapper implements ActivityMapper {
 
-    private String viewTarget;
+    private NavigationActivity navigationActivity;
 
-    private String viewName;
-
-    private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
+    public NavigationActivityMapper(NavigationActivity navigationActivity) {
+        this.navigationActivity = navigationActivity;
     }
 
-    public void start(ViewPort viewPort, EventBus eventBus) {
-        try {
-            // FIXME viewName = className? what name?
-            viewPort.setView((View) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
-        }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
-        }
+    public Activity getActivity(Place place) {
+        return navigationActivity;
     }
 
 }

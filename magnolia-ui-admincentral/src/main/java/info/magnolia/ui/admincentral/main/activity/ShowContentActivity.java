@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,23 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.showcontent.view;
+package info.magnolia.ui.admincentral.main.activity;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Embedded;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.ui.admincentral.main.view.IFrameView;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.framework.view.ViewPort;
+
 
 /**
- * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
- *
- * @author fgrilli
- *
+ * Shows a target page in an iframe.
  */
-public class IFrameView extends Embedded {
-    private static final long serialVersionUID = 1L;
+public class ShowContentActivity extends AbstractActivity {
 
-    public IFrameView(String url){
-        setSource(new ExternalResource(url));
-        setType(Embedded.TYPE_BROWSER);
-        setSizeFull();
+    private String viewTarget;
+
+    private String viewName;
+
+    private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
+
+    public ShowContentActivity(String viewTarget, String viewName) {
+        this.viewTarget = viewTarget;
+        this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
     }
+
+    public void start(ViewPort viewPort, EventBus eventBus) {
+        try {
+            // FIXME viewName = className? what name?
+            viewPort.setView((View) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
+        }
+        catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
 }

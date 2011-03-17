@@ -31,35 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.showcontent.place;
+package info.magnolia.ui.admincentral.main.activity;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.ui.framework.place.Place;
-
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.framework.view.ViewPort;
 
 /**
- * Show a target page in the main region.
+ * Some place activity.
+ * @author fgrilli
+ *
  */
-public class ShowContentPlace extends Place {
-
-    private String viewTarget;
-
-    private String viewName;
-
-    public ShowContentPlace(String viewTarget, String viewName) {
-        if(StringUtils.isBlank(viewTarget)){
-            throw new IllegalArgumentException("view target cannot be null");
-        }
-        this.viewTarget = viewTarget;
-        this.viewName = viewName;
+public class SomePlaceActivity extends AbstractActivity{
+    private Shell shell;
+    private String placeName;
+    public SomePlaceActivity(Shell shell, String placeName) {
+        this.shell = shell;
+        this.placeName = placeName;
     }
 
-    public String getViewTarget() {
-        return viewTarget;
-    }
-
-    public String getViewName() {
-        return viewName;
+    public void start(ViewPort viewPort, EventBus eventBus) {
+        shell.showNotification(placeName);
     }
 }

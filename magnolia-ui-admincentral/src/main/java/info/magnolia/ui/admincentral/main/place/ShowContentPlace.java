@@ -31,29 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.activity;
+package info.magnolia.ui.admincentral.main.place;
 
-import info.magnolia.ui.admincentral.navigation.NavigationActivity;
-import info.magnolia.ui.framework.activity.Activity;
-import info.magnolia.ui.framework.activity.ActivityMapper;
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.ui.framework.place.Place;
 
+
 /**
- * TODO: write javadoc.
- * TODO: is this the right package?
- * @author fgrilli
- *
+ * Show a target page in the main region.
  */
-public class NavigationActivityMapper implements ActivityMapper {
+public class ShowContentPlace extends Place {
 
-    private NavigationActivity navigationActivity;
+    private String viewTarget;
 
-    public NavigationActivityMapper(NavigationActivity navigationActivity) {
-        this.navigationActivity = navigationActivity;
+    private String viewName;
+
+    public ShowContentPlace(String viewTarget, String viewName) {
+        if(StringUtils.isBlank(viewTarget)){
+            throw new IllegalArgumentException("view target cannot be null");
+        }
+        this.viewTarget = viewTarget;
+        this.viewName = viewName;
     }
 
-    public Activity getActivity(Place place) {
-        return navigationActivity;
+    public String getViewTarget() {
+        return viewTarget;
     }
 
+    public String getViewName() {
+        return viewName;
+    }
 }

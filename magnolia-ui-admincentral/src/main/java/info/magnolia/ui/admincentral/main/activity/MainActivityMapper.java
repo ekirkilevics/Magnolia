@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.activity;
+package info.magnolia.ui.admincentral.main.activity;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
@@ -39,10 +39,8 @@ import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.editworkspace.activity.DetailViewActivityMapper;
 import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceActivity;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.admincentral.showcontent.activity.ShowContentActivity;
-import info.magnolia.ui.admincentral.showcontent.activity.SomePlaceActivity;
-import info.magnolia.ui.admincentral.showcontent.place.ShowContentPlace;
-import info.magnolia.ui.admincentral.showcontent.place.SomePlace;
+import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
+import info.magnolia.ui.admincentral.main.place.SomePlace;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;

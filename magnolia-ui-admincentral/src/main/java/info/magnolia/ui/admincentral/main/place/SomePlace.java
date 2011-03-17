@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.showcontent.place;
+package info.magnolia.ui.admincentral.main.place;
 
 import info.magnolia.ui.framework.place.Place;
 
