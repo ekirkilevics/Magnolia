@@ -108,13 +108,7 @@ public class DefaultComponentProvider implements ComponentProvider {
         return instance;
     }
 
-    /**
-     * Creates a new instance of the passed interface / class by using the registered implementation.
-     * If this fails a {@link MgnlInstantiationException} is thrown.
-     *
-     * @throws MgnlInstantiationException
-     */
-    public <T> T newInstance(Class<T> type) {
+    public <T> T newInstance(Class<T> type, Object... parameters) {
         if (type == null) {
             log.error("type can't be null", new Throwable());
             return null;
@@ -138,7 +132,7 @@ public class DefaultComponentProvider implements ComponentProvider {
                 if (!Classes.isConcrete(clazz)) {
                     throw new MgnlInstantiationException("No concrete implementation defined for " + clazz);
                 }
-                final Object instance = Classes.getClassFactory().newInstance(clazz);
+                final Object instance = Classes.getClassFactory().newInstance(clazz, parameters);
 
                 if (instance instanceof ComponentFactory) {
                     final ComponentFactory<T> factory = (ComponentFactory<T>) instance;

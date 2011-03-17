@@ -33,7 +33,6 @@
  */
 package info.magnolia.objectfactory.pico;
 
-import java.util.Map;
 
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
@@ -81,7 +80,7 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    protected <T> T createInstance(Class<T> type) {
+    protected <T> T createInstance(Class<T> type, Object ... parameters) {
 
         // let's register the component in-place
         // TODO - the container building is copied from info.magnolia.cms.servlets.MgnlServletContextListener#makeContainer - remove redundancy.
@@ -96,6 +95,10 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
             // .withMonitor(slf4jComponentMonitor)
             // .withLifecycle(lifecycleStrategy)
             .build();
+
+        for (Object parameter : parameters) {
+            adhocContainer.addComponent(parameter.getClass(), parameter);
+        }
 
         adhocContainer.addComponent(type, type);
         return adhocContainer.getComponent(type);
@@ -127,21 +130,4 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
         pico.addComponent(type, instance);
     }
 
-
-    public <T> T newInstance(Class<T> type, Map<String, Object> arguments) {
-
-        // Creates a temporary container, and adds all the arguments to it so they will be used for injection. Won't work with multiple arguments of the same type (like two strings).
-
-        final MutablePicoContainer adhocContainer = new PicoBuilder(pico)
-            // order of injection matters, so ConstructorInjection must be first. Yes, we could add more types of injection if needed.
-            .withConstructorInjection()
-            .build();
-
-        for (Map.Entry<String, Object> entry : arguments.entrySet()) {
-            adhocContainer.addComponent(entry.getValue(), entry.getValue());
-        }
-
-        adhocContainer.addComponent(type, type);
-        return adhocContainer.getComponent(type);
-    }
 }

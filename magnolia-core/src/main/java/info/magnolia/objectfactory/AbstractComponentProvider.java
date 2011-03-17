@@ -148,7 +148,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         return (T) instance;
     }
 
-    public synchronized <T> T newInstance(Class<T> type) {
+    public synchronized <T> T newInstance(Class<T> type, Object... parameters) {
         if (type == null) {
             log.error("type can't be null", new Throwable());
             return null;
@@ -161,12 +161,12 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
                 if (!Classes.isConcrete(type)) {
                     throw new MgnlInstantiationException("No concrete implementation defined for " + type);
                 }
-                return (T) createInstance(type);
+                return (T) createInstance(type, parameters);
             }
             if (definition.isFactory()) {
                 return this.<T>instantiateFactoryIfNecessary(definition).newInstance();
             }
-            return (T) createInstance(definition.getImplementationType());
+            return (T) createInstance(definition.getImplementationType(), parameters);
         } catch (Exception e) {
             if (e instanceof MgnlInstantiationException) {
                 throw (MgnlInstantiationException) e;
@@ -235,8 +235,8 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         return definition.getFactory();
     }
 
-    protected <T> T createInstance(Class<T> implementationType) {
-        return Classes.getClassFactory().newInstance(implementationType);
+    protected <T> T createInstance(Class<T> implementationType, Object... parameters) {
+        return Classes.getClassFactory().newInstance(implementationType, parameters);
     }
 
     protected synchronized void removeComponent(Class<?> type) {

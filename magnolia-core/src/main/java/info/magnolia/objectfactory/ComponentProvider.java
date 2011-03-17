@@ -61,11 +61,14 @@ public interface ComponentProvider {
     <T> T getComponent(Class<T> type);
 
     /**
-     * Creates a new instance of the passed interface / class by using the registered implementation.
-     * If this fails a {@link MgnlInstantiationException} is thrown.
+     * Creates a new instance of the passed interface / class by using the registered
+     * implementation. The parameters are used to build the object. Most likely they are passed to
+     * the constructor. If this fails a {@link MgnlInstantiationException} is thrown.
      *
      * @throws MgnlInstantiationException
+     * @throws UnsupportedOperationException
      */
-    <T> T newInstance(Class<T> type);
+
+    <T> T newInstance(Class<T> type, Object... parameters);
 
 }

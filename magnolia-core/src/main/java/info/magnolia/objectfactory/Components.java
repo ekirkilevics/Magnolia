@@ -105,5 +105,9 @@ public class Components {
         public <T> T newInstance(Class<T> type) {
             throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
         }
+
+        public <T> T newInstance(Class<T> type, Object... parameters) {
+            throw new IllegalStateException("No ComponentProvider has been set yet, something must have gone terribly wrong at startup.");
+        }
     }
 }
