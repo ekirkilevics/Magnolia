@@ -37,7 +37,10 @@
       <name>info.magnolia.ui.model.navigation.definition.NavigationItemDefinition</name>
       <value>info.magnolia.ui.model.navigation.definition.NavigationItemDefinitionImpl</value>
     </property>
-
+    <property>
+      <name>info.magnolia.ui.model.menu.definition.MenuItemDefinition</name>
+      <value>info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl</value>
+    </property>
   </properties>
 
   <dependencies>

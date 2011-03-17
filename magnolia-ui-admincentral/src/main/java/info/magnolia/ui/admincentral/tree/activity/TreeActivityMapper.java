@@ -33,12 +33,14 @@
  */
 package info.magnolia.ui.admincentral.tree.activity;
 
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
 
 /**
@@ -52,20 +54,23 @@ public class TreeActivityMapper implements ActivityMapper {
     private PlaceController placeController;
     private UIModel uiModel;
     private TreeBuilder builder;
+    private ComponentProvider componentProvider;
+    private Shell shell;
 
 
-    public TreeActivityMapper(PlaceController placeController, UIModel uiModel, TreeBuilder builder) {
+    public TreeActivityMapper(PlaceController placeController, UIModel uiModel, TreeBuilder builder, ComponentProvider componentProvider, Shell shell) {
         this.placeController = placeController;
         this.uiModel = uiModel;
         this.builder = builder;
+        this.shell = shell;
+        this.componentProvider = componentProvider;
     }
-
 
     public Activity getActivity(final Place place) {
         final String path = ((ItemSelectedPlace)place).getPath();
         final String treeName = ((ItemSelectedPlace)place).getWorkspace();
         if(treeActivity == null){
-            treeActivity = new TreeActivity(treeName, path, placeController, uiModel, builder);
+            treeActivity = new TreeActivity(treeName, path, placeController, uiModel, builder, componentProvider, shell);
         }
         else{
             // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view

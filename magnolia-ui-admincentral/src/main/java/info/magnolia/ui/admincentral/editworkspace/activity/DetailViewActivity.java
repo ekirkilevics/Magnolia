@@ -33,14 +33,25 @@
  */
 package info.magnolia.ui.admincentral.editworkspace.activity;
 
+import java.util.List;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailViewImpl;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionExecutionException;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
 
-import org.apache.commons.lang.NotImplementedException;
 
 
 /**
@@ -52,10 +63,14 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private String treeName;
     private String path;
     private DetailView detailView;
+    private EditWorkspaceActionFactory actionFactory;
+    private Shell shell;
 
-    public DetailViewActivity(String treeName, String path, UIModel uiModel) {
+    public DetailViewActivity(String treeName, String path, UIModel uiModel, EditWorkspaceActionFactory actionFactory, Shell shell) {
         this.treeName = treeName;
         this.uiModel = uiModel;
+        this.actionFactory = actionFactory;
+        this.shell = shell;
         detailView = new DetailViewImpl(this);
         showItem(path);
     }
@@ -74,48 +89,26 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     }
 
     public void onCommandSelected(String commandName) {
-        throw new NotImplementedException("Execution of actions is not working!");
-
-//        try {
-//            uiModel.executeCommand(commandName, treeName, path);
-//            // FIXME this has to be more granular
-//            eventBus.fireEvent(new ContentChangedEvent(treeName, path));
-//        } catch (RepositoryException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
+        // TODO we should inject the tree definition or something more abstract
+        final TreeDefinition treeDefinition = uiModel.getTreeDefinition(treeName);
+        final List<MenuItemDefinition> contextMenuItems = treeDefinition.getContextMenuItems();
+        // TODO should this be a map to avoid such iterations?
+        for (MenuItemDefinition menuItemDefinition : contextMenuItems) {
+            final Item item;
+            try {
+                item = JCRUtil.getSession(treeDefinition.getRepository()).getItem(path);
+                if(menuItemDefinition.getName().equals(commandName)){
+                    final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
+                    try {
+                        action.execute();
+                    }
+                    catch (ActionExecutionException e) {
+                        shell.showError("Can't execute action.", e);
+                    }
+                }            }
+            catch (RepositoryException e) {
+                shell.showError("Can't access content.", e);
+            }
+        }
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
-        result = prime * result
-                + ((treeName == null) ? 0 : treeName.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        DetailViewActivity other = (DetailViewActivity) obj;
-        if (path == null) {
-            if (other.path != null)
-                return false;
-        } else if (!path.equals(other.path))
-            return false;
-        if (treeName == null) {
-            if (other.treeName != null)
-                return false;
-        } else if (!treeName.equals(other.treeName))
-            return false;
-        return true;
-    }
-
-
 }

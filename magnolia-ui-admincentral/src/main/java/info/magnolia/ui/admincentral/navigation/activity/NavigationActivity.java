@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.navigation.activity;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionFactory;
@@ -49,10 +50,12 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
     private NavigationView view;
     private ActionFactory actionFactory;
+    private Shell shell;
 
-    public NavigationActivity(NavigationView view, ActionFactory actionFactory) {
+    public NavigationActivity(NavigationView view, ActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.view = view;
+        this.shell = shell;
         view.setPresenter(this);
     }
     public void start(ViewPort viewPort, EventBus eventBus) {
@@ -61,7 +64,12 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
 
     public void onMenuSelection(MenuItemDefinition menuItem) {
         final Action action = actionFactory.createAction(menuItem.getActionDefinition());
-        action.execute();
+        try {
+            action.execute();
+        }
+        catch (Exception e) {
+            shell.showError("Can't navigate", e);
+        }
     }
 
 }

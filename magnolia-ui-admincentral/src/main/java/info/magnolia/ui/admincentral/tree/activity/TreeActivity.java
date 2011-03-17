@@ -34,15 +34,18 @@
 package info.magnolia.ui.admincentral.tree.activity;
 
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Handler;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.UIModel;
 
@@ -57,19 +60,22 @@ import javax.jcr.RepositoryException;
 public class TreeActivity extends AbstractActivity implements TreeView.Presenter, Handler {
 
     private final String treeName;
-    private EventBus eventBus;
     private PlaceController placeController;
     private TreeView treeView;
     private UIModel uiModel;
     private String path;
     private TreeBuilder builder;
+    private ComponentProvider componentProvider;
+    private Shell shell;
 
-    public TreeActivity(String treeName, String path, PlaceController placeController, UIModel uiModel, TreeBuilder builder) {
+    public TreeActivity(String treeName, String path, PlaceController placeController, UIModel uiModel, TreeBuilder builder, ComponentProvider componentProvider, Shell shell) {
         this.uiModel = uiModel;
         this.treeName = treeName;
         this.path = path;
         this.placeController = placeController;
         this.builder = builder;
+        this.componentProvider = componentProvider;
+        this.shell = shell;
     }
 
     // TODO is this good practice?
@@ -81,9 +87,8 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        this.eventBus = eventBus;
         try {
-            this.treeView = new TreeViewImpl(treeName, this, uiModel, builder);
+            this.treeView = new TreeViewImpl(treeName, this, uiModel, builder, new EditWorkspaceActionFactory(componentProvider), shell);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

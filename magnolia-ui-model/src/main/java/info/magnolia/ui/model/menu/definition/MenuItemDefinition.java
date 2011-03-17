@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.model.menu.definition;
 
-import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 
 
@@ -51,6 +50,6 @@ public interface MenuItemDefinition {
 
     String getI18nBasename();
 
-    public ActionDefinition<Action> getActionDefinition();
+    public ActionDefinition getActionDefinition();
 
 }

@@ -40,6 +40,7 @@ import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.Application;
 import com.vaadin.ui.UriFragmentUtility;
+import com.vaadin.ui.Window.Notification;
 
 
 /**
@@ -75,6 +76,10 @@ public class ShellImpl extends AbstractShell {
 
     public void showNotification(String message) {
         application.getMainWindow().showNotification(message);
+    }
+
+    public void showError(String message, Exception e) {
+        application.getMainWindow().showNotification(message, e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
     }
 
     protected UriFragmentUtility getUriFragmentUtility() {

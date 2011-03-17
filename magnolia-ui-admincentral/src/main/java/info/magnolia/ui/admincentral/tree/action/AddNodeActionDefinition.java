@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,22 +25,30 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.model.action;
+package info.magnolia.ui.admincentral.tree.action;
+
+import info.magnolia.ui.model.action.ActionDefinition;
 
 
 /**
- * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
- * @author fgrilli
- *
+ * Defines the {@link #nodeType} of the new node.
  */
-public interface ActionFactory {
+public class AddNodeActionDefinition implements ActionDefinition {
 
-    Action createAction(final ActionDefinition definition);
+    private String nodeType;
+
+    public String getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(String nodeType) {
+        this.nodeType = nodeType;
+    }
 
 }

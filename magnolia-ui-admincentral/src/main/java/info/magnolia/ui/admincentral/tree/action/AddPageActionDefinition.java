@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,37 +33,12 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.action.ActionDefinition;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
 
 /**
- * Action for creating a new property.
+ * Adds a page (node).
  */
-public class AddPropertyCommand extends Command {
+public class AddPageActionDefinition implements ActionDefinition {
 
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
-    }
-
-    @Override
-    public void execute(Item item) throws RepositoryException {
-        if (item instanceof Node) {
-            Node node = (Node) item;
-
-            String name = JCRUtil.getUniqueLabel(node, "untitled");
-            Property property = node.setProperty(name, "");
-            node.getSession().save();
-//
-//            if (jcrBrowser != null)
-//            jcrBrowser.addItem(new ContainerItemId(property));
-//            if (jcrBrowser != null)
-//            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
-        }
-    }
 }

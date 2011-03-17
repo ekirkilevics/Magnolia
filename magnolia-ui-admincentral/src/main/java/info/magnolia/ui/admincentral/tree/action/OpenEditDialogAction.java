@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,50 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.command;
+package info.magnolia.ui.admincentral.tree.action;
 
-import javax.jcr.Item;
+import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
+
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 
 /**
- * Base class for all tree actions.
+ * Opens a dialog for editing a nodeToEdit in a tree.
+ *
+ * TODO: add support for configuring supported itemTypes, maybe in base class where no config means
+ * all
+ *
+ * @author tmattsson
  */
-public abstract class Command {
+public class OpenEditDialogAction extends ActionBase<OpenEditDialogActionDefinition> {
 
-    private static final long serialVersionUID = -4170116352082513835L;
+    private Node nodeToEdit;
 
-    private String name;
-    private String label;
-    private String icon;
-
-    public void setLabel(String label) {
-        this.label = label;
+    public OpenEditDialogAction(OpenEditDialogActionDefinition definition, Node nodeToEdit, DialogPresenter dialogPresenter) {
+        super(definition);
+        this.nodeToEdit = nodeToEdit;
+        this.dialogPresenter = dialogPresenter;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String dialogName;
 
-    public String getLabel() {
-        return label;
-    }
+    private DialogPresenter dialogPresenter;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public boolean isAvailable(Item item) {
-        return true;
-    }
-
-    public abstract void execute(Item item) throws RepositoryException;
+    public void execute() throws ActionExecutionException {
+        try {
+            dialogPresenter.showDialog(nodeToEdit, getDefinition().getDialogName());
+        }
+        catch (RepositoryException e) {
+            throw new ActionExecutionException("Can't open dialog.", e);
+        }
+    };
 }

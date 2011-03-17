@@ -60,6 +60,10 @@ public class SubShell extends AbstractShell {
         parent.showNotification(message);
     }
 
+    public void showError(String message, Exception e) {
+        parent.showError(message, e);
+    }
+
     @Override
     protected UriFragmentUtility getUriFragmentUtility() {
         //FIXME we should obviously not cast, but also don't like to add the method to the clean interface

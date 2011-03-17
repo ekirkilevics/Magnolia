@@ -41,5 +41,6 @@ package info.magnolia.ui.model.action;
  *
  */
 public interface Action {
-    void execute();
+
+    void execute() throws ActionExecutionException;
 }

@@ -34,9 +34,11 @@
 package info.magnolia.ui.admincentral.editworkspace.activity;
 
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
 
 /**
@@ -47,14 +49,18 @@ import info.magnolia.ui.model.UIModel;
  */
 public class DetailViewActivityMapper implements ActivityMapper {
     private UIModel uiModel;
+    private Shell shell;
+    private EditWorkspaceActionFactory actionFactory;
 
-    public DetailViewActivityMapper(UIModel uiModel) {
+    public DetailViewActivityMapper(UIModel uiModel, EditWorkspaceActionFactory actionFactory, Shell shell) {
         this.uiModel = uiModel;
+        this.shell = shell;
+        this.actionFactory = actionFactory;
     }
 
     public Activity getActivity(final Place place) {
         final String path = ((ItemSelectedPlace)place).getPath();
         final String treeName = ((ItemSelectedPlace)place).getWorkspace();
-        return new DetailViewActivity(treeName, path, uiModel);
+        return new DetailViewActivity(treeName, path, uiModel, actionFactory, shell);
     }
 }

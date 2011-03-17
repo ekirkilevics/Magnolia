@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.model.menu.definition;
 
-import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 
 
@@ -51,7 +50,7 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
 
     private String icon;
 
-    private ActionDefinition<Action> actionDefinition;
+    private ActionDefinition actionDefinition;
 
     public void setLabel(String label) {
         this.label = label;
@@ -77,11 +76,11 @@ public class MenuItemDefinitionImpl implements MenuItemDefinition {
         return icon;
     }
 
-    public ActionDefinition<Action> getActionDefinition() {
+    public ActionDefinition getActionDefinition() {
         return actionDefinition;
     }
 
-    public void setActionDefinition(ActionDefinition<Action> actionDefinition) {
+    public void setActionDefinition(ActionDefinition actionDefinition) {
         this.actionDefinition = actionDefinition;
     }
 

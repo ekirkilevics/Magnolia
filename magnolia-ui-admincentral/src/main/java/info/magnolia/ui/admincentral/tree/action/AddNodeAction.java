@@ -33,57 +33,40 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.HackContent;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.framework.event.EventBus;
 
-import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 
 /**
- * Tree action for adding a page to the website repository.
+ * Action for adding a new folder.
+ *
+ * TODO: add support for configuring supported itemTypes, maybe in base class where no config means
+ * all
  */
-public class AddPageCommand extends Command {
+public class AddNodeAction extends RepositoryOperationAction<AddNodeActionDefinition, Node> {
 
-    private static final long serialVersionUID = 7745378363506148188L;
-
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
+    public AddNodeAction(AddNodeActionDefinition definition, Node node, EventBus eventBus) {
+        super(definition, node, eventBus);
     }
 
     @Override
-    public void execute(Item item) throws RepositoryException {
+    void onExecute(Node node) throws RepositoryException {
+        String name = JCRUtil.getUniqueLabel(node, "untitled");
+        Node newNode = node.addNode(name, getDefinition().getNodeType());
+        postProcessNode(newNode);
+    }
 
-        if (item instanceof Node) {
-            Node node = (Node) item;
+    protected void postProcessNode(Node newNode) throws RepositoryException {
+        MetaData metaData = JCRMetadataUtil.getMetaData(newNode);
 
-            String name = JCRUtil.getUniqueLabel(node, "untitled");
-            Node newChild = node.addNode(name, ItemType.CONTENT.getSystemName());
-
-            MetaData metaData = JCRMetadataUtil.getMetaData(newChild);
-            metaData.setAuthorId(MgnlContext.getUser().getName());
-            metaData.setCreationDate();
-            metaData.setModificationDate();
-            Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newChild));
-            if (newTemplate != null) {
-                metaData.setTemplate(newTemplate.getName());
-            }
-
-            node.getSession().save();
-
-//            if (jcrBrowser != null)
-//            jcrBrowser.addItem(new ContainerItemId(newChild));
-//            if (jcrBrowser != null)
-//            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
-        }
+        metaData.setAuthorId(MgnlContext.getUser().getName());
+        metaData.setCreationDate();
+        metaData.setModificationDate();
     }
 }

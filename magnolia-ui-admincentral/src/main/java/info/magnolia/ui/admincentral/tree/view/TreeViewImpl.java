@@ -34,8 +34,10 @@
 package info.magnolia.ui.admincentral.tree.view;
 
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
@@ -55,8 +57,8 @@ public class TreeViewImpl extends CustomComponent implements TreeView, IsVaadinC
 
     private JcrBrowser jcrBrowser;
 
-    public TreeViewImpl(String treeName, final Presenter presenter, UIModel uiModel, TreeBuilder builder) throws RepositoryException {
-        jcrBrowser = new JcrBrowser(treeName, uiModel, builder);
+    public TreeViewImpl(String treeName, final Presenter presenter, UIModel uiModel, TreeBuilder builder, EditWorkspaceActionFactory actionFactory, Shell shell) throws RepositoryException {
+        jcrBrowser = new JcrBrowser(treeName, uiModel, builder, actionFactory, shell);
         setCompositionRoot(jcrBrowser);
         setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,28 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.action;
+package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.model.action.ActionBase;
+import info.magnolia.ui.model.action.ActionExecutionException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.Application;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Window;
+
 
 /**
- * Implements a place change action.
- * @author fgrilli
- *
+ * Opens the selected pageNode for pageNode editing.
  */
-public class PlaceChangeAction extends ActionBase<PlaceChangeActionDefinition>  {
+public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
-    private PlaceController placeController;
+    private static final long serialVersionUID = 751955514356448616L;
 
-    public PlaceChangeAction(final PlaceChangeActionDefinition definition, final PlaceController placeController) {
+    private Application application;
+
+    private Node pageNode;
+
+    // FIXME use the shell instead!
+    public OpenPageAction(OpenPageActionDefinition definition, Application application, Node pageNode) {
         super(definition);
-        this.placeController = placeController;
+        this.application =  application;
+        this.pageNode = pageNode;
     }
 
-    public void execute() {
-        Place newPlace = getDefinition().getPlace();
-        placeController.goTo(newPlace);
+    public void execute() throws ActionExecutionException {
+        try {
+            String uri = MgnlContext.getContextPath() + pageNode.getPath() + ".html";
+            Window window = application.getMainWindow();
+            window.open(new ExternalResource(uri));
+        }
+        catch (RepositoryException e) {
+            throw new ActionExecutionException("Can't open page.", e);
+        }
     }
-
 }

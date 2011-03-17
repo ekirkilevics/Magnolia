@@ -40,7 +40,7 @@ import info.magnolia.ui.framework.place.Place;
  * @author fgrilli
  *
  */
-public interface PlaceChangeActionDefinition extends ActionDefinition<PlaceChangeAction> {
+public interface PlaceChangeActionDefinition extends ActionDefinition {
 
     Place getPlace();
 }

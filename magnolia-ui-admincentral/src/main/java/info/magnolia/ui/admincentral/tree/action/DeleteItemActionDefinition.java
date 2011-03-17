@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,49 +33,12 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.action.ActionDefinition;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 /**
- * Opens a dialog for editing a node in a tree.
- *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
- *
- * @author tmattsson
+ * Delete an {@link javax.jcr.Item}.
  */
-// TODO this is a typical action
-public class OpenDialogCommand extends Command {
+public class DeleteItemActionDefinition implements ActionDefinition {
 
-    private DialogPresenter dialogPresenter;
-    private String dialog;
-
-    public OpenDialogCommand(DialogPresenter dialogPresenter) {
-        this.dialogPresenter = dialogPresenter;
-    }
-
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
-    }
-
-    @Override
-    public void execute(Item item) throws RepositoryException {
-
-        // We need to send the workspace as well
-
-        dialogPresenter.showDialog((Node) item, "userpreferences");
-//        AdminCentralApplication.placeController.goTo(new DialogPlace("howTo", item.getPath()));
-    }
-
-    public String getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
 }

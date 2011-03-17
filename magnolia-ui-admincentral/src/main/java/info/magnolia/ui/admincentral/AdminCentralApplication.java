@@ -39,8 +39,6 @@ import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.admincentral.editworkspace.activity.DetailViewActivity;
-import info.magnolia.ui.admincentral.editworkspace.activity.DetailViewActivityMapper;
 import info.magnolia.ui.admincentral.main.activity.MainActivityMapper;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
@@ -122,9 +120,6 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(PlaceController.class, PlaceController.class);
         container.addComponent(ActionFactory.class, ActionFactoryImpl.class);
         container.addComponent(UIModel.class, UIModel.class);
-
-        container.addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
-        container.addComponent(DetailViewActivity.class, DetailViewActivity.class);
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified

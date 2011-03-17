@@ -44,6 +44,8 @@ public interface Shell {
 
     void showNotification(String message);
 
+    void showError(String message, Exception e);
+
     // FIXME the following methods should be encapsulated into an specific interface: FragmentUtility or so
     String getFragment();
 
@@ -53,5 +55,6 @@ public interface Shell {
     HandlerRegistration addFragmentChangedHandler(FragmentChangedHandler handler);
 
     Shell createSubShell(String id);
+
 
 }

@@ -38,9 +38,7 @@ package info.magnolia.ui.model.action;
  * For instance, a place change action might provide a place object to move to via a place controller. An action definition is also used by {@link ActionFactory} implementations
  * to look up and retrieve the associated Action.
  * @author fgrilli
- *
- * @param <A>
  */
-public interface ActionDefinition<A extends Action> {
+public interface ActionDefinition {
 
 }

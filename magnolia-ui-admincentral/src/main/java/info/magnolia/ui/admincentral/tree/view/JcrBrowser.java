@@ -36,11 +36,14 @@ package info.magnolia.ui.admincentral.tree.view;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
@@ -56,7 +59,6 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +90,6 @@ public class JcrBrowser extends TreeTable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private UIModel uiModel;
     private TreeDefinition treeDefinition;
     private JcrContainer container;
 
@@ -97,10 +98,16 @@ public class JcrBrowser extends TreeTable {
 
     private Map<String, Column<?,?>> columns = new LinkedHashMap<String, Column<?,?>>();
 
+    private EditWorkspaceActionFactory actionFactory;
+
+    private Shell shell;
 
     // TODO just pass the tree definition
-    public JcrBrowser(String treeName, UIModel uiModel, TreeBuilder builder) throws RepositoryException {
-        this.uiModel = uiModel;
+    public JcrBrowser(String treeName, UIModel uiModel, TreeBuilder builder, EditWorkspaceActionFactory actionFactory, Shell shell) throws RepositoryException {
+        this.actionFactory = actionFactory;
+        // TODO the view should not know the shell
+        this.shell = shell;
+
         setSizeFull();
         setEditable(false);
         setSelectable(true);
@@ -124,9 +131,9 @@ public class JcrBrowser extends TreeTable {
         setPageLength(900);
     }
 
-    private static class JcrBrowserAction extends Action {
+    private  class JcrBrowserAction extends Action {
         private static final long serialVersionUID = -5358813017929951816L;
-        private ActionDefinition<info.magnolia.ui.model.action.Action> actionDefinition;
+        private ActionDefinition actionDefinition;
 
         private JcrBrowserAction(MenuItemDefinition menuItemDefinition) {
             super(menuItemDefinition.getLabel());
@@ -134,8 +141,9 @@ public class JcrBrowser extends TreeTable {
             this.actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
-        public void handleAction(JcrBrowser jcrBrowser, Item item) throws RepositoryException {
-            throw new NotImplementedException("should execute" + actionDefinition);
+        public void handleAction(JcrBrowser jcrBrowser, Item item) throws ActionExecutionException {
+            info.magnolia.ui.model.action.Action action = actionFactory.createAction(actionDefinition, item);
+            action.execute();
         }
     }
 
@@ -145,31 +153,29 @@ public class JcrBrowser extends TreeTable {
             private static final long serialVersionUID = 4311121075528949148L;
 
             public Action[] getActions(Object target, Object sender) {
-
-                try {
-                    ContainerItemId itemId = (ContainerItemId) target;
-                    Item item = container.getJcrItem(itemId);
-                    // FIXME make that item type, security dependent
-                    List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
-                    for(MenuItemDefinition menuItemDefinition: treeDefinition.getContextMenuItems()){
-                        actions.add(new JcrBrowserAction(menuItemDefinition));
-                    }
-
-                    return actions.toArray(new Action[actions.size()]);
-                } catch (RepositoryException e) {
-                    throw new IllegalStateException(e);
+                // FIXME make that item type, security dependent
+                List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
+                for(MenuItemDefinition menuItemDefinition: treeDefinition.getContextMenuItems()){
+                    actions.add(new JcrBrowserAction(menuItemDefinition));
                 }
+
+                return actions.toArray(new Action[actions.size()]);
             }
 
             public void handleAction(Action action, Object sender, Object target) {
+                ContainerItemId containerItemId = (ContainerItemId) target;
+                Item item;
                 try {
-                    ContainerItemId containerItemId = (ContainerItemId) target;
-                    ((JcrBrowserAction) action).handleAction(JcrBrowser.this, container.getJcrItem(containerItemId));
-                } catch (ClassCastException e) {
-                    // not our action
-                    log.error("Encountered untreatable action {}:{}", action.getCaption(), e.getMessage());
-                } catch (RepositoryException e) {
-                    log.error(e.getMessage(), e);
+                    item = container.getJcrItem(containerItemId);
+                    try {
+                        ((JcrBrowserAction) action).handleAction(JcrBrowser.this, item);
+                    }
+                    catch (ActionExecutionException e) {
+                        shell.showError("Can't execute action.", e);
+                    }
+                }
+                catch (RepositoryException e) {
+                    shell.showError("Can't access content.", e);
                 }
             }
         });

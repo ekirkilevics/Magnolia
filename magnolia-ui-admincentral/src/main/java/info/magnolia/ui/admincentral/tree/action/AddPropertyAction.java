@@ -31,16 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.action;
+package info.magnolia.ui.admincentral.tree.action;
+
+import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.framework.event.EventBus;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 
 /**
- * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
- * @author fgrilli
- *
+ * Action for creating a new property.
  */
-public interface ActionFactory {
+public class AddPropertyAction extends RepositoryOperationAction<AddPropertyActionDefinition, Node> {
 
-    Action createAction(final ActionDefinition definition);
+    public AddPropertyAction(AddPropertyActionDefinition definition, Node node, EventBus eventBus) {
+        super(definition, node, eventBus);
+    }
 
+    @Override
+    void onExecute(Node node) throws RepositoryException {
+        String name = JCRUtil.getUniqueLabel(node, "untitled");
+        node.setProperty(name, "");
+    }
 }

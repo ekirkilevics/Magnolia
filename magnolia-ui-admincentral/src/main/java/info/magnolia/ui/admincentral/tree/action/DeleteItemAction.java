@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,16 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.action;
+package info.magnolia.ui.admincentral.tree.action;
 
+import info.magnolia.ui.framework.event.EventBus;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
 
 /**
- * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
- * @author fgrilli
- *
+ * Deletes a node from the repository.
  */
-public interface ActionFactory {
+public class DeleteItemAction extends RepositoryOperationAction<DeleteItemActionDefinition, Item> {
 
-    Action createAction(final ActionDefinition definition);
+    public DeleteItemAction(DeleteItemActionDefinition definition, Item item, EventBus eventBus) {
+        super(definition, item, eventBus);
+    }
 
+    @Override
+    void onExecute(Item item) throws RepositoryException {
+        item.remove();
+    }
 }

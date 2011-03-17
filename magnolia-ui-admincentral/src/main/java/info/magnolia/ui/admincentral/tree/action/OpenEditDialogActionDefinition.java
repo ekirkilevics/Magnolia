@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,31 +33,22 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.ui.model.action.ActionDefinition;
 
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
 
 /**
- * Deletes a node from the repository.
+ * Opens a dialog to edit an {@link javax.jcr.Node}.
  */
-public class DeleteItemCommand extends Command {
+public class OpenEditDialogActionDefinition implements ActionDefinition {
 
-    private static final long serialVersionUID = -4485698706375056385L;
+    private String dialogName;
 
-    @Override
-    public void execute(Item item) throws RepositoryException {
-
-        if (item instanceof Node) {
-            Node node = (Node) item;
-            node.remove();
-            node.getSession().save();
-        } else if (item instanceof Property) {
-            Property property = (Property) item;
-            property.remove();
-            property.getSession().save();
-        }
+    public String getDialogName() {
+        return dialogName;
     }
+
+    public void setDialogName(String dialogName) {
+        this.dialogName = dialogName;
+    }
+
 }

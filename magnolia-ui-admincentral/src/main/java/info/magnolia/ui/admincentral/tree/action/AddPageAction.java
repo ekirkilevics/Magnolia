@@ -33,62 +33,32 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.HackContent;
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.model.command.Command;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.ui.framework.event.EventBus;
 
-import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 
 /**
- * Action for adding a new folder.
- *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
+ * Tree action for adding a page to the website repository.
  */
-public class AddNodeCommand extends Command {
+public class AddPageAction extends AddNodeAction {
 
-    private static final long serialVersionUID = -7658689118638162334L;
-
-    private String nodeType = ItemType.CONTENT.getSystemName();
-
-    @Override
-    public boolean isAvailable(Item item) {
-        return item instanceof Node;
+    public AddPageAction(AddNodeActionDefinition definition, Node parent, EventBus eventBus) {
+        super(definition, parent, eventBus);
     }
 
     @Override
-    public void execute(Item item) throws RepositoryException {
-
-        if (item instanceof Node) {
-            Node node = (Node) item;
-
-            String name = JCRUtil.getUniqueLabel(node, "untitled");
-            Node newChild = node.addNode(name, nodeType);
-
-            MetaData metaData = JCRMetadataUtil.getMetaData(newChild);
-            metaData.setAuthorId(MgnlContext.getUser().getName());
-            metaData.setCreationDate();
-            metaData.setModificationDate();
-
-            node.getSession().save();
-
-//            if (jcrBrowser != null)
-//            jcrBrowser.addItem(new ContainerItemId(newChild));
-//            if (jcrBrowser != null)
-//            jcrBrowser.setCollapsed(new ContainerItemId(item), false);
+    protected void postProcessNode(Node newNode) throws RepositoryException {
+        MetaData metaData = JCRMetadataUtil.getMetaData(newNode);
+        Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newNode));
+        if (newTemplate != null) {
+            metaData.setTemplate(newTemplate.getName());
         }
-    }
-
-    public String getNodeType() {
-        return nodeType;
-    }
-
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
     }
 }

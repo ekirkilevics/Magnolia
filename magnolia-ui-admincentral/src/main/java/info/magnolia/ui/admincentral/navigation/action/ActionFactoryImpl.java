@@ -72,7 +72,7 @@ public class ActionFactoryImpl implements ActionFactory {
         this.placeController = placeController;
     }
 
-    public Action createAction(final ActionDefinition<? extends Action> definition){
+    public Action createAction(final ActionDefinition definition){
         if(definition == null){
             //TODO this will actually have to throw an exception but as a quick workaround for the M3 Sprint II release we use a NowhereActionDefinition to avoid annoying IAE.
            //throw new IllegalArgumentException("action definition cannot be null");

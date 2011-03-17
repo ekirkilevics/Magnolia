@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.editworkspace.activity;
 
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
@@ -53,12 +54,10 @@ import info.magnolia.ui.model.UIModel;
 public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
     private String workspace;
-    private DetailViewActivityMapper detailViewActivityMapper;
 
-    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel, DetailViewActivityMapper detailViewActivityMapper, TreeBuilder builder) {
+    public EditWorkspaceActivity(String workspace, Shell shell, UIModel uiModel, TreeBuilder builder) {
         super("edit-workspace-" + workspace, shell);
         this.workspace = workspace;
-        this.detailViewActivityMapper = detailViewActivityMapper;
     }
 
     @Override
@@ -73,8 +72,12 @@ public class EditWorkspaceActivity extends MVPSubContainerActivity {
 
         addComponent(TreeActivityMapper.class, TreeActivityMapper.class);
         addComponent(TreeActivity.class, TreeActivity.class);
+        addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
+        addComponent(DetailViewActivity.class, DetailViewActivity.class);
+        addComponent(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
 
         TreeActivityMapper treeActivityMapper = getComponentProvider().getComponent(TreeActivityMapper.class);
+        DetailViewActivityMapper detailViewActivityMapper = getComponentProvider().getComponent(DetailViewActivityMapper.class);
 
         // FIXME does it make sense to have activity manager with a single activity? I think no.
         final ActivityManager treeActivityManager = new ActivityManager(treeActivityMapper, innerEventBus);
