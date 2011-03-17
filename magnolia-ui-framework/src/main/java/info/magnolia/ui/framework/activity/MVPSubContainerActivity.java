@@ -34,6 +34,7 @@
 package info.magnolia.ui.framework.activity;
 
 import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.Parameter;
 import org.picocontainer.PicoBuilder;
 
 import info.magnolia.objectfactory.ComponentProvider;
@@ -80,6 +81,10 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
     }
 
     private ComponentProvider componentProvider;
+
+    public ComponentProvider getComponentProvider() {
+        return componentProvider;
+    }
 
     public void start(ViewPort viewPort, EventBus outerEventBus) {
 
@@ -131,5 +136,12 @@ public abstract class MVPSubContainerActivity extends AbstractActivity {
 
     protected PlaceController getInnerPlaceController() {
         return innerPlaceController;
+    }
+    /**
+     * FIXME: this is a hack. We should come up with a better solution.
+     * Allows subclasses adding additional components to the parent container.
+     */
+    protected MutablePicoContainer addComponent(Object componentKey, Object componentImplementationOrInstance, Parameter... parameters){
+        return ((MutablePicoContainer)((PicoComponentProvider)componentProvider).getContainer()).addComponent(componentKey, componentImplementationOrInstance, parameters);
     }
 }
