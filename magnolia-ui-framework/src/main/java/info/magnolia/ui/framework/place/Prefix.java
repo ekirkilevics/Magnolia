@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  * <p>
  * Copied verbatim from {@link com.google.gwt.place.shared.Prefix}
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Prefix {
   String value();
