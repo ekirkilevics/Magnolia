@@ -33,12 +33,18 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
+import info.magnolia.ui.admincentral.tree.container.JcrContainerBackend;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import javax.jcr.RepositoryException;
@@ -57,8 +63,21 @@ public class TreeViewImpl extends CustomComponent implements TreeView, IsVaadinC
 
     private JcrBrowser jcrBrowser;
 
-    public TreeViewImpl(String treeName, final Presenter presenter, UIModel uiModel, TreeBuilder builder, EditWorkspaceActionFactory actionFactory, Shell shell) throws RepositoryException {
-        jcrBrowser = new JcrBrowser(treeName, uiModel, builder, actionFactory, shell);
+    public TreeViewImpl(final Presenter presenter, TreeBuilder builder, TreeDefinition treeDefinition, EditWorkspaceActionFactory editWorkspaceActionFactory, Shell shell) throws RepositoryException {
+
+        Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
+        for (ColumnDefinition columnDefinition : treeDefinition.getColumns()) {
+            // FIXME use getName() not getLabel()
+            Column<?, ?> column = builder.createTreeColumn(columnDefinition);
+            // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
+            if (column != null) {
+                columns.put(columnDefinition.getLabel(), column);
+            }
+        }
+
+        JcrContainerBackend jcrContainerBackend = new JcrContainerBackend(treeDefinition, columns);
+        jcrBrowser = new JcrBrowser(treeDefinition, jcrContainerBackend, editWorkspaceActionFactory, shell);
+
         setCompositionRoot(jcrBrowser);
         setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
@@ -67,7 +86,7 @@ public class TreeViewImpl extends CustomComponent implements TreeView, IsVaadinC
 
             public void itemClick(ItemClickEvent event) {
                 try {
-                    presenter.onItemSelection(jcrBrowser.getContainer().getJcrItem((ContainerItemId) event.getItemId()));
+                    presenter.onItemSelection(jcrBrowser.getJcrContainerBackend().getJcrItem((ContainerItemId) event.getItemId()));
                 } catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }
@@ -84,11 +103,10 @@ public class TreeViewImpl extends CustomComponent implements TreeView, IsVaadinC
     }
 
     public void refresh() {
-        jcrBrowser.getContainer().fireItemSetChange();
+        jcrBrowser.refresh();
     }
 
     public Component asVaadinComponent() {
         return this;
     }
-
 }

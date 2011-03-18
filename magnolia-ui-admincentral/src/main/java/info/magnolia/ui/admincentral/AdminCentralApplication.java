@@ -52,7 +52,8 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
@@ -97,6 +98,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         componentProvider = new PicoComponentProvider(container, provider);
         Properties properties = new Properties();
         properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
+        properties.put(MenuItemDefinition.class.getName(), MenuItemDefinitionImpl.class.getName());
         componentProvider.parseConfiguration(properties);
 
         // TODO: getBuilder should take params user, device...
@@ -123,7 +125,6 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(Shell.class, ShellImpl.class);
         container.addComponent(PlaceController.class, PlaceController.class);
         container.addComponent(NavigationActionFactory.class, NavigationActionFactory.class);
-        container.addComponent(UIModel.class, UIModel.class);
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified

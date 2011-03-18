@@ -50,12 +50,12 @@ import com.vaadin.data.Property;
 public class JcrContainerProperty implements Property, Property.ValueChangeNotifier {
 
     private String propertyId;
-    private ContainerItemId itemId;
+    private Object itemId;
     private JcrContainer container;
     private boolean readOnly = false;
     private List<ValueChangeListener> listeners = new ArrayList<Property.ValueChangeListener>();
 
-    public JcrContainerProperty(String propertyId, ContainerItemId itemId, JcrContainer container) {
+    public JcrContainerProperty(String propertyId, Object itemId, JcrContainer container) {
         this.propertyId = propertyId;
         this.itemId = itemId;
         this.container = container;

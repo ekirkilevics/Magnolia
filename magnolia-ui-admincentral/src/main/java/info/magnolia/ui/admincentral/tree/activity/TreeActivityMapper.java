@@ -41,7 +41,7 @@ import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 /**
  * Returns the {@link Activity} to perform when the current selected item on a tree has changed.
@@ -52,25 +52,24 @@ public class TreeActivityMapper implements ActivityMapper {
 
     private TreeActivity treeActivity;
     private PlaceController placeController;
-    private UIModel uiModel;
     private TreeBuilder builder;
     private ComponentProvider componentProvider;
     private Shell shell;
+    private TreeRegistry treeRegistry;
 
-
-    public TreeActivityMapper(PlaceController placeController, UIModel uiModel, TreeBuilder builder, ComponentProvider componentProvider, Shell shell) {
+    public TreeActivityMapper(PlaceController placeController, TreeBuilder builder, ComponentProvider componentProvider, Shell shell, TreeRegistry treeRegistry) {
         this.placeController = placeController;
-        this.uiModel = uiModel;
         this.builder = builder;
         this.shell = shell;
         this.componentProvider = componentProvider;
+        this.treeRegistry = treeRegistry;
     }
 
     public Activity getActivity(final Place place) {
         final String path = ((ItemSelectedPlace)place).getPath();
         final String treeName = ((ItemSelectedPlace)place).getWorkspace();
         if(treeActivity == null){
-            treeActivity = new TreeActivity(treeName, path, placeController, uiModel, builder, componentProvider, shell);
+            treeActivity = new TreeActivity(treeName, path, placeController, builder, componentProvider, shell, treeRegistry);
         }
         else{
             // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view

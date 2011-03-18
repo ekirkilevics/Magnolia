@@ -56,7 +56,7 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
     }
 
     public Class<?> getType(Object propertyId) {
-        return containerProperties.get(propertyId).getType();
+        return containerProperties.get((String)propertyId).getType();
     }
 
     public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue) throws UnsupportedOperationException {

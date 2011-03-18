@@ -34,10 +34,10 @@
 package info.magnolia.ui.admincentral.editworkspace.activity;
 
 import java.util.List;
-
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
 import info.magnolia.ui.admincentral.editworkspace.view.DetailViewImpl;
@@ -46,12 +46,11 @@ import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.UIModel;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
-
+import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 
 /**
@@ -59,18 +58,18 @@ import info.magnolia.ui.model.tree.definition.TreeDefinition;
  */
 public class DetailViewActivity extends AbstractActivity implements DetailView.Presenter {
 
-    private UIModel uiModel;
     private String treeName;
     private String path;
     private DetailView detailView;
     private EditWorkspaceActionFactory actionFactory;
     private Shell shell;
+    private TreeRegistry treeRegistry;
 
-    public DetailViewActivity(String treeName, String path, UIModel uiModel, EditWorkspaceActionFactory actionFactory, Shell shell) {
+    public DetailViewActivity(String treeName, String path, EditWorkspaceActionFactory actionFactory, Shell shell, TreeRegistry treeRegistry) {
         this.treeName = treeName;
-        this.uiModel = uiModel;
         this.actionFactory = actionFactory;
         this.shell = shell;
+        this.treeRegistry = treeRegistry;
         detailView = new DetailViewImpl(this);
         showItem(path);
     }
@@ -84,13 +83,22 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         if (!"/".equals(path)) {
             this.path = path;
             // FIXME should be dependent on the item type
-            detailView.showActions(uiModel.getTreeDefinition(treeName).getContextMenuItems());
+            try {
+                detailView.showActions(treeRegistry.getTree(treeName).getContextMenuItems());
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
         }
     }
 
     public void onCommandSelected(String commandName) {
         // TODO we should inject the tree definition or something more abstract
-        final TreeDefinition treeDefinition = uiModel.getTreeDefinition(treeName);
+        final TreeDefinition treeDefinition;
+        try {
+            treeDefinition = treeRegistry.getTree(treeName);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
         final List<MenuItemDefinition> contextMenuItems = treeDefinition.getContextMenuItems();
         // TODO should this be a map to avoid such iterations?
         for (MenuItemDefinition menuItemDefinition : contextMenuItems) {

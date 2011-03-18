@@ -47,10 +47,13 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.UIModel;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Activity for displaying dialogs.
@@ -62,20 +65,20 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private final String treeName;
     private PlaceController placeController;
     private TreeView treeView;
-    private UIModel uiModel;
     private String path;
     private TreeBuilder builder;
     private ComponentProvider componentProvider;
     private Shell shell;
+    private TreeRegistry treeRegistry;
 
-    public TreeActivity(String treeName, String path, PlaceController placeController, UIModel uiModel, TreeBuilder builder, ComponentProvider componentProvider, Shell shell) {
-        this.uiModel = uiModel;
+    public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, ComponentProvider componentProvider, Shell shell, TreeRegistry treeRegistry) {
         this.treeName = treeName;
         this.path = path;
         this.placeController = placeController;
         this.builder = builder;
         this.componentProvider = componentProvider;
         this.shell = shell;
+        this.treeRegistry = treeRegistry;
     }
 
     // TODO is this good practice?
@@ -88,7 +91,8 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void start(ViewPort viewPort, EventBus eventBus) {
         try {
-            this.treeView = new TreeViewImpl(treeName, this, uiModel, builder, new EditWorkspaceActionFactory(componentProvider), shell);
+            TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
+            this.treeView = new TreeViewImpl(this, builder, treeDefinition, new EditWorkspaceActionFactory(componentProvider), shell);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -97,13 +101,9 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         viewPort.setView(treeView);
     }
 
-    public UIModel getUIModel() {
-        return uiModel;
-    }
-
     public void onItemSelection(Item jcrItem) {
         try {
-            this.path = uiModel.getPathInTree(treeName, jcrItem);
+            this.path = getPathInTree(treeName, jcrItem);
             placeController.goTo(new ItemSelectedPlace(treeName, this.path));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -115,4 +115,15 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
         treeView.refresh();
     }
 
+    public String getPathInTree(String treeName, Item item) throws RepositoryException {
+
+        // TODO this method is duplicated in JcrContainerBackend
+
+        TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
+        String base = treeDefinition.getPath();
+        if (base.equals("/"))
+            return item.getPath();
+        else
+            return StringUtils.substringAfter(item.getPath(), base);
+    }
 }
