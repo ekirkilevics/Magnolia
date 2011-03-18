@@ -46,7 +46,7 @@ import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Han
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.admincentral.tree.container.JcrContainerBackend;
+import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -73,7 +73,6 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private ComponentProvider componentProvider;
     private Shell shell;
     private TreeRegistry treeRegistry;
-    private JcrContainerBackend jcrContainerBackend;
 
     public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, ComponentProvider componentProvider, Shell shell, TreeRegistry treeRegistry) {
         this.treeName = treeName;
@@ -94,6 +93,14 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
+        this.treeView = createTreeView();
+        this.treeView.select(path);
+        eventBus.addHandler(ContentChangedEvent.class, this);
+        viewPort.setView(treeView);
+    }
+
+    // TODO this should be done by the builder
+    private TreeView createTreeView() {
         try {
             TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
 
@@ -109,25 +116,18 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
             EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
 
-            jcrContainerBackend = new JcrContainerBackend(treeDefinition, columns, actionFactory);
+            TreeModel treeModel = new TreeModel(treeDefinition, columns, actionFactory);
 
-            this.treeView = new TreeViewImpl(this, treeDefinition, jcrContainerBackend, shell);
+            return new TreeViewImpl(this, treeDefinition, treeModel, shell);
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-        treeView.select(path);
-        eventBus.addHandler(ContentChangedEvent.class, this);
-        viewPort.setView(treeView);
     }
 
     public void onItemSelection(Item jcrItem) {
-        try {
-            this.path = jcrContainerBackend.getPathInTree(jcrItem);
-            placeController.goTo(new ItemSelectedPlace(treeName, this.path));
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        this.path = treeView.getPathInTree(jcrItem);
+        placeController.goTo(new ItemSelectedPlace(treeName, this.path));
     }
 
     public void onContentChanged(ContentChangedEvent event) {

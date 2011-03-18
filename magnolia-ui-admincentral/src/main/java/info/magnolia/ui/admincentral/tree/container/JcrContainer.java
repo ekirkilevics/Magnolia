@@ -61,10 +61,10 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;
 
-    private JcrContainerBackend jcrContainerBackend;
+    private JcrContainerSource jcrContainerSource;
 
-    public JcrContainer(JcrContainerBackend jcrContainerBackend) {
-        this.jcrContainerBackend = jcrContainerBackend;
+    public JcrContainer(JcrContainerSource jcrContainerSource) {
+        this.jcrContainerSource = jcrContainerSource;
     }
 
     public void addListener(ItemSetChangeListener listener) {
@@ -107,7 +107,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public Collection<ContainerItemId> getItemIds() {
         try {
-            return createContainerIds(jcrContainerBackend.getRootItemIds());
+            return createContainerIds(jcrContainerSource.getRootItemIds());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -147,7 +147,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public Collection<ContainerItemId> getChildren(Object itemId) {
         try {
-            return createContainerIds(jcrContainerBackend.getChildren(getJcrItem((ContainerItemId) itemId)));
+            return createContainerIds(jcrContainerSource.getChildren(getJcrItem((ContainerItemId) itemId)));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -167,7 +167,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public Collection<ContainerItemId> rootItemIds() {
         try {
-            return createContainerIds(jcrContainerBackend.getRootItemIds());
+            return createContainerIds(jcrContainerSource.getRootItemIds());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -188,7 +188,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public boolean isRoot(Object itemId) {
         try {
-            return jcrContainerBackend.isRoot(getJcrItem((ContainerItemId) itemId));
+            return jcrContainerSource.isRoot(getJcrItem((ContainerItemId) itemId));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -196,7 +196,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public boolean hasChildren(Object itemId) {
         try {
-            return jcrContainerBackend.hasChildren(getJcrItem((ContainerItemId) itemId));
+            return jcrContainerSource.hasChildren(getJcrItem((ContainerItemId) itemId));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -212,7 +212,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public Object getColumnValue(String propertyId, Object itemId) {
         try {
-            return jcrContainerBackend.getColumnValue(propertyId, getJcrItem(((ContainerItemId) itemId)));
+            return jcrContainerSource.getColumnValue(propertyId, getJcrItem(((ContainerItemId) itemId)));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -220,14 +220,14 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public void setColumnValue(String propertyId, Object itemId, Object newValue) {
         try {
-            jcrContainerBackend.setColumnValue(propertyId, getJcrItem(((ContainerItemId) itemId)), newValue);
+            jcrContainerSource.setColumnValue(propertyId, getJcrItem(((ContainerItemId) itemId)), newValue);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
     public javax.jcr.Item getJcrItem(ContainerItemId containerItemId) throws RepositoryException {
-        Node node = jcrContainerBackend.getSession().getNodeByIdentifier(containerItemId.getNodeIdentifier());
+        Node node = jcrContainerSource.getNodeByIdentifier(containerItemId.getNodeIdentifier());
         if (containerItemId.isProperty())
             return node.getProperty(containerItemId.getPropertyName());
         return node;
@@ -237,7 +237,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     public ContainerItemId getItemByPath(String path) {
         try {
-            return createContainerId(jcrContainerBackend.getItemByPath(path));
+            return createContainerId(jcrContainerSource.getItemByPath(path));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

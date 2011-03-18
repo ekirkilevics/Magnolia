@@ -31,32 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.view;
+package info.magnolia.ui.admincentral.tree.container;
 
-import info.magnolia.ui.framework.view.View;
-
+import java.util.Collection;
 import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
- * UI component that displays a tree.
+ * Backing implementation for JcrContainer.
  *
  * @author tmattsson
  */
-public interface TreeView extends View {
+public interface JcrContainerSource {
 
-    /**
-     * Presenter for the TreeView.
-     *
-     * @author tmattsson
-     */
-    public interface Presenter {
+    Collection<Item> getChildren(Item item) throws RepositoryException;
 
-        void onItemSelection(Item tem);
-    }
+    Collection<Item> getRootItemIds() throws RepositoryException;
 
-    String getPathInTree(Item item);
+    boolean isRoot(Item item) throws RepositoryException;
 
-    void select(String path);
+    boolean hasChildren(Item item) throws RepositoryException;
 
-    void refresh();
+    void setColumnValue(String columnLabel, Item item, Object newValue) throws RepositoryException;
+
+    Object getColumnValue(String columnLabel, Item item) throws RepositoryException;
+
+    String getItemIcon(Item item) throws RepositoryException;
+
+    Item getItemByPath(String path) throws RepositoryException;
+
+    Node getNodeByIdentifier(String nodeIdentifier) throws RepositoryException;
 }

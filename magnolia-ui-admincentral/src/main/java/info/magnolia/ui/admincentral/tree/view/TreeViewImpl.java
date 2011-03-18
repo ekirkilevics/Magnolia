@@ -33,13 +33,13 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Component;
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
-import info.magnolia.ui.admincentral.tree.container.JcrContainerBackend;
+import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
@@ -53,20 +53,19 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     private JcrBrowser jcrBrowser;
 
-    public TreeViewImpl(final Presenter presenter, TreeDefinition treeDefinition, JcrContainerBackend jcrContainerBackend, Shell shell) throws RepositoryException {
+    public TreeViewImpl(final Presenter presenter, TreeDefinition treeDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
 
-        jcrBrowser = new JcrBrowser(treeDefinition, jcrContainerBackend, shell);
+        jcrBrowser = new JcrBrowser(treeDefinition, treeModel, shell);
         jcrBrowser.setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
 
             private static final long serialVersionUID = 1L;
 
             public void itemClick(ItemClickEvent event) {
-                try {
-                    presenter.onItemSelection(jcrBrowser.getContainer().getJcrItem((ContainerItemId) event.getItemId()));
-                } catch (RepositoryException e) {
-                    throw new RuntimeRepositoryException(e);
-                }
+                
+                // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
+                
+                presenter.onItemSelection(jcrBrowser.getJcrItem((ContainerItemId) event.getItemId()));
             }
         });
     }
@@ -81,6 +80,10 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     public void refresh() {
         jcrBrowser.refresh();
+    }
+
+    public String getPathInTree(Item item) {
+        return jcrBrowser.getPathInTree(item);
     }
 
     public Component asVaadinComponent() {

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.container;
+package info.magnolia.ui.admincentral.tree.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +53,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.tree.container.JcrContainerSource;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
@@ -60,181 +61,139 @@ import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
 /**
- * Backend operations for the JcrContainer and JcrBrowser.
- *
- * TODO this should merge with the tree presenter.
+ * Model class for tree. Serves as a source for operations by JcrContainer and executes
  *
  * @author tmattsson
  */
-public class JcrContainerBackend {
+public class TreeModel implements JcrContainerSource {
 
     private EditWorkspaceActionFactory actionFactory;
     private TreeDefinition treeDefinition;
     private Map<String, Column<?, ?>> columns;
 
-    public JcrContainerBackend(TreeDefinition treeDefinition, Map<String, Column<?, ?>> columns, EditWorkspaceActionFactory actionFactory) {
+    public TreeModel(TreeDefinition treeDefinition, Map<String, Column<?, ?>> columns, EditWorkspaceActionFactory actionFactory) {
         this.treeDefinition = treeDefinition;
         this.actionFactory = actionFactory;
         this.columns = columns;
     }
-/*
-    public boolean containsId(ContainerItemId itemId) {
-        try {
-            getJcrItem(itemId);
-            return true;
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-    }
-*/
-    public Collection<Item> getChildren(Item item) {
+
+    // JcrContainerSource
+
+    public Collection<Item> getChildren(Item item) throws RepositoryException {
         if (item instanceof Property)
             return Collections.emptySet();
-        try {
-            Node node = (Node) item;
 
-            ArrayList<Item> c = new ArrayList<Item>();
+        Node node = (Node) item;
 
-            for (TreeItemType itemType : treeDefinition.getItemTypes()) {
-                ArrayList<Node> nodes = new ArrayList<Node>();
-                NodeIterator iterator = node.getNodes();
-                while (iterator.hasNext()) {
-                    Node next = (Node) iterator.next();
-                    if (itemType.getItemType().equals(next.getPrimaryNodeType().getName())) {
-                        nodes.add(next);
-                    }
-                }
-                // TODO This behaviour is optional in old AdminCentral, you can set a custom comparator.
-                Collections.sort(nodes, new Comparator<Node>() {
-                    public int compare(Node lhs, Node rhs) {
-                        try {
-                            return lhs.getName().compareTo(rhs.getName());
-                        } catch (RepositoryException e) {
-                            throw new RuntimeRepositoryException(e);
-                        }
-                    }
-                });
-                for (Node n : nodes) {
-                    c.add(n);
+        ArrayList<Item> c = new ArrayList<Item>();
+
+        for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+            ArrayList<Node> nodes = new ArrayList<Node>();
+            NodeIterator iterator = node.getNodes();
+            while (iterator.hasNext()) {
+                Node next = (Node) iterator.next();
+                if (itemType.getItemType().equals(next.getPrimaryNodeType().getName())) {
+                    nodes.add(next);
                 }
             }
-
-            boolean includeProperties = false;
-            for (TreeItemType itemType : this.treeDefinition.getItemTypes()) {
-                if (itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
-                    includeProperties = true;
-                    break;
-                }
-            }
-
-            if (includeProperties) {
-                ArrayList<Property> properties = new ArrayList<Property>();
-                PropertyIterator propertyIterator = node.getProperties();
-                while (propertyIterator.hasNext()) {
-                    Property property = propertyIterator.nextProperty();
-                    if (!property.getName().startsWith("jcr:")) {
-                        properties.add(property);
+            // TODO This behaviour is optional in old AdminCentral, you can set a custom comparator.
+            Collections.sort(nodes, new Comparator<Node>() {
+                public int compare(Node lhs, Node rhs) {
+                    try {
+                        return lhs.getName().compareTo(rhs.getName());
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
                     }
                 }
-                Collections.sort(properties, new Comparator<Property>() {
-                    public int compare(Property lhs, Property rhs) {
-                        try {
-                            return lhs.getName().compareTo(rhs.getName());
-                        } catch (RepositoryException e) {
-                            throw new RuntimeRepositoryException(e);
-                        }
-                    }
-                });
-                for (Property p : properties) {
-                    c.add(p);
+            });
+            for (Node n : nodes) {
+                c.add(n);
+            }
+        }
+
+        boolean includeProperties = false;
+        for (TreeItemType itemType : this.treeDefinition.getItemTypes()) {
+            if (itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+                includeProperties = true;
+                break;
+            }
+        }
+
+        if (includeProperties) {
+            ArrayList<Property> properties = new ArrayList<Property>();
+            PropertyIterator propertyIterator = node.getProperties();
+            while (propertyIterator.hasNext()) {
+                Property property = propertyIterator.nextProperty();
+                if (!property.getName().startsWith("jcr:")) {
+                    properties.add(property);
                 }
             }
+            Collections.sort(properties, new Comparator<Property>() {
+                public int compare(Property lhs, Property rhs) {
+                    try {
+                        return lhs.getName().compareTo(rhs.getName());
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
+                    }
+                }
+            });
+            for (Property p : properties) {
+                c.add(p);
+            }
+        }
 
-            return Collections.unmodifiableCollection(c);
-
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-    }
-/*
-    public ContainerItemId getParent(ContainerItemId itemId) {
-        try {
-            if (itemId.isProperty())
-                return new ContainerItemId(itemId.getNodeIdentifier());
-            Node node = (Node) getJcrItem(itemId);
-            return new ContainerItemId(node.getParent());
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-    }
-*/
-    public Collection<Item> getRootItemIds() {
-        try {
-            return getChildren(getRootNode());
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        return Collections.unmodifiableCollection(c);
     }
 
-    public boolean isRoot(Item item) {
-        try {
-            if (item instanceof Property)
-                return false;
-            int depthOfRootNodesInTree = getRootNode().getDepth() + 1;
-            return item.getDepth() <= depthOfRootNodesInTree;
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+    public Collection<Item> getRootItemIds() throws RepositoryException {
+        return getChildren(getRootNode());
     }
 
-    public boolean hasChildren(Item item) {
+    public boolean isRoot(Item item) throws RepositoryException {
         if (item instanceof Property)
             return false;
-        return !getChildren((Node)item).isEmpty();
+        int depthOfRootNodesInTree = getRootNode().getDepth() + 1;
+        return item.getDepth() <= depthOfRootNodesInTree;
     }
 
-    public void setColumnValue(String columnLabel, Item item, Object newValue) {
-        try {
-            getColumn(columnLabel).setValue(null, item, newValue);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+    public boolean hasChildren(Item item) throws RepositoryException {
+        if (item instanceof Property)
+            return false;
+        return !getChildren(item).isEmpty();
     }
 
-    public Object getColumnValue(String columnLabel, Item item) {
-        try {
-            return getColumn(columnLabel).getValue(item);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+    public void setColumnValue(String columnLabel, Item item, Object newValue) throws RepositoryException {
+        getColumn(columnLabel).setValue(null, item, newValue);
     }
 
-    private Column<?, ?> getColumn(String columnLabel) {
-        return columns.get(columnLabel);
+    public Object getColumnValue(String columnLabel, Item item) throws RepositoryException {
+        return getColumn(columnLabel).getValue(item);
     }
 
-    public Session getSession() {
-        return MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
-    }
-
-    public String getItemIcon(Item item) {
-        try {
-
-            for (TreeItemType itemType : treeDefinition.getItemTypes()) {
-                if (item instanceof javax.jcr.Property && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+    public String getItemIcon(Item item) throws RepositoryException {
+        for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+            if (item instanceof javax.jcr.Property && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+                return itemType.getIcon();
+            } else if (item instanceof Node) {
+                Node node = (Node) item;
+                if (itemType.getItemType().equals(node.getPrimaryNodeType().getName())) {
                     return itemType.getIcon();
-                } else if (item instanceof Node) {
-                    Node node = (Node) item;
-                    if (itemType.getItemType().equals(node.getPrimaryNodeType().getName())) {
-                        return itemType.getIcon();
-                    }
                 }
             }
-            return null;
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
         }
+        return null;
     }
+
+    public Node getNodeByIdentifier(String nodeIdentifier) throws RepositoryException {
+        return getSession().getNodeByIdentifier(nodeIdentifier);
+    }
+
+    public Item getItemByPath(String path) throws RepositoryException {
+        String absolutePath = getPathInWorkspace(path);
+        return getSession().getItem(absolutePath);
+    }
+
+    // Move operations performed by drag-n-drop in JcrBrowser
 
     // TODO these move methods need to be commands instead
 
@@ -299,6 +258,8 @@ public class JcrContainerBackend {
         return true;
     }
 
+    // Used by JcrBrowser and TreeViewImpl
+
     public String getPathInWorkspace(String pathInTree) {
         String base = this.treeDefinition.getPath();
         if (base.equals("/"))
@@ -325,21 +286,20 @@ public class JcrContainerBackend {
         return columns;
     }
 
-    public Item getItemByPath(String path) {
-        try {
-            String absolutePath = getPathInWorkspace(path);
-            return getSession().getItem(absolutePath);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
-    }
-
     public void execute(ActionDefinition actionDefinition, Item item) throws ActionExecutionException {
         Action action = actionFactory.createAction(actionDefinition, item);
         action.execute();
     }
 
+    private Session getSession() {
+        return MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
+    }
+
     private Node getRootNode() throws RepositoryException {
         return getSession().getNode(treeDefinition.getPath());
+    }
+
+    private Column<?, ?> getColumn(String columnLabel) {
+        return columns.get(columnLabel);
     }
 }
