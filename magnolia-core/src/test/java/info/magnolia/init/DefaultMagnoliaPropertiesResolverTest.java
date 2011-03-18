@@ -104,8 +104,9 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
 
         //some existing FS path, some existing ctx path, some unexisting rel and abs paths
         expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn("WEB-INF/hello/magnolia.properties," + unexistingAbsPath + "," + existingAbsPath + "," + unexistingRelPath);
-        expect(ctx.getResourceAsStream(existingRelPath)).andReturn(getClass().getResourceAsStream("/test-init.properties"));
-        expect(ctx.getResourceAsStream(unexistingRelPath)).andReturn(null);
+        // the paths have to be absolute, but they are relative to the webapp folder
+        expect(ctx.getResourceAsStream("/" + existingRelPath)).andReturn(getClass().getResourceAsStream("/test-init.properties"));
+        expect(ctx.getResourceAsStream("/" + unexistingRelPath)).andReturn(null);
         replay(ctx);
         final List<PropertySource> sources = new DefaultMagnoliaPropertiesResolver(ctx, initPaths).getSources();
         assertEquals(2, sources.size());
