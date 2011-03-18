@@ -33,8 +33,6 @@
  */
 package info.magnolia.ui.admincentral.main.activity;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
@@ -42,37 +40,26 @@ import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceMVPSubContainer;
 import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
 import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
-import info.magnolia.ui.admincentral.main.place.SomePlace;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
  * Maps the main places to main activities.
- * TODO: this should be a generic mapper
+ * TODO make configurable
  */
-public class MainActivityMapper implements ActivityMapper {
-
-    private ComponentProvider componentProvider;
-
-    private static Map<Class<? extends Place>, Class<? extends Activity>> mapping = new HashMap<Class<? extends Place>, Class<? extends Activity>>();
-
-    static{
-        mapping.put(EditWorkspacePlace.class, EditWorkspaceMVPSubContainer.class);
-        mapping.put(ShowContentPlace.class, ShowContentActivity.class);
-        mapping.put(DialogPlace.class, DialogActivity.class);
-        mapping.put(SomePlace.class, SomePlaceActivity.class);
-    }
+public class MainActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
 
     public MainActivityMapper(ComponentProvider componentProvider) {
-        this.componentProvider = componentProvider;
+        super(componentProvider);
+
+        addMapping(EditWorkspacePlace.class, EditWorkspaceMVPSubContainer.class);
+        addMapping(ShowContentPlace.class, ShowContentActivity.class);
+        addMapping(DialogPlace.class, DialogActivity.class);
     }
 
     public Activity getActivity(final Place place) {
-        final Class< ? extends Activity> activityClass = mapping.get(place.getClass());
-        if(activityClass != null){
-            return componentProvider.newInstance(activityClass, place);
-        }
-        return null;
+        return create(place);
     }
 }
