@@ -260,14 +260,6 @@ public class TreeModel implements JcrContainerSource {
 
     // Used by JcrBrowser and TreeViewImpl
 
-    public String getPathInWorkspace(String pathInTree) {
-        String base = this.treeDefinition.getPath();
-        if (base.equals("/"))
-            return pathInTree;
-        else
-            return base + pathInTree;
-    }
-
     public String getPathInTree(Item item) throws RepositoryException {
         String base = treeDefinition.getPath();
         if (base.equals("/"))
@@ -291,6 +283,8 @@ public class TreeModel implements JcrContainerSource {
         action.execute();
     }
 
+    // Private
+
     private Session getSession() {
         return MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
     }
@@ -301,5 +295,13 @@ public class TreeModel implements JcrContainerSource {
 
     private Column<?, ?> getColumn(String columnLabel) {
         return columns.get(columnLabel);
+    }
+
+    private String getPathInWorkspace(String pathInTree) {
+        String base = this.treeDefinition.getPath();
+        if (base.equals("/"))
+            return pathInTree;
+        else
+            return base + pathInTree;
     }
 }
