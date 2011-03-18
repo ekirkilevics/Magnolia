@@ -46,7 +46,7 @@ import info.magnolia.ui.framework.shell.Shell;
 
 
 /**
- * The isolated MVP container for workspace editting.
+ * The isolated MVP container for workspace editing.
  */
 public class EditWorkspaceMVPSubContainer extends MVPSubContainer{
 
