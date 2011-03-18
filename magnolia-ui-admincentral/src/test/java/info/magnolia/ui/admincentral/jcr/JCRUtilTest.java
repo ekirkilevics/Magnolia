@@ -40,6 +40,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Tests for JCRUtil.
  *
  * @author dlipp
  * @version $Id$

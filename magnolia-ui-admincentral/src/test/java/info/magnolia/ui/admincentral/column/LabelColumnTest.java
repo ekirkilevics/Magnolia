@@ -33,16 +33,20 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
+
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
 import com.vaadin.ui.Field;
-import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
-import static org.junit.Assert.*;
 
 
 /**
+ * Tests for LabelColumn.
  *
  * @author dlipp
  * @version $Id$
@@ -60,16 +64,6 @@ public class LabelColumnTest {
         assertEquals(original, result);
     }
 
-    /*@Test
-    // TODO: uncomment as soon as setValue is properly implemented on that Column.
-    public void testSetValue() throws RepositoryException {
-        MockNode mock = new MockNode();
-        LabelColumn column = new LabelColumn();
-        String newValue = "Netzer";
-        column.setValue(this, mock, "newValue");
-        assertEquals(column.getValue(mock), newValue);
-    }
-*/
     @Test
     public void testGetEditField() {
         LabelColumn column = new LabelColumn(new LabelColumnDefinition());

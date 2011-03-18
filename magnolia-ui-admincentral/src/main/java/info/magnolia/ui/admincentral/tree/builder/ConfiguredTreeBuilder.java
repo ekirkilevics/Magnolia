@@ -34,7 +34,6 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.module.AdminCentralModule;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 import java.io.Serializable;
@@ -55,8 +54,14 @@ public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
 
     private static final long serialVersionUID = 6702977290186078418L;
     private static final Logger log = LoggerFactory.getLogger(ConfiguredTreeBuilder.class);
-
+    /**
+     * Registry of types of ColumnDefinitions being mapped to Column types.
+     */
     private Map<Class<?>, Class<?>> defininitionToImplementationRegistries = new LinkedHashMap<Class<?>, Class<?>>();
+
+    /**
+     * List as retrieved out of JCR-config (via Content2Bean).
+     */
     private List<DefinitionToImplementationMapping> defininitionToImplementationMappings =
             new ArrayList<DefinitionToImplementationMapping>();
 
