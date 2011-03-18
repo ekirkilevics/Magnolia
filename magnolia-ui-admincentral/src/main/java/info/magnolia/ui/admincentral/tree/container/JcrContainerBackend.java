@@ -46,10 +46,15 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.vaadin.ui.Field;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.definition.TreeItemType;
 
@@ -62,11 +67,13 @@ import info.magnolia.ui.model.tree.definition.TreeItemType;
  */
 public class JcrContainerBackend {
 
+    private EditWorkspaceActionFactory actionFactory;
     private TreeDefinition treeDefinition;
     private Map<String, Column<?, ?>> columns;
 
-    public JcrContainerBackend(TreeDefinition treeDefinition, Map<String, Column<?, ?>> columns) {
+    public JcrContainerBackend(TreeDefinition treeDefinition, Map<String, Column<?, ?>> columns, EditWorkspaceActionFactory actionFactory) {
         this.treeDefinition = treeDefinition;
+        this.actionFactory = actionFactory;
         this.columns = columns;
     }
 
@@ -172,7 +179,8 @@ public class JcrContainerBackend {
         try {
             if (itemId.isProperty())
                 return false;
-            return getJcrItem(itemId).getDepth() == 0;
+            int depthOfRootNodesInTree = getRootNode().getDepth() + 1;
+            return getJcrItem(itemId).getDepth() <= depthOfRootNodesInTree;
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -319,6 +327,14 @@ public class JcrContainerBackend {
             return base + pathInTree;
     }
 
+    public String getPathInTree(Item item) throws RepositoryException {
+        String base = treeDefinition.getPath();
+        if (base.equals("/"))
+            return item.getPath();
+        else
+            return StringUtils.substringAfter(item.getPath(), base);
+    }
+
     public Field getFieldForColumn(ContainerItemId itemId, String propertyId) throws RepositoryException {
         Column<?,?> column = columns.get((String) propertyId);
         return column.getEditField(getJcrItem(itemId));
@@ -326,5 +342,25 @@ public class JcrContainerBackend {
 
     public Map<String,Column<?, ?>> getColumns() {
         return columns;
+    }
+
+    public ContainerItemId getItemByPath(String path) {
+        try {
+            String absolutePath = getPathInWorkspace(path);
+            Item item = getSession().getItem(absolutePath);
+            return new ContainerItemId(item);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
+    }
+
+    public void execute(ActionDefinition actionDefinition, ContainerItemId itemId) throws ActionExecutionException {
+        try {
+            Item item = getJcrItem(itemId);
+            info.magnolia.ui.model.action.Action action = actionFactory.createAction(actionDefinition, item);
+            action.execute();
+        } catch (RepositoryException e) {
+            throw new ActionExecutionException("Can't access content", e);
+        }
     }
 }

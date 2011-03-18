@@ -35,7 +35,6 @@ package info.magnolia.ui.admincentral.tree.view;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -62,7 +61,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.admincentral.tree.container.JcrContainerBackend;
@@ -85,7 +83,6 @@ public class JcrBrowser extends TreeTable {
 
     private TreeDefinition treeDefinition;
     private JcrContainer container;
-    private EditWorkspaceActionFactory actionFactory;
     private Shell shell;
 
     private Object selectedItemId = null;
@@ -93,8 +90,7 @@ public class JcrBrowser extends TreeTable {
 
     private JcrContainerBackend jcrContainerBackend;
 
-    public JcrBrowser(TreeDefinition treeDefinition, JcrContainerBackend jcrContainerBackend, EditWorkspaceActionFactory actionFactory, Shell shell) throws RepositoryException {
-        this.actionFactory = actionFactory;
+    public JcrBrowser(TreeDefinition treeDefinition, JcrContainerBackend jcrContainerBackend, Shell shell) throws RepositoryException {
         this.treeDefinition = treeDefinition;
         this.jcrContainerBackend = jcrContainerBackend;
         // TODO the view should not know the shell
@@ -132,10 +128,9 @@ public class JcrBrowser extends TreeTable {
             this.actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
-        public void handleAction(Item item) throws ActionExecutionException {
-            info.magnolia.ui.model.action.Action action = actionFactory.createAction(actionDefinition, item);
+        public void handleAction(ContainerItemId itemId) throws ActionExecutionException {
             try {
-                action.execute();
+                jcrContainerBackend.execute(actionDefinition, itemId);
             }
             catch (ActionExecutionException e) {
                 shell.showError("Can't execute action.", e);
@@ -160,14 +155,9 @@ public class JcrBrowser extends TreeTable {
 
             public void handleAction(Action action, Object sender, Object target) {
                 try {
-                    Item item = jcrContainerBackend.getJcrItem((ContainerItemId) target);
-                    try {
-                        ((JcrBrowserAction) action).handleAction(item);
-                    } catch (ActionExecutionException e) {
-                        shell.showError("Can't execute action.", e);
-                    }
-                } catch (RepositoryException e) {
-                    shell.showError("Can't access content.", e);
+                    ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
+                } catch (ActionExecutionException e) {
+                    shell.showError("Can't execute action.", e);
                 }
             }
         });
@@ -291,30 +281,19 @@ public class JcrBrowser extends TreeTable {
 
     public void select(String path) {
 
-        try {
+        ContainerItemId itemId = jcrContainerBackend.getItemByPath(path);
 
-            String absPath = jcrContainerBackend.getPathInWorkspace(path);
-            Item item = jcrContainerBackend.getSession().getItem(absPath);
-            ContainerItemId itemId = new ContainerItemId(item);
-
-            // Expand parent node all the way up to the root
-            if (item.getDepth() > 1) {
-                Item parent = item.getParent();
-                while (!parent.getPath().equals(treeDefinition.getPath())) {
-                    setCollapsed(new ContainerItemId(parent), false);
-                    parent = parent.getParent();
-                }
-            }
-
-            // Select the item
-            select(itemId);
-
-            // Make sure its in view
-            setCurrentPageFirstItemId(itemId);
-
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+        ContainerItemId parent = itemId;
+        while (!jcrContainerBackend.isRoot(itemId)) {
+            setCollapsed(parent, false);
+            parent = jcrContainerBackend.getParent(parent);
         }
+
+        // Select the item
+        select(itemId);
+
+        // Make sure its in view
+        setCurrentPageFirstItemId(itemId);
     }
 
     public void refresh() {

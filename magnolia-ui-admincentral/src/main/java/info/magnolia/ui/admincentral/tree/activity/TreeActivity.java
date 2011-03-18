@@ -33,13 +33,20 @@
  */
 package info.magnolia.ui.admincentral.tree.activity;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Handler;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.admincentral.tree.container.JcrContainerBackend;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -47,13 +54,9 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
 import info.magnolia.ui.model.tree.registry.TreeRegistry;
-
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Activity for displaying dialogs.
@@ -70,6 +73,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private ComponentProvider componentProvider;
     private Shell shell;
     private TreeRegistry treeRegistry;
+    private JcrContainerBackend jcrContainerBackend;
 
     public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, ComponentProvider componentProvider, Shell shell, TreeRegistry treeRegistry) {
         this.treeName = treeName;
@@ -92,7 +96,23 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     public void start(ViewPort viewPort, EventBus eventBus) {
         try {
             TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
-            this.treeView = new TreeViewImpl(this, builder, treeDefinition, new EditWorkspaceActionFactory(componentProvider), shell);
+
+            Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
+            for (ColumnDefinition columnDefinition : treeDefinition.getColumns()) {
+                // FIXME use getName() not getLabel()
+                Column<?, ?> column = builder.createTreeColumn(columnDefinition);
+                // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
+                if (column != null) {
+                    columns.put(columnDefinition.getLabel(), column);
+                }
+            }
+
+            EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
+
+            jcrContainerBackend = new JcrContainerBackend(treeDefinition, columns, actionFactory);
+
+            this.treeView = new TreeViewImpl(this, treeDefinition, jcrContainerBackend, shell);
+
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
@@ -103,7 +123,7 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
 
     public void onItemSelection(Item jcrItem) {
         try {
-            this.path = getPathInTree(treeName, jcrItem);
+            this.path = jcrContainerBackend.getPathInTree(jcrItem);
             placeController.goTo(new ItemSelectedPlace(treeName, this.path));
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
@@ -113,17 +133,5 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     public void onContentChanged(ContentChangedEvent event) {
         // FIXME only if we are not the source!
         treeView.refresh();
-    }
-
-    public String getPathInTree(String treeName, Item item) throws RepositoryException {
-
-        // TODO this method is duplicated in JcrContainerBackend
-
-        TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
-        String base = treeDefinition.getPath();
-        if (base.equals("/"))
-            return item.getPath();
-        else
-            return StringUtils.substringAfter(item.getPath(), base);
     }
 }

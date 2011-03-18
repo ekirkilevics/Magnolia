@@ -104,7 +104,7 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        return new JcrContainerProperty((String) propertyId, itemId, this);
+        return new JcrContainerProperty((String) propertyId, (ContainerItemId) itemId, this);
     }
 
     public int size() {
