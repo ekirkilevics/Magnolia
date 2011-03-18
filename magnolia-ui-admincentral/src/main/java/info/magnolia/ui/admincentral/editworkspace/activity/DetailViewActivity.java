@@ -97,7 +97,6 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
             final Item item;
             try {
                 String normalizedPath = (treeDefinition.getPath() + path).replaceAll("//", "/");
-                ;
                 item = JCRUtil.getSession(treeDefinition.getRepository()).getItem(normalizedPath);
                 if(menuItemDefinition.getName().equals(commandName)){
                     final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
