@@ -77,10 +77,6 @@ public interface Shell {
      * the contents of an existing window with that name.
      * </p>
      *
-     * @param resource
-     *            the resource.
-     * @param windowName
-     *            the name of the window.
      */
     void openWindow(String uri, String windowName);
 
