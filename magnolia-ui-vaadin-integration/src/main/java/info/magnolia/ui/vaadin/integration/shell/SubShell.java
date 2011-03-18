@@ -70,7 +70,9 @@ public class SubShell extends AbstractShell {
         return ((AbstractShell)parent).getUriFragmentUtility();
     }
 
-
+    public void openWindow(String uri, String windowName) {
+       parent.openWindow(uri, windowName);
+    }
 }
 
 

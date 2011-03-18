@@ -34,15 +34,12 @@
 package info.magnolia.ui.admincentral.tree.action;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-
-import com.vaadin.Application;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Window;
 
 
 /**
@@ -52,22 +49,21 @@ public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
     private static final long serialVersionUID = 751955514356448616L;
 
-    private Application application;
+    private Shell shell;
 
     private Node pageNode;
 
-    // FIXME use the shell instead!
-    public OpenPageAction(OpenPageActionDefinition definition, Application application, Node pageNode) {
+    public OpenPageAction(OpenPageActionDefinition definition, Shell shell, Node pageNode) {
         super(definition);
-        this.application =  application;
+        this.shell =  shell;
         this.pageNode = pageNode;
     }
 
     public void execute() throws ActionExecutionException {
         try {
             String uri = MgnlContext.getContextPath() + pageNode.getPath() + ".html";
-            Window window = application.getMainWindow();
-            window.open(new ExternalResource(uri));
+            //opens in a new tab or window (depending on how the browser is configured)
+            shell.openWindow(uri, "_blank");
         }
         catch (RepositoryException e) {
             throw new ActionExecutionException("Can't open page.", e);
