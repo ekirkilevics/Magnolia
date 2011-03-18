@@ -37,16 +37,20 @@ package info.magnolia.ui.framework.place;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * This class is the hub of the application's navigation system. It links
- * the {@link Place}s a user navigates to
- * with the browser history system &mdash; that is, it makes the browser's back
- * and forth buttons work, and also makes each spot in the app
- * bookmarkable.
+ * the {@link Place}s a user navigates to with the browser history system &mdash; that is, it makes the browser's back
+ * and forth buttons work, and also makes each spot in the app bookmarkable.
  * @author fgrilli
  *
  */
 public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
+    private Logger log = LoggerFactory.getLogger(PlaceHistoryMapperImpl.class);
+
     private Map<String, PlaceTokenizer<Place>> tokenizers = new HashMap<String, PlaceTokenizer<Place>>();
 
     public PlaceHistoryMapperImpl(Class<? extends Place>... places) {
@@ -55,9 +59,11 @@ public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
 
     @SuppressWarnings("unchecked")
     private void registerTokenizers(Class<? extends Place>... places) {
+        log.info("Starting registering tokenizers for places...");
         for(Class<? extends Place> clazz: places){
             Prefix prefix = clazz.getAnnotation(Prefix.class);
             if(prefix == null){
+                log.info("No @Prefix annotation found for place {}. Skipping it...", clazz.getName());
                 continue;
             }
             final Class<?>[] declaredClasses = clazz.getDeclaredClasses();
@@ -66,6 +72,7 @@ public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
                     try {
                         final PlaceTokenizer<Place> tokenizer = (PlaceTokenizer<Place>) declaredClass.newInstance();
                         tokenizers.put(prefix.value(), tokenizer);
+                        log.info("Added tokenizer for place {}", clazz.getName());
                     } catch (InstantiationException e) {
                         throw new IllegalStateException(e);
                     } catch (IllegalAccessException e) {
