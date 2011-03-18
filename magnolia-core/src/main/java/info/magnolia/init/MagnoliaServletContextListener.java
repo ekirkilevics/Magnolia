@@ -45,6 +45,7 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.ModuleAdapterFactory;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
@@ -190,6 +191,8 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             // the container used for startup - should not be referenced further
             // TODO : maybe we don't even need to store the root container ?
             final MutablePicoContainer root = makeContainer(null, "Magnolia-Root-Container");
+
+
             populateRootContainer(root, context);
             storeRootContainer(context, root);
 
@@ -223,6 +226,7 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             //Components.setProvider(new PicoComponentProvider(root, new DefaultComponentProvider(configurationProperties)));
 
             final MutablePicoContainer mainContainer = makeContainer(root, "Magnolia-Main-Container");
+
             // TODO extract population to a ContainerComposer interface - and get the composers out of pico ? (ordering problem? how about request-scope?)
             // TODO - extract container composers (one for properties, one for modules, etc)
             populateMainContainer(mainContainer, root.getComponent(ModuleRegistry.class), configurationProperties);
@@ -239,6 +243,10 @@ public class MagnoliaServletContextListener implements ServletContextListener {
             }
             provider.parseConfiguration(properties);
             Components.setProvider(provider);
+
+            //TODO: verify that this is what we need
+            mainContainer.addComponent(ComponentProvider.class, provider);
+
             // TODO - perhaps PicoComponentProvider can be constructed by pico itself
 
             // Start from the main container (ConfigLoader needs LicenceFileExtractor for example, whose impl is set via a property)
