@@ -63,7 +63,7 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
             public void itemClick(ItemClickEvent event) {
                 try {
-                    presenter.onItemSelection(jcrBrowser.getJcrContainerBackend().getJcrItem((ContainerItemId) event.getItemId()));
+                    presenter.onItemSelection(jcrBrowser.getContainer().getJcrItem((ContainerItemId) event.getItemId()));
                 } catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }

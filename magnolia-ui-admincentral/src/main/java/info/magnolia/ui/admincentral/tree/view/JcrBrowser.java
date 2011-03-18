@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.tree.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -118,6 +119,10 @@ public class JcrBrowser extends TreeTable {
         setPageLength(900);
     }
 
+    public JcrContainer getContainer() {
+        return container;
+    }
+
     private  class JcrBrowserAction extends Action {
         private static final long serialVersionUID = -5358813017929951816L;
         private ActionDefinition actionDefinition;
@@ -130,7 +135,11 @@ public class JcrBrowser extends TreeTable {
 
         public void handleAction(ContainerItemId itemId) throws ActionExecutionException {
             try {
-                jcrContainerBackend.execute(actionDefinition, itemId);
+                try {
+                    jcrContainerBackend.execute(actionDefinition, container.getJcrItem(itemId));
+                } catch (RepositoryException e) {
+                    shell.showError("Can't access content.", e);
+                }
             }
             catch (ActionExecutionException e) {
                 shell.showError("Can't execute action.", e);
@@ -196,27 +205,33 @@ public class JcrBrowser extends TreeTable {
 
                     log.debug("DropLocation: " + location.name());
 
-                    HierarchicalContainerOrderedWrapper container = (HierarchicalContainerOrderedWrapper) getContainerDataSource();
+                    HierarchicalContainerOrderedWrapper containerWrapper = (HierarchicalContainerOrderedWrapper) getContainerDataSource();
                     // Drop right on an item -> make it a child -
                     if (location == VerticalDropLocation.MIDDLE) {
-                        if (jcrContainerBackend.moveItem((ContainerItemId) sourceItemId, (ContainerItemId) targetItemId))
+                        Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
+                        Item targetItem = container.getJcrItem((ContainerItemId) targetItemId);
+                        if (jcrContainerBackend.moveItem(sourceItem, targetItem))
                             setParent(sourceItemId, targetItemId);
                     }
                     // Drop at the top of a subtree -> make it previous
                     else if (location == VerticalDropLocation.TOP) {
-                        Object parentId = container.getParent(targetItemId);
+                        Object parentId = containerWrapper.getParent(targetItemId);
                         if (parentId != null) {
-                            log.debug("Parent:" + container.getItem(parentId));
-                            if (jcrContainerBackend.moveItemBefore((ContainerItemId) sourceItemId, (ContainerItemId) targetItemId))
+                            log.debug("Parent:" + containerWrapper.getItem(parentId));
+                            Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
+                            Item targetItem = container.getJcrItem((ContainerItemId) targetItemId);
+                            if (jcrContainerBackend.moveItemBefore(sourceItem, targetItem))
                                 setParent(sourceItemId, targetItemId);
                         }
                     }
 
                     // Drop below another item -> make it next
                     else if (location == VerticalDropLocation.BOTTOM) {
-                        Object parentId = container.getParent(targetItemId);
+                        Object parentId = containerWrapper.getParent(targetItemId);
                         if (parentId != null) {
-                            if (jcrContainerBackend.moveItemAfter((ContainerItemId) sourceItemId, (ContainerItemId) targetItemId))
+                            Item sourceItem = container.getJcrItem((ContainerItemId) sourceItemId);
+                            Item targetItem = container.getJcrItem((ContainerItemId) targetItemId);
+                            if (jcrContainerBackend.moveItemAfter(sourceItem, targetItem))
                                 setParent(sourceItemId, targetItemId);
                         }
                     }
@@ -240,11 +255,11 @@ public class JcrBrowser extends TreeTable {
 
             private static final long serialVersionUID = 1656067341998458083L;
 
-            public Field createField(Container container, Object itemId, Object propertyId, Component uiContext) {
+            public Field createField(Container containerInstance, Object itemId, Object propertyId, Component uiContext) {
                 try {
                     if (selectedItemId != null) {
                         if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                            Field field = jcrContainerBackend.getFieldForColumn((ContainerItemId) itemId, (String) propertyId);
+                            Field field = jcrContainerBackend.getFieldForColumn(container.getJcrItem((ContainerItemId) itemId), (String) propertyId);
                             if (field != null) {
                                 field.focus();
                                 if (field instanceof AbstractComponent)
@@ -281,12 +296,12 @@ public class JcrBrowser extends TreeTable {
 
     public void select(String path) {
 
-        ContainerItemId itemId = jcrContainerBackend.getItemByPath(path);
+        ContainerItemId itemId = container.getItemByPath(path);
 
         ContainerItemId parent = itemId;
-        while (!jcrContainerBackend.isRoot(itemId)) {
+        while (!container.isRoot(itemId)) {
             setCollapsed(parent, false);
-            parent = jcrContainerBackend.getParent(parent);
+            parent = container.getParent(parent);
         }
 
         // Select the item
@@ -308,12 +323,15 @@ public class JcrBrowser extends TreeTable {
     public Resource getItemIcon(Object itemId) {
 
         // FIXME this is not the best place to do it, ideally we could set it when we create a new item (investigate, might not make a difference)
+        try {
+            String itemIcon = jcrContainerBackend.getItemIcon(container.getJcrItem((ContainerItemId) itemId));
+            if (itemIcon != null) {
+                String tmp = MgnlContext.getContextPath() + (!itemIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + itemIcon : itemIcon);
+                return new ExternalResource(tmp);
+            }
 
-        ContainerItemId containerItemId = (ContainerItemId) itemId;
-        String itemIcon = jcrContainerBackend.getItemIcon(containerItemId);
-        if (itemIcon != null) {
-            String tmp = MgnlContext.getContextPath() + (!itemIcon.startsWith(JCRUtil.PATH_SEPARATOR) ? JCRUtil.PATH_SEPARATOR + itemIcon : itemIcon);
-            return new ExternalResource(tmp);
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
         }
         return super.getItemIcon(itemId);
     }

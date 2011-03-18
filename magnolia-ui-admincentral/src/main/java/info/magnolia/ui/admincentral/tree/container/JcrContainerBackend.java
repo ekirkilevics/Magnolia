@@ -53,6 +53,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.tree.definition.TreeDefinition;
@@ -76,7 +77,7 @@ public class JcrContainerBackend {
         this.actionFactory = actionFactory;
         this.columns = columns;
     }
-
+/*
     public boolean containsId(ContainerItemId itemId) {
         try {
             getJcrItem(itemId);
@@ -85,14 +86,14 @@ public class JcrContainerBackend {
             throw new RuntimeRepositoryException(e);
         }
     }
-
-    public Collection<ContainerItemId> getChildren(ContainerItemId itemId) {
+*/
+    public Collection<Item> getChildren(Item item) {
+        if (item instanceof Property)
+            return Collections.emptySet();
         try {
-            if (itemId.isProperty())
-                return Collections.emptySet();
-            Node node = (Node) getJcrItem(itemId);
+            Node node = (Node) item;
 
-            ArrayList<ContainerItemId> c = new ArrayList<ContainerItemId>();
+            ArrayList<Item> c = new ArrayList<Item>();
 
             for (TreeItemType itemType : treeDefinition.getItemTypes()) {
                 ArrayList<Node> nodes = new ArrayList<Node>();
@@ -114,7 +115,7 @@ public class JcrContainerBackend {
                     }
                 });
                 for (Node n : nodes) {
-                    c.add(new ContainerItemId(n));
+                    c.add(n);
                 }
             }
 
@@ -145,7 +146,7 @@ public class JcrContainerBackend {
                     }
                 });
                 for (Property p : properties) {
-                    c.add(new ContainerItemId(node, p.getName()));
+                    c.add(p);
                 }
             }
 
@@ -155,7 +156,7 @@ public class JcrContainerBackend {
             throw new RuntimeRepositoryException(e);
         }
     }
-
+/*
     public ContainerItemId getParent(ContainerItemId itemId) {
         try {
             if (itemId.isProperty())
@@ -166,70 +167,58 @@ public class JcrContainerBackend {
             throw new RuntimeRepositoryException(e);
         }
     }
-
-    public Collection<ContainerItemId> getRootItemIds() {
+*/
+    public Collection<Item> getRootItemIds() {
         try {
-            return getChildren(new ContainerItemId(getRootNode()));
+            return getChildren(getRootNode());
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    public boolean isRoot(ContainerItemId itemId) {
+    public boolean isRoot(Item item) {
         try {
-            if (itemId.isProperty())
+            if (item instanceof Property)
                 return false;
             int depthOfRootNodesInTree = getRootNode().getDepth() + 1;
-            return getJcrItem(itemId).getDepth() <= depthOfRootNodesInTree;
+            return item.getDepth() <= depthOfRootNodesInTree;
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    public boolean hasChildren(ContainerItemId itemId) {
-        if (itemId.isProperty())
+    public boolean hasChildren(Item item) {
+        if (item instanceof Property)
             return false;
-        return !getChildren(itemId).isEmpty();
+        return !getChildren((Node)item).isEmpty();
     }
 
-    private Node getRootNode() throws RepositoryException {
-        return getSession().getNode(treeDefinition.getPath());
-    }
-
-    public void setColumnValue(String propertyId, ContainerItemId itemId, Object newValue) {
+    public void setColumnValue(String columnLabel, Item item, Object newValue) {
         try {
-            getColumn(propertyId).setValue(null, getJcrItem(itemId), newValue);
+            getColumn(columnLabel).setValue(null, item, newValue);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    public Object getColumnValue(String propertyId, ContainerItemId itemId) {
+    public Object getColumnValue(String columnLabel, Item item) {
         try {
-            return getColumn(propertyId).getValue(getJcrItem(itemId));
+            return getColumn(columnLabel).getValue(item);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    private Column<?, ?> getColumn(String propertyId) {
-        return columns.get(propertyId);
-    }
-
-    public Item getJcrItem(ContainerItemId containerItemId) throws RepositoryException {
-        Node node = getSession().getNodeByIdentifier(containerItemId.getNodeIdentifier());
-        if (containerItemId.isProperty())
-            return node.getProperty(containerItemId.getPropertyName());
-        return node;
+    private Column<?, ?> getColumn(String columnLabel) {
+        return columns.get(columnLabel);
     }
 
     public Session getSession() {
         return MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
     }
 
-    public String getItemIcon(ContainerItemId containerItemId) {
+    public String getItemIcon(Item item) {
         try {
-            Item item = getJcrItem(containerItemId);
 
             for (TreeItemType itemType : treeDefinition.getItemTypes()) {
                 if (item instanceof javax.jcr.Property && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
@@ -249,10 +238,7 @@ public class JcrContainerBackend {
 
     // TODO these move methods need to be commands instead
 
-    public boolean moveItem(ContainerItemId sourceItemId, ContainerItemId targetItemId) throws RepositoryException {
-
-        Item source = getJcrItem(sourceItemId);
-        Item target = getJcrItem(targetItemId);
+    public boolean moveItem(Item source, Item target) throws RepositoryException {
 
         if (target instanceof Property)
             return false;
@@ -267,10 +253,7 @@ public class JcrContainerBackend {
         return true;
     }
 
-    public boolean moveItemBefore(ContainerItemId sourceItemId, ContainerItemId targetItemId) throws RepositoryException {
-
-        Item source = getJcrItem(sourceItemId);
-        Item target = getJcrItem(targetItemId);
+    public boolean moveItemBefore(Item source, Item target) throws RepositoryException {
 
         if (target instanceof Property)
             return false;
@@ -293,10 +276,7 @@ public class JcrContainerBackend {
         return true;
     }
 
-    public boolean moveItemAfter(ContainerItemId sourceItemId, ContainerItemId targetItemId) throws RepositoryException {
-
-        Item source = getJcrItem(sourceItemId);
-        Item target = getJcrItem(targetItemId);
+    public boolean moveItemAfter(Item source, Item target) throws RepositoryException {
 
         if (target instanceof Property)
             return false;
@@ -335,32 +315,31 @@ public class JcrContainerBackend {
             return StringUtils.substringAfter(item.getPath(), base);
     }
 
-    public Field getFieldForColumn(ContainerItemId itemId, String propertyId) throws RepositoryException {
-        Column<?,?> column = columns.get((String) propertyId);
-        return column.getEditField(getJcrItem(itemId));
+    // TODO should be name not label
+    public Field getFieldForColumn(Item item, String columnLabel) throws RepositoryException {
+        Column<?,?> column = columns.get((String) columnLabel);
+        return column.getEditField(item);
     }
 
     public Map<String,Column<?, ?>> getColumns() {
         return columns;
     }
 
-    public ContainerItemId getItemByPath(String path) {
+    public Item getItemByPath(String path) {
         try {
             String absolutePath = getPathInWorkspace(path);
-            Item item = getSession().getItem(absolutePath);
-            return new ContainerItemId(item);
+            return getSession().getItem(absolutePath);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
     }
 
-    public void execute(ActionDefinition actionDefinition, ContainerItemId itemId) throws ActionExecutionException {
-        try {
-            Item item = getJcrItem(itemId);
-            info.magnolia.ui.model.action.Action action = actionFactory.createAction(actionDefinition, item);
-            action.execute();
-        } catch (RepositoryException e) {
-            throw new ActionExecutionException("Can't access content", e);
-        }
+    public void execute(ActionDefinition actionDefinition, Item item) throws ActionExecutionException {
+        Action action = actionFactory.createAction(actionDefinition, item);
+        action.execute();
+    }
+
+    private Node getRootNode() throws RepositoryException {
+        return getSession().getNode(treeDefinition.getPath());
     }
 }
