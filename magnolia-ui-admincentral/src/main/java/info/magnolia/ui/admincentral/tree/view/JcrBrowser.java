@@ -122,7 +122,11 @@ public class JcrBrowser extends TreeTable {
 
         for (ColumnDefinition columnDefintion : treeDefinition.getColumns()) {
             // FIXME use getName() not getLabel()
-            columns.put(columnDefintion.getLabel(), builder.createTreeColumn(columnDefintion));
+            Column<?, ?> column = builder.createTreeColumn(columnDefintion);
+            // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
+            if (column != null) {
+                columns.put(columnDefintion.getLabel(), column);
+            }
         }
 
         this.container = new JcrContainer(treeDefinition, columns);

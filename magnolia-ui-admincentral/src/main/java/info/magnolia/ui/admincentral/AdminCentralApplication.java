@@ -46,7 +46,8 @@ import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.admincentral.tree.builder.VaadinTreeBuilder;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProviderImpl;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
@@ -97,8 +98,12 @@ public class AdminCentralApplication extends Application implements HttpServletR
         componentProvider = new PicoComponentProvider(container, provider);
         Properties properties = new Properties();
         properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
-        properties.put(TreeBuilder.class.getName(), VaadinTreeBuilder.class.getName());
         componentProvider.parseConfiguration(properties);
+
+        // TODO: getBuilder should take params user, device...
+        container.addComponent(TreeBuilderProvider.class, TreeBuilderProviderImpl.class);
+        TreeBuilder treeBuilder = container.getComponent(TreeBuilderProvider.class).getBuilder();
+        container.addComponent(TreeBuilder.class, treeBuilder);
 
         container.addComponent(ComponentProvider.class, componentProvider);
 

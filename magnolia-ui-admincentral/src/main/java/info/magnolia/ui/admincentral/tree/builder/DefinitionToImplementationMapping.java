@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,18 +33,32 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.model.tree.definition.ColumnDefinition;
-
 /**
- * Used to transform tree and column definitions into components.
+ * Defines a Mapping form a Definition to an specific implementation.
+ *
+ * @author dlipp
  */
-public interface TreeBuilder {
-
+public class DefinitionToImplementationMapping {
     /**
-     * @param definition to create a column from
-     * @return the created column or null in case it could not be created
+     * Class-name of definition.
      */
-    public abstract Column< ?,? > createTreeColumn(ColumnDefinition definition);
+    private Class<?> definition;
+    /**
+     * Class-name of implementation.
+     */
+    private Class<?> implementation;
+
+    public void setDefinition(Class<?> definition) {
+        this.definition = definition;
+    }
+    public Class<?> getDefinition() {
+        return definition;
+    }
+    public void setImplementation(Class<?> implementation) {
+        this.implementation = implementation;
+    }
+    public Class<?> getImplementation() {
+        return implementation;
+    }
 
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,30 +33,12 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.column.LabelColumn;
-import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
-
-import org.junit.Test;
-
 /**
- * Test.
+ * Provides a tree definition.
+ *
+ * TODO: check whether this type should go to ui-model layer.
  */
-public class VaadinTreeBuilderTest {
+public interface TreeBuilderProvider {
 
-    @Test
-    public void testCreateTreeColumn() {
-        VaadinTreeBuilder builder = new VaadinTreeBuilder();
-        LabelColumnDefinition columnDefinition = new LabelColumnDefinition();
-        int width = 101;
-        columnDefinition.setWidth(width);
-        Column<?, ?> column = builder.createTreeColumn(columnDefinition);
-        assertTrue(column instanceof LabelColumn);
-        LabelColumn labelColumn = (LabelColumn) column;
-        // assure create column is actually wrapping our provided definition
-        assertEquals(width, labelColumn.getWidth());
-    }
-
+    TreeBuilder getBuilder();
 }

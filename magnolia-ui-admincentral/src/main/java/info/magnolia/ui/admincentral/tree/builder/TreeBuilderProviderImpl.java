@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,56 +33,22 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
+import info.magnolia.ui.admincentral.module.AdminCentralModule;
+
+
 /**
- * Defines a ColumnRegistry entry for the TreeBuilder.
- *
- * @author dlipp
- *
- * TODO: check whether String to Class<?> mapping can directly be done via Content2Bean.
+ * Provides the TreeBuilder defined in the AdminCentralModule.
  */
-public class ColumnRegistryDefinition {
-    /**
-     * Class-name to map from.
-     */
-    private String from;
+public class TreeBuilderProviderImpl implements TreeBuilderProvider {
 
-    /**
-     * Class-name to map from.
-     */
-    private Class<?> fromClass;
-    /**
-     * Class-name to map to.
-     */
-    private String to;
+    private AdminCentralModule module;
 
-    /**
-     * Class-name to map to.
-     */
-    private Class<?> toClass;
-
-    public void setFrom(String from) throws ClassNotFoundException {
-        this.from = from;
-        this.fromClass = Class.forName(from);
+    public TreeBuilderProviderImpl(AdminCentralModule module) {
+        this.module = module;
     }
 
-    public String getFrom() {
-        return from;
-    }
-
-    public void setTo(String to) throws ClassNotFoundException {
-        this.to = to;
-        this.toClass = Class.forName(to);
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public Class<?> getFromClass() {
-        return this.fromClass;
-    }
-
-    public Class<?> getToClass() {
-        return this.toClass;
+    public TreeBuilder getBuilder() {
+        // TODO: Decide how to handle if there's more than one.
+        return module.getTreeBuilders().get(0);
     }
 }

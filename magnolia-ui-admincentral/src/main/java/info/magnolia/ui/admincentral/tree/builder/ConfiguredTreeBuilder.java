@@ -34,50 +34,61 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.module.AdminCentralModule;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TreeBuild configured via content to bean.
- *
- * TODO: properly configure via Content2Bean
  */
 public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
 
     private static final long serialVersionUID = 6702977290186078418L;
+    private static final Logger log = LoggerFactory.getLogger(ConfiguredTreeBuilder.class);
 
-    private Map<Class<?>, Class<?>> columnRegistrations = new LinkedHashMap<Class<?>, Class<?>>();
+    private Map<Class<?>, Class<?>> defininitionToImplementationRegistries = new LinkedHashMap<Class<?>, Class<?>>();
+    private List<DefinitionToImplementationMapping> defininitionToImplementationMappings =
+            new ArrayList<DefinitionToImplementationMapping>();
 
-    public Map<Class<?>, Class<?>> getColumnRegistrations() {
-        return this.columnRegistrations;
+    public List<DefinitionToImplementationMapping> getDefininitionToImplementationMappings() {
+        return this.defininitionToImplementationMappings;
     }
 
-    public void setColumnRegistrations(Map<Class<?>, Class<?>> columnRegistrations) {
-        this.columnRegistrations = columnRegistrations;
+    public void setDefininitionToImplementationMappings(List<DefinitionToImplementationMapping> defininitionToImplementationMappings) {
+        this.defininitionToImplementationMappings = defininitionToImplementationMappings;
+        for (Iterator<DefinitionToImplementationMapping> iterator = defininitionToImplementationMappings.iterator(); iterator
+                .hasNext();) {
+            addDefininitionToImplementationMapping(iterator.next());
+        }
     }
 
-    public void addColumnRegistration(ColumnRegistryDefinition definition) {
-        columnRegistrations.put(definition.getFromClass(), definition.getToClass());
+    public void addDefininitionToImplementationMapping(DefinitionToImplementationMapping mapping) {
+        defininitionToImplementationRegistries.put(mapping.getDefinition(), mapping.getImplementation());
     }
 
     public Column<?, ?> createTreeColumn(ColumnDefinition definition) {
-        Class<?> classOfColumn = this.columnRegistrations.get(definition.getClass());
+        Class<?> classOfColumn = this.defininitionToImplementationRegistries.get(definition.getClass());
         if (classOfColumn == null) {
-            throw new IllegalArgumentException("No Column-Type registered for definition of type "
-                    + definition.getClass());
+            log.warn("No Column-Type registered for definition of type {}", definition.getClass());
+            return null;
         }
+        Column<?, ?> column = null;
         try {
             Constructor<?> columnConstructor = classOfColumn.getConstructor(definition.getClass());
-            Column<?, ?> column = (Column<?, ?>) columnConstructor.newInstance(definition);
-            return column;
+            column = (Column<?, ?>) columnConstructor.newInstance(definition);
         } catch (Exception e) {
-            throw new RuntimeException("Error trying to create instance of type " + classOfColumn.getName(), e);
+            log.warn("Error trying to create instance of type {}", classOfColumn.getName(), e);
         }
+        return column;
     }
 }

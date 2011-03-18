@@ -33,16 +33,20 @@
  */
 package info.magnolia.ui.admincentral.module;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.module.setup.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.tree.registry.ConfiguredTreeManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Magnolia's AdminCentral Module.
@@ -56,6 +60,7 @@ public class AdminCentralModule implements ModuleLifecycle {
     private NavigationDefinition navigation;
     private ConfiguredDialogManager configuredDialogManager;
     private ConfiguredTreeManager configuredTreeManager;
+    private List<TreeBuilder> treeBuilders = new ArrayList<TreeBuilder>();
 
     public AdminCentralModule(ConfiguredDialogManager configuredDialogManager, ConfiguredTreeManager configuredTreeManager) {
         this.configuredDialogManager = configuredDialogManager;
@@ -89,6 +94,18 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     public void setNavigation(NavigationDefinition navigation) {
         this.navigation = navigation;
+    }
+
+    public void setTreeBuilders(List<TreeBuilder> treeBuilders) {
+        this.treeBuilders = treeBuilders;
+    }
+
+    public List<TreeBuilder> getTreeBuilders() {
+        return treeBuilders;
+    }
+
+    public void addTreeBuilder(TreeBuilder treeBuilder) {
+        this.treeBuilders.add(treeBuilder);
     }
 
 }
