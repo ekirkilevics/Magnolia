@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
-    private Logger log = LoggerFactory.getLogger(PlaceHistoryMapperImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(PlaceHistoryMapperImpl.class);
 
     private Map<String, PlaceTokenizer<Place>> tokenizers = new HashMap<String, PlaceTokenizer<Place>>();
 
