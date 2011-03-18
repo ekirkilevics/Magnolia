@@ -33,7 +33,11 @@
  */
 package info.magnolia.ui.admincentral.main.view;
 
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 
 /**
@@ -42,12 +46,16 @@ import com.vaadin.ui.Embedded;
  * @author fgrilli
  *
  */
-public class IFrameView extends Embedded {
+public class IFrameView extends Embedded implements View, IsVaadinComponent {
     private static final long serialVersionUID = 1L;
 
     public IFrameView(String url){
         setSource(new ExternalResource(url));
         setType(Embedded.TYPE_BROWSER);
         setSizeFull();
+    }
+
+    public Component asVaadinComponent() {
+        return this;
     }
 }

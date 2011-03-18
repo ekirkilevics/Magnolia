@@ -147,7 +147,12 @@ public class JcrBrowser extends TreeTable {
 
         public void handleAction(JcrBrowser jcrBrowser, Item item) throws ActionExecutionException {
             info.magnolia.ui.model.action.Action action = actionFactory.createAction(actionDefinition, item);
-            action.execute();
+            try {
+                action.execute();
+            }
+            catch (ActionExecutionException e) {
+                shell.showError("Can't execute action.", e);
+            }
         }
     }
 

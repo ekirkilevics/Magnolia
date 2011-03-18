@@ -33,12 +33,15 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.ui.model.action.ActionDefinition;
-
+import info.magnolia.cms.core.ItemType;
 
 /**
  * Adds a page (node).
  */
-public class AddPageActionDefinition implements ActionDefinition {
+public class AddPageActionDefinition extends AddNodeActionDefinition {
+
+    public AddPageActionDefinition() {
+        setNodeType(ItemType.CONTENT.getSystemName());
+    }
 
 }

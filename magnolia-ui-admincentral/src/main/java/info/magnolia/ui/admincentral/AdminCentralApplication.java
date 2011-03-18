@@ -42,7 +42,7 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
 import info.magnolia.ui.admincentral.main.activity.MainActivityMapper;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
-import info.magnolia.ui.admincentral.navigation.action.ActionFactoryImpl;
+import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
@@ -53,7 +53,6 @@ import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.UIModel;
-import info.magnolia.ui.model.action.ActionFactory;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
@@ -123,7 +122,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(EventBus.class, SimpleEventBus.class);
         container.addComponent(Shell.class, ShellImpl.class);
         container.addComponent(PlaceController.class, PlaceController.class);
-        container.addComponent(ActionFactory.class, ActionFactoryImpl.class);
+        container.addComponent(NavigationActionFactory.class, NavigationActionFactory.class);
         container.addComponent(UIModel.class, UIModel.class);
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral

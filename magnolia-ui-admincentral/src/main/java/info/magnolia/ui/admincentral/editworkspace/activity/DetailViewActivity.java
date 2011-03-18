@@ -96,7 +96,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         for (MenuItemDefinition menuItemDefinition : contextMenuItems) {
             final Item item;
             try {
-                item = JCRUtil.getSession(treeDefinition.getRepository()).getItem(path);
+                item = JCRUtil.getSession(treeDefinition.getRepository()).getItem(treeDefinition.getPath() + path);
                 if(menuItemDefinition.getName().equals(commandName)){
                     final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
                     try {

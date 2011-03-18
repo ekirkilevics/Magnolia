@@ -34,8 +34,11 @@
 package info.magnolia.ui.vaadin.integration.shell;
 
 import info.magnolia.ui.framework.shell.ConfirmationHandler;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.vaadin.widgetset.Historian;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.Application;
@@ -49,6 +52,8 @@ import com.vaadin.ui.Window.Notification;
 public class ShellImpl extends AbstractShell {
 
     private static final String APPLICATION_FRAGMENT_ID = "app";
+
+    private static Logger log = LoggerFactory.getLogger(Shell.class);
 
     private Application application;
 
@@ -79,7 +84,9 @@ public class ShellImpl extends AbstractShell {
     }
 
     public void showError(String message, Exception e) {
+        log.error(message, e);
         application.getMainWindow().showNotification(message, e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
+
     }
 
     protected UriFragmentUtility getUriFragmentUtility() {

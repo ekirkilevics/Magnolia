@@ -34,12 +34,14 @@
 package info.magnolia.ui.admincentral.navigation.activity;
 
 import info.magnolia.ui.admincentral.navigation.NavigationView;
+import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
-import info.magnolia.ui.model.action.ActionFactory;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
@@ -49,10 +51,10 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
  */
 public class NavigationActivity extends AbstractActivity implements NavigationView.Presenter {
     private NavigationView view;
-    private ActionFactory actionFactory;
+    private NavigationActionFactory actionFactory;
     private Shell shell;
 
-    public NavigationActivity(NavigationView view, ActionFactory actionFactory, Shell shell) {
+    public NavigationActivity(NavigationView view, NavigationActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.view = view;
         this.shell = shell;
@@ -63,12 +65,18 @@ public class NavigationActivity extends AbstractActivity implements NavigationVi
     }
 
     public void onMenuSelection(MenuItemDefinition menuItem) {
-        final Action action = actionFactory.createAction(menuItem.getActionDefinition());
-        try {
-            action.execute();
+        final ActionDefinition actionDefinition = menuItem.getActionDefinition();
+        if(actionDefinition != null){
+            final Action action = actionFactory.createAction(actionDefinition);
+            try {
+                action.execute();
+            }
+            catch (ActionExecutionException e) {
+                shell.showError("Can't navigate", e);
+            }
         }
-        catch (Exception e) {
-            shell.showError("Can't navigate", e);
+        else{
+            shell.showNotification("No action defined for " + menuItem.getName());
         }
     }
 

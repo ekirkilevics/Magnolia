@@ -31,16 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.action;
+package info.magnolia.ui.admincentral.navigation.action;
 
+
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.PlaceChangeAction;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
- * An action factory is responsible for creating {@link Action}s from {@link ActionDefinition}s.
+ * A factory for {@link Action}s.
  * @author fgrilli
  *
  */
-public interface ActionFactory {
+public class NavigationActionFactory extends FactoryBase<ActionDefinition, Action> {
 
-    Action createAction(final ActionDefinition definition);
+    public NavigationActionFactory(ComponentProvider componentProvider) {
+        super(componentProvider);
+        addMapping(PlaceChangeActionDefinition.class, PlaceChangeAction.class);
+    }
 
+    public Action createAction(ActionDefinition definition) {
+        return create(definition);
+    }
 }

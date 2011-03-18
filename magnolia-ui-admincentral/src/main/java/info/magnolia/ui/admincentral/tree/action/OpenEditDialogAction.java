@@ -59,8 +59,6 @@ public class OpenEditDialogAction extends ActionBase<OpenEditDialogActionDefinit
         this.dialogPresenter = dialogPresenter;
     }
 
-    private String dialogName;
-
     private DialogPresenter dialogPresenter;
 
     public void execute() throws ActionExecutionException {
