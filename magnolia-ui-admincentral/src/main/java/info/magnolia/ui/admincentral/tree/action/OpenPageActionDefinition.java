@@ -40,5 +40,13 @@ import info.magnolia.ui.model.action.ActionDefinition;
  * Opens a page to edit i.
  */
 public class OpenPageActionDefinition implements ActionDefinition {
+    private String windowName;
 
+    public String getWindowName() {
+        return windowName;
+    }
+
+    public void setWindowName(String windowName) {
+        this.windowName = windowName;
+    }
 }

@@ -422,6 +422,9 @@
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
+        <sv:property sv:name="windowName" sv:type="String">
+          <sv:value>_blank</sv:value>
+        </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
@@ -436,7 +439,7 @@
             <sv:value>2010-09-08T15:04:05.467+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2010-09-08T15:04:26.054+02:00</sv:value>
+            <sv:value>2011-03-18T13:35:46.491+01:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>

@@ -62,8 +62,7 @@ public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
     public void execute() throws ActionExecutionException {
         try {
             String uri = MgnlContext.getContextPath() + pageNode.getPath() + ".html";
-            //opens in a new tab or window (depending on how the browser is configured)
-            shell.openWindow(uri, "_blank");
+            shell.openWindow(uri, getDefinition().getWindowName());
         }
         catch (RepositoryException e) {
             throw new ActionExecutionException("Can't open page.", e);
