@@ -50,12 +50,12 @@ import info.magnolia.cms.util.DeprecationUtil;
  */
 public abstract class AbstractComponentProvider implements HierarchicalComponentProvider {
 
-    private static class ComponentDefinition {
+    private static class ComponentDefinition<T> {
 
         private Class<?> type;
         private Object instance;
-        private ComponentFactory factory;
-        private Class<? extends ComponentFactory> factoryClass;
+        private ComponentFactory<T> factory;
+        private Class<? extends ComponentFactory<T>> factoryClass;
         private Class<?> implementationType;
 
         public Class<?> getType() {
@@ -74,11 +74,11 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
             this.instance = instance;
         }
 
-        public ComponentFactory getFactory() {
+        public ComponentFactory<T> getFactory() {
             return factory;
         }
 
-        public void setFactory(ComponentFactory factory) {
+        public void setFactory(ComponentFactory<T> factory) {
             this.factory = factory;
         }
 
@@ -93,11 +93,11 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
             this.implementationType = implementationType;
         }
 
-        public Class<? extends ComponentFactory> getFactoryClass() {
+        public Class<? extends ComponentFactory<T>> getFactoryClass() {
             return factoryClass;
         }
 
-        public void setFactoryClass(Class<? extends ComponentFactory> factoryClass) {
+        public void setFactoryClass(Class<? extends ComponentFactory<T>> factoryClass) {
             this.factoryClass = factoryClass;
         }
 
@@ -196,7 +196,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             ComponentDefinition definition = new ComponentDefinition();
             definition.setType(type);
-            definition.setFactoryClass((Class<? extends ComponentFactory>) implementationType);
+            definition.setFactoryClass((Class<? extends ComponentFactory<?>>) implementationType);
             definitions.put(type, definition);
         } else {
             ComponentDefinition definition = new ComponentDefinition();
@@ -206,7 +206,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         }
     }
 
-    protected synchronized void registerComponentFactory(Class<?> type, ComponentFactory componentFactory) {
+    protected synchronized void registerComponentFactory(Class<?> type, ComponentFactory<?> componentFactory) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         ComponentDefinition definition = new ComponentDefinition();
@@ -228,7 +228,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         return definitions.get(type);
     }
 
-    private <T> ComponentFactory<T> instantiateFactoryIfNecessary(ComponentDefinition definition) {
+    private <T> ComponentFactory<T> instantiateFactoryIfNecessary(ComponentDefinition<T> definition) {
         if (definition.getFactoryClass() != null && definition.getFactory() == null) {
             definition.setFactory(createInstance(definition.getFactoryClass()));
         }

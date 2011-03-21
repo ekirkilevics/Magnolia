@@ -47,16 +47,16 @@ import org.picocontainer.injectors.ProviderAdapter;
  */
 public class ComponentFactoryProviderAdapter extends ProviderAdapter {
 
-    private final Class componentKey;
-    private final Class<? extends ComponentFactory> factoryClass;
-    private ComponentFactory factory;
+    private final Class<?> componentKey;
+    private final Class<? extends ComponentFactory<?>> factoryClass;
+    private ComponentFactory<?> factory;
 
-    public ComponentFactoryProviderAdapter(Class<?> componentKey, Class<? extends ComponentFactory> factoryClass) {
+    public ComponentFactoryProviderAdapter(Class<?> componentKey, Class<? extends ComponentFactory<?>> factoryClass) {
         this.componentKey = componentKey;
         this.factoryClass = factoryClass;
     }
 
-    public ComponentFactoryProviderAdapter(Class componentKey, ComponentFactory factory) {
+    public ComponentFactoryProviderAdapter(Class<?> componentKey, ComponentFactory<?> factory) {
         this.componentKey = componentKey;
         this.factoryClass = null;
         this.factory = factory;
@@ -68,7 +68,7 @@ public class ComponentFactoryProviderAdapter extends ProviderAdapter {
     }
 
     @Override
-    public Class getComponentImplementation() {
+    public Class<?> getComponentImplementation() {
         return componentKey;
     }
 
