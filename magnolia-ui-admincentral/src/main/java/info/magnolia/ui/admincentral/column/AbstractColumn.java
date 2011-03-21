@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 import javax.jcr.Item;
@@ -51,7 +50,7 @@ import com.vaadin.ui.Field;
  */
 public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Column<E, ColumnDefinition> {
 
-    private final D definition;
+    protected final D definition;
 
     public AbstractColumn(D def) {
         this.definition = def;
@@ -81,7 +80,7 @@ public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Co
     /**
      * Set value of Property for the provided node to the new value.
      */
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public void setValue(Item item, Object newValue) throws RepositoryException {
     }
 
     public int getWidth() {

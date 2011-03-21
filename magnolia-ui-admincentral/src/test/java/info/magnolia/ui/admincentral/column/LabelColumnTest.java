@@ -66,14 +66,12 @@ public class LabelColumnTest {
 
     @Test
     public void testGetEditField() {
-        LabelColumn column = new LabelColumn(new LabelColumnDefinition());
-        boolean editableFlag = true;
-        column.setEditable(editableFlag);
-        assertEquals(editableFlag, column.isEditable());
+        LabelColumnDefinition definition = new LabelColumnDefinition();
+        definition.setEditable(true);
+        LabelColumn column = new LabelColumn(definition);
         assertTrue(column.getEditField(null) instanceof Field);
 
-        editableFlag = false;
-        column.setEditable(editableFlag);
+        definition.setEditable(false);
         assertNull(column.getEditField(null));
     }
 }

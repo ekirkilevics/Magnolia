@@ -34,7 +34,6 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
 
 import java.io.Serializable;
@@ -57,18 +56,8 @@ public class NodeDataColumn extends AbstractColumn<String, NodeDataColumnDefinit
 
     private static final long serialVersionUID = 979787074349524725L;
 
-    private boolean editable = false;
-
     public NodeDataColumn(NodeDataColumnDefinition def) {
         super(def);
-    }
-
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
     }
 
     public String getNodeDataName() {
@@ -81,7 +70,7 @@ public class NodeDataColumn extends AbstractColumn<String, NodeDataColumnDefinit
 
     @Override
     public Field getEditField(Item item) {
-        if (item instanceof Node && editable)
+        if (item instanceof Node && definition.isEditable())
             return new TextField();
         return null;
     }
@@ -104,7 +93,7 @@ public class NodeDataColumn extends AbstractColumn<String, NodeDataColumnDefinit
     }
 
     @Override
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public void setValue(Item item, Object newValue) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;

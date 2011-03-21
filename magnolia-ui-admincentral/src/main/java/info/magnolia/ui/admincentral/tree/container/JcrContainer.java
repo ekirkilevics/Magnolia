@@ -221,6 +221,10 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     public void setColumnValue(String propertyId, Object itemId, Object newValue) {
         try {
             jcrContainerSource.setColumnValue(propertyId, getJcrItem(((ContainerItemId) itemId)), newValue);
+
+            // Refresh the tree
+            fireItemSetChange();
+
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

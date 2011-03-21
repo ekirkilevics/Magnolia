@@ -150,6 +150,9 @@ public class JcrBrowser extends TreeTable {
             try {
                 try {
                     treeModel.execute(actionDefinition, container.getJcrItem(itemId));
+
+                    // Refresh the tree
+                    container.fireItemSetChange();
                 }
                 catch (RepositoryException e) {
                     shell.showError("Can't access content.", e);

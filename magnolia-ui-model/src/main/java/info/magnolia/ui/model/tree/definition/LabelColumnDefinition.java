@@ -39,4 +39,14 @@ package info.magnolia.ui.model.tree.definition;
  * @author dlipp
  */
 public class LabelColumnDefinition extends ColumnDefinition {
+
+    private boolean editable = false;
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 }

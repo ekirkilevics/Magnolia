@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 import javax.jcr.Item;
@@ -72,7 +71,7 @@ public interface Column<E, D extends ColumnDefinition> {
     /**
      * Set value of Property for the provided node to the new value.
      */
-    void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException;
+    void setValue(Item item, Object newValue) throws RepositoryException;
 
     int getWidth();
 

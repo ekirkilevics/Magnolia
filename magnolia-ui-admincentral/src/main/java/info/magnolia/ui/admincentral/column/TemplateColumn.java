@@ -39,7 +39,6 @@ import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
 
 import java.io.Serializable;
@@ -128,7 +127,7 @@ public class TemplateColumn extends AbstractColumn<String,TemplateColumnDefiniti
     }
 
     @Override
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public void setValue(Item item, Object newValue) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;

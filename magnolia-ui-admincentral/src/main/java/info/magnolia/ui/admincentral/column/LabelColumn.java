@@ -34,7 +34,6 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
 
 import java.io.Serializable;
@@ -57,18 +56,8 @@ public class LabelColumn extends AbstractColumn<String,LabelColumnDefinition> im
 
     private static final long serialVersionUID = -3025969036157185421L;
 
-    private boolean editable = false;
-
     public LabelColumn(LabelColumnDefinition def) {
         super(def);
-    }
-
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
     }
 
     @Override
@@ -83,11 +72,11 @@ public class LabelColumn extends AbstractColumn<String,LabelColumnDefinition> im
 
     @Override
     public Field getEditField(Item item) {
-        return (editable) ? new TextField() : null;
+        return (definition.isEditable()) ? new TextField() : null;
     }
 
     @Override
-    public void setValue(JcrContainer jcrContainer, Item item, Object newValue) throws RepositoryException {
+    public void setValue(Item item, Object newValue) throws RepositoryException {
 
         if (item instanceof Node) {
             Node node = (Node) item;
@@ -109,10 +98,6 @@ public class LabelColumn extends AbstractColumn<String,LabelColumnDefinition> im
 
             JCRMetadataUtil.updateMetaData(node);
             node.getSession().save();
-
-            // Since the name of the property is part of the itemId in the container it needs to be removed and re-added
-            // This might have negative impact on the selection and position of the TreeTable component
-            jcrContainer.fireItemSetChange();
         }
     }
 }

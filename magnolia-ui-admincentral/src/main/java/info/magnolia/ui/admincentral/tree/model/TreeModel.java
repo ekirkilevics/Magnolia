@@ -163,7 +163,7 @@ public class TreeModel implements JcrContainerSource {
     }
 
     public void setColumnValue(String columnLabel, Item item, Object newValue) throws RepositoryException {
-        getColumn(columnLabel).setValue(null, item, newValue);
+        getColumn(columnLabel).setValue(item, newValue);
     }
 
     public Object getColumnValue(String columnLabel, Item item) throws RepositoryException {
