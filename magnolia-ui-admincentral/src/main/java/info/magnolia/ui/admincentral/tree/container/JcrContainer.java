@@ -156,8 +156,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     public ContainerItemId getParent(Object itemId) {
         try {
             javax.jcr.Item item = getJcrItem((ContainerItemId) itemId);
-            if (item instanceof Property)
-                return null;
+            if (item instanceof javax.jcr.Property)
+                return createContainerId(item.getParent());
             Node node = (Node) item;
             return node.getDepth() > 0 ? createContainerId(node.getParent()) : null;
         } catch (RepositoryException e) {
@@ -227,6 +227,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public javax.jcr.Item getJcrItem(ContainerItemId containerItemId) throws RepositoryException {
+        if (containerItemId == null)
+            return null;
         Node node = jcrContainerSource.getNodeByIdentifier(containerItemId.getNodeIdentifier());
         if (containerItemId.isProperty())
             return node.getProperty(containerItemId.getPropertyName());

@@ -48,11 +48,6 @@ public class ContainerItemId {
     private final String nodeIdentifier;
     private final String propertyName;
 
-    public ContainerItemId(String nodeIdentifier) {
-        this.nodeIdentifier = nodeIdentifier;
-        this.propertyName = null;
-    }
-
     public ContainerItemId(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
@@ -65,11 +60,6 @@ public class ContainerItemId {
         } else {
             throw new IllegalStateException("Unsupported item type: " + item);
         }
-    }
-
-    public ContainerItemId(Node node, String propertyName) throws RepositoryException {
-        this.nodeIdentifier = node.getIdentifier();
-        this.propertyName = propertyName;
     }
 
     public String getNodeIdentifier() {

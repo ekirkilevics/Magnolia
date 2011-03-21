@@ -34,6 +34,8 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.tree.view.TreeView;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.tree.definition.ColumnDefinition;
 
 /**
@@ -45,6 +47,7 @@ public interface TreeBuilder {
      * @param definition to create a column from
      * @return the created column or null in case it could not be created
      */
-    public abstract Column< ?,? > createTreeColumn(ColumnDefinition definition);
+    Column< ?,? > createTreeColumn(ColumnDefinition definition);
 
+    TreeView createTreeView(Shell shell, TreeView.Presenter presenter, String treeName);
 }

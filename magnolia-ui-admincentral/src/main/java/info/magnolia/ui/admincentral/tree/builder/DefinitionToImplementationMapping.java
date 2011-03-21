@@ -39,10 +39,12 @@ package info.magnolia.ui.admincentral.tree.builder;
  * @author dlipp
  */
 public class DefinitionToImplementationMapping {
+
     /**
      * Class-name of definition.
      */
     private Class<?> definition;
+
     /**
      * Class-name of implementation.
      */
@@ -51,14 +53,16 @@ public class DefinitionToImplementationMapping {
     public void setDefinition(Class<?> definition) {
         this.definition = definition;
     }
+
     public Class<?> getDefinition() {
         return definition;
     }
+
     public void setImplementation(Class<?> implementation) {
         this.implementation = implementation;
     }
+
     public Class<?> getImplementation() {
         return implementation;
     }
-
 }

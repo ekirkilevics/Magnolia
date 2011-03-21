@@ -32,7 +32,7 @@
       <sv:value>2011-03-17T11:11:33.424+01:00</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="defininitionToImplementationMappings">
+  <sv:node sv:name="definitionToImplementationMappings">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>

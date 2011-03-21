@@ -33,15 +33,25 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.model.builder.FactoryBase;
-import info.magnolia.ui.model.tree.definition.ColumnDefinition;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.tree.model.TreeModel;
+import info.magnolia.ui.admincentral.tree.view.TreeView;
+import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.builder.FactoryBase;
+import info.magnolia.ui.model.tree.definition.ColumnDefinition;
+import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 /**
  * TreeBuild configured via content to bean.
@@ -49,34 +59,63 @@ import java.util.List;
 public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<?, ColumnDefinition>> implements TreeBuilder, Serializable {
 
     private static final long serialVersionUID = 6702977290186078418L;
+
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
      */
-    private List<DefinitionToImplementationMapping> defininitionToImplementationMappings =
-            new ArrayList<DefinitionToImplementationMapping>();
+    private List<DefinitionToImplementationMapping> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping>();
 
-    public ConfiguredTreeBuilder(ComponentProvider componentProvider) {
+    private ComponentProvider componentProvider;
+    private TreeRegistry treeRegistry;
+
+    public ConfiguredTreeBuilder(ComponentProvider componentProvider, TreeRegistry treeRegistry) {
         super(componentProvider);
+        this.treeRegistry = treeRegistry;
+        this.componentProvider = componentProvider;
     }
 
-    public List<DefinitionToImplementationMapping> getDefininitionToImplementationMappings() {
-        return this.defininitionToImplementationMappings;
+    public List<DefinitionToImplementationMapping> getDefinitionToImplementationMappings() {
+        return this.definitionToImplementationMappings;
     }
 
-    public void setDefininitionToImplementationMappings(List<DefinitionToImplementationMapping> defininitionToImplementationMappings) {
-        this.defininitionToImplementationMappings = defininitionToImplementationMappings;
-        for (Iterator<DefinitionToImplementationMapping> iterator = defininitionToImplementationMappings.iterator(); iterator
-                .hasNext();) {
-            addDefininitionToImplementationMapping(iterator.next());
+    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping> definitionToImplementationMappings) {
+        this.definitionToImplementationMappings = definitionToImplementationMappings;
+        for (DefinitionToImplementationMapping definitionToImplementationMapping : definitionToImplementationMappings) {
+            addDefinitionToImplementationMapping(definitionToImplementationMapping);
         }
     }
 
-    public void addDefininitionToImplementationMapping(DefinitionToImplementationMapping mapping) {
+    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping mapping) {
         // TODO: better usage of generics?
-        addMapping((Class<ColumnDefinition>) mapping.getDefinition(), (Class<Column<?,ColumnDefinition>>) mapping.getImplementation());
+        addMapping((Class<ColumnDefinition>) mapping.getDefinition(), (Class<Column<?, ColumnDefinition>>) mapping.getImplementation());
     }
 
     public Column<?, ColumnDefinition> createTreeColumn(ColumnDefinition definition) {
         return create(definition);
+    }
+
+    public TreeView createTreeView(Shell shell, TreeView.Presenter presenter, String treeName) {
+        try {
+            TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
+
+            Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
+            for (ColumnDefinition columnDefinition : treeDefinition.getColumns()) {
+                // FIXME use getName() not getLabel()
+                Column<?, ?> column = createTreeColumn(columnDefinition);
+                // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
+                if (column != null) {
+                    columns.put(columnDefinition.getLabel(), column);
+                }
+            }
+
+            EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
+
+            TreeModel treeModel = new TreeModel(treeDefinition, columns, actionFactory);
+
+            return new TreeViewImpl(presenter, treeDefinition, treeModel, shell);
+
+        } catch (RepositoryException e) {
+            throw new RuntimeRepositoryException(e);
+        }
     }
 }

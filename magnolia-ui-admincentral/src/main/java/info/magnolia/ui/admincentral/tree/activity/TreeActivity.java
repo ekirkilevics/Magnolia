@@ -33,30 +33,18 @@
  */
 package info.magnolia.ui.admincentral.tree.activity;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import javax.jcr.Item;
-import javax.jcr.RepositoryException;
 
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.editworkspace.event.ContentChangedEvent.Handler;
 import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
-import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.model.tree.definition.ColumnDefinition;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 /**
  * Activity for displaying dialogs.
@@ -70,18 +58,14 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private TreeView treeView;
     private String path;
     private TreeBuilder builder;
-    private ComponentProvider componentProvider;
     private Shell shell;
-    private TreeRegistry treeRegistry;
 
-    public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, ComponentProvider componentProvider, Shell shell, TreeRegistry treeRegistry) {
+    public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, Shell shell) {
         this.treeName = treeName;
         this.path = path;
         this.placeController = placeController;
         this.builder = builder;
-        this.componentProvider = componentProvider;
         this.shell = shell;
-        this.treeRegistry = treeRegistry;
     }
 
     // TODO is this good practice?
@@ -93,36 +77,10 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        this.treeView = createTreeView();
+        this.treeView = builder.createTreeView(shell, this, treeName);
         this.treeView.select(path);
         eventBus.addHandler(ContentChangedEvent.class, this);
         viewPort.setView(treeView);
-    }
-
-    // TODO this should be done by the builder
-    private TreeView createTreeView() {
-        try {
-            TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
-
-            Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
-            for (ColumnDefinition columnDefinition : treeDefinition.getColumns()) {
-                // FIXME use getName() not getLabel()
-                Column<?, ?> column = builder.createTreeColumn(columnDefinition);
-                // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
-                if (column != null) {
-                    columns.put(columnDefinition.getLabel(), column);
-                }
-            }
-
-            EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
-
-            TreeModel treeModel = new TreeModel(treeDefinition, columns, actionFactory);
-
-            return new TreeViewImpl(this, treeDefinition, treeModel, shell);
-
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
     }
 
     public void onItemSelection(Item jcrItem) {
