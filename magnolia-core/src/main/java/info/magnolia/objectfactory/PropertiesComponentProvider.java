@@ -66,22 +66,22 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
         super(parent);
     }
 
-    public void parseConfiguration(Properties mappings) {
+    public <T> void parseConfiguration(Properties mappings) {
 
         for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
             String key = (String) entry.getKey();
             String value = (String) entry.getValue();
 
-            final Class<?> type = classForName(key);
+            final Class<T> type = (Class<T>) classForName(key);
             if (type == null) {
                 log.debug("{} does not seem to resolve to a class. (property value: {})", key, value);
                 continue;
             }
             if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
                 ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                registerComponentFactory(type, new LazyObservedComponentFactory(path.getRepository(), path.getPath(), type));
+                registerComponentFactory(type, new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), type));
             } else {
-                Class<?> valueType = classForName(value);
+                Class<? extends T> valueType = (Class<? extends T>) classForName(value);
                 if (valueType == null) {
                     log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
                 } else {

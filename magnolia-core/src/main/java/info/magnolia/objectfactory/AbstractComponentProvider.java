@@ -52,25 +52,25 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
 
     private static class ComponentDefinition<T> {
 
-        private Class<?> type;
-        private Object instance;
+        private Class<T> type;
+        private T instance;
         private ComponentFactory<T> factory;
         private Class<? extends ComponentFactory<T>> factoryClass;
-        private Class<?> implementationType;
+        private Class<? extends T> implementationType;
 
-        public Class<?> getType() {
+        public Class<T> getType() {
             return type;
         }
 
-        public void setType(Class<?> type) {
+        public void setType(Class<T> type) {
             this.type = type;
         }
 
-        public Object getInstance() {
+        public T getInstance() {
             return instance;
         }
 
-        public void setInstance(Object instance) {
+        public void setInstance(T instance) {
             this.instance = instance;
         }
 
@@ -85,11 +85,11 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         /**
          * The implementation type is unknown for components created by ComponentFactories.
          */
-        public Class<?> getImplementationType() {
+        public Class<? extends T> getImplementationType() {
             return implementationType;
         }
 
-        public void setImplementationType(Class<?> implementationType) {
+        public void setImplementationType(Class<? extends T> implementationType) {
             this.implementationType = implementationType;
         }
 
@@ -109,7 +109,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private HierarchicalComponentProvider parent;
-    private final Map<Class<?>, ComponentDefinition> definitions = new ConcurrentHashMap<Class<?>, ComponentDefinition>();
+    private final Map<Class<?>, ComponentDefinition<?>> definitions = new ConcurrentHashMap<Class<?>, ComponentDefinition<?>>();
 
     protected AbstractComponentProvider() {
     }
@@ -128,7 +128,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
     }
 
     public synchronized <T> T getComponent(Class<T> type) {
-        ComponentDefinition definition = getComponentDefinition(type);
+        ComponentDefinition<T> definition = getComponentDefinition(type);
         if (definition == null) {
             if (parent != null && parent.isConfiguredFor(type))
                 return parent.getComponent(type);
@@ -138,14 +138,14 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
             registerComponent(type, type);
             definition = getComponentDefinition(type);
         }
-        Object instance = definition.getInstance();
+        T instance = definition.getInstance();
         if (instance == null) {
             log.debug("No instance for {} yet, creating new one.", type);
             instance = newInstance(type);
             definition.setInstance(instance);
             log.debug("New instance for {} created: {}", type, instance);
         }
-        return (T) instance;
+        return instance;
     }
 
     public synchronized <T> T newInstance(Class<T> type, Object... parameters) {
@@ -154,19 +154,19 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
             return null;
         }
         try {
-            ComponentDefinition definition = getComponentDefinition(type);
+            ComponentDefinition<T> definition = getComponentDefinition(type);
             if (definition == null) {
                 if (parent != null && parent.isConfiguredFor(type))
                     return parent.newInstance(type);
                 if (!Classes.isConcrete(type)) {
                     throw new MgnlInstantiationException("No concrete implementation defined for " + type);
                 }
-                return (T) createInstance(type, parameters);
+                return createInstance(type, parameters);
             }
             if (definition.isFactory()) {
                 return this.<T>instantiateFactoryIfNecessary(definition).newInstance();
             }
-            return (T) createInstance(definition.getImplementationType(), parameters);
+            return createInstance(definition.getImplementationType(), parameters);
         } catch (Exception e) {
             if (e instanceof MgnlInstantiationException) {
                 throw (MgnlInstantiationException) e;
@@ -175,8 +175,8 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         }
     }
 
-    public <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException {
-        ComponentDefinition definition = getComponentDefinition(type);
+    public <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException {
+        ComponentDefinition<T> definition = getComponentDefinition(type);
         if (definition == null)
             if (parent != null && parent.isConfiguredFor(type))
                 return parent.getImplementation(type);
@@ -184,48 +184,50 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
                 return type;
         if (definition.isFactory())
             return type;
-        return (Class<? extends C>) definition.getImplementationType();
+        return definition.getImplementationType();
     }
 
-    protected synchronized void registerComponent(Class<?> type, Class<?> implementationType) {
+    @SuppressWarnings("unchecked")
+    protected synchronized <T> void registerComponent(Class<T> type, Class<? extends T> implementationType) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         if (!Classes.isConcrete(implementationType)) {
             throw new MgnlInstantiationException("Implementation type is not a concrete class for type" + type);
         }
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
-            ComponentDefinition definition = new ComponentDefinition();
+            ComponentDefinition<T> definition = new ComponentDefinition<T>();
             definition.setType(type);
-            definition.setFactoryClass((Class<? extends ComponentFactory<?>>) implementationType);
+            definition.setFactoryClass((Class<? extends ComponentFactory<T>>)implementationType);
             definitions.put(type, definition);
         } else {
-            ComponentDefinition definition = new ComponentDefinition();
+            ComponentDefinition<T> definition = new ComponentDefinition<T>();
             definition.setType(type);
             definition.setImplementationType(implementationType);
             definitions.put(type, definition);
         }
     }
 
-    protected synchronized void registerComponentFactory(Class<?> type, ComponentFactory<?> componentFactory) {
+    protected synchronized <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
-        ComponentDefinition definition = new ComponentDefinition();
+        ComponentDefinition<T> definition = new ComponentDefinition<T>();
         definition.setType(type);
         definition.setFactory(componentFactory);
         definitions.put(type, definition);
     }
 
-    protected synchronized void registerInstance(Class<?> type, Object instance) {
+    protected synchronized <T> void registerInstance(Class<T> type, T instance) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
-        ComponentDefinition definition = new ComponentDefinition();
+        ComponentDefinition<T> definition = new ComponentDefinition<T>();
         definition.setType(type);
         definition.setInstance(instance);
         definitions.put(type, definition);
     }
 
-    private ComponentDefinition getComponentDefinition(Class<?> type) {
-        return definitions.get(type);
+    @SuppressWarnings("unchecked")
+    private <T> ComponentDefinition<T> getComponentDefinition(Class<T> type) {
+        return (ComponentDefinition<T>)definitions.get(type);
     }
 
     private <T> ComponentFactory<T> instantiateFactoryIfNecessary(ComponentDefinition<T> definition) {

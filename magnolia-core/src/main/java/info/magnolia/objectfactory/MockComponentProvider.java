@@ -53,16 +53,16 @@ public class MockComponentProvider extends PropertiesComponentProvider {
      * Used only in tests.
      * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
-    public void setImplementation(Class<?> keyType, String value) {
+    public <T> void setImplementation(Class<T> keyType, String value) {
         removeComponent(keyType);
 
         if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
 
             ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-            ComponentFactory factory = new LazyObservedComponentFactory(path.getRepository(), path.getPath(), keyType);
+            ComponentFactory<T> factory = new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), keyType);
             registerComponentFactory(keyType, factory);
         } else {
-            Class<?> valueType = classForName(value);
+            Class<? extends T> valueType = (Class<? extends T>) classForName(value);
             if (valueType == null) {
                 // TODO
             } else {
@@ -75,7 +75,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
      * Used only in tests.
      * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
-    public void setInstance(Class<?> type, Object instance) {
+    public <T> void setInstance(Class<T> type, T instance) {
         removeComponent(type);
         registerInstance(type, instance);
     }
@@ -84,7 +84,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
      * Used only in tests.
      * @see {@link info.magnolia.test.ComponentsTestUtil}
      */
-    public void setInstanceFactory(Class<?> type, ComponentFactory<?> factory) {
+    public <T> void setInstanceFactory(Class<T> type, ComponentFactory<T> factory) {
         removeComponent(type);
         registerComponentFactory(type, factory);
     }

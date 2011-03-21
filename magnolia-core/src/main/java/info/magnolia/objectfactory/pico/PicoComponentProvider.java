@@ -109,7 +109,7 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    protected void registerComponent(Class<?> type, Class<?> implementationType) {
+    protected <T> void registerComponent(Class<T> type, Class<? extends T> implementationType) {
         super.registerComponent(type, implementationType);
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory<?>>) implementationType));
@@ -119,15 +119,14 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    protected void registerComponentFactory(Class<?> type, ComponentFactory<?> componentFactory) {
+    protected <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
         super.registerComponentFactory(type, componentFactory);
         pico.addAdapter(new ComponentFactoryProviderAdapter(type, componentFactory));
     }
 
     @Override
-    protected void registerInstance(Class<?> type, Object instance) {
+    protected <T> void registerInstance(Class<T> type, T instance) {
         super.registerInstance(type, instance);
         pico.addComponent(type, instance);
     }
-
 }

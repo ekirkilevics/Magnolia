@@ -50,7 +50,7 @@ public interface ComponentProvider {
      *
      * Used by Content2Bean.
      */
-    <C> Class<? extends C> getImplementation(Class<C> type) throws ClassNotFoundException;
+    <T> Class<? extends T> getImplementation(Class<T> type) throws ClassNotFoundException;
 
     /**
      * @deprecated since 5.0, use IoC. If you really need to look up a component, then use {@link #getComponent(Class)}
