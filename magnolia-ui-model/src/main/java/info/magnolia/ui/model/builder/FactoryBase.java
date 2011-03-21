@@ -76,6 +76,7 @@ public abstract class FactoryBase<D, I> {
             }
         }
         if (implementationClass != null) {
+            // TODO: check whether this is satisfying enough - check TODO in FactoryBaseTest.Impl for details.
             Object[] combinedParameters = new Object[parameters.length + 1];
             combinedParameters[0] = definition;
             for (int i = 0; i < parameters.length; i++) {
