@@ -59,7 +59,7 @@ public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
 
     @SuppressWarnings("unchecked")
     private void registerTokenizers(Class<? extends Place>... places) {
-        log.info("Starting registering tokenizers for places...");
+        log.debug("Starting registering tokenizers for places...");
         for(Class<? extends Place> clazz: places){
             Prefix prefix = clazz.getAnnotation(Prefix.class);
             if(prefix == null){
@@ -72,7 +72,7 @@ public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
                     try {
                         final PlaceTokenizer<Place> tokenizer = (PlaceTokenizer<Place>) declaredClass.newInstance();
                         tokenizers.put(prefix.value(), tokenizer);
-                        log.info("Added tokenizer for place {}", clazz.getName());
+                        log.debug("Added tokenizer for place {}", clazz.getName());
                     } catch (InstantiationException e) {
                         throw new IllegalStateException(e);
                     } catch (IllegalAccessException e) {
