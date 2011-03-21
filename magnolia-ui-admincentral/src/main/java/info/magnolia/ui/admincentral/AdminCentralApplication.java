@@ -33,6 +33,19 @@
  */
 package info.magnolia.ui.admincentral;
 
+import java.lang.reflect.Type;
+import java.util.Properties;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
+import org.picocontainer.PicoCompositionException;
+import org.picocontainer.PicoContainer;
+import org.picocontainer.adapters.AbstractAdapter;
+
+import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
@@ -47,7 +60,6 @@ import info.magnolia.ui.admincentral.navigation.activity.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProviderImpl;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
@@ -57,17 +69,6 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
-
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
-import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 
 /**
  * Application class for AdminCentral. Provides a scoped IoC container and performs initialization of the UI.
@@ -88,7 +89,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         componentProvider.getComponent(AdminCentralPresenter.class).init();
     }
 
-    private void createScopedContainer() {
+    private void createComponentProvider() {
 
         PicoComponentProvider provider = (PicoComponentProvider) Components.getComponentProvider();
         PicoBuilder builder = new PicoBuilder(provider.getContainer()).withConstructorInjection().withCaching();
@@ -99,12 +100,27 @@ public class AdminCentralApplication extends Application implements HttpServletR
         Properties properties = new Properties();
         properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
         properties.put(MenuItemDefinition.class.getName(), MenuItemDefinitionImpl.class.getName());
+        properties.put(TreeBuilderProvider.class.getName(), "/modules/admin-central/components/treeBuilderProvider");
         componentProvider.parseConfiguration(properties);
 
-        // TODO: getBuilder should take params user, device...
-        container.addComponent(TreeBuilderProvider.class, TreeBuilderProviderImpl.class);
-        TreeBuilder treeBuilder = container.getComponent(TreeBuilderProvider.class).getBuilder();
-        container.addComponent(TreeBuilder.class, treeBuilder);
+        // We use a pico adapter here to delay creation of the TreeBuilder instance until it is needed (compare to before when we created an instance here and set it in the container).
+        container.addAdapter(new AbstractAdapter<TreeBuilder>(TreeBuilder.class, TreeBuilder.class) {
+
+            public TreeBuilder getComponentInstance(PicoContainer container, Type into) throws PicoCompositionException {
+
+                TreeBuilderProvider treeBuilderProvider = componentProvider.getComponent(TreeBuilderProvider.class);
+
+                // TODO: getBuilder should take params user, device...
+                return treeBuilderProvider.getBuilder();
+            }
+
+            public void verify(PicoContainer container) throws PicoCompositionException {
+            }
+
+            public String getDescriptor() {
+                return "Adapter creating TreeBuilder instance(s) by calling TreeBuilderProvider";
+            }
+        });
 
         container.addComponent(ComponentProvider.class, componentProvider);
 
@@ -132,7 +148,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {
         if (componentProvider == null)
-            createScopedContainer();
+            createComponentProvider();
 
         // TODO keeping scopes in ThreadLocal is not necessary if we allow components to have their ComponentProvider injected, expect that since Content2Bean is a static service it needs to get it this way which is a shame..
 

@@ -33,22 +33,30 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import info.magnolia.ui.admincentral.module.AdminCentralModule;
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides the TreeBuilder defined in the AdminCentralModule.
  */
 public class TreeBuilderProviderImpl implements TreeBuilderProvider {
 
-    private AdminCentralModule module;
-
-    public TreeBuilderProviderImpl(AdminCentralModule module) {
-        this.module = module;
-    }
+    private List<TreeBuilder> treeBuilders = new ArrayList<TreeBuilder>();
 
     public TreeBuilder getBuilder() {
         // TODO: Decide how to handle if there's more than one.
-        return module.getTreeBuilders().get(0);
+        return treeBuilders.get(0);
+    }
+
+    public void setTreeBuilders(List<TreeBuilder> treeBuilders) {
+        this.treeBuilders = treeBuilders;
+    }
+
+    public List<TreeBuilder> getTreeBuilders() {
+        return treeBuilders;
+    }
+
+    public void addTreeBuilder(TreeBuilder treeBuilder) {
+        this.treeBuilders.add(treeBuilder);
     }
 }
