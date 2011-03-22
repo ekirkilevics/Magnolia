@@ -62,7 +62,7 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     /**
      * Collection of principal objects.
      */
-    private Collection collection = new ArrayList();
+    private final Collection<Principal> collection = new ArrayList<Principal>();
 
     private String name;
 
@@ -86,10 +86,11 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
 
     /**
      * Sets internal collection of principals.
-     * @param collection
+     * @deprecated since 5.0
      */
-    public void set(Collection collection) {
-        this.collection = collection;
+    @Deprecated
+    public void set(Collection<Principal> collection) {
+        throw new UnsupportedOperationException("use addAll() instead");
     }
 
     /**
@@ -98,6 +99,14 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      */
     public void add(Principal principal) {
         this.collection.add(principal);
+    }
+
+    /**
+     * Adds principals to the internal collection of principals.
+     * @param principal to be added to the collection
+     */
+    public void addAll(Collection<Principal> principal) {
+        this.collection.addAll(principal);
     }
 
     /**
@@ -139,9 +148,9 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      */
     public Principal get(String name) {
         //TODO: change internal collection to a map and store names as keys to avoid loops !!!!
-        Iterator principalIterator = this.collection.iterator();
+        Iterator<Principal> principalIterator = this.collection.iterator();
         while (principalIterator.hasNext()) {
-            Principal principal = (Principal) principalIterator.next();
+            Principal principal = principalIterator.next();
             if (StringUtils.equalsIgnoreCase(name, principal.getName())) {
                 return principal;
             }
@@ -153,13 +162,14 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
      * Returns an iterator over the collection of principals.
      * @return iterator for Principal objects
      */
-    public Iterator iterator() {
+    public Iterator<Principal> iterator() {
         return collection.iterator();
     }
 
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).toString();
     }

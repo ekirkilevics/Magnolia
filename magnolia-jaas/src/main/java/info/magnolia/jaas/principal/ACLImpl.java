@@ -46,7 +46,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * This class represents access control list as a principal.
  * @author Sameer Charles $Id$
+ * @deprecated since 5.0 use {@link info.magnolia.cms.security.ACLImpl} instead
  */
+@Deprecated
 public class ACLImpl implements ACL {
 
     /**
@@ -58,7 +60,7 @@ public class ACLImpl implements ACL {
 
     private String name;
 
-    private List list;
+    private final List list;
 
     private String repository;
 
@@ -145,10 +147,11 @@ public class ACLImpl implements ACL {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).append(
-            "workspace",
-            this.workspace).append("repository", this.repository).append("list", this.list).toString();
+                "workspace",
+                this.workspace).append("repository", this.repository).append("list", this.list).toString();
     }
 
 }

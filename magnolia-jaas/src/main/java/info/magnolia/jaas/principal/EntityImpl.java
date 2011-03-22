@@ -45,7 +45,9 @@ import java.util.Map;
 /**
  * Implementation fo the security entity.
  * @author Sameer Charles $Id$
+ * @deprecated
  */
+@Deprecated
 public class EntityImpl implements Entity {
 
     /**
@@ -55,7 +57,7 @@ public class EntityImpl implements Entity {
 
     private static final String DEFAULT_NAME = "person";
 
-    private Map properties;
+    private final Map properties;
 
     public EntityImpl() {
         this.properties = new HashMap();
@@ -77,6 +79,7 @@ public class EntityImpl implements Entity {
     /**
      * @deprecated use addProperty(NAME, name)
      */
+    @Deprecated
     public void setName(String name) {
         addProperty(NAME, name);
     }
@@ -92,6 +95,7 @@ public class EntityImpl implements Entity {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", getName()).toString();
     }

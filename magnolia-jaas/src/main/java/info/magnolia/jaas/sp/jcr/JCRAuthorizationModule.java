@@ -33,38 +33,29 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.ACLImpl;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.RoleList;
-import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jaas.principal.ACLImpl;
 import info.magnolia.jaas.principal.GroupListImpl;
 import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,12 +67,14 @@ import org.slf4j.LoggerFactory;
  */
 public class JCRAuthorizationModule extends AbstractLoginModule {
 
+    @Override
     public void validateUser() throws LoginException {
     }
 
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
     // do nothing here, we are only responsible for authorization, not authentication!
+    @Override
     public boolean login() throws LoginException
     {
         this.success = true;
@@ -92,9 +85,10 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     /**
      * Sets access control list from the user, roles and groups.
      */
+    @Override
     public void setACL() {
-        String[] roles = (String[]) getRoleNames().toArray(new String[getRoleNames().size()]);
-        String[] groups = (String[]) getGroupNames().toArray(new String[getGroupNames().size()]);
+        String[] roles = getRoleNames().toArray(new String[getRoleNames().size()]);
+        String[] groups = getGroupNames().toArray(new String[getGroupNames().size()]);
 
         if (log.isDebugEnabled()) {
             log.debug("Roles: {}", ArrayUtils.toString(roles));
@@ -108,31 +102,50 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
         setACLForRoles(roles, principalList);
         setACLForGroups(groups, principalList);
         User user = null;
-        if (callbackHandler instanceof CredentialsCallbackHandler) {
-            user = ((CredentialsCallbackHandler) callbackHandler).getUser();
-        }
+
+        // can't obtain SS instance at creation time as repo is not initialized yet and class can't be instantiated.
+        SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
+        user = securitySupport.extractUser(subject);
         // not all jaas modules will support magnolia users
-        if(user == null){
-            user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
+        if(user == null) {
+            user = securitySupport.getUserManager().getUser(subject);
         }
 
         if (user instanceof MgnlUser) {
-            setACL(((MgnlUser)user).getUserNode(), principalList);
+            setACLForUser(principalList, user, securitySupport);
         }
 
-         if (log.isDebugEnabled()) {
-            for (Iterator iterator = ((PrincipalCollectionImpl) principalList).iterator(); iterator.hasNext();) {
-                Principal principal = (Principal) iterator.next();
+        if (log.isDebugEnabled()) {
+            for (Iterator<Principal> iterator =  principalList.iterator(); iterator.hasNext();) {
+                Principal principal = iterator.next();
                 log.debug("ACL: {}", principal);
             }
-
         }
 
         // set principal list, a set of info.magnolia.jaas.principal.ACL
         this.subject.getPrincipals().add(principalList);
     }
 
+    protected void setACLForUser(PrincipalCollection principalList, User user, SecuritySupport securitySupport) {
+        Collection<ACL> principals = securitySupport.getUserManager(((MgnlUser) user).getRealm()).getACLs(user).values();
+        mergePrincipals(principalList, principals);
+    }
+
+    private void mergePrincipals(PrincipalCollection principalList, Collection<ACL> principals) {
+        for (ACL princ : principals) {
+            if (principalList.contains(princ.getName())) {
+                ACL oldACL = (ACL) principalList.get(princ.getName());
+                Collection<Permission> permissions = new HashSet<Permission>(oldACL.getList());
+                permissions.addAll(princ.getList());
+                principalList.remove(oldACL);
+                princ = new ACLImpl(princ.getName(), princ.getRepository(), princ.getWorkspace(), new ArrayList<Permission>(permissions));
+            }
+            principalList.add(princ);
+        }
+    }
+
     // do nothing here, we are only responsible for adding ACL passed on via shared state
+    @Override
     public void setEntity() {}
 
     /**
@@ -141,8 +154,8 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
      */
     protected void addGroups(String[] groups) {
         GroupList groupList = new GroupListImpl();
-        for (Iterator iterator = getGroupNames().iterator(); iterator.hasNext();) {
-            String group = (String) iterator.next();
+        for (Iterator<String> iterator = getGroupNames().iterator(); iterator.hasNext();) {
+            String group = iterator.next();
             groupList.add(group);
         }
         this.subject.getPrincipals().add(groupList);
@@ -154,8 +167,8 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
      */
     protected void addRoles(String[] roles) {
         RoleList roleList = new RoleListImpl();
-        for (Iterator iterator = getRoleNames().iterator(); iterator.hasNext();) {
-            String role = (String) iterator.next();
+        for (Iterator<String> iterator = getRoleNames().iterator(); iterator.hasNext();) {
+            String role = iterator.next();
             roleList.add(role);
         }
         this.subject.getPrincipals().add(roleList);
@@ -167,20 +180,9 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
      * @param principalList PrincipalCollection
      */
     protected void setACLForRoles(String[] roles, PrincipalCollection principalList) {
-
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
-
-        for (int j = 0; j < roles.length; j++) {
-            String role = roles[j];
-            try {
-                setACL(hm.getContent(role), principalList);
-            }
-            catch (PathNotFoundException e) {
-                log.info("Role {} not found", role);
-            }
-            catch (RepositoryException e) {
-                log.warn("Error accessing {} role: {}", role, e.getMessage());
-            }
+        SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
+        for (String role : roles) {
+            mergePrincipals(principalList, securitySupport.getRoleManager().getACLs(role).values());
         }
     }
 
@@ -190,74 +192,17 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
      * @param principalList PrincipalCollection
      */
     protected void setACLForGroups(String[] groups, PrincipalCollection principalList) {
-        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
+        SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
 
-        for (int j = 0; j < groups.length; j++) {
-            String group = groups[j];
-            try {
-                setACL(hm.getContent(group), principalList);
-            }
-            catch (PathNotFoundException e) {
-                log.info("Group {} not found", group);
-            }
-            catch (RepositoryException e) {
-                log.warn("Error accessing {} group: {}", group, e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Sets access control list from a list of roles under the provided content object.
-     * @param node under which roles and ACL are defined
-     */
-    private void setACL(Content node, PrincipalCollection principalList) {
-        Iterator it = node.getChildren(ItemType.CONTENTNODE.getSystemName(), "acl*").iterator();
-        while (it.hasNext()) {
-            Content aclEntry = (Content) it.next();
-            String name = StringUtils.substringAfter(aclEntry.getName(), "acl_");
-            ACL acl;
-            String repositoryName;
-            String workspaceName;
-            if (!StringUtils.contains(name, "_")) {
-                repositoryName = name;
-                workspaceName = ContentRepository.getDefaultWorkspace(name);
-                name += ("_" + workspaceName); // default workspace must be added to the name
-            }
-            else {
-                String[] tokens = StringUtils.split(name, "_");
-                repositoryName = tokens[0];
-                workspaceName = tokens[1];
-            }
-            // get the existing acl object if created before with some
-            // other role
-            if (!principalList.contains(name)) {
-                acl = new ACLImpl();
-                principalList.add(acl);
-            }
-            else {
-                acl = (ACL) principalList.get(name);
-            }
-            acl.setName(name);
-            acl.setRepository(repositoryName);
-            acl.setWorkspace(workspaceName);
-
-            // add acl
-            Iterator permissionIterator = aclEntry.getChildren().iterator();
-            while (permissionIterator.hasNext()) {
-                Content map = (Content) permissionIterator.next();
-                String path = map.getNodeData("path").getString();
-                UrlPattern p = new SimpleUrlPattern(path);
-                Permission permission = new PermissionImpl();
-                permission.setPattern(p);
-                permission.setPermissions(map.getNodeData("permissions").getLong());
-                acl.addPermission(permission);
-            }
+        for (String group : groups) {
+            mergePrincipals(principalList, securitySupport.getGroupManager().getACLs(group).values());
         }
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean release() {
         return true;
     }

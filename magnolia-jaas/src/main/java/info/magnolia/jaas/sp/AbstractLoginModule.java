@@ -35,13 +35,13 @@ package info.magnolia.jaas.sp;
 
 
 import info.magnolia.cms.security.Realm;
-import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.callback.RealmCallback;
-import info.magnolia.cms.security.auth.callback.UserCallback;
 import info.magnolia.cms.util.BooleanUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,6 +82,7 @@ public abstract class AbstractLoginModule implements LoginModule {
     /**
      * @deprecated use STATUS_SUCCEEDED
      */
+    @Deprecated
     public static final int STATUS_SUCCEDED = STATUS_SUCCEEDED;
 
     public static final int STATUS_FAILED = 2;
@@ -90,7 +91,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     public static final int STATUS_UNAVAILABLE = 4;
 
-     // TODO: implement the following commonly supported flags to allow single signon with third party modules
+    // TODO: implement the following commonly supported flags to allow single signon with third party modules
 
     //If true, the first LoginModule in the stack saves the password entered,
     // and subsequent LoginModules also try to use it. If authentication fails,
@@ -116,9 +117,9 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     public CallbackHandler callbackHandler;
 
-    public Map sharedState;
+    public Map<String, Object> sharedState;
 
-    public Map options;
+    public Map<String, Object> options;
 
     public String name;
 
@@ -127,7 +128,7 @@ public abstract class AbstractLoginModule implements LoginModule {
     /**
      * The realm we login into. Initialized by the option realm.
      */
-    protected String realm = Realm.REALM_ALL;
+    protected Realm realm = Realm.REALM_ALL;
 
     /**
      * Allow the client to define the realm he logs into. Default value is false
@@ -149,21 +150,23 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     }
 
-    public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
+    public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, final Map options) {
         this.subject = subject;
         this.callbackHandler = callbackHandler;
         this.sharedState = sharedState;
         this.options = options;
         // don't overwrite group and roles set in the shared state
-        if (this.sharedState.get("groupNames") == null)
-        {
-            this.sharedState.put("groupNames", new LinkedHashSet());
+        if (this.sharedState.get("groupNames") == null) {
+            this.sharedState.put("groupNames", new LinkedHashSet<String>());
         }
-        if (this.sharedState.get("roleNames") == null)
-        {
-            this.sharedState.put("roleNames", new LinkedHashSet());
+        if (this.sharedState.get("roleNames") == null) {
+            this.sharedState.put("roleNames", new LinkedHashSet<String>());
         }
-        this.realm = StringUtils.defaultIfEmpty((String) options.get(OPTION_REALM), Realm.DEFAULT_REALM);
+        if (StringUtils.isBlank((String) options.get(OPTION_REALM))) {
+            this.realm = Realm.DEFAULT_REALM;
+        } else {
+            this.realm = new Realm.RealmImpl((String) options.get(OPTION_REALM));
+        }
 
         this.useRealmCallback = BooleanUtil.toBoolean((String) options.get(OPTION_USE_REALM_CALLBACK), true);
         this.skipOnPreviousSuccess = BooleanUtil.toBoolean((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), false);
@@ -190,22 +193,31 @@ public abstract class AbstractLoginModule implements LoginModule {
 
         this.success = false;
         try {
+            // TODO: really?
+            RealmCallback realmCallback = null;
+            if (this.callbackHandler instanceof CallbackHandler) {
+                log.debug("Removing RealmCallback unsupported by JR before passing through to JR CallbackHandler.");
+                List<Callback> tmp = new ArrayList<Callback>();
+                for (Callback callback : callbacks) {
+                    if (!(callback instanceof RealmCallback)) {
+                        tmp.add(callback);
+                    } else {
+                        realmCallback = (RealmCallback) callback;
+                    }
+                }
+                callbacks = tmp.toArray(new Callback[tmp.size()]);
+            }
             this.callbackHandler.handle(callbacks);
             this.name = ((NameCallback) callbacks[0]).getName();
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
-            if(this.useRealmCallback){
-                this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
+            if(this.useRealmCallback && realmCallback != null){
+                // TODO: this code is absolutely unsafe !!!!
+                if (!StringUtils.isBlank(realmCallback.getRealm())) {
+                    this.realm = new Realm.RealmImpl(realmCallback.getRealm());
+                }
             }
 
             this.validateUser();
-
-            // FIXME we do that only to be compatible to the old way jaas modules were written
-            if(this instanceof UserAwareLoginModule){
-                User user = ((UserAwareLoginModule)this).getUser();
-                if(user != null){
-                    this.callbackHandler.handle(new Callback[]{new UserCallback(user)});
-                }
-            }
         } catch (IOException ioe) {
             if (log.isDebugEnabled()) {
                 log.debug("Exception caught", ioe);
@@ -274,7 +286,7 @@ public abstract class AbstractLoginModule implements LoginModule {
         return skipOnPreviousSuccess && this.getSharedStatus() == STATUS_SUCCEEDED;
     }
 
-    public void setGroupNames(Set names) {
+    public void setGroupNames(Set<String> names) {
         this.getGroupNames().addAll(names);
     }
 
@@ -282,11 +294,11 @@ public abstract class AbstractLoginModule implements LoginModule {
         getGroupNames().add(groupName);
     }
 
-    public Set getGroupNames() {
-        return (Set) this.sharedState.get("groupNames");
+    public Set<String> getGroupNames() {
+        return (Set<String>) this.sharedState.get("groupNames");
     }
 
-    public void setRoleNames(Set names) {
+    public void setRoleNames(Set<String> names) {
         this.getRoleNames().addAll(names);
     }
 
@@ -294,8 +306,8 @@ public abstract class AbstractLoginModule implements LoginModule {
         getRoleNames().add(roleName);
     }
 
-    public Set getRoleNames() {
-        return (Set) this.sharedState.get("roleNames");
+    public Set<String> getRoleNames() {
+        return (Set<String>) this.sharedState.get("roleNames");
     }
 
     /**

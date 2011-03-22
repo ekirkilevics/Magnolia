@@ -34,32 +34,55 @@
 package info.magnolia.jaas.sp.jcr;
 
 import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
-import info.magnolia.cms.security.auth.Entity;
-import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.core.security.UserPrincipal;
+import org.apache.jackrabbit.core.security.principal.AdminPrincipal;
 
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.AccountLockedException;
-import java.util.Iterator;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Authentication module implementation using JCR to retrieve the users.
  * @author Sameer Charles $Id$
  */
-public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule {
+// JR requires login module to be serializable!
+public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule, Serializable {
+
+    private static final boolean logAdmin = false;
     protected User user;
+
+    /**
+     * As silly as it seems this class sole purpose of existence is to implement Serializable required by JR itself.
+     * @author had
+     * @version $Id$
+     */
+    public class MagnoliaJRAdminPrincipal extends AdminPrincipal implements Principal, Serializable {
+        public MagnoliaJRAdminPrincipal(String name) {
+            super(name);
+        }
+    }
+
 
     /**
      * Releases all associated memory.
      */
+    @Override
     public boolean release() {
         return true;
     }
@@ -68,6 +91,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
      * Checks is the credentials exist in the repository.
      * @throws LoginException or specific subclasses (which will be handled further for user feedback)
      */
+    @Override
     public void validateUser() throws LoginException {
         initUser();
 
@@ -81,14 +105,43 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
             throw new AccountLockedException("User account " + this.name + " is locked.");
         }
 
-        if (!UserManager.ANONYMOUS_USER.equals(user.getName()) && user instanceof MgnlUser)
-        {
-            ((MgnlUser) user).setLastAccess();
+        if (!UserManager.ANONYMOUS_USER.equals(user.getName()) && !isAdmin()) {
+            // update last access date for all non anonymous users
+            getUserManager().updateLastAccessTimestamp(user);
         }
     }
 
-    protected void initUser() {
-        user = getUserManager().getUser(name);
+    private UserManager getUserManager() {
+        // can't get the factory upfront and can't use IoC as this class is instantiated by JCR/JAAS before anything else is ready.
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getting user manager for realm " + realm.getName());
+        }
+        return SecuritySupport.Factory.getInstance().getUserManager(realm.getName());
+    }
+
+
+
+    protected void initUser() throws LoginException {
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("initializing user {}", name);
+        }
+        // we do not verify admin user, against our user base (which is in repo we are trying to access with this user), but we still check the password.
+        // This user has assigned no privileges, just dummy near empty user object (with name and pwd only).
+        if (isAdmin()) {
+            Map<String, String> props = new HashMap<String, String>();
+            //TODO: double check if we need to reset pwd here or if getAdminSession() is enough!!!
+            props.put(MgnlUserManager.PROPERTY_PASSWORD, new String(Base64.encodeBase64("admin".getBytes())));
+            MgnlUser user = new MgnlUser(name, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST,props);
+            this.user = user;
+            // admin user is used by system and have no access to regular user stuff
+            return;
+        }
+
+        long start = System.currentTimeMillis();
+        this.user = getUserManager().getUser(name);
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("initialized user {} in {}ms", name, (System.currentTimeMillis() - start));
+        }
     }
 
     protected void matchPassword() throws LoginException {
@@ -104,35 +157,46 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
     }
 
     /**
-     * Override this to support any configured/non-configured user manager.
-     */
-    public UserManager getUserManager() {
-        SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
-        return securitySupport.getUserManager(this.realm);
-    }
-
-    /**
      * Set user details.
      */
+    @Override
     public void setEntity() {
-        EntityImpl entity = new EntityImpl();
-        entity.addProperty(Entity.LANGUAGE, this.user.getLanguage());
-        entity.addProperty(Entity.NAME, this.user.getName());
+        // TODO: cleanup the code !!!
 
-        String fullName = this.user.getProperty("title");
-        if(fullName != null){
-            entity.addProperty(Entity.FULL_NAME, fullName);
+        if (isAdmin()) {
+            // JR specific principal for repo only authentication. This part will be probably different per repo.
+            this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(name));
+            // admin user is used by system and have no access to regular user stuff
+            return;
+        } else if ("superuser".equals(name)) {
+            // add admin principal also for our superuser to make sure system doesn't deny him any access
+            this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(name));
+        } else {
+            // TODO: make JR dependency pluggable!!!
+            // and ordinary JR User principal for everybody else
+            this.subject.getPrincipals().add(new UserPrincipal(name));
+
         }
-        entity.addProperty(Entity.PASSWORD, new String(this.pswd));
-        this.subject.getPrincipals().add(entity);
 
+        // our user has our principal!!!!
+        this.subject.getPrincipals().add(this.user);
+        this.subject.getPrincipals().add(this.realm);
+
+
+        // FIXME: should be removed and set by authorization module only ... check out why it is still here
         collectGroupNames();
         collectRoleNames();
+    }
+
+    private boolean isAdmin() {
+        // TODO: make admin user name configurable (read from properties)
+        return this.name != null && this.name.equals("admin");
     }
 
     /**
      * Set access control list from the user, roles and groups.
      */
+    @Override
     public void setACL() {
     }
 
@@ -140,8 +204,8 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
      * Extract all the configured roles from the given node. (which can be the user node or a group node)
      */
     public void collectRoleNames() {
-        for (Iterator iter = this.user.getAllRoles().iterator(); iter.hasNext();) {
-            addRoleName((String)iter.next());
+        for (String role : this.user.getAllRoles()) {
+            addRoleName(role);
         }
     }
 
@@ -149,13 +213,12 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
      * Extract all the configured groups from the given node. (which can be the user node or a group node)
      */
     public void collectGroupNames() {
-        for (Iterator iter = this.user.getAllGroups().iterator(); iter.hasNext();) {
-            addGroupName((String) iter.next());
+        for (String group : this.user.getAllGroups()) {
+            addGroupName(group);
         }
     }
 
     public User getUser() {
         return user;
     }
-
 }
