@@ -79,7 +79,7 @@ public class FactoryBaseTest {
 
     @Test
     public void testCreate() {
-        TestFactoryBase factoryBase = new TestFactoryBase(new MockSimpleComponentProvider());
+        DummyFactory factoryBase = new DummyFactory(new MockSimpleComponentProvider());
         Def def = new Def();
         SuperclassOfImpl impl = factoryBase.create(def);
         assertNotNull(impl);

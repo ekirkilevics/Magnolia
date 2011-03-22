@@ -41,9 +41,9 @@ import info.magnolia.objectfactory.ComponentProvider;
  *
  * @author dlipp
  */
-public class TestFactoryBase extends FactoryBase<FactoryBaseTest.SuperclassOfDef, FactoryBaseTest.SuperclassOfImpl> {
+public class DummyFactory extends FactoryBase<FactoryBaseTest.SuperclassOfDef, FactoryBaseTest.SuperclassOfImpl> {
 
-    public TestFactoryBase(ComponentProvider componentProvider) {
+    public DummyFactory(ComponentProvider componentProvider) {
         super(componentProvider);
         addMapping(FactoryBaseTest.Def.class, FactoryBaseTest.Impl.class);
         addMapping(FactoryBaseTest.SubclassOfDef.class, FactoryBaseTest.SubclassOfImpl.class);
