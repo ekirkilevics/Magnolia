@@ -31,35 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.action;
+package info.magnolia.ui.admincentral.workbench.activity;
 
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
+import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.tree.registry.TreeRegistry;
 
 /**
- * EditWorkspace Action Definition.
- *
+ * TODO: write javadoc.
+ * TODO: is this the right package?
  * @author fgrilli
  *
  */
-public class EditWorkspaceActionDefinition implements PlaceChangeActionDefinition {
+public class DetailViewActivityMapper implements ActivityMapper {
 
-    private Place place;
-    private String workspace;
+    private Shell shell;
+    private EditWorkspaceActionFactory actionFactory;
+    private TreeRegistry treeRegistry;
 
-    public String getWorkspace() {
-        return workspace;
+    public DetailViewActivityMapper(Shell shell, EditWorkspaceActionFactory actionFactory, TreeRegistry treeRegistry) {
+        this.shell = shell;
+        this.actionFactory = actionFactory;
+        this.treeRegistry = treeRegistry;
     }
 
-    public void setWorkspace(String workspace) {
-        this.workspace = workspace;
-    }
-
-    public Place getPlace() {
-        if (place == null) {
-            place = new EditWorkspacePlace(getWorkspace());
-        }
-        return place;
+    public Activity getActivity(final Place place) {
+        final String path = ((ItemSelectedPlace)place).getPath();
+        final String treeName = ((ItemSelectedPlace)place).getWorkspace();
+        return new DetailViewActivity(treeName, path, actionFactory, shell, treeRegistry);
     }
 }

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.activity;
+package info.magnolia.ui.admincentral.workbench.activity;
 
 import java.util.List;
 import javax.jcr.Item;
@@ -39,9 +39,9 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.admincentral.editworkspace.view.DetailView;
-import info.magnolia.ui.admincentral.editworkspace.view.DetailViewImpl;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.workbench.view.DetailView;
+import info.magnolia.ui.admincentral.workbench.view.DetailViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;

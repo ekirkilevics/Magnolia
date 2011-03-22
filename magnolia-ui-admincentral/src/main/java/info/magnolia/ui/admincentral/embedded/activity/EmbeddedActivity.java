@@ -31,43 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.action;
+package info.magnolia.ui.admincentral.embedded.activity;
 
-import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.link.LinkUtil;
+import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
+import info.magnolia.ui.admincentral.embedded.view.EmbeddedView;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.view.ViewPort;
+
 
 /**
- * ShowContent Action Definition.
- * @author fgrilli
- *
+ * Shows a target page in an iframe.
  */
-public class ShowContentActionDefinition implements PlaceChangeActionDefinition {
-    private Place place;
-    private String viewTarget;
-    private String view;
+public class EmbeddedActivity extends AbstractActivity {
 
-    public String getViewTarget() {
-        return viewTarget;
+    private EmbeddedPlace place;
+
+    public EmbeddedActivity(EmbeddedPlace place){
+        this.place = place;
     }
 
-    public void setViewTarget(String viewTarget) {
-        this.viewTarget = viewTarget;
-    }
 
-    public String getView() {
-        return view;
-    }
-
-    public void setView(String view) {
-        this.view = view;
-    }
-
-    public Place getPlace() {
-        if(place != null){
-            return place;
+    public void start(ViewPort viewPort, EventBus eventBus) {
+        String url;
+        if(LinkUtil.isExternalLinkOrAnchor(place.getUrl())){
+            url = place.getUrl();
         }
-        place = new ShowContentPlace(viewTarget, view);
-        return place;
+        else{
+            url = MgnlContext.getContextPath() + place.getUrl();
+        }
+        // TODO should this be more dynamic? at least inject it
+        final EmbeddedView view = new EmbeddedView(url);
+        viewPort.setView(view);
     }
+
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,31 +31,43 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.main.view;
+package info.magnolia.ui.admincentral.workbench.event;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+import info.magnolia.ui.framework.event.Event;
+import info.magnolia.ui.framework.event.EventHandler;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Embedded;
 
 /**
- * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
- *
- * @author fgrilli
- *
+ * Global event fired if content was changed, deleted, added.
+ * FIXME introduce more granular events
  */
-public class IFrameView extends Embedded implements View, IsVaadinComponent {
-    private static final long serialVersionUID = 1L;
+public class ContentChangedEvent implements Event<ContentChangedEvent.Handler> {
 
-    public IFrameView(String url){
-        setSource(new ExternalResource(url));
-        setType(Embedded.TYPE_BROWSER);
-        setSizeFull();
+    /**
+     * Handles {@link ContentChangedEvent} events.
+     */
+    public static interface Handler extends EventHandler {
+        void onContentChanged(ContentChangedEvent event);
     }
 
-    public Component asVaadinComponent() {
-        return this;
+    private String workspace;
+
+    private String path;
+
+    public void dispatch(Handler handler) {
+        handler.onContentChanged(this);
+    }
+
+    public ContentChangedEvent(String workspace, String path) {
+        this.workspace = workspace;
+        this.path = path;
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

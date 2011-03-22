@@ -31,46 +31,48 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.main.activity;
+package info.magnolia.ui.admincentral.workbench.place;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
-import info.magnolia.ui.admincentral.main.view.IFrameView;
-import info.magnolia.ui.framework.activity.AbstractActivity;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
+import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.place.PlaceTokenizer;
+import info.magnolia.ui.framework.place.Prefix;
 
 
 /**
- * Shows a target page in an iframe.
+ * Edit a workbenchName's content.
  */
-public class ShowContentActivity extends AbstractActivity {
+@Prefix("edit-workbenchName")
+public class WorkbenchPlace extends Place {
 
-    private String viewTarget;
+    /**
+     * Serializes and deserializes WorkbenchPlace(s).
+     *
+     * @author fgrilli
+     *
+     */
+    public static class Tokenizer implements PlaceTokenizer<WorkbenchPlace>{
 
-    private String viewName;
-
-    private static final String DEFAULT_VIEW_NAME = IFrameView.class.getName();
-
-    public ShowContentActivity(ShowContentPlace place){
-        this(place.getViewTarget(), place.getViewName());
-    }
-
-    public ShowContentActivity(String viewTarget, String viewName) {
-        this.viewTarget = viewTarget;
-        this.viewName = viewName != null ? viewName : DEFAULT_VIEW_NAME;
-    }
-
-    public void start(ViewPort viewPort, EventBus eventBus) {
-        try {
-            // FIXME viewName = className? what name?
-            viewPort.setView((View) Classes.newInstance(viewName, MgnlContext.getContextPath() + viewTarget));
+        public WorkbenchPlace getPlace(String token) {
+            return new WorkbenchPlace(token);
         }
-        catch (ClassNotFoundException e) {
-            throw new IllegalStateException(e);
+
+        public String getToken(WorkbenchPlace place) {
+            return place.getWorkbenchName();
         }
     }
 
+    private String workbenchName;
+
+    public WorkbenchPlace(String workbenchName) {
+        if(StringUtils.isBlank(workbenchName)){
+            throw new IllegalArgumentException("workbenchName cannot be null");
+        }
+        this.workbenchName = workbenchName;
+    }
+
+    public String getWorkbenchName() {
+        return workbenchName;
+    }
 }

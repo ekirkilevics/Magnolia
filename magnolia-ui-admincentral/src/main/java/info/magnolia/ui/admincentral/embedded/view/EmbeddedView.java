@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,23 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.view;
+package info.magnolia.ui.admincentral.embedded.view;
 
 import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
-import java.util.List;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
+
 /**
- * The detail view showing the list of available actions and some detail information.
+ * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
+ *
+ * @author fgrilli
+ *
  */
-public interface DetailView extends View{
-    /**
-     * Presenter that is called when the user selects a command.
-     */
-    public interface Presenter {
-        void onCommandSelected(String commandName);
+public class EmbeddedView extends Embedded implements View, IsVaadinComponent {
+    private static final long serialVersionUID = 1L;
+
+    public EmbeddedView(String url){
+        setSource(new ExternalResource(url));
+        setType(Embedded.TYPE_BROWSER);
+        setSizeFull();
     }
 
-    void showActions(List<MenuItemDefinition> contextMenuItems);
-
+    public Component asVaadinComponent() {
+        return this;
+    }
 }

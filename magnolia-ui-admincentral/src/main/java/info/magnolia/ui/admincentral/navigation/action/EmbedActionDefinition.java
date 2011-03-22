@@ -31,37 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.activity;
+package info.magnolia.ui.admincentral.navigation.action;
 
-import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
-import info.magnolia.ui.framework.activity.Activity;
-import info.magnolia.ui.framework.activity.ActivityMapper;
+import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.tree.registry.TreeRegistry;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * TODO: write javadoc.
- * TODO: is this the right package?
+ * ShowContent Action Definition.
  * @author fgrilli
  *
  */
-public class DetailViewActivityMapper implements ActivityMapper {
+public class EmbedActionDefinition implements PlaceChangeActionDefinition {
+    private Place place;
+    private String url;
 
-    private Shell shell;
-    private EditWorkspaceActionFactory actionFactory;
-    private TreeRegistry treeRegistry;
-
-    public DetailViewActivityMapper(Shell shell, EditWorkspaceActionFactory actionFactory, TreeRegistry treeRegistry) {
-        this.shell = shell;
-        this.actionFactory = actionFactory;
-        this.treeRegistry = treeRegistry;
+    public String getUrl() {
+        return url;
     }
 
-    public Activity getActivity(final Place place) {
-        final String path = ((ItemSelectedPlace)place).getPath();
-        final String treeName = ((ItemSelectedPlace)place).getWorkspace();
-        return new DetailViewActivity(treeName, path, actionFactory, shell, treeRegistry);
+    public void setUrl(String uri) {
+        this.url = uri;
+    }
+
+    public Place getPlace() {
+        if(place != null){
+            return place;
+        }
+        place = new EmbeddedPlace(url);
+        return place;
     }
 }

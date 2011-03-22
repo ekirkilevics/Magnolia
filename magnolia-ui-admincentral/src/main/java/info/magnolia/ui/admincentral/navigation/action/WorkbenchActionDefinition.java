@@ -31,35 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.main.place;
+package info.magnolia.ui.admincentral.navigation.action;
 
-import org.apache.commons.lang.StringUtils;
-
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.place.Place;
-
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * Show a target page in the main region.
+ * EditWorkspace Action Definition.
+ *
+ * @author fgrilli
+ *
  */
-public class ShowContentPlace extends Place {
+public class WorkbenchActionDefinition implements PlaceChangeActionDefinition {
 
-    private String viewTarget;
+    private Place place;
+    private String workbenchName;
 
-    private String viewName;
+    public String getWorkbenchName() {
+        return workbenchName;
+    }
 
-    public ShowContentPlace(String viewTarget, String viewName) {
-        if(StringUtils.isBlank(viewTarget)){
-            throw new IllegalArgumentException("view target cannot be null");
+    public void setWorkbenchName(String workspace) {
+        this.workbenchName = workspace;
+    }
+
+    public Place getPlace() {
+        if (place == null) {
+            place = new WorkbenchPlace(getWorkbenchName());
         }
-        this.viewTarget = viewTarget;
-        this.viewName = viewName;
-    }
-
-    public String getViewTarget() {
-        return viewTarget;
-    }
-
-    public String getViewName() {
-        return viewName;
+        return place;
     }
 }

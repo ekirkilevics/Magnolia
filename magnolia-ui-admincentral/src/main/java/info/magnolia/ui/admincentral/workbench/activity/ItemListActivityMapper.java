@@ -31,65 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.activity;
+package info.magnolia.ui.admincentral.workbench.activity;
 
-import javax.jcr.Item;
-
+import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
-import info.magnolia.ui.admincentral.tree.view.TreeView;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent.Handler;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
-import info.magnolia.ui.framework.activity.AbstractActivity;
-import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.framework.activity.ActivityMapper;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.framework.view.ViewPort;
 
 /**
- * Activity for displaying dialogs.
+ * Returns the {@link Activity} to perform when the current selected item on a tree has changed.
+ * @author fgrilli
  *
- * @author tmattsson
  */
-public class TreeActivity extends AbstractActivity implements TreeView.Presenter, Handler {
+public class ItemListActivityMapper implements ActivityMapper {
 
-    private final String treeName;
+    private TreeActivity treeActivity;
     private PlaceController placeController;
-    private TreeView treeView;
-    private String path;
     private TreeBuilder builder;
     private Shell shell;
 
-    public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, Shell shell) {
-        this.treeName = treeName;
-        this.path = path;
+    public ItemListActivityMapper(PlaceController placeController, TreeBuilder builder, Shell shell) {
         this.placeController = placeController;
         this.builder = builder;
         this.shell = shell;
     }
 
-    // TODO is this good practice?
-    public void update(String path){
-        if(!this.path.equals(path)){
-            this.path = path;
-            treeView.select(path);
+    public Activity getActivity(final Place place) {
+        final String path = ((ItemSelectedPlace)place).getPath();
+        final String treeName = ((ItemSelectedPlace)place).getWorkspace();
+        if(treeActivity == null){
+            treeActivity = new TreeActivity(treeName, path, placeController, builder, shell);
         }
+        else{
+            // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view
+            treeActivity.update(path);
+        }
+        return treeActivity;
     }
 
-    public void start(ViewPort viewPort, EventBus eventBus) {
-        this.treeView = builder.createTreeView(shell, this, treeName);
-        this.treeView.select(path);
-        eventBus.addHandler(ContentChangedEvent.class, this);
-        viewPort.setView(treeView);
-    }
-
-    public void onItemSelection(Item jcrItem) {
-        this.path = treeView.getPathInTree(jcrItem);
-        placeController.goTo(new ItemSelectedPlace(treeName, this.path));
-    }
-
-    public void onContentChanged(ContentChangedEvent event) {
-        // FIXME only if we are not the source!
-        treeView.refresh();
-    }
 }

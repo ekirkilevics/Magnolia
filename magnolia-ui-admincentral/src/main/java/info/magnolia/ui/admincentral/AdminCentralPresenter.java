@@ -33,9 +33,8 @@
  */
 package info.magnolia.ui.admincentral;
 
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.admincentral.main.activity.MainActivityMapper;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.ActivityManager;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
@@ -70,9 +69,9 @@ public class AdminCentralPresenter {
 
         // Browser history integration
         // FIXME make this more dynamic, don't pass the place explicitly
-        final PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(EditWorkspacePlace.class);
+        final PlaceHistoryMapper historyMapper = new PlaceHistoryMapperImpl(WorkbenchPlace.class);
         final PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper, shell);
-        final EditWorkspacePlace defaultPlace = new EditWorkspacePlace("website");
+        final WorkbenchPlace defaultPlace = new WorkbenchPlace("website");
 
         historyHandler.register(placeController, eventBus, defaultPlace);
 

@@ -31,35 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.main.activity;
+package info.magnolia.ui.admincentral.embedded.place;
 
+import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
-import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
-import info.magnolia.ui.admincentral.editworkspace.activity.EditWorkspaceMVPSubContainer;
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.admincentral.main.place.ShowContentPlace;
-import info.magnolia.ui.framework.activity.Activity;
-import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.builder.FactoryBase;
+
 
 /**
- * Maps the main places to main activities.
- * TODO make configurable
+ * Show a target page in the main region.
  */
-public class MainActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
+public class EmbeddedPlace extends Place {
 
-    public MainActivityMapper(ComponentProvider componentProvider) {
-        super(componentProvider);
+    private String url;
 
-        addMapping(EditWorkspacePlace.class, EditWorkspaceMVPSubContainer.class);
-        addMapping(ShowContentPlace.class, ShowContentActivity.class);
-        addMapping(DialogPlace.class, DialogActivity.class);
+    public EmbeddedPlace(String url) {
+        if(StringUtils.isBlank(url)){
+            throw new IllegalArgumentException("url cannot be null");
+        }
+        this.url = url;
     }
 
-    public Activity getActivity(final Place place) {
-        return create(place);
+    public String getUrl() {
+        return url;
     }
+
 }

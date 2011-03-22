@@ -31,45 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.activity;
+package info.magnolia.ui.admincentral;
 
-import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
+import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
+import info.magnolia.ui.admincentral.embedded.activity.EmbeddedActivity;
+import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
+import info.magnolia.ui.admincentral.workbench.activity.WorkbenchMVPSubContainer;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
- * Returns the {@link Activity} to perform when the current selected item on a tree has changed.
- * @author fgrilli
- *
+ * Maps the main places to main activities.
+ * TODO make configurable
  */
-public class TreeActivityMapper implements ActivityMapper {
+public class MainActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
 
-    private TreeActivity treeActivity;
-    private PlaceController placeController;
-    private TreeBuilder builder;
-    private Shell shell;
+    public MainActivityMapper(ComponentProvider componentProvider) {
+        super(componentProvider);
 
-    public TreeActivityMapper(PlaceController placeController, TreeBuilder builder, Shell shell) {
-        this.placeController = placeController;
-        this.builder = builder;
-        this.shell = shell;
+        addMapping(WorkbenchPlace.class, WorkbenchMVPSubContainer.class);
+        addMapping(EmbeddedPlace.class, EmbeddedActivity.class);
+        addMapping(DialogPlace.class, DialogActivity.class);
     }
 
     public Activity getActivity(final Place place) {
-        final String path = ((ItemSelectedPlace)place).getPath();
-        final String treeName = ((ItemSelectedPlace)place).getWorkspace();
-        if(treeActivity == null){
-            treeActivity = new TreeActivity(treeName, path, placeController, builder, shell);
-        }
-        else{
-            // TODO is this good practice? we can avoid calls to start() but just update the activity to avoid a re-initialization of the tree view
-            treeActivity.update(path);
-        }
-        return treeActivity;
+        return create(place);
     }
-
 }

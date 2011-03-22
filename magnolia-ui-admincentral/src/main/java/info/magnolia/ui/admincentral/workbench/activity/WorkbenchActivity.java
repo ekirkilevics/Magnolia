@@ -31,58 +31,56 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.place;
+package info.magnolia.ui.admincentral.workbench.activity;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
+import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.activity.ActivityManager;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.view.ViewPort;
 
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.framework.place.PlaceTokenizer;
-import info.magnolia.ui.framework.place.Prefix;
 
 /**
- * A sub-place of {@link EditWorkspacePlace} if an item got selected.
+ * Edit a workspace. Shows the structure view.
  */
-@Prefix("item-selected")
-public class ItemSelectedPlace extends Place {
-    /**
-     * Tokenizer for ItemSelectedPlace.
-     * @author fgrilli
-     *
-     */
-    public static class Tokenizer implements PlaceTokenizer<ItemSelectedPlace> {
+public class WorkbenchActivity extends AbstractActivity {
+    private String workspace;
+    private ItemListActivityMapper itemListActivityMapper;
+    private DetailViewActivityMapper detailViewActivityMapper;
+    private WorkbenchView view;
 
-        public ItemSelectedPlace getPlace(String token) {
-            final String[] bits = token.split(":");
-            if(bits.length != 2){
-                throw new IllegalArgumentException("Invalid token: " + token);
-            }
-            return new ItemSelectedPlace(bits[0], bits[1]);
-        }
-
-        public String getToken(ItemSelectedPlace place) {
-            return place.getWorkspace() + ":" + place.getPath();
-        }
+    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, DetailViewActivityMapper detailViewActivityMapper) {
+        this.workspace = place.getWorkbenchName();
+        this.view = view;
+        this.itemListActivityMapper = itemListActivityMapper;
+        this.detailViewActivityMapper = detailViewActivityMapper;
     }
 
-    private String workspace;
+    @Override
+    public String mayStop() {
+        return "Are you sure you want to leave this page?";
+    }
 
-    private String path;
+    public void start(ViewPort display, EventBus eventBus) {
 
-    public ItemSelectedPlace(String workspace, String path) {
-        this.workspace = workspace;
-        this.path = path;
+        final ActivityManager treeActivityManager = new ActivityManager(itemListActivityMapper, eventBus);
+        final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, eventBus);
+
+        treeActivityManager.setViewPort(view.getItemListViewPort());
+        detailViewActivityManager.setViewPort(view.getDetailViewPort());
+
+        display.setView(view);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
         result = prime * result
                 + ((workspace == null) ? 0 : workspace.hashCode());
         return result;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -92,32 +90,13 @@ public class ItemSelectedPlace extends Place {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ItemSelectedPlace other = (ItemSelectedPlace) obj;
-        if (path == null) {
-            if (other.path != null)
-                return false;
-        } else if (!path.equals(other.path))
-            return false;
+        WorkbenchActivity other = (WorkbenchActivity) obj;
         if (workspace == null) {
             if (other.workspace != null)
                 return false;
         } else if (!workspace.equals(other.workspace))
             return false;
         return true;
-    }
-
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 
 

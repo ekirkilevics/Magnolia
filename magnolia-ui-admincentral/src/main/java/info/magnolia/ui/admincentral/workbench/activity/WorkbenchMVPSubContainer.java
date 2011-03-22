@@ -31,14 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.activity;
+package info.magnolia.ui.admincentral.workbench.activity;
 
-import info.magnolia.ui.admincentral.editworkspace.place.EditWorkspacePlace;
-import info.magnolia.ui.admincentral.editworkspace.place.ItemSelectedPlace;
-import info.magnolia.ui.admincentral.editworkspace.view.EditWorkspaceView;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivityMapper;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.MVPSubContainer;
 import info.magnolia.ui.framework.place.Place;
@@ -48,18 +47,18 @@ import info.magnolia.ui.framework.shell.Shell;
 /**
  * The isolated MVP container for workspace editing.
  */
-public class EditWorkspaceMVPSubContainer extends MVPSubContainer{
+public class WorkbenchMVPSubContainer extends MVPSubContainer{
 
-    private EditWorkspacePlace place;
+    private WorkbenchPlace place;
 
-    public EditWorkspaceMVPSubContainer(EditWorkspacePlace place,Shell shell) {
-        super("edit-workspace-" + place.getWorkspace(), shell);
+    public WorkbenchMVPSubContainer(WorkbenchPlace place,Shell shell) {
+        super("workbench-" + place.getWorkbenchName(), shell);
         this.place = place;
     }
 
     @Override
     protected Class<? extends Activity> getActivityClass() {
-        return EditWorkspaceActivity.class;
+        return WorkbenchActivity.class;
     }
 
     @Override
@@ -69,10 +68,10 @@ public class EditWorkspaceMVPSubContainer extends MVPSubContainer{
 
     @Override
     protected void populateComponentProvider(MutableComponentProvider componentProvider) {
-        componentProvider.addComponent(EditWorkspaceView.class, EditWorkspaceView.class);
+        componentProvider.addComponent(WorkbenchView.class, WorkbenchView.class);
         componentProvider.addComponent(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
 
-        componentProvider.addComponent(TreeActivityMapper.class, TreeActivityMapper.class);
+        componentProvider.addComponent(ItemListActivityMapper.class, ItemListActivityMapper.class);
         componentProvider.addComponent(TreeActivity.class, TreeActivity.class);
         componentProvider.addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
         componentProvider.addComponent(DetailViewActivity.class, DetailViewActivity.class);
@@ -87,7 +86,7 @@ public class EditWorkspaceMVPSubContainer extends MVPSubContainer{
 
     @Override
     protected Place getDefaultPlace() {
-        return new ItemSelectedPlace(place.getWorkspace(), "/");
+        return new ItemSelectedPlace(place.getWorkbenchName(), "/");
     }
 
 }

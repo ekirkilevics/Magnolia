@@ -31,43 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.event;
+package info.magnolia.ui.admincentral.workbench.view;
 
-import info.magnolia.ui.framework.event.Event;
-import info.magnolia.ui.framework.event.EventHandler;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
-
+import java.util.List;
 /**
- * Global event fired if content was changed, deleted, added.
- * FIXME introduce more granular events
+ * The detail view showing the list of available actions and some detail information.
  */
-public class ContentChangedEvent implements Event<ContentChangedEvent.Handler> {
-
+public interface DetailView extends View{
     /**
-     * Handles {@link ContentChangedEvent} events.
+     * Presenter that is called when the user selects a command.
      */
-    public static interface Handler extends EventHandler {
-        void onContentChanged(ContentChangedEvent event);
+    public interface Presenter {
+        void onCommandSelected(String commandName);
     }
 
-    private String workspace;
+    void showActions(List<MenuItemDefinition> contextMenuItems);
 
-    private String path;
-
-    public void dispatch(Handler handler) {
-        handler.onContentChanged(this);
-    }
-
-    public ContentChangedEvent(String workspace, String path) {
-        this.workspace = workspace;
-        this.path = path;
-    }
-
-    public String getWorkspace() {
-        return workspace;
-    }
-
-    public String getPath() {
-        return path;
-    }
 }

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.editworkspace.view;
+package info.magnolia.ui.admincentral.workbench.view;
 
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
@@ -48,13 +48,13 @@ import com.vaadin.ui.HorizontalSplitPanel;
 /**
  * The view to edit a workspace. Provides slots for the tree and detail view.
  */
-public class EditWorkspaceView implements View, IsVaadinComponent{
+public class WorkbenchView implements View, IsVaadinComponent{
 
     private HorizontalSplitPanel splitPanel;
-    private ComponentViewPort treeDisplay;
-    private ComponentViewPort detailViewDisplay;
+    private ComponentViewPort itemListViewPort;
+    private ComponentViewPort detailViewPort;
 
-    public EditWorkspaceView() {
+    public WorkbenchView() {
 
         splitPanel = new HorizontalSplitPanel();
         splitPanel.setSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
@@ -74,27 +74,27 @@ public class EditWorkspaceView implements View, IsVaadinComponent{
             }
         });
 
-        treeDisplay = new ComponentViewPort();
-        detailViewDisplay = new ComponentViewPort();
+        itemListViewPort = new ComponentViewPort();
+        detailViewPort = new ComponentViewPort();
 
-        treeDisplay.setSizeFull();
-        detailViewDisplay.setSizeFull();
+        itemListViewPort.setSizeFull();
+        detailViewPort.setSizeFull();
 
-        splitPanel.addComponent(treeDisplay);
-        splitPanel.addComponent(detailViewDisplay);
+        splitPanel.addComponent(itemListViewPort);
+        splitPanel.addComponent(detailViewPort);
     }
 
     public Component asVaadinComponent() {
         return splitPanel;
     }
 
-    public ViewPort getTreeDisplay() {
-        return treeDisplay;
+    public ViewPort getItemListViewPort() {
+        return itemListViewPort;
 
     }
 
-    public ViewPort getDetailDisplay() {
-        return detailViewDisplay;
+    public ViewPort getDetailViewPort() {
+        return detailViewPort;
     }
 
 }
