@@ -63,7 +63,7 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
      */
-    private List<DefinitionToImplementationMapping> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping>();
+    private List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>>();
 
     private ComponentProvider componentProvider;
     private TreeRegistry treeRegistry;
@@ -74,20 +74,19 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
         this.componentProvider = componentProvider;
     }
 
-    public List<DefinitionToImplementationMapping> getDefinitionToImplementationMappings() {
+    public List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> getDefinitionToImplementationMappings() {
         return this.definitionToImplementationMappings;
     }
 
-    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping> definitionToImplementationMappings) {
+    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> definitionToImplementationMappings) {
         this.definitionToImplementationMappings = definitionToImplementationMappings;
-        for (DefinitionToImplementationMapping definitionToImplementationMapping : definitionToImplementationMappings) {
+        for (DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>> definitionToImplementationMapping : definitionToImplementationMappings) {
             addDefinitionToImplementationMapping(definitionToImplementationMapping);
         }
     }
 
-    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping mapping) {
-        // TODO: better usage of generics?
-        addMapping((Class<ColumnDefinition>) mapping.getDefinition(), (Class<Column<?, ColumnDefinition>>) mapping.getImplementation());
+    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>> mapping) {
+        addMapping(mapping.getDefinition(), mapping.getImplementation());
     }
 
     public Column<?, ColumnDefinition> createTreeColumn(ColumnDefinition definition) {

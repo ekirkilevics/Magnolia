@@ -35,34 +35,36 @@ package info.magnolia.ui.admincentral.tree.builder;
 
 /**
  * Defines a Mapping form a Definition to an specific implementation.
+ * @param <D> class of the definition
+ * @param <I> class of the implementation
  *
  * @author dlipp
  */
-public class DefinitionToImplementationMapping {
+public class DefinitionToImplementationMapping<D,I> {
 
     /**
      * Class-name of definition.
      */
-    private Class<?> definition;
+    private Class<D> definition;
 
     /**
      * Class-name of implementation.
      */
-    private Class<?> implementation;
+    private Class<I> implementation;
 
-    public void setDefinition(Class<?> definition) {
+    public void setDefinition(Class<D> definition) {
         this.definition = definition;
     }
 
-    public Class<?> getDefinition() {
+    public Class<D> getDefinition() {
         return definition;
     }
 
-    public void setImplementation(Class<?> implementation) {
+    public void setImplementation(Class<I> implementation) {
         this.implementation = implementation;
     }
 
-    public Class<?> getImplementation() {
+    public Class<I> getImplementation() {
         return implementation;
     }
 }
