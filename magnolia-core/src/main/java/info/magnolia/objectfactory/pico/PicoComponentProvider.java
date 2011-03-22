@@ -69,14 +69,25 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
         this.pico = pico;
     }
 
+    @Override
     public <T> T getComponent(Class<T> type) {
-        final T found = pico.getComponent(type);
-        log.debug("Looking for {}, found {}", type, found);
-        if (found == null) {
-            // TODO - throw specific exception
-            throw new IllegalStateException("No component registered for " + type);
+        try {
+            final T found = pico.getComponent(type);
+            log.debug("Looking for {}, found {}", type, found);
+            if (found == null) {
+                // TODO - throw specific exception
+                throw new IllegalStateException("No component registered for " + type);
+            }
+            return found;
+        } catch (ClassCastException e) {
+            // as silly as it seems pico throws all as class cast even if type instance is null, e.g. when it can't be instantiated.
+            log.error("Failed to cast component to type "+type+" with " + e.getMessage(), e);
+            if (e.getMessage() == null) {
+                throw new NullPointerException("The type " + type + " could not be instantiated. Check log files for messages related to the initalization of the type earlier.");
+            } else {
+                throw new ClassCastException("Can't cast type " + type);
+            }
         }
-        return found;
     }
 
     @Override
