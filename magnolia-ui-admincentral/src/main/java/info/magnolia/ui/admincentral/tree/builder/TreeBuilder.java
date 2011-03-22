@@ -33,21 +33,15 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
  * Used to transform tree and column definitions into components.
  */
 public interface TreeBuilder {
 
-    /**
-     * @param definition to create a column from
-     * @return the created column or null in case it could not be created
-     */
-    Column< ?,? > createTreeColumn(ColumnDefinition definition);
-
-    TreeView createTreeView(Shell shell, TreeView.Presenter presenter, String treeName);
+    // TODO the TreeBuilderProvider should take the componentProvider
+    TreeView createTreeView(ComponentProvider componentProvider, WorkbenchDefinition workbenchDefinition);
 }

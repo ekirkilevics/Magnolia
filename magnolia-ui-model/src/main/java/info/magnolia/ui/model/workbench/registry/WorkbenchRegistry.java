@@ -37,7 +37,6 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.jcr.RepositoryException;
 
 /**
  * Maintains a registry of configured tree providers by name.
@@ -60,7 +59,7 @@ public class WorkbenchRegistry {
         }
     }
 
-    public WorkbenchDefinition getWorkbench(String name) throws RepositoryException {
+    public WorkbenchDefinition getWorkbench(String name) {
 
         WorkbenchProvider workbenchProvider;
         synchronized (providers) {

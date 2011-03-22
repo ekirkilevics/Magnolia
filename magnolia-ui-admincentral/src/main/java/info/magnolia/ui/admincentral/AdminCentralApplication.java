@@ -33,16 +33,12 @@
  */
 package info.magnolia.ui.admincentral;
 
-import java.lang.reflect.Type;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
-import org.picocontainer.PicoCompositionException;
-import org.picocontainer.PicoContainer;
-import org.picocontainer.adapters.AbstractAdapter;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
@@ -57,7 +53,6 @@ import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
@@ -99,27 +94,9 @@ public class AdminCentralApplication extends Application implements HttpServletR
         Properties properties = new Properties();
         properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
         properties.put(MenuItemDefinition.class.getName(), MenuItemDefinitionImpl.class.getName());
+        //FIXME is this the right configuration place? how to generalize that?
         properties.put(TreeBuilderProvider.class.getName(), "/modules/admin-central/components/treeBuilderProvider");
         componentProvider.parseConfiguration(properties);
-
-        // We use a pico adapter here to delay creation of the TreeBuilder instance until it is needed (compare to before when we created an instance here and set it in the container).
-        container.addAdapter(new AbstractAdapter<TreeBuilder>(TreeBuilder.class, TreeBuilder.class) {
-
-            public TreeBuilder getComponentInstance(PicoContainer container, Type into) throws PicoCompositionException {
-
-                TreeBuilderProvider treeBuilderProvider = componentProvider.getComponent(TreeBuilderProvider.class);
-
-                // TODO: getBuilder should take params user, device...
-                return treeBuilderProvider.getBuilder();
-            }
-
-            public void verify(PicoContainer container) throws PicoCompositionException {
-            }
-
-            public String getDescriptor() {
-                return "Adapter creating TreeBuilder instance(s) by calling TreeBuilderProvider";
-            }
-        });
 
         container.addComponent(ComponentProvider.class, componentProvider);
 

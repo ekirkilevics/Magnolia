@@ -34,8 +34,9 @@
 package info.magnolia.ui.admincentral.tree.activity;
 
 import javax.jcr.Item;
+import javax.jcr.RepositoryException;
 
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent.Handler;
@@ -53,23 +54,19 @@ import info.magnolia.ui.framework.view.ViewPort;
  */
 public class TreeActivity extends AbstractActivity implements TreeView.Presenter, Handler {
 
-    private final String treeName;
     private PlaceController placeController;
     private TreeView treeView;
-    private String path;
-    private TreeBuilder builder;
+    private String path = "/";
     private Shell shell;
 
-    public TreeActivity(String treeName, String path, PlaceController placeController, TreeBuilder builder, Shell shell) {
-        this.treeName = treeName;
-        this.path = path;
+    public TreeActivity(TreeView treeView, PlaceController placeController, Shell shell, ComponentProvider componentProvider) {
         this.placeController = placeController;
-        this.builder = builder;
+        this.treeView = treeView;
         this.shell = shell;
     }
 
-    // TODO is this good practice?
-    public void update(String path){
+    public void update(ItemSelectedPlace place){
+        final String path = place.getPath();
         if(!this.path.equals(path)){
             this.path = path;
             treeView.select(path);
@@ -77,15 +74,20 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        this.treeView = builder.createTreeView(shell, this, treeName);
-        this.treeView.select(path);
+        treeView.setPresenter(this);
+        treeView.select(path);
         eventBus.addHandler(ContentChangedEvent.class, this);
         viewPort.setView(treeView);
     }
 
     public void onItemSelection(Item jcrItem) {
         this.path = treeView.getPathInTree(jcrItem);
-        placeController.goTo(new ItemSelectedPlace(treeName, this.path));
+        try {
+            placeController.goTo(new ItemSelectedPlace(jcrItem.getSession().getWorkspace().getName(), this.path));
+        }
+        catch (RepositoryException e) {
+            shell.showError("Can't access item.", e);
+        }
     }
 
     public void onContentChanged(ContentChangedEvent event) {

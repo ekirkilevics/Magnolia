@@ -60,10 +60,42 @@ import info.magnolia.ui.framework.view.ViewPort;
  */
 public abstract class MVPSubContainer extends AbstractActivity {
 
+    private final class PicoMutableComponentProvider implements MutableComponentProvider {
+
+        private ComponentProvider componentProvider;
+        private MutablePicoContainer container;
+
+        public PicoMutableComponentProvider(ComponentProvider componentProvider, MutablePicoContainer container) {
+            this.componentProvider = componentProvider;
+            this.container = container;
+        }
+
+        public void addComponent(Object componentKey, Object componentImplementationOrInstance) {
+            container.addComponent(componentKey, componentImplementationOrInstance);
+        }
+
+        public <T> Class< ? extends T> getImplementation(Class<T> type) throws ClassNotFoundException {
+            return componentProvider.getImplementation(type);
+        }
+
+        public <T> T getSingleton(Class<T> type) {
+            return componentProvider.getSingleton(type);
+        }
+
+        public <T> T getComponent(Class<T> type) {
+            return componentProvider.getComponent(type);
+        }
+
+        public <T> T newInstance(Class<T> type, Object... parameters) {
+            return componentProvider.newInstance(type, parameters);
+        }
+    }
+
     /**
      * Used in the {@link MVPSubContainer#populateComponentProvider(MutableComponentProvider)} to hide the pico specifics.
+     * TODO move to the core? see patch in MAGNOLIA-3592
      */
-    protected interface MutableComponentProvider {
+    protected interface MutableComponentProvider extends ComponentProvider {
         void addComponent(Object componentKey, Object componentImplementationOrInstance);
     }
 
@@ -104,11 +136,7 @@ public abstract class MVPSubContainer extends AbstractActivity {
         container.addComponent(Shell.class, shell.createSubShell(id));
         container.addComponent(PlaceController.class, PlaceController.class);
 
-        populateComponentProvider(new MutableComponentProvider(){
-            public void addComponent(Object componentKey, Object componentImplementationOrInstance) {
-                container.addComponent(componentKey, componentImplementationOrInstance);
-            }
-        });
+        populateComponentProvider(new PicoMutableComponentProvider(componentProvider, container));
 
         subShell = componentProvider.getComponent(Shell.class);
         innerEventBus = componentProvider.getComponent(EventBus.class);

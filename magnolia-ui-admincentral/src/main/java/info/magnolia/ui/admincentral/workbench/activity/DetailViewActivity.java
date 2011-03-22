@@ -37,7 +37,6 @@ import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.workbench.view.DetailView;
@@ -83,22 +82,13 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         if (!"/".equals(path)) {
             this.path = path;
             // FIXME should be dependent on the item type
-            try {
-                detailView.showActions(workbenchRegistry.getWorkbench(treeName).getMenuItems());
-            } catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
-            }
+            detailView.showActions(workbenchRegistry.getWorkbench(treeName).getMenuItems());
         }
     }
 
     public void onCommandSelected(String commandName) {
         // TODO we should inject the tree definition or something more abstract
-        final WorkbenchDefinition workbenchDefinition;
-        try {
-            workbenchDefinition = workbenchRegistry.getWorkbench(treeName);
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
+        final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(treeName);
         final List<MenuItemDefinition> contextMenuItems = workbenchDefinition.getMenuItems();
         // TODO should this be a map to avoid such iterations?
         for (MenuItemDefinition menuItemDefinition : contextMenuItems) {

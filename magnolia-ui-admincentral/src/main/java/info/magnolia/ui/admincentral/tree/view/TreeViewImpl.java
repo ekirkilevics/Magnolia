@@ -53,7 +53,9 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     private JcrBrowser jcrBrowser;
 
-    public TreeViewImpl(final Presenter presenter, WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
+    private TreeView.Presenter presenter;
+
+    public TreeViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
 
         jcrBrowser = new JcrBrowser(workbenchDefinition, treeModel, shell);
         jcrBrowser.setSizeFull();
@@ -62,9 +64,9 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
             private static final long serialVersionUID = 1L;
 
             public void itemClick(ItemClickEvent event) {
-                
+
                 // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
-                
+
                 presenter.onItemSelection(jcrBrowser.getJcrItem((ContainerItemId) event.getItemId()));
             }
         });
@@ -88,5 +90,10 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     public Component asVaadinComponent() {
         return jcrBrowser;
+    }
+
+
+    public void setPresenter(TreeView.Presenter presenter) {
+        this.presenter = presenter;
     }
 }

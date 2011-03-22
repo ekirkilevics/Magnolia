@@ -54,6 +54,9 @@ public interface TreeView extends View {
         void onItemSelection(Item tem);
     }
 
+    void setPresenter(Presenter presenter);
+
+    // TODO should we really ask view?
     String getPathInTree(Item item);
 
     void select(String path);

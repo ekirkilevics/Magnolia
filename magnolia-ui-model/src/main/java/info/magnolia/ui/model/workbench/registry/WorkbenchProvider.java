@@ -35,12 +35,11 @@ package info.magnolia.ui.model.workbench.registry;
 
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
-import javax.jcr.RepositoryException;
 
 /**
  * Provides a tree definition.
  */
 public interface WorkbenchProvider {
 
-    WorkbenchDefinition getDefinition() throws RepositoryException;
+    WorkbenchDefinition getDefinition();
 }

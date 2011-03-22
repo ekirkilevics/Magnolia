@@ -33,8 +33,12 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
+import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
@@ -42,6 +46,8 @@ import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.MVPSubContainer;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 
 /**
@@ -50,10 +56,15 @@ import info.magnolia.ui.framework.shell.Shell;
 public class WorkbenchMVPSubContainer extends MVPSubContainer{
 
     private WorkbenchPlace place;
+    private TreeBuilderProvider treeBuilderProvider;
+    private WorkbenchRegistry workbenchRegistry;
 
-    public WorkbenchMVPSubContainer(WorkbenchPlace place,Shell shell) {
+    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, TreeBuilderProvider treeBuilderProvider, Shell shell) {
         super("workbench-" + place.getWorkbenchName(), shell);
         this.place = place;
+        this.treeBuilderProvider = treeBuilderProvider;
+        this.workbenchRegistry = workbenchRegistry;
+
     }
 
     @Override
@@ -73,8 +84,15 @@ public class WorkbenchMVPSubContainer extends MVPSubContainer{
 
         componentProvider.addComponent(ItemListActivityMapper.class, ItemListActivityMapper.class);
         componentProvider.addComponent(TreeActivity.class, TreeActivity.class);
+        final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(place.getWorkbenchName());
+        componentProvider.addComponent(WorkbenchDefinition.class, workbenchDefinition);
+        final TreeBuilder treeBuilder = this.treeBuilderProvider.getBuilder();
+        // TODO should we really build the view?
+        componentProvider.addComponent(TreeView.class, treeBuilder.createTreeView(componentProvider, workbenchDefinition));
+
         componentProvider.addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
         componentProvider.addComponent(DetailViewActivity.class, DetailViewActivity.class);
+
     }
 
     @Override

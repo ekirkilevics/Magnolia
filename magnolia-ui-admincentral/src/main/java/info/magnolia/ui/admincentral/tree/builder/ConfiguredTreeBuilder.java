@@ -38,41 +38,43 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.jcr.RepositoryException;
 
-import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
-import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.builder.FactoryBase;
 import info.magnolia.ui.model.column.definition.ColumnDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
-import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 /**
  * TreeBuild configured via content to bean.
  */
-public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<?, ColumnDefinition>> implements TreeBuilder, Serializable {
+public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
 
     private static final long serialVersionUID = 6702977290186078418L;
+
+    // FIXME this is a workaround because we cant extend the FactoryBase
+    private static class ColumnFactory extends FactoryBase<ColumnDefinition, Column<?, ColumnDefinition>>{
+        public ColumnFactory(ComponentProvider componentProvider) {
+            super(componentProvider);
+        }
+
+        Column< ? , ColumnDefinition> createColumn(ColumnDefinition definition){
+            return create(definition);
+        }
+
+        public void addMapping(Class< ? extends ColumnDefinition> definitionClass, Class< ? extends Column< ? , ColumnDefinition>> implementationClass) {
+            super.addMapping(definitionClass, implementationClass);
+        }
+    }
 
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
      */
     private List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>>();
-
-    private ComponentProvider componentProvider;
-    private WorkbenchRegistry workbenchRegistry;
-
-    public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry) {
-        super(componentProvider);
-        this.workbenchRegistry = workbenchRegistry;
-        this.componentProvider = componentProvider;
-    }
 
     public List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> getDefinitionToImplementationMappings() {
         return this.definitionToImplementationMappings;
@@ -86,35 +88,31 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
     }
 
     public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>> mapping) {
-        addMapping(mapping.getDefinition(), mapping.getImplementation());
+        this.definitionToImplementationMappings.add(mapping);
     }
 
-    public Column<?, ColumnDefinition> createTreeColumn(ColumnDefinition definition) {
-        return create(definition);
-    }
+    public TreeView createTreeView(ComponentProvider componentProvider, WorkbenchDefinition workbenchDefinition) {
+        //FIXME we should not create the factory here
+        final ColumnFactory columnFactory = new ColumnFactory(componentProvider);
 
-    public TreeView createTreeView(Shell shell, TreeView.Presenter presenter, String treeName) {
-        try {
-            WorkbenchDefinition workbenchDefinition = this.workbenchRegistry.getWorkbench(treeName);
-
-            Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
-            for (ColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
-                // FIXME use getName() not getLabel()
-                Column<?, ?> column = createTreeColumn(columnDefinition);
-                // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
-                if (column != null) {
-                    columns.put(columnDefinition.getLabel(), column);
-                }
-            }
-
-            EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
-
-            TreeModel treeModel = new TreeModel(workbenchDefinition, columns, actionFactory);
-
-            return new TreeViewImpl(presenter, workbenchDefinition, treeModel, shell);
-
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
+        for (DefinitionToImplementationMapping mapping : definitionToImplementationMappings) {
+            columnFactory.addMapping(mapping.getDefinition(), mapping.getImplementation());
         }
+
+        Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
+        for (ColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
+            // FIXME use getName() not getLabel()
+            Column<?, ?> column = columnFactory.createColumn(columnDefinition);
+            // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
+            if (column != null) {
+                columns.put(columnDefinition.getLabel(), column);
+            }
+        }
+
+        EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
+
+        // FIXME the model should be set by the presenter
+        TreeModel treeModel = new TreeModel(workbenchDefinition, columns, actionFactory);
+        return componentProvider.newInstance(TreeViewImpl.class, workbenchDefinition, treeModel);
     }
 }
