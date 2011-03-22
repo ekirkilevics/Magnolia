@@ -59,10 +59,12 @@ public class LoginFilter extends AbstractMgnlFilter {
 
     private Collection<LoginHandler> loginHandlers = new ArrayList<LoginHandler>();
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         for (LoginHandler handler : this.getLoginHandlers()) {
             LoginResult loginResult = handler.handle(request, response);
             LoginResult.setCurrentLoginResult(loginResult);
+            AuditLoggingUtil.log(loginResult, request);
             if (loginResult.getStatus() == LoginResult.STATUS_IN_PROCESS) {
                 // special handling to support multi step login mechanisms like ntlm
                 // do not continue with the filter chain
@@ -70,7 +72,6 @@ public class LoginFilter extends AbstractMgnlFilter {
             } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
                 MgnlContext.login(loginResult.getUser());
             }
-            AuditLoggingUtil.log(loginResult, request);
 
         }
         // continue even if all login handlers failed

@@ -37,6 +37,7 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -53,7 +54,9 @@ import org.apache.commons.io.IOUtils;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class DefaultMessagesImpl extends AbstractMessagesImpl {
+public class DefaultMessagesImpl extends AbstractMessagesImpl implements Serializable {
+
+    private static final long serialVersionUID = 6557257240676973699L;
 
     protected DefaultMessagesImpl(String basename, Locale locale) {
         super(basename, locale);

@@ -33,14 +33,12 @@
  */
 package info.magnolia.cms.core.search;
 
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -49,6 +47,7 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -81,11 +80,6 @@ public class QueryResultImpl implements QueryResult {
      */
     protected Map<String, Collection<Content>> objectStore = new Hashtable<String, Collection<Content>>();
 
-    /**
-     * @deprecated
-     */
-    private AccessManager accessManager;
-
     protected HierarchyManager hm;
 
     protected final long maxResultSize;
@@ -99,16 +93,7 @@ public class QueryResultImpl implements QueryResult {
     protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm, long maxResultSize) {
         this.result = result;
         this.hm = hm;
-        this.accessManager = hm.getAccessManager();
         this.maxResultSize = maxResultSize;
-    }
-
-    /**
-     * @deprecated
-     * @return
-     */
-    public AccessManager getAccessManager() {
-        return accessManager;
     }
 
     public javax.jcr.query.QueryResult getJcrResult() {
@@ -135,8 +120,8 @@ public class QueryResultImpl implements QueryResult {
                 log.error("{} caught while iterating on query results: {}", re.getClass().getName(), re.getMessage());
                 if (log.isDebugEnabled()) {
                     log.debug(
-                        re.getClass().getName() + " caught while iterating on query results: " + re.getMessage(),
-                        re);
+                            re.getClass().getName() + " caught while iterating on query results: " + re.getMessage(),
+                            re);
                 }
             }
         }
@@ -151,7 +136,8 @@ public class QueryResultImpl implements QueryResult {
          */
         if ((nodeType == null || nodeType.length == 0) || isNodeType(node, nodeType) && !node.isNodeType(ItemType.NT_RESOURCE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
-                boolean isAllowed = this.hm.getAccessManager().isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
+                // TODO: yet another of those silly checks ... if we were not allowed, we would not have the node here
+                boolean isAllowed = Access.isGranted(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_READ);
                 if (isAllowed) {
                     collection.add(new DefaultContent(node, this.hm));
                     this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);

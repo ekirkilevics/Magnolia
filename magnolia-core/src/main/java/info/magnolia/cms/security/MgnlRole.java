@@ -33,16 +33,9 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.auth.ACL;
 
 import java.util.Collection;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,31 +50,24 @@ public class MgnlRole implements Role {
 
     public static long PERMISSION_ANY = -1;
 
-    private final Content roleNode;
+    private final String roleName;
 
-    protected MgnlRole(Content roleNode) {
-        this.roleNode = roleNode;
+    private final String roleId;
+
+    private final Collection<ACL> acls;
+
+    protected MgnlRole(String name ,String roleId , Collection<ACL> acls) {
+        this.roleName = name;
+        this.roleId = roleId;
+        this.acls = acls;
     }
 
     public String getName() {
-        return roleNode.getName();
+        return roleName;
     }
 
     public void addPermission(String repository, String path, long permission) {
-        try {
-            Content aclNode = getAclNode(repository);
-            if (!this.existsPermission(aclNode, path, permission)) {
-                HierarchyManager hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_ROLES);
-                String nodename = Path.getUniqueLabel(hm, aclNode.getHandle(), "0");
-                Content node = aclNode.createContent(nodename, ItemType.CONTENTNODE);
-                node.setNodeData("path", path);
-                node.setNodeData("permissions", permission);
-                roleNode.save();
-            }
-        }
-        catch (Exception e) {
-            log.error("can't add permission", e);
-        }
+        throw new UnsupportedOperationException("Use RoleManager.addPermission() instead.");
     }
 
     public void removePermission(String repository, String path) {
@@ -89,56 +75,10 @@ public class MgnlRole implements Role {
     }
 
     public void removePermission(String repository, String path, long permission) {
-        try {
-            Content aclNode = getAclNode(repository);
-            Collection<Content> children = aclNode.getChildren();
-            for (Content child : children) {
-                if (child.getNodeData("path").getString().equals(path)) {
-                    if (permission == MgnlRole.PERMISSION_ANY
-                            || child.getNodeData("permissions").getLong() == permission) {
-                        child.delete();
-                    }
-                }
-            }
-            roleNode.save();
-        }
-        catch (Exception e) {
-            log.error("can't remove permission", e);
-        }
+        throw new UnsupportedOperationException("Use RoleManager.removePermission() instead.");
     }
 
-    /**
-     * Get the ACL node for the current role node.
-     */
-    private Content getAclNode(String repository) throws RepositoryException, PathNotFoundException,
-    AccessDeniedException {
-        Content aclNode;
-        if (!roleNode.hasContent("acl_" + repository)) {
-            aclNode = roleNode.createContent("acl_" + repository, ItemType.CONTENTNODE);
-        }
-        else {
-            aclNode = roleNode.getContent("acl_" + repository);
-        }
-        return aclNode;
-    }
-
-    /**
-     * Does this permission exist?
-     */
-    private boolean existsPermission(Content aclNode, String path, long permission) {
-        Collection<Content> children = aclNode.getChildren();
-        for (Content child : children) {
-            if (child.getNodeData("path").getString().equals(path)) {
-                if (permission == MgnlRole.PERMISSION_ANY
-                        || child.getNodeData("permissions").getLong() == permission) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public Content getRoleNode() {
-        return roleNode;
+    public String getId() {
+        return roleId;
     }
 }

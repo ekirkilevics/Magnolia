@@ -34,13 +34,12 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
-
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -120,12 +119,12 @@ public class BinaryNodeData extends AbstractNodeData {
     }
 
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(this.parent.getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE);
         getBinaryNode(true).setProperty(ItemType.JCR_DATA, value);
     }
 
     public void delete() throws RepositoryException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), getHandle(), Permission.REMOVE);
+        Access.tryPermission(this.parent.getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_REMOVE);
         if(isExist()){
             getBinaryNode(false).remove();
         }
@@ -133,13 +132,13 @@ public class BinaryNodeData extends AbstractNodeData {
 
     @Override
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(this.parent.getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE);
         getBinaryNode(true).setProperty(name, value);
     }
 
     @Override
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException, UnsupportedOperationException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(this.parent.getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE);
         getBinaryNode(true).setProperty(name, value);
     }
 

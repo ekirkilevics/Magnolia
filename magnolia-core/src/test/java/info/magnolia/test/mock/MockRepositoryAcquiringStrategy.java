@@ -36,6 +36,8 @@ package info.magnolia.test.mock;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.jcr.Session;
+
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
@@ -57,7 +59,7 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
      */
     private static Logger log = LoggerFactory.getLogger(MockRepositoryAcquiringStrategy.class);
 
-    private Map hierarchyManagers = new HashMap();
+    private final Map hierarchyManagers = new HashMap();
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         if(!hierarchyManagers.containsKey(repositoryId)){
@@ -80,5 +82,9 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
     }
 
     public void release() {
+    }
+
+    public Session getSession(String repositoryId, String workspaceId) {
+        return null;
     }
 }

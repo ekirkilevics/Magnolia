@@ -4,10 +4,12 @@
   <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
     <param name="path" value="${rep.home}/repository" />
   </FileSystem>
-  <Security appName="Jackrabbit">
-    <AccessManager class="org.apache.jackrabbit.core.security.SimpleAccessManager"></AccessManager>
-    <LoginModule class="org.apache.jackrabbit.core.security.SimpleLoginModule">
-      <param name="anonymousId" value="anonymous" />
+  <Security appName="magnolia">
+    <SecurityManager class="org.apache.jackrabbit.core.DefaultSecurityManager"/>
+    <AccessManager class="org.apache.jackrabbit.core.security.DefaultAccessManager">
+    </AccessManager>
+    <!-- login module defined here is used by the repo to authenticate every request. not by the webapp to authenticate user against the webapp context (this one has to be passed before thing here gets invoked -->
+    <LoginModule class="info.magnolia.jaas.sp.jcr.JCRAuthenticationModule">
     </LoginModule>
   </Security>
   <DataStore class="org.apache.jackrabbit.core.data.FileDataStore">
@@ -60,6 +62,9 @@
                org.apache.jackrabbit.extractor.PlainTextExtractor,
                org.apache.jackrabbit.extractor.XMLTextExtractor" />
     </SearchIndex>
+    <WorkspaceSecurity>
+      <AccessControlProvider class="info.magnolia.cms.core.MagnoliaAccessProvider" />
+    </WorkspaceSecurity>
   </Workspace>
   <Versioning rootPath="${rep.home}/version">
     <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">

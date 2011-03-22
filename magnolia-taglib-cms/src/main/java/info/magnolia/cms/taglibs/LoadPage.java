@@ -97,6 +97,7 @@ public class LoadPage extends BodyTagSupport {
         this.level = level;
     }
 
+    @Override
     public int doEndTag() {
         Content newActpage = Resource.getCurrentActivePage();
 
@@ -110,7 +111,7 @@ public class LoadPage extends BodyTagSupport {
             try {
                 startPage = Resource.getCurrentActivePage().getAncestor(this.level);
                 HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-                newActpage = hm.getPage(startPage.getHandle(), this.templateName);
+                newActpage = hm.getContent(startPage.getHandle());
             }
             catch (RepositoryException e) {
                 log.error(e.getClass().getName() + " caught while loading page with template " + this.templateName + " (start level=" + this.level + ") from " + actPageHandle + ": " + e.getMessage(), e);
@@ -139,6 +140,7 @@ public class LoadPage extends BodyTagSupport {
         return EVAL_PAGE;
     }
 
+    @Override
     public void release() {
         super.release();
         this.path = null;

@@ -33,11 +33,14 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.core.Access;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.security.AccessControlException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -64,6 +67,7 @@ public class URISecurityFilter extends BaseSecurityFilter {
      * @return boolean <code>true</code> if access to the resource is allowed
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
+    @Override
     public boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // todo MAGNOLIA-1617 move this to separate filter
         final IPSecurityManager ipSecurityManager = IPSecurityManager.Factory.getInstance();
@@ -86,20 +90,25 @@ public class URISecurityFilter extends BaseSecurityFilter {
      * Validates user permissions on URI.
      */
     protected boolean isAuthorized(AccessManager accessManager, HttpServletRequest request) {
-        if (null == accessManager) return false;
-        long permission;
+        String permission;
         if (request.getMethod().equalsIgnoreCase("POST")) {
-            permission = Permission.WRITE;
+            permission = Session.ACTION_ADD_NODE;
         } else {
-            permission = Permission.READ;
+            permission = Session.ACTION_READ;
         }
+        final String uri = MgnlContext.getAggregationState().getCurrentURI();
         try {
-            final String handle = MgnlContext.getAggregationState().getCurrentURI();
-            Access.isGranted(accessManager, handle, permission);
+            MgnlContext.getSession("uri").checkPermission(uri, permission);
+            log.info("user {} has been granted permission {} to access uri {}", new Object[] {MgnlContext.getUser().getName(), permission, uri});
             return true;
-        } catch (AccessDeniedException ade) {
+        } catch (AccessControlException ade) {
+            log.debug(ade.getMessage());
+        } catch (LoginException e) {
+            log.debug(e.getMessage());
+        } catch (RepositoryException ade) {
             log.debug(ade.getMessage());
         }
+        log.info("user {} has been denied permission {} to access uri {}", new Object[] {MgnlContext.getUser().getName(), permission, uri});
         return false;
     }
 }

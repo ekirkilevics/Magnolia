@@ -33,7 +33,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.ACL;
+
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Manages the groups.
@@ -55,5 +58,7 @@ public interface GroupManager {
      * Get all groups defined in the system.
      */
     public Collection<Group> getAllGroups() throws UnsupportedOperationException;
+
+    public Map<String, ACL> getACLs(String group);
 
 }

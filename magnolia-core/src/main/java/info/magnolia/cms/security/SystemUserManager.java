@@ -34,17 +34,14 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.context.MgnlContext;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -80,45 +77,48 @@ public class SystemUserManager extends MgnlUserManager {
 
         };
 
-        final String anonymousUserPath = "/" + Realm.REALM_SYSTEM + "/" + UserManager.ANONYMOUS_USER;
+        final String anonymousUserPath = "/" + Realm.REALM_SYSTEM.getName() + "/" + UserManager.ANONYMOUS_USER;
         ObservationUtil.registerChangeListener(
-            ContentRepository.USERS,
-            anonymousUserPath,
-            true,
-            "mgnl:user",
-            anonymousListener);
+                ContentRepository.USERS,
+                anonymousUserPath,
+                true,
+                "mgnl:user",
+                anonymousListener);
 
         ObservationUtil.registerChangeListener(
-            ContentRepository.USER_GROUPS,
-            "/",
-            true,
-            "mgnl:group",
-            anonymousListener);
+                ContentRepository.USER_GROUPS,
+                "/",
+                true,
+                "mgnl:group",
+                anonymousListener);
 
         ObservationUtil.registerDeferredChangeListener(
-            ContentRepository.USER_ROLES,
-            "/",
-            true,
-            "mgnl:role",
-            anonymousListener,
-            1000,
-            5000);
+                ContentRepository.USER_ROLES,
+                "/",
+                true,
+                "mgnl:role",
+                anonymousListener,
+                1000,
+                5000);
     }
 
+    @Override
     public String getRealmName() {
         String name = super.getRealmName();
         // attempt to fix: MAGNOLIA-1839
         if (StringUtils.isEmpty(name)) {
             log.error("realm of system user manager is not set!");
-            return Realm.REALM_SYSTEM;
+            return Realm.REALM_SYSTEM.getName();
         }
         return name;
     }
 
+    @Override
     public User getSystemUser() {
         return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
     }
 
+    @Override
     public User getAnonymousUser() {
         if (anonymousUser == null) {
             // see MAGNOLIA-2029
@@ -130,56 +130,43 @@ public class SystemUserManager extends MgnlUserManager {
     /**
      * Load a system user from the repository, but don't try to create it if missing.
      */
-    private User getRequiredSystemUser(String username, String password) {
-        MgnlUser user = null;
-        Content node;
-        try {
-            node = getHierarchyManager().getContent("/" + Realm.REALM_SYSTEM + "/" + username);
-        }
-        catch (RepositoryException e) {
-            log.error("Error caught while loading the system user "
-                + username
-                + ": "
-                + e.getClass().getName()
-                + ": "
-                + e.getMessage(), e);
-            return null;
-        }
-        if (node == null) {
-            log.error("User not found: {}.", username);
-            return null;
-        }
+    private User getRequiredSystemUser(final String username, String password) {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<User>(getRepositoryName()) {
 
-        user = userInstance(node);
-        Subject subject = getSubject(username, password);
-        user.setSubject(subject);
-        return user;
+            @Override
+            public User doExec(Session session) throws RepositoryException {
+                User user = null;
+                Node node;
+                try {
+                    node = session.getNode("/" + Realm.REALM_SYSTEM.getName() + "/" + username);
+                }
+                catch (RepositoryException e) {
+                    log.error("Error caught while loading the system user "
+                            + username
+                            + ": "
+                            + e.getClass().getName()
+                            + ": "
+                            + e.getMessage(), e);
+                    return null;
+                }
+                if (node == null) {
+                    log.error("User not found: {}.", username);
+                    return null;
+                }
+
+                user = newUserInstance(node);
+                return user;
+            }});
     }
 
     protected User getOrCreateUser(String userName, String password) {
         User user = getUser(userName);
         if (user == null) {
             log.error(
-                "Failed to get system user [{}], will try to create new system user with default password",
-                userName);
+                    "Failed to get system user [{}], will try to create new system user with default password",
+                    userName);
             user = this.createUser(userName, password);
         }
         return user;
-    }
-
-    private Subject getSubject(String userName, String password) {
-        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
-            userName,
-            password.toCharArray(),
-            getRealmName());
-        try {
-            LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
-            loginContext.login();
-            return loginContext.getSubject();
-        }
-        catch (LoginException le) {
-            log.error("Failed to login as " + userName + " user", le);
-        }
-        return null;
     }
 }

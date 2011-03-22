@@ -36,7 +36,6 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -44,9 +43,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Property;
+import javax.jcr.Session;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -94,12 +93,14 @@ public class MetaData {
      */
     private Node node;
 
-    private AccessManager accessManager;
+    private Session session;
 
     /**
      * Package private constructor.
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
+     * @deprecated since 5.0 use MetaData(Node, Session) instead.
      */
+    @Deprecated
     protected MetaData(Node workingNode, AccessManager manager) {
         try {
             this.node = workingNode.getNode(DEFAULT_META_NODE);
@@ -112,10 +113,24 @@ public class MetaData {
         } catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
-        this.accessManager = manager;
     }
 
     protected MetaData() {
+    }
+
+    public MetaData(Node workingNode, Session session) {
+        try {
+            this.node = workingNode.getNode(DEFAULT_META_NODE);
+        } catch (PathNotFoundException e) {
+            try {
+                log.debug("{} does not support MetaData, check node type definition of {}", workingNode.getPath(), workingNode.getPrimaryNodeType().getName());
+            } catch (RepositoryException re) {
+                // should never come here
+            }
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        this.session = session;
     }
 
     public String getHandle() throws RepositoryException {
@@ -128,31 +143,13 @@ public class MetaData {
             return;
         }
         try {
-            Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.WRITE);
+            // was Permission.WRITE, but since we only update properties of metadata, this should be enough.
+            Access.tryPermission(session, Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
             throw new AccessDeniedException(re.getMessage());
         }
-    }
-
-    /**
-     * Get all meta data properties.
-     * @return property iterator
-     * @deprecated since 4.0 - not used.
-     */
-    @Deprecated
-    public PropertyIterator getProperties() {
-        if (node == null) {
-            return null;
-        }
-        try {
-            return this.node.getProperties();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return null;
     }
 
     /**

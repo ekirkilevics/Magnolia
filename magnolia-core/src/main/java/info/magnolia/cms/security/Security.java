@@ -66,12 +66,12 @@ public class Security {
     }
 
     public static User getAnonymousUser() {
-        return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM).getAnonymousUser();
+        return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM.getName()).getAnonymousUser();
     }
 
     public static User getSystemUser() {
-        return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM).getSystemUser();
+        return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM.getName()).getSystemUser();
     }
 
-    
+
 }

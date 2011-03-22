@@ -35,68 +35,83 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.SystemContentWrapper;
+import static info.magnolia.cms.security.SecurityConstants.*;
+import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.security.auth.Subject;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * This class wraps a user content object.
- * @version $Revision$ ($Author$)
+ * User for 5.0 instance
+ * In difference from old MgnlUser, this class operates directly on JCR session and with JCR nodes/properties as our hierarchy managers are not
+ * available at the login time.
+ * Also in difference from MgnlUser, this class doesn't keep around instance of the user node! TODO: Test performance impact of such change.
+ * @author had
+ * @version $Id$
  */
-public class MgnlUser extends AbstractUser implements Serializable {
+public class MgnlUser extends AbstractUser implements User, Serializable {
 
     private static final long serialVersionUID = 222L;
 
+    private static final boolean logAdmin = false;
     private static final Logger log = LoggerFactory.getLogger(MgnlUser.class);
 
-    /**
-     * Under this subnodes the assigned roles are saved.
-     */
-    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
+    private final Map<String, String> properties;
+    private final Collection<String> groups;
+    private final Collection<String> roles;
 
-    private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
+    private final String name;
+    private Subject subject;
+    private final String language;
+    private final String encodedPassword;
+    private boolean enabled = true;
+    private String path;
 
-    /**
-     * Used to to synchronize write operations in {@link MgnlUser#setLastAccess().
-     */
-    private static final Object mutex = new Object();
+    private final String realm;
 
-    // serialized
-    private final SystemContentWrapper userNode;
+    public MgnlUser(String name, String realm, Collection<String> groups, Collection<String> roles, Map<String, String> properties) {
+        this.name = name;
+        this.roles = Collections.unmodifiableCollection(roles);
+        this.groups = Collections.unmodifiableCollection(groups);
+        this.properties = Collections.unmodifiableMap(properties);
+        this.realm = realm;
 
-    /**
-     * @param userNode the Content object representing this user
-     */
-    protected MgnlUser(Content userNode) {
-        this.userNode = new SystemContentWrapper(userNode);
+        //shortcut some often accessed props so we don't have to search hashmap for them.
+        language = properties.get(MgnlUserManager.PROPERTY_LANGUAGE);
+        String enbld = properties.get(MgnlUserManager.PROPERTY_ENABLED);
+        // all accounts are enabled by default and prop doesn't exist if the account was not disabled before
+        enabled = enbld == null ? true : Boolean.parseBoolean(properties.get(MgnlUserManager.PROPERTY_ENABLED));
+        encodedPassword = properties.get(MgnlUserManager.PROPERTY_PASSWORD);
     }
 
     /**
-     * Is this user in a specified role?
-     * @param groupName the name of the role
-     * @return true if in role
+     * Is this user in a specified group?
+     * @param groupName the name of the group
+     * @return true if in group
      */
     public boolean inGroup(String groupName) {
+        if (logAdmin || !"admin".equals(name)) {
+            log.info("inGroup({})", groupName);
+        }
         return this.hasAny(groupName, NODE_GROUPS);
     }
 
@@ -105,7 +120,10 @@ public class MgnlUser extends AbstractUser implements Serializable {
      * @param groupName
      */
     public void removeGroup(String groupName) throws UnsupportedOperationException {
-        this.remove(groupName, NODE_GROUPS);
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("removeGroup({})", groupName);
+        }
+        throw new UnsupportedOperationException("use manager to remove groups!");
     }
 
     /**
@@ -113,20 +131,27 @@ public class MgnlUser extends AbstractUser implements Serializable {
      * @param groupName
      */
     public void addGroup(String groupName) throws UnsupportedOperationException {
-        this.add(groupName, NODE_GROUPS);
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("addGroup({})", groupName);
+        }
+        throw new UnsupportedOperationException("use manager to add groups!");
     }
 
     public boolean isEnabled() {
-        return NodeDataUtil.getBoolean(getUserNode(), "enabled", true);
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("isEnabled()");
+        }
+        return enabled ;
     }
 
+    /**
+     * This methods sets flag just on the bean. It does not update persisted user data. Use manager to update user data.
+     */
     public void setEnabled(boolean enabled) {
-        try {
-            NodeDataUtil.getOrCreateAndSet(getUserNode(), "enabled", enabled);
-            getUserNode().save();
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("setEnabled({})", enabled);
         }
+        this.enabled = enabled;
     }
 
     /**
@@ -135,124 +160,91 @@ public class MgnlUser extends AbstractUser implements Serializable {
      * @return true if in role
      */
     public boolean hasRole(String roleName) {
-        return this.hasAny(roleName, NODE_ROLES);
+        return SecuritySupport.Factory.getInstance().getUserManager(getRealm()).hasAny(getName(), roleName, NODE_ROLES);
     }
 
-    public void removeRole(String roleName) {
-        this.remove(roleName, NODE_ROLES);
-    }
-
-    public void addRole(String roleName) {
-        this.add(roleName, NODE_ROLES);
-    }
-
-    // TODO this are the same methods as in {@link MgnlGroup}. A rewrite is needed.
-
-    private boolean hasAny(String name, String nodeName) {
-        try {
-            HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_ROLES);
-            }
-            else {
-                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
-            }
-
-            Content node = this.getUserNode().getContent(nodeName);
-            for (NodeData nodeData : node.getNodeDataCollection()) {
-                // check for the existence of this ID
-                try {
-                    if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
-                        return true;
-                    }
-                }
-                catch (ItemNotFoundException e) {
-                    log.debug("Role [{}] does not exist in the ROLES repository", name);
-                }
-                catch (IllegalArgumentException e) {
-                    log.debug("{} has invalid value", nodeData.getHandle());
-                }
-            }
+    public void removeRole(String roleName) throws UnsupportedOperationException {
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("removeRole({})", roleName);
         }
-        catch (RepositoryException e) {
+        throw new UnsupportedOperationException("use manager to remove roles!");
+    }
+
+    public void addRole(String roleName) throws UnsupportedOperationException {
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("addRole({})", roleName);
+        }
+        throw new UnsupportedOperationException("use manager to add roles!");
+    }
+
+    // TODO: methods like the ones below should not be in the object but rather in the manager, making object reusable with different managers.
+    private boolean hasAny(final String name, final String nodeName) {
+        long start = System.currentTimeMillis();
+        try {
+            String sessionName;
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
+                sessionName = ContentRepository.USER_ROLES;
+            } else {
+                sessionName = ContentRepository.USER_GROUPS;
+            }
+
+            // TODO: this is an original code. If you ever need to speed it up, turn it around - retrieve group or role by its name and read its ID, then loop through IDs this user has assigned to find out if he has that one or not.
+            final Collection<String> groupsOrRoles = MgnlContext.doInSystemContext(new SilentSessionOp<Collection<String>>(ContentRepository.USERS) {
+
+                @Override
+                public Collection<String> doExec(Session session) throws RepositoryException {
+                    Node groupsOrRoles = session.getNode(getName()).getNode(nodeName);
+                    List<String> list = new ArrayList<String>();
+                    for (PropertyIterator props = groupsOrRoles.getProperties(); props.hasNext();) {
+                        // check for the existence of this ID
+                        Property property = props.nextProperty();
+                        try {
+                            list.add(property.getString());
+                        } catch (ItemNotFoundException e) {
+                            log.debug("Role [{}] does not exist in the ROLES repository", name);
+                        } catch (IllegalArgumentException e) {
+                            log.debug("{} has invalid value", property.getPath());
+                        }
+                    }
+                    return list;
+                }});
+
+
+            return MgnlContext.doInSystemContext(new SessionOp<Boolean, RepositoryException>(sessionName) {
+
+                @Override
+                public Boolean exec(Session session) throws RepositoryException {
+                    for (String groupOrRole : groupsOrRoles) {
+                        // check for the existence of this ID
+                        try {
+                            if (session.getNodeByIdentifier(groupOrRole).getName().equalsIgnoreCase(name)) {
+                                return true;
+                            }
+                        } catch (ItemNotFoundException e) {
+                            log.debug("Role [{}] does not exist in the ROLES repository", name);
+                        }
+                    }
+                    return false;
+                }});
+
+        } catch (RepositoryException e) {
             log.debug(e.getMessage(), e);
+            //TODO: why are we swallowing exceptions silently here?
+        } finally {
+            log.debug("checked {} for {} in {}ms.", new Object[] {name, nodeName, (System.currentTimeMillis() - start)});
         }
         return false;
     }
 
-    private void remove(String name, String nodeName) {
-        try {
-            HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
-            }
-            else {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
-            }
-            Content node = this.getUserNode().getContent(nodeName);
-
-            for (NodeData nodeData : node.getNodeDataCollection()) {
-                // check for the existence of this ID
-                try {
-                    if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
-                        nodeData.delete();
-                    }
-                }
-                catch (ItemNotFoundException e) {
-                    log.debug("Role [{}] does not exist in the ROLES repository", name);
-                }
-                catch (IllegalArgumentException e) {
-                    log.debug("{} has invalid value", nodeData.getHandle());
-                }
-            }
-            this.getUserNode().save();
-        }
-        catch (RepositoryException e) {
-            log.error("failed to remove " + name + " from user [" + this.getName() + "]", e);
-        }
-    }
-
-    private void add(String name, String nodeName) {
-        try {
-            final String hmName;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hmName = ContentRepository.USER_ROLES;
-            }
-            else {
-                hmName = ContentRepository.USER_GROUPS;
-            }
-            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(hmName);
-
-            if (!this.hasAny(name, nodeName)) {
-               if (!this.getUserNode().hasContent(nodeName)) {
-                    this.getUserNode().createContent(nodeName, ItemType.CONTENTNODE);
-               }
-                Content node = this.getUserNode().getContent(nodeName);
-                // add corresponding ID
-                try {
-                    String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
-                    // used only to get the unique label
-                    HierarchyManager usersHM = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USERS);
-                    String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
-                    node.createNodeData(newName).setValue(value);
-                    this.getUserNode().save();
-                }
-                catch (PathNotFoundException e) {
-                    log.debug("[{}] does not exist in the {} repository", name, hmName);
-                }
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("failed to add " + name + " to user [" + this.getName() + "]", e);
-        }
-    }
-
     public String getName() {
-        return this.getUserNode().getName();
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getName()=>{}", name);
+        }
+        return name;
     }
 
     public String getPassword() {
-        final String encodedPassword = this.getUserNode().getNodeData("pswd").getString().trim();
+        // TODO: should we really decode pwd here? Encoding is UM implementation specific
         return decodePassword(encodedPassword);
     }
 
@@ -261,104 +253,154 @@ public class MgnlUser extends AbstractUser implements Serializable {
     }
 
     public String getLanguage() {
-        return this.getUserNode().getNodeData("language").getString(); //$NON-NLS-1$
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getLang()=>{}", language);
+        }
+        return this.language;
     }
 
     public String getProperty(String propertyName) {
-        return NodeDataUtil.getString(getUserNode(), propertyName, null);
-    }
-
-    public void setProperty(String propertyName, String value) {
-        try {
-            NodeDataUtil.getOrCreateAndSet(getUserNode(), propertyName, value);
-            getUserNode().save();
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getProperty({})", propertyName);
         }
+        return properties.get(propertyName);
     }
 
     public Collection<String> getGroups() {
-        return MgnlSecurityUtil.collectPropertyNames(getUserNode(), "groups", ContentRepository.USER_GROUPS, false);
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getGroups()");
+        }
+        return groups;
     }
 
     public Collection<String> getAllGroups() {
-        final Set<String> allGroups = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-        try {
-            // add the user's direct groups
-            final Collection<String> groups = getGroups();
-            allGroups.addAll(groups);
-
-            // add all groups from direct groups
-            final GroupManager gm = SecuritySupport.Factory.getInstance().getGroupManager();
-            for (String groupName : groups) {
-                final Group g = gm.getGroup(groupName);
-                allGroups.addAll(g.getAllGroups());
-            }
-
-            return allGroups;
-        } catch (AccessDeniedException e) {
-            throw new RuntimeException(e); // TODO
+        // TODO: if the user is just a simple bean, then this method doesn't belong here anymore!!!!
+        // should be moved to user manager or to group manager???
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("get groups for {}", getName());
         }
+        final Set<String> allGroups = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        final Collection<String> groups = getGroups();
+
+        // FYI: can't initialize upfront as the instance of the user class needs to be created BEFORE repo is ready
+        GroupManager man = SecuritySupport.Factory.getInstance().getGroupManager();
+
+        // add all direct user groups
+        allGroups.addAll(groups);
+
+        // add all subbroups
+        addSubgroups(allGroups, man, groups);
+        return allGroups;
     }
 
     public Collection<String> getRoles() {
-        return MgnlSecurityUtil.collectPropertyNames(getUserNode(), "roles", ContentRepository.USER_ROLES, false);
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getRoles()");
+        }
+        return roles;
     }
 
     public Collection<String> getAllRoles() {
-        final Set<String> allRoles = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-        try {
-            // add the user's direct roles
-            allRoles.addAll(getRoles());
-
-            // add roles from all groups
-            final GroupManager gm = SecuritySupport.Factory.getInstance().getGroupManager();
-            final Collection<String> allGroups = getAllGroups();
-            for (String groupName : allGroups) {
-                final Group g = gm.getGroup(groupName);
-                allRoles.addAll(g.getRoles());
-            }
-
-            return allRoles;
-        } catch (AccessDeniedException e) {
-            throw new RuntimeException(e); // TODO
+        // TODO: if the user is just a simple bean, then this method doesn't belong here anymore!!!!
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("get roles for {}", getName());
         }
+        final Set<String> allRoles = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        final Collection<String> roles = getRoles();
+
+        // add all direct user groups
+        allRoles.addAll(roles);
+
+        Collection<String> allGroups = getAllGroups();
+
+        // FYI: can't initialize upfront as the instance of the user class needs to be created BEFORE repo is ready
+        GroupManager man = SecuritySupport.Factory.getInstance().getGroupManager();
+
+        // add roles from all groups
+        for (String group : allGroups) {
+            try {
+                allRoles.addAll(man.getGroup(group).getRoles());
+            } catch (AccessDeniedException e) {
+                log.debug("Skipping denied group " + group + " for user " + getName(), e);
+            } catch (UnsupportedOperationException e) {
+                log.debug("Skipping unsupported  getGroup() for group " + group + " and user " + getName(), e);
+            }
+        }
+        return allRoles;
+    }
+
+    @Override
+    public Subject getSubject() {
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("getSubject()=>{}", this.subject);
+        }
+        return this.subject;
+    }
+
+    @Override
+    @Deprecated
+    public void setSubject(Subject subject) {
+        if (logAdmin || !"admin".equals(name)) {
+            log.debug("setsubject({})", subject);
+        }
+        this.subject = subject;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    @Deprecated
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    private void addSubgroups(final Set<String> allGroups, GroupManager man, Collection<String> groups) {
+        for (String group : groups) {
+            // check if this group was not already added to prevent infinite loops
+            if (!allGroups.contains(group)) {
+                try {
+                    Collection<String> subgroups = man.getGroup(group).getGroups();
+                    allGroups.addAll(subgroups);
+                    // and recursively add more subgroups
+                    addSubgroups(allGroups, man, subgroups);
+                } catch (AccessDeniedException e) {
+                    log.debug("Skipping denied group " + group + " for user " + getName(), e);
+                } catch (UnsupportedOperationException e) {
+                    log.debug("Skipping unsupported  getGroup() for group " + group + " and user " + getName(), e);
+                }
+
+            }
+        }
+    }
+
+    public String getRealm() {
+        return realm;
     }
 
     /**
      * Update the "last access" timestamp.
+     * @deprecated since 5.0, use {@link UserManager#updateLastAccessTimestamp(User)} instead
      */
+    @Deprecated
     public void setLastAccess() {
-        NodeData lastaccess;
-        Exception finalException = null;
-        boolean success = false;
-        // try three times to save the lastaccess property
-        for(int i= 1; !success && i <=3; i++){
-            finalException = null;
-            try {
-                // synchronize on a static mutex
-                synchronized (mutex) {
-                    // refresh the session on retries
-                    if(i>1){
-                        getUserNode().refresh(false);
-                    }
-                    lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
-                    lastaccess.setValue(new GregorianCalendar());
-                    getUserNode().save();
-                    success = true;
-                }
-            }
-            catch (RepositoryException e) {
-                finalException = e;
-                log.debug("Unable to set the last access", e);
-            }
-        }
-        if(finalException != null){
-            log.warn("Unable to set the last access date due to a " + ExceptionUtils.getMessage(finalException));
-        }
+        throw new UnsupportedOperationException("Use manager to update user details.");
     }
 
+    /**
+     * Not every user needs to have a node behind. Use manager to obtain nodes
+     * @deprecated since 5.0, use {@link UserManager#updateLastAccessTimestamp(User)} instead
+     */
+    @Deprecated
     public Content getUserNode() {
-        return userNode;
+        throw new UnsupportedOperationException("Underlying storage node is no longer exposed nor required for custom user stores.");
+    }
+
+    /**
+     * @deprecated since 5.0, use {@link UserManager} instead
+     */
+    @Deprecated
+    public void setProperty(String propertyName, String value) {
+        throw new UnsupportedOperationException("Use manager to modify properties of the user.");
     }
 }

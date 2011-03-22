@@ -22,18 +22,36 @@
           <label for="from">${this.messages.get("page.form.text.message.from")}</label>
           <input type="text" name="from" />
         </div>
+        </td>
+        <!--  gap between columns -->
+        <td style="width:30px" rowspan="6">
+        &nbsp;
+        </td>
+        <!--  2nd column -->
+        <td valign="top" rowspan="6">
+        <h3>${this.messages.get("page.form.text.message.text")}</h3>
+        <input type="hidden" name="type" value="simple" />
+        <div class="formelement" >
+          <label for="body">${this.messages.get("page.form.text.message.messagetext")}</label>
+          <textarea name="body" rows="8" style="width:380px;height:140px"></textarea>
+        </div>
+        </td>
+        </tr><tr><td valign="top">
         <div class="formelement">
           <label for="to">${this.messages.get("page.form.text.message.to")}</label>
           <input type="text" name="to" />
         </div>
+        </td></tr><tr><td valign="top">
         <div class="formelement">
           <label for="cc">${this.messages.get("page.form.text.message.cc")}</label>
           <input type="text" name="cc" />
         </div>
+        </td></tr><tr><td valign="top">
         <div class="formelement">
           <label for="subject">${this.messages.get("page.form.text.message.subject")}</label>
           <input type="text" name="subject" />
         </div>
+        </td></tr><tr><td valign="top">
         <div class="formelement">
           <label for="contentType">${this.messages.get("page.form.text.message.contenttype")}</label>
           <select name="contentType" >
@@ -41,23 +59,13 @@
             <option value="html">${this.messages.get("page.form.text.message.contenttype.html")}</option>
           </select>
         </div>
+        </td></tr><tr><td valign="top">
         <div class="formelement">
           <label for="attachment">${this.messages.get("page.form.text.message.attachment")}</label>
           <input type="file" name="attachment" />
         </div>
-        <br />
+        </td></tr><tr><td valign="top" colspan="3">
         <input type="submit" value="${this.messages.get("page.form.submit")}" class="mgnlControlButton" />
-        </td>
-        <td style="width:30px">
-        &nbsp;
-        </td>
-        <td valign="top" >
-        <h3>${this.messages.get("page.form.text.message.text")}</h3>
-        <input type="hidden" name="type" value="simple" />
-        <div class="formelement" >
-          <label for="body">${this.messages.get("page.form.text.message.messagetext")}</label>
-          <textarea name="body" rows="8" style="width:380px;height:140px"></textarea>
-        </div>
         </td>
         </tr>
         </table>

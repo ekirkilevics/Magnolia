@@ -77,9 +77,9 @@
       <form action="" method="post" style="padding: 0; margin: 0;">
         <div>
         <input type="hidden" name="mgnlLogout" value="true"/>
-        ${this.messages.get("central.user")}: 
-        [#if this.userNode?exists]
-          <span onclick="mgnlOpenDialog('${this.userNode.@handle}','','','','users','.magnolia/dialogs/userpreferences.html')" style=" font-size: 11px; color: black; border: 0; background: transparent; outline: invert none 0; cursor: pointer; padding: 0; margin: 0;" onmouseover="this.style.textDecoration = 'underline';" onmouseout="this.style.textDecoration = 'none';">${this.user.name}</span>
+        ${this.messages.get("central.user")}:
+        [#if this.user.path?exists]
+          <span onclick="mgnlOpenDialog('${this.user.path}','','','','users','.magnolia/dialogs/userpreferences.html')" style=" font-size: 11px; color: black; border: 0; background: transparent; outline: invert none 0; cursor: pointer; padding: 0; margin: 0;" onmouseover="this.style.textDecoration = 'underline';" onmouseout="this.style.textDecoration = 'none';">${this.user.name}</span>
         [#else]
           ${this.user.name}
         [/#if]

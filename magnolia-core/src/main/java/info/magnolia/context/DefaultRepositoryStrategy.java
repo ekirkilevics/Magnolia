@@ -34,47 +34,42 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
-
 import javax.security.auth.Subject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Uses a user based access manager.
  */
 public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
 
-    private Map<String, AccessManager> accessManagers = new HashMap<String, AccessManager>();
     protected UserContext context;
 
     public DefaultRepositoryStrategy(UserContext context) {
         this.context = context;
     }
 
+    /**
+     * @deprecated since 5.0 Access Manager is no longer supported. Security is checked directly by repository.
+     */
+    @Deprecated
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        final String amAttrName = repositoryId + "_" + workspaceId;
-        AccessManager accessManager = accessManagers.get(amAttrName);
-
-        if (accessManager == null) {
-            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(getSubject(), repositoryId, workspaceId);
-            accessManagers.put(amAttrName, accessManager);
-        }
-
-        return accessManager;
+        return null;
     }
 
+    /**
+     * @deprecated since 5.0 JAAS subject is no longer passed around by strategy. There should be no need to access it.
+     */
+    @Deprecated
     protected Subject getSubject() {
-        return this.context.getUser().getSubject();
+        return null;
     }
 
+    @Override
     protected String getUserId() {
         return this.context.getUser().getName();
     }
 
     public void release() {
         release(false);
-        accessManagers.clear();
     }
 
 }

@@ -36,7 +36,6 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -53,6 +52,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
@@ -63,6 +63,7 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +73,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * @version $Revision:2719 $ ($Author:scharles $)
+ * @deprecated since 5.0 use jcr.Node instead.
  */
+@Deprecated
 public class DefaultContent extends AbstractContent {
     private static final Logger log = LoggerFactory.getLogger(DefaultContent.class);
 
@@ -114,7 +117,7 @@ public class DefaultContent extends AbstractContent {
      */
     DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
+        Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_READ);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.getNode(this.path));
@@ -130,7 +133,8 @@ public class DefaultContent extends AbstractContent {
      */
     public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
+        // TODO: this check seems bit pointless ... we wouldn't have got the node if we were not allowed to read it
+        Access.tryPermission(elem.getSession(), Path.getAbsolutePath(elem.getPath()), Session.ACTION_READ);
         this.setNode((Node) elem);
         this.setPath(this.getHandle());
     }
@@ -152,7 +156,7 @@ public class DefaultContent extends AbstractContent {
     RepositoryException,
     AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
+        Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
@@ -212,7 +216,7 @@ public class DefaultContent extends AbstractContent {
     @Override
     public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException {
         try {
-            Access.isGranted(getAccessManager(), Path.getAbsolutePath(getHandle(), name), Permission.READ);
+            Access.tryPermission(node.getSession(), Path.getAbsolutePath(getHandle(), name), Session.ACTION_READ);
         }
         // FIXME: should be thrown but return a dummy node data
         catch (AccessDeniedException e) {
@@ -257,7 +261,11 @@ public class DefaultContent extends AbstractContent {
 
     public MetaData getMetaData() {
         if (this.metaData == null) {
-            this.metaData = new MetaData(this.node, this.hierarchyManager.getAccessManager());
+            try {
+                this.metaData = new MetaData(this.node, this.node.getSession());
+            } catch (RepositoryException e) {
+                throw new UnhandledException(e);
+            }
         }
         return this.metaData;
     }
@@ -390,7 +398,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     public int getLevel() throws PathNotFoundException, RepositoryException {
-        return this.node.getDepth(); 
+        return this.node.getDepth();
     }
 
     public void orderBefore(String srcName, String beforeName) throws RepositoryException {
@@ -450,23 +458,24 @@ public class DefaultContent extends AbstractContent {
     }
 
     public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), this.getHandle(), Permission.WRITE);
+        Access.tryPermission(this.node.getSession(), this.getHandle(), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         Version version = this.getVersionHistory().getVersion(versionName);
         this.restore(version, removeExisting);
     }
 
     public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), this.getHandle(), Permission.WRITE);
+        Access.tryPermission(this.node.getSession(), this.getHandle(), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
-        throw new UnsupportedRepositoryOperationException("Not implemented in 3.0 Beta");
+        throw new UnsupportedRepositoryOperationException("Not implemented since 3.0 Beta");
     }
 
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+        // FIXME: !!! why does it do something and then throws exception anyway?
         this.node.restoreByLabel(versionLabel, removeExisting);
-        throw new UnsupportedRepositoryOperationException("Not implemented in 3.0 Beta");
+        throw new UnsupportedRepositoryOperationException("Not implemented since 3.0 Beta");
     }
 
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -520,7 +529,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.WRITE);
+        Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY);
         VersionManager.getInstance().removeVersionHistory(this.node.getUUID());
     }
 
@@ -529,7 +538,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     public void delete() throws RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
+        Access.tryPermission(this.node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath());
         ItemType nodeType = this.getItemType();
         this.node.remove();
@@ -555,7 +564,8 @@ public class DefaultContent extends AbstractContent {
     }
 
     public void addMixin(String type) throws RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.SET);
+        // TODO: was Permission.SET, is this OK?
+        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         // TODO: there seems to be bug somewhere as we are able to add mixins even when the method below returns false
         if (!this.node.canAddMixin(type)) {
             log.debug("Node - " + this.node.getPath() + " does not allow mixin type - " + type); //$NON-NLS-1$ //$NON-NLS-2$
@@ -568,7 +578,8 @@ public class DefaultContent extends AbstractContent {
     }
 
     public void removeMixin(String type) throws RepositoryException {
-        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.SET);
+        // TODO: was Permission.SET, is this OK?
+        Access.tryPermission(node.getSession(), Path.getAbsolutePath(node.getPath()), Session.ACTION_SET_PROPERTY);
         this.node.removeMixin(type);
     }
 

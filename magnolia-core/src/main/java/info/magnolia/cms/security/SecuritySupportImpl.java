@@ -54,7 +54,7 @@ public class SecuritySupportImpl extends SecuritySupportBase {
     }
 
     public UserManager getUserManager(String realmName) {
-        if(Realm.REALM_ALL.equals(realmName)){
+        if(Realm.REALM_ALL.getName().equals(realmName)){
             return getUserManager();
         }
         return userManagers.get(realmName);

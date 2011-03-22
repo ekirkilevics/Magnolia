@@ -43,6 +43,9 @@ import info.magnolia.cms.security.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -126,16 +129,20 @@ public class MgnlContext {
 
     /**
      * Get access manager for the specified repository on default workspace.
+     * @deprecated security is handled by JCR now
      */
+    @Deprecated
     public static AccessManager getAccessManager(String repositoryId) {
-        return getInstance().getAccessManager(repositoryId);
+        return getAccessManager(repositoryId, repositoryId);
     }
 
     /**
      * Get access manager for the specified repository on the specified workspace.
+     * @deprecated security is handled by JCR now
      */
+    @Deprecated
     public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return getInstance().getAccessManager(repositoryId, workspaceId);
+        return null;
     }
 
     /**
@@ -352,6 +359,7 @@ public class MgnlContext {
      * Get Magnolia system context. This context has full permissions over all repositories/ workspaces.
      * @deprecated since 5.0, use IoC, i.e., declare a dependency on SystemContext in your component.
      */
+    @Deprecated
     public static SystemContext getSystemContext() {
         return ContextFactory.getInstance().getSystemContext();
     }
@@ -359,6 +367,7 @@ public class MgnlContext {
     /**
      * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
      */
+    @Deprecated
     public static void doInSystemContext(final SystemContextOperation op) {
         doInSystemContext(op, false);
     }
@@ -375,8 +384,10 @@ public class MgnlContext {
     /**
      * @deprecated since 4.2 - use the Op interface, which can return values, or extend VoidOp.
      */
+    @Deprecated
     public static void doInSystemContext(final SystemContextOperation op, boolean releaseAfterExecution) {
         doInSystemContext(new VoidOp() {
+            @Override
             public void doExec() {
                 op.exec();
             }
@@ -387,7 +398,7 @@ public class MgnlContext {
      * Executes the given operation in the system context and sets it back to the original once done
      * (also if an exception is thrown). Also works if there was no context upon calling (sets it back
      * to null in this case)
-     * @param releaseAfterExecution TODO document this parameter
+     * @param releaseAfterExecution set to true if the context should be released once the execution is done (e.g. in workflow operations or scheduled jobs).
      */
     public static <T, E extends Throwable> T doInSystemContext(final Op<T, E> op, boolean releaseAfterExecution) throws E {
         final Context originalCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
@@ -410,6 +421,7 @@ public class MgnlContext {
      * @see info.magnolia.context.MgnlContext.Op
      * @see info.magnolia.context.MgnlContext.VoidOp
      */
+    @Deprecated
     public static interface SystemContextOperation {
         void exec();
     }
@@ -446,6 +458,7 @@ public class MgnlContext {
      * @param servletContext ServletContext instance
      * @deprecated since 5.0, use WebContextFactory.
      */
+    @Deprecated
     public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         WebContext ctx = ContextFactory.getInstance().createWebContext(request, response, servletContext);
         setInstance(ctx);
@@ -490,5 +503,9 @@ public class MgnlContext {
             WebContext wc = getWebContext();
             wc.pop();
         }
+    }
+
+    public static Session getSession(String repository) throws LoginException, RepositoryException {
+        return getInstance().getSession(repository, repository);
     }
 }

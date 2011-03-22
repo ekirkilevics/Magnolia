@@ -39,6 +39,9 @@ import info.magnolia.cms.security.PermissionImpl;
 
 import java.text.MessageFormat;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 /**
  * Simply utility class for AccessManager.
  *
@@ -58,10 +61,38 @@ public final class Access {
      * If no AccessManager is passed, the permission is assumed granted, no exception is thrown.
      *
      * @throws AccessDeniedException if the permission isn't granted.
+     * @deprecated AccessManager is no longer supported and used. Use JCR Session based security instead.
      */
+    @Deprecated
     public static void isGranted(AccessManager manager, String path, long permissions) throws AccessDeniedException {
         if (manager != null && !manager.isGranted(path, permissions)) {
             throw new AccessDeniedException(MessageFormat.format("User not allowed to {0} path [{1}]", PermissionImpl.getPermissionAsName(permissions), path));
+        }
+    }
+
+    /**
+     * Checks whether given session has requested permission on provided path. Throws an exception if permission is not granted on given path.
+     * @throws AccessDeniedException when permission is not granted.
+     */
+    public static void tryPermission(Session jcrSession, String path, String action) throws AccessDeniedException {
+        try {
+            if (!jcrSession.hasPermission( path, action)) {
+                throw new AccessDeniedException("Not allowed to access " + path + " with permission " + action);
+            }
+        } catch (RepositoryException e) {
+            throw new AccessDeniedException("Exception occured while checking permissions for " + path + " with permission " + action, e);
+        }
+    }
+
+    /**
+     * Checks whether given session has requested permission on provided path. Throws an exception if permission is not granted on given path.
+     * @throws AccessDeniedException when permission is not granted.
+     */
+    public static boolean isGranted(Session jcrSession, String path, String action) {
+        try {
+            return jcrSession.hasPermission( path, action);
+        } catch (RepositoryException e) {
+            return false;
         }
     }
 }

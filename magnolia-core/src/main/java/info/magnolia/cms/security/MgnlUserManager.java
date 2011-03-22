@@ -39,21 +39,33 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.search.Query;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.ValueFormatException;
+import javax.jcr.query.Query;
 import javax.security.auth.Subject;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -61,7 +73,7 @@ import java.util.Set;
  * Manages the users stored in Magnolia itself.
  * @version $Revision$ ($Author$)
  */
-public class MgnlUserManager implements UserManager {
+public class MgnlUserManager extends RepositoryBackedSecurityManager implements UserManager {
 
     private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
@@ -70,23 +82,31 @@ public class MgnlUserManager implements UserManager {
     public static final String PROPERTY_LASTACCESS = "lastaccess";
     public static final String PROPERTY_PASSWORD = "pswd";
     public static final String PROPERTY_TITLE = "title";
+    public static final String PROPERTY_ENABLED = "enabled";
 
     public static final String NODE_ACLUSERS = "acl_users";
 
     private String realmName;
 
     /**
-     * Do not instantiate it!
+     * There should be no need to instantiate this class except maybe for testing. Manual instantiation might cause manager not to be initialized properly.
      */
     public MgnlUserManager() {
     }
 
-    // TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the
-    // parent's node name)
+    /**
+     * TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the parent's node name).
+     * @deprecated since 5.0 use realmName instead
+     */
+    @Deprecated
     public String getName() {
         return getRealmName();
     }
 
+    /**
+     * @deprecated since 5.0 use realmName instead
+     */
+    @Deprecated
     public void setName(String name) {
         this.realmName = name;
     }
@@ -100,14 +120,23 @@ public class MgnlUserManager implements UserManager {
      * @param name
      * @return the user object
      */
-    public User getUser(String name) {
+    public User getUser(final String name) {
         try {
-            return getFromRepository(name);
+            return MgnlContext.doInSystemContext(new SessionOp<User, RepositoryException>(getRepositoryName()) {
+                @Override
+                public User exec(Session session) throws RepositoryException {
+                    Node priviledgedUserNode = findPrincipalNode(name, session);
+                    return newUserInstance(priviledgedUserNode);
+                }
+                @Override
+                public String toString() {
+                    return "retrieve user " + name;
+                }
+            });
+        } catch (RepositoryException e) {
+            e.printStackTrace();
         }
-        catch (RepositoryException e) {
-            log.info("Unable to load user [" + name + "] due to: " + e.toString(), e);
-            return null;
-        }
+        return null;
     }
 
     public User getUser(Subject subject) throws UnsupportedOperationException {
@@ -117,26 +146,59 @@ public class MgnlUserManager implements UserManager {
             return new DummyUser();
         }
 
-        Set<Entity> principalSet = subject.getPrincipals(Entity.class);
-        Iterator<Entity> entityIterator = principalSet.iterator();
+        Set<User> principalSet = subject.getPrincipals(User.class);
+        Iterator<User> entityIterator = principalSet.iterator();
         if (!entityIterator.hasNext()) {
             // happens when JCR authentication module set to optional and user doesn't exist in magnolia
             log.debug("user name not contained in principal set.");
             return new DummyUser();
         }
-        Entity userDetails = entityIterator.next();
-        String name = (String) userDetails.getProperty(Entity.NAME);
-        try {
-            return getFromRepository(name);
-        }
-        catch (PathNotFoundException e) {
-            log.error("user not registered in magnolia itself [" + name + "]");
-        }
-        catch (Exception e) {
-            log.error("can't get jcr-node of current user", e);
+        return entityIterator.next();
+    }
+
+    /**
+     * Helper method to find a user in a certain realm. Uses JCR Query.
+     * @deprecated since 5.0 use findUserNode(java.lang.String, java.lang.String, javax.jcr.Session) instead
+     */
+    @Deprecated
+    protected Content findUserNode(String realm, String name) throws RepositoryException {
+        // while we could call the other findUserNode method and wrap the output it would be inappropriate as session is not valid outside of the call
+        throw new UnsupportedOperationException("Admin session is no longer kept open for unlimited duration of the time, therefore it is not possible to expose node outside of admin session.");
+    }
+
+    /**
+     * Helper method to find a user in a certain realm. Uses JCR Query.
+     */
+    @Override
+    protected Node findPrincipalNode(String name, Session session) throws RepositoryException {
+        String realm = getRealmName();
+        final String where;
+        // the all realm searches the repository
+        if (Realm.REALM_ALL.equals(realm)) {
+            where = "where name() = '" + name + "'";
+        } else {
+            // FIXME: DOUBLE CHECK THE QUERY FOR REALMS ... ISDESCENDANTNODE and NAME ....
+            where = "where name() = '" + name + "' and isdescendantnode(['/" + realm + "'])";
+            //            where = "where [jcr:path] = '/" + realm + "/" + name + "'"
+            //            + " or [jcr:path] like '/" + realm + "/%/" + name + "'";
         }
 
-        return new DummyUser();
+        final String statement = "select * from [" + ItemType.USER + "] " + where;
+
+        Query query = session.getWorkspace().getQueryManager().createQuery(statement, Query.JCR_SQL2);
+        NodeIterator iter = query.execute().getNodes();
+        Node user = null;
+        while (iter.hasNext()) {
+            Node node = iter.nextNode();
+            if (node.isNodeType(ItemType.USER.getSystemName())) {
+                user = node;
+                break;
+            }
+        }
+        if (iter.hasNext()) {
+            log.error("More than one user found with name [{}] in realm [{}]");
+        }
+        return user;
     }
 
     protected User getFromRepository(String name) throws RepositoryException {
@@ -147,32 +209,6 @@ public class MgnlUserManager implements UserManager {
         }
 
         return newUserInstance(node);
-    }
-
-    /**
-     * Helper method to find a user in a certain realm. Uses JCR Query.
-     */
-    protected Content findUserNode(String realm, String name) throws RepositoryException {
-        String where = "where jcr:path = '/" + realm + "/" + name + "'";
-        where += " or jcr:path like '/" + realm + "/%/" + name + "'";
-
-        // the all realm searches the repository
-        if (Realm.REALM_ALL.equals(realm)) {
-            where = "where jcr:path like '%/" + name + "'";
-        }
-
-        String statement = "select * from " + ItemType.USER + " " + where;
-
-        QueryManager qm = getHierarchyManager().getQueryManager();
-        Query query = qm.createQuery(statement, Query.SQL);
-        Collection<Content> users = query.execute().getContent(ItemType.USER.getSystemName());
-        if (users.size() == 1) {
-            return users.iterator().next();
-        }
-        else if (users.size() > 1) {
-            log.error("More than one user found with name [{}] in realm [{}]");
-        }
-        return null;
     }
 
     /**
@@ -193,64 +229,95 @@ public class MgnlUserManager implements UserManager {
      * Get all users managed by this user manager.
      */
     public Collection<User> getAllUsers() {
-        Collection<User> users = new ArrayList<User>();
-        try {
-            Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
-            for (Content node : nodes) {
-                users.add(newUserInstance(node));
+        return MgnlContext.doInSystemContext(new SilentSessionOp<Collection<User>>(getRepositoryName()) {
+
+            @Override
+            public Collection<User> doExec(Session session) throws RepositoryException {
+                List<User> users = new ArrayList<User>();
+                for (NodeIterator iter = session.getNode("/" + realmName).getNodes(); iter.hasNext();) {
+                    Node node = iter.nextNode();
+                    if (!node.isNodeType(ItemType.USER.getSystemName())) {
+                        continue;
+                    }
+                    users.add(newUserInstance(node));
+                }
+                return users;
             }
-        }
-        catch (Exception e) {
-            log.error("can't find user");
-        }
-        return users;
+
+            @Override
+            public String toString() {
+                return "get all users";
+            }
+
+        });
     }
 
-    public User createUser(String name, String pw) {
+    public User createUser(final String name, final String pw) {
         validateUsername(name);
-        try {
-            final Content node = createUserNode(name);
-            node.createNodeData("name").setValue(name);
-            setPasswordProperty(node, pw);
-            node.createNodeData("language").setValue("en");
+        return MgnlContext.doInSystemContext(new SilentSessionOp<MgnlUser>(getRepositoryName()) {
 
-            final String handle = node.getHandle();
-            final Content acls = node.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
-            // read only access to the node itself
-            Content acl = acls.createContent(Path.getUniqueLabel(acls.getHierarchyManager(), acls.getHandle(), "0"), ItemType.CONTENTNODE);
-            acl.setNodeData("path", handle);
-            acl.setNodeData("permissions", new Long(Permission.READ));
-            // those who had access to their nodes should get access to their own props
-            addWrite(handle, PROPERTY_EMAIL, acls);
-            addWrite(handle, PROPERTY_LANGUAGE, acls);
-            addWrite(handle, PROPERTY_LASTACCESS, acls);
-            addWrite(handle, PROPERTY_PASSWORD, acls);
-            addWrite(handle, PROPERTY_TITLE, acls);
-            // and of course the meta data
-            addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
+            @Override
+            public MgnlUser doExec(Session session) throws RepositoryException {
+                Node userNode = session.getNode("/").addNode(name,ItemType.USER.getSystemName());
+                userNode.setProperty("name", name);
+                setPasswordProperty(userNode, pw);
+                userNode.setProperty("language", "en");
 
-            getHierarchyManager().save();
-            return newUserInstance(node);
-        }
-        catch (Exception e) {
-            log.info("can't create user [" + name + "]", e);
-            return null;
-        }
+                final String handle = userNode.getPath();
+                final Node acls = userNode.addNode(NODE_ACLUSERS, ItemType.CONTENTNODE.getSystemName());
+                // read only access to the node itself
+                Node acl = acls.addNode(Path.getUniqueLabel(session, acls.getPath(), "0"), ItemType.CONTENTNODE.getSystemName());
+                acl.setProperty("path", handle);
+                acl.setProperty("permissions", new Long(Permission.READ));
+                // those who had access to their nodes should get access to their own props
+                addWrite(handle, PROPERTY_EMAIL, acls);
+                addWrite(handle, PROPERTY_LANGUAGE, acls);
+                addWrite(handle, PROPERTY_LASTACCESS, acls);
+                addWrite(handle, PROPERTY_PASSWORD, acls);
+                addWrite(handle, PROPERTY_TITLE, acls);
+                // and of course the meta data
+                addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
+                session.save();
+                return new MgnlUser(userNode.getName(), getRealmName(), Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP);
+            }
+
+            @Override
+            public String toString() {
+                return "create user " + name;
+            }
+        });
     }
 
-    public void changePassword(User user, String newPassword) {
-        final Content userNode = ((MgnlUser) user).getUserNode();
-        try {
-            setPasswordProperty(userNode, newPassword);
-            userNode.save();
-        }
-        catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
-        }
+    public User changePassword(final User user, final String newPassword) {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<User>(getRepositoryName()) {
+
+            @Override
+            public User doExec(Session session) throws RepositoryException {
+                Node userNode = session.getNode("/" + realmName + "/" + user.getName());
+                setPasswordProperty(userNode, newPassword);
+
+                session.save();
+                return newUserInstance(userNode);
+            }
+
+            @Override
+            public String toString() {
+                return "change password of user " + user.getName();
+            }
+        });
     }
 
+    /**
+     * @deprecated since 5.0 use {@link #setPasswordProperty(Node, String)} instead
+     */
+    @Deprecated
     protected void setPasswordProperty(Content userNode, String clearPassword) throws RepositoryException {
-        userNode.createNodeData(PROPERTY_PASSWORD).setValue(encodePassword(clearPassword));
+        setPasswordProperty(userNode.getJCRNode(), clearPassword);
+    }
+
+
+    protected void setPasswordProperty(Node userNode, String clearPassword) throws RepositoryException {
+        userNode.setProperty(PROPERTY_PASSWORD, encodePassword(clearPassword));
     }
 
     protected String encodePassword(String clearPassword) {
@@ -276,24 +343,102 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * @deprecated since 4.3.1 - use {@link #newUserInstance(info.magnolia.cms.core.Content)}
+     * @deprecated since 4.3.1 - use {@link #newUserInstance(javax.jcr.Node)}
      */
+    @Deprecated
     protected MgnlUser userInstance(Content node) {
-        return new MgnlUser(node);
+        try {
+            return (MgnlUser) newUserInstance(node.getJCRNode());
+        } catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     /**
      * Creates a {@link MgnlUser} out of a jcr node. Can be overridden in order to provide a different implementation.
      * @since 4.3.1
+     * @deprecated since 5.0 use newUSerInstance(javax.jcr.Node) instead
      */
+    @Deprecated
     protected User newUserInstance(Content node) {
-        return userInstance(node);
+        try {
+            return newUserInstance(node.getJCRNode());
+        } catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
     }
 
-    private Content addWrite(String parentPath, String property, Content acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Content acl = acls.createContent(Path.getUniqueLabel(acls.getHierarchyManager(), acls.getHandle(), "0"), ItemType.CONTENTNODE);
-        acl.setNodeData("path", parentPath + "/" + property);
-        acl.setNodeData("permissions", new Long(Permission.ALL));
+    private Node addWrite(String parentPath, String property, Node acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Node acl = acls.addNode(Path.getUniqueLabel(acls.getSession(), acls.getPath(), "0"), ItemType.CONTENTNODE.getSystemName());
+        acl.setProperty("path", parentPath + "/" + property);
+        acl.setProperty("permissions", new Long(Permission.ALL));
         return acl;
+    }
+
+    public void updateLastAccessTimestamp(final User user) throws UnsupportedOperationException {
+        MgnlContext.doInSystemContext(new SilentSessionOp<Void>(getRepositoryName()) {
+
+            @Override
+            public Void doExec(Session session) throws RepositoryException {
+                String path = ((MgnlUser) user).getPath();
+                log.info("update access timestamp for {}", user.getName());
+                try {
+                    Node userNode = session.getNode(path);
+                    NodeDataUtil.updateOrCreate(userNode, "lastaccess", new GregorianCalendar());
+                    session.save();
+                }
+                catch (RepositoryException e) {
+                    session.refresh(false);
+                }
+                return null;
+            }
+            @Override
+            public String toString() {
+                return "update user "+user.getName()+" last access time stamp";
+            }
+        });
+    }
+
+    protected User newUserInstance(Node privilegedUserNode) throws ValueFormatException, PathNotFoundException, RepositoryException {
+        if (privilegedUserNode == null) {
+            return null;
+        }
+        Set<String> roles = JCRUtil.collectUniquePropertyNames(privilegedUserNode, "roles", ContentRepository.USER_ROLES, false);
+        Set<String> groups = JCRUtil.collectUniquePropertyNames(privilegedUserNode, "groups", ContentRepository.USER_GROUPS, false);
+
+        Map<String, String> properties = new HashMap<String, String>();
+        for (PropertyIterator iter = privilegedUserNode.getProperties(); iter.hasNext(); ) {
+            Property prop = iter.nextProperty();
+            if (prop.getName().startsWith("jcr:") || prop.getName().startsWith("mgnl:")) {
+                // skip special props
+                continue;
+            }
+            //TODO: should we check and skip binary props in case someone adds image to the user?
+            properties.put(prop.getName(), prop.getString());
+        }
+
+        MgnlUser user = new MgnlUser(privilegedUserNode.getName(), getRealmName(), groups, roles, properties);
+        // keep just a token to user, not the whole node
+        // TODO: would it be better to keep around UUID?
+        user.setPath(privilegedUserNode.getPath());
+
+        return user;
+    }
+
+    @Override
+    protected String getRepositoryName() {
+        return ContentRepository.USERS;
+    }
+
+    /**
+     * Sets access control list from a list of roles under the provided content object.
+     */
+    public Map<String, ACL> getACLs(final User user) {
+        if (!(user instanceof MgnlUser)) {
+            return null;
+        }
+        return super.getACLs(user.getName());
     }
 }

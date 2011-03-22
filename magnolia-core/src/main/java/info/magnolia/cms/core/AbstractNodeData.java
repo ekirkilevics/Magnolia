@@ -77,7 +77,7 @@ public abstract class AbstractNodeData implements NodeData{
     }
 
     public boolean isGranted(long permissions) {
-        return getHierarchyManager().getAccessManager().isGranted(getHandle(), permissions);
+        return getHierarchyManager().isGranted(getHandle(), permissions);
     }
 
     public String getString(String lineBreak) {
@@ -186,6 +186,7 @@ public abstract class AbstractNodeData implements NodeData{
         throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
     }
 
+    @Override
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getHierarchyManager().getName()).append(":");

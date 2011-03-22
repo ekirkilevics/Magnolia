@@ -53,19 +53,16 @@ import org.slf4j.LoggerFactory;
 public abstract class SecuritySupportBase implements SecuritySupport {
     private static final Logger log = LoggerFactory.getLogger(SecuritySupportBase.class);
 
+    public static final String DEFAULT_JAAS_LOGIN_CHAIN = "magnolia";
+
     public LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String customLoginModule) {
         Subject subject;
         try {
             LoginContext loginContext = createLoginContext(callbackHandler, customLoginModule);
             loginContext.login();
             subject = loginContext.getSubject();
-            User user = callbackHandler.getUser();
-            // not all jaas modules will support magnolia users
-            if(user == null){
-                user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
-            }
-            user.setSubject(subject);
-            return new LoginResult(LoginResult.STATUS_SUCCEEDED, user);
+            subject.getPrincipals(User.class);
+            return new LoginResult(LoginResult.STATUS_SUCCEEDED, extractUser(subject));
         }
         catch (LoginException e) {
             logLoginException(e);
@@ -88,8 +85,14 @@ public abstract class SecuritySupportBase implements SecuritySupport {
     }
 
     protected static LoginContext createLoginContext(CredentialsCallbackHandler callbackHandler, String customLoginModule) throws LoginException {
-        final String loginContextName = StringUtils.defaultString(customLoginModule, "magnolia");
+        final String loginContextName = StringUtils.defaultString(customLoginModule, DEFAULT_JAAS_LOGIN_CHAIN);
         return new LoginContext(loginContextName, callbackHandler);
     }
 
+    public User extractUser(Subject subject) {
+        for (User userPrincipal : subject.getPrincipals(User.class)) {
+            return userPrincipal;
+        }
+        return null;
+    }
 }

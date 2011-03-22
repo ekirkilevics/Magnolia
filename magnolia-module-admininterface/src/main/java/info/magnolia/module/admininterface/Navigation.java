@@ -36,12 +36,14 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +57,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Navigation {
 
-	private static final String CP_PREFIX = "contextPath + ";
+    private static final String CP_PREFIX = "contextPath + ";
 
     Logger log = LoggerFactory.getLogger(Navigation.class);
 
@@ -106,11 +108,11 @@ public class Navigation {
                     contextPath = CP_PREFIX;
                 }
                 str.append(MessageFormat.format(nodePattern, jsName,
-                mp.getUUID(),
-                getLabel(mp),
-                NodeDataUtil.getString(mp, "onclick"),
-                contextPath,
-                icon));
+                        mp.getUUID(),
+                        getLabel(mp),
+                        NodeDataUtil.getString(mp, "onclick"),
+                        contextPath,
+                        icon));
 
 
                 // sub menupoints (2 level only)
@@ -123,12 +125,12 @@ public class Navigation {
                             subContextPath = CP_PREFIX;
                         }
                         str.append(MessageFormat.format(subPattern, jsName,
-                        mp.getUUID(),
-                        sub.getUUID(),
-                        getLabel(sub),
-                        NodeDataUtil.getString(sub, "onclick"),
-                        subContextPath,
-                        subIcon));
+                                mp.getUUID(),
+                                sub.getUUID(),
+                                getLabel(sub),
+                                NodeDataUtil.getString(sub, "onclick"),
+                                subContextPath,
+                                subIcon));
 
                     }
                 }
@@ -151,7 +153,12 @@ public class Navigation {
      * @return
      */
     protected boolean isMenuPointRendered(Content mp) {
-        return MgnlContext.getAccessManager(ContentRepository.CONFIG).isGranted(mp.getHandle(), Permission.READ);
+        try {
+            return MgnlContext.getSession(ContentRepository.CONFIG).hasPermission(mp.getHandle(), Session.ACTION_READ);
+        } catch (RepositoryException e) {
+            log.debug("Failed to read navigation permission", e);
+            return false;
+        }
     }
 
     /**

@@ -135,8 +135,8 @@ public class GenericTasks {
                         "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
 
                 // --- user/roles repositories related tasks
-                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
-                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
+                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", ContentRepository.USERS, "/", Realm.REALM_SYSTEM.getName(), ItemType.NT_FOLDER),
+                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", ContentRepository.USERS, "/", Realm.REALM_ADMIN.getName(), ItemType.NT_FOLDER),
 
                 new IsAuthorInstanceDelegateTask("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.",
                         new AddURIPermissionsToAllRoles(true),

@@ -98,26 +98,26 @@ public class MailUtil {
      */
     public static List<MailAttachment> createAttachmentList() {
         List<MailAttachment> attachments = new ArrayList<MailAttachment>();
-         try {
-             // get any possible attachment
-             if(MgnlContext.getPostedForm() != null) {
-                 MultipartForm form = MgnlContext.getPostedForm();
-                 Map<String, Document> docs = form.getDocuments();
+        try {
+            // get any possible attachment
+            if(MgnlContext.getPostedForm() != null) {
+                MultipartForm form = MgnlContext.getPostedForm();
+                Map<String, Document> docs = form.getDocuments();
 
-                 for (Entry<String, Document> entry : docs.entrySet()) {
-                     Document doc = entry.getValue();
+                for (Entry<String, Document> entry : docs.entrySet()) {
+                    Document doc = entry.getValue();
 
-                     if (doc != null) {
-                         attachments.add(new MailAttachment(doc.getFile().toURL(), entry.getKey()));
-                     }
-                 }
-             }
+                    if (doc != null) {
+                        attachments.add(new MailAttachment(doc.getFile().toURL(), entry.getKey()));
+                    }
+                }
+            }
 
-         } catch (Exception e) {
+        } catch (Exception e) {
 
-         }
-         return attachments;
-     }
+        }
+        return attachments;
+    }
 
     public static List<MailAttachment> createAttachmentList(Map parameters) {
         List<MailAttachment> attachments = new ArrayList<MailAttachment>();
@@ -218,8 +218,8 @@ public class MailUtil {
      */
     protected static Collection<Content> getAllUserNodes() throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
-        Collection<Content> users = hm.getContent(Realm.REALM_ADMIN).getChildren(ItemType.USER);
-        users.addAll(hm.getContent(Realm.REALM_SYSTEM).getChildren(ItemType.USER));
+        Collection<Content> users = hm.getContent(Realm.REALM_ADMIN.getName()).getChildren(ItemType.USER);
+        users.addAll(hm.getContent(Realm.REALM_SYSTEM.getName()).getChildren(ItemType.USER));
         return users;
     }
 
@@ -230,7 +230,7 @@ public class MailUtil {
     public static Object getParameter(Map<String, Object> param, String name, String defaultValue) {
 
         if(param != null && param.containsKey(name)) {
-          return param.get(name);
+            return param.get(name);
         } else {
             return defaultValue;
         }

@@ -48,37 +48,15 @@ public interface ACL extends Principal, Serializable {
 
     public String getName();
 
-    public void setName(String name);
-
     /**
      * Get repository ID for which this ACL has been constructed.
      */
     public String getRepository();
 
     /**
-     * Set repository ID for which this ACL will be constructed.
-     */
-    public void setRepository(String repository);
-
-    /**
      * Get workspace ID for which this ACL has been constructed.
      */
     public String getWorkspace();
-
-    /**
-     * Set workspace ID for which this ACL will be constructed.
-     */
-    public void setWorkspace(String workspace);
-
-    /**
-     * Add permission in to an existing list.
-     */
-    public void addPermission(Object permission);
-
-    /**
-     * Initialize access control list with provided permissions it will overwrite any existing permissions set before.
-     */
-    public void setList(List<Permission> list);
 
     /**
      * Returns list of permissions for this principal.

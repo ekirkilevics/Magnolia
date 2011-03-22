@@ -1,19 +1,19 @@
 /**
  * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
- * 
- * 
+ *
+ *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
- * 
+ *
  * This file is distributed in the hope that it will be
  * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
  * Redistribution, except as permitted by whichever of the GPL
  * or MNA you select, is prohibited.
- * 
+ *
  * 1. For the GPL license (GPL), you can redistribute and/or
  * modify this file under the terms of the GNU General
  * Public License, Version 3, as published by the Free Software
@@ -21,15 +21,15 @@
  * General Public License, Version 3 along with this program;
  * if not, write to the Free Software Foundation, Inc., 51
  * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
  * is available at http://www.magnolia-cms.com/mna.html
- * 
+ *
  * Any modifications to this file must keep this entire header
  * intact.
- * 
+ *
  */
 package info.magnolia.cms.core;
 
@@ -83,38 +83,41 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * @deprecated
      */
+    @Deprecated
     public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return setNodeData(name, value);
     }
 
     /**
-     * @deprecated 
+     * @deprecated
      */
+    @Deprecated
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         // set some default values to create the property
         switch (type) {
-            case PropertyType.STRING:
-                return setNodeData(name, StringUtils.EMPTY);
-            case PropertyType.BOOLEAN:
-                return setNodeData(name, Boolean.FALSE);
-            case PropertyType.DATE:
-                return setNodeData(name, Calendar.getInstance());
-            case PropertyType.LONG:
-                return setNodeData(name, new Long(0));
-            case PropertyType.DOUBLE:
-                return setNodeData(name, new Double(0.0));
-            default:
-                return newNodeDataInstance(name, type, true);
+        case PropertyType.STRING:
+            return setNodeData(name, StringUtils.EMPTY);
+        case PropertyType.BOOLEAN:
+            return setNodeData(name, Boolean.FALSE);
+        case PropertyType.DATE:
+            return setNodeData(name, Calendar.getInstance());
+        case PropertyType.LONG:
+            return setNodeData(name, new Long(0));
+        case PropertyType.DOUBLE:
+            return setNodeData(name, new Double(0.0));
+        default:
+            return newNodeDataInstance(name, type, true);
         }
     }
-    
+
     /**
      * @deprecated
      */
+    @Deprecated
     public NodeData createNodeData(String name, Object valueObj) throws RepositoryException {
         return setNodeData(name, valueObj);
     }
-    
+
     /**
      * {@inheritDoc}
      * Delegates to {@link #newNodeDataInstance(String, int, boolean)} by setting the type to PropertyType.UNDEFINED. A subclass has to handle this by trying to determine the type if the node data exists. The reason for this is that implementations want to instantiate different node data classes per type
@@ -128,10 +131,10 @@ public abstract class AbstractContent extends ContentHandler implements Content 
             throw new IllegalStateException("Can't instantiate node data " + name + " on node " + toString(), e);
         }
     }
-    
+
     /**
      * As defined in {@link Content#getNodeData(String)} this method always returns a node data object. If the type is {@link PropertyType#UNDEFINED} the implementation should check if the node data exists and determine the type to use.
-     * 
+     *
      * @param createIfNotExisting if false an empty non-mutable node data will be returned if the node data doesn't exist otherwise a mutable nodedata object is returned (depending on the type)
      */
     abstract public NodeData newNodeDataInstance(String name, int type, boolean createIfNotExisting) throws AccessDeniedException, RepositoryException;
@@ -157,49 +160,49 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, boolean value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.BOOLEAN, true);
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, long value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.LONG, true);
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, double value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.DOUBLE, true);
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, String value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, InputStream value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.BINARY, true);
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, Calendar value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.DATE, true);
         nodeData.setValue(value);
         return nodeData;
     }
-    
+
     public NodeData setNodeData(String name, Content value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         NodeData nodeData = newNodeDataInstance(name, PropertyType.STRING, true);
         nodeData.setValue(value.getUUID());
         return nodeData;
     }
-    
+
     /**
      * Uses the {@link NodeDataUtil} to create and set the node data based on the object type.
      */
@@ -208,7 +211,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         NodeDataUtil.setValue(nodeData, value);
         return nodeData;
     }
-    
+
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
         getNodeData(name).delete();
     }
@@ -219,13 +222,13 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      */
     public Collection<Content> getChildren() {
         String type = null;
-    
+
         try {
             type = this.getNodeTypeName();
         }
         catch (RepositoryException re) {
             throw new RuntimeException("Can't read type of node [" + toString() + "]", re);
-    
+
         }
         // fix all getChildren calls from the root node
         if ("rep:root".equalsIgnoreCase(type)) { //$NON-NLS-1$
@@ -238,7 +241,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
-     */    
+     */
     public Collection<Content> getChildren(ContentFilter filter) {
         return getChildren(filter, null);
     }
@@ -246,7 +249,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, java.util.Comparator).
-     */    
+     */
     public Collection<Content> getChildren(ItemType itemType) {
         return getChildren(new NodeTypeFilter(itemType), null);
     }
@@ -262,7 +265,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * {@inheritDoc}
      * Delegates to {@link #getChildren(info.magnolia.cms.core.Content.ContentFilter, String, java.util.Comparator)}.
-     */    
+     */
     public Collection<Content> getChildren(final String contentType, final String namePattern) {
         return getChildren(new NodeTypeFilter(contentType), namePattern, null);
     }
@@ -283,6 +286,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     /**
      * @deprecated
      */
+    @Deprecated
     public Content getChildByName(String namePattern) {
         Collection<Content> children = getChildren("nt:base", namePattern);;
         if (!children.isEmpty()) {
@@ -312,7 +316,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     public boolean hasChildren(String contentType) {
         return (this.getChildren(contentType).size() > 0);
     }
-    
+
     public void delete(String path) throws RepositoryException {
         if(isNodeData(path)){
             deleteNodeData(path);
@@ -342,13 +346,14 @@ public abstract class AbstractContent extends ContentHandler implements Content 
     }
 
     public boolean isGranted(long permissions) {
-        return hierarchyManager.getAccessManager().isGranted(getHandle(), permissions);
+        return hierarchyManager.isGranted(getHandle(), permissions);
     }
 
     public Workspace getWorkspace() throws RepositoryException {
         return getHierarchyManager().getWorkspace();
     }
-    
+
+    @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append(getHierarchyManager() == null ? "null" : getHierarchyManager().getName());

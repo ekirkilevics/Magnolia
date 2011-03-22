@@ -51,6 +51,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.jcr.Node;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -78,8 +79,8 @@ public class NodeDataUtil {
         if(nodeData.getType() == PropertyType.DATE){
             try{
                 dateFormat = FastDateFormat.getDateInstance(
-                FastDateFormat.SHORT,
-                MgnlContext.getLocale()).getPattern();
+                        FastDateFormat.SHORT,
+                        MgnlContext.getLocale()).getPattern();
             }
             // this happens if the context is not (yet) set
             catch(IllegalStateException e){
@@ -121,21 +122,21 @@ public class NodeDataUtil {
     public static String getValueString(Value value, String dateFormat) {
         try{
             switch (value.getType()) {
-                case (PropertyType.STRING):
-                    return value.getString();
-                case (PropertyType.DOUBLE):
-                    return Double.toString(value.getDouble());
-                case (PropertyType.LONG):
-                    return Long.toString(value.getLong());
-                case (PropertyType.BOOLEAN):
-                    return Boolean.toString(value.getBoolean());
-                case (PropertyType.DATE):
-                    Date valueDate = value.getDate().getTime();
-                    return DateUtil.format(valueDate, dateFormat);
-                case (PropertyType.BINARY):
-                    // ???
-                default:
-                    return StringUtils.EMPTY;
+            case (PropertyType.STRING):
+                return value.getString();
+            case (PropertyType.DOUBLE):
+                return Double.toString(value.getDouble());
+            case (PropertyType.LONG):
+                return Long.toString(value.getLong());
+            case (PropertyType.BOOLEAN):
+                return Boolean.toString(value.getBoolean());
+            case (PropertyType.DATE):
+                Date valueDate = value.getDate().getTime();
+            return DateUtil.format(valueDate, dateFormat);
+            case (PropertyType.BINARY):
+                // ???
+            default:
+                return StringUtils.EMPTY;
             }
         }
         catch (Exception e) {
@@ -207,20 +208,20 @@ public class NodeDataUtil {
     public static Object getValueObject(NodeData nd) {
         try {
             switch (nd.getType()) {
-                case (PropertyType.STRING):
-                    return nd.getString();
-                case (PropertyType.DOUBLE):
-                    return new Double(nd.getDouble());
-                case (PropertyType.LONG):
-                    return new Long(nd.getLong());
-                case (PropertyType.BOOLEAN):
-                    return Boolean.valueOf(nd.getBoolean());
-                case (PropertyType.DATE):
-                    return nd.getDate().getTime();
-                case (PropertyType.BINARY):
-                    return null;
-                default:
-                    return null;
+            case (PropertyType.STRING):
+                return nd.getString();
+            case (PropertyType.DOUBLE):
+                return new Double(nd.getDouble());
+            case (PropertyType.LONG):
+                return new Long(nd.getLong());
+            case (PropertyType.BOOLEAN):
+                return Boolean.valueOf(nd.getBoolean());
+            case (PropertyType.DATE):
+                return nd.getDate().getTime();
+            case (PropertyType.BINARY):
+                return null;
+            default:
+                return null;
             }
         }
         catch (Exception e) {
@@ -238,29 +239,29 @@ public class NodeDataUtil {
         }
         else{
             switch (getJCRPropertyType(valueObj)) {
-                case PropertyType.STRING:
-                    nodeData.setValue((String)valueObj);
-                    break;
-                case PropertyType.BOOLEAN:
-                    nodeData.setValue(((Boolean)valueObj).booleanValue());
-                    break;
-                case PropertyType.DATE:
-                    nodeData.setValue((Calendar)valueObj);
-                    break;
-                case PropertyType.LONG:
-                    nodeData.setValue(((Long)valueObj).longValue());
-                    break;
-                case PropertyType.DOUBLE:
-                    nodeData.setValue(((Double)valueObj).doubleValue());
-                    break;
-                case PropertyType.BINARY:
-                    nodeData.setValue((InputStream)valueObj);
-                    break;
-                case PropertyType.REFERENCE:
-                    nodeData.setValue((Content)valueObj);
-                    break;
-                default:
-                    nodeData.setValue(valueObj.toString());
+            case PropertyType.STRING:
+                nodeData.setValue((String)valueObj);
+                break;
+            case PropertyType.BOOLEAN:
+                nodeData.setValue(((Boolean)valueObj).booleanValue());
+                break;
+            case PropertyType.DATE:
+                nodeData.setValue((Calendar)valueObj);
+                break;
+            case PropertyType.LONG:
+                nodeData.setValue(((Long)valueObj).longValue());
+                break;
+            case PropertyType.DOUBLE:
+                nodeData.setValue(((Double)valueObj).doubleValue());
+                break;
+            case PropertyType.BINARY:
+                nodeData.setValue((InputStream)valueObj);
+                break;
+            case PropertyType.REFERENCE:
+                nodeData.setValue((Content)valueObj);
+                break;
+            default:
+                nodeData.setValue(valueObj.toString());
             }
         }
         return nodeData;
@@ -381,7 +382,7 @@ public class NodeDataUtil {
      * @throws RepositoryException
      */
     public static NodeData getOrCreate(Content node, String name, int type) throws AccessDeniedException,
-        RepositoryException {
+    RepositoryException {
         if (node.hasNodeData(name)) {
             return node.getNodeData(name);
         }
@@ -390,7 +391,7 @@ public class NodeDataUtil {
     }
 
     public static NodeData getOrCreate(Content node, String name, Object obj) throws AccessDeniedException,
-        RepositoryException {
+    RepositoryException {
 
         return getOrCreate(node, name, getJCRPropertyType(obj));
     }
@@ -466,22 +467,22 @@ public class NodeDataUtil {
 
     public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
         switch (getJCRPropertyType(obj)) {
-            case PropertyType.STRING:
-                return valueFactory.createValue((String)obj);
-            case PropertyType.BOOLEAN:
-                return valueFactory.createValue(((Boolean)obj).booleanValue());
-            case PropertyType.DATE:
-                return valueFactory.createValue((Calendar)obj);
-            case PropertyType.LONG:
-                return valueFactory.createValue(((Long)obj).longValue());
-            case PropertyType.DOUBLE:
-                return valueFactory.createValue(((Double)obj).doubleValue());
-            case PropertyType.BINARY:
-                return valueFactory.createValue((InputStream)obj);
-            case PropertyType.REFERENCE:
-                return valueFactory.createValue(((Content)obj).getJCRNode());
-            default:
-                return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
+        case PropertyType.STRING:
+            return valueFactory.createValue((String)obj);
+        case PropertyType.BOOLEAN:
+            return valueFactory.createValue(((Boolean)obj).booleanValue());
+        case PropertyType.DATE:
+            return valueFactory.createValue((Calendar)obj);
+        case PropertyType.LONG:
+            return valueFactory.createValue(((Long)obj).longValue());
+        case PropertyType.DOUBLE:
+            return valueFactory.createValue(((Double)obj).doubleValue());
+        case PropertyType.BINARY:
+            return valueFactory.createValue((InputStream)obj);
+        case PropertyType.REFERENCE:
+            return valueFactory.createValue(((Content)obj).getJCRNode());
+        default:
+            return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
         }
     }
 
@@ -588,26 +589,26 @@ public class NodeDataUtil {
             for( int i = 0; i < values.length; i++) {
                 value = values[i];
                 switch (value.getType()) {
-                    case (PropertyType.STRING):
-                        list.add(value.getString());
-                        break;
-                    case (PropertyType.DOUBLE):
-                        list.add(Double.toString(value.getDouble()));
-                        break;
-                    case (PropertyType.LONG):
-                        list.add(Long.toString(value.getLong()));
-                        break;
-                    case (PropertyType.BOOLEAN):
-                        list.add(Boolean.toString(value.getBoolean()));
-                        break;
-                    case (PropertyType.DATE):
-                        Date valueDate = value.getDate().getTime();
-                        list.add(DateUtil.format(valueDate, NodeDataUtil.getDateFormat()));
-                        break;
-                    case (PropertyType.BINARY):
-                        // for lack of better solution, fall through to the default - empty string
-                    default:
-                        list.add(StringUtils.EMPTY);
+                case (PropertyType.STRING):
+                    list.add(value.getString());
+                break;
+                case (PropertyType.DOUBLE):
+                    list.add(Double.toString(value.getDouble()));
+                break;
+                case (PropertyType.LONG):
+                    list.add(Long.toString(value.getLong()));
+                break;
+                case (PropertyType.BOOLEAN):
+                    list.add(Boolean.toString(value.getBoolean()));
+                break;
+                case (PropertyType.DATE):
+                    Date valueDate = value.getDate().getTime();
+                list.add(DateUtil.format(valueDate, NodeDataUtil.getDateFormat()));
+                break;
+                case (PropertyType.BINARY):
+                    // for lack of better solution, fall through to the default - empty string
+                default:
+                    list.add(StringUtils.EMPTY);
                 }
             }
         }
@@ -621,13 +622,24 @@ public class NodeDataUtil {
         String dateFormat = null;
         try{
             dateFormat = FastDateFormat.getDateInstance(
-            FastDateFormat.SHORT,
-            MgnlContext.getLocale()).getPattern();
+                    FastDateFormat.SHORT,
+                    MgnlContext.getLocale()).getPattern();
         }
         // this happens if the context is not (yet) set
         catch(IllegalStateException e){
             dateFormat = DateUtil.YYYY_MM_DD;
         }
         return dateFormat;
+    }
+
+    /**
+     * Updates existing property or creates a new one if it doesn't exist already.
+     */
+    public static void updateOrCreate(Node node, String string, GregorianCalendar gregorianCalendar) throws RepositoryException {
+        if (node.hasProperty(string)) {
+            node.getProperty(string).setValue(gregorianCalendar);
+        } else {
+            node.setProperty(string, gregorianCalendar);
+        }
     }
 }

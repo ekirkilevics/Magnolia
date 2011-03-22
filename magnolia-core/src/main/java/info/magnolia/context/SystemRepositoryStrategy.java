@@ -33,17 +33,24 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.SystemUserManager;
 import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jcr.Credentials;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+
+import org.apache.commons.lang.UnhandledException;
 
 /**
  * Uses a single full access AccessManager. JCR sessions are only released if no event listener were registered.
@@ -52,23 +59,16 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
     private static final Logger log = LoggerFactory.getLogger(SystemRepositoryStrategy.class);
 
-    private final WorkspaceAccessUtil workspaceAccessUtil;
-    private AccessManager accessManager;
-
     public SystemRepositoryStrategy(SystemContext context) {
-        this(context, WorkspaceAccessUtil.getInstance());
+        // TODO: deprecate?
     }
 
-    public SystemRepositoryStrategy(SystemContext context, WorkspaceAccessUtil workspaceAccessUtil) {
-        this.workspaceAccessUtil = workspaceAccessUtil;
-    }
-
+    /**
+     * @deprecated since 5.0, permissions are checked directly by jcr now. Use Session.hasPermission() directly
+     */
+    @Deprecated
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        if (accessManager == null) {
-            accessManager = workspaceAccessUtil.createAccessManager(getSystemPermissions(), repositoryId, workspaceId);
-        }
-
-        return accessManager;
+        return null;
     }
 
     protected List<Permission> getSystemPermissions() {
@@ -84,6 +84,17 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     @Override
     protected String getUserId() {
         return SystemUserManager.SYSTEM_USER;
+    }
+
+    @Override
+    public Session getSession(String repositoryName, String workspaceName) {
+        Credentials creds = new SimpleCredentials(ContentRepository.REPOSITORY_USER,ContentRepository.REPOSITORY_PSWD.toCharArray());
+        try {
+            return super.getRepositorySession(creds, repositoryName, workspaceName);
+        } catch (RepositoryException e) {
+            throw new UnhandledException(e);
+        }
+
     }
 
     public void release() {

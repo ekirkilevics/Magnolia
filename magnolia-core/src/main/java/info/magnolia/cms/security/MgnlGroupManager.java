@@ -35,75 +35,126 @@ package info.magnolia.cms.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.PathNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.Query;
 
 
 /**
- * Manages groups stored in the {@link ContentRepository#USER_GROUPS} workspace.
+ * Group manager working directly with JCR API and returning simple groups (no JCR node aware).
  * @author Sameer Charles $Id$
  */
-public class MgnlGroupManager implements GroupManager {
+public class MgnlGroupManager extends RepositoryBackedSecurityManager implements GroupManager {
     private static final Logger log = LoggerFactory.getLogger(MgnlGroupManager.class);
 
-    public Group createGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
-        try {
-            Content node = getHierarchyManager().createContent("/", name, ItemType.GROUP.getSystemName());
-            getHierarchyManager().save();
-            return newGroupInstance(node);
-        }
-        catch (Exception e) {
-            log.error("can't create group [" + name + "]", e);
-            return null;
-        }
+    public Group createGroup(final String name) throws AccessDeniedException {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<MgnlGroup>(getRepositoryName()) {
+
+            @Override
+            public MgnlGroup doExec(Session session) throws RepositoryException {
+                Node groupNode = session.getNode("/").addNode(name,ItemType.GROUP.getSystemName());
+                session.save();
+                return new MgnlGroup(groupNode.getIdentifier(), groupNode.getName(), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+            }
+
+            @Override
+            public String toString() {
+                return "create group " + name;
+            }
+        });
     }
 
-    public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
-        try {
-            return newGroupInstance(getHierarchyManager().getContent(name));
-        } catch (PathNotFoundException e) {
-            // this is not an error, once we have MAGNOLIA-1757 implemented we can change this.
-            log.warn("can't find group [" + name + "] in magnolia");
-            log.debug("can't find group [" + name + "] in magnolia", e);
-        } catch (AccessDeniedException e) {
-            throw e;
-        } catch (Throwable e) {
-            log.error("Exception while retrieving group", e);
-        }
-        return null;
+    public Group getGroup(final String name) throws AccessDeniedException {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<Group>(getRepositoryName()) {
+
+            @Override
+            public Group doExec(Session session) throws RepositoryException {
+                Node groupNode = session.getNode("/" + name);
+                return newGroupInstance(groupNode);
+            }
+
+            @Override
+            public String toString() {
+                return "get group " + name;
+            }
+        });
     }
 
     public Collection<Group> getAllGroups() {
-        Collection<Group> groups = new ArrayList<Group>();
-        try {
-            Collection<Content> nodes = getHierarchyManager().getRoot().getChildren(ItemType.GROUP);
-            for (Content node : nodes) {
-                groups.add(newGroupInstance(node));
+        return MgnlContext.doInSystemContext(new SilentSessionOp<Collection<Group>>(getRepositoryName()) {
+
+            @Override
+            public Collection<Group> doExec(Session session) throws RepositoryException {
+                List<Group> groups = new ArrayList<Group>();
+                for (NodeIterator iter = session.getNode("/").getNodes(); iter.hasNext();) {
+                    Node node = iter.nextNode();
+                    if (!node.isNodeType(ItemType.GROUP.getSystemName())) {
+                        continue;
+                    }
+                    groups.add(newGroupInstance(node));
+                }
+                return groups;
+            }
+
+            @Override
+            public String toString() {
+                return "get all groups";
+            }
+
+        });
+    }
+
+    protected Group newGroupInstance(Node node) throws RepositoryException {
+        List<String> groups = new ArrayList<String>();
+        for (NodeIterator iter = node.getNode("groups").getNodes();iter.hasNext();) {
+            Node subgroup = iter.nextNode();
+            groups.add(subgroup.getName());
+        }
+        List<String> roles = new ArrayList<String>();
+        for (NodeIterator iter = node.getNode("roles").getNodes();iter.hasNext();) {
+            Node role = iter.nextNode();
+            roles.add(role.getName());
+        }
+        MgnlGroup group = new MgnlGroup(node.getIdentifier(), node.getName(), groups, roles);
+        return group;
+    }
+
+    @Override
+    protected Node findPrincipalNode(String principalName, Session session) throws RepositoryException {
+        final String where = "where name() = '" + principalName + "'";
+
+        final String statement = "select * from [" + ItemType.GROUP + "] " + where;
+
+        Query query = session.getWorkspace().getQueryManager().createQuery(statement, Query.JCR_SQL2);
+        NodeIterator iter = query.execute().getNodes();
+        Node group = null;
+        while (iter.hasNext()) {
+            Node node = iter.nextNode();
+            if (node.isNodeType(ItemType.USER.getSystemName())) {
+                group = node;
+                break;
             }
         }
-        catch (Exception e) {
-            log.error("can't find user");
+        if (iter.hasNext()) {
+            log.error("More than one group found with name [{}] in realm [{}]");
         }
-        return groups;
+        return group;
     }
 
-    protected Group newGroupInstance(Content node) {
-        return new MgnlGroup(node);
-    }
-
-    /**
-     * Returns the HierarchyManager (through the system context).
-     */
-    protected HierarchyManager getHierarchyManager() {
-        return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
+    @Override
+    protected String getRepositoryName() {
+        return ContentRepository.USER_GROUPS;
     }
 }

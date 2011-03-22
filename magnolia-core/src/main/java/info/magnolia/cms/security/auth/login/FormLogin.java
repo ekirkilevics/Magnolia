@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security.auth.login;
 
+import info.magnolia.cms.security.SecuritySupportBase;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 
@@ -61,10 +62,11 @@ public class FormLogin extends LoginHandlerBase implements LoginHandler {
      * The JAAS chain/module to use.
      */
 
-    private String jaasChain = "magnolia";
+    private String jaasChain = SecuritySupportBase.DEFAULT_JAAS_LOGIN_CHAIN;
 
     public LoginResult handle(HttpServletRequest request, HttpServletResponse response) {
         String userid = request.getParameter(PARAMETER_USER_ID);
+        log.debug("handle login for {}", userid);
         if (StringUtils.isNotEmpty(userid)) {
             String pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
             String realm = StringUtils.defaultString(request.getParameter(PARAMETER_REALM));

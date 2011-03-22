@@ -34,6 +34,7 @@
 package info.magnolia.jcr.util;
 
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -54,7 +55,7 @@ public class JCRMetadataUtil {
 
         public JCRMetaData(Node node) {
             // do not use AccessManager for now
-            super(node, null);
+            super(node, (AccessManager) null);
         }
     }
 
@@ -66,14 +67,14 @@ public class JCRMetadataUtil {
         MetaData metaData = new JCRMetaData(parent);
         String imgSrc;
         switch (metaData.getActivationStatus()) {
-            case MetaData.ACTIVATION_STATUS_MODIFIED:
-                imgSrc = "indicator_yellow.gif";
-                break;
-            case MetaData.ACTIVATION_STATUS_ACTIVATED:
-                imgSrc = "indicator_green.gif";
-                break;
-            default:
-                imgSrc = "indicator_red.gif";
+        case MetaData.ACTIVATION_STATUS_MODIFIED:
+            imgSrc = "indicator_yellow.gif";
+            break;
+        case MetaData.ACTIVATION_STATUS_ACTIVATED:
+            imgSrc = "indicator_green.gif";
+            break;
+        default:
+            imgSrc = "indicator_red.gif";
         }
         return imgSrc;
     }

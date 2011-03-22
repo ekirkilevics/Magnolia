@@ -33,214 +33,100 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.util.NodeDataUtil;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import java.util.Collection;
+import java.util.Collections;
 
 
 /**
- * A group stored in the {@link ContentRepository#USER_GROUPS} workspace.
+ * A group implementation. This bean is not connected to the underlying group storage.
  * @author Sameer Charles $Id$
  */
 public class MgnlGroup implements Group {
     private static final Logger log = LoggerFactory.getLogger(MgnlGroup.class);
 
-    /**
-     * Name of the subnode under which the assigned roles get saved.
-     */
-    private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
+    private final String name;
+    private final Collection<String> groups;
+    private final Collection<String> roles;
+    private final String id;
 
-    /**
-     * Name of the subnode under which the assigned groups get saved.
-     */
-    private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
-
-    /**
-     * The node in the workspace.
-     */
-    private final Content groupNode;
-
-    /**
-     * @param groupNode the Content object representing this group
-     */
-    protected MgnlGroup(Content groupNode) {
-        this.groupNode = groupNode;
+    public MgnlGroup(String id, String groupName, Collection<String> subgroupNames, Collection<String> roleNames) {
+        this.id = id;
+        this.name = groupName;
+        this.groups = Collections.unmodifiableCollection(subgroupNames);
+        this.roles = Collections.unmodifiableCollection(roleNames);
     }
 
     public String getName() {
-        return getGroupNode().getName();
+        return this.name;
     }
 
     public void addRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
-        this.add(roleName, NODE_ROLES);
+        throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
     /**
      * Add a subgroup to this group.
      */
     public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException {
-        this.add(groupName, NODE_GROUPS);
+        throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
-        this.remove(roleName, NODE_ROLES);
+        throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
     /**
      * Remove a subgroup from this group.
      */
     public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException {
-        this.remove(groupName, NODE_GROUPS);
+        throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
-        return this.hasAny(roleName, NODE_ROLES);
+        return this.roles.contains(roleName);
     }
 
+    /**
+     * FIXME: Yet another method that is questionable. Either we take all arbitrary properties of the group and load them in memory,
+     * wasting the time and memory on group instance creation or such props should be requested on demand from the manager.
+     * The fact that group interface exposes also setter for this method makes it even worse!
+     */
     public String getProperty(String propertyName) {
-        return NodeDataUtil.getString(getGroupNode(), propertyName, null);
+        throw new UnsupportedOperationException("Use manager to retrieve arbitrary group properties");
     }
 
     public void setProperty(String propertyName, String value) {
-        try {
-            NodeDataUtil.getOrCreateAndSet(getGroupNode(), propertyName, value);
-            getGroupNode().save();
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
-        }
+        throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
+    /**
+     * Returns read only roles collection.
+     * @see info.magnolia.cms.security.Group#getRoles()
+     */
     public Collection<String> getRoles() {
-        return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "roles", ContentRepository.USER_ROLES, false);
+        return Collections.unmodifiableCollection(this.roles);
     }
 
+    /**
+     * Returns read only groups collection.
+     * @see info.magnolia.cms.security.Group#getGroups()
+     */
     public Collection<String> getGroups() {
-        return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "groups", ContentRepository.USER_GROUPS, false);
+        return this.groups;
     }
 
+    /**
+     * FIXME: While this method could be potentially supported and can return all the groups that this group belongs to by inheritance,
+     * it doesn't seem to be great idea to pre-fill it on object creation and should be just requested on demand from manager.
+     */
     public Collection<String> getAllGroups() {
-        return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "groups", ContentRepository.USER_GROUPS, true);
+        throw new UnsupportedOperationException("Use manager to modify this group");
     }
 
-    // TODO the following methods need a complete rewrite. They work on the group or role subnode collection
-    // and perform the uuid to group/role name transformation. I rename the parameters to hopefully give a
-    // better hint.
-
-    private boolean hasAny(String groupOrRoleName, String collectionName) {
-        try {
-            final String hmName;
-            if (StringUtils.equalsIgnoreCase(collectionName, NODE_ROLES)) {
-                hmName = ContentRepository.USER_ROLES;
-            }
-            else {
-                hmName = ContentRepository.USER_GROUPS;
-            }
-            final HierarchyManager hm = MgnlSecurityUtil.getSystemHierarchyManager(hmName);
-
-            Content node = getGroupNode().getContent(collectionName);
-            for (NodeData nodeData : node.getNodeDataCollection()) {
-                // check for the existence of this ID
-                try {
-                    if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(groupOrRoleName)) {
-                        return true;
-                    }
-                }
-                catch (ItemNotFoundException e) {
-                    log.debug("[{}] does not exist in the {} repository", groupOrRoleName, hmName);
-                }
-                catch (IllegalArgumentException e) {
-                    log.debug(nodeData.getHandle() + " has invalid value");
-                }
-            }
-        }
-        catch (RepositoryException e) {
-            log.debug(e.getMessage(), e);
-        }
-        return false;
-    }
-
-    private void remove(String groupOrRoleName, String collectionName) {
-        try {
-            final String hmName;
-            if (StringUtils.equalsIgnoreCase(collectionName, NODE_ROLES)) {
-                hmName = ContentRepository.USER_ROLES;
-            }
-            else {
-                hmName = ContentRepository.USER_GROUPS;
-            }
-            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(hmName);
-            Content node = getGroupNode().getContent(collectionName);
-
-            for (NodeData nodeData: node.getNodeDataCollection()) {
-                // check for the existence of this ID
-                try {
-                    if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(groupOrRoleName)) {
-                        nodeData.delete();
-                    }
-                }
-                catch (ItemNotFoundException e) {
-                    log.debug("[{}] does not exist in the {} repository", groupOrRoleName, hmName);
-                }
-                catch (IllegalArgumentException e) {
-                    log.debug(nodeData.getHandle() + " has invalid value");
-                }
-            }
-            getGroupNode().save();
-        }
-        catch (RepositoryException e) {
-            log.error("failed to remove " + groupOrRoleName + " from group [" + this.getName() + "]", e);
-        }
-    }
-
-    private void add(String groupOrRoleName, String collectionName) {
-        try {
-            final Content groupNode = getGroupNode();
-            final String hmName;
-            if (StringUtils.equalsIgnoreCase(collectionName, NODE_ROLES)) {
-                hmName = ContentRepository.USER_ROLES;
-            } else {
-                hmName = ContentRepository.USER_GROUPS;
-            }
-
-            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(hmName);
-
-            if (!this.hasAny(groupOrRoleName, collectionName)) {
-                if (!groupNode.hasContent(collectionName)) {
-                    groupNode.createContent(collectionName, ItemType.CONTENTNODE);
-                }
-                Content node = groupNode.getContent(collectionName);
-                // add corresponding ID
-                try {
-                    String value = hm.getContent("/" + groupOrRoleName).getUUID(); // assuming that there is a flat hierarchy
-                    // used only to get the unique label
-                    final HierarchyManager sysHM = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
-                    final String newName = Path.getUniqueLabel(sysHM, node.getHandle(), "0");
-                    node.createNodeData(newName).setValue(value);
-                    groupNode.save();
-                }
-                catch (PathNotFoundException e) {
-                    log.debug("[{}] does not exist in the {} repository", groupOrRoleName, hmName);
-                }
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("failed to add " + groupOrRoleName + " to group [" + this.getName() + "]", e);
-        }
-    }
-
-    public Content getGroupNode() {
-        return groupNode;
+    public String getId() {
+        return id;
     }
 }

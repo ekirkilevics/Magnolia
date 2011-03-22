@@ -81,6 +81,7 @@ public class ServerConfiguration {
     /**
      * @deprecated since 5.0, use IoC
      */
+    @Deprecated
     public static ServerConfiguration getInstance() {
         return Components.getSingleton(ServerConfiguration.class);
     }
@@ -94,8 +95,10 @@ public class ServerConfiguration {
         }
 
         // the false parameter here is the important thing to keep (not recursive)
+        @Override
         protected ServerConfiguration transformNode(Content node) throws Content2BeanException {
             return (ServerConfiguration) Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl() {
+                @Override
                 public Object newBeanInstance(TransformationState state, Map properties) {
                     return new ServerConfiguration();
                 }

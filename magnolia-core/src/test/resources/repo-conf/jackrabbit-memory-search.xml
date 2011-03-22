@@ -3,6 +3,7 @@
 <!--
   TESTING-ONLY configuration!
   repositories are in memory only and any change is lost upon restart
+  also at this point all the rights are granted as security checks are done by jaas modules and access provider not configurable here.
 -->
 <Repository>
   <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />

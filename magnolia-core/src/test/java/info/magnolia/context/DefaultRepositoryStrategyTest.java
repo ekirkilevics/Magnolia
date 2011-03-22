@@ -56,50 +56,29 @@ import java.util.Set;
 public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
     public void testAccessManagers() {
         UserContext context = createMock(UserContext.class);
-        User user = createMock(User.class);
-        Set principalSet = new HashSet();
-        PrincipalCollection principals = createMock(PrincipalCollection.class);
-        principalSet.add(principals);
-        ACL acl = createMock(ACL.class);
-        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
-        expect(context.getUser()).andReturn(user);
-        expect(user.getSubject()).andReturn(subject);
-        expect(principals.get("repo1_space1")).andReturn(acl);
-        expect(acl.getList()).andReturn(new ArrayList());
-        replay(context, user, principals, acl);
+        replay(context);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
+        // Access Manager is no longer used and supported!
         AccessManager accessManager = strategy.getAccessManager("repo1", "space1");
-        assertNotNull(accessManager);
-        assertSame(accessManager, strategy.getAccessManager("repo1", "space1"));
-        verify(context, user, principals, acl);
+        assertNull(accessManager);
+        verify(context);
     }
 
     public void testRepositorySessions() throws Exception {
         UserContext context = createMock(UserContext.class);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
-        Session session = strategy.getRepositorySession("magnolia", "website");
+        Session session = strategy.getSession("magnolia", "website");
         assertNotNull(session);
         strategy.release();
     }
 
     public void testQueryManagers() {
         UserContext context = createMock(UserContext.class);
-        User user = createMock(User.class);
-        Set principalSet = new HashSet();
-        PrincipalCollection principals = createMock(PrincipalCollection.class);
-        principalSet.add(principals);
-        ACL acl = createMock(ACL.class);
-        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
-        expect(context.getUser()).andReturn(user).anyTimes();
-        expect(user.getName()).andReturn("admin").anyTimes();
-        expect(user.getSubject()).andReturn(subject);
-        expect(principals.get("magnolia_website")).andReturn(acl);
-        expect(acl.getList()).andReturn(new ArrayList());
-        replay(context, user, principals, acl);
+        replay(context);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
         QueryManager queryManager = strategy.getQueryManager("magnolia", "website");
         assertNotNull(queryManager);
-        verify(context, user, principals, acl);
+        verify(context);
     }
 
     public void testHierarchyManagers() {

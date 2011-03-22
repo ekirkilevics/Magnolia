@@ -33,7 +33,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.ACL;
+
 import javax.security.auth.Subject;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -63,7 +66,7 @@ public class DelegatingUserManager implements UserManager {
         return delegateUntilSupported(op);
     }
 
-    public void changePassword(User user, String newPassword) throws UnsupportedOperationException {
+    public User changePassword(User user, String newPassword) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Please use a specific instance of UserManager to do this.");
     }
 
@@ -109,6 +112,15 @@ public class DelegatingUserManager implements UserManager {
         });
     }
 
+    public void updateLastAccessTimestamp(final User user) {
+        delegateUntilSupported(new Op<Void>() {
+            public Void delegate(UserManager um) {
+                um.updateLastAccessTimestamp(user);
+                return null;
+            }
+        });
+    }
+
     private <RT> RT delegateUntilSupported(Op<RT> op) {
         for (String realmName : delegates.keySet()) {
             final UserManager um = delegates.get(realmName);
@@ -134,5 +146,21 @@ public class DelegatingUserManager implements UserManager {
 
     private interface Op<RT> {
         RT delegate(UserManager um);
+    }
+
+    public boolean hasAny(final String principal, final String resourceName, final String resourceTypeName) {
+        return delegateUntilSupported(new Op<Boolean>() {
+            public Boolean delegate(UserManager um) {
+                return um.hasAny(principal, resourceName, resourceTypeName);
+            }
+        });
+    }
+
+    public Map<String,ACL> getACLs(final User user) {
+        return delegateUntilSupported(new Op<Map<String,ACL>>() {
+            public Map<String,ACL> delegate(UserManager um) {
+                return um.getACLs(user);
+            }
+        });
     }
 }

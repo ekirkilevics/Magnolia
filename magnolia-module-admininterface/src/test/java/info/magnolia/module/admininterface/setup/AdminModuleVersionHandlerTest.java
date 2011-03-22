@@ -45,7 +45,6 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
-import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
@@ -62,7 +61,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     private static final String ADMIN_CENTRAL = "redirect:/.magnolia/pages/adminCentral.html";
 
     @Override
-    protected String getModuleDescriptorPath() {
+    public String getModuleDescriptorPath() {
         return "/META-INF/magnolia/admininterface.xml";
     }
 
@@ -76,7 +75,7 @@ public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase 
     }
 
     @Override
-    protected ModuleVersionHandler newModuleVersionHandlerForTests() {
+    public ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new AdminModuleVersionHandler();
     }
 

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.cms.security.auth.callback;
+package info.magnolia.cms.security;
 
-import info.magnolia.cms.security.Realm;
-
-import javax.security.auth.callback.Callback;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javax.jcr.Session;
 
 /**
- * The JCR JAAS module uses this callback to get the realm we login into.
- * @author philipp
- * @version $Id$
- * @deprecated
+ * Session operation that just logs all exceptions instead of re-throwing them.
+ * @author had
+ * @version $Id: $
+ * @param <T>
  */
-@Deprecated
-public class RealmCallback implements Callback {
+public abstract class SilentSessionOp<T> extends SessionOp<T, RuntimeException> {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(RealmCallback.class);
-
-    private Realm realm = Realm.DEFAULT_REALM;
-
-    public String getRealm() {
-        return this.realm.getName();
+    public SilentSessionOp(String repository) {
+        super(repository);
     }
 
-    public void setRealm(final String realm) {
-        this.realm = new Realm() {
-            public String getName() {
-                return realm;
-            }};
+    public SilentSessionOp(String repository, boolean closeOnExit) {
+        super(repository, closeOnExit);
     }
 
+    @Override
+    public T exec(Session session) {
+        try {
+            return doExec(session);
+        } catch (Throwable t) {
+            log.error("Failed to execute " + toString() + " session operation with " + t.getMessage(), t);
+            return null;
+        }
+    }
+
+    public abstract T doExec(Session session) throws Throwable;
 }

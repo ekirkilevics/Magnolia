@@ -34,8 +34,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
-
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -44,6 +42,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 
@@ -56,7 +55,9 @@ import org.slf4j.LoggerFactory;
  * Wrapper class for a jcr property.
  * @author Sameer Charles
  * @version 2.0 $Id$
+ * @deprecated since 5.0, use jcr.Property instead.
  */
+@Deprecated
 public class DefaultNodeData extends AbstractNodeData {
     private static final Logger log = LoggerFactory.getLogger(DefaultNodeData.class);
 
@@ -238,49 +239,50 @@ public class DefaultNodeData extends AbstractNodeData {
         return parent.getJCRNode();
     }
 
+    @Override
     protected Content getContentFromJCRReference() throws RepositoryException {
         return getHierarchyManager().getContent(getJCRProperty().getNode().getPath());
     }
 
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);
     }
 
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);    }
 
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);    }
 
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value);    }
 
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         getJCRNode().setProperty(name, value.getJCRNode());
     }
 
@@ -304,7 +306,7 @@ public class DefaultNodeData extends AbstractNodeData {
     }
 
     public void delete() throws RepositoryException {
-        Access.isGranted(getHierarchyManager().getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.REMOVE);
+        Access.tryPermission(getJCRNode().getSession(), Path.getAbsolutePath(this.getHandle()), Session.ACTION_SET_PROPERTY);
         if(isExist()){
             getJCRProperty().remove();
         }

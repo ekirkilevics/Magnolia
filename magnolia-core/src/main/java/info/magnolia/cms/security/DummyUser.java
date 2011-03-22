@@ -50,13 +50,14 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision:9391 $ ($Author:scharles $)
  */
+@Deprecated
 public class DummyUser extends AbstractUser {
 
     private static final Logger log = LoggerFactory.getLogger(DummyUser.class);
 
     private static final String DEFAULT_LANGUAGE = "en";
 
-    DummyUser() {
+    public DummyUser() {
         log.info("Initializing dummy user - Anonymous");
         log.info("This area and/or instance is not secured");
     }

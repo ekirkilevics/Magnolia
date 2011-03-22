@@ -41,6 +41,8 @@ import info.magnolia.stats.JCRStats;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.jcr.Credentials;
+import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventListener;
@@ -66,6 +68,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
     private final Map<String, HierarchyManager> hierarchyManagers = new HashMap<String, HierarchyManager>();
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
+        log.debug("creating {}:{} HM for {}, using {} strategy", new Object[] {repositoryId, workspaceId, getUserId(), this.getClass().getName()});
         final String hmAttrName = repositoryId + "_" + workspaceId;
         HierarchyManager hm = hierarchyManagers.get(hmAttrName);
 
@@ -73,7 +76,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
                 hm = util.createHierarchyManager(getUserId(),
-                        getRepositorySession(repositoryId, workspaceId),
+                        getSession(repositoryId, workspaceId),
                         getAccessManager(repositoryId, workspaceId));
                 hierarchyManagers.put(hmAttrName, hm);
             }
@@ -91,7 +94,12 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
 
-    protected Session getRepositorySession(String repositoryName, String workspaceName) throws RepositoryException {
+    public Session getSession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
+        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+        return getRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
+    }
+
+    protected Session getRepositorySession(Credentials credentials, String repositoryName, String workspaceName) throws LoginException, RepositoryException {
         final String repoSessAttrName = repositoryName + "_" + workspaceName;
 
         Session jcrSession = jcrSessions.get(repoSessAttrName);
@@ -100,7 +108,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             log.debug("creating jcr session {} by thread {}", repositoryName, Thread.currentThread().getName());
 
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
+            jcrSession = util.createRepositorySession(credentials, repositoryName, workspaceName);
             jcrSessions.put(repoSessAttrName, jcrSession);
             incSessionCount(workspaceName);
         }

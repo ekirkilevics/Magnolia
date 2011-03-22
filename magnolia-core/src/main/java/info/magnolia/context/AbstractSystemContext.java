@@ -37,6 +37,7 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import info.magnolia.cms.i18n.MessagesManager;
 
 
@@ -46,6 +47,7 @@ import info.magnolia.cms.i18n.MessagesManager;
  * @version $Revision$ ($Author$)
  */
 public abstract class AbstractSystemContext extends AbstractContext implements SystemContext {
+
     private static final Logger log = LoggerFactory.getLogger(AbstractSystemContext.class);
 
     /**
@@ -62,6 +64,7 @@ public abstract class AbstractSystemContext extends AbstractContext implements S
         setAttributeStrategy(new MapAttributeStrategy());
     }
 
+    @Override
     public void setAttribute(String name, Object value, int scope) {
         if (scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE) {
             log.warn("you should not set an attribute in the system context in request or session scope. You are setting {}={}", name, value);
@@ -80,11 +83,14 @@ public abstract class AbstractSystemContext extends AbstractContext implements S
      * @deprecated since 4.0 - this shouldn't be exposed in the SystemContext interface. Prevent calls by
      * throwing an UnsupportedOperationException.
      */
+    @Deprecated
+    @Override
     public void setLocale(Locale locale) {
         throw new UnsupportedOperationException("setLocale() should not be called on SystemContext - system default locale is handled by MessagesManager");
     }
 
     // TODO - See MAGNOLIA-2531
+    @Override
     public Locale getLocale() {
         return MessagesManager.getInstance().getDefaultLocale();
     }

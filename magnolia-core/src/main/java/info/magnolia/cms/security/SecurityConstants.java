@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.cms.security.auth.callback;
-
-import info.magnolia.cms.security.Realm;
-
-import javax.security.auth.callback.Callback;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+package info.magnolia.cms.security;
 
 /**
- * The JCR JAAS module uses this callback to get the realm we login into.
- * @author philipp
- * @version $Id$
- * @deprecated
+ * Common constants used throughout the security.
+ *
+ * @author had
+ * @version $Id: $
  */
-@Deprecated
-public class RealmCallback implements Callback {
+public class SecurityConstants {
 
     /**
-     * Logger.
+     * Name of the subnode under which the assigned roles get saved.
      */
-    private static Logger log = LoggerFactory.getLogger(RealmCallback.class);
+    public static final String NODE_ROLES = "roles";
 
-    private Realm realm = Realm.DEFAULT_REALM;
-
-    public String getRealm() {
-        return this.realm.getName();
-    }
-
-    public void setRealm(final String realm) {
-        this.realm = new Realm() {
-            public String getName() {
-                return realm;
-            }};
-    }
+    /**
+     * Name of the subnode under which the assigned groups get saved.
+     */
+    public static final String NODE_GROUPS = "groups";
 
 }

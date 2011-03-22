@@ -33,9 +33,11 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 
@@ -72,7 +74,7 @@ public class ExternalUserManager implements UserManager {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
-    public void changePassword(User user, String newPassword) throws UnsupportedOperationException {
+    public User changePassword(User user, String newPassword) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
@@ -88,5 +90,17 @@ public class ExternalUserManager implements UserManager {
      */
     public User getAnonymousUser() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
+    }
+
+    public void updateLastAccessTimestamp(User user) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean hasAny(String name, String roleName, String nodeRoles) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    public Map<String,ACL> getACLs(User user) {
+        throw new UnsupportedOperationException("not implemented yet");
     }
 }

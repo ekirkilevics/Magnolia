@@ -33,7 +33,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.ACL;
+
 import java.util.Collection;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 
@@ -69,7 +72,9 @@ public interface UserManager {
     /**
      * Initialize new user using JAAS authenticated/authorized subject.
      * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     * @deprecated jaas login module should just request the user, not pass the subject around to the user manager
      */
+    @Deprecated
     public User getUser(Subject subject) throws UnsupportedOperationException;
 
     /**
@@ -99,8 +104,30 @@ public interface UserManager {
 
     /**
      * Sets a new password.
+     * @return user object with updated password.
      * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
-    public void changePassword(User user, String newPassword) throws UnsupportedOperationException;
+    public User changePassword(User user, String newPassword) throws UnsupportedOperationException;
+
+    /**
+     * Updates last access timestamp for the user.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
+    public void updateLastAccessTimestamp(User user) throws UnsupportedOperationException;
+
+    /**
+     * Checks whether principal belongs to the named resource.
+     * @param name principal name
+     * @param resourceName either group or role name
+     * @param resourceType either group or role see
+     * @return
+     */
+    public boolean hasAny(String principal, String resourceName, String resourceType);
+
+    /**
+     * Returns all ACLs assigned to the given user.
+     * @return
+     */
+    public Map<String, ACL> getACLs(User user);
 
 }

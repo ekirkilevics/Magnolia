@@ -33,31 +33,58 @@
  */
 package info.magnolia.cms.security;
 
+import java.security.Principal;
+
 /**
  * Provides the name for the default realm. A realm is a independent set of users.
  * @author philipp
  * @version $Id$
  */
-public interface Realm {
+public interface Realm extends Principal {
 
     /**
      * The realm for the admin interface.
      */
-    public static final String REALM_ADMIN = "admin";
+    public static final Realm REALM_ADMIN = new RealmImpl("admin");
 
     /**
      * No realm --> all users.
      */
-    public static final String REALM_ALL = "all";
+    public static final Realm REALM_ALL = new RealmImpl("all");
 
     /**
      * Contains not removable system users: anonymous, superuser.
      */
-    public static final String REALM_SYSTEM = "system";
+    public static final Realm REALM_SYSTEM = new RealmImpl("system");
 
     /**
      * The default realm is {@link Realm#REALM_ALL}.
      */
-    public static final String DEFAULT_REALM = REALM_ALL;
+    public static final Realm DEFAULT_REALM = REALM_ALL;
 
+    /**
+     * Implementation of the realm. Enum would be easier to read, but would not be backward compatible.
+     * @author had
+     * @version $Id$
+     */
+    class RealmImpl implements Realm {
+        private final String name;
+        public RealmImpl(String name) {
+            if (name == null) {
+                throw new NullPointerException("Realm name can't be null!");
+            }
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || !(o instanceof Realm) ) {
+                return false;
+            }
+            return this.name.equals(((Realm) o).getName());
+        }
+    }
 }

@@ -34,7 +34,9 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.SilentSessionOp;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
@@ -48,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import java.util.Map;
@@ -79,12 +82,14 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
      * @deprecated since 4.3 - this should be private - use {@link #getComponentType()} instead.
      * (rename to "type" once made private)
      */
+    @Deprecated
     protected final Class<T> interf;
 
     /**
      * The object delivered by this factory.
      * @deprecated since 4.3 - this should be private - use {@link #getObservedObject()} instead.
      */
+    @Deprecated
     protected T observedObject;
 
     public ObservedComponentFactory(String repository, String path, Class<T> type) {
@@ -110,7 +115,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
                 return getObservedObject();
             }
         }, new Class[]{
-                // we want to expose the observed object's concrete class and interfaces so that client code can cast if they want 
+                // we want to expose the observed object's concrete class and interfaces so that client code can cast if they want
                 getObservedObject().getClass()
         });
     }
@@ -128,18 +133,32 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected void load() {
-        final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
-        if (hm.isExist(path)) {
-            try {
-                final Content node = hm.getContent(path);
-                onRegister(node);
-            } catch (RepositoryException e) {
-                log.error("Can't read configuration for " + interf + " from [" + repository + ":" + path + "], will return null.", e);
+        MgnlContext.doInSystemContext(new SilentSessionOp<Void>(repository, true) {
+
+            @Override
+            public Void doExec(Session session) throws RepositoryException {
+                // create hm from session
+                HierarchyManager hm = new DefaultHierarchyManager(session.getUserID(), session, null);
+                if (session.nodeExists(path)) {
+                    try {
+                        // TODO: change this once c2b is n2b ...
+                        final Content node = hm.getContent(path);
+                        onRegister(node);
+                    } catch (RepositoryException e) {
+                        log.error("Can't read configuration for " + interf + " from [" + repository + ":" + path + "], will return null.", e);
+                    }
+                } else {
+                    log.debug("{} does not exist, will return a default implementation for {}.", path, interf);
+                    instantiateDefault();
+                }
+                return null;
             }
-        } else {
-            log.debug("{} does not exist, will return a default implementation for {}.", path, interf);
-            instantiateDefault();
-        }
+
+            @Override
+            public String toString() {
+                return " load repotisory [" + repository + "] path [" + path + "].";
+            }
+        });
     }
 
     protected void instantiateDefault() {
@@ -155,10 +174,15 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     /**
      * @deprecated since 5.0, use {@link Classes#isConcrete(Class)}
      */
+    @Deprecated
     protected boolean isConcrete(Class<?> clazz) {
         return Classes.isConcrete(clazz);
     }
 
+    /**
+     * @deprecated since 5.0, use {@link #onRegister(Node)} instead
+     */
+    @Deprecated
     protected void onRegister(Content node) {
         try {
             final T instance = transformNode(node);
@@ -182,6 +206,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     protected Content2BeanTransformer getContent2BeanTransformer() {
         // we can not discover again the same class we are building
         return new Content2BeanTransformerImpl() {
+            @Override
             public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
                 if (state.getCurrentType().getType().equals(interf)) {
                     final ClassFactory classFactory = Classes.getClassFactory();
@@ -203,10 +228,12 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
      *
      * @deprecated since 4.3 - {@link info.magnolia.objectfactory.DefaultComponentProvider#newInstance(Class)} returns a proxy of the observed object instead of this factory, so this method shouldn't be needed publicly.
      */
+    @Deprecated
     public T getObservedObject() {
         return this.observedObject;
     }
 
+    @Override
     public String toString() {
         return super.toString() + ":" + interf + "(Observing: " + repository + ":" + path + ")";
     }

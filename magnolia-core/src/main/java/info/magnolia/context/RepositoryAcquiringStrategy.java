@@ -33,6 +33,10 @@
  */
 package info.magnolia.context;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
@@ -44,7 +48,12 @@ import info.magnolia.cms.security.AccessManager;
  */
 public interface RepositoryAcquiringStrategy {
     HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
+    /**
+     * @deprecated since 5.0
+     */
+    @Deprecated
     AccessManager getAccessManager(String repositoryId, String workspaceId);
     QueryManager getQueryManager(String repositoryId, String workspaceId);
     void release();
+    Session getSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException;
 }

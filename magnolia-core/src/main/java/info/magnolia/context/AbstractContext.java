@@ -50,6 +50,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,6 +111,10 @@ public abstract class AbstractContext implements Context, Serializable {
         getAttributeStrategy().setAttribute(name, value, scope);
     }
 
+    /**
+     * @deprecated since 5.0
+     */
+    @Deprecated
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return getRepositoryStrategy().getAccessManager(repositoryId, workspaceId);
     }
@@ -117,6 +125,10 @@ public abstract class AbstractContext implements Context, Serializable {
 
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return getRepositoryStrategy().getQueryManager(repositoryId, workspaceId);
+    }
+
+    public Session getSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException {
+        return getRepositoryStrategy().getSession(repositoryId,  workspaceId);
     }
 
     /**
@@ -192,7 +204,7 @@ public abstract class AbstractContext implements Context, Serializable {
         return this.getQueryManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
     }
 
-     // ------ Map interface methods -------
+    // ------ Map interface methods -------
     /**
      * {@inheritDoc}
      */

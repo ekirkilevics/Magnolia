@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.safehaus.uuid.UUIDGenerator;
@@ -164,9 +165,19 @@ public final class Path {
         return label;
     }
 
+    public static String getUniqueLabel(Session session, String parent, String label) throws RepositoryException {
+        if (parent.equals("/")) {
+            parent = StringUtils.EMPTY;
+        }
+        while (session.itemExists(parent + "/" + label)) {
+            label = createUniqueName(label);
+        }
+        return label;
+    }
+
     public static String getUniqueLabel(Content parent, String label) {
         try {
-            while (parent.hasContent(label) || parent.hasNodeData(label)) { //$NON-NLS-1$
+            while (parent.hasContent(label) || parent.hasNodeData(label)) {
                 label = createUniqueName(label);
             }
         }
@@ -288,10 +299,10 @@ public final class Path {
         {
             // charCodes: 48-57: [0-9]; 65-90: [A-Z]; 97-122: [a-z]; 45: [-]; 95:[_]
             if (((charCode >= 48) && (charCode <= 57))
-                || ((charCode >= 65) && (charCode <= 90))
-                || ((charCode >= 97) && (charCode <= 122))
-                || charCode == 45
-                || charCode == 95)
+                    || ((charCode >= 65) && (charCode <= 90))
+                    || ((charCode >= 97) && (charCode <= 122))
+                    || charCode == 45
+                    || charCode == 95)
             {
                 return true;
             }
@@ -351,6 +362,7 @@ public final class Path {
     /**
      * @deprecated since 4.0 - untested and unused
      */
+    @Deprecated
     public static String getNodePath(String path, String label) {
         if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
             return label;
@@ -361,6 +373,7 @@ public final class Path {
     /**
      * @deprecated since 4.0 - untested and unused
      */
+    @Deprecated
     public static String getNodePath(String path) {
         if (path.startsWith("/")) { //$NON-NLS-1$
             return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
@@ -371,6 +384,7 @@ public final class Path {
     /**
      * @deprecated since 4.0 - untested and unused
      */
+    @Deprecated
     public static String getParentPath(String path) {
         int lastIndexOfSlash = path.lastIndexOf("/"); //$NON-NLS-1$
         if (lastIndexOfSlash > 0) {

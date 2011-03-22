@@ -61,19 +61,10 @@ public interface HierarchyManager {
 
     NodeData getNodeData(String path) throws RepositoryException;
 
-    /**
-     * @deprecated since 4.0 - only used by taglibs - should go/move.
-     */
-    Content getPage(String path, String templateName) throws RepositoryException;
-
     void delete(String path) throws RepositoryException;
 
     Content getRoot() throws RepositoryException;
 
-    /**
-     * @deprecated since 4.0 - use getContent().isNodeType() instead.
-     */
-    boolean isPage(String path) throws AccessDeniedException;
 
     boolean isExist(String path);
 
@@ -84,16 +75,6 @@ public interface HierarchyManager {
      * @return true if the current user has access on the provided node path.
      */
     boolean isGranted(String path, long permissions);
-
-    /**
-     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-     */
-    boolean isNodeType(String path, String type);
-
-    /**
-     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-     */
-    boolean isNodeType(String path, ItemType type);
 
     boolean isNodeData(String path) throws AccessDeniedException;
 

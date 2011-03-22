@@ -57,6 +57,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     }
 
+    @Override
     public Locale getLocale() {
         if(this.locale == null){
             setLocaleFor(getUser());
@@ -68,7 +69,9 @@ public class UserContextImpl extends AbstractContext implements UserContext {
      * Create the subject on demand.
      * @see info.magnolia.context.AbstractContext#getUser()
      */
+    @Override
     public User getUser() {
+        //TODO: is this correct? such a user will stay set even when session attribute expires
         if (user == null) {
             user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
             if (user == null) {

@@ -42,10 +42,28 @@ public interface Role extends Serializable {
 
     public abstract String getName();
 
+    /**
+     * @deprecated use manager instead
+     */
+    @Deprecated
     public abstract void addPermission(String repository, String path, long permission);
 
+    /**
+     * @deprecated use manager instead
+     */
+    @Deprecated
     public abstract void removePermission(String repository, String path);
 
+    /**
+     * @deprecated use manager instead
+     */
+    @Deprecated
     public abstract void removePermission(String repository, String path, long permission);
+
+    /**
+     * Gets identifier of the role.
+     * @return
+     */
+    public abstract String getId();
 
 }

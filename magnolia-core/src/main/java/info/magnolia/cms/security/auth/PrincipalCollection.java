@@ -36,6 +36,7 @@ package info.magnolia.cms.security.auth;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Iterator;
 
 
 /**
@@ -48,15 +49,19 @@ public interface PrincipalCollection extends Principal, Serializable {
 
     public void setName(String name);
 
-    public void set(Collection collection);
+    public void set(Collection<Principal> collection);
 
     public void add(Principal principal);
+
+    public void addAll(Collection<Principal> principal);
 
     public void remove(Principal principal);
 
     public void clearAll();
 
     public boolean contains(Principal principal);
+
+    public Iterator<Principal> iterator();
 
     /**
      * Checks if this collection contains object with the specified name.

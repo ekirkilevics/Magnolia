@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
@@ -114,6 +115,7 @@ public class AHref extends BodyTagSupport {
      * @deprecated use the nodeDataName attribute instead.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
+    @Deprecated
     public void setAtomName(String name) {
         this.setNodeDataName(name);
     }
@@ -174,6 +176,7 @@ public class AHref extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
+    @Override
     public int doEndTag() {
         if (StringUtils.isEmpty(this.templateName)) {
             if (this.nodeDataName == null) {
@@ -210,7 +213,7 @@ public class AHref extends BodyTagSupport {
             try {
                 startPage = Resource.getCurrentActivePage().getAncestor(this.level);
                 HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-                Content resultPage = hm.getPage(startPage.getHandle(), this.templateName);
+                Content resultPage = hm.getContent(startPage.getHandle());
                 this.writeLink(resultPage.getHandle());
             }
             catch (RepositoryException e) {
@@ -235,7 +238,8 @@ public class AHref extends BodyTagSupport {
                     out.print(this.preHref);
                 }
                 out.print(path);
-                if (MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).isPage(path)) {
+                HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                if (hm.isExist(path) && ItemType.CONTENT.getSystemName().equals(hm.getContent(path).getNodeTypeName())) {
                     out.print("."); //$NON-NLS-1$
                     out.print(ServerConfiguration.getInstance().getDefaultExtension());
                 }
@@ -273,6 +277,7 @@ public class AHref extends BodyTagSupport {
     /**
      * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
      */
+    @Override
     public void release() {
         this.preHref = null;
         this.postHref = null;

@@ -33,6 +33,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.ACL;
+
+import java.util.Map;
+
 /**
  * Manages roles.
  */
@@ -49,5 +53,11 @@ public interface RoleManager {
      * @throws UnsupportedOperationException in case the role manager does not support this operation
      */
     public Role getRole(String name) throws UnsupportedOperationException;
+
+    /**
+     * Obtains list of ACLs defined for specified role.
+     * @throws UnsupportedOperationException in case the role manager does not support this operation
+     */
+    public Map<String, ACL> getACLs(String role) throws UnsupportedOperationException;
 
 }

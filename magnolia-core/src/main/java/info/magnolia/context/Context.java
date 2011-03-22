@@ -42,6 +42,10 @@ import info.magnolia.cms.core.HierarchyManager;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 
 /**
  * This interface defines all the methods which should be implemented by any configured magnolia context. Implementing
@@ -206,5 +210,13 @@ public interface Context extends org.apache.commons.chain.Context {
      * Release any resource used by this Context (e.g. jcr sessions).
      */
     public void release();
+
+    /**
+     * Gets Session initialized for current user.
+     * @param config
+     * @param repository
+     * @return
+     */
+    public Session getSession(String repository, String workspace) throws LoginException, RepositoryException ;
 
 }

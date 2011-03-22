@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.security;
 
+import javax.security.auth.Subject;
+
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.objectfactory.Components;
@@ -58,9 +60,9 @@ public interface SecuritySupport {
 
     RoleManager getRoleManager();
 
-   /**
-    * Performs an authentication using the {@link CredentialsCallbackHandler} to retriev the user name and password.
-    */
+    /**
+     * Performs an authentication using the {@link CredentialsCallbackHandler} to retriev the user name and password.
+     */
     LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String jaasModuleName);
 
     /**
@@ -71,4 +73,11 @@ public interface SecuritySupport {
             return Components.getSingleton(SecuritySupport.class);
         }
     }
+
+    /**
+     * extracts magnolia user from the list of principals.
+     * @param subject
+     * @return
+     */
+    User extractUser(Subject subject);
 }

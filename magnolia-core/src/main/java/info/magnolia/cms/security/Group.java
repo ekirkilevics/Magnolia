@@ -44,18 +44,28 @@ public interface Group extends Serializable {
 
     public String getName();
 
+    /**
+     * @deprecated use manager instead
+     */
+    @Deprecated
     public void addRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
-     * Add a subgroup to this group.
-     * @param groupName
-     * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
+     * @deprecated use manager instead
      */
+    @Deprecated
     public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
+    /**
+     * @deprecated use manager instead
+     */
+    @Deprecated
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
+    /**
+     * @deprecated use manager instead
+     */
+    @Deprecated
     public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
@@ -84,5 +94,10 @@ public interface Group extends Serializable {
      * Get roles that are directly assigned to group.
      */
     public Collection<String> getRoles();
+
+    /**
+     * Gets identifier of the group.
+     */
+    public String getId();
 
 }

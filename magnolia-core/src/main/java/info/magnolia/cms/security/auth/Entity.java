@@ -40,7 +40,9 @@ import java.security.Principal;
 /**
  * A user entity. Defines some standard properties as user name or language.
  * @author Sameer Charles $Id$
+ * @deprecated
  */
+@Deprecated
 public interface Entity extends Principal, Serializable {
 
     public static final String FULL_NAME = "fullName";
@@ -65,6 +67,7 @@ public interface Entity extends Principal, Serializable {
     /**
      * @deprecated not used - use addProperty(Entity.NAME)
      */
+    @Deprecated
     public void setName(String name);
 
     public void addProperty(String key, Object value);

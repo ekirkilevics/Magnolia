@@ -4,7 +4,7 @@
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
@@ -59,8 +59,8 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class WebContextImplTest extends TestCase
-    /* TODO - implementing Serializable for the purpose of this test - see MAGNOLIA-3523 */
-        implements Serializable {
+/* TODO - implementing Serializable for the purpose of this test - see MAGNOLIA-3523 */
+implements Serializable {
 
     // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
@@ -80,7 +80,7 @@ public class WebContextImplTest extends TestCase
         session.setAttribute(SESSION_USER, user);
         expect(session.getAttribute(SESSION_USER)).andReturn(user);
         session.invalidate();
-        expect(securitySupport.getUserManager(Realm.REALM_SYSTEM)).andReturn(userManager);
+        expect(securitySupport.getUserManager(Realm.REALM_SYSTEM.getName())).andReturn(userManager);
         expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
         expect(anonymousUser.getLanguage()).andReturn("en");
         session.setAttribute(SESSION_USER, anonymousUser);
@@ -96,16 +96,16 @@ public class WebContextImplTest extends TestCase
     }
 
     // TODO commented out until MAGNOLIA-3523 is fixed
-//    public void testSerializable() throws Exception {
-//        WebContext context = newWebContextImpl(null, null, null);
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        ObjectOutputStream oos = new ObjectOutputStream(baos);
-//        try {
-//            oos.writeObject(context);
-//        } catch (NotSerializableException e) {
-//            fail("WebContextImpl should be serializable, failed with: " + e);
-//        }
-//    }
+    //    public void testSerializable() throws Exception {
+    //        WebContext context = newWebContextImpl(null, null, null);
+    //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //        ObjectOutputStream oos = new ObjectOutputStream(baos);
+    //        try {
+    //            oos.writeObject(context);
+    //        } catch (NotSerializableException e) {
+    //            fail("WebContextImpl should be serializable, failed with: " + e);
+    //        }
+    //    }
 
     private WebContext newWebContextImpl(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         // the factory calls the init() method.

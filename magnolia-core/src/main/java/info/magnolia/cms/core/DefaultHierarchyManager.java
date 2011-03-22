@@ -62,7 +62,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
+ * @deprecated since 5.0. Use Session and its methods instead.
  */
+@Deprecated
 public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     private static final long serialVersionUID = 223L;
@@ -72,10 +74,9 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * serialized.
      * */
     private static final ObjectStreamField[] serialPersistentFields = {
-            new ObjectStreamField("userId", String.class),
-            new ObjectStreamField("repositoryName", String.class),
-            new ObjectStreamField("workspaceName", String.class),
-            new ObjectStreamField("accessManager", AccessManager.class)
+        new ObjectStreamField("userId", String.class),
+        new ObjectStreamField("repositoryName", String.class),
+        new ObjectStreamField("workspaceName", String.class),
     };
 
     private static final Logger log = LoggerFactory.getLogger(DefaultHierarchyManager.class);
@@ -97,21 +98,18 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     private String workspaceName;
 
-    private AccessManager accessManager;
-
     protected DefaultHierarchyManager() {}
 
     public DefaultHierarchyManager(String userId,
-                                   Session jcrSession,
-                                   AccessManager aManager)
-            throws RepositoryException {
+            Session jcrSession,
+            AccessManager aManager)
+    throws RepositoryException {
         this.userId = userId;
         this.jcrSession = jcrSession;
         this.rootNode = jcrSession.getRootNode();
         this.workspace = jcrSession.getWorkspace();
         this.workspaceName = this.workspace.getName();
         this.repositoryName = ContentRepository.getParentRepositoryName(this.workspaceName);
-        this.accessManager = aManager;
     }
 
     /**
@@ -134,7 +132,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @param accessManager
      */
     protected void setAccessManager(AccessManager accessManager) {
-        this.accessManager = accessManager;
+        // throw an ex because letting this fall through would be too unsecure for code relying on the old behavior
+        throw new UnsupportedOperationException("Custom access managers are no longer supported. Use Repository level security checks instead.");
     }
 
     /**
@@ -142,7 +141,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @return accessmanager attached to this hierarchy
      */
     public AccessManager getAccessManager() {
-        return this.accessManager;
+        // throw an ex because letting this fall through would be too unsecure for code relying on the old behavior
+        throw new UnsupportedOperationException("Custom access managers are no longer supported. Use Repository level security checks instead.");
     }
 
     /**
@@ -190,7 +190,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws AccessDeniedException
      */
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
-            RepositoryException, AccessDeniedException {
+    RepositoryException, AccessDeniedException {
         Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType, this);
         setMetaData(content.getMetaData());
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, content.getItemType(), content.getHandle());
@@ -204,7 +204,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         if (!parent.endsWith("/")) {
             parent = parent + "/";
         }
-        return getNodePath(parent + label); //$NON-NLS-1$
+        return getNodePath(parent + label);
     }
 
     private String getNodePath(String path) {
@@ -254,7 +254,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws RepositoryException
      */
     public Content getContent(String path, boolean create, ItemType type) throws AccessDeniedException,
-        RepositoryException {
+    RepositoryException {
         Content node;
         try {
             node = getContent(path);
@@ -262,8 +262,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         catch (PathNotFoundException e) {
             if (create) {
                 node = this.createContent(StringUtils.substringBeforeLast(path, "/"), StringUtils.substringAfterLast(
-                    path,
-                    "/"), type.toString());
+                        path,
+                "/"), type.toString());
                 AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, node.getItemType(), node.getHandle());
             }
             else {
@@ -301,8 +301,9 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      *
      * @deprecated since 4.0 - only used by taglibs - should go/move.
      */
+    @Deprecated
     public Content getPage(String path, String templateName) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
+    AccessDeniedException {
         Content page = getContent(path);
         if (page.getTemplate().equals(templateName)) {
             return page;
@@ -338,7 +339,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws AccessDeniedException
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, path, Permission.REMOVE);
+        Access.tryPermission(jcrSession, path, Session.ACTION_REMOVE);
         ItemType type = null;
         if (this.isNodeData(path)) {
             this.getNodeData(makeRelative(path)).delete();
@@ -365,30 +366,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         return (new DefaultContent(this.getRootNode(), this));
     }
 
-    /**
-     * Checks if the requested resource is a page (hierarchy Node).
-     * @param path of the requested content
-     * @return boolean true is the requested content is a Hierarchy Node todo remove this method, instead use
-     * (getContent(PATH) is NodeType)
-     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-     */
-    public boolean isPage(String path) throws AccessDeniedException {
-        Access.isGranted(this.accessManager, path, Permission.READ);
-
-        String nodePath = getNodePath(path);
-        if (StringUtils.isEmpty(nodePath)) {
-            return false;
-        }
-
-        try {
-            Node n = this.getRootNode().getNode(nodePath);
-            return (n.isNodeType(ItemType.CONTENT.getSystemName()));
-        }
-        catch (RepositoryException re) {
-            // ignore, not existing?
-        }
-        return false;
-    }
 
     /**
      * check is either the node or property exists with the specified path and user has access to it. If at least READ permission is not
@@ -396,10 +373,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @param path
      */
     public boolean isExist(String path) {
-        try {
-            Access.isGranted(this.accessManager, path, Permission.READ);
-        } catch (AccessDeniedException e) {
-            log.error(e.getMessage());
+        if (!Access.isGranted(jcrSession, path, Session.ACTION_READ)) {
             return false;
         }
         try {
@@ -412,37 +386,18 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         }
     }
 
-    public boolean isGranted(String path, long permissions) {
-        try {
-            Access.isGranted(this.accessManager, path, permissions);
-        } catch (AccessDeniedException e) {
-            return false;
+    public boolean isGranted(String path, long oldPermissions) {
+        String permissions = "";
+        //TODO: review && convert all the permissions properly
+        if ((oldPermissions & Permission.READ) == Permission.READ) {
+            permissions = Session.ACTION_READ;
+        } else if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
+            permissions = Session.ACTION_ADD_NODE;
+        } if ((oldPermissions & Permission.ALL) == Permission.ALL) {
+            permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
         }
-        return true;
-    }
 
-    /**
-     * Evaluate primary node type of the node at the given path.
-     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-     */
-    public boolean isNodeType(String path, String type) {
-        try {
-            Node n = this.getRootNode().getNode(getNodePath(path));
-            return n.isNodeType(type);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            log.debug(re.getMessage(), re);
-        }
-        return false;
-    }
-
-    /**
-     * Evaluate primary node type of the node at the given path.
-     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-     */
-    public boolean isNodeType(String path, ItemType type) {
-        return isNodeType(path, type.getSystemName());
+        return (!Access.isGranted(jcrSession, path, permissions));
     }
 
     /**
@@ -451,7 +406,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @return boolean true is the requested content is an NodeData
      */
     public boolean isNodeData(String path) throws AccessDeniedException {
-        Access.isGranted(this.accessManager, path, Permission.READ);
+        Access.tryPermission(jcrSession, path, Session.ACTION_READ);
         boolean result = false;
         String nodePath = getNodePath(path);
         if (StringUtils.isEmpty(nodePath)) {
@@ -476,7 +431,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @param uuid
      */
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
-        AccessDeniedException {
+    AccessDeniedException {
         try {
             return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid), this);
         } catch (ItemNotFoundException e) {
@@ -504,9 +459,9 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.RepositoryException
      */
     public void moveTo(String source, String destination) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        Access.isGranted(this.accessManager, source, Permission.REMOVE);
-        Access.isGranted(this.accessManager, destination, Permission.WRITE);
+    AccessDeniedException {
+        Access.tryPermission(jcrSession, source, Session.ACTION_REMOVE);
+        Access.tryPermission(jcrSession, destination, Session.ACTION_ADD_NODE);
         this.getWorkspace().move(source, destination);
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MOVE, workspaceName, source, destination);
     }
@@ -519,9 +474,9 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws javax.jcr.RepositoryException
      */
     public void copyTo(String source, String destination) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        Access.isGranted(this.accessManager, source, Permission.READ);
-        Access.isGranted(this.accessManager, destination, Permission.WRITE);
+    AccessDeniedException {
+        Access.tryPermission(jcrSession, source, Session.ACTION_READ);
+        Access.tryPermission(jcrSession, destination, Session.ACTION_ADD_NODE);
         this.getWorkspace().copy(source, destination);
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_COPY, workspaceName, source, destination);
     }

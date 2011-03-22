@@ -68,6 +68,7 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
         return wrappedHM;
     }
 
+    @Override
     public String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getClass().getSimpleName());
@@ -133,15 +134,6 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
         return wrap(getWrappedHierarchyManager().getNodeData(path));
     }
 
-    /**
-     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-      */
-     @Deprecated
-    public Content getPage(String path, String templateName) throws RepositoryException {
-        path = transformPath(path);
-        return wrap(getWrappedHierarchyManager().getPage(path, templateName));
-    }
-
     public void delete(String path) throws RepositoryException {
         path = transformPath(path);
         getWrappedHierarchyManager().delete(path);
@@ -149,15 +141,6 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
 
     public Content getRoot() throws RepositoryException {
         return wrap(getWrappedHierarchyManager().getRoot());
-    }
-
-    /**
-     * @deprecated since 4.0 - use getContent().isNodeType() instead.
-      */
-     @Deprecated
-    public boolean isPage(String path) throws AccessDeniedException {
-        path = transformPath(path);
-        return getWrappedHierarchyManager().isPage(path);
     }
 
     public boolean isExist(String path) {
@@ -168,24 +151,6 @@ public abstract class HierarchyManagerWrapper implements HierarchyManager {
     public boolean isGranted(String path, long permissions) {
         path = transformPath(path);
         return getWrappedHierarchyManager().isGranted(path, permissions);
-    }
-
-    /**
-     * @deprecated since 4.0 - use getContent().isNodeType() instead.
-      */
-     @Deprecated
-    public boolean isNodeType(String path, String type) {
-        path = transformPath(path);
-        return getWrappedHierarchyManager().isNodeType(path, type);
-    }
-
-    /**
-    * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
-     */
-    @Deprecated
-    public boolean isNodeType(String path, ItemType type) {
-        path = transformPath(path);
-        return getWrappedHierarchyManager().isNodeType(path, type);
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException {

@@ -33,9 +33,16 @@
  */
 package info.magnolia.cms.security;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 
@@ -48,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Revision$ ($Author$)
  */
-public class MgnlRoleManager implements RoleManager {
+public class MgnlRoleManager extends RepositoryBackedSecurityManager implements RoleManager {
     private static final Logger log = LoggerFactory.getLogger(MgnlRoleManager.class);
 
     /**
@@ -59,7 +66,7 @@ public class MgnlRoleManager implements RoleManager {
 
     public Role getRole(String name) {
         try {
-            return newRoleInstance(getHierarchyManager().getContent(name));
+            return newRoleInstance(findPrincipalNode(name, MgnlContext.getSession(getRepositoryName())));
         }
         catch (Exception e) {
             log.info("can't find role [" + name + "]", e);
@@ -79,11 +86,103 @@ public class MgnlRoleManager implements RoleManager {
         }
     }
 
-    protected MgnlRole newRoleInstance(Content node) {
-        return new MgnlRole(node);
+    /**
+     * @deprecated since 5.0
+     */
+    @Deprecated
+    protected MgnlRole newRoleInstance(Content node) throws RepositoryException {
+        return newRoleInstance(node.getJCRNode());
+    }
+
+    protected MgnlRole newRoleInstance(Node node) throws RepositoryException {
+        return new MgnlRole(node.getName(), node.getIdentifier(), getACLs(node).values());
     }
 
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
     }
+
+    public void removePermission(Role role, String repository, String path, long permission) {
+        try {
+            Session session = MgnlContext.getSession(ContentRepository.REPOSITORY_USER);
+            Node roleNode = session.getNodeByIdentifier(role.getId());
+            Node aclNode = getAclNode(roleNode, repository);
+            NodeIterator children = aclNode.getNodes();
+            while(children.hasNext()) {
+                Node child = children.nextNode();
+                if (child.getProperty("path").getString().equals(path)) {
+                    if (permission == MgnlRole.PERMISSION_ANY
+                            || child.getProperty("permissions").getLong() == permission) {
+                        child.remove();
+                    }
+                }
+            }
+            session.save();
+        }
+        catch (Exception e) {
+            log.error("can't remove permission", e);
+        }
+    }
+
+    /**
+     * Get the ACL node for the current role node.
+     * @param roleNode
+     */
+    private Node getAclNode(Node roleNode, String repository) throws RepositoryException, PathNotFoundException,
+    AccessDeniedException {
+        Node aclNode;
+        if (!roleNode.hasNode("acl_" + repository)) {
+            aclNode = roleNode.addNode("acl_" + repository, ItemType.CONTENTNODE.getSystemName());
+        }
+        else {
+            aclNode = roleNode.getNode("acl_" + repository);
+        }
+        return aclNode;
+    }
+
+    /**
+     * Does this permission exist?
+     */
+    private boolean existsPermission(Node aclNode, String path, long permission) throws RepositoryException {
+        NodeIterator children = aclNode.getNodes();
+        while(children.hasNext()) {
+            Node child = children.nextNode();
+            if (child.getProperty("path").getString().equals(path)) {
+                if (permission == MgnlRole.PERMISSION_ANY
+                        || child.getProperty("permissions").getLong() == permission) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void addPermission(Role role, String repository, String path, long permission) {
+        try {
+            Session session = MgnlContext.getSession(getRepositoryName());
+            Node roleNode = session.getNodeByIdentifier(role.getId());
+            Node aclNode = getAclNode(roleNode, repository);
+            if (!this.existsPermission(aclNode, path, permission)) {
+                String nodename = Path.getUniqueLabel(session, aclNode.getPath(), "0");
+                Node node = aclNode.addNode(nodename, ItemType.CONTENTNODE.getSystemName());
+                node.setProperty("path", path);
+                node.setProperty("permissions", permission);
+                session.save();
+            }
+        }
+        catch (Exception e) {
+            log.error("can't add permission", e);
+        }
+    }
+
+    @Override
+    protected Node findPrincipalNode(String principalName, Session session) throws RepositoryException {
+        return session.getNode("/" + principalName);
+    }
+
+    @Override
+    protected String getRepositoryName() {
+        return ContentRepository.USER_ROLES;
+    }
+
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,41 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.cms.security.auth.callback;
+package info.magnolia.cms.security;
 
-import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.security.auth.ACL;
 
-import javax.security.auth.callback.Callback;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.List;
 
 /**
- * The JCR JAAS module uses this callback to get the realm we login into.
- * @author philipp
- * @version $Id$
- * @deprecated
+ * Basic ACL implementation.
+ * @author had
+ * @version $Id: $
  */
-@Deprecated
-public class RealmCallback implements Callback {
+public class ACLImpl implements ACL {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(RealmCallback.class);
+    private static final long serialVersionUID = 7683918091476831307L;
 
-    private Realm realm = Realm.DEFAULT_REALM;
+    private final List<Permission> permissions;
+    private final String workspaceName;
+    private final String repositoryName;
+    private final String name;
 
-    public String getRealm() {
-        return this.realm.getName();
+    public ACLImpl(String name, String repositoryName, String workspaceName, List<Permission> permissions) {
+        this.name = name;
+        this.repositoryName = repositoryName;
+        this.workspaceName = workspaceName;
+        this.permissions = permissions;
     }
 
-    public void setRealm(final String realm) {
-        this.realm = new Realm() {
-            public String getName() {
-                return realm;
-            }};
+    public List<Permission> getList() {
+        return permissions;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getRepository() {
+        return repositoryName;
+    }
+
+    public String getWorkspace() {
+        return workspaceName;
+    }
 }

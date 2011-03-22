@@ -69,12 +69,14 @@ public class ContextFilter extends AbstractMgnlFilter {
         this.webContextFactory = webContextFactory;
     }
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
     }
 
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    throws IOException, ServletException {
 
         // This filter can be invoked multiple times. The first time it's called it initializes the MgnlContext. On
         // subsequent invocations it only pushes the request and response objects on the stack in WebContext. The
@@ -93,11 +95,12 @@ public class ContextFilter extends AbstractMgnlFilter {
                     MDC.put("requesturi", uri);
                 }
 
-                String userName = MgnlContext.getUser().getName();
-                if (userName != null) {
-                    // FIXME: Performance: following line of code forces creation of "users", "userroles" and "usergroups" JCR workspace sessions on _every_ request no matter if the user is logged in or not!
-                    MDC.put("userid", userName);
-                }
+                // TODO: make user available here already
+                //                String userName = MgnlContext.getUser().getName();
+                //                if (userName != null) {
+                //                    // FIXME: Performance: following line of code forces creation of "users", "userroles" and "usergroups" JCR workspace sessions on _every_ request no matter if the user is logged in or not!
+                //                    MDC.put("userid", userName);
+                //                }
 
                 String referer = request.getHeader("Referer");
                 if (referer != null) {

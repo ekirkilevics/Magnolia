@@ -34,6 +34,7 @@
 package info.magnolia.cms.security;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.Collection;
 
 import javax.security.auth.Subject;
@@ -44,7 +45,7 @@ import javax.security.auth.Subject;
  * @author philipp
  * @version $Revision:2558 $ ($Author:scharles $)
  */
-public interface User extends Serializable {
+public interface User extends Principal, Serializable {
 
     /**
      * Is this user in a specified role?
@@ -55,13 +56,17 @@ public interface User extends Serializable {
 
     /**
      * Remove a role. Implementation is optional
+     * @deprecated use manager instead
      */
+    @Deprecated
     void removeRole(String roleName) throws UnsupportedOperationException;
 
     /**
      * Adds a role to this user. Implementation is optional
      * @param roleName the name of the role
+     * @deprecated use manager instead
      */
+    @Deprecated
     void addRole(String roleName) throws UnsupportedOperationException;
 
     /**
@@ -72,12 +77,16 @@ public interface User extends Serializable {
 
     /**
      * Remove a group. Implementation is optional
+     * @deprecated use manager instead
      */
+    @Deprecated
     void removeGroup(String groupName) throws UnsupportedOperationException;
 
     /**
      * Adds this user to a group. Implementation is optional
+     * @deprecated use manager instead
      */
+    @Deprecated
     void addGroup(String groupName) throws UnsupportedOperationException;
 
     /**
@@ -127,12 +136,15 @@ public interface User extends Serializable {
 
     /**
      * Returns the jaas subject if available.
+     * @deprecated
      */
+    @Deprecated
     Subject getSubject();
 
     /**
      * The jass login handler will set the subject.
-     *
+     * @deprecated
      */
+    @Deprecated
     void setSubject(Subject subject);
 }
