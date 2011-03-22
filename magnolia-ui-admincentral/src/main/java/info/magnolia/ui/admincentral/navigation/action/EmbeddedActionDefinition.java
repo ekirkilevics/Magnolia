@@ -42,7 +42,7 @@ import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
  * @author fgrilli
  *
  */
-public class EmbedActionDefinition implements PlaceChangeActionDefinition {
+public class EmbeddedActionDefinition implements PlaceChangeActionDefinition {
     private Place place;
     private String url;
 

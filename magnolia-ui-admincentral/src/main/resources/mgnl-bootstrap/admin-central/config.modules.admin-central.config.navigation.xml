@@ -1611,7 +1611,7 @@
           <sv:value>3c01b040-604c-4d2d-b9d7-1c2f048a9a4a</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.navigation.action.EmbedActionDefinition</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.navigation.action.EmbeddedActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
