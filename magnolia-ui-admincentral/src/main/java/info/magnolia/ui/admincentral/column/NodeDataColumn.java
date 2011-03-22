@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition;
+import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
 
 import java.io.Serializable;
 

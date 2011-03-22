@@ -57,8 +57,8 @@ import info.magnolia.ui.admincentral.tree.container.JcrContainerSource;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.definition.TreeItemType;
+import info.magnolia.ui.model.workbench.definition.ItemTypeDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
  * Model class for tree. Serves as a source for operations by JcrContainer and executes
@@ -68,11 +68,11 @@ import info.magnolia.ui.model.tree.definition.TreeItemType;
 public class TreeModel implements JcrContainerSource {
 
     private EditWorkspaceActionFactory actionFactory;
-    private TreeDefinition treeDefinition;
+    private WorkbenchDefinition workbenchDefinition;
     private Map<String, Column<?, ?>> columns;
 
-    public TreeModel(TreeDefinition treeDefinition, Map<String, Column<?, ?>> columns, EditWorkspaceActionFactory actionFactory) {
-        this.treeDefinition = treeDefinition;
+    public TreeModel(WorkbenchDefinition workbenchDefinition, Map<String, Column<?, ?>> columns, EditWorkspaceActionFactory actionFactory) {
+        this.workbenchDefinition = workbenchDefinition;
         this.actionFactory = actionFactory;
         this.columns = columns;
     }
@@ -87,7 +87,7 @@ public class TreeModel implements JcrContainerSource {
 
         ArrayList<Item> c = new ArrayList<Item>();
 
-        for (TreeItemType itemType : treeDefinition.getItemTypes()) {
+        for (ItemTypeDefinition itemType : workbenchDefinition.getItemTypes()) {
             ArrayList<Node> nodes = new ArrayList<Node>();
             NodeIterator iterator = node.getNodes();
             while (iterator.hasNext()) {
@@ -112,8 +112,8 @@ public class TreeModel implements JcrContainerSource {
         }
 
         boolean includeProperties = false;
-        for (TreeItemType itemType : this.treeDefinition.getItemTypes()) {
-            if (itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+        for (ItemTypeDefinition itemType : this.workbenchDefinition.getItemTypes()) {
+            if (itemType.getItemType().equals(ItemTypeDefinition.ITEM_TYPE_NODE_DATA)) {
                 includeProperties = true;
                 break;
             }
@@ -171,8 +171,8 @@ public class TreeModel implements JcrContainerSource {
     }
 
     public String getItemIcon(Item item) throws RepositoryException {
-        for (TreeItemType itemType : treeDefinition.getItemTypes()) {
-            if (item instanceof javax.jcr.Property && itemType.getItemType().equals(TreeItemType.ITEM_TYPE_NODE_DATA)) {
+        for (ItemTypeDefinition itemType : workbenchDefinition.getItemTypes()) {
+            if (item instanceof javax.jcr.Property && itemType.getItemType().equals(ItemTypeDefinition.ITEM_TYPE_NODE_DATA)) {
                 return itemType.getIcon();
             } else if (item instanceof Node) {
                 Node node = (Node) item;
@@ -261,7 +261,7 @@ public class TreeModel implements JcrContainerSource {
     // Used by JcrBrowser and TreeViewImpl
 
     public String getPathInTree(Item item) throws RepositoryException {
-        String base = treeDefinition.getPath();
+        String base = workbenchDefinition.getPath();
         if (base.equals("/"))
             return item.getPath();
         else
@@ -286,11 +286,11 @@ public class TreeModel implements JcrContainerSource {
     // Private
 
     private Session getSession() {
-        return MgnlContext.getHierarchyManager(treeDefinition.getRepository()).getWorkspace().getSession();
+        return MgnlContext.getHierarchyManager(workbenchDefinition.getWorkspace()).getWorkspace().getSession();
     }
 
     private Node getRootNode() throws RepositoryException {
-        return getSession().getNode(treeDefinition.getPath());
+        return getSession().getNode(workbenchDefinition.getPath());
     }
 
     private Column<?, ?> getColumn(String columnLabel) {
@@ -298,7 +298,7 @@ public class TreeModel implements JcrContainerSource {
     }
 
     private String getPathInWorkspace(String pathInTree) {
-        String base = this.treeDefinition.getPath();
+        String base = this.workbenchDefinition.getPath();
         if (base.equals("/"))
             return pathInTree;
         else

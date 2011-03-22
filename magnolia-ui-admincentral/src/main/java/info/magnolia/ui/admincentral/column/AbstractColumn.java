@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.ui.model.tree.definition.ColumnDefinition;
+import info.magnolia.ui.model.column.definition.ColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;

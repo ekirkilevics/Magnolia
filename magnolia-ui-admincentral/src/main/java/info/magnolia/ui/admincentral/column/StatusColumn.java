@@ -35,7 +35,7 @@ package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.model.tree.definition.StatusColumnDefinition;
+import info.magnolia.ui.model.column.definition.StatusColumnDefinition;
 
 import java.io.Serializable;
 import java.security.AccessControlException;

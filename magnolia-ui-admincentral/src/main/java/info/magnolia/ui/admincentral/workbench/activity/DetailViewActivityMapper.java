@@ -39,7 +39,7 @@ import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.tree.registry.TreeRegistry;
+import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 /**
  * TODO: write javadoc.
@@ -51,17 +51,17 @@ public class DetailViewActivityMapper implements ActivityMapper {
 
     private Shell shell;
     private EditWorkspaceActionFactory actionFactory;
-    private TreeRegistry treeRegistry;
+    private WorkbenchRegistry workbenchRegistry;
 
-    public DetailViewActivityMapper(Shell shell, EditWorkspaceActionFactory actionFactory, TreeRegistry treeRegistry) {
+    public DetailViewActivityMapper(Shell shell, EditWorkspaceActionFactory actionFactory, WorkbenchRegistry workbenchRegistry) {
         this.shell = shell;
         this.actionFactory = actionFactory;
-        this.treeRegistry = treeRegistry;
+        this.workbenchRegistry = workbenchRegistry;
     }
 
     public Activity getActivity(final Place place) {
         final String path = ((ItemSelectedPlace)place).getPath();
         final String treeName = ((ItemSelectedPlace)place).getWorkspace();
-        return new DetailViewActivity(treeName, path, actionFactory, shell, treeRegistry);
+        return new DetailViewActivity(treeName, path, actionFactory, shell, workbenchRegistry);
     }
 }

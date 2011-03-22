@@ -31,12 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.column.definition;
 
 /**
- * Definition for NodeDataTypeColumns.
+ * Definition for StatusColumns.
  *
  * @author dlipp
  */
-public class NodeDataTypeColumnDefinition extends ColumnDefinition {
+public class StatusColumnDefinition extends ColumnDefinition {
 }

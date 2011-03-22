@@ -69,10 +69,10 @@ import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
- * User interface component that extends TreeTable and uses a TreeDefinition for layout and invoking command callbacks.
+ * User interface component that extends TreeTable and uses a WorkbenchDefinition for layout and invoking command callbacks.
  *
  * @author tmattsson
  */
@@ -82,7 +82,7 @@ public class JcrBrowser extends TreeTable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private TreeDefinition treeDefinition;
+    private WorkbenchDefinition workbenchDefinition;
     private JcrContainer container;
     private Shell shell;
 
@@ -91,8 +91,8 @@ public class JcrBrowser extends TreeTable {
 
     private TreeModel treeModel;
 
-    public JcrBrowser(TreeDefinition treeDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
-        this.treeDefinition = treeDefinition;
+    public JcrBrowser(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
+        this.workbenchDefinition = workbenchDefinition;
         this.treeModel = treeModel;
         // TODO the view should not know the shell
         this.shell = shell;
@@ -172,7 +172,7 @@ public class JcrBrowser extends TreeTable {
             public Action[] getActions(Object target, Object sender) {
                 // FIXME make that item type, security dependent
                 List<JcrBrowserAction> actions = new ArrayList<JcrBrowserAction>();
-                for (MenuItemDefinition menuItemDefinition : treeDefinition.getContextMenuItems()) {
+                for (MenuItemDefinition menuItemDefinition : workbenchDefinition.getMenuItems()) {
                     actions.add(new JcrBrowserAction(menuItemDefinition));
                 }
 

@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition;
+import info.magnolia.ui.model.column.definition.NodeDataTypeColumnDefinition;
 
 import java.io.Serializable;
 

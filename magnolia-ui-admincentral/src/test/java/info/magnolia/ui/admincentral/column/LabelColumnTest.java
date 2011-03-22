@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.column;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import info.magnolia.ui.model.tree.definition.LabelColumnDefinition;
+import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
 
 import javax.jcr.RepositoryException;
 

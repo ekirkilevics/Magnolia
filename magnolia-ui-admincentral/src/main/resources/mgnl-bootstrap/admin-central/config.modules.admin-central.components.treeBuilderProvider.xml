@@ -139,7 +139,7 @@
             <sv:value>88fbab47-a7c4-4555-9bbf-f8b24839de76</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.LabelColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.LabelColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.LabelColumn</sv:value>
@@ -176,7 +176,7 @@
             <sv:value>832977dc-9b46-44ae-85ab-b50897345a18</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.NodeDataColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.NodeDataColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.NodeDataColumn</sv:value>
@@ -216,7 +216,7 @@
             <sv:value>90b970a9-b530-4e5b-a693-638db8366c5a</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.NodeDataValueColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.NodeDataValueColumn</sv:value>
@@ -256,7 +256,7 @@
             <sv:value>704db944-fe57-4650-a18c-fb2456b5a253</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.NodeDataTypeColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.NodeDataTypeColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.NodeDataTypeColumn</sv:value>
@@ -296,7 +296,7 @@
             <sv:value>dbcad56c-94bd-4653-bb15-3bb808a485c2</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.MetaDataColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.MetaDataColumn</sv:value>
@@ -336,7 +336,7 @@
             <sv:value>7ad6679f-95a6-423f-85a9-12031a974a75</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.TemplateColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.TemplateColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.TemplateColumn</sv:value>
@@ -376,7 +376,7 @@
             <sv:value>d05b0bb6-1f35-4704-9968-efc3d01c29b3</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.tree.definition.StatusColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.StatusColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
             <sv:value>info.magnolia.ui.admincentral.column.StatusColumn</sv:value>

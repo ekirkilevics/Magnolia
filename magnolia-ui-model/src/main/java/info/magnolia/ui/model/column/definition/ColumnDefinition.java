@@ -31,22 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.column.definition;
 
 /**
- * Definition for LabelColumns.
+ * Base implementation for all special ColumnDefinitions.
  *
  * @author dlipp
  */
-public class LabelColumnDefinition extends ColumnDefinition {
+public abstract class ColumnDefinition {
+    private String label;
 
-    private boolean editable = false;
+    private int width = 1;
 
-    public boolean isEditable() {
-        return editable;
+    public int getWidth() {
+        return width;
     }
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

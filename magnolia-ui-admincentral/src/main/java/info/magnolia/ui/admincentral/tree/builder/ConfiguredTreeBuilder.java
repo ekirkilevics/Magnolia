@@ -49,9 +49,9 @@ import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.builder.FactoryBase;
-import info.magnolia.ui.model.tree.definition.ColumnDefinition;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.registry.TreeRegistry;
+import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 /**
  * TreeBuild configured via content to bean.
@@ -66,11 +66,11 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
     private List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>>();
 
     private ComponentProvider componentProvider;
-    private TreeRegistry treeRegistry;
+    private WorkbenchRegistry workbenchRegistry;
 
-    public ConfiguredTreeBuilder(ComponentProvider componentProvider, TreeRegistry treeRegistry) {
+    public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry) {
         super(componentProvider);
-        this.treeRegistry = treeRegistry;
+        this.workbenchRegistry = workbenchRegistry;
         this.componentProvider = componentProvider;
     }
 
@@ -95,10 +95,10 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
 
     public TreeView createTreeView(Shell shell, TreeView.Presenter presenter, String treeName) {
         try {
-            TreeDefinition treeDefinition = this.treeRegistry.getTree(treeName);
+            WorkbenchDefinition workbenchDefinition = this.workbenchRegistry.getWorkbench(treeName);
 
             Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
-            for (ColumnDefinition columnDefinition : treeDefinition.getColumns()) {
+            for (ColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
                 // FIXME use getName() not getLabel()
                 Column<?, ?> column = createTreeColumn(columnDefinition);
                 // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
@@ -109,9 +109,9 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
 
             EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
 
-            TreeModel treeModel = new TreeModel(treeDefinition, columns, actionFactory);
+            TreeModel treeModel = new TreeModel(workbenchDefinition, columns, actionFactory);
 
-            return new TreeViewImpl(presenter, treeDefinition, treeModel, shell);
+            return new TreeViewImpl(presenter, workbenchDefinition, treeModel, shell);
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

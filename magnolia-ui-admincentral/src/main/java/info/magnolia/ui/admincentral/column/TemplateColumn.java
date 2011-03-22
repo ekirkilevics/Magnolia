@@ -39,7 +39,7 @@ import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.model.tree.definition.TemplateColumnDefinition;
+import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
 
 import java.io.Serializable;
 import java.util.Iterator;

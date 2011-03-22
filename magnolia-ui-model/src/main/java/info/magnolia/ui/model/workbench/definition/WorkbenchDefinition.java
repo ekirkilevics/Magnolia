@@ -31,8 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.workbench.definition;
 
+import info.magnolia.ui.model.column.definition.ColumnDefinition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 import java.io.Serializable;
@@ -48,56 +49,40 @@ import java.util.Map;
  * Definition of a tree: A tree is a perennial woody plant. It is most often defined as a woody plant that has many secondary
  * branches supported clear of the ground on a single main stem or trunk with clear apical dominance.
  */
-public class TreeDefinition implements Serializable {
+public class WorkbenchDefinition implements Serializable {
 
     private static final long serialVersionUID = -4220598066437699852L;
 
     private String name;
 
-    private String repository;
+    private String workspace;
 
     private String path;
 
-    /**
-     * When in flat mode the tree behaves like a simple table and nodes cannot be expanded to show
-     * their children. Used in the security trees.
-     */
-    private boolean flatMode = false;
-
     private Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();
 
-    private List<MenuItemDefinition> functionMenu = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> menuItems = new ArrayList<MenuItemDefinition>();
 
-    private List<MenuItemDefinition> contextMenuItems = new ArrayList<MenuItemDefinition>();
+    private List<ItemTypeDefinition> itemTypes = new ArrayList<ItemTypeDefinition>();
 
-    private List<TreeItemType> itemTypes = new ArrayList<TreeItemType>();
-
-    public boolean isFlatMode() {
-        return flatMode;
-    }
-
-    public List<TreeItemType> getItemTypes() {
+    public List<ItemTypeDefinition> getItemTypes() {
         return itemTypes;
     }
 
-    public void setItemTypes(List<TreeItemType> itemTypes) {
+    public void setItemTypes(List<ItemTypeDefinition> itemTypes) {
         this.itemTypes = itemTypes;
     }
 
-    public boolean addItemType(TreeItemType treeItemType) {
-        return itemTypes.add(treeItemType);
+    public boolean addItemType(ItemTypeDefinition itemTypeDefinition) {
+        return itemTypes.add(itemTypeDefinition);
     }
 
-    public void setFlatMode(boolean flatMode) {
-        this.flatMode = flatMode;
+    public String getWorkspace() {
+        return workspace;
     }
 
-    public String getRepository() {
-        return repository;
-    }
-
-    public void setRepository(String repository) {
-        this.repository = repository;
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
     }
 
     public String getPath() {
@@ -128,23 +113,15 @@ public class TreeDefinition implements Serializable {
         columns.put(treeColumn.getLabel(), treeColumn);
     }
 
-    public List<MenuItemDefinition> getFunctionMenu() {
-        return functionMenu;
+    public List<MenuItemDefinition> getMenuItems() {
+        return menuItems;
     }
 
-    public void setFunctionMenu(List<MenuItemDefinition> functionMenu) {
-        this.functionMenu = functionMenu;
+    public void setMenuItems(List<MenuItemDefinition> contextMenuItems) {
+        this.menuItems = contextMenuItems;
     }
 
-    public List<MenuItemDefinition> getContextMenuItems() {
-        return contextMenuItems;
-    }
-
-    public void setContextMenuItems(List<MenuItemDefinition> contextMenuItems) {
-        this.contextMenuItems = contextMenuItems;
-    }
-
-    public boolean addContextMenuItem(MenuItemDefinition menuItem) {
-        return contextMenuItems.add(menuItem);
+    public boolean addMenuItem(MenuItemDefinition menuItem) {
+        return menuItems.add(menuItem);
     }
 }

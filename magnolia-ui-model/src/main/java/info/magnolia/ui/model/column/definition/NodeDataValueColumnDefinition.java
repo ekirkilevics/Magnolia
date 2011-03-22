@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.column.definition;
 
 /**
  * Definition for NodeDataValueDataColumns.

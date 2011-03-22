@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,46 +25,28 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
-
-import java.io.Serializable;
+package info.magnolia.ui.model.column.definition;
 
 /**
- * Configuration for inclusion of a certain item type in a tree.
+ * Definition for LabelColumns.
  *
- * @see info.magnolia.cms.core.ItemType
+ * @author dlipp
  */
-public class TreeItemType implements Serializable {
+public class LabelColumnDefinition extends ColumnDefinition {
 
-    private static final long serialVersionUID = 815087827919184207L;
+    private boolean editable = false;
 
-    public static final String ITEM_TYPE_NODE_DATA = "nodeData";
-
-    /**
-     * The system name of the item type or 'nodeData' if it describes node data.
-     */
-    private String itemType;
-    private String icon;
-
-    public String getItemType() {
-        return itemType;
+    public boolean isEditable() {
+        return editable;
     }
 
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

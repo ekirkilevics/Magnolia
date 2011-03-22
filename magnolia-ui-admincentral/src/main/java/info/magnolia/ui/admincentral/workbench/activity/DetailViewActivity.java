@@ -49,8 +49,8 @@ import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
-import info.magnolia.ui.model.tree.registry.TreeRegistry;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 
 /**
@@ -63,13 +63,13 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private DetailView detailView;
     private EditWorkspaceActionFactory actionFactory;
     private Shell shell;
-    private TreeRegistry treeRegistry;
+    private WorkbenchRegistry workbenchRegistry;
 
-    public DetailViewActivity(String treeName, String path, EditWorkspaceActionFactory actionFactory, Shell shell, TreeRegistry treeRegistry) {
+    public DetailViewActivity(String treeName, String path, EditWorkspaceActionFactory actionFactory, Shell shell, WorkbenchRegistry workbenchRegistry) {
         this.treeName = treeName;
         this.actionFactory = actionFactory;
         this.shell = shell;
-        this.treeRegistry = treeRegistry;
+        this.workbenchRegistry = workbenchRegistry;
         detailView = new DetailViewImpl(this);
         showItem(path);
     }
@@ -84,7 +84,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
             this.path = path;
             // FIXME should be dependent on the item type
             try {
-                detailView.showActions(treeRegistry.getTree(treeName).getContextMenuItems());
+                detailView.showActions(workbenchRegistry.getWorkbench(treeName).getMenuItems());
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
@@ -93,19 +93,19 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
 
     public void onCommandSelected(String commandName) {
         // TODO we should inject the tree definition or something more abstract
-        final TreeDefinition treeDefinition;
+        final WorkbenchDefinition workbenchDefinition;
         try {
-            treeDefinition = treeRegistry.getTree(treeName);
+            workbenchDefinition = workbenchRegistry.getWorkbench(treeName);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-        final List<MenuItemDefinition> contextMenuItems = treeDefinition.getContextMenuItems();
+        final List<MenuItemDefinition> contextMenuItems = workbenchDefinition.getMenuItems();
         // TODO should this be a map to avoid such iterations?
         for (MenuItemDefinition menuItemDefinition : contextMenuItems) {
             final Item item;
             try {
-                String normalizedPath = (treeDefinition.getPath() + path).replaceAll("//", "/");
-                item = JCRUtil.getSession(treeDefinition.getRepository()).getItem(normalizedPath);
+                String normalizedPath = (workbenchDefinition.getPath() + path).replaceAll("//", "/");
+                item = JCRUtil.getSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
                 if(menuItemDefinition.getName().equals(commandName)){
                     final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
                     try {

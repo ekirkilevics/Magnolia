@@ -31,31 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.column.definition;
 
 /**
- * Base implementation for all special ColumnDefinitions.
+ * Definition for MetaDataColumns.
  *
  * @author dlipp
  */
-public abstract class ColumnDefinition {
-    private String label;
-
-    private int width = 1;
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
+public class MetaDataColumnDefinition extends ColumnDefinition {
 }

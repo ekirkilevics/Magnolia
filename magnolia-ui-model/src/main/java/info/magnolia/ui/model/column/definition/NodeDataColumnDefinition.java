@@ -31,12 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.column.definition;
 
 /**
- * Definition for StatusColumns.
+ * Definition for NodeDataColumns.
  *
  * @author dlipp
  */
-public class StatusColumnDefinition extends ColumnDefinition {
+public class NodeDataColumnDefinition extends ColumnDefinition {
+
+    private String nodeDataName;
+    private boolean editable = false;
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public String getNodeDataName() {
+        return nodeDataName;
+    }
+
+    public void setNodeDataName(String nodeDataName) {
+        this.nodeDataName = nodeDataName;
+    }
+
 }

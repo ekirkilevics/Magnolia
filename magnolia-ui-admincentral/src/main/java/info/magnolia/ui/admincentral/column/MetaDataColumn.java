@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.model.tree.definition.MetaDataColumnDefinition;
+import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
 import java.io.Serializable;
 import java.util.Calendar;

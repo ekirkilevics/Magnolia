@@ -41,7 +41,7 @@ import com.vaadin.ui.Component;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
@@ -53,9 +53,9 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     private JcrBrowser jcrBrowser;
 
-    public TreeViewImpl(final Presenter presenter, TreeDefinition treeDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
+    public TreeViewImpl(final Presenter presenter, WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
 
-        jcrBrowser = new JcrBrowser(treeDefinition, treeModel, shell);
+        jcrBrowser = new JcrBrowser(workbenchDefinition, treeModel, shell);
         jcrBrowser.setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
 

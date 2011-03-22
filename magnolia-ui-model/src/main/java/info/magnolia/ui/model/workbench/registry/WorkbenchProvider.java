@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,38 +25,22 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.definition;
+package info.magnolia.ui.model.workbench.registry;
+
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+
+import javax.jcr.RepositoryException;
 
 /**
- * Definition for NodeDataColumns.
- *
- * @author dlipp
+ * Provides a tree definition.
  */
-public class NodeDataColumnDefinition extends ColumnDefinition {
+public interface WorkbenchProvider {
 
-    private String nodeDataName;
-    private boolean editable = false;
-
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
-
-    public String getNodeDataName() {
-        return nodeDataName;
-    }
-
-    public void setNodeDataName(String nodeDataName) {
-        this.nodeDataName = nodeDataName;
-    }
-
+    WorkbenchDefinition getDefinition() throws RepositoryException;
 }

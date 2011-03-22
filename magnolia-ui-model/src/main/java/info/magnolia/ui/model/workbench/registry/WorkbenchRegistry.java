@@ -31,32 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.registry;
+package info.magnolia.ui.model.workbench.registry;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.ui.model.tree.definition.TreeDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.jcr.RepositoryException;
 
 /**
- * Provides the tree definition for a tree configured in the repository.
+ * Maintains a registry of configured tree providers by name.
  */
-public class ConfiguredTreeProvider implements TreeProvider {
+public class WorkbenchRegistry {
 
-    private Content configNode;
+    private final Map<String, WorkbenchProvider> providers = new HashMap<String, WorkbenchProvider>();
 
-    public ConfiguredTreeProvider(Content content) {
-        this.configNode = new LazyContentWrapper(content);
+    public void register(String name, WorkbenchProvider provider) {
+        synchronized (providers) {
+            if (providers.containsKey(name))
+                throw new IllegalStateException("Tree already registered for name [" + name + "]");
+            providers.put(name, provider);
+        }
     }
 
-    public TreeDefinition getTreeDefinition() throws RepositoryException {
-        try {
-            return (TreeDefinition) Content2BeanUtil.toBean(configNode, true, TreeDefinition.class);
-        } catch (Content2BeanException e) {
-            throw new RepositoryException(e);
+    public void unregister(String name) {
+        synchronized (providers) {
+            providers.remove(name);
         }
+    }
+
+    public WorkbenchDefinition getWorkbench(String name) throws RepositoryException {
+
+        WorkbenchProvider workbenchProvider;
+        synchronized (providers) {
+            workbenchProvider = providers.get(name);
+        }
+        if (workbenchProvider == null) {
+            return null;
+        }
+        return workbenchProvider.getDefinition();
     }
 }

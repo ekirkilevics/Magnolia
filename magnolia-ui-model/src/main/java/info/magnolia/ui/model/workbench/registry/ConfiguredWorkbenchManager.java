@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.tree.registry;
+package info.magnolia.ui.model.workbench.registry;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -48,15 +48,15 @@ import info.magnolia.cms.core.ItemType;
 /**
  * ObservedManager for trees configured in the repository.
  */
-public class ConfiguredTreeManager extends ObservedManager {
+public class ConfiguredWorkbenchManager extends ObservedManager {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Set<String> registeredTrees = new HashSet<String>();
-    private TreeRegistry treeRegistry;
+    private final Set<String> registeredWorkbenches = new HashSet<String>();
+    private WorkbenchRegistry workbenchRegistry;
 
-    public ConfiguredTreeManager(TreeRegistry treeRegistry) {
-        this.treeRegistry = treeRegistry;
+    public ConfiguredWorkbenchManager(WorkbenchRegistry workbenchRegistry) {
+        this.workbenchRegistry = workbenchRegistry;
     }
 
     @Override
@@ -71,13 +71,13 @@ public class ConfiguredTreeManager extends ObservedManager {
                 name = treeNode.getName();
             }
 
-            synchronized (registeredTrees) {
+            synchronized (registeredWorkbenches) {
                 try {
 
-                    TreeProvider tree = new ConfiguredTreeProvider(treeNode);
+                    WorkbenchProvider tree = new ConfiguredWorkbenchProvider(treeNode);
 
-                    treeRegistry.registerTree(name, tree);
-                    this.registeredTrees.add(name);
+                    workbenchRegistry.register(name, tree);
+                    this.registeredWorkbenches.add(name);
                 } catch (IllegalStateException e) {
                     log.error("Unable to register tree [" + name + "]", e);
                 }
@@ -87,11 +87,11 @@ public class ConfiguredTreeManager extends ObservedManager {
 
     @Override
     protected void onClear() {
-        synchronized (registeredTrees) {
-            for (String treeName : registeredTrees) {
-                treeRegistry.unregisterTree(treeName);
+        synchronized (registeredWorkbenches) {
+            for (String treeName : registeredWorkbenches) {
+                workbenchRegistry.unregister(treeName);
             }
-            this.registeredTrees.clear();
+            this.registeredWorkbenches.clear();
         }
     }
 }
