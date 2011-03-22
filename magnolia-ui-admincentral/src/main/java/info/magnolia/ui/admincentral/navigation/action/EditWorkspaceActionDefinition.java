@@ -39,6 +39,7 @@ import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
  * EditWorkspace Action Definition.
+ *
  * @author fgrilli
  *
  */
@@ -56,10 +57,9 @@ public class EditWorkspaceActionDefinition implements PlaceChangeActionDefinitio
     }
 
     public Place getPlace() {
-        if(place != null){
-            return place;
+        if (place == null) {
+            place = new EditWorkspacePlace(getWorkspace());
         }
-        place = new EditWorkspacePlace(getWorkspace());
         return place;
     }
 }
