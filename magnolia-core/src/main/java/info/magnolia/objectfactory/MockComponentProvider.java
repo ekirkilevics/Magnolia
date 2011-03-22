@@ -39,6 +39,8 @@ import java.util.Properties;
  * ComponentProvider that is useful for tests as it can be configured and reconfigured.
  *
  * @author tmattsson
+ *
+ * TODO: move to info.magnolia.test.mock package in src/test
  */
 public class MockComponentProvider extends PropertiesComponentProvider {
 
