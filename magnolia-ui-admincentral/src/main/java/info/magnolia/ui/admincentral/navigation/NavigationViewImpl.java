@@ -85,6 +85,8 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         buttons.setMargin(false, false, true, false);
 
         final VerticalLayout navigationWorkareaContainer = new VerticalLayout();
+        navigationWorkareaContainer.setSizeFull();
+        navigationWorkareaContainer.setMargin(false, false, true, false);
 
         final NavigationDefinition navigation = navigationRegistry.getNavigation();
 
@@ -113,13 +115,23 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
 
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
+        for(NavigationWorkArea wa: registeredNavigationAreas.values()){
+            for(NavigationGroup ng: wa.getNavigationGroup()){
+                ng.setPresenter(presenter);
+            }
+        }
 
     }
 
     public Component asVaadinComponent() {
         return this;
     }
-
+    /**
+     * WorkbenchChooser.
+     * TODO naming?
+     * @author fgrilli
+     *
+     */
     public class WorkbenchChooser extends Button {
 
         private static final long serialVersionUID = 1L;
@@ -141,6 +153,12 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
             }
         }
     }
+    /**
+     * WorkbenchChooserClickListener.
+     * TODO naming.
+     * @author fgrilli
+     *
+     */
     public class WorkbenchChooserClickListener implements ClickListener {
 
         private static final long serialVersionUID = 1L;
