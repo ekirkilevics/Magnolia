@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,21 +25,46 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.model.navigation.definition;
+package info.magnolia.ui.admincentral.navigation;
 
-import java.util.Collection;
+import java.util.List;
+
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * The definition of the navigation.
+ * TODO write javadoc.
+ * @author fgrilli
+ *
  */
-public interface NavigationDefinition {
-    Collection<NavigationWorkareaDefinition> getWorkareas();
+public class NavigationWorkArea extends CustomComponent {
+
+    private static final long serialVersionUID = 1L;
+    private List<NavigationGroup> navigationGroup;
+    private VerticalLayout container = new VerticalLayout();
+
+    public NavigationWorkArea(List<NavigationGroup> navigationGroup) {
+        setCompositionRoot(container);
+        setSizeFull();
+        this.navigationGroup = navigationGroup;
+
+        for(NavigationGroup group: navigationGroup){
+            container.addComponent(group);
+        }
+
+        //all workareas start not visible
+        setVisible(false);
+    }
+
+    public List<NavigationGroup> getNavigationGroup() {
+        return navigationGroup;
+    }
 
 }

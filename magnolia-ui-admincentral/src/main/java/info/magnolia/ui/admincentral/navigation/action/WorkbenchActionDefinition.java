@@ -38,7 +38,7 @@ import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * EditWorkspace Action Definition.
+ * Workbench Action Definition.
  *
  * @author fgrilli
  *

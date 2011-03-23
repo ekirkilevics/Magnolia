@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,13 +33,46 @@
  */
 package info.magnolia.ui.model.navigation.definition;
 
+import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
- * The definition of the navigation.
+ * TODO write javadoc.
+ * @author fgrilli
+ *
  */
-public interface NavigationDefinition {
-    Collection<NavigationWorkareaDefinition> getWorkareas();
+public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl implements NavigationWorkareaDefinition {
+
+    private Collection<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
+    private String name;
+    private boolean visible;
+
+    public Collection<NavigationItemDefinition> getItems() {
+        return items;
+    }
+
+    public void addItem(NavigationItemDefinition item) {
+        items.add(item);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+    /**
+     * Sets this workbench as visible by default (e.g. when opening the application).
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
 
 }
