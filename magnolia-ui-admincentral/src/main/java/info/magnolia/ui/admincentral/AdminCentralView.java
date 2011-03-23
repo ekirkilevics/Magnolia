@@ -33,12 +33,14 @@
  */
 package info.magnolia.ui.admincentral;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.VerticalLayout;
 
 /**
  * Main application view layout.
  */
-public interface AdminCentralView {
+public interface AdminCentralView extends Serializable {
 
     void init();
 

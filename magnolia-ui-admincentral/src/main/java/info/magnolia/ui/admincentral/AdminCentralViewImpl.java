@@ -60,6 +60,7 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
  */
 public class AdminCentralViewImpl implements AdminCentralView {
 
+    private static final long serialVersionUID = -8882766616316597356L;
     private Application application;
     private DialogPresenter dialogPresenter;
 
