@@ -33,13 +33,14 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.logging.AuditLoggingUtil;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.UnhandledException;
+
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
 
 /**
  * Collection of utilities to simplify working with the JCR API. To be checked how much this type
@@ -53,18 +54,22 @@ public class JCRMetadataUtil {
 
     private static class JCRMetaData extends MetaData {
 
-        public JCRMetaData(Node node) {
+        public JCRMetaData(Node node) throws RepositoryException {
             // do not use AccessManager for now
-            super(node, (AccessManager) null);
+            super(node, node.getSession());
         }
     }
 
     public static MetaData getMetaData(Node node) {
-        return new JCRMetaData(node);
+        try {
+            return new JCRMetaData(node);
+        } catch (RepositoryException e) {
+            throw new UnhandledException(e);
+        }
     }
 
     public static String getActivationStatusIcon(Node parent) {
-        MetaData metaData = new JCRMetaData(parent);
+        MetaData metaData = getMetaData(parent);
         String imgSrc;
         switch (metaData.getActivationStatus()) {
         case MetaData.ACTIVATION_STATUS_MODIFIED:
