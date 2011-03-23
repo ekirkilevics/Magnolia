@@ -31,7 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.test.mock;
+
+import info.magnolia.objectfactory.ComponentConfigurationPath;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.LazyObservedComponentFactory;
+import info.magnolia.objectfactory.PropertiesComponentProvider;
 
 import java.util.Properties;
 
@@ -39,8 +44,6 @@ import java.util.Properties;
  * ComponentProvider that is useful for tests as it can be configured and reconfigured.
  *
  * @author tmattsson
- *
- * TODO: move to info.magnolia.test.mock package in src/test
  */
 public class MockComponentProvider extends PropertiesComponentProvider {
 

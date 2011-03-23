@@ -37,7 +37,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.MockComponentProvider;
+import info.magnolia.test.mock.MockComponentProvider;
 
 import java.io.IOException;
 import java.io.InputStream;

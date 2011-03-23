@@ -35,6 +35,7 @@ package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
+import info.magnolia.test.mock.MockComponentProvider;
 import junit.framework.TestCase;
 import org.apache.commons.beanutils.ConstructorUtils;
 
