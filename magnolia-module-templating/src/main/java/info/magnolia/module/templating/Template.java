@@ -33,16 +33,18 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 /**
  * Represents a template definition.
@@ -66,7 +68,7 @@ import java.util.Map;
  * <tr>
  * <td>type</td>
  * <td> <code>jsp</code></td>
- * <td> <code>jsp</code>, <code>freemarker</code>, É</td>
+ * <td> <code>jsp</code>, <code>freemarker</code>, ï¿½</td>
  * <td>Determines which <code>TemplateRenderer</code> to use. Out of the box,
  * Magnolia provides support for JSP and FreeMarker.</td>
  * </tr>
@@ -161,6 +163,7 @@ public class Template extends AbstractRenderable {
      * @return Returns the path.
      * @deprecated since 4.0. use getTemplatePath() instead
      */
+    @Deprecated
     public String getPath() {
         DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (current value: " + getTemplatePath() + ")");
         return getTemplatePath();
@@ -204,6 +207,7 @@ public class Template extends AbstractRenderable {
     /**
      * @deprecated since 4.0 use {@link #setTemplatePath(String)}
      */
+    @Deprecated
     public void setPath(String path) {
         // log message can only output the templatePath, as there is not guarantee the name or content name have been set already
         DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (setting to value: " + path + ")");
@@ -215,9 +219,12 @@ public class Template extends AbstractRenderable {
     }
 
     public boolean isAvailable(Content node) {
-        // TODO is called quite often and should be faster
-        AccessManager am = MgnlContext.getAccessManager(getContent().getHierarchyManager().getName());
-        return am.isGranted(getContent().getHandle(), Permission.READ);
+        // was: TODO is called quite often and should be faster
+        try {
+            return Access.isGranted(MgnlContext.getSession(getContent().getHierarchyManager().getName()), getContent().getHandle(), Session.ACTION_READ);
+        } catch (RepositoryException e) {
+            return false;
+        }
     }
 
     public Content getContent() {
