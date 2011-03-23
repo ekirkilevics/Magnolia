@@ -47,9 +47,8 @@ import info.magnolia.context.MgnlContext.Op;
  * @author had
  * @version $Id: $
  * @param <R>
- * @param <E>
  */
-public abstract class SessionOp<R, E extends Throwable> implements Op<R, E> {
+public abstract class SessionOp<R> implements Op<R, RepositoryException> {
 
     protected static final Logger log = LoggerFactory.getLogger(SessionOp.class);
 
@@ -66,7 +65,7 @@ public abstract class SessionOp<R, E extends Throwable> implements Op<R, E> {
         this.closeOnExit = closeOnExit;
     }
 
-    public R exec() throws E {
+    public R exec() throws RepositoryException {
         Session session = null;
         try {
             // can't do ... need a session before repo is setup and pico is initialized ...
@@ -83,5 +82,5 @@ public abstract class SessionOp<R, E extends Throwable> implements Op<R, E> {
         }
     }
 
-    public abstract R exec(Session session) throws E;
+    public abstract R exec(Session session) throws RepositoryException;
 }

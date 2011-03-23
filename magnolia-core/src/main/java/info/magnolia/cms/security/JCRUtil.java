@@ -80,7 +80,7 @@ public class JCRUtil {
     }
 
     static void collectUniquePropertyNames(final Node node, final String repositoryName, final String subnodeName, final Collection<String> set, final boolean isDeep) throws RepositoryException {
-        MgnlContext.doInSystemContext(new SessionOp<Void, RepositoryException>(repositoryName) {
+        MgnlContext.doInSystemContext(new SessionOp<Void>(repositoryName) {
 
             @Override
             public Void exec(Session session) throws RepositoryException {

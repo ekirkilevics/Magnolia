@@ -122,7 +122,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      */
     public User getUser(final String name) {
         try {
-            return MgnlContext.doInSystemContext(new SessionOp<User, RepositoryException>(getRepositoryName()) {
+            return MgnlContext.doInSystemContext(new SessionOp<User>(getRepositoryName()) {
                 @Override
                 public User exec(Session session) throws RepositoryException {
                     Node priviledgedUserNode = findPrincipalNode(name, session);

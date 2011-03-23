@@ -210,7 +210,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
                 }});
 
 
-            return MgnlContext.doInSystemContext(new SessionOp<Boolean, RepositoryException>(sessionName) {
+            return MgnlContext.doInSystemContext(new SessionOp<Boolean>(sessionName) {
 
                 @Override
                 public Boolean exec(Session session) throws RepositoryException {
