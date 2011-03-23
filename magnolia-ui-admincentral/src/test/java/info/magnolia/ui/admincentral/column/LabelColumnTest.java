@@ -59,7 +59,7 @@ public class LabelColumnTest {
         String original = "Beckenbauer";
         mock.setName(original);
         mock.setProperty("name", original);
-        LabelColumn column = new LabelColumn(new LabelColumnDefinition());
+        LabelColumn column = new LabelColumn(new LabelColumnDefinition(), null);
         Object result = column.getValue(mock);
         assertEquals(original, result);
     }
@@ -68,7 +68,7 @@ public class LabelColumnTest {
     public void testGetEditField() {
         LabelColumnDefinition definition = new LabelColumnDefinition();
         definition.setEditable(true);
-        LabelColumn column = new LabelColumn(definition);
+        LabelColumn column = new LabelColumn(definition, null);
         assertTrue(column.getEditField(null) instanceof Field);
 
         definition.setEditable(false);

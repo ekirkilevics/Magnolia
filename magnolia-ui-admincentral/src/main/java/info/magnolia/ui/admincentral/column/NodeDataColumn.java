@@ -33,7 +33,11 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
 
 import java.io.Serializable;
@@ -52,12 +56,15 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataColumn extends AbstractColumn<String, NodeDataColumnDefinition> implements Serializable {
+public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = 979787074349524725L;
 
-    public NodeDataColumn(NodeDataColumnDefinition def) {
+    private EventBus eventBus;
+
+    public NodeDataColumn(NodeDataColumnDefinition def, EventBus eventBus) {
         super(def);
+        this.eventBus = eventBus;
     }
 
     public String getNodeDataName() {
@@ -76,20 +83,37 @@ public class NodeDataColumn extends AbstractColumn<String, NodeDataColumnDefinit
     }
 
     @Override
-    public Class<String> getType() {
-        return String.class;
+    public Class<Component> getType() {
+        return Component.class;
     }
 
     @Override
-    public String getValue(Item item) throws RepositoryException {
+    public Component getValue(Item item) throws RepositoryException {
 
         if (item instanceof Node) {
-            Node node = (Node) item;
 
-            if (node.hasProperty(getNodeDataName()))
-                return node.getProperty(getNodeDataName()).getString();
+            return new EditableText(item) {
+
+                @Override
+                protected String getValue(Item item) throws RepositoryException {
+                    return getInternal((Node) item);
+                }
+
+                @Override
+                protected void setValue(Item item, Object value) throws RepositoryException {
+                    NodeDataColumn.this.setValue(item, value);
+                    eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
+                }
+            };
         }
-        return "";
+        return new Label();
+    }
+
+    private String getInternal(Node node) throws RepositoryException {
+        if (node.hasProperty(getNodeDataName())) {
+            return node.getProperty(getNodeDataName()).getString();
+        } else
+            return "";
     }
 
     @Override

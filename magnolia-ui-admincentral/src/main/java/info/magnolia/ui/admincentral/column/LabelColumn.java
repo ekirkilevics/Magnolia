@@ -33,18 +33,19 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
-
 import java.io.Serializable;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
 
 /**
  * Describes a column that contains the label of the item.
@@ -52,22 +53,38 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class LabelColumn extends AbstractColumn<String,LabelColumnDefinition> implements Serializable {
+public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 
-    public LabelColumn(LabelColumnDefinition def) {
+    private EventBus eventBus;
+
+    public LabelColumn(LabelColumnDefinition def, EventBus eventBus) {
         super(def);
+        this.eventBus = eventBus;
     }
 
     @Override
-    public Class<String> getType() {
-        return String.class;
+    public Class<Component> getType() {
+        return Component.class;
     }
 
     @Override
-    public String getValue(Item item) throws RepositoryException {
-        return item.getName();
+    public Component getValue(Item item) throws RepositoryException {
+
+        return new EditableText(item) {
+
+            @Override
+            protected String getValue(Item item) throws RepositoryException {
+                return item.getName();
+            }
+
+            @Override
+            protected void setValue(Item item, Object value) throws RepositoryException {
+                LabelColumn.this.setValue(item, value);
+                eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
+            }
+        };
     }
 
     @Override
