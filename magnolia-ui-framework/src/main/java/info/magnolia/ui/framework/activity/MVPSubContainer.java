@@ -36,8 +36,10 @@ package info.magnolia.ui.framework.activity;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 
+import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.pico.ComponentFactoryProviderAdapter;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.HandlerRegistration;
@@ -74,6 +76,10 @@ public abstract class MVPSubContainer extends AbstractActivity {
             container.addComponent(componentKey, componentImplementationOrInstance);
         }
 
+        public <T> void addComponentFactory(Class<T> componentKey, ComponentFactory<T> componentFactory) {
+            container.addAdapter(new ComponentFactoryProviderAdapter(componentKey, componentFactory));
+        }
+
         public <T> Class< ? extends T> getImplementation(Class<T> type) throws ClassNotFoundException {
             return componentProvider.getImplementation(type);
         }
@@ -96,7 +102,10 @@ public abstract class MVPSubContainer extends AbstractActivity {
      * TODO move to the core? see patch in MAGNOLIA-3592
      */
     protected interface MutableComponentProvider extends ComponentProvider {
+
         void addComponent(Object componentKey, Object componentImplementationOrInstance);
+
+        <T> void addComponentFactory(Class<T> componentClass, ComponentFactory<T> componentFactory);
     }
 
     private String id;
