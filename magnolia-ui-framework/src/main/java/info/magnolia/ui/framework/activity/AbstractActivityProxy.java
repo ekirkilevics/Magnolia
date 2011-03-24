@@ -60,7 +60,7 @@ import info.magnolia.ui.framework.view.ViewPort;
  * TODO it is not clear how we would provide IoC here. it is comparable to a sub-conversion scope.
  *
  */
-public abstract class MVPSubContainer extends AbstractActivity {
+public abstract class AbstractActivityProxy extends AbstractActivity {
 
     private final class PicoMutableComponentProvider implements MutableComponentProvider {
 
@@ -125,7 +125,7 @@ public abstract class MVPSubContainer extends AbstractActivity {
     private Activity activity;
 
 
-    public MVPSubContainer(String id, Shell shell) {
+    public AbstractActivityProxy(String id, Shell shell) {
         this.id = id;
         this.shell = shell;
     }

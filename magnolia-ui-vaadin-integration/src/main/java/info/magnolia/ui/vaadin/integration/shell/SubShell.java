@@ -41,7 +41,7 @@ import com.vaadin.ui.UriFragmentUtility;
 
 
 /**
- * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.framework.activity.MVPSubContainer}.
+ * A shell working only with a sub fragment of the URL fragment. Used to build sub containers by using {@link info.magnolia.ui.framework.activity.AbstractActivityProxy}.
  */
 @SuppressWarnings("serial")
 public class SubShell extends AbstractShell {

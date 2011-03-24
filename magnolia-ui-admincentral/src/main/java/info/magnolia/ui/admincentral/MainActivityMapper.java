@@ -39,7 +39,7 @@ import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.embedded.activity.EmbeddedActivity;
 import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
-import info.magnolia.ui.admincentral.workbench.activity.WorkbenchMVPSubContainer;
+import info.magnolia.ui.admincentral.workbench.activity.WorkbenchActivityProxy;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
@@ -55,7 +55,7 @@ public class MainActivityMapper extends FactoryBase<Place, Activity> implements 
     public MainActivityMapper(ComponentProvider componentProvider) {
         super(componentProvider);
 
-        addMapping(WorkbenchPlace.class, WorkbenchMVPSubContainer.class);
+        addMapping(WorkbenchPlace.class, WorkbenchActivityProxy.class);
         addMapping(EmbeddedPlace.class, EmbeddedActivity.class);
         addMapping(DialogPlace.class, DialogActivity.class);
     }

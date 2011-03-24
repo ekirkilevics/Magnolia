@@ -43,7 +43,7 @@ import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
 import info.magnolia.ui.framework.activity.Activity;
-import info.magnolia.ui.framework.activity.MVPSubContainer;
+import info.magnolia.ui.framework.activity.AbstractActivityProxy;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
@@ -53,13 +53,13 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 /**
  * The isolated MVP container for workspace editing.
  */
-public class WorkbenchMVPSubContainer extends MVPSubContainer{
+public class WorkbenchActivityProxy extends AbstractActivityProxy{
 
     private WorkbenchPlace place;
     private TreeBuilderProvider treeBuilderProvider;
     private WorkbenchRegistry workbenchRegistry;
 
-    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, TreeBuilderProvider treeBuilderProvider, Shell shell) {
+    public WorkbenchActivityProxy(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, TreeBuilderProvider treeBuilderProvider, Shell shell) {
         super("workbench-" + place.getWorkbenchName(), shell);
         this.place = place;
         this.treeBuilderProvider = treeBuilderProvider;

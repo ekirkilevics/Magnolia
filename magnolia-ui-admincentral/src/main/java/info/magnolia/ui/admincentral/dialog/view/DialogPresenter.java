@@ -46,6 +46,7 @@ import info.magnolia.ui.model.dialog.registry.DialogRegistry;
 
 /**
  * Window for creating or editing content using a dialog.
+ * TODO should this be merged with {@link info.magnolia.ui.admincentral.dialog.activity.DialogActivity}
  */
 public class DialogPresenter implements DialogView.Presenter {
 
