@@ -91,7 +91,7 @@ public class WorkbenchView implements View, IsVaadinComponent{
         outerLayout.addComponent(searchForm);
         outerLayout.addComponent(splitPanel);
         outerLayout.setExpandRatio(searchForm, 1);
-        outerLayout.setExpandRatio(splitPanel, 10);
+        outerLayout.setExpandRatio(splitPanel, 9);
     }
 
     public Component asVaadinComponent() {

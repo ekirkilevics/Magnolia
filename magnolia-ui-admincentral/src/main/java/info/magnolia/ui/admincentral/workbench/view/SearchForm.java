@@ -46,31 +46,34 @@ import com.vaadin.ui.TextField;
  *
  * @author dlipp
  *
- *         TODO: check where to move - make nice design
+ * TODO: check where to move, make nice design, animate
  */
 public class SearchForm extends Form {
     private static final long serialVersionUID = 2746156631931332883L;
 
     public SearchForm() {
         super();
-        final GridLayout grid = new GridLayout(2, 2);
+        final GridLayout grid = new GridLayout(2, 3);
         setLayout(grid);
 
         grid.setSizeFull();
-        Label basicSearch = new Label("Basic search");
-        grid.addComponent(basicSearch, 0, 0);
-        grid.setComponentAlignment(basicSearch, Alignment.MIDDLE_LEFT);
 
-        Label resultLabel = new Label("5 pages where found containing yout text...");
-        resultLabel.setSizeFull();
-        grid.addComponent(resultLabel, 0, 1);
-        grid.setComponentAlignment(resultLabel, Alignment.MIDDLE_LEFT);
-
+        // Note: right now the only component in the first row - prepare for fading in the other stuff only after
+        // someone started a search...
         TextField searchField = new TextField();
         searchField.setValue("<Search term goes here>");
         searchField.setSizeFull();
         grid.addComponent(searchField, 1, 0);
         grid.setComponentAlignment(searchField, Alignment.MIDDLE_RIGHT);
+
+        Label basicSearch = new Label("Basic search");
+        grid.addComponent(basicSearch, 0, 1);
+        grid.setComponentAlignment(basicSearch, Alignment.MIDDLE_LEFT);
+
+        Label resultLabel = new Label("5 pages where found containing yout text...");
+        resultLabel.setSizeFull();
+        grid.addComponent(resultLabel, 0, 2);
+        grid.setComponentAlignment(resultLabel, Alignment.MIDDLE_LEFT);
 
         Button updateResultsButton = new Button("Update results");
         Button doneButton = new Button("Done");
@@ -79,8 +82,11 @@ public class SearchForm extends Form {
         buttonForm.addComponent(doneButton);
         buttonForm.setSizeFull();
 
-        grid.addComponent(buttonForm, 1, 1);
+        grid.addComponent(buttonForm, 1, 2);
         grid.setComponentAlignment(buttonForm, Alignment.MIDDLE_RIGHT);
+
+        grid.setColumnExpandRatio(0, 5);
+        grid.setColumnExpandRatio(1, 1);
     }
 
 }
