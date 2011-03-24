@@ -43,6 +43,7 @@ import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.VerticalLayout;
 
 
 /**
@@ -50,6 +51,8 @@ import com.vaadin.ui.HorizontalSplitPanel;
  */
 public class WorkbenchView implements View, IsVaadinComponent{
 
+    private static final long serialVersionUID = 7548338054163224225L;
+    private VerticalLayout outerLayout;
     private HorizontalSplitPanel splitPanel;
     private ComponentViewPort itemListViewPort;
     private ComponentViewPort detailViewPort;
@@ -65,11 +68,7 @@ public class WorkbenchView implements View, IsVaadinComponent{
             public void splitterClick(SplitterClickEvent event) {
                 if(event.isDoubleClick()){
                     HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
-                    if(panel.getSplitPosition() > 0){
-                        panel.setSplitPosition(0);
-                    }else {
-                        panel.setSplitPosition(15);
-                    }
+                    panel.setSplitPosition(panel.getSplitPosition() > 0 ? 0:15);
                 }
             }
         });
@@ -82,15 +81,25 @@ public class WorkbenchView implements View, IsVaadinComponent{
 
         splitPanel.addComponent(itemListViewPort);
         splitPanel.addComponent(detailViewPort);
+        splitPanel.setSizeFull();
+
+        SearchForm searchForm = new SearchForm();
+        searchForm.setSizeFull();
+
+        outerLayout = new  VerticalLayout();
+        outerLayout.setSizeFull();
+        outerLayout.addComponent(searchForm);
+        outerLayout.addComponent(splitPanel);
+        outerLayout.setExpandRatio(searchForm, 1);
+        outerLayout.setExpandRatio(splitPanel, 10);
     }
 
     public Component asVaadinComponent() {
-        return splitPanel;
+        return outerLayout;
     }
 
     public ViewPort getItemListViewPort() {
         return itemListViewPort;
-
     }
 
     public ViewPort getDetailViewPort() {
