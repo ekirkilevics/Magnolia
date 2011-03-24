@@ -33,6 +33,10 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
+import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
 
 import java.io.Serializable;
@@ -52,26 +56,41 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataValueColumn extends AbstractColumn<String,NodeDataValueColumnDefinition> implements Serializable {
+public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -6032077132567486333L;
 
-    public NodeDataValueColumn(NodeDataValueColumnDefinition def) {
+    private EventBus eventBus;
+
+    public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus) {
         super(def);
+        this.eventBus = eventBus;
     }
 
     @Override
-    public Class<String> getType() {
-        return String.class;
+    public Class<Component> getType() {
+        return Component.class;
     }
 
     @Override
-    public Object getValue(Item item) throws RepositoryException {
+    public Component getValue(Item item) throws RepositoryException {
         if (item instanceof Property) {
-            Property property = (Property) item;
-            return property.getString();
+            return new EditableText(item) {
+
+                @Override
+                protected String getValue(Item item) throws RepositoryException {
+                    Property property = (Property) item;
+                    return property.getString();
+                }
+
+                @Override
+                protected void setValue(Item item, Object value) throws RepositoryException {
+                    NodeDataValueColumn.this.setValue(item, value);
+                    eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
+                }
+            };
         }
-        return "";
+        return new Label();
     }
 
     @Override

@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.column;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.FieldEvents;
@@ -57,10 +58,13 @@ public abstract class EditableText extends CustomComponent {
 
     private final String workspace;
     private final String nodeIdentifier;
+    private final String propertyName;
 
     public EditableText(Item item) throws RepositoryException {
+
         this.workspace = item.getSession().getWorkspace().getName();
-        this.nodeIdentifier = ((Node) item).getIdentifier();
+        this.nodeIdentifier = item instanceof Node ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
+        this.propertyName = item instanceof Property ? (item).getName() : null;
 
         final HorizontalLayout layout = new HorizontalLayout();
         final Label label = new Label(getValue(item));
@@ -72,7 +76,7 @@ public abstract class EditableText extends CustomComponent {
                 if (event.isDoubleClick()) {
                     final TextField textField = new TextField();
                     try {
-                        textField.setValue(getValue(getItem(workspace, nodeIdentifier)));
+                        textField.setValue(getValue(getItem()));
                     } catch (RepositoryException e) {
                         throw new RuntimeRepositoryException(e);
                     }
@@ -89,7 +93,7 @@ public abstract class EditableText extends CustomComponent {
                             Object value = textField.getValue();
 
                             try {
-                                Item item1 = getItem(workspace, nodeIdentifier);
+                                Item item1 = getItem();
                                 setValue(item1, value);
                             } catch (RepositoryException e) {
                                 throw new RuntimeRepositoryException(e);
@@ -108,17 +112,19 @@ public abstract class EditableText extends CustomComponent {
             }
         });
         layout.addComponent(label);
-        layout.setSizeFull();
+        layout.setSizeUndefined();
         setCompositionRoot(layout);
-        setSizeFull();
+        setSizeUndefined();
     }
 
     protected abstract String getValue(Item item) throws RepositoryException;
 
     protected abstract void setValue(Item item, Object value) throws RepositoryException;
 
-    private Item getItem(String workspace, String nodeIdentifier) throws RepositoryException {
-        return JCRUtil.getSession(workspace).getNodeByIdentifier(nodeIdentifier);
+    private Item getItem() throws RepositoryException {
+        Node node = JCRUtil.getSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);
+        if (propertyName != null)
+            return node.getProperty(propertyName);
+        return node;
     }
 }
-
