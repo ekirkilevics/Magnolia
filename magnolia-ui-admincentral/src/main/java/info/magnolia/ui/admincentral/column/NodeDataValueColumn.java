@@ -33,20 +33,15 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
-
 import java.io.Serializable;
-
 import javax.jcr.Item;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
 
 
 /**
@@ -75,35 +70,15 @@ public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueC
     @Override
     public Component getValue(Item item) throws RepositoryException {
         if (item instanceof Property) {
-            return new EditableText(item) {
+            return new EditableText(item, eventBus, "") {
 
                 @Override
                 protected String getValue(Item item) throws RepositoryException {
                     Property property = (Property) item;
                     return property.getString();
                 }
-
-                @Override
-                protected void setValue(Item item, Object value) throws RepositoryException {
-                    NodeDataValueColumn.this.setValue(item, value);
-                    eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
-                }
             };
         }
         return new Label();
-    }
-
-    @Override
-    public Field getEditField(Item item) {
-        return (definition.isEditable() && item instanceof Property) ? new TextField() : null;
-    }
-
-    @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            property.setValue((String) newValue);
-            property.getSession().save();
-        }
     }
 }

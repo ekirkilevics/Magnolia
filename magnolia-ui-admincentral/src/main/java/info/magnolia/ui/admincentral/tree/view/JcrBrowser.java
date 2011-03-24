@@ -111,6 +111,7 @@ public class JcrBrowser extends TreeTable {
         this.container = new JcrContainer(treeModel);
 
         for (Column<?, ?> treeColumn : treeModel.getColumns().values()) {
+            super.setColumnExpandRatio(treeColumn.getLabel(), treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
             container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
         }
 

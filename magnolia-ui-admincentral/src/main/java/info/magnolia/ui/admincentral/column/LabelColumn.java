@@ -35,15 +35,9 @@ package info.magnolia.ui.admincentral.column;
 
 import java.io.Serializable;
 import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
 
@@ -72,49 +66,12 @@ public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition>
     @Override
     public Component getValue(Item item) throws RepositoryException {
 
-        return new EditableText(item) {
+        return new EditableText(item, eventBus, "@name") {
 
             @Override
             protected String getValue(Item item) throws RepositoryException {
                 return item.getName();
             }
-
-            @Override
-            protected void setValue(Item item, Object value) throws RepositoryException {
-                LabelColumn.this.setValue(item, value);
-                eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
-            }
         };
-    }
-
-    @Override
-    public Field getEditField(Item item) {
-        return (definition.isEditable()) ? new TextField() : null;
-    }
-
-    @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
-
-        if (item instanceof Node) {
-            Node node = (Node) item;
-
-            String newPath = (node.getParent().getDepth() > 0 ? node.getParent().getPath() : "") + "/" + newValue;
-
-            node.getSession().move(node.getPath(), newPath);
-
-            JCRMetadataUtil.updateMetaData(node);
-
-            node.getSession().save();
-
-        } else if (item instanceof Property) {
-            Property property = (Property) item;
-            Node node = property.getParent();
-
-            node.setProperty((String) newValue, property.getValue());
-            property.remove();
-
-            JCRMetadataUtil.updateMetaData(node);
-            node.getSession().save();
-        }
     }
 }

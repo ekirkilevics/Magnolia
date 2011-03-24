@@ -33,21 +33,15 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
-
 import java.io.Serializable;
-
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.Field;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
 
 /**
  * A column that displays a NodeData value when viewing a content node. Used in the website tree for
@@ -76,13 +70,6 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
     }
 
     @Override
-    public Field getEditField(Item item) {
-        if (item instanceof Node && definition.isEditable())
-            return new TextField();
-        return null;
-    }
-
-    @Override
     public Class<Component> getType() {
         return Component.class;
     }
@@ -92,17 +79,11 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
 
         if (item instanceof Node) {
 
-            return new EditableText(item) {
+            return new EditableText(item, eventBus, definition.getNodeDataName()) {
 
                 @Override
                 protected String getValue(Item item) throws RepositoryException {
                     return getInternal((Node) item);
-                }
-
-                @Override
-                protected void setValue(Item item, Object value) throws RepositoryException {
-                    NodeDataColumn.this.setValue(item, value);
-                    eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
                 }
             };
         }
@@ -114,16 +95,5 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
             return node.getProperty(getNodeDataName()).getString();
         } else
             return "";
-    }
-
-    @Override
-    public void setValue(Item item, Object newValue) throws RepositoryException {
-
-        if (item instanceof Node) {
-            Node node = (Node) item;
-            node.setProperty(getNodeDataName(), (String) newValue);
-            JCRMetadataUtil.updateMetaData(node);
-            node.getSession().save();
-        }
     }
 }

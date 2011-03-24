@@ -35,20 +35,19 @@ package info.magnolia.ui.admincentral.column;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.LayoutEvents;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.NativeSelect;
 import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.framework.editor.ContentDriver;
@@ -62,7 +61,7 @@ import info.magnolia.ui.framework.event.EventBus;
  *
  * @author tmattsson
  */
-public abstract class EditableText extends CustomComponent {
+public abstract class EditableSelect extends CustomComponent {
 
     private final String workspace;
     private final String nodeIdentifier;
@@ -71,7 +70,7 @@ public abstract class EditableText extends CustomComponent {
     private ValueEditor editor;
     private EventBus eventBus;
 
-    public EditableText(Item item, final EventBus eventBus, final String path) throws RepositoryException {
+    public EditableSelect(Item item, final EventBus eventBus, final String path, final Map<String, String> options) throws RepositoryException {
 
         this.eventBus = eventBus;
 
@@ -87,17 +86,29 @@ public abstract class EditableText extends CustomComponent {
         layout.addListener(new LayoutEvents.LayoutClickListener() {
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
-                    final TextField textField = new TextField();
-                    textField.addListener(new FieldEvents.BlurListener() {
-                        public void blur(FieldEvents.BlurEvent event) {
-                            // TODO should we save on blur
-                            layout.removeComponent(textField);
-                            layout.addComponent(label);
-                        }
-                    });
-                    textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new int[]{}) {
-                        @Override
-                        public void handleAction(Object sender, Object target) {
+
+                    final NativeSelect select = new NativeSelect();
+                    select.setNullSelectionAllowed(false);
+                    select.setNewItemsAllowed(false);
+
+                    for (Map.Entry<String, String> entry : options.entrySet()) {
+                        select.addItem(entry.getValue());
+                        select.setItemCaption(entry.getValue(), entry.getKey());
+                    }
+
+                    try {
+                        String template = JCRMetadataUtil.getMetaData((Node) getItem()).getTemplate();
+                        select.setValue(template); // TODO Doesn't render this choice as selected
+                        select.focus(); // TODO isn't focused in gui
+                        select.setImmediate(true);
+                        select.setInvalidAllowed(false);
+
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
+                    }
+
+                    select.addListener(new com.vaadin.data.Property.ValueChangeListener() {
+                        public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 
                             try {
                                 Item item1 = getItem();
@@ -109,7 +120,7 @@ public abstract class EditableText extends CustomComponent {
 
                                 eventBus.fireEvent(new ContentChangedEvent(item1.getSession().getWorkspace().getName(), item1.getPath()));
 
-                                layout.removeComponent(textField);
+                                layout.removeComponent(select);
                                 layout.addComponent(label);
 
                             } catch (RepositoryException e) {
@@ -117,19 +128,19 @@ public abstract class EditableText extends CustomComponent {
                             }
                         }
                     });
+
                     layout.removeComponent(label);
-                    layout.addComponent(textField);
-                    textField.focus();
-                    textField.setWidth("100%");
-                    textField.setHeight("100%");
+                    layout.addComponent(select);
+                    select.setWidth("100%");
+                    select.setHeight("100%");
 
                     editor = new ValueEditor() {
                         public void setValue(Object object) {
-                            textField.setValue(object);
+                            select.setValue(object);
                         }
 
                         public Object getValue() {
-                            return textField.getValue();
+                            return select.getValue();
                         }
 
                         public String getPath() {

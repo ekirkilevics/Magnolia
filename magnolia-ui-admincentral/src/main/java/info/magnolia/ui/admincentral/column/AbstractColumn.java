@@ -72,6 +72,7 @@ public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Co
      * this type!
      */
     public abstract Class<E> getType();
+
     /**
      * @return value to be displayed in the corresponding column (from the provided Node)
      */
