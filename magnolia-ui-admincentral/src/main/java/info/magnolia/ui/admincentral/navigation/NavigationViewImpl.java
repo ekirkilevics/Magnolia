@@ -52,8 +52,6 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
@@ -99,24 +97,23 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
             final WorkareaChooser button = new WorkareaChooser(definition);
             buttons.addComponent(button);
 
-            final NavigationWorkArea wa = new NavigationWorkArea(groups);
+            final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(groups);
 
             if(definition.isVisible()){
-                wa.setVisible(true);
+                navigationWorkArea.setVisible(true);
             }
-            registeredNavigationAreas.put(button, wa);
-            navigationWorkareaContainer.addComponent(wa);
+            registeredNavigationAreas.put(button, navigationWorkArea);
+            navigationWorkareaContainer.addComponent(navigationWorkArea);
         }
         outerNavigationContainer.addComponent(buttons);
         outerNavigationContainer.addComponent(navigationWorkareaContainer);
     }
 
-
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
-        for(NavigationWorkArea wa: registeredNavigationAreas.values()){
-            for(NavigationGroupView ng: wa.getNavigationGroup()){
-                ng.setPresenter(presenter);
+        for(NavigationWorkArea navigationWorkArea: registeredNavigationAreas.values()){
+            for(NavigationGroupView navigationGroup: navigationWorkArea.getNavigationGroup()){
+                navigationGroup.setPresenter(presenter);
             }
         }
 
@@ -125,6 +122,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     public Component asVaadinComponent() {
         return this;
     }
+
     /**
      * WorkareaChooser.
      * TODO naming?
@@ -138,12 +136,15 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         public WorkareaChooser(final NavigationWorkareaDefinition definition) {
 
             addListener(new ClickListener() {
+
+                private static final long serialVersionUID = 1L;
+
                 public void buttonClick(ClickEvent event) {
-                    for(NavigationWorkArea wa : registeredNavigationAreas.values()){
-                        wa.setVisible(false);
+                    for(NavigationWorkArea navigationWorkArea : registeredNavigationAreas.values()){
+                        navigationWorkArea.setVisible(false);
                     }
-                    NavigationWorkArea current = registeredNavigationAreas.get(event.getButton());
-                    current.setVisible(true);
+                    NavigationWorkArea selected = registeredNavigationAreas.get(event.getButton());
+                    selected.setVisible(true);
                     presenter.onMenuSelection(definition);
                 }
             });
@@ -152,29 +153,6 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
             if(StringUtils.isNotBlank(icon)) {
                 setIcon(new ExternalResource(MgnlContext.getContextPath() + icon));
             }
-        }
-    }
-    /**
-     * WorkareaChooserClickListener.
-     * TODO naming.
-     * @author fgrilli
-     *
-     */
-    protected class WorkareaChooserClickListener implements ClickListener {
-
-        private static final long serialVersionUID = 1L;
-        private NavigationWorkareaDefinition definition;
-        public WorkareaChooserClickListener(final NavigationWorkareaDefinition definition) {
-            this.definition = definition;
-        }
-
-        public void buttonClick(ClickEvent event) {
-            for(NavigationWorkArea wa : registeredNavigationAreas.values()){
-                wa.setVisible(false);
-            }
-            NavigationWorkArea current = registeredNavigationAreas.get(event.getButton());
-            current.setVisible(true);
-            presenter.onMenuSelection(definition);
         }
     }
 }
