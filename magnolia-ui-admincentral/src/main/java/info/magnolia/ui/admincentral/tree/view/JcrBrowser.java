@@ -316,7 +316,7 @@ public class JcrBrowser extends TreeTable {
         ContainerItemId itemId = container.getItemByPath(path);
 
         ContainerItemId parent = itemId;
-        while (!container.isRoot(itemId)) {
+        while (!container.isRoot(parent)) {
             setCollapsed(parent, false);
             parent = container.getParent(parent);
         }
