@@ -58,11 +58,11 @@ import com.vaadin.ui.themes.BaseTheme;
 
 
 /**
- * TODO write javadoc.
+ * A menu items collection (e.g. website, data) which is part of a {@link NavigationWorkArea}.
  * @author fgrilli
  *
  */
-public class NavigationGroup extends CustomComponent implements NavigationView, IsVaadinComponent{
+public class NavigationGroupView extends CustomComponent implements NavigationView, IsVaadinComponent{
 
     private static final long serialVersionUID = 1L;
     private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
@@ -71,7 +71,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
     private NavigationPermissionSchema permissions;
     private Presenter presenter;
 
-    public NavigationGroup(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
+    public NavigationGroupView(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
         setCompositionRoot(accordion);
         setSizeFull();
         this.navigationItemDef = navigationItemDef;
@@ -159,11 +159,11 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
         @Override
         public void attach() {
             super.attach();
-            Resource icon = NavigationGroup.this.getIcon(item);
+            Resource icon = NavigationGroupView.this.getIcon(item);
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(NavigationGroup.this.getLabel(item));
+            setCaption(NavigationGroupView.this.getLabel(item));
 
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);

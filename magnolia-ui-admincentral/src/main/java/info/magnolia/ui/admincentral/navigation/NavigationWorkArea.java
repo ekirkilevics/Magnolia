@@ -40,22 +40,22 @@ import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * TODO write javadoc.
+ * Represents a collection of menus (that is {@link NavigationGroupView} objects). The type and number of work areas will depend on user's privileges.
  * @author fgrilli
  *
  */
 public class NavigationWorkArea extends CustomComponent {
 
     private static final long serialVersionUID = 1L;
-    private List<NavigationGroup> navigationGroup;
+    private List<NavigationGroupView> navigationGroupView;
     private VerticalLayout container = new VerticalLayout();
 
-    public NavigationWorkArea(List<NavigationGroup> navigationGroup) {
+    public NavigationWorkArea(List<NavigationGroupView> navigationGroupView) {
         setCompositionRoot(container);
         setSizeFull();
-        this.navigationGroup = navigationGroup;
+        this.navigationGroupView = navigationGroupView;
 
-        for(NavigationGroup group: navigationGroup){
+        for(NavigationGroupView group: navigationGroupView){
             container.addComponent(group);
         }
 
@@ -63,8 +63,8 @@ public class NavigationWorkArea extends CustomComponent {
         setVisible(false);
     }
 
-    public List<NavigationGroup> getNavigationGroup() {
-        return navigationGroup;
+    public List<NavigationGroupView> getNavigationGroup() {
+        return navigationGroupView;
     }
 
 }

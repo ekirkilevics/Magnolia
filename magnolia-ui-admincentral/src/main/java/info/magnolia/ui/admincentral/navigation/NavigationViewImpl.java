@@ -60,8 +60,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * The Application accordion Menu.
- * TODO Add simple animation to make it look nicer.
+ * Implementation of {@link NavigationView}. It represents the app main navigation and holds {@link NavigationWorkArea}(s).
  * @author fgrilli
  *
  */
@@ -73,7 +72,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
 
     private VerticalLayout outerNavigationContainer = new VerticalLayout();
     private Presenter presenter;
-    private Map<WorkbenchChooser, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkbenchChooser, NavigationWorkArea>();
+    private Map<WorkareaChooser, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkareaChooser, NavigationWorkArea>();
 
     //TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationRegistry navigationRegistry, NavigationPermissionSchema permissions) {
@@ -91,13 +90,13 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         final NavigationDefinition navigation = navigationRegistry.getNavigation();
 
         for(NavigationWorkareaDefinition definition : navigation.getWorkareas()){
-            List<NavigationGroup> groups = new ArrayList<NavigationGroup>();
+            List<NavigationGroupView> groups = new ArrayList<NavigationGroupView>();
 
             for (NavigationItemDefinition navigationItem : definition.getItems()) {
-                groups.add(new NavigationGroup(navigationItem, permissions));
+                groups.add(new NavigationGroupView(navigationItem, permissions));
             }
 
-            final WorkbenchChooser button = new WorkbenchChooser(definition);
+            final WorkareaChooser button = new WorkareaChooser(definition);
             buttons.addComponent(button);
 
             final NavigationWorkArea wa = new NavigationWorkArea(groups);
@@ -116,7 +115,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         for(NavigationWorkArea wa: registeredNavigationAreas.values()){
-            for(NavigationGroup ng: wa.getNavigationGroup()){
+            for(NavigationGroupView ng: wa.getNavigationGroup()){
                 ng.setPresenter(presenter);
             }
         }
@@ -127,16 +126,17 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         return this;
     }
     /**
-     * WorkbenchChooser.
+     * WorkareaChooser.
      * TODO naming?
      * @author fgrilli
      *
      */
-    public class WorkbenchChooser extends Button {
+    protected class WorkareaChooser extends Button {
 
         private static final long serialVersionUID = 1L;
 
-        public WorkbenchChooser(final NavigationWorkareaDefinition definition) {
+        public WorkareaChooser(final NavigationWorkareaDefinition definition) {
+
             addListener(new ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     for(NavigationWorkArea wa : registeredNavigationAreas.values()){
@@ -147,6 +147,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
                     presenter.onMenuSelection(definition);
                 }
             });
+
             String icon = definition.getIcon();
             if(StringUtils.isNotBlank(icon)) {
                 setIcon(new ExternalResource(MgnlContext.getContextPath() + icon));
@@ -154,16 +155,16 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         }
     }
     /**
-     * WorkbenchChooserClickListener.
+     * WorkareaChooserClickListener.
      * TODO naming.
      * @author fgrilli
      *
      */
-    public class WorkbenchChooserClickListener implements ClickListener {
+    protected class WorkareaChooserClickListener implements ClickListener {
 
         private static final long serialVersionUID = 1L;
         private NavigationWorkareaDefinition definition;
-        public WorkbenchChooserClickListener(final NavigationWorkareaDefinition definition) {
+        public WorkareaChooserClickListener(final NavigationWorkareaDefinition definition) {
             this.definition = definition;
         }
 
