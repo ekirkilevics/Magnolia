@@ -43,7 +43,7 @@ import info.magnolia.ui.framework.place.Prefix;
 /**
  * Edit a workbenchName's content.
  */
-@Prefix("edit-workbenchName")
+@Prefix("edit-workbench")
 public class WorkbenchPlace extends Place {
 
     /**
@@ -75,4 +75,32 @@ public class WorkbenchPlace extends Place {
     public String getWorkbenchName() {
         return workbenchName;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((workbenchName == null) ? 0 : workbenchName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof WorkbenchPlace))
+            return false;
+        WorkbenchPlace other = (WorkbenchPlace) obj;
+        if (workbenchName == null) {
+            if (other.workbenchName != null)
+                return false;
+        }
+        else if (!workbenchName.equals(other.workbenchName))
+            return false;
+        return true;
+    }
+
+
 }
