@@ -44,7 +44,12 @@ import info.magnolia.ui.framework.view.View;
  *
  */
 public interface WorkbenchHeaderView extends View {
-
+    /**
+     *
+     * TODO write javadoc.
+     * @author fgrilli
+     *
+     */
     public interface Presenter {
         /**
          * Action performed when the user selects a view (i.e. structure/tree or list).
