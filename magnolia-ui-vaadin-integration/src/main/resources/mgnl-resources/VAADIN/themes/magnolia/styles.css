@@ -47,3 +47,14 @@
 	-moz-border-radius: 15px;
 	border-radius: 15px;
 }
+
+.v-treetable-treespacer{
+	float: left;
+	margin-top: 2px;
+}
+
+.v-table-cell-wrapper img{
+    float: left;
+    margin-top: 2px;
+    margin-right: 5px;
+}
