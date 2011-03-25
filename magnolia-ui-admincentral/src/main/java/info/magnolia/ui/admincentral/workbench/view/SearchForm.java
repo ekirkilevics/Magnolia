@@ -62,7 +62,7 @@ public class SearchForm extends Form {
         searchField.setValue("<Search term goes here>");
         searchField.setHeight(25, UNITS_PIXELS);
         searchField.setWidth(200, UNITS_PIXELS);
-        searchField.addStyleName(".m-search-box");
+        searchField.addStyleName("m-search-box");
 
         grid.addComponent(searchField, 1, 0);
         grid.setComponentAlignment(searchField, Alignment.MIDDLE_RIGHT);
