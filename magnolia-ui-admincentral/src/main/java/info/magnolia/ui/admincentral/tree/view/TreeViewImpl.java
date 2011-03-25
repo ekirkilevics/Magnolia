@@ -63,7 +63,7 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
         jcrBrowser.setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
 
-            private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = -6752253952550059502L;
 
             public void itemClick(ItemClickEvent event) {
 
