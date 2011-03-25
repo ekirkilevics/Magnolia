@@ -33,6 +33,10 @@
  */
 package info.magnolia.ui.admincentral.workbench.view;
 
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Form;
@@ -59,10 +63,28 @@ public class SearchForm extends Form {
         // Note: right now the only component in the first row - prepare for fading in the other stuff only after
         // someone started a search...
         TextField searchField = new TextField();
-        searchField.setValue("<Search term goes here>");
+        searchField.setValue("Search");
         searchField.setHeight(25, UNITS_PIXELS);
         searchField.setWidth(200, UNITS_PIXELS);
         searchField.addStyleName("m-search-box");
+
+        searchField.addListener(new FocusListener() {
+            private static final long serialVersionUID = 1L;
+
+            public void focus(FocusEvent event) {
+                ((TextField)event.getSource()).setValue("");
+
+            }
+        });
+        searchField.addListener(new BlurListener() {
+
+            private static final long serialVersionUID = 1L;
+
+            public void blur(BlurEvent event) {
+                ((TextField)event.getSource()).setValue("Search");
+
+            }
+        });
 
         grid.addComponent(searchField, 1, 0);
         grid.setComponentAlignment(searchField, Alignment.MIDDLE_RIGHT);

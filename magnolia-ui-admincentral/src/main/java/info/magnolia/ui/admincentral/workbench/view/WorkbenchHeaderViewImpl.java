@@ -104,6 +104,7 @@ public class WorkbenchHeaderViewImpl extends CustomComponent implements Workbenc
         showParentsGroup.addComponent(showParentsLabel, 1, 0);
         outerContainer.addComponent(showParentsGroup, 2, 0);*/
 
+
         /*outerContainer.setColumnExpandRatio(0, 20);
         outerContainer.setColumnExpandRatio(1, 10);
         outerContainer.setColumnExpandRatio(2, 90);*/
