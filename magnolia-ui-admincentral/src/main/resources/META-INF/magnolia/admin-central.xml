@@ -49,6 +49,10 @@
       <name>info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition</name>
       <value>info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinitionImpl</value>
     </property>
+    <property>
+      <name>info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition</name>
+      <value>info.magnolia.ui.model.navigation.definition.NavigationGroupDefinitionImpl</value>
+    </property>
   </properties>
 
   <dependencies>

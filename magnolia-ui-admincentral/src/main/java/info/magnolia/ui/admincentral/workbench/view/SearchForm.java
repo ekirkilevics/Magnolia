@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.workbench.view;
 
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Form;
@@ -52,11 +53,11 @@ public class SearchForm extends Form {
     private static final long serialVersionUID = 2746156631931332883L;
 
     public SearchForm() {
-        super();
         final GridLayout grid = new GridLayout(2, 3);
         setLayout(grid);
 
-        grid.setSizeFull();
+        grid.setHeight(50, Sizeable.UNITS_PIXELS);
+        grid.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
         // Note: right now the only component in the first row - prepare for fading in the other stuff only after
         // someone started a search...

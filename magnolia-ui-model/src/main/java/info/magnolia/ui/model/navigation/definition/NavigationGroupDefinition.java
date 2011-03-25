@@ -33,9 +33,6 @@
  */
 package info.magnolia.ui.model.navigation.definition;
 
-import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
-
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -43,36 +40,7 @@ import java.util.Collection;
  * @author fgrilli
  *
  */
-public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl implements NavigationWorkareaDefinition {
-
-    private Collection<NavigationGroupDefinition> groups = new ArrayList<NavigationGroupDefinition>();
-    private String name;
-    private boolean visible;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-    /**
-     * Sets this workbench as visible by default (e.g. when opening the application).
-     */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public Collection<NavigationGroupDefinition> getGroups() {
-        return groups;
-    }
-
-    public void addGroup(NavigationGroupDefinition definition) {
-        groups.add(definition);
-    }
-
+public interface NavigationGroupDefinition {
+    Collection<NavigationItemDefinition> getItems();
+    String getName();
 }

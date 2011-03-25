@@ -40,3 +40,6 @@
 .v-panel-deco-vtabsheet-tab {
 	display:none;
 }
+.workbench-header {
+	border-top: 1px solid #B6BBBC;
+}

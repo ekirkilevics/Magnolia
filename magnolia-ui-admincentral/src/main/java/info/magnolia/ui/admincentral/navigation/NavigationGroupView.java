@@ -39,6 +39,7 @@ import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,20 +68,23 @@ public class NavigationGroupView extends CustomComponent implements NavigationVi
     private static final long serialVersionUID = 1L;
     private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
     private Accordion accordion = new Accordion();
-    private NavigationItemDefinition navigationItemDef;
+    private Collection<NavigationItemDefinition> navigationItemDefs;
     private NavigationPermissionSchema permissions;
     private Presenter presenter;
 
-    public NavigationGroupView(NavigationItemDefinition navigationItemDef, NavigationPermissionSchema permissions) {
+    public NavigationGroupView(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
         setCompositionRoot(accordion);
         setSizeFull();
-        this.navigationItemDef = navigationItemDef;
+        this.navigationItemDefs = navigationItemDefs;
         this.permissions = permissions;
 
-        if(this.permissions.hasPermission(this.navigationItemDef)){
-            // register new top level menu
-            addTab(this.navigationItemDef, this.permissions);
+        for(NavigationItemDefinition navigationItemDef:  this.navigationItemDefs) {
+            if(this.permissions.hasPermission(navigationItemDef)){
+                // register new top level menu
+                addTab(navigationItemDef, this.permissions);
+            }
         }
+
     }
 
     public void setPresenter(Presenter presenter) {

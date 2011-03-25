@@ -84,14 +84,22 @@ public class WorkbenchView implements View, IsVaadinComponent{
         splitPanel.setSizeFull();
 
         SearchForm searchForm = new SearchForm();
-        searchForm.setSizeFull();
 
         outerLayout = new  VerticalLayout();
         outerLayout.setSizeFull();
+
+        WorkbenchHeaderViewImpl workbenchHeaderView = new WorkbenchHeaderViewImpl();
+
+
         outerLayout.addComponent(searchForm);
+        outerLayout.addComponent(workbenchHeaderView);
         outerLayout.addComponent(splitPanel);
-        outerLayout.setExpandRatio(searchForm, 1);
-        outerLayout.setExpandRatio(splitPanel, 9);
+
+        //outerLayout.setExpandRatio(searchForm, 1);
+        //outerLayout.setExpandRatio(workbenchHeaderView, 1);
+        outerLayout.setExpandRatio(splitPanel, 1);
+        //outerLayout.setExpandRatio(searchForm, 1);
+        //outerLayout.setExpandRatio(splitPanel, 9);
     }
 
     public Component asVaadinComponent() {

@@ -35,7 +35,7 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
+import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
@@ -88,10 +88,12 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         final NavigationDefinition navigation = navigationRegistry.getNavigation();
 
         for(NavigationWorkareaDefinition definition : navigation.getWorkareas()){
+            log.debug("creating navigation workarea {}", definition.getName());
             List<NavigationGroupView> groups = new ArrayList<NavigationGroupView>();
 
-            for (NavigationItemDefinition navigationItem : definition.getItems()) {
-                groups.add(new NavigationGroupView(navigationItem, permissions));
+            for(NavigationGroupDefinition group : definition.getGroups()){
+                log.debug("creating navigation group {}", group.getName());
+                groups.add(new NavigationGroupView(group.getItems(), permissions));
             }
 
             final WorkareaChooser button = new WorkareaChooser(definition);

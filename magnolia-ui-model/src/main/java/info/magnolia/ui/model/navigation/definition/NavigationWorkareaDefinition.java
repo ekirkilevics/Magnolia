@@ -43,7 +43,7 @@ import java.util.Collection;
  *
  */
 public interface NavigationWorkareaDefinition extends MenuItemDefinition{
-    Collection<NavigationItemDefinition> getItems();
+    Collection<NavigationGroupDefinition> getGroups();
     String getName();
     boolean isVisible();
 }

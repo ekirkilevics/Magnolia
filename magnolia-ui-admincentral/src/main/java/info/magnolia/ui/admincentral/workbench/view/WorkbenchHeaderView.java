@@ -31,48 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.navigation.definition;
+package info.magnolia.ui.admincentral.workbench.view;
 
-import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
+import javax.jcr.Item;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import info.magnolia.ui.framework.view.View;
+
 
 /**
  * TODO write javadoc.
  * @author fgrilli
  *
  */
-public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl implements NavigationWorkareaDefinition {
+public interface WorkbenchHeaderView extends View {
 
-    private Collection<NavigationGroupDefinition> groups = new ArrayList<NavigationGroupDefinition>();
-    private String name;
-    private boolean visible;
-
-    public String getName() {
-        return name;
+    public interface Presenter {
+        /**
+         * Action performed when the user selects a view (i.e. structure/tree or list).
+         */
+        void onViewSelection(String viewName);
+        /**
+         * Action performed when the user selects an item to show its parents (only on list view).
+         */
+        void onShowParents(Item item);
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-    /**
-     * Sets this workbench as visible by default (e.g. when opening the application).
-     */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    public Collection<NavigationGroupDefinition> getGroups() {
-        return groups;
-    }
-
-    public void addGroup(NavigationGroupDefinition definition) {
-        groups.add(definition);
-    }
-
 }
