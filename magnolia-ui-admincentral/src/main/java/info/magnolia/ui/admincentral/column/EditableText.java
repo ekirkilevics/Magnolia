@@ -61,14 +61,17 @@ import info.magnolia.ui.framework.event.EventBus;
  * UI component that displays a label and on double click opens it for editing by switching the label to a text field.
  *
  * @author tmattsson
+ *
+ * TODO notifying eventBus not yet implemented
  */
 public abstract class EditableText extends CustomComponent {
 
+    private static final long serialVersionUID = -3126541389513880027L;
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
     private ContentDriver driver;
-    private ValueEditor editor;
+    private ValueEditor<String> editor;
     private EventBus eventBus;
 
     public EditableText(Item item, final EventBus eventBus, final String path) throws RepositoryException {
@@ -85,10 +88,14 @@ public abstract class EditableText extends CustomComponent {
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
 
         layout.addListener(new LayoutEvents.LayoutClickListener() {
+            private static final long serialVersionUID = -7068955179985809239L;
+
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
                     final TextField textField = new TextField();
                     textField.addListener(new FieldEvents.BlurListener() {
+                        private static final long serialVersionUID = -510289267548470775L;
+
                         public void blur(FieldEvents.BlurEvent event) {
                             // TODO should we save on blur
                             layout.removeComponent(textField);
@@ -96,6 +103,8 @@ public abstract class EditableText extends CustomComponent {
                         }
                     });
                     textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new int[]{}) {
+                        private static final long serialVersionUID = -9182888572843517832L;
+
                         @Override
                         public void handleAction(Object sender, Object target) {
 
@@ -120,23 +129,23 @@ public abstract class EditableText extends CustomComponent {
                     layout.removeComponent(label);
                     layout.addComponent(textField);
                     textField.focus();
-                    textField.setWidth("100%");
-                    textField.setHeight("100%");
+                    textField.setSizeFull();
 
-                    editor = new ValueEditor() {
-                        public void setValue(Object object) {
+                    // TODO most probably of common interest - think about Providing proper type "StringEditor"
+                    editor = new ValueEditor<String>() {
+                        public void setValue(String object) {
                             textField.setValue(object);
                         }
 
-                        public Object getValue() {
-                            return textField.getValue();
+                        public String getValue() {
+                            return (String)textField.getValue();
                         }
 
                         public String getPath() {
                             return path;
                         }
 
-                        public Class getType() {
+                        public Class<String> getType() {
                             return String.class;
                         }
                     };
