@@ -65,7 +65,7 @@ public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition>
 
     @Override
     public Component getValue(Item item) throws RepositoryException {
-
+        // TODO: isn't that to costy to create new instance on each call to getValue? (Same for other columns)
         return new EditableText(item, eventBus, "@name") {
 
             @Override
