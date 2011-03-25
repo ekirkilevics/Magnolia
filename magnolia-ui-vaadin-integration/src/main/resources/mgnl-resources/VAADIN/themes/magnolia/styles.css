@@ -46,6 +46,7 @@
 .m-search-box {
 	-moz-border-radius: 15px;
 	border-radius: 15px;
+	padding-left: 10px !important;
 }
 
 .v-treetable-treespacer{
