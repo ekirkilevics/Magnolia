@@ -60,6 +60,8 @@ import info.magnolia.ui.framework.event.EventBus;
  * UI component that displays a label and on double click opens it for editing by switching the label to a text field.
  *
  * @author tmattsson
+ *
+ * TODO This implementation is very similar to EditableText - should be merged together.
  */
 public abstract class EditableSelect extends CustomComponent {
 
