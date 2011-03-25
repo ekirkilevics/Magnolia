@@ -67,7 +67,7 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
         this.vaadinDialogField = vaadinDialogField;
     }
 
-    public void setValue(Object object) {
+    public void setValue(T object) {
         field.setValue(object);
     }
 
@@ -106,7 +106,7 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
         return fieldDefinition.getName();
     }
 
-    public Class getType() {
+    public Class<T> getType() {
         return type;
     }
 }
