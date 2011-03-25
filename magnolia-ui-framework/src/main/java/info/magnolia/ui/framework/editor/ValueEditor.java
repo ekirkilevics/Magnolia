@@ -36,7 +36,7 @@ package info.magnolia.ui.framework.editor;
 /**
  * Editor for editing a value.
  *
- * @param <T>
+ * @param <T> type of the editable value.
  * @author tmattsson
  */
 public interface ValueEditor<T> extends Editor {
