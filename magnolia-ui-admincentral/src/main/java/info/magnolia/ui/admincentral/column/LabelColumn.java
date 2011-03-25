@@ -39,6 +39,7 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
 
 /**
@@ -53,9 +54,12 @@ public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition>
 
     private EventBus eventBus;
 
-    public LabelColumn(LabelColumnDefinition def, EventBus eventBus) {
+    private PlaceController placeController;
+
+    public LabelColumn(LabelColumnDefinition def, EventBus eventBus, PlaceController placeController ) {
         super(def);
         this.eventBus = eventBus;
+        this.placeController = placeController;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition>
     @Override
     public Component getValue(Item item) throws RepositoryException {
         // TODO: isn't that to costy to create new instance on each call to getValue? (Same for other columns)
-        return new EditableText(item, eventBus, "@name") {
+        return new EditableText(item, eventBus, "@name", placeController) {
 
             @Override
             protected String getValue(Item item) throws RepositoryException {

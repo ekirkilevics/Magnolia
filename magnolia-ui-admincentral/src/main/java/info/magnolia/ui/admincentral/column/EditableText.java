@@ -51,11 +51,13 @@ import com.vaadin.ui.TextField;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.HasEditors;
 import info.magnolia.ui.framework.editor.ValueEditor;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to a text field.
@@ -74,7 +76,8 @@ public abstract class EditableText extends CustomComponent {
     private ValueEditor<String> editor;
     private EventBus eventBus;
 
-    public EditableText(Item item, final EventBus eventBus, final String path) throws RepositoryException {
+    // FIXME needing the placeController to select the item is really silly
+    public EditableText(final Item item, final EventBus eventBus, final String path, final PlaceController placeController) throws RepositoryException {
 
         this.eventBus = eventBus;
 
@@ -85,9 +88,10 @@ public abstract class EditableText extends CustomComponent {
         final HorizontalLayout layout = new HorizontalLayout();
         final Label label = new Label(getValue(item));
 
-        // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
+        final String itemPath = item.getPath();
 
-        layout.addListener(new LayoutEvents.LayoutClickListener() {
+        // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
+                layout.addListener(new LayoutEvents.LayoutClickListener() {
             private static final long serialVersionUID = -7068955179985809239L;
 
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
@@ -165,6 +169,11 @@ public abstract class EditableText extends CustomComponent {
                         throw new RuntimeRepositoryException(e);
                     }
 
+                }
+                else{
+                    // FIXME we do this to select the item and update the history
+                    // the event is not visible to the tree (no bubbling of the event)
+                    placeController.goTo(new ItemSelectedPlace(workspace, itemPath));
                 }
             }
         });

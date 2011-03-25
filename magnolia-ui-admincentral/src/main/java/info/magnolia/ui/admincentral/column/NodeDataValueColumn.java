@@ -41,6 +41,7 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
 
 
@@ -57,9 +58,12 @@ public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueC
 
     private EventBus eventBus;
 
-    public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus) {
+    private PlaceController placeController;
+
+    public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus, PlaceController placeController) {
         super(def);
         this.eventBus = eventBus;
+        this.placeController = placeController;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueC
     @Override
     public Component getValue(Item item) throws RepositoryException {
         if (item instanceof Property) {
-            return new EditableText(item, eventBus, "") {
+            return new EditableText(item, eventBus, "", placeController) {
 
                 @Override
                 protected String getValue(Item item) throws RepositoryException {

@@ -41,14 +41,13 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
 
 /**
  * A column that displays a NodeData value when viewing a content node. Used in the website tree for
  * the 'Title' column.
- *
- * @author dlipp
- * @author tmattsson
+ * FIXME this is a PropertyColumn, NodeData is a Content API term we have to avoid
  */
 public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefinition> implements Serializable {
 
@@ -56,9 +55,12 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
 
     private EventBus eventBus;
 
-    public NodeDataColumn(NodeDataColumnDefinition def, EventBus eventBus) {
+    private PlaceController placeController;
+
+    public NodeDataColumn(NodeDataColumnDefinition def, EventBus eventBus, PlaceController placeController) {
         super(def);
         this.eventBus = eventBus;
+        this.placeController = placeController;
     }
 
     public String getNodeDataName() {
@@ -79,7 +81,7 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
 
         if (item instanceof Node) {
 
-            return new EditableText(item, eventBus, definition.getNodeDataName()) {
+            return new EditableText(item, eventBus, definition.getNodeDataName(), placeController) {
 
                 @Override
                 protected String getValue(Item item) throws RepositoryException {
