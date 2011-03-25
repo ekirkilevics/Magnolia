@@ -35,11 +35,8 @@ package info.magnolia.ui.admincentral.workbench.view;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
 /**
@@ -53,7 +50,7 @@ public class SearchForm extends Form {
     private static final long serialVersionUID = 2746156631931332883L;
 
     public SearchForm() {
-        final GridLayout grid = new GridLayout(2, 3);
+        final GridLayout grid = new GridLayout(2, 1);
         setLayout(grid);
 
         grid.setHeight(50, Sizeable.UNITS_PIXELS);
@@ -63,11 +60,15 @@ public class SearchForm extends Form {
         // someone started a search...
         TextField searchField = new TextField();
         searchField.setValue("<Search term goes here>");
-        searchField.setSizeFull();
+        searchField.setHeight(25, UNITS_PIXELS);
+        searchField.setWidth(200, UNITS_PIXELS);
+        searchField.addStyleName(".m-search-box");
+
         grid.addComponent(searchField, 1, 0);
         grid.setComponentAlignment(searchField, Alignment.MIDDLE_RIGHT);
+        grid.setMargin(false, true, false, false);
 
-        Label basicSearch = new Label("Basic search");
+        /*Label basicSearch = new Label("Basic search");
         grid.addComponent(basicSearch, 0, 1);
         grid.setComponentAlignment(basicSearch, Alignment.MIDDLE_LEFT);
 
@@ -84,7 +85,7 @@ public class SearchForm extends Form {
         buttonForm.setSizeFull();
 
         grid.addComponent(buttonForm, 1, 2);
-        grid.setComponentAlignment(buttonForm, Alignment.MIDDLE_RIGHT);
+        grid.setComponentAlignment(buttonForm, Alignment.MIDDLE_RIGHT);*/
 
         grid.setColumnExpandRatio(0, 5);
         grid.setColumnExpandRatio(1, 1);

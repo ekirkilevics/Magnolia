@@ -40,6 +40,10 @@
 .v-panel-deco-vtabsheet-tab {
 	display:none;
 }
-.workbench-header {
+.m-workbench-header {
 	border-top: 1px solid #B6BBBC;
+}
+.m-search-box {
+	-moz-border-radius: 15px;
+	border-radius: 15px;
 }

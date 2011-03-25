@@ -56,7 +56,7 @@ public class WorkbenchHeaderViewImpl extends CustomComponent implements Workbenc
     public WorkbenchHeaderViewImpl() {
         outerContainer = new GridLayout(3,1);
         outerContainer.setMargin(false,true,false,true);
-        outerContainer.addStyleName("workbench-header");
+        outerContainer.addStyleName("m-workbench-header");
         outerContainer.setHeight(50, Sizeable.UNITS_PIXELS);
         outerContainer.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         setCompositionRoot(outerContainer);
