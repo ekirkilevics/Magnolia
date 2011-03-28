@@ -83,8 +83,7 @@ public interface Shell {
     // FIXME the following methods should be encapsulated into an specific interface: FragmentUtility or so
     String getFragment();
 
-    // TODO do we need the fireEvent parameter?
-    void setFragment(String fragment, boolean fireEvent);
+    void setFragment(String fragment);
 
     HandlerRegistration addFragmentChangedHandler(FragmentChangedHandler handler);
 

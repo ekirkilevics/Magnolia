@@ -71,7 +71,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
         return fragmenter.getSubFragment(id);
     }
 
-    public void setFragment(String fragment, boolean fireEvent) {
+    public void setFragment(String fragment) {
         final String currentCompleteFragment = getUriFragmentUtility().getFragment();
         final Fragmenter fragmenter = new Fragmenter(currentCompleteFragment);
         log.debug("current uri fragment is {}", currentCompleteFragment);
@@ -82,7 +82,7 @@ public abstract class AbstractShell implements Shell, com.vaadin.ui.UriFragmentU
             fragmenter.setSubFragment(id, fragment);
             final String newFragment = fragmenter.toString();
             log.debug("setting uri fragment to {}", newFragment);
-            getUriFragmentUtility().setFragment(newFragment, fireEvent);
+            getUriFragmentUtility().setFragment(newFragment);
         }
     }
 

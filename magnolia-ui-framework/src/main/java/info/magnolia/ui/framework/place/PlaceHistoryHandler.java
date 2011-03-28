@@ -108,7 +108,7 @@ public class PlaceHistoryHandler implements FragmentChangedHandler {
             public void onPlaceChange(PlaceChangeEvent event) {
                 log.debug("onPlaceChange...");
                 Place newPlace = event.getNewPlace();
-                shell.setFragment(tokenForPlace(newPlace), false);
+                shell.setFragment(tokenForPlace(newPlace));
             }
         });
     }

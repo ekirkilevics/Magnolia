@@ -169,7 +169,7 @@ public abstract class AbstractActivityProxy extends AbstractActivity {
     public void onStop() {
         activity.onStop();
         historyReg.removeHandler();
-        subShell.setFragment(null, false);
+        subShell.setFragment(null);
     }
 
     @Override
