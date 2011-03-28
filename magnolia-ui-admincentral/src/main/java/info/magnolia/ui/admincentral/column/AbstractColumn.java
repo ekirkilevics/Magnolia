@@ -64,6 +64,7 @@ public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Co
      * @return Field used when editing this column. Defaults to null.
      */
     public Field getEditField(Item item) {
+        // TODO: looks like it's no longer in use - no subclass overwrites it (any longer). On the other side TreeModel is still calling it. To be checked soon!
         return null;
     }
 
