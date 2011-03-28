@@ -61,12 +61,12 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
     private static final long serialVersionUID = -2952607345108242592L;
 
     private static final Logger log = LoggerFactory.getLogger(DetailViewImpl.class);
-    private CommandList actionList;
+    private ActionList actionList;
     private Presenter presenter;
 
     public DetailViewImpl(Presenter presenter) {
         this.presenter = presenter;
-        actionList = new CommandList();
+        actionList = new ActionList();
         setSizeFull();
 
         setFirstComponent(actionList);
@@ -80,14 +80,12 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
     /**
      * UI component that displays a list of actions available for the selected tree item.
      *
-     * TODO should be renamed to action list?
-     *
      * @author fgrilli
      */
-    public class CommandList extends Table {
+    public class ActionList extends Table {
         private static final long serialVersionUID = 5555637630698340366L;
 
-        public CommandList() {
+        public ActionList() {
             setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
             addContainerProperty("Command", String.class, "");
             setSizeFull();
