@@ -295,7 +295,7 @@ public class JcrBrowser extends TreeTable {
 
         addListener(new ItemClickEvent.ItemClickListener() {
 
-            private static final long serialVersionUID = 1L;
+            private static final long serialVersionUID = 7391900464575027070L;
 
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {

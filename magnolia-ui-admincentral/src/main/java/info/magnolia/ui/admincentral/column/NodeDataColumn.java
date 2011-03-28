@@ -83,6 +83,8 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
 
             return new EditableText(item, eventBus, definition.getNodeDataName(), placeController) {
 
+                private static final long serialVersionUID = -4967706678599224210L;
+
                 @Override
                 protected String getValue(Item item) throws RepositoryException {
                     return getInternal((Node) item);

@@ -76,6 +76,8 @@ public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueC
         if (item instanceof Property) {
             return new EditableText(item, eventBus, "", placeController) {
 
+                private static final long serialVersionUID = -6751441032365525912L;
+
                 @Override
                 protected String getValue(Item item) throws RepositoryException {
                     Property property = (Property) item;

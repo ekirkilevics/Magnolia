@@ -47,7 +47,8 @@ import com.vaadin.ui.Embedded;
  *
  */
 public class EmbeddedView extends Embedded implements View, IsVaadinComponent {
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = -5693000320140645040L;
 
     public EmbeddedView(String url){
         setSource(new ExternalResource(url));

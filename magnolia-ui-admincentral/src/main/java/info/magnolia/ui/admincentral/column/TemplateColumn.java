@@ -90,6 +90,9 @@ public class TemplateColumn extends AbstractColumn<Component,TemplateColumnDefin
     @Override
     public Component getValue(Item item) throws RepositoryException {
         return new EditableSelect(item, eventBus, "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
+
+            private static final long serialVersionUID = -8268356405124559092L;
+
             @Override
             protected String getValue(Item item) throws RepositoryException {
                 return getInternalValue((Node)item);

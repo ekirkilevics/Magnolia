@@ -49,6 +49,7 @@ import com.vaadin.data.Container;
  */
 public abstract class AbstractHierarchicalContainer implements Container.Hierarchical {
 
+    private static final long serialVersionUID = 1379525750613681290L;
     private Map<String, PropertyDefinition> containerProperties = new LinkedHashMap<String, PropertyDefinition>();
 
     public Collection<?> getContainerPropertyIds() {
@@ -73,6 +74,8 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
      * Implementation of item set change event.
      */
     protected class ItemSetChangeEvent implements Serializable, Container.ItemSetChangeEvent {
+
+        private static final long serialVersionUID = 6575662167403754731L;
 
         /**
          * Gets the Property where the event occurred.

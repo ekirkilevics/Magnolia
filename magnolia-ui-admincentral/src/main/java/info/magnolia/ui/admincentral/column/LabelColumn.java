@@ -72,6 +72,8 @@ public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition>
         // TODO: isn't that too costy to create new instance on each call to getValue? (Same for other columns)
         return new EditableText(item, eventBus, "@name", placeController) {
 
+            private static final long serialVersionUID = 633952333006245861L;
+
             @Override
             protected String getValue(Item item) throws RepositoryException {
                 return item.getName();

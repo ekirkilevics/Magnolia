@@ -52,6 +52,7 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class VaadinDialogField extends CustomComponent {
 
+    private static final long serialVersionUID = 5204698301110368817L;
     private String errorMessage;
     private Label errorLabel;
     private Component field;
@@ -78,6 +79,9 @@ public class VaadinDialogField extends CustomComponent {
         horizontalLayout.setExpandRatio(layout, 5);
 
         CssLayout box = new CssLayout() {
+
+            private static final long serialVersionUID = -2540335130050343206L;
+
             @Override
             protected String getCss(Component c) {
                 if (errorMessage != null)

@@ -65,7 +65,7 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class NavigationGroup extends CustomComponent implements NavigationView, IsVaadinComponent{
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 934144545611324840L;
     private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
     private Accordion accordion = new Accordion();
     private Collection<NavigationItemDefinition> navigationItemDefs;
@@ -144,13 +144,12 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
 
     /**
      * Menu item button implementation.
-     * @author fgrilli
      *
+     * @author fgrilli
      */
     public class NavigationItem extends Button {
 
-        private static final long serialVersionUID = 1L;
-
+        private static final long serialVersionUID = 2307222248276023636L;
         private NavigationItemDefinition item;
 
         public NavigationItem(final NavigationItemDefinition item) {
@@ -184,12 +183,12 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
 
     /**
      * Trigger for all menu actions.
-     * @author fgrilli
      *
+     * @author fgrilli
      */
     public class SelectedNavigationItemTabChangeListener implements SelectedTabChangeListener {
 
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 7163776929934539272L;
 
         public void selectedTabChange(SelectedTabChangeEvent event) {
             TabSheet tabsheet = event.getTabSheet();

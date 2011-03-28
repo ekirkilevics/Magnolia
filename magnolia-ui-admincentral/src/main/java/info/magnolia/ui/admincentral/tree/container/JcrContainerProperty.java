@@ -49,6 +49,7 @@ import com.vaadin.data.Property;
  */
 public class JcrContainerProperty implements Property, Property.ValueChangeNotifier {
 
+    private static final long serialVersionUID = -9188861347368604176L;
     private String propertyId;
     private Object itemId;
     private JcrContainer container;
