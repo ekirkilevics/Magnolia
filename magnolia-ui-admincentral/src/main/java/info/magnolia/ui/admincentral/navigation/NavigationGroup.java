@@ -59,11 +59,11 @@ import com.vaadin.ui.themes.BaseTheme;
 
 
 /**
- * A menu items collection (e.g. website, data) which is part of a {@link NavigationWorkArea}.
- * @author fgrilli
+ * A group of navigation items defined by a collection of NavigationItemDefinitions (e.g. website, data). It's part of a {@link NavigationWorkArea}.
  *
+ * @author fgrilli
  */
-public class NavigationGroupView extends CustomComponent implements NavigationView, IsVaadinComponent{
+public class NavigationGroup extends CustomComponent implements NavigationView, IsVaadinComponent{
 
     private static final long serialVersionUID = 1L;
     private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
@@ -72,7 +72,7 @@ public class NavigationGroupView extends CustomComponent implements NavigationVi
     private NavigationPermissionSchema permissions;
     private Presenter presenter;
 
-    public NavigationGroupView(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
+    public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
         setCompositionRoot(accordion);
         setSizeFull();
         this.navigationItemDefs = navigationItemDefs;
@@ -163,11 +163,11 @@ public class NavigationGroupView extends CustomComponent implements NavigationVi
         @Override
         public void attach() {
             super.attach();
-            Resource icon = NavigationGroupView.this.getIcon(item);
+            Resource icon = NavigationGroup.this.getIcon(item);
             if (icon != null) {
                 setIcon(icon);
             }
-            setCaption(NavigationGroupView.this.getLabel(item));
+            setCaption(NavigationGroup.this.getLabel(item));
 
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
@@ -205,5 +205,4 @@ public class NavigationGroupView extends CustomComponent implements NavigationVi
     public Component asVaadinComponent() {
         return this;
     }
-
 }

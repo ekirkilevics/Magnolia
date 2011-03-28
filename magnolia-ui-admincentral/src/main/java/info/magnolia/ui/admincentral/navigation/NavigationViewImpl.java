@@ -89,11 +89,11 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
 
         for(NavigationWorkareaDefinition definition : navigation.getWorkareas()){
             log.debug("creating navigation workarea {}", definition.getName());
-            List<NavigationGroupView> groups = new ArrayList<NavigationGroupView>();
+            List<NavigationGroup> groups = new ArrayList<NavigationGroup>();
 
             for(NavigationGroupDefinition group : definition.getGroups()){
                 log.debug("creating navigation group {}", group.getName());
-                groups.add(new NavigationGroupView(group.getItems(), permissions));
+                groups.add(new NavigationGroup(group.getItems(), permissions));
             }
 
             final WorkareaChooser button = new WorkareaChooser(definition);
@@ -114,7 +114,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
         for(NavigationWorkArea navigationWorkArea: registeredNavigationAreas.values()){
-            for(NavigationGroupView navigationGroup: navigationWorkArea.getNavigationGroup()){
+            for(NavigationGroup navigationGroup: navigationWorkArea.getNavigationGroup()){
                 navigationGroup.setPresenter(presenter);
             }
         }
