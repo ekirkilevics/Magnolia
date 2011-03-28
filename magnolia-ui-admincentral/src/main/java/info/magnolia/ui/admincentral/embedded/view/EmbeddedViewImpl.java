@@ -33,14 +33,27 @@
  */
 package info.magnolia.ui.admincentral.embedded.view;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
 
 /**
- * Just a marker interface for embedded views for now.
+ * A custom component which creates an iframe. Default type is {@link Embedded#TYPE_BROWSER}.
  *
- * @author dlipp
+ * @author fgrilli
  *
  */
-public interface EmbeddedView extends View, IsVaadinComponent {
+public class EmbeddedViewImpl extends Embedded implements EmbeddedView {
+
+    private static final long serialVersionUID = -5693000320140645040L;
+
+    public EmbeddedViewImpl(String url){
+        setSource(new ExternalResource(url));
+        setType(Embedded.TYPE_BROWSER);
+        setSizeFull();
+    }
+
+    public Component asVaadinComponent() {
+        return this;
+    }
 }

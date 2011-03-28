@@ -37,6 +37,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
 import info.magnolia.ui.admincentral.embedded.view.EmbeddedView;
+import info.magnolia.ui.admincentral.embedded.view.EmbeddedViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
@@ -63,7 +64,7 @@ public class EmbeddedActivity extends AbstractActivity {
             url = MgnlContext.getContextPath() + place.getUrl();
         }
         // TODO should this be more dynamic? at least inject it
-        final EmbeddedView view = new EmbeddedView(url);
+        final EmbeddedView view = new EmbeddedViewImpl(url);
         viewPort.setView(view);
     }
 
