@@ -33,16 +33,12 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
-
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
-import com.vaadin.ui.Field;
+import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
+import static org.junit.Assert.*;
 
 
 /**
@@ -60,18 +56,7 @@ public class LabelColumnTest {
         mock.setName(original);
         mock.setProperty("name", original);
         LabelColumn column = new LabelColumn(new LabelColumnDefinition(), null, null);
-        Object result = column.getValue(mock);
+        Object result = column.getComponent(mock);
         assertEquals(original, result);
-    }
-
-    @Test
-    public void testGetEditField() {
-        LabelColumnDefinition definition = new LabelColumnDefinition();
-        definition.setEditable(true);
-        LabelColumn column = new LabelColumn(definition, null, null);
-        assertTrue(column.getEditField(null) instanceof Field);
-
-        definition.setEditable(false);
-        assertNull(column.getEditField(null));
     }
 }

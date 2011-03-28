@@ -33,45 +33,27 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Component;
 import info.magnolia.ui.model.column.definition.ColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.Field;
-
 /**
  * Defines a Column - e.g. for lists or trees.
  *
- * @param <E>
- *            type of the hosted values of this column.
  * @param <D>
  *            type of the definition for this column.
  * @author dlipp
  */
-public interface Column<E, D extends ColumnDefinition> {
+public interface Column<D extends ColumnDefinition> {
 
     D getDefinition();
 
     /**
-     * @return Field used when editing this column. Defaults to null.
-     */
-    Field getEditField(Item item);
-
-    /**
-     * Type of the column: Subclasses have to make sure the getValue methods return instances of this type!
-     */
-    Class<E> getType();
-
-    /**
      * @return value to be displayed in the corresponding column (from the provided Node)
      */
-    Object getValue(Item item) throws RepositoryException;
-
-    /**
-     * Set value of Property for the provided node to the new value.
-     */
-    void setValue(Item item, Object newValue) throws RepositoryException;
+    Component getComponent(Item item) throws RepositoryException;
 
     int getWidth();
 

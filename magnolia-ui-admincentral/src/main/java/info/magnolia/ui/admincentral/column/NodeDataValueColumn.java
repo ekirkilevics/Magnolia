@@ -52,7 +52,7 @@ import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueColumnDefinition> implements Serializable {
+public class NodeDataValueColumn extends AbstractColumn<NodeDataValueColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -6032077132567486333L;
 
@@ -67,12 +67,7 @@ public class NodeDataValueColumn extends AbstractColumn<Component,NodeDataValueC
     }
 
     @Override
-    public Class<Component> getType() {
-        return Component.class;
-    }
-
-    @Override
-    public Component getValue(Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
             return new EditableText(item, eventBus, "", placeController) {
 

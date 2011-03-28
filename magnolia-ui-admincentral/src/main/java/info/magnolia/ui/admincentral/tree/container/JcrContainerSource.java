@@ -38,6 +38,8 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import com.vaadin.ui.Component;
+
 /**
  * Backing implementation for JcrContainer.
  *
@@ -53,9 +55,7 @@ public interface JcrContainerSource {
 
     boolean hasChildren(Item item) throws RepositoryException;
 
-    void setColumnValue(String columnLabel, Item item, Object newValue) throws RepositoryException;
-
-    Object getColumnValue(String columnLabel, Item item) throws RepositoryException;
+    Component getColumnComponent(String columnLabel, Item item) throws RepositoryException;
 
     String getItemIcon(Item item) throws RepositoryException;
 

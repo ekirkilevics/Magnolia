@@ -48,7 +48,7 @@ import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
  * @author dlipp
  * @author tmattsson
  */
-public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition> implements Serializable {
+public class LabelColumn extends AbstractColumn<LabelColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -3025969036157185421L;
 
@@ -63,13 +63,8 @@ public class LabelColumn extends AbstractColumn<Component,LabelColumnDefinition>
     }
 
     @Override
-    public Class<Component> getType() {
-        return Component.class;
-    }
-
-    @Override
-    public Component getValue(Item item) throws RepositoryException {
-        // TODO: isn't that too costy to create new instance on each call to getValue? (Same for other columns)
+    public Component getComponent(Item item) throws RepositoryException {
+        // TODO: isn't that to costy to create new instance on each call to getComponent? (Same for other columns)
         return new EditableText(item, eventBus, "@name", placeController) {
 
             private static final long serialVersionUID = 633952333006245861L;

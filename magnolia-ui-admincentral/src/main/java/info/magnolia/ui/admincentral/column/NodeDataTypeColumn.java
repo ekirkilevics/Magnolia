@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import info.magnolia.ui.model.column.definition.NodeDataTypeColumnDefinition;
 
 import java.io.Serializable;
@@ -47,7 +49,7 @@ import javax.jcr.RepositoryException;
  * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
  * is a NodeData.
  */
-public class NodeDataTypeColumn extends AbstractColumn<String, NodeDataTypeColumnDefinition> implements Serializable {
+public class NodeDataTypeColumn extends AbstractColumn<NodeDataTypeColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -2594102704173600906L;
 
@@ -56,16 +58,11 @@ public class NodeDataTypeColumn extends AbstractColumn<String, NodeDataTypeColum
     }
 
     @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public Object getValue(Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
             Property property = (Property) item;
-            return PropertyType.nameFromValue(property.getType());
+            return new Label(PropertyType.nameFromValue(property.getType()));
         }
-        return "";
+        return new Label("");
     }
 }

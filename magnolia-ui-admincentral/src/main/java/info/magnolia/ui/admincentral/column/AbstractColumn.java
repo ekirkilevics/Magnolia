@@ -33,22 +33,20 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Component;
 import info.magnolia.ui.model.column.definition.ColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.Field;
-
 /**
  * Base class for tree columns.
  *
- * @param <E> type of the hosted values of this column.
  * @param <D> type of the definition for this column.
  * @author dlipp
  * @author tmattsson
  */
-public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Column<E, ColumnDefinition> {
+public abstract class AbstractColumn<D extends ColumnDefinition> implements Column<ColumnDefinition> {
 
     protected final D definition;
 
@@ -60,30 +58,7 @@ public abstract class AbstractColumn<E,D extends ColumnDefinition> implements Co
         return this.definition;
     }
 
-    /**
-     * @return Field used when editing this column. Defaults to null.
-     */
-    public Field getEditField(Item item) {
-        // TODO: looks like it's no longer in use - no subclass overwrites it (any longer). On the other side TreeModel is still calling it. To be checked soon!
-        return null;
-    }
-
-    /**
-     * Type of the column: Subclasses have to make sure the getValue methods return instances of
-     * this type!
-     */
-    public abstract Class<E> getType();
-
-    /**
-     * @return value to be displayed in the corresponding column (from the provided Node)
-     */
-    public abstract Object getValue(Item item) throws RepositoryException;
-
-    /**
-     * Set value of Property for the provided node to the new value.
-     */
-    public void setValue(Item item, Object newValue) throws RepositoryException {
-    }
+    public abstract Component getComponent(Item item) throws RepositoryException;
 
     public int getWidth() {
         return getDefinition().getWidth();

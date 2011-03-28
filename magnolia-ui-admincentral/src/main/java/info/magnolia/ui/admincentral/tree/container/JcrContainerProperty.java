@@ -33,11 +33,6 @@
  */
 package info.magnolia.ui.admincentral.tree.container;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EventObject;
-import java.util.List;
-
 import com.vaadin.data.Property;
 
 /**
@@ -47,14 +42,13 @@ import com.vaadin.data.Property;
  *
  * @author tmattsson
  */
-public class JcrContainerProperty implements Property, Property.ValueChangeNotifier {
+public class JcrContainerProperty implements Property {
 
     private static final long serialVersionUID = -9188861347368604176L;
     private String propertyId;
     private Object itemId;
     private JcrContainer container;
     private boolean readOnly = false;
-    private List<ValueChangeListener> listeners = new ArrayList<Property.ValueChangeListener>();
 
     public JcrContainerProperty(String propertyId, Object itemId, JcrContainer container) {
         this.propertyId = propertyId;
@@ -67,8 +61,6 @@ public class JcrContainerProperty implements Property, Property.ValueChangeNotif
     }
 
     public void setValue(Object newValue) throws ReadOnlyException, ConversionException {
-        container.setColumnValue(propertyId, itemId, newValue);
-        fireValueChange();
     }
 
     public Class<?> getType() {
@@ -83,40 +75,9 @@ public class JcrContainerProperty implements Property, Property.ValueChangeNotif
         readOnly = newStatus;
     }
 
-    public void addListener(ValueChangeListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(ValueChangeListener listener) {
-        listeners.remove(listener);
-    }
-
     @Override
     public String toString() {
         Object value = getValue();
         return value != null ? value.toString() : "";
-    }
-
-    protected void fireValueChange() {
-        ValueChangeEvent event = new ValueChangeEvent(this);
-        for (ValueChangeListener listener : Collections .unmodifiableList(listeners)) {
-            listener.valueChange(event);
-        }
-    }
-
-    /**
-     * Event for changes of values.
-     */
-    protected static class ValueChangeEvent extends EventObject implements Property.ValueChangeEvent {
-
-        private static final long serialVersionUID = 348981570885096308L;
-
-        private ValueChangeEvent(com.vaadin.data.Property source) {
-            super(source);
-        }
-
-        public Property getProperty() {
-            return (Property) getSource();
-        }
     }
 }

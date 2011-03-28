@@ -43,9 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.addon.treetable.HierarchicalContainerOrderedWrapper;
 import com.vaadin.addon.treetable.TreeTable;
-import com.vaadin.data.Container;
 import com.vaadin.event.Action;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -54,10 +52,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.TableFieldFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
@@ -86,9 +81,6 @@ public class JcrBrowser extends TreeTable {
     private JcrContainer container;
     private Shell shell;
 
-    private Object selectedItemId = null;
-    private Object selectedPropertyId = null;
-
     private TreeModel treeModel;
 
     public JcrBrowser(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
@@ -105,14 +97,13 @@ public class JcrBrowser extends TreeTable {
         // TODO: check Ticket http://dev.vaadin.com/ticket/5453
         setColumnReorderingAllowed(true);
 
-        addEditingByDoubleClick();
         addDragAndDrop();
 
         this.container = new JcrContainer(treeModel);
 
-        for (Column<?, ?> treeColumn : treeModel.getColumns().values()) {
+        for (Column<?> treeColumn : treeModel.getColumns().values()) {
             super.setColumnExpandRatio(treeColumn.getLabel(), treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
-            container.addContainerProperty(treeColumn.getLabel(), treeColumn.getType(), "");
+            container.addContainerProperty(treeColumn.getLabel(), Component.class, "");
         }
 
         setContainerDataSource(container);
@@ -263,51 +254,6 @@ public class JcrBrowser extends TreeTable {
              */
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
-            }
-        });
-    }
-
-    private void addEditingByDoubleClick() {
-
-        setTableFieldFactory(new TableFieldFactory() {
-
-            private static final long serialVersionUID = 1656067341998458083L;
-
-            public Field createField(Container containerInstance, Object itemId, Object propertyId, Component uiContext) {
-                try {
-                    if (selectedItemId != null) {
-                        if ((selectedItemId.equals(itemId)) && (selectedPropertyId.equals(propertyId))) {
-                            Field field = treeModel.getFieldForColumn(container.getJcrItem((ContainerItemId) itemId), (String) propertyId);
-                            if (field != null) {
-                                field.focus();
-                                if (field instanceof AbstractComponent)
-                                    ((AbstractComponent) field).setImmediate(true);
-                                return field;
-                            }
-                        }
-                    }
-                } catch (RepositoryException e) {
-                    throw new RuntimeRepositoryException(e);
-                }
-                return null;
-            }
-        });
-
-        addListener(new ItemClickEvent.ItemClickListener() {
-
-            private static final long serialVersionUID = 7391900464575027070L;
-
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-
-                    // TODO we need to unset these somehow...
-                    selectedItemId = event.getItemId();
-                    selectedPropertyId = event.getPropertyId();
-
-                    setEditable(true);
-                } else if (isEditable()) {
-                    setEditable(false);
-                }
             }
         });
     }

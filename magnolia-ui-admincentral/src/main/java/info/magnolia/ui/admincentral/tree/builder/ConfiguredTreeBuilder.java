@@ -57,16 +57,16 @@ public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
     private static final long serialVersionUID = 6702977290186078418L;
 
     // FIXME this is a workaround because we cant extend the FactoryBase
-    private static class ColumnFactory extends FactoryBase<ColumnDefinition, Column<?, ColumnDefinition>>{
+    private static class ColumnFactory extends FactoryBase<ColumnDefinition, Column<ColumnDefinition>>{
         public ColumnFactory(ComponentProvider componentProvider) {
             super(componentProvider);
         }
 
-        Column< ? , ColumnDefinition> createColumn(ColumnDefinition definition){
+        Column<ColumnDefinition> createColumn(ColumnDefinition definition){
             return create(definition);
         }
 
-        public void addMapping(Class< ? extends ColumnDefinition> definitionClass, Class< ? extends Column< ? , ColumnDefinition>> implementationClass) {
+        public void addMapping(Class< ? extends ColumnDefinition> definitionClass, Class< ? extends Column<ColumnDefinition>> implementationClass) {
             super.addMapping(definitionClass, implementationClass);
         }
     }
@@ -74,20 +74,20 @@ public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
      */
-    private List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>>();
+    private List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>>();
 
-    public List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> getDefinitionToImplementationMappings() {
+    public List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> getDefinitionToImplementationMappings() {
         return this.definitionToImplementationMappings;
     }
 
-    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>>> definitionToImplementationMappings) {
+    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> definitionToImplementationMappings) {
         this.definitionToImplementationMappings = definitionToImplementationMappings;
-        for (DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>> definitionToImplementationMapping : definitionToImplementationMappings) {
+        for (DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>> definitionToImplementationMapping : definitionToImplementationMappings) {
             addDefinitionToImplementationMapping(definitionToImplementationMapping);
         }
     }
 
-    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping<ColumnDefinition, Column<?, ColumnDefinition>> mapping) {
+    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>> mapping) {
         this.definitionToImplementationMappings.add(mapping);
     }
 
@@ -99,10 +99,10 @@ public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
             columnFactory.addMapping(mapping.getDefinition(), mapping.getImplementation());
         }
 
-        Map<String, Column<?, ?>> columns = new LinkedHashMap<String, Column<?, ?>>();
+        Map<String, Column<?>> columns = new LinkedHashMap<String, Column<?>>();
         for (ColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
             // FIXME use getName() not getLabel()
-            Column<?, ?> column = columnFactory.createColumn(columnDefinition);
+            Column<?> column = columnFactory.createColumn(columnDefinition);
             // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
             if (column != null) {
                 columns.put(columnDefinition.getLabel(), column);

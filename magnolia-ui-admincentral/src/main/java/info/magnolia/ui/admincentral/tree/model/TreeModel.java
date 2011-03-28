@@ -48,7 +48,7 @@ import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.vaadin.ui.Field;
+import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
@@ -69,9 +69,9 @@ public class TreeModel implements JcrContainerSource {
 
     private EditWorkspaceActionFactory actionFactory;
     private WorkbenchDefinition workbenchDefinition;
-    private Map<String, Column<?, ?>> columns;
+    private Map<String, Column<?>> columns;
 
-    public TreeModel(WorkbenchDefinition workbenchDefinition, Map<String, Column<?, ?>> columns, EditWorkspaceActionFactory actionFactory) {
+    public TreeModel(WorkbenchDefinition workbenchDefinition, Map<String, Column<?>> columns, EditWorkspaceActionFactory actionFactory) {
         this.workbenchDefinition = workbenchDefinition;
         this.actionFactory = actionFactory;
         this.columns = columns;
@@ -162,12 +162,8 @@ public class TreeModel implements JcrContainerSource {
         return !getChildren(item).isEmpty();
     }
 
-    public void setColumnValue(String columnLabel, Item item, Object newValue) throws RepositoryException {
-        getColumn(columnLabel).setValue(item, newValue);
-    }
-
-    public Object getColumnValue(String columnLabel, Item item) throws RepositoryException {
-        return getColumn(columnLabel).getValue(item);
+    public Component getColumnComponent(String columnLabel, Item item) throws RepositoryException {
+        return getColumn(columnLabel).getComponent(item);
     }
 
     public String getItemIcon(Item item) throws RepositoryException {
@@ -268,13 +264,7 @@ public class TreeModel implements JcrContainerSource {
             return StringUtils.substringAfter(item.getPath(), base);
     }
 
-    // TODO should be name not label
-    public Field getFieldForColumn(Item item, String columnLabel) throws RepositoryException {
-        Column<?,?> column = columns.get((String) columnLabel);
-        return column.getEditField(item);
-    }
-
-    public Map<String,Column<?, ?>> getColumns() {
+    public Map<String,Column<?>> getColumns() {
         return columns;
     }
 
@@ -293,7 +283,7 @@ public class TreeModel implements JcrContainerSource {
         return getSession().getNode(workbenchDefinition.getPath());
     }
 
-    private Column<?, ?> getColumn(String columnLabel) {
+    private Column<?> getColumn(String columnLabel) {
         return columns.get(columnLabel);
     }
 

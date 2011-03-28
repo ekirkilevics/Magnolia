@@ -56,7 +56,7 @@ import com.vaadin.ui.HorizontalLayout;
  * @author dlipp
  * @author tmattsson
  */
-public class StatusColumn extends AbstractColumn<Component,StatusColumnDefinition> implements Serializable {
+public class StatusColumn extends AbstractColumn<StatusColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -2873717609262761331L;
 
@@ -85,12 +85,7 @@ public class StatusColumn extends AbstractColumn<Component,StatusColumnDefinitio
     }
 
     @Override
-    public Class<Component> getType() {
-        return Component.class;
-    }
-
-    @Override
-    public Component getValue(Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
             Component component = null;

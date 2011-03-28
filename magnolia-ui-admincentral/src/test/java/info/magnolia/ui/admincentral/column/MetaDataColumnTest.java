@@ -70,7 +70,7 @@ public class MetaDataColumnTest {
         Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
         metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
         MetaDataColumn column = new MetaDataColumn(new MetaDataColumnDefinition());
-        Object result = column.getValue(node);
+        Object result = column.getComponent(node);
         assertEquals(dateFormat.format(now), result);
     }
 }

@@ -42,7 +42,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.jcr.util.TemporaryHackUtil;
@@ -59,9 +58,7 @@ import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
  * @author dlipp
  * @author tmattsson
  */
-public class TemplateColumn extends AbstractColumn<Component,TemplateColumnDefinition> implements Serializable {
-
-    public static final String PROPERTY_NAME = ContentRepository.NAMESPACE_PREFIX + ":template";
+public class TemplateColumn extends AbstractColumn<TemplateColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -4658046121169661806L;
 
@@ -88,7 +85,7 @@ public class TemplateColumn extends AbstractColumn<Component,TemplateColumnDefin
     }
 
     @Override
-    public Component getValue(Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
         return new EditableSelect(item, eventBus, "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
 
             private static final long serialVersionUID = -8268356405124559092L;
@@ -106,10 +103,5 @@ public class TemplateColumn extends AbstractColumn<Component,TemplateColumnDefin
         TemplateManager templateManager = TemplateManager.getInstance();
         Template definition = templateManager.getTemplateDefinition(template);
         return (definition != null) ? definition.getI18NTitle() : "";
-    }
-
-    @Override
-    public Class<Component> getType() {
-        return Component.class;
     }
 }

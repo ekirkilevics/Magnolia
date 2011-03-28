@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
@@ -50,7 +52,7 @@ import org.apache.commons.lang.time.FastDateFormat;
  * Column that displays a property for a nodes MetaData. Used to display the modification date of
  * content nodes.
  */
-public class MetaDataColumn extends AbstractColumn<String,MetaDataColumnDefinition> implements Serializable {
+public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = -2788490588550009503L;
 
@@ -62,22 +64,16 @@ public class MetaDataColumn extends AbstractColumn<String,MetaDataColumnDefiniti
         super(def);
     }
 
-    // TODO check whether this couldn't be replaced by impl. from TreeColumn
     @Override
-    public Class<String> getType() {
-        return String.class;
-    }
-
-    @Override
-    public Object getValue(Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Node) {
             Node node = (Node) item;
             Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
             final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
             final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
-            return date != null ? DATE_FORMAT.format(date.getTime()) : "";
+            return date != null ? new Label(DATE_FORMAT.format(date.getTime())) : new Label("");
         }
-        return "";
+        return new Label();
     }
 
     /**

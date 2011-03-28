@@ -49,7 +49,7 @@ import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
  * the 'Title' column.
  * FIXME this is a PropertyColumn, NodeData is a Content API term we have to avoid
  */
-public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefinition> implements Serializable {
+public class NodeDataColumn extends AbstractColumn<NodeDataColumnDefinition> implements Serializable {
 
     private static final long serialVersionUID = 979787074349524725L;
 
@@ -72,12 +72,7 @@ public class NodeDataColumn extends AbstractColumn<Component, NodeDataColumnDefi
     }
 
     @Override
-    public Class<Component> getType() {
-        return Component.class;
-    }
-
-    @Override
-    public Component getValue(Item item) throws RepositoryException {
+    public Component getComponent(Item item) throws RepositoryException {
 
         if (item instanceof Node) {
 
