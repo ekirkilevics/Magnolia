@@ -69,7 +69,7 @@ public class VaadinDialogBuilder implements DialogBuilder {
     }
 
     public DialogView build(DialogDefinition dialogDefinition) {
-
+        // TODO: shouldn't we use IoC here?
         DialogViewImpl dialog = new DialogViewImpl();
 
         application.getMainWindow().addWindow(dialog);
