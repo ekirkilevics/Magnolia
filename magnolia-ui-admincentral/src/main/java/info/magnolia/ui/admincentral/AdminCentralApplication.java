@@ -33,21 +33,14 @@
  */
 package info.magnolia.ui.admincentral;
 
-import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
-import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.admincentral.embedded.view.EmbeddedView;
+import info.magnolia.ui.admincentral.embedded.view.EmbeddedViewImpl;
 import info.magnolia.ui.admincentral.navigation.NavigationView;
 import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
@@ -63,6 +56,17 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
+
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
+
+import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 
 /**
  * Application class for AdminCentral. Provides a scoped IoC container and performs initialization of the UI.
@@ -112,6 +116,8 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(NavigationPermissionSchema.class, NavigationPermissionSchemaImpl.class);
         container.addComponent(NavigationActivityMapper.class, NavigationActivityMapper.class);
         container.addComponent(NavigationActivity.class, NavigationActivity.class);
+
+        container.addComponent(EmbeddedView.class, EmbeddedViewImpl.class);
 
         container.addComponent(EventBus.class, SimpleEventBus.class);
         container.addComponent(Shell.class, ShellImpl.class);

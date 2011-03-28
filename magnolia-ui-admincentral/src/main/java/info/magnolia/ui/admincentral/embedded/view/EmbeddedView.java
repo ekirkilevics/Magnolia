@@ -33,14 +33,18 @@
  */
 package info.magnolia.ui.admincentral.embedded.view;
 
+import com.vaadin.terminal.Resource;
+
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
- * Just a marker interface for embedded views for now.
+ * Interface for embedded views displaying a resource.
  *
  * @author dlipp
  *
  */
 public interface EmbeddedView extends View, IsVaadinComponent {
+
+    void setSource(Resource source);
 }

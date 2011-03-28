@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.embedded.view;
 
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 
@@ -47,8 +46,7 @@ public class EmbeddedViewImpl extends Embedded implements EmbeddedView {
 
     private static final long serialVersionUID = -5693000320140645040L;
 
-    public EmbeddedViewImpl(String url){
-        setSource(new ExternalResource(url));
+    public EmbeddedViewImpl(){
         setType(Embedded.TYPE_BROWSER);
         setSizeFull();
     }

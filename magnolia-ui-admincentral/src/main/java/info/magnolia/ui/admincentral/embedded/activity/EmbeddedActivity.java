@@ -35,12 +35,14 @@ package info.magnolia.ui.admincentral.embedded.activity;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
 import info.magnolia.ui.admincentral.embedded.view.EmbeddedView;
-import info.magnolia.ui.admincentral.embedded.view.EmbeddedViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
+
+import com.vaadin.terminal.ExternalResource;
 
 
 /**
@@ -54,7 +56,6 @@ public class EmbeddedActivity extends AbstractActivity {
         this.place = place;
     }
 
-
     public void start(ViewPort viewPort, EventBus eventBus) {
         String url;
         if(LinkUtil.isExternalLinkOrAnchor(place.getUrl())){
@@ -63,8 +64,8 @@ public class EmbeddedActivity extends AbstractActivity {
         else{
             url = MgnlContext.getContextPath() + place.getUrl();
         }
-        // TODO should this be more dynamic? at least inject it
-        final EmbeddedView view = new EmbeddedViewImpl(url);
+        final EmbeddedView view = Components.getComponentProvider().getComponent(EmbeddedView.class);
+        view.setSource(new ExternalResource(url));
         viewPort.setView(view);
     }
 
