@@ -35,83 +35,15 @@ package info.magnolia.ui.admincentral.workbench.view;
 
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.ComponentViewPort;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
-
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * The view to edit a workspace. Provides slots for the tree and detail view.
+ * The view to edit a workspace. Provides slots for the item list and detail view.
  */
-public class WorkbenchView implements View, IsVaadinComponent{
+public interface WorkbenchView extends View, IsVaadinComponent{
 
-    private static final long serialVersionUID = 7548338054163224225L;
-    private VerticalLayout outerLayout;
-    private HorizontalSplitPanel splitPanel;
-    private ComponentViewPort itemListViewPort;
-    private ComponentViewPort detailViewPort;
+    ViewPort getItemListViewPort();
 
-    public WorkbenchView() {
-
-        splitPanel = new HorizontalSplitPanel();
-        splitPanel.setSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
-        splitPanel.setSizeFull();
-        splitPanel.addListener(new SplitterClickListener() {
-            private static final long serialVersionUID = 4837023553542505515L;
-
-            public void splitterClick(SplitterClickEvent event) {
-                if(event.isDoubleClick()){
-                    HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
-                    panel.setSplitPosition(panel.getSplitPosition() > 0 ? 0:15);
-                }
-            }
-        });
-
-        itemListViewPort = new ComponentViewPort();
-        detailViewPort = new ComponentViewPort();
-
-        itemListViewPort.setSizeFull();
-        detailViewPort.setSizeFull();
-
-        splitPanel.addComponent(itemListViewPort);
-        splitPanel.addComponent(detailViewPort);
-        splitPanel.setSizeFull();
-
-        SearchForm searchForm = new SearchForm();
-
-        outerLayout = new  VerticalLayout();
-        outerLayout.setSizeFull();
-
-        WorkbenchHeaderViewImpl workbenchHeaderView = new WorkbenchHeaderViewImpl();
-
-
-        outerLayout.addComponent(searchForm);
-        outerLayout.addComponent(workbenchHeaderView);
-        outerLayout.addComponent(splitPanel);
-
-        //outerLayout.setExpandRatio(searchForm, 1);
-        //outerLayout.setExpandRatio(workbenchHeaderView, 1);
-        outerLayout.setExpandRatio(splitPanel, 1);
-        //outerLayout.setExpandRatio(searchForm, 1);
-        //outerLayout.setExpandRatio(splitPanel, 9);
-    }
-
-    public Component asVaadinComponent() {
-        return outerLayout;
-    }
-
-    public ViewPort getItemListViewPort() {
-        return itemListViewPort;
-    }
-
-    public ViewPort getDetailViewPort() {
-        return detailViewPort;
-    }
-
+    ViewPort getDetailViewPort();
 }

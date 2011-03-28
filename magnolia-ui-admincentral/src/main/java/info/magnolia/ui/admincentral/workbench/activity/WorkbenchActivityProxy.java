@@ -39,11 +39,12 @@ import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
-import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
-import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.admincentral.workbench.view.WorkbenchViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivityProxy;
+import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
@@ -79,7 +80,7 @@ public class WorkbenchActivityProxy extends AbstractActivityProxy{
 
     @Override
     protected void populateComponentProvider(MutableComponentProvider componentProvider) {
-        componentProvider.addComponent(WorkbenchView.class, WorkbenchView.class);
+        componentProvider.addComponent(WorkbenchView.class, WorkbenchViewImpl.class);
         componentProvider.addComponent(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
 
         componentProvider.addComponent(ItemListActivityMapper.class, ItemListActivityMapper.class);
