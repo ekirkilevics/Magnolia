@@ -74,7 +74,10 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
 
     public void testQueryManagers() {
         UserContext context = createMock(UserContext.class);
-        replay(context);
+        User user = createMock(User.class);
+        expect(context.getUser()).andReturn(user).anyTimes();
+        expect(user.getName()).andReturn("admin").anyTimes();
+        replay(context,user);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
         QueryManager queryManager = strategy.getQueryManager("magnolia", "website");
         assertNotNull(queryManager);
