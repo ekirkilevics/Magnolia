@@ -389,15 +389,16 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public boolean isGranted(String path, long oldPermissions) {
         String permissions = "";
         //TODO: review && convert all the permissions properly
-        if ((oldPermissions & Permission.READ) == Permission.READ) {
-            permissions = Session.ACTION_READ;
+        if ((oldPermissions & Permission.ALL) == Permission.ALL) {
+            permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
         } else if ((oldPermissions & Permission.WRITE) == Permission.WRITE) {
             permissions = Session.ACTION_ADD_NODE;
-        } if ((oldPermissions & Permission.ALL) == Permission.ALL) {
-            permissions = Session.ACTION_ADD_NODE + "," + Session.ACTION_READ + "," + Session.ACTION_REMOVE + "," + Session.ACTION_SET_PROPERTY;
+        }
+        else if ((oldPermissions & Permission.READ) == Permission.READ) {
+            permissions = Session.ACTION_READ;
         }
 
-        return (!Access.isGranted(jcrSession, path, permissions));
+        return (Access.isGranted(jcrSession, path, permissions));
     }
 
     /**
