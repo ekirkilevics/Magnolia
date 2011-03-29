@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,36 +33,38 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.io.Serializable;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.Component;
+import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
+import info.magnolia.ui.model.column.definition.ColumnDefinition;
 
 /**
- * Describes a column that contains the label of the item.
+ * Abstract base class for columns that use AbstractEditable. Provides selecting of items and tree refresh on modification.
  *
- * @author dlipp
  * @author tmattsson
+ * @param <D>
  */
-public class LabelColumn extends AbstractEditableColumn<LabelColumnDefinition> implements Serializable {
+public abstract class AbstractEditableColumn<D extends ColumnDefinition> extends AbstractColumn<D> implements AbstractEditable.Presenter {
 
-    public LabelColumn(LabelColumnDefinition def, EventBus eventBus, PlaceController placeController ) {
-        super(def, eventBus, placeController);
+    private EventBus eventBus;
+
+    private PlaceController placeController;
+
+    public AbstractEditableColumn(D def, EventBus eventBus, PlaceController placeController) {
+        super(def);
+        this.eventBus = eventBus;
+        this.placeController = placeController;
     }
 
-    @Override
-    public Component getComponent(Item item) throws RepositoryException {
-        // TODO: isn't that to costy to create new instance on each call to getComponent? (Same for other columns)
-        return new EditableText(item, this, "@name") {
+    public void onSave(Item item) throws RepositoryException {
+        eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
+    }
 
-            @Override
-            protected String getLabelText(Item item) throws RepositoryException {
-                return item.getName();
-            }
-        };
+    public void onClick(Item item) throws RepositoryException {
+        placeController.goTo(new ItemSelectedPlace(item.getSession().getWorkspace().getName(), item.getPath()));
     }
 }

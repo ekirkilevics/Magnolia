@@ -33,158 +33,62 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.FieldEvents;
-import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
-import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
-import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.Editor;
-import info.magnolia.ui.framework.editor.HasEditors;
 import info.magnolia.ui.framework.editor.ValueEditor;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.place.PlaceController;
 
 /**
- * UI component that displays a label and on double click opens it for editing by switching the label to a text field.
+ * UI component that displays onSave label and on double click opens it for editing by switching the label to onSave text field.
  *
  * @author tmattsson
- *
- * TODO notifying eventBus not yet implemented
  */
-public abstract class EditableText extends CustomComponent {
+public abstract class EditableText extends AbstractEditable {
 
-    private final String workspace;
-    private final String nodeIdentifier;
-    private final String propertyName;
-    private ContentDriver driver;
-    private ValueEditor<String> editor;
-    private EventBus eventBus;
+    private String path;
 
-    // FIXME needing the placeController to select the item is really silly
-    public EditableText(final Item item, final EventBus eventBus, final String path, final PlaceController placeController) throws RepositoryException {
-
-        this.eventBus = eventBus;
-
-        this.workspace = item.getSession().getWorkspace().getName();
-        this.nodeIdentifier = item instanceof Node ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
-        this.propertyName = item instanceof Property ? (item).getName() : null;
-
-        final HorizontalLayout layout = new HorizontalLayout();
-        final Label label = new Label(getValue(item));
-
-        final String itemPath = item.getPath();
-
-        // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
-       layout.addListener(new LayoutEvents.LayoutClickListener() {
-
-            public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
-                if (event.isDoubleClick()) {
-                    final TextField textField = new TextField();
-                    textField.addListener(new FieldEvents.BlurListener() {
-
-                        public void blur(FieldEvents.BlurEvent event) {
-                            // TODO should we save on blur
-                            layout.removeComponent(textField);
-                            layout.addComponent(label);
-                        }
-                    });
-                    textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new int[]{}) {
-
-                        @Override
-                        public void handleAction(Object sender, Object target) {
-
-                            try {
-                                Item item1 = getItem();
-                                driver.flush(item1);
-
-                                if (driver.hasErrors())
-                                    // TODO show validation errors
-                                    return;
-
-                                eventBus.fireEvent(new ContentChangedEvent(item1.getSession().getWorkspace().getName(), item1.getPath()));
-
-                                layout.removeComponent(textField);
-                                layout.addComponent(label);
-
-                            } catch (RepositoryException e) {
-                                throw new RuntimeRepositoryException(e);
-                            }
-                        }
-                    });
-                    layout.removeComponent(label);
-                    layout.addComponent(textField);
-                    textField.focus();
-                    textField.setSizeFull();
-
-                    // TODO most probably of common interest - think about Providing proper type "StringEditor"
-                    editor = new ValueEditor<String>() {
-                        public void setValue(String object) {
-                            textField.setValue(object);
-                        }
-
-                        public String getValue() {
-                            return (String)textField.getValue();
-                        }
-
-                        public String getPath() {
-                            return path;
-                        }
-
-                        public Class<String> getType() {
-                            return String.class;
-                        }
-                    };
-
-                    driver = new ContentDriver();
-                    driver.initialize(new HasEditors() {
-                        public Collection<? extends Editor> getEditors() {
-                            ArrayList<Editor> list = new ArrayList<Editor>();
-                            list.add(editor);
-                            return list;
-                        }
-                    });
-
-                    try {
-                        driver.edit(getItem());
-                    } catch (RepositoryException e) {
-                        throw new RuntimeRepositoryException(e);
-                    }
-
-                }
-                else{
-                    // FIXME we do this to select the item and update the history
-                    // the event is not visible to the tree (no bubbling of the event)
-                    placeController.goTo(new ItemSelectedPlace(workspace, itemPath));
-                }
-            }
-        });
-        layout.addComponent(label);
-        layout.setSizeUndefined();
-        setCompositionRoot(layout);
-        setSizeUndefined();
+    public EditableText(Item item, Presenter presenter, String path) throws RepositoryException {
+        super(item, presenter);
+        this.path = path;
     }
 
-    protected abstract String getValue(Item item) throws RepositoryException;
+    private static class TextFieldEditor extends TextField implements ValueEditor {
 
-    private Item getItem() throws RepositoryException {
-        Node node = JCRUtil.getSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);
-        if (propertyName != null)
-            return node.getProperty(propertyName);
-        return node;
+        private String path;
+
+        private TextFieldEditor(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
+    @Override
+    protected Editor getComponentAndEditor(Item item) throws RepositoryException {
+        final TextFieldEditor textField = new TextFieldEditor(path);
+        textField.addListener(new FieldEvents.BlurListener() {
+
+            public void blur(FieldEvents.BlurEvent event) {
+                onCancel();
+            }
+        });
+        textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new int[]{}) {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                onSave();
+            }
+        });
+        textField.focus();
+        textField.setSizeFull();
+
+        return textField;
     }
 }

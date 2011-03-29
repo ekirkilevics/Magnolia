@@ -49,16 +49,10 @@ import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
  * the 'Title' column.
  * FIXME this is a PropertyColumn, NodeData is a Content API term we have to avoid
  */
-public class NodeDataColumn extends AbstractColumn<NodeDataColumnDefinition> implements Serializable {
-
-    private EventBus eventBus;
-
-    private PlaceController placeController;
+public class NodeDataColumn extends AbstractEditableColumn<NodeDataColumnDefinition> implements Serializable {
 
     public NodeDataColumn(NodeDataColumnDefinition def, EventBus eventBus, PlaceController placeController) {
-        super(def);
-        this.eventBus = eventBus;
-        this.placeController = placeController;
+        super(def, eventBus, placeController);
     }
 
     public String getNodeDataName() {
@@ -74,10 +68,10 @@ public class NodeDataColumn extends AbstractColumn<NodeDataColumnDefinition> imp
 
         if (item instanceof Node) {
 
-            return new EditableText(item, eventBus, definition.getNodeDataName(), placeController) {
+            return new EditableText(item, this, definition.getNodeDataName()) {
 
                 @Override
-                protected String getValue(Item item) throws RepositoryException {
+                protected String getLabelText(Item item) throws RepositoryException {
                     return getInternal((Node) item);
                 }
             };

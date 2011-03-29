@@ -48,6 +48,7 @@ import info.magnolia.jcr.util.TemporaryHackUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
 
 /**
@@ -58,13 +59,29 @@ import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
  * @author dlipp
  * @author tmattsson
  */
-public class TemplateColumn extends AbstractColumn<TemplateColumnDefinition> implements Serializable {
+public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinition> implements Serializable {
 
-    private EventBus eventBus;
+    private static final long serialVersionUID = -4658046121169661806L;
 
-    public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus) {
-        super(def);
-        this.eventBus = eventBus;
+    public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController) {
+        super(def, eventBus, placeController);
+    }
+
+    @Override
+    public Component getComponent(Item item) throws RepositoryException {
+        return new EditableSelect(item, this, "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
+
+            private static final long serialVersionUID = -8268356405124559092L;
+
+            @Override
+            protected String getLabelText(Item item) {
+                Node node = (Node) item;
+                String template = JCRMetadataUtil.getMetaData(node).getTemplate();
+                TemplateManager templateManager = TemplateManager.getInstance();
+                Template definition = templateManager.getTemplateDefinition(template);
+                return (definition != null) ? definition.getI18NTitle() : "";
+            }
+        };
     }
 
     private Map<String, String> getAvailableTemplates(Node node) {
@@ -80,24 +97,5 @@ public class TemplateColumn extends AbstractColumn<TemplateColumnDefinition> imp
             map.put(template.getI18NTitle(), template.getName());
         }
         return map;
-    }
-
-    @Override
-    public Component getComponent(Item item) throws RepositoryException {
-        return new EditableSelect(item, eventBus, "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
-
-            @Override
-            protected String getValue(Item item) throws RepositoryException {
-                return getInternalValue((Node)item);
-            }
-        };
-    }
-
-    private String getInternalValue(Node item) {
-        Node node = (Node) item;
-        String template = JCRMetadataUtil.getMetaData(node).getTemplate();
-        TemplateManager templateManager = TemplateManager.getInstance();
-        Template definition = templateManager.getTemplateDefinition(template);
-        return (definition != null) ? definition.getI18NTitle() : "";
     }
 }

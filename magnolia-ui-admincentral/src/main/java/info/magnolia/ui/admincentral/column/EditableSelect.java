@@ -33,158 +33,75 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.event.LayoutEvents;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
-import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.Editor;
-import info.magnolia.ui.framework.editor.HasEditors;
 import info.magnolia.ui.framework.editor.ValueEditor;
-import info.magnolia.ui.framework.event.EventBus;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to a text field.
  *
  * @author tmattsson
- *
- * TODO This implementation is very similar to EditableText - should be merged together.
  */
-public abstract class EditableSelect extends CustomComponent {
+public abstract class EditableSelect extends AbstractEditable {
 
-    private final String workspace;
-    private final String nodeIdentifier;
-    private final String propertyName;
-    private ContentDriver driver;
-    private ValueEditor editor;
-    private EventBus eventBus;
+    private static final long serialVersionUID = -9123969896830970149L;
+    private Map<String, String> options;
+    private String path;
 
-    public EditableSelect(Item item, final EventBus eventBus, final String path, final Map<String, String> options) throws RepositoryException {
-
-        this.eventBus = eventBus;
-
-        this.workspace = item.getSession().getWorkspace().getName();
-        this.nodeIdentifier = item instanceof Node ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
-        this.propertyName = item instanceof Property ? (item).getName() : null;
-
-        final HorizontalLayout layout = new HorizontalLayout();
-        final Label label = new Label(getValue(item));
-
-        // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
-
-        layout.addListener(new LayoutEvents.LayoutClickListener() {
-
-            public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
-                if (event.isDoubleClick()) {
-
-                    final NativeSelect select = new NativeSelect();
-                    select.setNullSelectionAllowed(false);
-                    select.setNewItemsAllowed(false);
-
-                    for (Map.Entry<String, String> entry : options.entrySet()) {
-                        select.addItem(entry.getValue());
-                        select.setItemCaption(entry.getValue(), entry.getKey());
-                    }
-
-                    try {
-                        String template = JCRMetadataUtil.getMetaData((Node) getItem()).getTemplate();
-                        select.setValue(template); // TODO Doesn't render this choice as selected
-                        select.focus(); // TODO isn't focused in gui
-                        select.setImmediate(true);
-                        select.setInvalidAllowed(false);
-
-                    } catch (RepositoryException e) {
-                        throw new RuntimeRepositoryException(e);
-                    }
-
-                    select.addListener(new com.vaadin.data.Property.ValueChangeListener() {
-
-                        public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-
-                            try {
-                                Item item1 = getItem();
-                                driver.flush(item1);
-
-                                if (driver.hasErrors())
-                                    // TODO show validation errors
-                                    return;
-
-                                eventBus.fireEvent(new ContentChangedEvent(item1.getSession().getWorkspace().getName(), item1.getPath()));
-
-                                layout.removeComponent(select);
-                                layout.addComponent(label);
-
-                            } catch (RepositoryException e) {
-                                throw new RuntimeRepositoryException(e);
-                            }
-                        }
-                    });
-
-                    layout.removeComponent(label);
-                    layout.addComponent(select);
-                    select.setSizeFull();
-
-                    editor = new ValueEditor() {
-                        public void setValue(Object object) {
-                            select.setValue(object);
-                        }
-
-                        public Object getValue() {
-                            return select.getValue();
-                        }
-
-                        public String getPath() {
-                            return path;
-                        }
-
-                        public Class getType() {
-                            return String.class;
-                        }
-                    };
-
-                    driver = new ContentDriver();
-                    driver.initialize(new HasEditors() {
-                        public Collection<? extends Editor> getEditors() {
-                            ArrayList<Editor> list = new ArrayList<Editor>();
-                            list.add(editor);
-                            return list;
-                        }
-                    });
-
-                    try {
-                        driver.edit(getItem());
-                    } catch (RepositoryException e) {
-                        throw new RuntimeRepositoryException(e);
-                    }
-
-                }
-            }
-        });
-        layout.addComponent(label);
-        layout.setSizeUndefined();
-        setCompositionRoot(layout);
-        setSizeUndefined();
+    public EditableSelect(Item item, Presenter presenter, final String path, final Map<String, String> options) throws RepositoryException {
+        super(item, presenter);
+        this.path = path;
+        this.options = options;
     }
 
-    protected abstract String getValue(Item item) throws RepositoryException;
+    private static class NativeSelectEditor extends NativeSelect implements ValueEditor {
 
-    private Item getItem() throws RepositoryException {
-        Node node = JCRUtil.getSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);
-        if (propertyName != null)
-            return node.getProperty(propertyName);
-        return node;
+        private String path;
+
+        public NativeSelectEditor(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
+    @Override
+    protected Editor getComponentAndEditor(Item item) {
+
+        NativeSelectEditor select = new NativeSelectEditor(path);
+        select.setNullSelectionAllowed(false);
+        select.setNewItemsAllowed(false);
+
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            select.addItem(entry.getValue());
+            select.setItemCaption(entry.getValue(), entry.getKey());
+        }
+
+        select.focus(); // TODO isn't focused in gui
+        select.setImmediate(true);
+        select.setInvalidAllowed(false);
+
+
+// TODO we can't use this event since its triggered by ContentDriver.edit()
+/*
+        select.addListener(new com.vaadin.data.Property.ValueChangeListener() {
+
+            private static final long serialVersionUID = -4980015736557119160L;
+
+            public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
+                onSave();
+            }
+        });
+*/
+
+        select.setSizeFull();
+
+        return select;
     }
 }

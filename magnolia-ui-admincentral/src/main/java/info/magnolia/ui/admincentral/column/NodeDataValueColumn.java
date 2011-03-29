@@ -52,25 +52,19 @@ import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
  * @author dlipp
  * @author tmattsson
  */
-public class NodeDataValueColumn extends AbstractColumn<NodeDataValueColumnDefinition> implements Serializable {
-
-    private EventBus eventBus;
-
-    private PlaceController placeController;
+public class NodeDataValueColumn extends AbstractEditableColumn<NodeDataValueColumnDefinition> implements Serializable {
 
     public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus, PlaceController placeController) {
-        super(def);
-        this.eventBus = eventBus;
-        this.placeController = placeController;
+        super(def, eventBus, placeController);
     }
 
     @Override
     public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
-            return new EditableText(item, eventBus, "", placeController) {
+            return new EditableText(item, this, "") {
 
                 @Override
-                protected String getValue(Item item) throws RepositoryException {
+                protected String getLabelText(Item item) throws RepositoryException {
                     Property property = (Property) item;
                     return property.getString();
                 }
