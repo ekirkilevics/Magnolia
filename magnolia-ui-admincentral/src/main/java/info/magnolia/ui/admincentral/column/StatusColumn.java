@@ -46,6 +46,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
@@ -120,8 +121,8 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
         Embedded embedded = new Embedded();
         embedded.setType(Embedded.TYPE_IMAGE);
         embedded.setSource(new ExternalResource(resource));
-        embedded.setWidth("16px");
-        embedded.setHeight("16px");
+        embedded.setWidth(16, Sizeable.UNITS_PIXELS);
+        embedded.setHeight(16, Sizeable.UNITS_PIXELS);
         return embedded;
     }
 }

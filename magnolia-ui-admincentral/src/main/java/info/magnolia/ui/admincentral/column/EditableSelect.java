@@ -135,8 +135,7 @@ public abstract class EditableSelect extends CustomComponent {
 
                     layout.removeComponent(label);
                     layout.addComponent(select);
-                    select.setWidth("100%");
-                    select.setHeight("100%");
+                    select.setSizeFull();
 
                     editor = new ValueEditor() {
                         public void setValue(Object object) {

@@ -38,6 +38,7 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
@@ -112,18 +113,18 @@ public class AdminCentralViewImpl implements AdminCentralView {
         // TODO: this layout breaks completely on long user name or with different languages (eg spanish). It needs to be floating instead
 
         final AbsoluteLayout headerLayout = new AbsoluteLayout();
-        headerLayout.setHeight("50px");
-        headerLayout.setWidth("100%");
+        headerLayout.setHeight(50, Sizeable.UNITS_PIXELS);
+        headerLayout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
         final Embedded magnoliaLogo = new Embedded();
         magnoliaLogo.setType(Embedded.TYPE_IMAGE);
         magnoliaLogo.setSource(new ExternalResource(MgnlContext.getContextPath() + "/.resources/admin-images/magnoliaLogo.gif"));
-        magnoliaLogo.setWidth("294px");
-        magnoliaLogo.setHeight("36px");
+        magnoliaLogo.setWidth(294, Sizeable.UNITS_PIXELS);
+        magnoliaLogo.setHeight(36, Sizeable.UNITS_PIXELS);
         headerLayout.addComponent(magnoliaLogo, "left: 20px; top: 10px;");
 
         final Label loggedUser = new Label(messages.get("central.user"));
-        loggedUser.setWidth("35px");
+        loggedUser.setWidth(35, Sizeable.UNITS_PIXELS);
         headerLayout.addComponent(loggedUser, "right: 120px; top: 10px;");
 
         final User user = MgnlContext.getUser();
@@ -145,7 +146,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
         headerLayout.addComponent(userPreferences, "right: 65px; top: 10px;");
 
         final Label divider = new Label(" |");
-        divider.setWidth("10px");
+        divider.setWidth(10, Sizeable.UNITS_PIXELS);
         headerLayout.addComponent(divider, "right: 50px; top: 10px;");
 
         final Button logout = new Button(messages.get("central.logout"));
