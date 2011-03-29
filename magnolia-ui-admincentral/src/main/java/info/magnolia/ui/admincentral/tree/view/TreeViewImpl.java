@@ -51,8 +51,6 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
  */
 public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
-    private static final long serialVersionUID = 4152174218601590465L;
-
     private JcrBrowser jcrBrowser;
 
     private TreeView.Presenter presenter;
@@ -62,8 +60,6 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
         jcrBrowser = new JcrBrowser(workbenchDefinition, treeModel, shell);
         jcrBrowser.setSizeFull();
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
-
-            private static final long serialVersionUID = -6752253952550059502L;
 
             public void itemClick(ItemClickEvent event) {
 

@@ -73,8 +73,6 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  */
 public class JcrBrowser extends TreeTable {
 
-    private static final long serialVersionUID = -6202685472650709855L;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private WorkbenchDefinition workbenchDefinition;
@@ -129,7 +127,6 @@ public class JcrBrowser extends TreeTable {
     }
 
     private  class JcrBrowserAction extends Action {
-        private static final long serialVersionUID = -5358813017929951816L;
         private ActionDefinition actionDefinition;
 
         private JcrBrowserAction(MenuItemDefinition menuItemDefinition) {
@@ -159,7 +156,6 @@ public class JcrBrowser extends TreeTable {
     private void addContextMenu() {
 
         addActionHandler(new Action.Handler() {
-            private static final long serialVersionUID = 4311121075528949148L;
 
             public Action[] getActions(Object target, Object sender) {
                 // FIXME make that item type, security dependent
@@ -187,8 +183,6 @@ public class JcrBrowser extends TreeTable {
     private void addDragAndDrop() {
         setDragMode(TableDragMode.ROW);
         setDropHandler(new DropHandler() {
-
-            private static final long serialVersionUID = 1108084327834238921L;
 
             /*
              * @seecom.vaadin.event.dd.DropHandler#drop(com.vaadin.event.dd.

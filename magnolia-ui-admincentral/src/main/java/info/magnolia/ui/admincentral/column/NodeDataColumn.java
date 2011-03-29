@@ -51,8 +51,6 @@ import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
  */
 public class NodeDataColumn extends AbstractColumn<NodeDataColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = 979787074349524725L;
-
     private EventBus eventBus;
 
     private PlaceController placeController;
@@ -77,8 +75,6 @@ public class NodeDataColumn extends AbstractColumn<NodeDataColumnDefinition> imp
         if (item instanceof Node) {
 
             return new EditableText(item, eventBus, definition.getNodeDataName(), placeController) {
-
-                private static final long serialVersionUID = -4967706678599224210L;
 
                 @Override
                 protected String getValue(Item item) throws RepositoryException {

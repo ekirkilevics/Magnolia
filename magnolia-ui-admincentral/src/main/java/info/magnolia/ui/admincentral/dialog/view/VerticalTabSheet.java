@@ -52,8 +52,6 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class VerticalTabSheet extends CustomComponent {
 
-    private static final long serialVersionUID = -6992773732282625673L;
-
     private static class Tab {
 
         private String label;
@@ -143,8 +141,6 @@ public class VerticalTabSheet extends CustomComponent {
         tabComponent.addStyleName("vtabsheet-tab");
 
         tabComponent.addListener(new MouseEvents.ClickListener() {
-
-            private static final long serialVersionUID = -2394301708605467506L;
 
             public void click(MouseEvents.ClickEvent event) {
                 selectTab(index);

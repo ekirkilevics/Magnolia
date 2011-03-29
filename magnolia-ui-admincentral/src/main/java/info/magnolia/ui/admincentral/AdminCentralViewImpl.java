@@ -60,7 +60,6 @@ import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
  */
 public class AdminCentralViewImpl implements AdminCentralView {
 
-    private static final long serialVersionUID = -8882766616316597356L;
     private Application application;
     private DialogPresenter dialogPresenter;
 
@@ -131,7 +130,6 @@ public class AdminCentralViewImpl implements AdminCentralView {
         final Button userPreferences = new Button(user.getName());
         userPreferences.setStyleName(BaseTheme.BUTTON_LINK);
         userPreferences.addListener(new Button.ClickListener () {
-            private static final long serialVersionUID = 7477646576639532112L;
 
             public void buttonClick(Button.ClickEvent event) {
                 try {
@@ -153,7 +151,6 @@ public class AdminCentralViewImpl implements AdminCentralView {
         final Button logout = new Button(messages.get("central.logout"));
         logout.setStyleName(BaseTheme.BUTTON_LINK);
         logout.addListener(new Button.ClickListener () {
-            private static final long serialVersionUID = 6067826137675410483L;
 
             public void buttonClick(Button.ClickEvent event) {
                 ((WebApplicationContext)application.getContext()).getHttpSession().invalidate();

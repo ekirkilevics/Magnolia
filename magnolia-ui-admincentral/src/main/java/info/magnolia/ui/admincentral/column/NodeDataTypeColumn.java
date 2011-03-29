@@ -51,8 +51,6 @@ import javax.jcr.RepositoryException;
  */
 public class NodeDataTypeColumn extends AbstractColumn<NodeDataTypeColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -2594102704173600906L;
-
     public NodeDataTypeColumn(NodeDataTypeColumnDefinition def) {
         super(def);
     }

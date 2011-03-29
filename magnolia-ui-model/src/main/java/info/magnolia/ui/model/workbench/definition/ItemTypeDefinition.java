@@ -42,8 +42,6 @@ import java.io.Serializable;
  */
 public class ItemTypeDefinition implements Serializable {
 
-    private static final long serialVersionUID = 815087827919184207L;
-
     public static final String ITEM_TYPE_NODE_DATA = "nodeData";
 
     /**

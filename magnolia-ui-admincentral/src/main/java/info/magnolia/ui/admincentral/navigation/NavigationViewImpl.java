@@ -65,7 +65,6 @@ import com.vaadin.ui.VerticalLayout;
 // FIXME don't extend CustomComponent, make it composite.
 public class NavigationViewImpl extends CustomComponent implements NavigationView, IsVaadinComponent{
 
-    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
 
     private VerticalLayout outerNavigationContainer = new VerticalLayout();
@@ -133,13 +132,9 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
      */
     protected class WorkareaChooser extends Button {
 
-        private static final long serialVersionUID = 1L;
-
         public WorkareaChooser(final NavigationWorkareaDefinition definition) {
 
             addListener(new ClickListener() {
-
-                private static final long serialVersionUID = 1L;
 
                 public void buttonClick(ClickEvent event) {
                     for(NavigationWorkArea navigationWorkArea : registeredNavigationAreas.values()){

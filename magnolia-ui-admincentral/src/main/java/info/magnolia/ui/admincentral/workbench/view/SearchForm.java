@@ -51,7 +51,6 @@ import com.vaadin.ui.TextField;
  * TODO: check where to move, make nice design, animate
  */
 public class SearchForm extends Form {
-    private static final long serialVersionUID = 2746156631931332883L;
 
     public SearchForm() {
         final GridLayout grid = new GridLayout(2, 1);
@@ -69,7 +68,6 @@ public class SearchForm extends Form {
         searchField.addStyleName("m-search-box");
 
         searchField.addListener(new FocusListener() {
-            private static final long serialVersionUID = 1L;
 
             public void focus(FocusEvent event) {
                 ((TextField)event.getSource()).setValue("");
@@ -77,8 +75,6 @@ public class SearchForm extends Form {
             }
         });
         searchField.addListener(new BlurListener() {
-
-            private static final long serialVersionUID = 1L;
 
             public void blur(BlurEvent event) {
                 ((TextField)event.getSource()).setValue("Search");

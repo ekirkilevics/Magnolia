@@ -68,7 +68,6 @@ import info.magnolia.ui.framework.place.PlaceController;
  */
 public abstract class EditableText extends CustomComponent {
 
-    private static final long serialVersionUID = -3126541389513880027L;
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
@@ -91,14 +90,12 @@ public abstract class EditableText extends CustomComponent {
         final String itemPath = item.getPath();
 
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
-                layout.addListener(new LayoutEvents.LayoutClickListener() {
-            private static final long serialVersionUID = -7068955179985809239L;
+       layout.addListener(new LayoutEvents.LayoutClickListener() {
 
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
                     final TextField textField = new TextField();
                     textField.addListener(new FieldEvents.BlurListener() {
-                        private static final long serialVersionUID = -510289267548470775L;
 
                         public void blur(FieldEvents.BlurEvent event) {
                             // TODO should we save on blur
@@ -107,7 +104,6 @@ public abstract class EditableText extends CustomComponent {
                         }
                     });
                     textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ENTER, new int[]{}) {
-                        private static final long serialVersionUID = -9182888572843517832L;
 
                         @Override
                         public void handleAction(Object sender, Object target) {

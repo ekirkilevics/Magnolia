@@ -54,8 +54,6 @@ import org.apache.commons.lang.time.FastDateFormat;
  */
 public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -2788490588550009503L;
-
     private String datePattern;
 
     protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";

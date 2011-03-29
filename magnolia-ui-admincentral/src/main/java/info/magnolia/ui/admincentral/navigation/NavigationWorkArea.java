@@ -46,7 +46,6 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class NavigationWorkArea extends CustomComponent {
 
-    private static final long serialVersionUID = 5982407250072187586L;
     private List<NavigationGroup> navigationGroupView;
     private VerticalLayout container = new VerticalLayout();
 

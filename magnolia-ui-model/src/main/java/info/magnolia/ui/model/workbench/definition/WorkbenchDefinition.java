@@ -51,8 +51,6 @@ import java.util.Map;
  */
 public class WorkbenchDefinition implements Serializable {
 
-    private static final long serialVersionUID = -4220598066437699852L;
-
     private String name;
 
     private String workspace;

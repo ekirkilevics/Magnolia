@@ -54,8 +54,6 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  */
 public class ConfiguredTreeBuilder implements TreeBuilder, Serializable {
 
-    private static final long serialVersionUID = 6702977290186078418L;
-
     // FIXME this is a workaround because we cant extend the FactoryBase
     private static class ColumnFactory extends FactoryBase<ColumnDefinition, Column<ColumnDefinition>>{
         public ColumnFactory(ComponentProvider componentProvider) {

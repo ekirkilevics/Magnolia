@@ -49,7 +49,6 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class WorkbenchViewImpl implements WorkbenchView{
 
-    private static final long serialVersionUID = 7548338054163224225L;
     private VerticalLayout outerLayout;
     private HorizontalSplitPanel splitPanel;
     private ComponentViewPort itemListViewPort;
@@ -61,7 +60,6 @@ public class WorkbenchViewImpl implements WorkbenchView{
         splitPanel.setSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
         splitPanel.setSizeFull();
         splitPanel.addListener(new SplitterClickListener() {
-            private static final long serialVersionUID = 4837023553542505515L;
 
             public void splitterClick(SplitterClickEvent event) {
                 if(event.isDoubleClick()){

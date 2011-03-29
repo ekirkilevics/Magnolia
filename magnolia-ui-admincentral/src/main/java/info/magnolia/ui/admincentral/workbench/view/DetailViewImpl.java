@@ -58,7 +58,6 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
  */
 // FIXME don't extend CustomComponent, make it composite.
 public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinComponent, DetailView {
-    private static final long serialVersionUID = -2952607345108242592L;
 
     private static final Logger log = LoggerFactory.getLogger(DetailViewImpl.class);
     private ActionList actionList;
@@ -83,7 +82,6 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
      * @author fgrilli
      */
     public class ActionList extends Table {
-        private static final long serialVersionUID = 5555637630698340366L;
 
         public ActionList() {
             setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
@@ -91,7 +89,6 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
             setSizeFull();
             setSelectable(true);
             addListener(new ItemClickEvent.ItemClickListener() {
-                private static final long serialVersionUID = -161575092802595348L;
 
                 public void itemClick(ItemClickEvent event) {
                     if (presenter != null) {
@@ -128,7 +125,6 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
      * @author fgrilli
      */
     public class DetailForm extends Form {
-        private static final long serialVersionUID = 9092655352290488124L;
 
         public DetailForm() {
             addField("Some prop", new TextField("Some value"));

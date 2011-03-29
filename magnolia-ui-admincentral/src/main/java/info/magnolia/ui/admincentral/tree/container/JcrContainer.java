@@ -55,8 +55,6 @@ import info.magnolia.exception.RuntimeRepositoryException;
  */
 public class JcrContainer extends AbstractHierarchicalContainer implements Container.ItemSetChangeNotifier {
 
-    private static final long serialVersionUID = 7567243386105952325L;
-
     private static final Logger log = LoggerFactory.getLogger(JcrContainer.class);
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;

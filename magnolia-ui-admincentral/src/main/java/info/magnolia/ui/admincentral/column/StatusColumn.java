@@ -58,8 +58,6 @@ import com.vaadin.ui.HorizontalLayout;
  */
 public class StatusColumn extends AbstractColumn<StatusColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -2873717609262761331L;
-
     private boolean activation = true;
 
     private boolean permissions = false;

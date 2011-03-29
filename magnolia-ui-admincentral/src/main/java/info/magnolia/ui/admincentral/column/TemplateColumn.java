@@ -60,8 +60,6 @@ import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
  */
 public class TemplateColumn extends AbstractColumn<TemplateColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -4658046121169661806L;
-
     private EventBus eventBus;
 
     public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus) {
@@ -87,8 +85,6 @@ public class TemplateColumn extends AbstractColumn<TemplateColumnDefinition> imp
     @Override
     public Component getComponent(Item item) throws RepositoryException {
         return new EditableSelect(item, eventBus, "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
-
-            private static final long serialVersionUID = -8268356405124559092L;
 
             @Override
             protected String getValue(Item item) throws RepositoryException {

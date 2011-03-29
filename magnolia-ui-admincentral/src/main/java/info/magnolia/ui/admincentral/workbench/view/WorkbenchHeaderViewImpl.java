@@ -49,8 +49,6 @@ import com.vaadin.ui.Label;
  */
 public class WorkbenchHeaderViewImpl extends CustomComponent implements WorkbenchHeaderView, WorkbenchHeaderView.Presenter{
 
-    private static final long serialVersionUID = 1L;
-
     private GridLayout outerContainer;
 
     public WorkbenchHeaderViewImpl() {

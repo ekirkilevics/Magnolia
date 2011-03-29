@@ -65,7 +65,6 @@ import info.magnolia.ui.framework.event.EventBus;
  */
 public abstract class EditableSelect extends CustomComponent {
 
-    private static final long serialVersionUID = -9123969896830970149L;
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
@@ -87,8 +86,6 @@ public abstract class EditableSelect extends CustomComponent {
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
 
         layout.addListener(new LayoutEvents.LayoutClickListener() {
-
-            private static final long serialVersionUID = 4701952826049210376L;
 
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
@@ -114,8 +111,6 @@ public abstract class EditableSelect extends CustomComponent {
                     }
 
                     select.addListener(new com.vaadin.data.Property.ValueChangeListener() {
-
-                        private static final long serialVersionUID = -4980015736557119160L;
 
                         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 

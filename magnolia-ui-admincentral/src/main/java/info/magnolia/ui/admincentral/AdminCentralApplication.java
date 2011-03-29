@@ -73,8 +73,6 @@ import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
  */
 public class AdminCentralApplication extends Application implements HttpServletRequestListener {
 
-    private static final long serialVersionUID = 5773744599513735815L;
-
     private PicoComponentProvider componentProvider;
 
     @Override

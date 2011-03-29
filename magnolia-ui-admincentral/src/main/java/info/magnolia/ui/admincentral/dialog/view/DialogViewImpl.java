@@ -63,8 +63,6 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogViewImpl extends Window implements DialogView {
 
-    private static final long serialVersionUID = -286110603712388401L;
-
     private class Tab implements HasEditors, HasEditorErrors {
 
         private String name;
@@ -112,8 +110,6 @@ public class DialogViewImpl extends Window implements DialogView {
 
         Button save = new Button("Save", new Button.ClickListener() {
 
-            private static final long serialVersionUID = 5631693343761309138L;
-
             public void buttonClick(Button.ClickEvent event) {
                 presenter.onSave();
             }
@@ -124,8 +120,6 @@ public class DialogViewImpl extends Window implements DialogView {
         buttons.setComponentAlignment(save, "right");
 
         Button cancel = new Button("Cancel", new Button.ClickListener() {
-
-            private static final long serialVersionUID = 8619534838917272946L;
 
             public void buttonClick(Button.ClickEvent event) {
                 presenter.onCancel();

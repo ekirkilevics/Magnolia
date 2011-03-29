@@ -47,8 +47,6 @@ import javax.jcr.RepositoryException;
  */
 public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
-    private static final long serialVersionUID = 751955514356448616L;
-
     private Shell shell;
 
     private Node pageNode;

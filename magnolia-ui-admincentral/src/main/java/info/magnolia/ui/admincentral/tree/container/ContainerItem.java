@@ -45,7 +45,6 @@ import com.vaadin.data.Property;
  */
 public class ContainerItem implements Item {
 
-    private static final long serialVersionUID = 3609122698379712831L;
     private ContainerItemId itemId;
     private JcrContainer jcrContainer;
 
