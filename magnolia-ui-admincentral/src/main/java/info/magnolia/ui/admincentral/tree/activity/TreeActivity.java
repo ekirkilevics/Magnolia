@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.tree.activity;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent.Handler;
@@ -46,6 +46,7 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
  * Activity for displaying dialogs.
@@ -59,10 +60,10 @@ public class TreeActivity extends AbstractActivity implements TreeView.Presenter
     private String path = "/";
     private Shell shell;
 
-    public TreeActivity(TreeView treeView, PlaceController placeController, Shell shell, ComponentProvider componentProvider) {
+    public TreeActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, PlaceController placeController, Shell shell) {
         this.placeController = placeController;
-        this.treeView = treeView;
         this.shell = shell;
+        treeView = treeBuilderProvider.getBuilder().build(workbenchDefinition);
     }
 
     public void update(ItemSelectedPlace place){

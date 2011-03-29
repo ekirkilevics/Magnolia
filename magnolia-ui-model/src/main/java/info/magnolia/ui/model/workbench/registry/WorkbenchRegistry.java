@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Maintains a registry of configured tree providers by name.
+ * Maintains a registry of configured workbench providers by name.
  */
 public class WorkbenchRegistry {
 
@@ -48,7 +48,7 @@ public class WorkbenchRegistry {
     public void register(String name, WorkbenchProvider provider) {
         synchronized (providers) {
             if (providers.containsKey(name))
-                throw new IllegalStateException("Tree already registered for name [" + name + "]");
+                throw new IllegalStateException("Workbench already registered for name [" + name + "]");
             providers.put(name, provider);
         }
     }

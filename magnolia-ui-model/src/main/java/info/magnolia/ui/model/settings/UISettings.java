@@ -31,17 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.navigation.registry;
-
-
-import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-
+package info.magnolia.ui.model.settings;
 
 /**
- * Provides the main navigation.
+ * UI settings like whether the UI should be RTL/LTR or if it supports touch.
  */
-public interface NavigationRegistry {
+public class UISettings {
 
-    NavigationDefinition getNavigation();
+    private Direction direction;
 
+    private InputDevice inputDevice;
+
+    public UISettings(Direction direction, InputDevice inputDevice) {
+        this.direction = direction;
+        this.inputDevice = inputDevice;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public InputDevice getDevice() {
+        return inputDevice;
+    }
+
+    public void setDevice(InputDevice inputDevice) {
+        this.inputDevice = inputDevice;
+    }
 }

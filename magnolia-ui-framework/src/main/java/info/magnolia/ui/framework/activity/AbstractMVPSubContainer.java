@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.framework.activity;
 
+import java.util.Properties;
+
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 
@@ -60,7 +62,7 @@ import info.magnolia.ui.framework.view.ViewPort;
  * TODO it is not clear how we would provide IoC here. it is comparable to a sub-conversion scope.
  *
  */
-public abstract class AbstractActivityProxy extends AbstractActivity {
+public abstract class AbstractMVPSubContainer extends AbstractActivity {
 
     private final class PicoMutableComponentProvider implements MutableComponentProvider {
 
@@ -72,28 +74,23 @@ public abstract class AbstractActivityProxy extends AbstractActivity {
             this.container = container;
         }
 
-        public void addComponent(Object componentKey, Object componentImplementationOrInstance) {
-            container.addComponent(componentKey, componentImplementationOrInstance);
+        public <T> void setImplementation(Class<T> componentClass, Class< ? extends T> implementationClass) {
+            container.addComponent(componentClass, implementationClass);
         }
 
-        public <T> void addComponentFactory(Class<T> componentKey, ComponentFactory<T> componentFactory) {
+        public <T> void setInstance(Class<T> componentClass, T implementation) {
+            container.addComponent(componentClass, implementation);
+        }
+
+        public <T> void setConfigurationPath(Class<T> componentClass, String path) {
+            //FIXME better solution than just creating properties
+            Properties properties = new Properties();
+            properties.put(componentClass.getName(), path);
+            ((PicoComponentProvider)componentProvider).parseConfiguration(properties);
+        }
+
+        public <T> void addFactory(Class<T> componentKey, ComponentFactory<T> componentFactory) {
             container.addAdapter(new ComponentFactoryProviderAdapter(componentKey, componentFactory));
-        }
-
-        public <T> Class< ? extends T> getImplementation(Class<T> type) throws ClassNotFoundException {
-            return componentProvider.getImplementation(type);
-        }
-
-        public <T> T getSingleton(Class<T> type) {
-            return componentProvider.getSingleton(type);
-        }
-
-        public <T> T getComponent(Class<T> type) {
-            return componentProvider.getComponent(type);
-        }
-
-        public <T> T newInstance(Class<T> type, Object... parameters) {
-            return componentProvider.newInstance(type, parameters);
         }
     }
 
@@ -101,11 +98,15 @@ public abstract class AbstractActivityProxy extends AbstractActivity {
      * Used in the {@link MVPSubContainer#populateComponentProvider(MutableComponentProvider)} to hide the pico specifics.
      * TODO move to the core? see patch in MAGNOLIA-3592
      */
-    protected interface MutableComponentProvider extends ComponentProvider {
+    protected interface MutableComponentProvider {
 
-        void addComponent(Object componentKey, Object componentImplementationOrInstance);
+        <T> void setImplementation(Class<T> componentClass, Class<? extends T> implementationClass);
 
-        <T> void addComponentFactory(Class<T> componentClass, ComponentFactory<T> componentFactory);
+        <T> void setInstance(Class<T> componentClass, T implementation);
+
+        <T> void setConfigurationPath(Class<T> componentClass, String path);
+
+        <T> void addFactory(Class<T> componentClass, ComponentFactory<T> componentFactory);
     }
 
     private String id;
@@ -125,7 +126,7 @@ public abstract class AbstractActivityProxy extends AbstractActivity {
     private Activity activity;
 
 
-    public AbstractActivityProxy(String id, Shell shell) {
+    public AbstractMVPSubContainer(String id, Shell shell) {
         this.id = id;
         this.shell = shell;
     }

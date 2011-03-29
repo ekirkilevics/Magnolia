@@ -34,17 +34,13 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 
-import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
-import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
-import info.magnolia.ui.admincentral.workbench.view.WorkbenchViewImpl;
-import info.magnolia.ui.framework.activity.AbstractActivityProxy;
+import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
@@ -55,16 +51,14 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 /**
  * The isolated MVP container for workspace editing.
  */
-public class WorkbenchActivityProxy extends AbstractActivityProxy{
+public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer{
 
     private WorkbenchPlace place;
-    private TreeBuilderProvider treeBuilderProvider;
     private WorkbenchRegistry workbenchRegistry;
 
-    public WorkbenchActivityProxy(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, TreeBuilderProvider treeBuilderProvider, Shell shell) {
+    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, Shell shell) {
         super("workbench-" + place.getWorkbenchName(), shell);
         this.place = place;
-        this.treeBuilderProvider = treeBuilderProvider;
         this.workbenchRegistry = workbenchRegistry;
 
     }
@@ -81,27 +75,25 @@ public class WorkbenchActivityProxy extends AbstractActivityProxy{
 
     @Override
     protected void populateComponentProvider(MutableComponentProvider componentProvider) {
-        componentProvider.addComponent(WorkbenchView.class, WorkbenchViewImpl.class);
-        componentProvider.addComponent(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
+        componentProvider.setInstance(WorkbenchDefinition.class, workbenchRegistry.getWorkbench(place.getWorkbenchName()));
 
-        componentProvider.addComponent(ItemListActivityMapper.class, ItemListActivityMapper.class);
-        componentProvider.addComponent(TreeActivity.class, TreeActivity.class);
-        final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(place.getWorkbenchName());
-        componentProvider.addComponent(WorkbenchDefinition.class, workbenchDefinition);
-        final TreeBuilder treeBuilder = this.treeBuilderProvider.getBuilder();
-        // TODO should we really build the view?
-        componentProvider.addComponent(TreeView.class, treeBuilder.createTreeView(componentProvider, workbenchDefinition));
+        componentProvider.setImplementation(WorkbenchView.class, WorkbenchView.class);
+        componentProvider.setImplementation(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
 
-        componentProvider.addComponent(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
-        componentProvider.addComponent(DetailViewActivity.class, DetailViewActivity.class);
+        componentProvider.setImplementation(ItemListActivityMapper.class, ItemListActivityMapper.class);
+        componentProvider.setImplementation(TreeActivity.class, TreeActivity.class);
 
+        componentProvider.setImplementation(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
+        componentProvider.setImplementation(DetailViewActivity.class, DetailViewActivity.class);
+
+        componentProvider.setConfigurationPath(TreeBuilderProvider.class, "/modules/admin-central/components/treeBuilderProvider");
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected Class<? extends Place>[] getSupportedPlaces() {
         // Casts since generic array creation doesn't exist
-        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class, EmbeddedPlace.class};
+        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class};
     }
 
     @Override

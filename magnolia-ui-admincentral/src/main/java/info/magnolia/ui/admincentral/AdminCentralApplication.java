@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral;
 
+
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.pico.PicoComponentProvider;
@@ -46,15 +49,16 @@ import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
 import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivity;
 import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.SimpleEventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
+import info.magnolia.ui.model.navigation.registry.NavigationProvider;
+import info.magnolia.ui.model.settings.Direction;
+import info.magnolia.ui.model.settings.InputDevice;
+import info.magnolia.ui.model.settings.UISettings;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
 import java.util.Properties;
@@ -92,12 +96,12 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
         MutablePicoContainer container = builder.build();
 
+
         componentProvider = new PicoComponentProvider(container, provider);
+
+        //FIXME better solution than just creating properties
         Properties properties = new Properties();
-        properties.put(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
-        properties.put(MenuItemDefinition.class.getName(), MenuItemDefinitionImpl.class.getName());
-        //FIXME is this the right configuration place? how to generalize that?
-        properties.put(TreeBuilderProvider.class.getName(), "/modules/admin-central/components/treeBuilderProvider");
+        properties.put(NavigationProvider.class.getName(), "/modules/admin-central/components/navigationProvider");
         componentProvider.parseConfiguration(properties);
 
         container.addComponent(ComponentProvider.class, componentProvider);
@@ -107,7 +111,7 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(AdminCentralPresenter.class, AdminCentralPresenter.class);
         container.addComponent(MainActivityMapper.class, MainActivityMapper.class);
 
-
+        container.addComponent(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
         container.addComponent(DialogPresenter.class, DialogPresenter.class);
 
         container.addComponent(NavigationView.class, NavigationViewImpl.class);
@@ -121,6 +125,11 @@ public class AdminCentralApplication extends Application implements HttpServletR
         container.addComponent(Shell.class, ShellImpl.class);
         container.addComponent(PlaceController.class, PlaceController.class);
         container.addComponent(NavigationActionFactory.class, NavigationActionFactory.class);
+
+        container.addComponent(User.class, MgnlContext.getUser());
+
+        // TODO do it dynamic
+        container.addComponent(UISettings.class, new UISettings(Direction.LTR, InputDevice.MOUSE));
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified

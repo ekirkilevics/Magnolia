@@ -38,7 +38,7 @@ import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
-import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
+import info.magnolia.ui.model.navigation.registry.NavigationProvider;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     private Map<WorkareaChooser, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkareaChooser, NavigationWorkArea>();
 
     //TODO don't pass the registry but the navigation itself
-    public NavigationViewImpl(NavigationRegistry navigationRegistry, NavigationPermissionSchema permissions) {
+    public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
         setCompositionRoot(outerNavigationContainer);
         setSizeFull();
 
@@ -84,7 +84,7 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
         navigationWorkareaContainer.setSizeFull();
         navigationWorkareaContainer.setMargin(false, false, true, false);
 
-        final NavigationDefinition navigation = navigationRegistry.getNavigation();
+        final NavigationDefinition navigation = navigationProvider.getNavigation();
 
         for(NavigationWorkareaDefinition definition : navigation.getWorkareas()){
             log.debug("creating navigation workarea {}", definition.getName());

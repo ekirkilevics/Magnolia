@@ -31,26 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.registry;
-
-import info.magnolia.ui.admincentral.module.AdminCentralModule;
-import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-import info.magnolia.ui.model.navigation.registry.NavigationRegistry;
-
+package info.magnolia.ui.model.settings;
 
 /**
- * Binds the navigation configuration to the AdminCentral configuration.
+ * Direction of the UI. Arabic: RTL, English LTR.
  */
-public class NavigationRegistryImpl implements NavigationRegistry {
-
-    private AdminCentralModule module;
-
-    public NavigationRegistryImpl(AdminCentralModule module) {
-        this.module = module;
-    }
-
-    public NavigationDefinition getNavigation() {
-        return module.getNavigation();
-    }
-
+public enum Direction {
+    LTR, RTL
 }

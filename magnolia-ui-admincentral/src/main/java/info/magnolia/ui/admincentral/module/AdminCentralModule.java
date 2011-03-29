@@ -41,7 +41,6 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.ui.admincentral.module.setup.commands.ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand;
 import info.magnolia.ui.model.dialog.registry.ConfiguredDialogManager;
-import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.workbench.registry.ConfiguredWorkbenchManager;
 
 /**
@@ -56,7 +55,6 @@ public class AdminCentralModule implements ModuleLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(AdminCentralModule.class);
 
-    private NavigationDefinition navigation;
     private ConfiguredDialogManager configuredDialogManager;
     private ConfiguredWorkbenchManager configuredWorkbenchManager;
 
@@ -85,11 +83,4 @@ public class AdminCentralModule implements ModuleLifecycle {
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 
-    public NavigationDefinition getNavigation() {
-        return this.navigation;
-    }
-
-    public void setNavigation(NavigationDefinition navigation) {
-        this.navigation = navigation;
-    }
 }
