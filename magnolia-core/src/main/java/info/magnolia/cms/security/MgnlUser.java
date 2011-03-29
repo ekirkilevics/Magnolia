@@ -110,7 +110,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
      */
     public boolean inGroup(String groupName) {
         if (logAdmin || !"admin".equals(name)) {
-            log.info("inGroup({})", groupName);
+            log.debug("inGroup({})", groupName);
         }
         return this.hasAny(groupName, NODE_GROUPS);
     }

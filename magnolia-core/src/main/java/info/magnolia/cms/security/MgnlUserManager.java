@@ -383,7 +383,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             @Override
             public Void doExec(Session session) throws RepositoryException {
                 String path = ((MgnlUser) user).getPath();
-                log.info("update access timestamp for {}", user.getName());
+                log.debug("update access timestamp for {}", user.getName());
                 try {
                     Node userNode = session.getNode(path);
                     NodeDataUtil.updateOrCreate(userNode, "lastaccess", new GregorianCalendar());

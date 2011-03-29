@@ -129,7 +129,7 @@ public abstract class RepositoryBackedSecurityManager {
             // Item not found or access denied ...
             log.debug(e.getMessage(), e);
         } finally {
-            log.info("checked {} for {} in {}ms.", new Object[] {resourceName, resourceTypeName, (System.currentTimeMillis() - start)});
+            log.debug("checked {} for {} in {}ms.", new Object[] {resourceName, resourceTypeName, (System.currentTimeMillis() - start)});
         }
         return false;
     }
