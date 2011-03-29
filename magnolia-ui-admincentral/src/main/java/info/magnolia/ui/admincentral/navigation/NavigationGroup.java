@@ -43,6 +43,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Accordion;
@@ -65,6 +68,9 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class NavigationGroup extends CustomComponent implements NavigationView, IsVaadinComponent{
 
+
+    private static final Logger log = LoggerFactory.getLogger(NavigationGroup.class);
+
     private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
     private Accordion accordion = new Accordion();
     private Collection<NavigationItemDefinition> navigationItemDefs;
@@ -84,6 +90,8 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
             }
         }
 
+        // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
+        accordion.addListener(new SelectedNavigationItemTabChangeListener());
     }
 
     public void setPresenter(Presenter presenter) {
@@ -101,8 +109,6 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
         Tab tab = accordion.addTab(subNavigation == null ? new Label() : subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
         // store tab reference
         this.navigationItems.put(tab, navigationItemDef);
-        // register trigger for menu actions ... sucks but TabSheet doesn't support actions for tabs only for sub menu items
-        accordion.addListener(new SelectedNavigationItemTabChangeListener());
     }
 
     /**
@@ -165,6 +171,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
                 setIcon(icon);
             }
             setCaption(NavigationGroup.this.getLabel(item));
+            log.info("Attaching NavigationItem: {}", getCaption());
 
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
