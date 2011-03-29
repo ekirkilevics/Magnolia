@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.column;
 
 import java.io.Serializable;
 import javax.jcr.Item;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
@@ -56,8 +57,10 @@ public class LabelColumn extends AbstractEditableColumn<LabelColumnDefinition> i
 
     @Override
     public Component getComponent(Item item) throws RepositoryException {
-        // TODO: isn't that to costy to create new instance on each call to getComponent? (Same for other columns)
-        return new EditableText(item, this, "@name") {
+
+        String path = item instanceof Node ? "@name" : item.getName() + "@name";
+
+        return new EditableText(item, this, path) {
 
             @Override
             protected String getLabelText(Item item) throws RepositoryException {

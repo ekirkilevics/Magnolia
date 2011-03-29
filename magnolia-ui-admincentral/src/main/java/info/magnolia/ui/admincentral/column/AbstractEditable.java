@@ -126,7 +126,7 @@ public abstract class AbstractEditable extends CustomComponent {
                 }
             });
 
-            driver.edit(item);
+            driver.edit(item instanceof Node ? (Node) item : item.getParent());
 
             layout.removeAllComponents();
             layout.addComponent((Component) editor);
@@ -148,7 +148,7 @@ public abstract class AbstractEditable extends CustomComponent {
     protected boolean onSave() {
         try {
             Item item = getItem();
-            driver.flush(item);
+            driver.flush(item instanceof Node ? (Node) item : item.getParent());
 
             if (driver.hasErrors())
                 // TODO show validation errors

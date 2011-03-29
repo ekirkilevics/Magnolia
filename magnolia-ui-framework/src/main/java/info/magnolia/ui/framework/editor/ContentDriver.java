@@ -36,8 +36,11 @@ package info.magnolia.ui.framework.editor;
 import java.util.Calendar;
 import javax.jcr.Item;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRMetadataUtil;
@@ -48,9 +51,9 @@ import info.magnolia.jcr.util.JCRMetadataUtil;
  *
  * @author tmattsson
  */
-public class ContentDriver extends AbstractDriver<Item> {
+public class ContentDriver extends AbstractDriver<Node> {
 
-    public void edit(final Item item) {
+    public void edit(final Node node) {
 
         // TODO default values also need to be set, but we don't have the definition available here
 
@@ -61,10 +64,7 @@ public class ContentDriver extends AbstractDriver<Item> {
                         ValueEditor valueEditor = (ValueEditor) editor;
                         String path = valueEditor.getPath();
                         Class type = valueEditor.getType();
-                        if (item instanceof Node)
-                            setNodeValue(valueEditor, path, type, (Node) item);
-                        if (item instanceof Property)
-                            setPropertyValue(valueEditor, path, type, (Property) item);
+                        setEditorValue(valueEditor, path, type, node);
                     }
 
                 } catch (RepositoryException e) {
@@ -74,7 +74,7 @@ public class ContentDriver extends AbstractDriver<Item> {
         });
     }
 
-    public void flush(final Item item) {
+    public void flush(final Node node) {
 
         // Clear any errors from a previous flush
         super.clearErrors();
@@ -88,10 +88,7 @@ public class ContentDriver extends AbstractDriver<Item> {
                         Object value = valueEditor.getValue();
                         if (!hasErrors(path)) {
                             try {
-                                if (item instanceof Node)
-                                    flushNode(path, value, (Node) item);
-                                if (item instanceof Property)
-                                    flushProperty(path, value, (Property) item);
+                                flushEditor(path, value, node);
                             } catch (RepositoryException e) {
                                 throw new RuntimeRepositoryException(e);
                             }
@@ -100,9 +97,8 @@ public class ContentDriver extends AbstractDriver<Item> {
                 }
             });
             if (!hasErrors()) {
-                if (item instanceof Node)
-                    JCRMetadataUtil.updateMetaData((Node) item);
-                item.getSession().save();
+                JCRMetadataUtil.updateMetaData(node);
+                node.getSession().save();
             } else {
 
                 visitEditors(getView(), new EditorVisitor() {
@@ -118,24 +114,15 @@ public class ContentDriver extends AbstractDriver<Item> {
         }
     }
 
-    private void flushProperty(String path, Object value, Property property) throws RepositoryException {
-        if ("@name".equals(path)) {
-            Node node = property.getParent();
-            node.setProperty((String) value, property.getValue());
-            property.remove();
-        } else if ("".equals(path)) {
-            if (value instanceof String) {
-                property.setValue((String) value);
-            } else if (value instanceof Calendar) {
-                property.setValue((Calendar) value);
-            }
-        }
-    }
+    private void flushEditor(String path, Object value, Node node) throws RepositoryException {
 
-    private void flushNode(String path, Object value, Node node) throws RepositoryException {
-        if ("@name".equals(path)) {
-            String newPath = (node.getParent().getDepth() > 0 ? node.getParent().getPath() : "") + "/" + value;
-            node.getSession().move(node.getPath(), newPath);
+        if (path.endsWith("@name")) {
+            path = StringUtils.substringBefore(path, "@name");
+            Item item = getItemByRelPath(node, path);
+            if (item instanceof Node)
+                renameNode(node, (String) value);
+            else if (item instanceof Property)
+                renameProperty((Property) item, (String) value);
         } else if (value instanceof String) {
             node.getProperty(path).setValue((String) value);
         } else if (value instanceof Calendar) {
@@ -143,19 +130,11 @@ public class ContentDriver extends AbstractDriver<Item> {
         }
     }
 
-    private void setPropertyValue(ValueEditor valueEditor, String path, Class type, Property property) throws RepositoryException {
-        if ("@name".equals(path)) {
-            valueEditor.setValue(property.getName());
-        } else if (type.equals(String.class)) {
-            valueEditor.setValue(property.getString());
-        } else if (type.equals(Calendar.class)) {
-            valueEditor.setValue(property.getDate());
-        }
-    }
+    private void setEditorValue(ValueEditor valueEditor, String path, Class type, Node node) throws RepositoryException {
 
-    private void setNodeValue(ValueEditor valueEditor, String path, Class type, Node node) throws RepositoryException {
-        if ("@name".equals(path)) {
-            valueEditor.setValue(node.getName());
+        if (path.endsWith("@name")) {
+            path = StringUtils.substringBefore(path, "@name");
+            valueEditor.setValue(getItemByRelPath(node, path).getName());
         } else if (type.equals(String.class)) {
             if (node.hasProperty(path))
                 valueEditor.setValue(node.getProperty(path).getString());
@@ -163,5 +142,25 @@ public class ContentDriver extends AbstractDriver<Item> {
             if (node.hasProperty(path))
                 valueEditor.setValue(node.getProperty(path).getDate());
         }
+    }
+
+    private Item getItemByRelPath(Node node, String relPath) throws RepositoryException {
+        if (relPath.equals(""))
+            return node;
+        if (node.hasNode(relPath))
+            return node.getNode(relPath);
+        if (node.hasProperty(relPath))
+            return node.getProperty(relPath);
+        throw new PathNotFoundException(node.getPath() + " "  + relPath);
+    }
+
+    private void renameNode(Node node, String newName) throws RepositoryException {
+        String newPath = (node.getParent().getDepth() > 0 ? node.getParent().getPath() : "") + "/" + newName;
+        node.getSession().move(node.getPath(), newPath);
+    }
+
+    private void renameProperty(Property property, String newName) throws RepositoryException {
+        property.getNode().setProperty(newName, property.getValue());
+        property.remove();
     }
 }
