@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 
+import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilder;
@@ -100,7 +101,7 @@ public class WorkbenchActivityProxy extends AbstractActivityProxy{
     @SuppressWarnings("unchecked")
     protected Class<? extends Place>[] getSupportedPlaces() {
         // Casts since generic array creation doesn't exist
-        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class};
+        return (Class<? extends Place>[]) new Class[] {ItemSelectedPlace.class, EmbeddedPlace.class};
     }
 
     @Override

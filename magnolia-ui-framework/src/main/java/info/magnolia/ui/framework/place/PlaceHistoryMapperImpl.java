@@ -66,19 +66,26 @@ public class PlaceHistoryMapperImpl extends AbstractPlaceHistoryMapper {
                 log.info("No @Prefix annotation found for place {}. Skipping it...", clazz.getName());
                 continue;
             }
+
+            boolean foundTokenizer = false;
             final Class<?>[] declaredClasses = clazz.getDeclaredClasses();
+
             for(Class<?> declaredClass : declaredClasses){
                 if(PlaceTokenizer.class.isAssignableFrom(declaredClass)){
                     try {
                         final PlaceTokenizer<Place> tokenizer = (PlaceTokenizer<Place>) declaredClass.newInstance();
                         tokenizers.put(prefix.value(), tokenizer);
                         log.debug("Added tokenizer for place {}", clazz.getName());
+                        foundTokenizer = true;
                     } catch (InstantiationException e) {
                         throw new IllegalStateException(e);
                     } catch (IllegalAccessException e) {
                         throw new IllegalStateException(e);
                     }
                 }
+            }
+            if(!foundTokenizer){
+                log.warn("A @Prefix annotation was detected for {} but a PlaceTokenizer implementation was not found.", clazz.getName());
             }
         }
     }

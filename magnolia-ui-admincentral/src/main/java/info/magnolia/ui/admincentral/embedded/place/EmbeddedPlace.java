@@ -36,11 +36,14 @@ package info.magnolia.ui.admincentral.embedded.place;
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.place.PlaceTokenizer;
+import info.magnolia.ui.framework.place.Prefix;
 
 
 /**
  * Show a target page in the main region.
  */
+@Prefix("target")
 public class EmbeddedPlace extends Place {
 
     private String url;
@@ -54,6 +57,23 @@ public class EmbeddedPlace extends Place {
 
     public String getUrl() {
         return url;
+    }
+
+    /**
+     * Serializes and deserializes EmbeddedPlace(s).
+     *
+     * @author fgrilli
+     *
+     */
+    public static class Tokenizer implements PlaceTokenizer<EmbeddedPlace>{
+
+        public EmbeddedPlace getPlace(String token) {
+            return new EmbeddedPlace(token);
+        }
+
+        public String getToken(EmbeddedPlace place) {
+            return place.getUrl();
+        }
     }
 
 }
