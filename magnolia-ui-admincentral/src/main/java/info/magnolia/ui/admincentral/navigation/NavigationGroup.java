@@ -171,7 +171,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
                 setIcon(icon);
             }
             setCaption(NavigationGroup.this.getLabel(item));
-            log.info("Attaching NavigationItem: {}", getCaption());
+            log.debug("Attaching NavigationItem: {}", getCaption());
 
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
