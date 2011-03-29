@@ -69,7 +69,7 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
 
     @Override
     public Component getComponent(Item item) throws RepositoryException {
-        return new EditableSelect(item, this, "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
+        return new EditableSelect(item, new PresenterImpl(), "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
 
             private static final long serialVersionUID = -8268356405124559092L;
 

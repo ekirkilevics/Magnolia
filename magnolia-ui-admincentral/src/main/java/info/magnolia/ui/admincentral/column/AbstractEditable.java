@@ -33,8 +33,6 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -47,12 +45,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRUtil;
-import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.Editor;
-import info.magnolia.ui.framework.editor.HasEditors;
 
 /**
- * UI component that displays onSave label and on double click opens it for editing by switching the label to onSave text field.
+ * UI component that displays a label and on double click opens it for editing by switching the label to save text field.
  *
  * @author tmattsson
  */
@@ -63,7 +59,9 @@ public abstract class AbstractEditable extends CustomComponent {
      */
     public interface Presenter {
 
-        void onSave(Item item) throws RepositoryException;
+        void edit(Item item, Editor editor) throws RepositoryException;
+
+        boolean save(Item item) throws RepositoryException;
 
         void onClick(Item item) throws RepositoryException;
     }
@@ -73,7 +71,6 @@ public abstract class AbstractEditable extends CustomComponent {
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
-    private ContentDriver driver;
     private HorizontalLayout layout;
     private Presenter presenter;
 
@@ -93,14 +90,21 @@ public abstract class AbstractEditable extends CustomComponent {
 
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
-                    onEdit();
+                    try {
+                        Item item = getItem();
+                        Editor editor = getComponentAndEditor(item);
+                        AbstractEditable.this.presenter.edit(item, editor);
+                        layout.removeAllComponents();
+                        layout.addComponent((Component) editor);
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
+                    }
                 } else {
-                    if (AbstractEditable.this.presenter != null)
-                        try {
-                            AbstractEditable.this.presenter.onClick(getItem());
-                        } catch (RepositoryException e) {
-                            throw new RuntimeRepositoryException(e);
-                        }
+                    try {
+                        AbstractEditable.this.presenter.onClick(getItem());
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
+                    }
                 }
             }
         });
@@ -108,32 +112,6 @@ public abstract class AbstractEditable extends CustomComponent {
         layout.setSizeUndefined();
         setCompositionRoot(layout);
         setSizeUndefined();
-    }
-
-    private void onEdit() {
-
-        try {
-            Item item = getItem();
-
-            final Editor editor = getComponentAndEditor(item);
-
-            driver = new ContentDriver();
-            driver.initialize(new HasEditors() {
-                public Collection<? extends Editor> getEditors() {
-                    ArrayList<Editor> list = new ArrayList<Editor>();
-                    list.add(editor);
-                    return list;
-                }
-            });
-
-            driver.edit(item instanceof Node ? (Node) item : item.getParent());
-
-            layout.removeAllComponents();
-            layout.addComponent((Component) editor);
-
-        } catch (RepositoryException e) {
-            throw new RuntimeRepositoryException(e);
-        }
     }
 
     protected void onCancel() {
@@ -145,25 +123,16 @@ public abstract class AbstractEditable extends CustomComponent {
         }
     }
 
-    protected boolean onSave() {
+    protected void onSave() {
         try {
             Item item = getItem();
-            driver.flush(item instanceof Node ? (Node) item : item.getParent());
-
-            if (driver.hasErrors())
-                // TODO show validation errors
-                return true;
-
-            if (presenter != null)
-                presenter.onSave(item);
-
-            layout.removeAllComponents();
-            layout.addComponent(new Label(getLabelText(getItem())));
-
+            if (presenter.save(item)) {
+                layout.removeAllComponents();
+                layout.addComponent(new Label(getLabelText(getItem())));
+            }
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }
-        return false;
     }
 
     protected abstract String getLabelText(Item item) throws RepositoryException;

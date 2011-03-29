@@ -60,7 +60,7 @@ public class LabelColumn extends AbstractEditableColumn<LabelColumnDefinition> i
 
         String path = item instanceof Node ? "@name" : item.getName() + "@name";
 
-        return new EditableText(item, this, path) {
+        return new EditableText(item, new PresenterImpl(), path) {
 
             @Override
             protected String getLabelText(Item item) throws RepositoryException {

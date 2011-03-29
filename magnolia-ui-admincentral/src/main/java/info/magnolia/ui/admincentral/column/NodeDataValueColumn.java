@@ -61,7 +61,7 @@ public class NodeDataValueColumn extends AbstractEditableColumn<NodeDataValueCol
     @Override
     public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
-            return new EditableText(item, this, item.getName()) {
+            return new EditableText(item, new PresenterImpl(), item.getName()) {
 
                 @Override
                 protected String getLabelText(Item item) throws RepositoryException {

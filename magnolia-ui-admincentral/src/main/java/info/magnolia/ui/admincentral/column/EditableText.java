@@ -44,7 +44,7 @@ import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.ValueEditor;
 
 /**
- * UI component that displays onSave label and on double click opens it for editing by switching the label to onSave text field.
+ * UI component that displays a label and on double click opens it for editing by switching the label to save text field.
  *
  * @author tmattsson
  */
@@ -72,7 +72,7 @@ public abstract class EditableText extends AbstractEditable {
 
     @Override
     protected Editor getComponentAndEditor(Item item) throws RepositoryException {
-        final TextFieldEditor textField = new TextFieldEditor(path);
+        TextFieldEditor textField = new TextFieldEditor(path);
         textField.addListener(new FieldEvents.BlurListener() {
 
             public void blur(FieldEvents.BlurEvent event) {
@@ -84,6 +84,13 @@ public abstract class EditableText extends AbstractEditable {
             @Override
             public void handleAction(Object sender, Object target) {
                 onSave();
+            }
+        });
+        textField.addShortcutListener(new ShortcutListener("", ShortcutAction.KeyCode.ESCAPE, new int[]{}) {
+
+            @Override
+            public void handleAction(Object sender, Object target) {
+                onCancel();
             }
         });
         textField.focus();

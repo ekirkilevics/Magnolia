@@ -68,7 +68,7 @@ public class NodeDataColumn extends AbstractEditableColumn<NodeDataColumnDefinit
 
         if (item instanceof Node) {
 
-            return new EditableText(item, this, definition.getNodeDataName()) {
+            return new EditableText(item, new PresenterImpl(), definition.getNodeDataName()) {
 
                 @Override
                 protected String getLabelText(Item item) throws RepositoryException {

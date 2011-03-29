@@ -42,7 +42,7 @@ import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.ValueEditor;
 
 /**
- * UI component that displays a label and on double click opens it for editing by switching the label to a text field.
+ * UI component that displays a label and on double click opens it for editing by switching the label to a select field.
  *
  * @author tmattsson
  */
@@ -83,7 +83,7 @@ public abstract class EditableSelect extends AbstractEditable {
             select.setItemCaption(entry.getValue(), entry.getKey());
         }
 
-        select.focus(); // TODO isn't focused in gui
+        select.focus();
         select.setImmediate(true);
         select.setInvalidAllowed(false);
 
@@ -95,7 +95,7 @@ public abstract class EditableSelect extends AbstractEditable {
             private static final long serialVersionUID = -4980015736557119160L;
 
             public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-                onSave();
+                save();
             }
         });
 */
