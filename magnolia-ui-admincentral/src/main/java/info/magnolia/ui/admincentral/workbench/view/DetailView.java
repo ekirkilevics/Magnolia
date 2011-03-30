@@ -50,4 +50,6 @@ public interface DetailView extends View{
 
     void showActions(List<MenuItemDefinition> contextMenuItems);
 
+    // TODO: experimental
+    void showDetails(String treeName, String someValue);
 }

@@ -41,8 +41,10 @@ import org.slf4j.LoggerFactory;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -61,19 +63,25 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
 
     private static final Logger log = LoggerFactory.getLogger(DetailViewImpl.class);
     private ActionList actionList;
+    private DetailForm detailForm;
     private Presenter presenter;
 
     public DetailViewImpl(Presenter presenter) {
         this.presenter = presenter;
         actionList = new ActionList();
+        detailForm = new DetailForm();
         setSizeFull();
 
         setFirstComponent(actionList);
-        setSecondComponent(new DetailForm());
+        setSecondComponent(detailForm);
     }
 
     public void showActions(List<MenuItemDefinition> contextMenuItems) {
         actionList.showActions(contextMenuItems);
+    }
+
+    public void showDetails(String treeName, String path) {
+        detailForm.showDetails(treeName, path);
     }
 
     /**
@@ -126,9 +134,20 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
      */
     public static class DetailForm extends Form {
 
+        private static final String TREENAME = "TreeName";
+        private static final String PATH = "Path";
+
         public DetailForm() {
-            addField("Some prop", new TextField("Some value"));
-            addField("Another prop", new TextField("Another value"));
+            addField(TREENAME, new TextField(TREENAME));
+            TextField pathField = new TextField(PATH);
+            pathField.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            addField(PATH, pathField);
+            addField("unused", new PasswordField("Password"));
+        }
+
+        public void showDetails(String treeName, String path) {
+            getField(TREENAME).setValue(treeName);
+            getField(PATH).setValue(path);
         }
     }
 

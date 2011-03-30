@@ -83,6 +83,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
             this.path = path;
             // FIXME should be dependent on the item type
             detailView.showActions(workbenchRegistry.getWorkbench(treeName).getMenuItems());
+            detailView.showDetails(treeName, path);
         }
     }
 
