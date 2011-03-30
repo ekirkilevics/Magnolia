@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.tree.container;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -56,7 +55,7 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
     }
 
     public Class<?> getType(Object propertyId) {
-        return containerProperties.get((String)propertyId).getType();
+        return containerProperties.get(propertyId).getType();
     }
 
     public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue) throws UnsupportedOperationException {
@@ -65,14 +64,14 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
     }
 
     public boolean removeContainerProperty(Object propertyId) throws UnsupportedOperationException {
-        containerProperties.remove((String) propertyId);
+        containerProperties.remove(propertyId);
         return true;
     }
 
     /**
      * Implementation of item set change event.
      */
-    protected class ItemSetChangeEvent implements Serializable, Container.ItemSetChangeEvent {
+    protected class ItemSetChangeEvent implements Container.ItemSetChangeEvent {
 
         /**
          * Gets the Property where the event occurred.

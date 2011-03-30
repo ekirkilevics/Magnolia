@@ -124,7 +124,7 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
      *
      * @author fgrilli
      */
-    public class DetailForm extends Form {
+    public static class DetailForm extends Form {
 
         public DetailForm() {
             addField("Some prop", new TextField("Some value"));

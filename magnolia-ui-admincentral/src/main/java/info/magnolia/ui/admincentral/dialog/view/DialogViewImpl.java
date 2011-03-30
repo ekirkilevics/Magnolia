@@ -63,7 +63,7 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
  */
 public class DialogViewImpl extends Window implements DialogView {
 
-    private class Tab implements HasEditors, HasEditorErrors {
+    private static class Tab implements HasEditors, HasEditorErrors {
 
         private String name;
         private List<Editor> editors = new ArrayList<Editor>();
