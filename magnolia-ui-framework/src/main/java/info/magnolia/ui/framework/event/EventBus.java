@@ -40,6 +40,6 @@ public interface EventBus  {
 
     public <H extends EventHandler> HandlerRegistration addHandler(Class<? extends Event<H>> eventClass, H handler);
 
-    public void fireEvent(Event<?> event);
+    public void fireEvent(Event<? extends EventHandler> event);
 
 }
