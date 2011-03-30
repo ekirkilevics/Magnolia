@@ -42,6 +42,7 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
 import java.lang.reflect.Constructor;
@@ -207,7 +208,7 @@ public class PageHandlerManager extends ObservedManager {
             try {
                 return (PageMVCHandler) Content2BeanUtil.toBean(node, true, new Content2BeanTransformerImpl() {
 
-                    public Object newBeanInstance(TransformationState state, Map properties)
+                    public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider)
                         throws Content2BeanException {
                         if (state.getLevel() == 1) {
                             try {
@@ -221,7 +222,7 @@ public class PageHandlerManager extends ObservedManager {
                             }
                         }
 
-                        return super.newBeanInstance(state, properties);
+                        return super.newBeanInstance(state, properties, componentProvider);
                     }
                 });
             }
