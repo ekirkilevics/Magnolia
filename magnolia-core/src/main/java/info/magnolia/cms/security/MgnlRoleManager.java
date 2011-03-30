@@ -69,7 +69,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
             return newRoleInstance(findPrincipalNode(name, MgnlContext.getSession(getRepositoryName())));
         }
         catch (Exception e) {
-            log.info("can't find role [" + name + "]", e);
+            log.debug("can't find role [" + name + "]", e);
             return null;
         }
     }

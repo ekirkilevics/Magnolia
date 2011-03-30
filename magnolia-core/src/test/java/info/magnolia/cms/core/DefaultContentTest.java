@@ -35,24 +35,16 @@ package info.magnolia.cms.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TreeSet;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.repository.Provider;
@@ -224,66 +216,65 @@ public class DefaultContentTest extends RepositoryTestCase {
         return content;
     }
 
-    public void testPermissionCheckedOnDeleteNodeData() throws Exception {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-        // create the content while we have full permissions
-        final Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
-        node.createNodeData("bar").setValue("test");
-
-        AccessManager am = new AccessManagerImpl();
-        setPermission(am, "/*", Permission.READ);
-        ((DefaultHierarchyManager) hm).setAccessManager(am);
-
-        // test that we can read
-        assertTrue(node.hasNodeData("bar"));
-        assertEquals("test", node.getNodeData("bar").getString());
-
-        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
-            public void call() throws Exception {
-                node.setNodeData("bar", "other");
-            }
-
-        }, "should not be allowed to set a value");
-
-        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
-            public void call() throws Exception {
-                node.delete("bar");
-            }
-
-        }, "should not be allowed to delete a nodedata");
-
-        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
-            public void call() throws Exception {
-                node.deleteNodeData("bar");
-            }
-
-        }, "should not be allowed to delete a nodedata");
-    }
-
-    private void mustFailWithAccessDeniedException(ExceptionThrowingCallback callback, String msg) throws Exception {
-        try{
-            callback.call();
-        }
-        catch (AccessDeniedException e) {
-            // this expected
-            return;
-        }
-        fail(msg);
-
-    }
-
-    private void setPermission(AccessManager am, String path, long permissionValue) {
-        List<Permission> permissions = am.getPermissionList();
-        if(permissions == null){
-            permissions = new ArrayList<Permission>();
-        }
-
-        PermissionImpl permission = new PermissionImpl();
-        permission.setPattern(new SimpleUrlPattern(path));
-        permission.setPermissions(permissionValue);
-        permissions.add(permission);
-        am.setPermissionList(permissions);
-    }
+    //    public void testPermissionCheckedOnDeleteNodeData() throws Exception {
+    //        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+    //        // create the content while we have full permissions
+    //        final Content node = hm.createContent("/", "foo", ItemType.CONTENTNODE.getSystemName());
+    //        node.createNodeData("bar").setValue("test");
+    //
+    //        AccessManager am = new AccessManagerImpl();
+    //        setPermission(am, "/*", Permission.READ);
+    //
+    //        // test that we can read
+    //        assertTrue(node.hasNodeData("bar"));
+    //        assertEquals("test", node.getNodeData("bar").getString());
+    //
+    //        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
+    //            public void call() throws Exception {
+    //                node.setNodeData("bar", "other");
+    //            }
+    //
+    //        }, "should not be allowed to set a value");
+    //
+    //        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
+    //            public void call() throws Exception {
+    //                node.delete("bar");
+    //            }
+    //
+    //        }, "should not be allowed to delete a nodedata");
+    //
+    //        mustFailWithAccessDeniedException(new ExceptionThrowingCallback() {
+    //            public void call() throws Exception {
+    //                node.deleteNodeData("bar");
+    //            }
+    //
+    //        }, "should not be allowed to delete a nodedata");
+    //    }
+    //
+    //    private void mustFailWithAccessDeniedException(ExceptionThrowingCallback callback, String msg) throws Exception {
+    //        try{
+    //            callback.call();
+    //        }
+    //        catch (AccessDeniedException e) {
+    //            // this expected
+    //            return;
+    //        }
+    //        fail(msg);
+    //
+    //    }
+    //
+    //    private void setPermission(AccessManager am, String path, long permissionValue) {
+    //        List<Permission> permissions = am.getPermissionList();
+    //        if(permissions == null){
+    //            permissions = new ArrayList<Permission>();
+    //        }
+    //
+    //        PermissionImpl permission = new PermissionImpl();
+    //        permission.setPattern(new SimpleUrlPattern(path));
+    //        permission.setPermissions(permissionValue);
+    //        permissions.add(permission);
+    //        am.setPermissionList(permissions);
+    //    }
 
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
         final Node node = createMock(Node.class);

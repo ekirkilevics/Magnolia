@@ -39,7 +39,7 @@ import javax.jcr.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext.Op;
 
 /**
@@ -48,25 +48,38 @@ import info.magnolia.context.MgnlContext.Op;
  * @version $Id: $
  * @param <R>
  */
-public abstract class SessionOp<R> implements Op<R, RepositoryException> {
+public abstract class OnInitSessionOp<R> implements Op<R, RepositoryException> {
 
-    protected static final Logger log = LoggerFactory.getLogger(SessionOp.class);
+    protected static final Logger log = LoggerFactory.getLogger(OnInitSessionOp.class);
 
     private final String repository;
 
-    public SessionOp(String repository) {
+    private boolean closeOnExit;
+
+    public OnInitSessionOp(String repository) {
+        this(repository, true);
+    }
+
+    public OnInitSessionOp(String repository, boolean closeOnExit) {
         this.repository = repository;
+        this.closeOnExit = closeOnExit;
     }
 
     public R exec() throws RepositoryException {
         Session session = null;
         try {
-            // if you need to access repo before all is initialized use OnInitSessionOp instead
-            session = MgnlContext.getSession(repository);
+            // can't do ... need a session before repo is setup and pico is initialized ...
+            session = WorkspaceAccessUtil.getInstance().createAdminRepositorySession(repository);
         } catch (RepositoryException e) {
             log.error("failed to retrieve repository " + repository + " with " + e.getMessage(), e);
         }
-        return exec(session);
+        try {
+            return exec(session);
+        } finally {
+            if (closeOnExit && session != null) {
+                session.logout();
+            }
+        }
     }
 
     public abstract R exec(Session session) throws RepositoryException;

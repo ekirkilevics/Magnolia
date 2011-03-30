@@ -33,6 +33,7 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.core.Content;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -79,7 +80,7 @@ public class MockJCRNode implements Node {
      */
     private static Logger log = LoggerFactory.getLogger(MockJCRNode.class);
 
-    private MockContent mockContent;
+    private final MockContent mockContent;
 
     public MockJCRNode(MockContent mockContent) {
         this.mockContent = mockContent;
@@ -146,7 +147,11 @@ public class MockJCRNode implements Node {
     }
 
     public NodeIterator getNodes() throws RepositoryException {
-        return new MockJCRNodeIterator(mockContent.getChildren());
+        return new MockJCRNodeIterator(mockContent.getChildren(new Content.ContentFilter() {
+            public boolean accept(Content content) {
+                return true;
+            }
+        }));
     }
 
     public NodeIterator getNodes(String namePattern) throws RepositoryException {
@@ -158,7 +163,7 @@ public class MockJCRNode implements Node {
     }
 
     public NodeType getPrimaryNodeType() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        return mockContent.getNodeType();
     }
 
     public PropertyIterator getProperties() throws RepositoryException {
@@ -385,7 +390,7 @@ public class MockJCRNode implements Node {
     }
 
     public String getIdentifier() throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented. This is a mock class.");
+        return this.mockContent.getUUID();
     }
 
     public PropertyIterator getReferences(String name) throws RepositoryException {

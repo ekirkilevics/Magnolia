@@ -60,4 +60,7 @@ public interface RoleManager {
      */
     public Map<String, ACL> getACLs(String role) throws UnsupportedOperationException;
 
+
+    public void addPermission(Role role, String workspaceName, String path, long permission);
+
 }

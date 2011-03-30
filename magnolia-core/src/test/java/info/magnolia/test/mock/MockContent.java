@@ -90,11 +90,11 @@ public class MockContent extends AbstractContent {
 
     private String name;
 
-    private Map<String, NodeData> nodeDatas = new ListOrderedMap();
+    private final Map<String, NodeData> nodeDatas = new ListOrderedMap();
 
-    private Map<String, MockContent> children = new ListOrderedMap();
+    private final Map<String, MockContent> children = new ListOrderedMap();
 
-    private List<String> mixins = new ArrayList<String>();
+    private final List<String> mixins = new ArrayList<String>();
 
     private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
 
@@ -137,6 +137,7 @@ public class MockContent extends AbstractContent {
         nodeDatas.put(nd.getName(), nd);
     }
 
+    @Override
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         final MockNodeData nd = new MockNodeData(name, type);
         addNodeData(nd);
@@ -182,7 +183,7 @@ public class MockContent extends AbstractContent {
             return current;
         }
         else {
-            c = (Content) children.get(path);
+            c = children.get(path);
         }
         if (c == null) {
             throw new PathNotFoundException(path);
@@ -239,6 +240,7 @@ public class MockContent extends AbstractContent {
         return onlyExistingNodeDatas;
     }
 
+    @Override
     public Collection<Content> getChildren(final ContentFilter filter, final String namePattern, Comparator<Content> orderCriteria) {
         // copy
         final List<Content> children = new ArrayList<Content>(this.children.values());
@@ -337,6 +339,7 @@ public class MockContent extends AbstractContent {
         return ancestor;
     }
 
+    @Override
     public MockHierarchyManager getHierarchyManager() {
         if (this.hierarchyManager == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
@@ -449,7 +452,7 @@ public class MockContent extends AbstractContent {
     }
 
     public NodeType getNodeType() throws RepositoryException {
-        throw new UnsupportedOperationException("Not Implemented");
+        return new MockNodeType(getNodeTypeName());
     }
 
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -494,24 +497,25 @@ public class MockContent extends AbstractContent {
     }
 
     public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    RepositoryException {
     }
 
     public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    RepositoryException {
     }
 
     public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    RepositoryException {
     }
 
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException,
-        RepositoryException {
+    RepositoryException {
     }
 
     public void unlock() throws LockException, RepositoryException {
     }
 
+    @Override
     public void updateMetaData() throws RepositoryException, AccessDeniedException {
     }
 

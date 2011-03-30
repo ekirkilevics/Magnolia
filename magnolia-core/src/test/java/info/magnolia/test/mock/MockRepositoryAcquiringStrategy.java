@@ -59,13 +59,15 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
      */
     private static Logger log = LoggerFactory.getLogger(MockRepositoryAcquiringStrategy.class);
 
-    private final Map hierarchyManagers = new HashMap();
+    private final Map<String, HierarchyManager> hierarchyManagers = new HashMap<String, HierarchyManager>();
+
+    private final Map<String, Session> sessions = new HashMap<String, Session>();
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         if(!hierarchyManagers.containsKey(repositoryId)){
             throw new IllegalArgumentException("repository [" + repositoryId + "] not initialized");
         }
-        return (HierarchyManager) hierarchyManagers.get(repositoryId);
+        return hierarchyManagers.get(repositoryId);
     }
 
     public void addHierarchyManager(String repositoryId, HierarchyManager hm){
@@ -85,6 +87,13 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
     }
 
     public Session getSession(String repositoryId, String workspaceId) {
-        return null;
+        if(!sessions.containsKey(repositoryId)){
+            throw new IllegalArgumentException("session [" + repositoryId + "] not initialized");
+        }
+        return sessions.get(repositoryId);
+    }
+
+    public void addSession(String repositoryId, MockSession session) {
+        sessions.put(repositoryId, session);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,28 +33,44 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.AbstractMapBasedContext;
-import info.magnolia.context.SystemContext;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.InvalidQueryException;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.qom.QueryObjectModelFactory;
 
 /**
- * A mock context where you can set a mocked hierarchy manger on it.
- * @author philipp
- * @version $Id$
- *
+ * Mock implementation of the JCR Query Manager.
+ * @author had
+ * @version $Id: $
  */
-public class MockContext extends AbstractMapBasedContext implements SystemContext{
+public class MockQueryManager implements QueryManager {
 
-    public MockContext() {
-        this.setRepositoryStrategy(new MockRepositoryAcquiringStrategy());
+    private final Session session;
+
+    public MockQueryManager(Session session) {
+        this.session = session;
     }
 
-    public void addHierarchyManager(String repositoryId, HierarchyManager hm){
-        ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addHierarchyManager(repositoryId, hm);
+    public Query createQuery(String statement, String language) throws InvalidQueryException, RepositoryException {
+        return new MockQuery(session, statement, language);
     }
 
-    public void addSession(String repositoryId, MockSession session) {
-        ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addSession(repositoryId, session);
+    public QueryObjectModelFactory getQOMFactory() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public String[] getSupportedQueryLanguages() throws RepositoryException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

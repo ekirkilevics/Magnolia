@@ -120,8 +120,14 @@ public class MockUtil {
 
     public static MockHierarchyManager createAndSetHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = createHierarchyManager(propertiesStream);
-        getMockContext(true).addHierarchyManager(repository, hm);
-        getSystemMockContext(true).addHierarchyManager(repository, hm);
+        MockContext ctx = getMockContext(true);
+        ctx.addHierarchyManager(repository, hm);
+        ctx.addSession(repository, hm.getSession());
+
+        MockContext sysCtx = getSystemMockContext(true);
+        sysCtx.addHierarchyManager(repository, hm);
+        sysCtx.addSession(repository, hm.getSession());
+        hm.save();
         return hm;
     }
 
@@ -132,6 +138,7 @@ public class MockUtil {
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
         final PropertiesImportExport importer = new PropertiesImportExport() {
+            @Override
             protected void populateContent(Content c, String name, String valueStr) throws RepositoryException {
                 if ("@uuid".equals(name)) {
                     ((MockContent) c).setUUID(valueStr);
@@ -184,6 +191,7 @@ public class MockUtil {
     /**
      * @deprecated use PropertiesImportExport.toProperties(hm);
      */
+    @Deprecated
     public static Properties toProperties(HierarchyManager hm) throws Exception {
         return PropertiesImportExport.toProperties(hm);
     }

@@ -83,6 +83,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         root.setHierarchyManager(this);
     }
 
+    @Override
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content c = (Content) nodes.get(path);
         if( c == null){
@@ -104,12 +105,17 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         nodes.values().remove(node);
     }
 
+    @Override
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content parent = ContentUtil.createPath(getRoot(), StringUtils.removeStart(path, "/"), ItemType.CONTENTNODE);
         return parent.createContent(label, contentType);
     }
 
+    @Override
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException, AccessDeniedException {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID can't be null");
+        }
         final Content result = getContentByUUID(getRoot(), uuid);
         if (result == null) {
             throw new ItemNotFoundException("Can't find item with uuid " + uuid);
@@ -132,14 +138,17 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         return null;
     }
 
+    @Override
     public void delete(String path) throws RepositoryException {
         getContent(path).delete();
     }
 
+    @Override
     public MockContent getRoot() {
         return this.root;
     }
 
+    @Override
     public boolean isExist(String path) {
         try {
             this.getContent(path);
@@ -155,6 +164,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         }
     }
 
+    @Override
     public boolean isNodeData(String path) throws AccessDeniedException {
         try {
             Content node = getContent(StringUtils.substringBeforeLast(path, "/"));
@@ -165,11 +175,13 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         }
     }
 
+    @Override
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content node = getContent(StringUtils.substringBeforeLast(path, "/"));
         return node.getNodeData(StringUtils.substringAfterLast(path, "/"));
     }
 
+    @Override
     public String toString() {
         final StringBuffer str = new StringBuffer();
         try {
@@ -196,6 +208,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         return str.toString();
     }
 
+    @Override
     public Workspace getWorkspace() {
         return this.session.getWorkspace();
     }
@@ -211,12 +224,14 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
      * Set access manager for this hierarchy
      * @param accessManager
      */
+    @Override
     public void setAccessManager(AccessManager accessManager) {
         super.setAccessManager(accessManager);
     }
 
 
 
+    @Override
     public String getName() {
         return this.name;
     }
@@ -232,4 +247,8 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         this.name = name;
     }
 
+    @Override
+    public void save() throws RepositoryException {
+        this.session.save();
+    }
 }

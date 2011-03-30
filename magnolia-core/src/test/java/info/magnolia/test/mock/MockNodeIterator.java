@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,28 +33,58 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.AbstractMapBasedContext;
-import info.magnolia.context.SystemContext;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 
 /**
- * A mock context where you can set a mocked hierarchy manger on it.
- * @author philipp
- * @version $Id$
- *
+ * Mock implementation of JCR Node Iterator.
+ * @author had
+ * @version $Id: $
  */
-public class MockContext extends AbstractMapBasedContext implements SystemContext{
+public class MockNodeIterator implements NodeIterator {
 
-    public MockContext() {
-        this.setRepositoryStrategy(new MockRepositoryAcquiringStrategy());
+    private final Iterator<Node> internalIterator;
+    private long count = 0;
+    private final List<Node> list;
+
+    public MockNodeIterator(List<Node> list) {
+        this.list = list;
+        this.internalIterator = list.iterator();
     }
 
-    public void addHierarchyManager(String repositoryId, HierarchyManager hm){
-        ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addHierarchyManager(repositoryId, hm);
+    public Node nextNode() {
+        count++;
+        return internalIterator.next();
     }
 
-    public void addSession(String repositoryId, MockSession session) {
-        ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addSession(repositoryId, session);
+    public long getPosition() {
+        return count;
+    }
+
+    public long getSize() {
+        return list.size();
+    }
+
+    public void skip(long skipNum) {
+        for (int i = 0; i < skipNum; i++) {
+            internalIterator.next();
+        }
+
+    }
+
+    public boolean hasNext() {
+        return internalIterator.hasNext();
+    }
+
+    public Object next() {
+        return internalIterator.next();
+    }
+
+    public void remove() {
+        internalIterator.remove();
     }
 
 }

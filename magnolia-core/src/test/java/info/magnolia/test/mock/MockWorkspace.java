@@ -33,6 +33,8 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.core.HierarchyManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -71,31 +73,38 @@ public class MockWorkspace implements Workspace {
 
     private static Logger log = LoggerFactory.getLogger(MockWorkspace.class);
 
-    private String name;
+    private final String name;
 
-    private Session session;
+    private final Session session;
 
     private ObservationManager observationManager;
 
+    private final HierarchyManager hm;
+
     public MockWorkspace(String name, Session session) {
+        this(name, session, null);
+    }
+
+    public MockWorkspace(String name, Session session, HierarchyManager hm) {
         super();
         this.name = name;
         this.session = session;
         this.observationManager = new MockObservationManager();
+        this.hm = hm;
     }
 
     public void clone(String srcWorkspace, String srcAbsPath, String destAbsPath, boolean removeExisting)
-        throws NoSuchWorkspaceException, ConstraintViolationException, VersionException, AccessDeniedException,
-        PathNotFoundException, ItemExistsException, LockException, RepositoryException {
+    throws NoSuchWorkspaceException, ConstraintViolationException, VersionException, AccessDeniedException,
+    PathNotFoundException, ItemExistsException, LockException, RepositoryException {
     }
 
     public void copy(String srcAbsPath, String destAbsPath) throws ConstraintViolationException, VersionException,
-        AccessDeniedException, PathNotFoundException, ItemExistsException, LockException, RepositoryException {
+    AccessDeniedException, PathNotFoundException, ItemExistsException, LockException, RepositoryException {
     }
 
     public void copy(String srcWorkspace, String srcAbsPath, String destAbsPath) throws NoSuchWorkspaceException,
-        ConstraintViolationException, VersionException, AccessDeniedException, PathNotFoundException,
-        ItemExistsException, LockException, RepositoryException {
+    ConstraintViolationException, VersionException, AccessDeniedException, PathNotFoundException,
+    ItemExistsException, LockException, RepositoryException {
     }
 
     public String[] getAccessibleWorkspaceNames() throws RepositoryException {
@@ -103,7 +112,7 @@ public class MockWorkspace implements Workspace {
     }
 
     public ContentHandler getImportContentHandler(String parentAbsPath, int uuidBehavior) throws PathNotFoundException,
-        ConstraintViolationException, VersionException, LockException, AccessDeniedException, RepositoryException {
+    ConstraintViolationException, VersionException, LockException, AccessDeniedException, RepositoryException {
         return null;
     }
 
@@ -120,7 +129,7 @@ public class MockWorkspace implements Workspace {
     }
 
     public QueryManager getQueryManager() throws RepositoryException {
-        return null;
+        return new MockQueryManager(this.session);
     }
 
     public Session getSession() {
@@ -128,17 +137,17 @@ public class MockWorkspace implements Workspace {
     }
 
     public void importXML(String parentAbsPath, InputStream in, int uuidBehavior) throws IOException,
-        PathNotFoundException, ItemExistsException, ConstraintViolationException, InvalidSerializedDataException,
-        LockException, AccessDeniedException, RepositoryException {
+    PathNotFoundException, ItemExistsException, ConstraintViolationException, InvalidSerializedDataException,
+    LockException, AccessDeniedException, RepositoryException {
     }
 
     public void move(String srcAbsPath, String destAbsPath) throws ConstraintViolationException, VersionException,
-        AccessDeniedException, PathNotFoundException, ItemExistsException, LockException, RepositoryException {
+    AccessDeniedException, PathNotFoundException, ItemExistsException, LockException, RepositoryException {
     }
 
     public void restore(Version[] versions, boolean removeExisting) throws ItemExistsException,
-        UnsupportedRepositoryOperationException, VersionException, LockException, InvalidItemStateException,
-        RepositoryException {
+    UnsupportedRepositoryOperationException, VersionException, LockException, InvalidItemStateException,
+    RepositoryException {
     }
 
 

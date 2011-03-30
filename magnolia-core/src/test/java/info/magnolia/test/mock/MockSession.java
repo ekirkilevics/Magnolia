@@ -80,11 +80,11 @@ public class MockSession implements Session {
 
     private Workspace workspace;
 
-    private MockHierarchyManager mockHM;
+    private final MockHierarchyManager mockHM;
 
     public MockSession(MockHierarchyManager mockHierarchyManager) {
         this.mockHM = mockHierarchyManager;
-        workspace = new MockWorkspace(mockHM.getName(), this);
+        workspace = new MockWorkspace(mockHM.getName(), this, mockHM);
     }
 
     public void addLockToken(String lt) {
@@ -94,19 +94,19 @@ public class MockSession implements Session {
     }
 
     public void exportDocumentView(String absPath, ContentHandler contentHandler, boolean skipBinary, boolean noRecurse)
-        throws PathNotFoundException, SAXException, RepositoryException {
+    throws PathNotFoundException, SAXException, RepositoryException {
     }
 
     public void exportDocumentView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse)
-        throws IOException, PathNotFoundException, RepositoryException {
+    throws IOException, PathNotFoundException, RepositoryException {
     }
 
     public void exportSystemView(String absPath, ContentHandler contentHandler, boolean skipBinary, boolean noRecurse)
-        throws PathNotFoundException, SAXException, RepositoryException {
+    throws PathNotFoundException, SAXException, RepositoryException {
     }
 
     public void exportSystemView(String absPath, OutputStream out, boolean skipBinary, boolean noRecurse)
-        throws IOException, PathNotFoundException, RepositoryException {
+    throws IOException, PathNotFoundException, RepositoryException {
     }
 
     public Object getAttribute(String name) {
@@ -118,7 +118,7 @@ public class MockSession implements Session {
     }
 
     public ContentHandler getImportContentHandler(String parentAbsPath, int uuidBehavior) throws PathNotFoundException,
-        ConstraintViolationException, VersionException, LockException, RepositoryException {
+    ConstraintViolationException, VersionException, LockException, RepositoryException {
         return null;
     }
 
@@ -143,7 +143,7 @@ public class MockSession implements Session {
     }
 
     public Node getNodeByUUID(String uuid) throws ItemNotFoundException, RepositoryException {
-        return null;
+        return this.mockHM.getContentByUUID(uuid).getJCRNode();
     }
 
     public Repository getRepository() {
@@ -151,7 +151,7 @@ public class MockSession implements Session {
     }
 
     public Node getRootNode() throws RepositoryException {
-        return null;
+        return this.mockHM.getRoot().getJCRNode();
     }
 
     public String getUserID() {
@@ -175,8 +175,8 @@ public class MockSession implements Session {
     }
 
     public void importXML(String parentAbsPath, InputStream in, int uuidBehavior) throws IOException,
-        PathNotFoundException, ItemExistsException, ConstraintViolationException, VersionException,
-        InvalidSerializedDataException, LockException, RepositoryException {
+    PathNotFoundException, ItemExistsException, ConstraintViolationException, VersionException,
+    InvalidSerializedDataException, LockException, RepositoryException {
     }
 
     public boolean isLive() {
@@ -184,14 +184,14 @@ public class MockSession implements Session {
     }
 
     public boolean itemExists(String absPath) throws RepositoryException {
-        return true;
+        return mockHM.isExist(absPath);
     }
 
     public void logout() {
     }
 
     public void move(String srcAbsPath, String destAbsPath) throws ItemExistsException, PathNotFoundException,
-        VersionException, ConstraintViolationException, LockException, RepositoryException {
+    VersionException, ConstraintViolationException, LockException, RepositoryException {
     }
 
     public void refresh(boolean keepChanges) throws RepositoryException {
@@ -201,7 +201,7 @@ public class MockSession implements Session {
     }
 
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException,
-        InvalidItemStateException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
+    InvalidItemStateException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
     }
 
     public void setNamespacePrefix(String prefix, String uri) throws NamespaceException, RepositoryException {
@@ -213,11 +213,11 @@ public class MockSession implements Session {
     }
 
     public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented");
+        return this.mockHM.getContentByUUID(id).getJCRNode();
     }
 
     public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
-        throw new UnsupportedOperationException("Not implemented");
+        return this.mockHM.getContent(absPath).getJCRNode();
     }
 
     public Property getProperty(String absPath) throws PathNotFoundException, RepositoryException {
