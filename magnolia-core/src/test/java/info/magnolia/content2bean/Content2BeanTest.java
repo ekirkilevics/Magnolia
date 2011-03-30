@@ -36,6 +36,7 @@ package info.magnolia.content2bean;
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
@@ -379,7 +380,7 @@ public class Content2BeanTest extends MgnlTestCase {
         final Content2BeanTransformer trans = Content2BeanUtil.getContent2BeanTransformer();
 
         try {
-            proc.toBean(node, true, trans);
+            proc.toBean(node, true, trans, new MockComponentProvider());
             fail("should have failed");
         } catch (Content2BeanException t) {
             assertEquals("Can't instantiate bean for /bar/beans", t.getMessage());

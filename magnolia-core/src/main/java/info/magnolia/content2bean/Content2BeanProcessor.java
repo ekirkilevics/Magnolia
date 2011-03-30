@@ -34,6 +34,7 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
 
@@ -48,15 +49,15 @@ import info.magnolia.objectfactory.Components;
 public interface Content2BeanProcessor {
 
     /**
-     * Transforms the node to a bean using the passed transformer.
+     * Transforms the node to a bean using the passed transformer and component provider.
      */
-    public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer)
+    public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer, ComponentProvider componentProvider)
         throws Content2BeanException;
 
     /**
      * Similar to <code>toBean()</code> but uses a passed bean as the root bean.
      */
-    public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException;
+    public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException;
 
     /**
      * Creates a singleton instance of the content2bean processor.

@@ -34,6 +34,7 @@
 package info.magnolia.objectfactory.pico;
 
 import info.magnolia.objectfactory.ComponentConfigurationPath;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 import org.picocontainer.PicoCompositionException;
 import org.picocontainer.PicoContainer;
@@ -54,21 +55,23 @@ public class ObservedComponentAdapter extends AbstractAdapter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ObservedComponentAdapter.class);
 
     private final ComponentConfigurationPath path;
+    private ComponentProvider componentProvider;
     private ObservedComponentFactory factory;
     private Object o;
 
-    public ObservedComponentAdapter(ComponentConfigurationPath path, Class type) {
-        this(path, type, type);
+    public ObservedComponentAdapter(ComponentConfigurationPath path, Class type, ComponentProvider componentProvider) {
+        this(path, type, type, componentProvider);
     }
 
-    public ObservedComponentAdapter(ComponentConfigurationPath path, Object componentKey, Class type) {
+    public ObservedComponentAdapter(ComponentConfigurationPath path, Object componentKey, Class type, ComponentProvider componentProvider) {
         super(componentKey, type);
         this.path = path;
+        this.componentProvider = componentProvider;
     }
 
     public Object getComponentInstance(PicoContainer container, Type into) throws PicoCompositionException {
         if (factory == null) {
-            factory = new ObservedComponentFactory(path.getRepository(), path.getPath(), getComponentImplementation());
+            factory = new ObservedComponentFactory(path.getRepository(), path.getPath(), getComponentImplementation(), componentProvider);
         }
         if (o == null) {
             o = factory.newInstance();

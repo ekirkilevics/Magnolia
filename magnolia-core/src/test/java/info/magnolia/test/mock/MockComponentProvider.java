@@ -64,7 +64,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
         if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
 
             ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-            ComponentFactory<T> factory = new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), keyType);
+            ComponentFactory<T> factory = new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), keyType, this);
             registerComponentFactory(keyType, factory);
         } else {
             Class<? extends T> valueType = (Class<? extends T>) classForName(value);

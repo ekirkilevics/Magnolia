@@ -123,7 +123,7 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     protected <T> void registerComponent(Class<T> type, Class<? extends T> implementationType) {
         super.registerComponent(type, implementationType);
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
-            pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory<?>>) implementationType));
+            pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory<?>>) implementationType, this));
         } else {
             pico.addComponent(type, implementationType);
         }

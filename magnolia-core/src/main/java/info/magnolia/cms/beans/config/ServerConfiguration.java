@@ -38,6 +38,7 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 
@@ -99,7 +100,7 @@ public class ServerConfiguration {
         protected ServerConfiguration transformNode(Content node) throws Content2BeanException {
             return (ServerConfiguration) Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl() {
                 @Override
-                public Object newBeanInstance(TransformationState state, Map properties) {
+                public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) {
                     return new ServerConfiguration();
                 }
             });

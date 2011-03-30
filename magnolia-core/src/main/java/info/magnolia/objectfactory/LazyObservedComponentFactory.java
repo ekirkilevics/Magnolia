@@ -46,16 +46,22 @@ public class LazyObservedComponentFactory<T> implements ComponentFactory<T> {
     private String path;
     private Class<T> type;
     private ObservedComponentFactory<T> observedComponentFactory;
+    private ComponentProvider componentProvider;
 
     public LazyObservedComponentFactory(String repository, String path, Class<T> type) {
+        this(repository, path, type, Components.getComponentProvider());
+    }
+
+    public LazyObservedComponentFactory(String repository, String path, Class<T> type, ComponentProvider componentProvider) {
         this.repository = repository;
         this.path = path;
         this.type = type;
+        this.componentProvider = componentProvider;
     }
 
     public T newInstance() {
         if (observedComponentFactory == null) {
-            observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type);
+            observedComponentFactory = new ObservedComponentFactory<T>(repository, path, type, componentProvider);
         }
         return observedComponentFactory.newInstance();
     }

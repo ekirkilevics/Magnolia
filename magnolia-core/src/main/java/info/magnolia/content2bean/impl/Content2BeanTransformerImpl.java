@@ -43,6 +43,7 @@ import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.MethodUtils;
@@ -364,7 +365,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     /**
      * Use the factory util to instantiate. This is useful to get default implementation of interfaces
      */
-    public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
+    public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) throws Content2BeanException {
         // we try first to use conversion (Map --> primitive type)
         // this is the case when we flattening the hierarchy?
         final Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
@@ -382,7 +383,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                     // TODO ?
                     log.warn("someone wants another type of map ? " + type);
                 }
-                return Components.getComponentProvider().newInstance(type);
+                return componentProvider.newInstance(type);
             } catch (Throwable e) {
                 throw new Content2BeanException(e);
             }

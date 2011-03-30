@@ -33,7 +33,12 @@
  */
 package info.magnolia.objectfactory.pico;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.ComponentProvider;
+
 import org.picocontainer.injectors.ProviderAdapter;
 
 /**
@@ -50,10 +55,12 @@ public class ComponentFactoryProviderAdapter extends ProviderAdapter {
     private final Class<?> componentKey;
     private final Class<? extends ComponentFactory<?>> factoryClass;
     private ComponentFactory<?> factory;
+    private ComponentProvider componentProvider;
 
-    public ComponentFactoryProviderAdapter(Class<?> componentKey, Class<? extends ComponentFactory<?>> factoryClass) {
+    public ComponentFactoryProviderAdapter(Class<?> componentKey, Class<? extends ComponentFactory<?>> factoryClass, ComponentProvider componentProvider) {
         this.componentKey = componentKey;
         this.factoryClass = factoryClass;
+        this.componentProvider = componentProvider;
     }
 
     public ComponentFactoryProviderAdapter(Class<?> componentKey, ComponentFactory<?> factory) {
@@ -75,13 +82,26 @@ public class ComponentFactoryProviderAdapter extends ProviderAdapter {
     public Object provide() {
         // TODO -- well this is completely wrong for now, those should be cached
         try {
-            if (this.factory == null)
-                this.factory = factoryClass.newInstance();
-            return factory.newInstance();
+            if (this.factory == null) {
+                Constructor< ? extends ComponentFactory< ? >> constructor;
+                try {
+                    constructor = factoryClass.getConstructor(ComponentProvider.class);
+                    this.factory = constructor.newInstance(componentProvider);
+                }
+                catch (NoSuchMethodException e) {
+                    this.factory = factoryClass.newInstance();
+                }
+            }
+            return this.factory.newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e); // TODO
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e); // TODO
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e); // TODO
         }
+
     }
 }

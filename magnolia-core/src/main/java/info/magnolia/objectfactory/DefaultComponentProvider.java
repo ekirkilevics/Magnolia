@@ -123,7 +123,7 @@ public class DefaultComponentProvider implements ComponentProvider {
             final String className = getImplementationName(type);
             if (isInRepositoryDefinition(className)) {
                 final ComponentConfigurationPath path = new ComponentConfigurationPath(className);
-                final ObservedComponentFactory<T> factory = new ObservedComponentFactory<T>(path.getRepository(), path.getPath(), type);
+                final ObservedComponentFactory<T> factory = new ObservedComponentFactory<T>(path.getRepository(), path.getPath(), type, this);
                 setInstanceFactory(type, factory);
                 // now that the factory is registered, we call ourself again
                 return newInstance(type);

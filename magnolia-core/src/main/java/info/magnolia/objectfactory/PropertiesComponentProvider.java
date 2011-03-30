@@ -79,7 +79,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
             }
             if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
                 ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                registerComponentFactory(type, new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), type));
+                registerComponentFactory(type, new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), type, this));
             } else {
                 Class<? extends T> valueType = (Class<? extends T>) classForName(value);
                 if (valueType == null) {

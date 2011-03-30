@@ -43,6 +43,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -169,8 +170,18 @@ public class Content2BeanUtil {
      * TODO -- this method has a bunch of usage points
      */
     public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
-        return getContent2BeanProcessor().toBean(node, recursive, transformer);
+        return toBean(node, recursive, transformer, Components.getComponentProvider());
     }
+
+    /**
+     * @see Content2BeanProcessor
+     * @deprecated since 5.0 use {@link Content2Bean}
+     * TODO -- this method has a bunch of usage points
+     */
+    public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
+        return getContent2BeanProcessor().toBean(node, recursive, transformer, componentProvider);
+    }
+
 
     /**
      * Transforms the nodes data into a map containing the names and values.
@@ -235,8 +246,17 @@ public class Content2BeanUtil {
      * @deprecated since 5.0 - use {@link Content2Bean}
      */
     public static Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
-        return getContent2BeanProcessor().setProperties(bean, node, recursive, transformer);
+        return setProperties(bean, node, recursive, transformer, Components.getComponentProvider());
     }
+
+    /**
+     * @see Content2BeanProcessor
+     * @deprecated since 5.0 - use {@link Content2Bean}
+     */
+    public static Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
+        return getContent2BeanProcessor().setProperties(bean, node, recursive, transformer, componentProvider);
+    }
+
 
     /**
      * @see Content2BeanProcessor
@@ -298,7 +318,6 @@ public class Content2BeanUtil {
             throw new Content2BeanException("can't read properties from bean", e);
         }
     }
-
 
 
 }

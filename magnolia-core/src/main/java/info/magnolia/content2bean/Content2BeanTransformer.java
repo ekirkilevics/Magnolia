@@ -34,6 +34,7 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
@@ -69,7 +70,7 @@ public interface Content2BeanTransformer {
     /**
      * Instantiates the bean.
      */
-    public Object newBeanInstance(TransformationState state, Map values) throws Content2BeanException;
+    public Object newBeanInstance(TransformationState state, Map values, ComponentProvider componentProvider) throws Content2BeanException;
 
     /**
      * Called after all properties are set.

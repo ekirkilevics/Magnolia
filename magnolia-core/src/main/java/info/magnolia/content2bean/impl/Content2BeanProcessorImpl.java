@@ -51,6 +51,8 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.objectfactory.ComponentProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,11 +73,11 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         this.typeMapping = typeMapping;
     }
 
-    public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
-        return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState());
+    public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException{
+        return toBean(new ExtendingContentWrapper(node), recursive, transformer, transformer.newState(), componentProvider);
     }
 
-    protected Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException{
+    protected Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state, ComponentProvider componentProvider) throws Content2BeanException{
 
         state.pushContent(node);
 
@@ -98,10 +100,10 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
             transformer = resolveTransformer(type, transformer);
 
-            Map<String, Object> values = toMap(node, recursive, transformer, state);
+            Map<String, Object> values = toMap(node, recursive, transformer, state, componentProvider);
 
             try {
-                bean = transformer.newBeanInstance(state, values);
+                bean = transformer.newBeanInstance(state, values, componentProvider);
             }
             catch (Throwable e) {
                 if(isForceCreation()){
@@ -137,7 +139,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         return bean;
     }
 
-    public Object setProperties(final Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
+    public Object setProperties(final Object bean, Content node, boolean recursive, Content2BeanTransformer transformer, ComponentProvider componentProvider) throws Content2BeanException {
         // enable extending feature
         node = new ExtendingContentWrapper(node);
 
@@ -152,7 +154,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
         transformer = resolveTransformer(type, transformer);
 
-        Map<String, Object> values = toMap(node, recursive, transformer, state);
+        Map<String, Object> values = toMap(node, recursive, transformer, state, componentProvider);
 
         setProperties(values, transformer, state);
 
@@ -168,7 +170,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     /**
      * Transforms the children of provided content into a map.
      */
-    protected Map<String, Object> toMap(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
+    protected Map<String, Object> toMap(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state, ComponentProvider componentProvider) throws Content2BeanException {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         for (NodeData nd : node.getNodeDataCollection()) {
             Object val = NodeDataUtil.getValueObject(nd);
@@ -183,7 +185,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                 // in case the the class can not get resolved we can use now
                 // the parent bean to resolve the class
 
-                Object childBean = toBean(childNode, true, transformer, state);
+                Object childBean = toBean(childNode, true, transformer, state, componentProvider);
                 // can be null if forceCreation is true
                 if(childBean != null){
                     String name = childNode.getName();

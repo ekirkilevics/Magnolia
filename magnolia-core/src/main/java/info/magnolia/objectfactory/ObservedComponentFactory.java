@@ -92,10 +92,17 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     @Deprecated
     protected T observedObject;
 
+    private ComponentProvider componentProvider;
+
     public ObservedComponentFactory(String repository, String path, Class<T> type) {
+        this(repository, path, type, Components.getComponentProvider());
+    }
+
+    public ObservedComponentFactory(String repository, String path, Class<T> type, ComponentProvider componentProvider) {
         this.repository = repository;
         this.path = path;
         this.interf = type;
+        this.componentProvider = componentProvider;
         load();
         startObservation(path);
     }
@@ -200,19 +207,20 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected T transformNode(Content node) throws Content2BeanException {
-        return (T) Content2BeanUtil.toBean(node, true, getContent2BeanTransformer());
+        return (T) Content2BeanUtil.toBean(node, true, getContent2BeanTransformer(), componentProvider);
     }
 
     protected Content2BeanTransformer getContent2BeanTransformer() {
         // we can not discover again the same class we are building
         return new Content2BeanTransformerImpl() {
             @Override
-            public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
+            public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) throws Content2BeanException {
+                // TODO here too?
                 if (state.getCurrentType().getType().equals(interf)) {
                     final ClassFactory classFactory = Classes.getClassFactory();
                     return classFactory.newInstance(interf);
                 }
-                return super.newBeanInstance(state, properties);
+                return super.newBeanInstance(state, properties, componentProvider);
             }
         };
     }
