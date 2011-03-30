@@ -41,6 +41,7 @@ import javax.jcr.RepositoryException;
 import com.vaadin.ui.Component;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
 
 /**
@@ -51,8 +52,8 @@ import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
  */
 public class LabelColumn extends AbstractEditableColumn<LabelColumnDefinition> implements Serializable {
 
-    public LabelColumn(LabelColumnDefinition def, EventBus eventBus, PlaceController placeController ) {
-        super(def, eventBus, placeController);
+    public LabelColumn(LabelColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
+        super(def, eventBus, placeController, shell);
     }
 
     @Override

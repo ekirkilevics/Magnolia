@@ -42,6 +42,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
 
 
@@ -54,8 +55,8 @@ import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
  */
 public class NodeDataValueColumn extends AbstractEditableColumn<NodeDataValueColumnDefinition> implements Serializable {
 
-    public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus, PlaceController placeController) {
-        super(def, eventBus, placeController);
+    public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
+        super(def, eventBus, placeController, shell);
     }
 
     @Override

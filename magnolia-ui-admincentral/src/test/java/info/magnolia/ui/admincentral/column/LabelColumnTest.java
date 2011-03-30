@@ -55,7 +55,7 @@ public class LabelColumnTest {
         String original = "Beckenbauer";
         mock.setName(original);
         mock.setProperty("name", original);
-        LabelColumn column = new LabelColumn(new LabelColumnDefinition(), null, null);
+        LabelColumn column = new LabelColumn(new LabelColumnDefinition(), null, null, null);
         Object result = column.getComponent(mock);
         assertEquals(original, result);
     }

@@ -66,6 +66,29 @@ public abstract class AbstractEditable extends CustomComponent {
         void onClick(Item item) throws RepositoryException;
     }
 
+    /**
+     * Result object used by subclasses to return the component to switch to on double click and an editor which is to
+     * be used by the editor driver.
+     */
+    public static class ComponentAndEditor {
+
+        private Component component;
+        private Editor editor;
+
+        public ComponentAndEditor(Component component, Editor editor) {
+            this.component = component;
+            this.editor = editor;
+        }
+
+        public Component getComponent() {
+            return component;
+        }
+
+        public Editor getEditor() {
+            return editor;
+        }
+    }
+
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
@@ -89,10 +112,10 @@ public abstract class AbstractEditable extends CustomComponent {
                 if (event.isDoubleClick()) {
                     try {
                         Item item = getItem();
-                        Editor editor = getComponentAndEditor(item);
-                        AbstractEditable.this.presenter.edit(item, editor);
+                        ComponentAndEditor componentAndEditor = getComponentAndEditor(item);
+                        AbstractEditable.this.presenter.edit(item, componentAndEditor.getEditor());
                         layout.removeAllComponents();
-                        layout.addComponent((Component) editor);
+                        layout.addComponent(componentAndEditor.getComponent());
                     } catch (RepositoryException e) {
                         throw new RuntimeRepositoryException(e);
                     }
@@ -106,9 +129,9 @@ public abstract class AbstractEditable extends CustomComponent {
             }
         });
         layout.addComponent(new Label(getLabelText(item)));
-        layout.setSizeUndefined();
+        layout.setSizeFull();
         setCompositionRoot(layout);
-        setSizeUndefined();
+        setSizeFull();
     }
 
     protected void onCancel() {
@@ -134,7 +157,7 @@ public abstract class AbstractEditable extends CustomComponent {
 
     protected abstract String getLabelText(Item item) throws RepositoryException;
 
-    protected abstract Editor getComponentAndEditor(Item item) throws RepositoryException;
+    protected abstract ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException;
 
     private Item getItem() throws RepositoryException {
         Node node = JCRUtil.getSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);

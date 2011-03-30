@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.column;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -43,9 +44,11 @@ import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.Editor;
+import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.editor.HasEditors;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.ColumnDefinition;
 
 /**
@@ -56,14 +59,15 @@ import info.magnolia.ui.model.column.definition.ColumnDefinition;
  */
 public abstract class AbstractEditableColumn<D extends ColumnDefinition> extends AbstractColumn<D> {
 
+    private Shell shell;
     private EventBus eventBus;
-
     private PlaceController placeController;
 
-    public AbstractEditableColumn(D def, EventBus eventBus, PlaceController placeController) {
+    public AbstractEditableColumn(D def, EventBus eventBus, PlaceController placeController, Shell shell) {
         super(def);
         this.eventBus = eventBus;
         this.placeController = placeController;
+        this.shell = shell;
     }
 
     /**
@@ -90,9 +94,14 @@ public abstract class AbstractEditableColumn<D extends ColumnDefinition> extends
         public boolean save(Item item) throws RepositoryException {
             driver.flush(item instanceof Node ? (Node) item : item.getParent());
 
-            if (driver.hasErrors())
-                // TODO show validation errors
+            if (driver.hasErrors()) {
+                List<EditorError> errors = driver.getErrors();
+                shell.showNotification(errors.get(0).getMessage());
+
+                // TODO show validation errors inline in tree
+
                 return false;
+            }
 
             eventBus.fireEvent(new ContentChangedEvent(item.getSession().getWorkspace().getName(), item.getPath()));
 

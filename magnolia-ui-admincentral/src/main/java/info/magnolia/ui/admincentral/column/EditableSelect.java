@@ -37,8 +37,8 @@ import java.util.Map;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.ui.NativeSelect;
-import info.magnolia.ui.framework.editor.Editor;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.ui.Select;
 import info.magnolia.ui.framework.editor.ValueEditor;
 
 /**
@@ -57,11 +57,11 @@ public abstract class EditableSelect extends AbstractEditable {
         this.options = options;
     }
 
-    private static class NativeSelectEditor extends NativeSelect implements ValueEditor {
+    private static class SelectEditor extends Select implements ValueEditor {
 
         private String path;
 
-        public NativeSelectEditor(String path) {
+        public SelectEditor(String path) {
             this.path = path;
         }
 
@@ -71,9 +71,9 @@ public abstract class EditableSelect extends AbstractEditable {
     }
 
     @Override
-    protected Editor getComponentAndEditor(Item item) {
+    protected ComponentAndEditor getComponentAndEditor(Item item) {
 
-        NativeSelectEditor select = new NativeSelectEditor(path);
+        SelectEditor select = new SelectEditor(path);
         select.setNullSelectionAllowed(false);
         select.setNewItemsAllowed(false);
 
@@ -86,19 +86,15 @@ public abstract class EditableSelect extends AbstractEditable {
         select.setImmediate(true);
         select.setInvalidAllowed(false);
 
+        select.addListener(new FieldEvents.BlurListener() {
 
-// TODO we can't use this event since its triggered by ContentDriver.edit()
-/*
-        select.addListener(new com.vaadin.data.Property.ValueChangeListener() {
-
-            public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-                save();
+            public void blur(FieldEvents.BlurEvent event) {
+                    onSave();
             }
         });
-*/
 
         select.setSizeFull();
 
-        return select;
+        return new ComponentAndEditor(select, select);
     }
 }

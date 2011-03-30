@@ -49,6 +49,7 @@ import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
 
 /**
@@ -61,8 +62,8 @@ import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
  */
 public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinition> implements Serializable {
 
-    public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController) {
-        super(def, eventBus, placeController);
+    public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
+        super(def, eventBus, placeController, shell);
     }
 
     @Override

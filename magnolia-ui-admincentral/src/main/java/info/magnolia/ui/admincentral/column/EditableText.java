@@ -40,7 +40,6 @@ import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.TextField;
-import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.ValueEditor;
 
 /**
@@ -71,7 +70,7 @@ public abstract class EditableText extends AbstractEditable {
     }
 
     @Override
-    protected Editor getComponentAndEditor(Item item) throws RepositoryException {
+    protected ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException {
         TextFieldEditor textField = new TextFieldEditor(path);
         textField.addListener(new FieldEvents.BlurListener() {
 
@@ -96,6 +95,6 @@ public abstract class EditableText extends AbstractEditable {
         textField.focus();
         textField.setSizeFull();
 
-        return textField;
+        return new ComponentAndEditor(textField, textField);
     }
 }
