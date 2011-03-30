@@ -40,6 +40,7 @@ import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
+import info.magnolia.ui.admincentral.workbench.view.WorkbenchViewImpl;
 import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
 import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.place.Place;
@@ -77,7 +78,7 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer{
     protected void populateComponentProvider(MutableComponentProvider componentProvider) {
         componentProvider.setInstance(WorkbenchDefinition.class, workbenchRegistry.getWorkbench(place.getWorkbenchName()));
 
-        componentProvider.setImplementation(WorkbenchView.class, WorkbenchView.class);
+        componentProvider.setImplementation(WorkbenchView.class, WorkbenchViewImpl.class);
         componentProvider.setImplementation(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
 
         componentProvider.setImplementation(ItemListActivityMapper.class, ItemListActivityMapper.class);
