@@ -61,8 +61,6 @@ import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
  */
 public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinition> implements Serializable {
 
-    private static final long serialVersionUID = -4658046121169661806L;
-
     public TemplateColumn(TemplateColumnDefinition def, EventBus eventBus, PlaceController placeController) {
         super(def, eventBus, placeController);
     }
@@ -70,8 +68,6 @@ public class TemplateColumn extends AbstractEditableColumn<TemplateColumnDefinit
     @Override
     public Component getComponent(Item item) throws RepositoryException {
         return new EditableSelect(item, new PresenterImpl(), "MetaData/mgnl:template", getAvailableTemplates((Node) item)) {
-
-            private static final long serialVersionUID = -8268356405124559092L;
 
             @Override
             protected String getLabelText(Item item) {

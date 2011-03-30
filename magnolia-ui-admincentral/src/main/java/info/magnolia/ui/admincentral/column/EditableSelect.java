@@ -48,7 +48,6 @@ import info.magnolia.ui.framework.editor.ValueEditor;
  */
 public abstract class EditableSelect extends AbstractEditable {
 
-    private static final long serialVersionUID = -9123969896830970149L;
     private Map<String, String> options;
     private String path;
 
@@ -91,8 +90,6 @@ public abstract class EditableSelect extends AbstractEditable {
 // TODO we can't use this event since its triggered by ContentDriver.edit()
 /*
         select.addListener(new com.vaadin.data.Property.ValueChangeListener() {
-
-            private static final long serialVersionUID = -4980015736557119160L;
 
             public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
                 save();

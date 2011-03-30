@@ -55,8 +55,6 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
  */
 public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<ColumnDefinition>> implements TreeBuilder, Serializable {
 
-    private static final long serialVersionUID = 6702977290186078418L;
-
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
      */
@@ -64,6 +62,7 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
 
     private ComponentProvider componentProvider;
 
+    // TODO: why is WorkbenchRegistry handed over here?
     public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry) {
         super(componentProvider);
         this.componentProvider = componentProvider;

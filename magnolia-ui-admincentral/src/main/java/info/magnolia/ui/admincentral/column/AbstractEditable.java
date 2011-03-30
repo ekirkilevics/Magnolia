@@ -66,8 +66,6 @@ public abstract class AbstractEditable extends CustomComponent {
         void onClick(Item item) throws RepositoryException;
     }
 
-    private static final long serialVersionUID = -3126541389513880027L;
-
     private final String workspace;
     private final String nodeIdentifier;
     private final String propertyName;
@@ -86,7 +84,6 @@ public abstract class AbstractEditable extends CustomComponent {
 
         // TODO the double click event should be removed when the text field is visible, otherwise its not possible to double click to mark words
         layout.addListener(new LayoutEvents.LayoutClickListener() {
-            private static final long serialVersionUID = -7068955179985809239L;
 
             public void layoutClick(final LayoutEvents.LayoutClickEvent event) {
                 if (event.isDoubleClick()) {
