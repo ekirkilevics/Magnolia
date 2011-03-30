@@ -36,6 +36,9 @@ package info.magnolia.ui.framework.event;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -45,6 +48,8 @@ import com.google.common.collect.Multimap;
  */
 public class SimpleEventBus implements EventBus {
 
+    private static final Logger log = LoggerFactory.getLogger(SimpleEventBus.class);
+
     private final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
 
     public SimpleEventBus() {
@@ -52,7 +57,7 @@ public class SimpleEventBus implements EventBus {
     }
 
     public synchronized <H extends EventHandler> HandlerRegistration addHandler(final Class<? extends Event<H>> eventClass, final H handler) {
-
+        log.debug("Adding handler {} for events of class {}", handler, eventClass);
         if (eventHandlers.containsEntry(eventClass, handler)) {
             return new HandlerRegistration() {
                 public void removeHandler() {
@@ -81,6 +86,7 @@ public class SimpleEventBus implements EventBus {
             eventHandlersSnapshot = new ArrayList<EventHandler>(eventHandlers.get(event.getClass()));
         }
         for (EventHandler eventHandler : eventHandlersSnapshot) {
+            log.debug("Dispatch event {} with handler {}", event, eventHandler);
             event.dispatch(eventHandler);
         }
     }

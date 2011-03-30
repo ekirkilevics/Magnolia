@@ -70,6 +70,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     private ViewPort viewPort;
 
     public ActivityManager(ActivityMapper mapper, EventBus eventBus) {
+        log.debug("Create ActivityManager for ActivityMapper {} and EventBus {}", mapper, eventBus);
         this.mapper = mapper;
         this.isolatedEventBus = new ResettableEventBus(eventBus);
 
@@ -108,7 +109,7 @@ public class ActivityManager implements PlaceChangeEvent.Handler, PlaceChangeReq
     }
 
     public void onPlaceChangeRequest(final PlaceChangeRequestEvent event) {
-        log.debug("onPlaceChangeRequest...");
+        log.debug("onPlaceChangeRequest for event {}", event);
         if (!currentActivity.equals(NULL_ACTIVITY)) {
             final String message = currentActivity.mayStop();
             if(message != null) {
