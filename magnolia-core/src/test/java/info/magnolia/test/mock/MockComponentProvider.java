@@ -71,7 +71,7 @@ public class MockComponentProvider extends PropertiesComponentProvider {
             if (valueType == null) {
                 // TODO
             } else {
-                registerComponent(keyType, valueType);
+                registerImplementation(keyType, valueType);
             }
         }
     }

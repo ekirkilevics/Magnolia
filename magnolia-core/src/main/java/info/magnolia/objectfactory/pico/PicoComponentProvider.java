@@ -120,8 +120,8 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    protected <T> void registerComponent(Class<T> type, Class<? extends T> implementationType) {
-        super.registerComponent(type, implementationType);
+    public <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
+        super.registerImplementation(type, implementationType);
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory<?>>) implementationType, this));
         } else {
@@ -130,14 +130,23 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    protected <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
+    public <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
         super.registerComponentFactory(type, componentFactory);
         pico.addAdapter(new ComponentFactoryProviderAdapter(type, componentFactory));
     }
 
     @Override
-    protected <T> void registerInstance(Class<T> type, T instance) {
+    public <T> void registerInstance(Class<T> type, T instance) {
         super.registerInstance(type, instance);
         pico.addComponent(type, instance);
+    }
+
+    @Override
+    public PicoComponentProvider createChild() {
+        PicoBuilder builder = new PicoBuilder(getContainer()).withConstructorInjection().withCaching();
+
+        final MutablePicoContainer container = builder.build();
+
+        return new PicoComponentProvider(container, this);
     }
 }

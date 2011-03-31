@@ -79,13 +79,13 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
             }
             if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
                 ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                registerComponentFactory(type, new LazyObservedComponentFactory<T>(path.getRepository(), path.getPath(), type, this));
+                registerObservedComponent(type, path.getRepository(), path.getPath());
             } else {
                 Class<? extends T> valueType = (Class<? extends T>) classForName(value);
                 if (valueType == null) {
                     log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
                 } else {
-                    registerComponent(type, valueType);
+                    registerImplementation(type, valueType);
                 }
             }
         }
@@ -97,5 +97,9 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public PropertiesComponentProvider createChild() {
+        return new PropertiesComponentProvider(this);
     }
 }

@@ -34,19 +34,16 @@
 package info.magnolia.objectfactory;
 
 /**
- * ComponentProvider that can participate in a hierarchical structure. Use {@link #createChild()} to create a sub container.
- *
- * @author tmattsson
+ * A {@link ComponentProvider} on which we can register implementations and instances.
  */
-public interface HierarchicalComponentProvider extends ComponentProvider {
+public interface MutableComponentProvider extends ComponentProvider {
 
-    HierarchicalComponentProvider getParent();
+    public abstract <T> void registerConfiguredComponent(Class<T> type, String workspace, String path, boolean observed);
 
-    boolean isConfiguredFor(Class<?> type);
+    public abstract <T> void registerImplementation(Class<T> type, Class< ? extends T> implementationType);
 
-    /**
-     * Creates a new {@link ComponentProvider} which can be configured.
-     */
-    MutableComponentProvider createChild();
+    public abstract <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory);
+
+    public abstract <T> void registerInstance(Class<T> type, T instance);
 
 }

@@ -48,7 +48,7 @@ import info.magnolia.cms.util.DeprecationUtil;
  *
  * @author tmattsson
  */
-public abstract class AbstractComponentProvider implements HierarchicalComponentProvider {
+public abstract class AbstractComponentProvider implements MutableComponentProvider, HierarchicalComponentProvider {
 
     private static class ComponentDefinition<T> {
 
@@ -135,7 +135,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
             // Register the component on-demand
             if (!Classes.isConcrete(type))
                 throw new MgnlInstantiationException("No concrete implementation defined for " + type);
-            registerComponent(type, type);
+            registerImplementation(type, type);
             definition = getComponentDefinition(type);
         }
         T instance = definition.getInstance();
@@ -187,8 +187,24 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         return definition.getImplementationType();
     }
 
+    public synchronized <T> void registerConfiguredComponent(Class<T> type, final String workspace, final String path, boolean observed) {
+        final ComponentFactory factory;
+        if(observed){
+            factory = new LazyObservedComponentFactory<T>(workspace, path, type, this);
+        }
+        else{
+            factory = new ConfiguredComponentFactory<T>(path, workspace, this);
+        }
+        registerComponentFactory(type, factory);
+
+    }
+
+    public synchronized <T> void registerObservedComponent(Class<T> type, String workspace, String path) {
+        registerComponentFactory(type, new LazyObservedComponentFactory<T>(workspace, path, type, this));
+    }
+
     @SuppressWarnings("unchecked")
-    protected synchronized <T> void registerComponent(Class<T> type, Class<? extends T> implementationType) {
+    public synchronized <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         if (!Classes.isConcrete(implementationType)) {
@@ -207,7 +223,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         }
     }
 
-    protected synchronized <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
+    public synchronized <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         ComponentDefinition<T> definition = new ComponentDefinition<T>();
@@ -216,7 +232,7 @@ public abstract class AbstractComponentProvider implements HierarchicalComponent
         definitions.put(type, definition);
     }
 
-    protected synchronized <T> void registerInstance(Class<T> type, T instance) {
+    public synchronized <T> void registerInstance(Class<T> type, T instance) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         ComponentDefinition<T> definition = new ComponentDefinition<T>();
