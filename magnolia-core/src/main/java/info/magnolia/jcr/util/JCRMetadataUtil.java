@@ -48,14 +48,13 @@ import javax.jcr.ValueFormatException;
 import org.apache.commons.lang.UnhandledException;
 
 /**
- * Collection of utilities to simplify working with the JCR API. To be checked how much this type should be based on
- * current MetaData-support implemented in the Content-API. Right now it delegates partly to the "old" MetaData-support.
+ * Collection of utilities to simplify working with the JCR API. In contrast to info.magnolia.cms.core.Content it is - from a caller perspective - independent from Content API.
+ * Internally content API is still used for now, but this will most probably change quite soo.
  *
  * @deprecated temporary
  */
 public class JCRMetadataUtil {
 
-    public static final String RESOURCES_ICONS_16_PATH = "/.resources/icons/16/";
 
     private static class JCRMetaData extends MetaData {
 
@@ -73,8 +72,13 @@ public class JCRMetadataUtil {
         }
     }
 
-    // TODO should be somewhere in a UI-Utility
-    public static String getActivationStatusIconURL(Node node) {
+    /**
+     * Return iconFileName for a node.
+     *
+     * @param node node to read status from
+     * @return file name for an icon
+     */
+    public static String getActivationStatusIcon(Node node) {
 
         MetaData metaData = getMetaData(node);
         String iconFileName;
@@ -89,7 +93,7 @@ public class JCRMetadataUtil {
             iconFileName = "indicator_red.gif";
         }
 
-        return MgnlContext.getContextPath() + RESOURCES_ICONS_16_PATH + iconFileName;
+        return iconFileName;
     }
 
     public static void updateMetaData(Node node) throws RepositoryException {

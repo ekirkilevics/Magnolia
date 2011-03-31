@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 
 import java.util.Calendar;
 
@@ -95,19 +96,11 @@ public class MetaDataUtil {
         return StringUtils.EMPTY;
     }
 
+    /**
+     * @deprecated - directly use JCRMetaDataUtil instead
+     */
     public static String getActivationStatusIcon(Content content) {
-        String imgSrc;
-        switch (content.getMetaData().getActivationStatus()) {
-            case MetaData.ACTIVATION_STATUS_MODIFIED :
-                imgSrc = "indicator_yellow.gif";
-                break;
-            case MetaData.ACTIVATION_STATUS_ACTIVATED :
-                imgSrc = "indicator_green.gif";
-                break;
-            default :
-                imgSrc = "indicator_red.gif";
-        }
-        return imgSrc;
+        return JCRMetadataUtil.getActivationStatusIcon(content.getJCRNode());
     }
 
 }
