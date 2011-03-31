@@ -34,6 +34,9 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
@@ -42,7 +45,6 @@ import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchViewImpl;
 import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
-import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
@@ -52,42 +54,43 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 /**
  * The isolated MVP container for workspace editing.
  */
-public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer{
+public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchActivity>{
 
     private WorkbenchPlace place;
     private WorkbenchRegistry workbenchRegistry;
 
-    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, Shell shell) {
-        super("workbench-" + place.getWorkbenchName(), shell);
+    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, Shell shell, ComponentProvider componentProvider) {
+        super("workbench-" + place.getWorkbenchName(), shell, componentProvider);
         this.place = place;
         this.workbenchRegistry = workbenchRegistry;
 
     }
 
     @Override
-    protected Class<? extends Activity> getActivityClass() {
+    protected Class<WorkbenchActivity> getActivityClass() {
         return WorkbenchActivity.class;
     }
 
     @Override
-    protected Object[] getAdditionalConstructorParameters() {
+    protected Object[] getActivityParameters() {
         return new Object[]{place};
     }
 
     @Override
-    protected void populateComponentProvider(MutableComponentProvider componentProvider) {
-        componentProvider.setInstance(WorkbenchDefinition.class, workbenchRegistry.getWorkbench(place.getWorkbenchName()));
+    protected void configureComponentProvider(MutableComponentProvider componentProvider) {
 
-        componentProvider.setImplementation(WorkbenchView.class, WorkbenchViewImpl.class);
-        componentProvider.setImplementation(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
+        componentProvider.registerInstance(WorkbenchDefinition.class, workbenchRegistry.getWorkbench(place.getWorkbenchName()));
 
-        componentProvider.setImplementation(ItemListActivityMapper.class, ItemListActivityMapper.class);
-        componentProvider.setImplementation(TreeActivity.class, TreeActivity.class);
+        componentProvider.registerImplementation(WorkbenchView.class, WorkbenchViewImpl.class);
+        componentProvider.registerImplementation(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
 
-        componentProvider.setImplementation(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
-        componentProvider.setImplementation(DetailViewActivity.class, DetailViewActivity.class);
+        componentProvider.registerImplementation(ItemListActivityMapper.class, ItemListActivityMapper.class);
+        componentProvider.registerImplementation(TreeActivity.class, TreeActivity.class);
 
-        componentProvider.setConfigurationPath(TreeBuilderProvider.class, "/modules/admin-central/components/treeBuilderProvider");
+        componentProvider.registerImplementation(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
+        componentProvider.registerImplementation(DetailViewActivity.class, DetailViewActivity.class);
+
+        componentProvider.registerConfiguredComponent(TreeBuilderProvider.class, ContentRepository.CONFIG, "/modules/admin-central/components/treeBuilderProvider", false);
     }
 
     @Override

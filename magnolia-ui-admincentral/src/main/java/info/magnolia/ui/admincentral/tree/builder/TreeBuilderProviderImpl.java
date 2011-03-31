@@ -33,6 +33,9 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
+import info.magnolia.cms.security.User;
+import info.magnolia.ui.model.settings.UISettings;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +44,28 @@ import java.util.List;
  */
 public class TreeBuilderProviderImpl implements TreeBuilderProvider {
 
+    //injected
+    private User user;
+    private UISettings uiSettings;
+
+    // content2bean
     private List<TreeBuilder> treeBuilders = new ArrayList<TreeBuilder>();
 
+
+    /**
+     * Is needed so that we can make a proxy (reloading configuration).
+     * TODO: is this really necessary?
+     */
+    protected TreeBuilderProviderImpl() {
+    }
+
+    public TreeBuilderProviderImpl(User user, UISettings uiSettings) {
+        this.user = user;
+        this.uiSettings = uiSettings;
+    }
+
     public TreeBuilder getBuilder() {
-        // TODO: Decide how to handle if there's more than one.
+        // FIXME: use user and uiSettings
         return treeBuilders.get(0);
     }
 

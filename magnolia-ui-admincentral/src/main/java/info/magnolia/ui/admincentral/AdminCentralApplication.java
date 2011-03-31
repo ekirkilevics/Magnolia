@@ -34,11 +34,13 @@
 package info.magnolia.ui.admincentral;
 
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.ComponentProviders;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.pico.PicoComponentProvider;
+import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
@@ -61,13 +63,9 @@ import info.magnolia.ui.model.settings.InputDevice;
 import info.magnolia.ui.model.settings.UISettings;
 import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
@@ -77,7 +75,7 @@ import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
  */
 public class AdminCentralApplication extends Application implements HttpServletRequestListener {
 
-    private PicoComponentProvider componentProvider;
+    private MutableComponentProvider componentProvider;
 
     @Override
     public void init() {
@@ -91,45 +89,37 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
     private void createComponentProvider() {
 
-        PicoComponentProvider provider = (PicoComponentProvider) Components.getComponentProvider();
-        PicoBuilder builder = new PicoBuilder(provider.getContainer()).withConstructorInjection().withCaching();
-
-        MutablePicoContainer container = builder.build();
+        componentProvider = ComponentProviders.createChild(Components.getComponentProvider());
 
 
-        componentProvider = new PicoComponentProvider(container, provider);
+        componentProvider.registerConfiguredComponent(NavigationProvider.class, ContentRepository.CONFIG, "/modules/admin-central/components/navigationProvider", false);
 
-        //FIXME better solution than just creating properties
-        Properties properties = new Properties();
-        properties.put(NavigationProvider.class.getName(), "/modules/admin-central/components/navigationProvider");
-        componentProvider.parseConfiguration(properties);
+        componentProvider.registerInstance(ComponentProvider.class, componentProvider);
 
-        container.addComponent(ComponentProvider.class, componentProvider);
+        componentProvider.registerInstance(Application.class, this);
+        componentProvider.registerImplementation(AdminCentralView.class, AdminCentralViewImpl.class);
+        componentProvider.registerImplementation(AdminCentralPresenter.class, AdminCentralPresenter.class);
+        componentProvider.registerImplementation(MainActivityMapper.class, MainActivityMapper.class);
 
-        container.addComponent(Application.class, this);
-        container.addComponent(AdminCentralView.class, AdminCentralViewImpl.class);
-        container.addComponent(AdminCentralPresenter.class, AdminCentralPresenter.class);
-        container.addComponent(MainActivityMapper.class, MainActivityMapper.class);
+        componentProvider.registerImplementation(DialogBuilder.class, VaadinDialogBuilder.class);
+        componentProvider.registerImplementation(DialogPresenter.class, DialogPresenter.class);
 
-        container.addComponent(DialogBuilder.class.getName(), VaadinDialogBuilder.class.getName());
-        container.addComponent(DialogPresenter.class, DialogPresenter.class);
+        componentProvider.registerImplementation(NavigationView.class, NavigationViewImpl.class);
+        componentProvider.registerImplementation(NavigationPermissionSchema.class, NavigationPermissionSchemaImpl.class);
+        componentProvider.registerImplementation(NavigationActivityMapper.class, NavigationActivityMapper.class);
+        componentProvider.registerImplementation(NavigationActivity.class, NavigationActivity.class);
 
-        container.addComponent(NavigationView.class, NavigationViewImpl.class);
-        container.addComponent(NavigationPermissionSchema.class, NavigationPermissionSchemaImpl.class);
-        container.addComponent(NavigationActivityMapper.class, NavigationActivityMapper.class);
-        container.addComponent(NavigationActivity.class, NavigationActivity.class);
+        componentProvider.registerImplementation(EmbeddedView.class, EmbeddedViewImpl.class);
 
-        container.addComponent(EmbeddedView.class, EmbeddedViewImpl.class);
+        componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);
+        componentProvider.registerImplementation(Shell.class, ShellImpl.class);
+        componentProvider.registerImplementation(PlaceController.class, PlaceController.class);
+        componentProvider.registerImplementation(NavigationActionFactory.class, NavigationActionFactory.class);
 
-        container.addComponent(EventBus.class, SimpleEventBus.class);
-        container.addComponent(Shell.class, ShellImpl.class);
-        container.addComponent(PlaceController.class, PlaceController.class);
-        container.addComponent(NavigationActionFactory.class, NavigationActionFactory.class);
-
-        container.addComponent(User.class, MgnlContext.getUser());
+        componentProvider.registerInstance(User.class, MgnlContext.getUser());
 
         // TODO do it dynamic
-        container.addComponent(UISettings.class, new UISettings(Direction.LTR, InputDevice.MOUSE));
+        componentProvider.registerInstance(UISettings.class, new UISettings(Direction.LTR, InputDevice.MOUSE));
 
         // TODO how do we find and register classes from other modules that will be used by AdminCentral
         // TODO maybe configured in the module descriptors with scopes specified
