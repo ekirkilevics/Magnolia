@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.StatusColumnDefinition;
 
 import java.io.Serializable;
@@ -89,7 +89,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             Node node = (Node) item;
             Component component = null;
             if (activation) {
-                component = createIcon(JCRMetadataUtil.getActivationStatusIconURL(node));
+                component = createIcon(UIUtil.getActivationStatusIconURL(node));
             }
 
             if (permissions) {
@@ -105,7 +105,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
                     HorizontalLayout horizontal = new HorizontalLayout();
                     horizontal.addComponent(component);
                     component =
-                            createIcon(MgnlContext.getContextPath() + JCRMetadataUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif");
+                            createIcon(MgnlContext.getContextPath() + UIUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif");
                     horizontal.addComponent(component);
                     component = horizontal;
                 }

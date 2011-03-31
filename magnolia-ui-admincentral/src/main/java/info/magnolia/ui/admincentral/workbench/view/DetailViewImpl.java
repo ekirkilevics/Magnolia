@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.workbench.view;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
@@ -174,7 +175,7 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
 
                 getField(LAST_MOD).setValue(JCRMetadataUtil.getLastModification(node).getTime());
 
-                getField(STATUS).setIcon(new ExternalResource(JCRMetadataUtil.getActivationStatusIconURL(node)));
+                getField(STATUS).setIcon(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
                 getField(STATUS).setValue(JCRMetadataUtil.getMetaData(node).getActivationStatus());
             } catch (RepositoryException e) {
                 // TODO proper ExceptionHandling
