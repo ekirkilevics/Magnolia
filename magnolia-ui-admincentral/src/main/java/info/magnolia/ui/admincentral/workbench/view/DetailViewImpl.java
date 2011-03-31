@@ -33,6 +33,10 @@
  */
 package info.magnolia.ui.admincentral.workbench.view;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -44,13 +48,9 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalSplitPanel;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * Displays commands and details about the currently selected item.
