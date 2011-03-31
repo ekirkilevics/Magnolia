@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.jcr;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;

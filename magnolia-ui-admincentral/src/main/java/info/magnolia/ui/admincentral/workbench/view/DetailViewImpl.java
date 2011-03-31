@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.workbench.view;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 

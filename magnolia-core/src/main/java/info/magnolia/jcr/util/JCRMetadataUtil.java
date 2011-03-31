@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr;
+package info.magnolia.jcr.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;

@@ -43,9 +43,9 @@ import javax.jcr.RepositoryException;
 
 import com.vaadin.ui.Component;
 import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;

@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.column;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
-import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
 import java.io.Serializable;
