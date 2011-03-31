@@ -35,7 +35,6 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -44,18 +43,20 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Iterator;
 
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Iterator;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -80,7 +81,7 @@ public class ExportPage extends TemplatedMVCHandler {
      * View value for the export file stream (won't render anything)
      */
     public static final String VIEW_EXPORT="export";
-    
+
     /**
      * Logger.
      */
@@ -261,12 +262,12 @@ public class ExportPage extends TemplatedMVCHandler {
         pathName = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
         if (DataTransporter.DOT.equals(pathName)) { //$NON-NLS-1$
             // root node
-            pathName = StringUtils.EMPTY; 
-        } 
-        
+            pathName = StringUtils.EMPTY;
+        }
+
         response.setHeader("content-disposition", "attachment; filename=" + mgnlRepository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream baseOutputStream = response.getOutputStream();
- 
+
         try {
             DataTransporter.executeExport(
                 baseOutputStream,
@@ -302,7 +303,7 @@ public class ExportPage extends TemplatedMVCHandler {
         }
         return true;
     }
-    
+
     public void renderHtml(String view) throws IOException {
         // if we are exporing the file, everything is already done --> do not render
         if(VIEW_EXPORT.equals(view)){

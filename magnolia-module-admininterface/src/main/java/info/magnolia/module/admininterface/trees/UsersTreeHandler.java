@@ -33,13 +33,6 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.exchange.ExchangeException;
@@ -49,8 +42,14 @@ import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author had

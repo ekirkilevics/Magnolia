@@ -33,12 +33,11 @@
  */
 package info.magnolia.module.admininterface.pages;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.module.admininterface.TemplatedMVCHandler;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 /**
  *

@@ -36,7 +36,6 @@ package info.magnolia.module.admininterface.dialogs;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.module.admininterface.DialogHandlerManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 import info.magnolia.module.admininterface.InvalidDialogHandlerException;
@@ -44,11 +43,13 @@ import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.module.templating.Paragraph;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.objectfactory.Components;
-import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This dialog hander delegates to a dialog handler representing the dialog assigned to the paragraph we edit (or create).

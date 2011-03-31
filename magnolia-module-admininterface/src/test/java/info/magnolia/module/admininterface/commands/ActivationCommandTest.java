@@ -34,12 +34,12 @@
 package info.magnolia.module.admininterface.commands;
 
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.Syndicator;
@@ -49,12 +49,17 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
+
+import java.util.ArrayList;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 
 /**
