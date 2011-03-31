@@ -46,6 +46,7 @@ public class EmbeddedViewImpl extends Embedded implements EmbeddedView {
 
     public EmbeddedViewImpl(){
         setType(Embedded.TYPE_BROWSER);
+        addStyleName("m-embedded-view");
         setSizeFull();
     }
 
