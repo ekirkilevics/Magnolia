@@ -36,17 +36,21 @@ package info.magnolia.cms.security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
+import static info.magnolia.cms.security.SecurityConstants.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.query.Query;
@@ -117,15 +121,21 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
     }
 
     protected Group newGroupInstance(Node node) throws RepositoryException {
-        List<String> groups = new ArrayList<String>();
-        for (NodeIterator iter = node.getNode("groups").getNodes();iter.hasNext();) {
-            Node subgroup = iter.nextNode();
-            groups.add(subgroup.getName());
+        // remove duplicates
+        Collection<String> groups = new HashSet<String>();
+        if (node.hasNode(NODE_GROUPS)) {
+            for (PropertyIterator iter = node.getNode(NODE_GROUPS).getProperties();iter.hasNext();) {
+                Property subgroup = iter.nextProperty();
+                groups.add(getResourceName(subgroup.getString()));
+            }
         }
-        List<String> roles = new ArrayList<String>();
-        for (NodeIterator iter = node.getNode("roles").getNodes();iter.hasNext();) {
-            Node role = iter.nextNode();
-            roles.add(role.getName());
+        Collection<String> roles = new HashSet<String>();
+        if (node.hasNode(NODE_ROLES)) {
+            RoleManager roleMan = SecuritySupport.Factory.getInstance().getRoleManager();
+            for (PropertyIterator iter = node.getNode(NODE_ROLES).getProperties();iter.hasNext();) {
+                Property role = iter.nextProperty();
+                roles.add(roleMan.getRoleNameById(role.getString()));
+            }
         }
         MgnlGroup group = new MgnlGroup(node.getIdentifier(), node.getName(), groups, roles);
         return group;

@@ -33,29 +33,27 @@
  */
 package info.magnolia.test.mock;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
+import javax.jcr.Item;
 
 /**
- * Mock implementation of JCR Node Iterator.
+ * Mock implementation of generic JCR Iterator.
  * @author had
  * @version $Id: $
  */
-public class MockNodeIterator implements NodeIterator {
+public class MockJCRIterator<T extends Item> {
 
-    private final Iterator<Node> internalIterator;
+    private final Iterator<T> internalIterator;
     private long count = 0;
-    private final List<Node> list;
+    private final Collection<T> list;
 
-    public MockNodeIterator(List<Node> list) {
+    public MockJCRIterator(Collection<T> list) {
         this.list = list;
         this.internalIterator = list.iterator();
     }
 
-    public Node nextNode() {
+    public T nextItem() {
         count++;
         return internalIterator.next();
     }

@@ -179,6 +179,17 @@ public abstract class RepositoryBackedSecurityManager {
         return nodeID;
     }
 
+    protected String getResourceName(final String resourceId) {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<String>(getRepositoryName()) {
+
+            @Override
+            public String doExec(Session session) throws Throwable {
+                return session.getNodeByIdentifier(resourceId).getName();
+            }
+
+        });
+    }
+
     protected void remove(final String principalName, final String resourceName, final String resourceTypeName) {
         // FIXME: need same thing as add() method
         try {

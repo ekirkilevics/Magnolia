@@ -140,7 +140,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected void load() {
-        MgnlContext.doInSystemContext(new SilentSessionOp<Void>(repository, true) {
+        MgnlContext.doInSystemContext(new SilentSessionOp<Void>(repository) {
 
             @Override
             public Void doExec(Session session) throws RepositoryException {

@@ -36,57 +36,23 @@ package info.magnolia.test.mock;
 import info.magnolia.cms.core.Content;
 
 import java.util.Collection;
-import java.util.Iterator;
-
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 /**
+ * Iterator allowing to iterate over collection of nodes or content. Due to runtime erasure, constructor allows generic collection, but will fail with CCE in case of passing in other collection then Content or Node.
+ *
  * @author pbaerfuss
  * @version $Id$
  *
  */
-public class MockJCRNodeIterator implements NodeIterator {
+public class MockJCRNodeIterator extends MockJCRIterator<Node> implements NodeIterator {
 
-    private final Collection<Content> children;
-
-    private final Iterator<Content> iterator;
-
-    private int position;
-
-    public MockJCRNodeIterator(Collection<Content> children) {
-        this.children = children;
-        this.iterator = children.iterator();
-    }
-
-    public void remove() {
-        this.iterator.remove();
-    }
-
-    public Object next() {
-        position ++;
-        return this.iterator.next();
-    }
-
-    public boolean hasNext() {
-        return this.iterator.hasNext();
-    }
-
-    public void skip(long skipNum) {
-        for (int i = 0; i < skipNum; i++) {
-            next();
-        }
-    }
-
-    public long getSize() {
-        return this.children.size();
-    }
-
-    public long getPosition() {
-        return position;
+    public MockJCRNodeIterator(Collection children) {
+        super(children.size() > 0 && children.iterator().next() instanceof Content ? new Content2NodeCollectionWrapper(children) : children);
     }
 
     public Node nextNode() {
-        return ((Content)next()).getJCRNode();
+        return nextItem();
     }
 }

@@ -36,8 +36,6 @@ package info.magnolia.test.mock;
 import info.magnolia.cms.core.NodeData;
 
 import java.util.Collection;
-import java.util.Iterator;
-
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 
@@ -46,47 +44,13 @@ import javax.jcr.PropertyIterator;
  * @version $Id$
  *
  */
-public class MockJCRPropertyIterator implements PropertyIterator {
+public class MockJCRPropertyIterator extends MockJCRIterator<Property> implements PropertyIterator {
 
-    private int position =0;
-
-    private Collection<NodeData> nodeDatas;
-
-    private Iterator<NodeData> iterator;
-
-    public MockJCRPropertyIterator(Collection<NodeData> nodeDatas) {
-        this.nodeDatas = nodeDatas;
-        iterator = nodeDatas.iterator();
-    }
-
-    public void remove() {
-        this.iterator.remove();
-    }
-
-    public Object next() {
-        position ++;
-        return this.iterator.next();
-    }
-
-    public boolean hasNext() {
-        return this.iterator.hasNext();
-    }
-
-    public void skip(long skipNum) {
-        for (int i = 0; i < skipNum; i++) {
-            next();
-        }
-    }
-
-    public long getSize() {
-        return this.nodeDatas.size();
-    }
-
-    public long getPosition() {
-        return position;
+    public MockJCRPropertyIterator(Collection children) {
+        super(children.size() > 0 && children.iterator().next() instanceof NodeData ? new NodeData2PropertyCollectionWrapper(children) : children);
     }
 
     public Property nextProperty() {
-        return ((NodeData)next()).getJCRProperty();
+        return super.nextItem();
     }
 }

@@ -49,10 +49,12 @@ import java.util.Collection;
 public class MgnlGroupTest extends TestCase {
     private MgnlGroupManager gman;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
+        sec.setRoleManager(new MgnlRoleManager());
         ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
@@ -61,6 +63,7 @@ public class MgnlGroupTest extends TestCase {
         gman = new MgnlGroupManager();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         MgnlContext.setInstance(null);
         super.tearDown();

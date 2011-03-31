@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext.Op;
 
 import javax.jcr.RepositoryException;
@@ -48,21 +48,28 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $
  * @param <R>
  */
-public abstract class SilentSessionOp<R> implements Op<R, RuntimeException> {
+public abstract class OnInitSilentSessionOp<R> implements Op<R, RuntimeException> {
 
     protected static final Logger log = LoggerFactory.getLogger(SessionOp.class);
 
     private final String repository;
 
-    public SilentSessionOp(String repository) {
+    private boolean closeOnExit;
+
+    public OnInitSilentSessionOp(String repository) {
+        this(repository, true);
+    }
+
+    public OnInitSilentSessionOp(String repository, boolean closeOnExit) {
         this.repository = repository;
+        this.closeOnExit = closeOnExit;
     }
 
     public R exec() {
         Session session = null;
         try {
             // can't do ... need a session before repo is setup and pico is initialized ...
-            session = MgnlContext.getSession(repository);
+            session = WorkspaceAccessUtil.getInstance().createAdminRepositorySession(repository);
         } catch (RepositoryException e) {
             log.error("failed to retrieve repository " + repository + " with " + e.getMessage(), e);
         }
@@ -71,6 +78,10 @@ public abstract class SilentSessionOp<R> implements Op<R, RuntimeException> {
         } catch (Throwable t) {
             log.error("Failed to execute " + toString() + " session operation with " + t.getMessage(), t);
             return null;
+        } finally {
+            if (closeOnExit && session != null) {
+                session.logout();
+            }
         }
     }
 

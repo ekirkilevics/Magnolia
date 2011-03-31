@@ -81,7 +81,7 @@ public class MockQueryResult implements QueryResult {
         List<Node> results = new ArrayList<Node>();
         // mocking up real search qould be a pain, so for now we just return all ... could be substituted for op that will return expected results
         addChildren(session.getRootNode().getNodes(), results);
-        return new MockNodeIterator(results);
+        return new MockJCRNodeIterator(results);
     }
 
     private void addChildren(NodeIterator nodes, List<Node> results) throws RepositoryException {

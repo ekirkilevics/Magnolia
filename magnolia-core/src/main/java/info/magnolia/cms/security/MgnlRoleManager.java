@@ -185,4 +185,8 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
         return ContentRepository.USER_ROLES;
     }
 
+    public String getRoleNameById(String string) {
+        return getResourceName(string);
+    }
+
 }

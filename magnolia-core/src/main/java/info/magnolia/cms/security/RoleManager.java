@@ -60,7 +60,15 @@ public interface RoleManager {
      */
     public Map<String, ACL> getACLs(String role) throws UnsupportedOperationException;
 
-
+    /**
+     * Adds permission to the specified roles, assuming current user has enough rights to perform such operation.
+     */
     public void addPermission(Role role, String workspaceName, String path, long permission);
+
+
+    /**
+     * Retrieves role name by its identifier.
+     */
+    public String getRoleNameById(String string);
 
 }
