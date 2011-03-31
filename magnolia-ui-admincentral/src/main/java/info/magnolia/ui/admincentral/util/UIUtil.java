@@ -47,6 +47,7 @@ import javax.jcr.Node;
 public class UIUtil {
 
     public static final String RESOURCES_ICONS_16_PATH = "/.resources/icons/16/";
+    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd, HH:mm";
 
     // TODO should be somewhere in a UI-Utility
     public static String getActivationStatusIconURL(Node node) {

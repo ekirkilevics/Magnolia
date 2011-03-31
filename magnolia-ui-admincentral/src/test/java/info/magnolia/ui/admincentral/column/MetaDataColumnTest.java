@@ -36,6 +36,7 @@ package info.magnolia.ui.admincentral.column;
 import static junit.framework.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
 import java.util.Calendar;
@@ -56,7 +57,7 @@ import org.junit.Test;
  */
 public class MetaDataColumnTest {
     private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(MetaDataColumn.DEFAULT_DATE_PATTERN);
+    private FastDateFormat dateFormat = FastDateFormat.getInstance(UIUtil.DEFAULT_DATE_PATTERN);
     private Date now = new Date();
 
     @Before

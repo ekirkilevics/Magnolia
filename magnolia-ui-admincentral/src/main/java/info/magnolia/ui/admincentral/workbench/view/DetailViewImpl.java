@@ -158,7 +158,7 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
             addField(PATH, pathField);
 
             DateField lastMod = new DateField(LAST_MOD);
-            lastMod.setDateFormat("yyyy-MM-dd");
+            lastMod.setDateFormat(UIUtil.DEFAULT_DATE_PATTERN);
             lastMod.setEnabled(false);
             addField(LAST_MOD, lastMod);
 

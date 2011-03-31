@@ -37,6 +37,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
 import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
 import java.io.Serializable;
@@ -57,8 +58,6 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
 
     private String datePattern;
 
-    protected static final String DEFAULT_DATE_PATTERN = "yy-MM-dd, HH:mm";
-
     public MetaDataColumn(MetaDataColumnDefinition def) {
         super(def);
     }
@@ -68,7 +67,7 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
         if (item instanceof Node) {
             Node node = (Node) item;
             Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
-            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : DEFAULT_DATE_PATTERN;
+            final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : UIUtil.DEFAULT_DATE_PATTERN;
             final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
             return date != null ? new Label(DATE_FORMAT.format(date.getTime())) : new Label("");
         }
