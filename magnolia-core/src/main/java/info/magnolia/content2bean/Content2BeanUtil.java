@@ -131,7 +131,6 @@ public class Content2BeanUtil {
         return Components.getSingleton(Content2BeanTransformer.class);
     }
 
-
     /**
      * @see Content2BeanProcessor
      * @deprecated since 5.0 - only used in tests - use {@link Content2Bean}
@@ -162,6 +161,14 @@ public class Content2BeanUtil {
      */
     public static Object toBean(Content node, boolean recursive) throws Content2BeanException {
         return toBean(node, recursive, getContent2BeanTransformer());
+    }
+
+    /**
+     * @see Content2BeanProcessor
+     * @deprecated since 5.0- only used in DelegateVoter - use {@link Content2Bean}
+     */
+    public static Object toBean(Content node, boolean recursive, ComponentProvider componentProvider) throws Content2BeanException {
+        return toBean(node, recursive, getContent2BeanTransformer(), componentProvider);
     }
 
     /**
