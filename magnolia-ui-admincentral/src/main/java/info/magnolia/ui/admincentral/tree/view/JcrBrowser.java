@@ -81,7 +81,7 @@ public class JcrBrowser extends TreeTable {
 
     private TreeModel treeModel;
 
-    public JcrBrowser(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
+    public JcrBrowser(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) {
         this.workbenchDefinition = workbenchDefinition;
         this.treeModel = treeModel;
         // TODO the view should not know the shell
@@ -135,7 +135,7 @@ public class JcrBrowser extends TreeTable {
             this.actionDefinition = menuItemDefinition.getActionDefinition();
         }
 
-        public void handleAction(ContainerItemId itemId) throws ActionExecutionException {
+        public void handleAction(ContainerItemId itemId) {
             try {
                 try {
                     treeModel.execute(actionDefinition, container.getJcrItem(itemId));
@@ -168,11 +168,7 @@ public class JcrBrowser extends TreeTable {
             }
 
             public void handleAction(Action action, Object sender, Object target) {
-                try {
-                    ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
-                } catch (ActionExecutionException e) {
-                    shell.showError("Can't execute action.", e);
-                }
+              ((JcrBrowserAction) action).handleAction((ContainerItemId) target);
             }
         });
     }
