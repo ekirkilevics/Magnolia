@@ -35,8 +35,8 @@ package info.magnolia.ui.admincentral.tree.action;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.JCRMetadataUtil;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.event.EventBus;
 
 import javax.jcr.Node;

@@ -37,7 +37,7 @@ import java.util.List;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.view.DetailView;

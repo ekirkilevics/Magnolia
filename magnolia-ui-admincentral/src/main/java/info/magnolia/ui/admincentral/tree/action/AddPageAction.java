@@ -34,10 +34,10 @@
 package info.magnolia.ui.admincentral.tree.action;
 
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.jcr.util.HackContent;
-import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.ui.admincentral.jcr.HackContent;
+import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.ui.framework.event.EventBus;
 
 import javax.jcr.Node;

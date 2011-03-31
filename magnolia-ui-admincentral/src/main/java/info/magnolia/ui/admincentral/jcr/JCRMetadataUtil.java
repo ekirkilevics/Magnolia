@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.ui.admincentral.jcr;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -47,8 +47,7 @@ import info.magnolia.logging.AuditLoggingUtil;
  * should be based on current MetaData-support implemented in the Content-API. Right now it
  * delegates partly to the "old" MetaData-support.
  *
- * @author dlipp
- * @version $Id$
+ * @deprecated temporary
  */
 public class JCRMetadataUtil {
 

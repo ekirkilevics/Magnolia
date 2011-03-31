@@ -31,23 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.jcr.util;
+package info.magnolia.ui.admincentral.jcr;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.MetaData;
 
 import javax.jcr.Node;
-
+import javax.jcr.RepositoryException;
 
 /**
- * Collection of utilities temporarily needed as long as we have no clear vision of the future of
- * our Content API.
+ * Hack implementation of a Content. Temporarily used as long as we don't have a clear vision where
+ * to go with the Content-API.
  *
- * @author dlipp
- * @version $Id$
+ * @deprecated temporary
  */
-public class TemporaryHackUtil {
+public class HackContent extends DefaultContent {
 
-    public static Content createHackContentFrom(Node node) {
-        return new HackContent(node);
+    public HackContent(Node node) {
+        super();
+        setNode(node);
+    }
+
+    public Content getParent() throws RepositoryException {
+        return (new HackContent(this.node.getParent()));
+    }
+
+    public MetaData getMetaData() {
+        return JCRMetadataUtil.getMetaData(this.node);
     }
 }

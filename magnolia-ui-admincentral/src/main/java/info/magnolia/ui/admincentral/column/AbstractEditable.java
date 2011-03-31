@@ -44,7 +44,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.jcr.util.JCRUtil;
+import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.editor.Editor;
 
 /**
