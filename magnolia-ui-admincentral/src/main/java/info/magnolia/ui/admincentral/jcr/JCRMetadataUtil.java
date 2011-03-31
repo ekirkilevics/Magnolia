@@ -55,7 +55,7 @@ import org.apache.commons.lang.UnhandledException;
  */
 public class JCRMetadataUtil {
 
-    private static final String RESOURCES_ICONS_16_PATH = "/.resources/icons/16/";
+    public static final String RESOURCES_ICONS_16_PATH = "/.resources/icons/16/";
 
     private static class JCRMetaData extends MetaData {
 

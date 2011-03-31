@@ -105,7 +105,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
                     HorizontalLayout horizontal = new HorizontalLayout();
                     horizontal.addComponent(component);
                     component =
-                            createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + "pen_blue_canceled.gif");
+                            createIcon(MgnlContext.getContextPath() + JCRMetadataUtil.RESOURCES_ICONS_16_PATH + "pen_blue_canceled.gif");
                     horizontal.addComponent(component);
                     component = horizontal;
                 }
