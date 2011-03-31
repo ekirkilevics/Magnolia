@@ -79,7 +79,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
         splitPanel.addComponent(detailViewPort);
         splitPanel.setSizeFull();
 
-        SearchForm searchForm = new SearchForm();
+        //SearchForm searchForm = new SearchForm();
 
         outerLayout = new  VerticalLayout();
         outerLayout.setSizeFull();
@@ -87,7 +87,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
         WorkbenchHeaderViewImpl workbenchHeaderView = new WorkbenchHeaderViewImpl();
 
 
-        outerLayout.addComponent(searchForm);
+        //outerLayout.addComponent(searchForm);
         outerLayout.addComponent(workbenchHeaderView);
         outerLayout.addComponent(splitPanel);
 

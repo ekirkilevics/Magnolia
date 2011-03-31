@@ -49,6 +49,7 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  *
  * TODO: check where to move, make nice design, animate
+ * TODO: move to a different package?
  */
 public class SearchForm extends Form {
 
@@ -56,7 +57,7 @@ public class SearchForm extends Form {
         final GridLayout grid = new GridLayout(2, 1);
         setLayout(grid);
 
-        grid.setHeight(50, Sizeable.UNITS_PIXELS);
+        grid.setHeight(40, Sizeable.UNITS_PIXELS);
         grid.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
         // Note: right now the only component in the first row - prepare for fading in the other stuff only after

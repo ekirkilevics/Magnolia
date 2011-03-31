@@ -55,6 +55,7 @@ import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
+import info.magnolia.ui.admincentral.workbench.view.SearchForm;
 
 /**
  * Main application view layout.
@@ -80,27 +81,32 @@ public class AdminCentralViewImpl implements AdminCentralView {
         Messages messages = MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
 
         menuDisplay = new VerticalLayout();
-        menuDisplay.setHeight("100%");
+        menuDisplay.setHeight(100,Sizeable.UNITS_PERCENTAGE);
+        menuDisplay.setMargin(false, true, false, true);
 
         mainContainer = new VerticalLayout();
         mainContainer.setSizeFull();
 
-        final HorizontalSplitPanel mainSplitPanel = new HorizontalSplitPanel();
-        mainSplitPanel.setSplitPosition(15);
-        mainSplitPanel.setSizeFull();
-        mainSplitPanel.addComponent(menuDisplay);
-        mainSplitPanel.addComponent(mainContainer);
+        final HorizontalLayout mainLayout = new HorizontalLayout();
+        mainLayout.setSizeFull();
+        mainLayout.addComponent(menuDisplay);
+        mainLayout.addComponent(mainContainer);
+        mainLayout.setExpandRatio(menuDisplay, 1);
+        mainLayout.setExpandRatio(mainContainer, 5);
 
         final HorizontalLayout innerContainer = new HorizontalLayout();
         innerContainer.setSizeFull();
-        innerContainer.addComponent(mainSplitPanel);
-        innerContainer.setExpandRatio(mainSplitPanel, 1.0f);
+        innerContainer.addComponent(mainLayout);
+        innerContainer.setExpandRatio(mainLayout, 1.0f);
 
         final AbsoluteLayout headerLayout = createHeaderLayout(messages);
 
         final VerticalLayout outerContainer = new VerticalLayout();
         outerContainer.setSizeFull();
         outerContainer.addComponent(headerLayout);
+
+        final SearchForm searchForm = new SearchForm();
+        outerContainer.addComponent(searchForm);
         outerContainer.addComponent(innerContainer);
         outerContainer.setExpandRatio(headerLayout, 1.0f);
         outerContainer.setExpandRatio(innerContainer, 90.0f);
@@ -110,10 +116,10 @@ public class AdminCentralViewImpl implements AdminCentralView {
 
     private AbsoluteLayout createHeaderLayout(Messages messages) {
 
-        // TODO: this layout breaks completely on long user name or with different languages (eg spanish). It needs to be floating instead
+        // FIXME: this layout breaks completely on long user name or with different languages (eg spanish). It needs to be floating instead
 
         final AbsoluteLayout headerLayout = new AbsoluteLayout();
-        headerLayout.setHeight(50, Sizeable.UNITS_PIXELS);
+        headerLayout.setHeight(45, Sizeable.UNITS_PIXELS);
         headerLayout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
         final Embedded magnoliaLogo = new Embedded();
@@ -125,7 +131,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
 
         final Label loggedUser = new Label(messages.get("central.user"));
         loggedUser.setWidth(35, Sizeable.UNITS_PIXELS);
-        headerLayout.addComponent(loggedUser, "right: 120px; top: 10px;");
+        headerLayout.addComponent(loggedUser, "right: 130px; top: 20px;");
 
         final User user = MgnlContext.getUser();
         final Button userPreferences = new Button(user.getName());
@@ -143,11 +149,11 @@ public class AdminCentralViewImpl implements AdminCentralView {
                 }
             }
         });
-        headerLayout.addComponent(userPreferences, "right: 65px; top: 10px;");
+        headerLayout.addComponent(userPreferences, "right: 75px; top: 20px;");
 
         final Label divider = new Label(" |");
         divider.setWidth(10, Sizeable.UNITS_PIXELS);
-        headerLayout.addComponent(divider, "right: 50px; top: 10px;");
+        headerLayout.addComponent(divider, "right: 60px; top: 20px;");
 
         final Button logout = new Button(messages.get("central.logout"));
         logout.setStyleName(BaseTheme.BUTTON_LINK);
@@ -158,7 +164,7 @@ public class AdminCentralViewImpl implements AdminCentralView {
                 application.getMainWindow().getApplication().close();
             }
         });
-        headerLayout.addComponent(logout, "right: 10px; top: 10px;");
+        headerLayout.addComponent(logout, "right: 20px; top: 20px;");
 
         return headerLayout;
     }
