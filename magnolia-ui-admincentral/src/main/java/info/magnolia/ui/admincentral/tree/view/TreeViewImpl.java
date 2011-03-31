@@ -82,14 +82,17 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
     }
 
     private void presenterOnItemSelection(ContainerItemId id) {
-        presenter.onItemSelection(jcrBrowser.getJcrItem(id));
+        if (presenter != null) {
+            presenter.onItemSelection(jcrBrowser.getJcrItem(id));
+        }
     }
 
     /**
      *
-     * @param path relative to the tree root, must start with /
+     * @param path
+     *            relative to the tree root, must start with /
      */
-    public void select(String path){
+    public void select(String path) {
         jcrBrowser.select(path);
     }
 
@@ -104,7 +107,6 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
     public Component asVaadinComponent() {
         return jcrBrowser;
     }
-
 
     public void setPresenter(TreeView.Presenter presenter) {
         this.presenter = presenter;
