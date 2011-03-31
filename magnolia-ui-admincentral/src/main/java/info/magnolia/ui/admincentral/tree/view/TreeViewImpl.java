@@ -33,16 +33,18 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.ui.Component;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
+import javax.jcr.Item;
+
+import com.vaadin.addon.treetable.TreeTable;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.ui.Component;
 
 /**
  * Vaadin UI component that displays a tree.
@@ -55,19 +57,32 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     private TreeView.Presenter presenter;
 
-    public TreeViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) throws RepositoryException {
+    public TreeViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) {
 
         jcrBrowser = new JcrBrowser(workbenchDefinition, treeModel, shell);
         jcrBrowser.setSizeFull();
+        // next two lines are required to make the browser (TreeTable) react on selection change via mouse
+        jcrBrowser.setImmediate(true);
+        jcrBrowser.setNullSelectionAllowed(false);
         jcrBrowser.addListener(new ItemClickEvent.ItemClickListener() {
 
             public void itemClick(ItemClickEvent event) {
 
-                // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
-
-                presenter.onItemSelection(jcrBrowser.getJcrItem((ContainerItemId) event.getItemId()));
+                // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a
+                // ContainerItemId
+                presenterOnItemSelection((ContainerItemId) event.getItemId());
             }
         });
+
+        jcrBrowser.addListener(new TreeTable.ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                presenterOnItemSelection((ContainerItemId) event.getProperty().getValue());
+            }
+        });
+    }
+
+    private void presenterOnItemSelection(ContainerItemId id) {
+        presenter.onItemSelection(jcrBrowser.getJcrItem(id));
     }
 
     /**
