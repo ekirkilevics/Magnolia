@@ -89,9 +89,7 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
             Node node = (Node) item;
             Component component = null;
             if (activation) {
-                component =
-                        createIcon(MgnlContext.getContextPath() + "/.resources/icons/16/"
-                                + JCRMetadataUtil.getActivationStatusIcon(node));
+                component = createIcon(JCRMetadataUtil.getActivationStatusIconURL(node));
             }
 
             if (permissions) {
@@ -117,12 +115,14 @@ public class StatusColumn extends AbstractColumn<StatusColumnDefinition> impleme
         return null;
     }
 
-    private Embedded createIcon(String resource) {
+    private Embedded createIcon(String path) {
         Embedded embedded = new Embedded();
         embedded.setType(Embedded.TYPE_IMAGE);
-        embedded.setSource(new ExternalResource(resource));
+        embedded.setSource(new ExternalResource(path));
         embedded.setWidth(16, Sizeable.UNITS_PIXELS);
         embedded.setHeight(16, Sizeable.UNITS_PIXELS);
+
         return embedded;
     }
+
 }

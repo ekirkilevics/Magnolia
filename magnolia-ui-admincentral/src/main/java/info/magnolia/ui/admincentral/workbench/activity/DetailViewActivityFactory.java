@@ -31,26 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.workbench.activity;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.framework.activity.ActivityMapper;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.model.builder.FactoryBase;
 
-import java.util.List;
-
-import javax.jcr.Node;
 /**
- * The detail view showing the list of available actions and some detail information.
+ *
+ * Returns the {@link Activity} to perform when the current selected item on a tree has changed.
+ * @author fgrilli
+ *
  */
-public interface DetailView extends View{
-    /**
-     * Presenter that is called when the user selects a command.
-     */
-    public interface Presenter {
-        void onCommandSelected(String commandName);
+public class DetailViewActivityFactory extends FactoryBase<Place, Activity> implements ActivityMapper {
+
+    public DetailViewActivityFactory(ComponentProvider componentProvider) {
+        super(componentProvider);
+        addMapping(ItemSelectedPlace.class, DetailViewActivity.class);
     }
 
-    void showActions(List<MenuItemDefinition> contextMenuItems);
-
-    void showDetails(Node node);
+    public Activity getActivity(final Place place) {
+        return this.create(place);
+    }
 }

@@ -34,10 +34,14 @@
 package info.magnolia.ui.admincentral.workbench.view;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.jcr.JCRMetadataUtil;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +51,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -80,8 +85,8 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
         actionList.showActions(contextMenuItems);
     }
 
-    public void showDetails(String treeName, String path) {
-        detailForm.showDetails(treeName, path);
+    public void showDetails(Node node) {
+        detailForm.showDetails(node);
     }
 
     /**
@@ -134,19 +139,47 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
      */
     public static class DetailForm extends Form {
 
-        private static final String TREENAME = "TreeName";
+        private static final String STATUS = "Status";
+        private static final int DEFAULT_FIELD_WIDTH = 250;
+        private static final String UUID = "UUID";
         private static final String PATH = "Path";
+        private static final String LAST_MOD = "LastMod";
 
         public DetailForm() {
-            addField(TREENAME, new TextField(TREENAME));
+            TextField uuid = new TextField(UUID);
+            uuid.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
+            uuid.setEnabled(false);
+            addField(UUID, uuid);
+
             TextField pathField = new TextField(PATH);
-            pathField.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
+            pathField.setEnabled(false);
             addField(PATH, pathField);
+
+            DateField lastMod = new DateField(LAST_MOD);
+            lastMod.setDateFormat("yyyy-MM-dd");
+            lastMod.setEnabled(false);
+            addField(LAST_MOD, lastMod);
+
+            TextField statusField = new TextField(STATUS);
+            statusField.setWidth(25, Sizeable.UNITS_PIXELS);
+            statusField.setEnabled(false);
+            addField(STATUS, statusField);
         }
 
-        public void showDetails(String treeName, String path) {
-            getField(TREENAME).setValue(treeName);
-            getField(PATH).setValue(path);
+        public void showDetails(Node node) {
+            try {
+                getField(UUID).setValue(node.getIdentifier());
+                getField(PATH).setValue(node.getPath());
+
+                getField(LAST_MOD).setValue(JCRMetadataUtil.getLastModification(node).getTime());
+
+                getField(STATUS).setIcon(new ExternalResource(JCRMetadataUtil.getActivationStatusIconURL(node)));
+                getField(STATUS).setValue(JCRMetadataUtil.getMetaData(node).getActivationStatus());
+            } catch (RepositoryException e) {
+                // TODO proper ExceptionHandling
+                throw new RuntimeException(e);
+            }
         }
     }
 

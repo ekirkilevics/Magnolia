@@ -33,23 +33,29 @@
  */
 package info.magnolia.ui.admincentral.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.UnhandledException;
-
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
+import java.util.Calendar;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
+
+import org.apache.commons.lang.UnhandledException;
+
 /**
- * Collection of utilities to simplify working with the JCR API. To be checked how much this type
- * should be based on current MetaData-support implemented in the Content-API. Right now it
- * delegates partly to the "old" MetaData-support.
+ * Collection of utilities to simplify working with the JCR API. To be checked how much this type should be based on
+ * current MetaData-support implemented in the Content-API. Right now it delegates partly to the "old" MetaData-support.
  *
  * @deprecated temporary
  */
 public class JCRMetadataUtil {
+
+    private static final String RESOURCES_ICONS_16_PATH = "/.resources/icons/16/";
 
     private static class JCRMetaData extends MetaData {
 
@@ -67,26 +73,37 @@ public class JCRMetadataUtil {
         }
     }
 
-    public static String getActivationStatusIcon(Node parent) {
-        MetaData metaData = getMetaData(parent);
-        String imgSrc;
+    // TODO should be somewhere in a UI-Utility
+    public static String getActivationStatusIconURL(Node node) {
+
+        MetaData metaData = getMetaData(node);
+        String iconFileName;
         switch (metaData.getActivationStatus()) {
         case MetaData.ACTIVATION_STATUS_MODIFIED:
-            imgSrc = "indicator_yellow.gif";
+            iconFileName = "indicator_yellow.gif";
             break;
         case MetaData.ACTIVATION_STATUS_ACTIVATED:
-            imgSrc = "indicator_green.gif";
+            iconFileName = "indicator_green.gif";
             break;
         default:
-            imgSrc = "indicator_red.gif";
+            iconFileName = "indicator_red.gif";
         }
-        return imgSrc;
+
+        return MgnlContext.getContextPath() + RESOURCES_ICONS_16_PATH + iconFileName;
     }
 
     public static void updateMetaData(Node node) throws RepositoryException {
         MetaData md = getMetaData(node);
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node.getPrimaryNodeType().getName(), node.getName());
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
+                .getPrimaryNodeType().getName(), node.getName());
     }
+
+
+    public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
+        Node meta = node.getNode(MetaData.DEFAULT_META_NODE);
+        return meta.getProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED).getDate();
+    }
+
 }

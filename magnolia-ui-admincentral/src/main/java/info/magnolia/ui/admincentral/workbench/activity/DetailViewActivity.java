@@ -33,10 +33,8 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
-import java.util.List;
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
@@ -51,6 +49,11 @@ import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
+import java.util.List;
+
+import javax.jcr.Item;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Shows the detail view and command list.
@@ -63,25 +66,35 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private Shell shell;
     private WorkbenchDefinition workbenchDefinition;
 
-    public DetailViewActivity(ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition, EditWorkspaceActionFactory actionFactory, Shell shell) {
+    public DetailViewActivity(ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition,
+            EditWorkspaceActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.shell = shell;
         this.workbenchDefinition = workbenchDefinition;
         detailView = new DetailViewImpl(this);
-        showItem(place.getPath());
+        showItem(place);
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
         viewPort.setView(detailView);
     }
 
-    private void showItem(String path) {
+    private void showItem(ItemSelectedPlace place) {
+        String path = place.getPath();
+        final Content content;
+        try {
+            content = MgnlContext.getHierarchyManager(place.getWorkspace()).getContent(path);
+        } catch (RepositoryException e) {
+            shell.showError("Exception trying to access " + path, e);
+            return;
+        }
+        Node node = content.getJCRNode();
         // Displaying commands for the root node makes no sense
         if (!"/".equals(path)) {
             this.path = path;
             // FIXME should be dependent on the item type
             detailView.showActions(workbenchDefinition.getMenuItems());
-            detailView.showDetails(workbenchDefinition.getWorkspace(), path);
+            detailView.showDetails(node);
         }
     }
 
@@ -94,16 +107,15 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
             try {
                 String normalizedPath = (workbenchDefinition.getPath() + path).replaceAll("//", "/");
                 item = JCRUtil.getSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
-                if(menuItemDefinition.getName().equals(commandName)){
+                if (menuItemDefinition.getName().equals(commandName)) {
                     final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
                     try {
                         action.execute();
-                    }
-                    catch (ActionExecutionException e) {
+                    } catch (ActionExecutionException e) {
                         shell.showError("Can't execute action.", e);
                     }
-                }            }
-            catch (RepositoryException e) {
+                }
+            } catch (RepositoryException e) {
                 shell.showError("Can't access content.", e);
             }
         }
