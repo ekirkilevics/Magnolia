@@ -39,6 +39,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.jcr.util.JCRUtil;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.view.DetailView;
 import info.magnolia.ui.admincentral.workbench.view.DetailViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -49,7 +50,6 @@ import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
-import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 
 /**
@@ -57,20 +57,18 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
  */
 public class DetailViewActivity extends AbstractActivity implements DetailView.Presenter {
 
-    private String treeName;
     private String path;
     private DetailView detailView;
     private EditWorkspaceActionFactory actionFactory;
     private Shell shell;
-    private WorkbenchRegistry workbenchRegistry;
+    private WorkbenchDefinition workbenchDefinition;
 
-    public DetailViewActivity(String treeName, String path, EditWorkspaceActionFactory actionFactory, Shell shell, WorkbenchRegistry workbenchRegistry) {
-        this.treeName = treeName;
+    public DetailViewActivity(ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition, EditWorkspaceActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.shell = shell;
-        this.workbenchRegistry = workbenchRegistry;
+        this.workbenchDefinition = workbenchDefinition;
         detailView = new DetailViewImpl(this);
-        showItem(path);
+        showItem(place.getPath());
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
@@ -82,14 +80,13 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         if (!"/".equals(path)) {
             this.path = path;
             // FIXME should be dependent on the item type
-            detailView.showActions(workbenchRegistry.getWorkbench(treeName).getMenuItems());
-            detailView.showDetails(treeName, path);
+            detailView.showActions(workbenchDefinition.getMenuItems());
+            detailView.showDetails(workbenchDefinition.getWorkspace(), path);
         }
     }
 
     public void onCommandSelected(String commandName) {
         // TODO we should inject the tree definition or something more abstract
-        final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(treeName);
         final List<MenuItemDefinition> contextMenuItems = workbenchDefinition.getMenuItems();
         // TODO should this be a map to avoid such iterations?
         for (MenuItemDefinition menuItemDefinition : contextMenuItems) {
