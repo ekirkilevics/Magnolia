@@ -142,7 +142,6 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
             TextField pathField = new TextField(PATH);
             pathField.setWidth(100, Sizeable.UNITS_PERCENTAGE);
             addField(PATH, pathField);
-            addField("unused", new PasswordField("Password"));
         }
 
         public void showDetails(String treeName, String path) {
