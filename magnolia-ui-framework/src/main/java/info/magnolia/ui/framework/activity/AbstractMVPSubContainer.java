@@ -33,16 +33,9 @@
  */
 package info.magnolia.ui.framework.activity;
 
-import java.util.Properties;
-
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
-import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.pico.ComponentFactoryProviderAdapter;
-import info.magnolia.objectfactory.pico.PicoComponentProvider;
+import info.magnolia.objectfactory.ComponentProviders;
+import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.HandlerRegistration;
 import info.magnolia.ui.framework.event.SimpleEventBus;
@@ -60,54 +53,9 @@ import info.magnolia.ui.framework.view.ViewPort;
  * and vice versa.
  *
  * TODO it is not clear how we would provide IoC here. it is comparable to a sub-conversion scope.
- *
+ * @param <A> the inner activity the container will delegate to.
  */
-public abstract class AbstractMVPSubContainer extends AbstractActivity {
-
-    private final class PicoMutableComponentProvider implements MutableComponentProvider {
-
-        private ComponentProvider componentProvider;
-        private MutablePicoContainer container;
-
-        public PicoMutableComponentProvider(ComponentProvider componentProvider, MutablePicoContainer container) {
-            this.componentProvider = componentProvider;
-            this.container = container;
-        }
-
-        public <T> void setImplementation(Class<T> componentClass, Class< ? extends T> implementationClass) {
-            container.addComponent(componentClass, implementationClass);
-        }
-
-        public <T> void setInstance(Class<T> componentClass, T implementation) {
-            container.addComponent(componentClass, implementation);
-        }
-
-        public <T> void setConfigurationPath(Class<T> componentClass, String path) {
-            //FIXME better solution than just creating properties
-            Properties properties = new Properties();
-            properties.put(componentClass.getName(), path);
-            ((PicoComponentProvider)componentProvider).parseConfiguration(properties);
-        }
-
-        public <T> void addFactory(Class<T> componentKey, ComponentFactory<T> componentFactory) {
-            container.addAdapter(new ComponentFactoryProviderAdapter(componentKey, componentFactory));
-        }
-    }
-
-    /**
-     * Used in the {@link MVPSubContainer#populateComponentProvider(MutableComponentProvider)} to hide the pico specifics.
-     * TODO move to the core? see patch in MAGNOLIA-3592
-     */
-    protected interface MutableComponentProvider {
-
-        <T> void setImplementation(Class<T> componentClass, Class<? extends T> implementationClass);
-
-        <T> void setInstance(Class<T> componentClass, T implementation);
-
-        <T> void setConfigurationPath(Class<T> componentClass, String path);
-
-        <T> void addFactory(Class<T> componentClass, ComponentFactory<T> componentFactory);
-    }
+public abstract class AbstractMVPSubContainer<A extends Activity> extends AbstractActivity {
 
     private String id;
 
@@ -123,40 +71,37 @@ public abstract class AbstractMVPSubContainer extends AbstractActivity {
 
     private HandlerRegistration historyReg;
 
-    private Activity activity;
+    private A activity;
+
+    private MutableComponentProvider componentProvider;
 
 
-    public AbstractMVPSubContainer(String id, Shell shell) {
+    public AbstractMVPSubContainer(String id, Shell shell, ComponentProvider parentComponentProvider) {
         this.id = id;
         this.shell = shell;
+        this.componentProvider = ComponentProviders.createChild(parentComponentProvider);
     }
 
     public void start(ViewPort viewPort, EventBus outerEventBus) {
 
-        PicoComponentProvider provider = (PicoComponentProvider) Components.getComponentProvider();
-        PicoBuilder builder = new PicoBuilder(provider.getContainer()).withConstructorInjection().withCaching();
-
-        final MutablePicoContainer container = builder.build();
-
-        ComponentProvider componentProvider = new PicoComponentProvider(container, provider);
-
-        container.addComponent(ComponentProvider.class, componentProvider);
-        container.addComponent(EventBus.class, SimpleEventBus.class);
+        componentProvider.registerInstance(ComponentProvider.class, componentProvider);
+        componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);
         // TODO use IoC with parameters instead? newInstance(SubShell.class, id)
-        container.addComponent(Shell.class, shell.createSubShell(id));
-        container.addComponent(PlaceController.class, PlaceController.class);
+        componentProvider.registerInstance(Shell.class, shell.createSubShell(id));
+        componentProvider.registerImplementation(PlaceController.class, PlaceController.class);
 
-        populateComponentProvider(new PicoMutableComponentProvider(componentProvider, container));
+        // configure the component provider
+        configureComponentProvider(componentProvider);
 
         subShell = componentProvider.getComponent(Shell.class);
         innerEventBus = componentProvider.getComponent(EventBus.class);
         innerPlaceController = componentProvider.getComponent(PlaceController.class);
 
-        final Class<? extends Activity> activityClass = getActivityClass();
+        final Class<A> activityClass = getActivityClass();
 
-        activity = componentProvider.newInstance(activityClass, getAdditionalConstructorParameters());
+        activity = componentProvider.newInstance(activityClass, getActivityParameters());
         // add the activity we built so that sub components can ask for injection
-        container.addComponent(activityClass, activity);
+        componentProvider.registerInstance(activityClass, activity);
 
         activity.start(viewPort, innerEventBus);
 
@@ -182,15 +127,14 @@ public abstract class AbstractMVPSubContainer extends AbstractActivity {
         return id;
     }
 
-    protected abstract Class< ? extends Activity> getActivityClass();
+    protected abstract Class<A> getActivityClass();
 
-    protected abstract Object[] getAdditionalConstructorParameters();
+    protected abstract Object[] getActivityParameters();
 
     /**
      * Prepare the IoC container.
-     * TODO should this really relay on the Pico API
      */
-    protected abstract void populateComponentProvider(MutableComponentProvider mutableComponentProvider);
+    protected abstract void configureComponentProvider(MutableComponentProvider mutableComponentProvider);
 
     protected abstract Class< ? extends Place>[] getSupportedPlaces();
 
