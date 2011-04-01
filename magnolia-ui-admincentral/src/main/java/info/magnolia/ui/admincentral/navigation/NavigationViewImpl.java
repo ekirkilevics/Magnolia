@@ -58,7 +58,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * Implementation of {@link NavigationView}. It represents the app main navigation and holds {@link NavigationWorkArea}(s).
+ * ImplementationConfiguration of {@link NavigationView}. It represents the app main navigation and holds {@link NavigationWorkArea}(s).
  * @author fgrilli
  *
  */

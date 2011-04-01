@@ -73,7 +73,7 @@ import javax.jcr.version.VersionHistory;
 
 
 /**
- * Mock Implementation of a Node. Work in progress...
+ * Mock ImplementationConfiguration of a Node. Work in progress...
  * 
  * @author dlipp
  * @version $Id$

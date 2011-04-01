@@ -31,19 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.navigation.registry;
+package info.magnolia.ui.admincentral.configuration;
 
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.cms.security.User;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.ui.model.settings.UISettings;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
- * ImplementationConfiguration of {@link NavigationPermissionSchema}.
+ * Has a set of {@link ComponentProviderConfiguration}s.
  */
-public class NavigationPermissionSchemaImpl implements NavigationPermissionSchema {
+public class ConfiguredAdminCentralComponentsConfigurationProvider implements AdminCentralComponentsConfigurationProvider{
 
-    // TODO real implementation
-    public boolean hasPermission(MenuItemDefinition item) {
-        return true;
+    // content2bean
+    private Map<String, ComponentProviderConfiguration> configurations = new HashMap<String, ComponentProviderConfiguration>();
+
+    public Map<String, ComponentProviderConfiguration> getConfigurations() {
+        return configurations;
+    }
+
+    public void setConfigurations(Map<String, ComponentProviderConfiguration> configurations) {
+        this.configurations = configurations;
+    }
+
+    public void addConfiguration(String name, ComponentProviderConfiguration configuration){
+        this.configurations.put(name, configuration);
+    }
+
+    public ComponentProviderConfiguration getConfiguration(User user, UISettings uiSettings) {
+        // TODO add the decition logic about what configuration to use
+        return configurations.get("default");
     }
 
 }

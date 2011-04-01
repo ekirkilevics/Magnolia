@@ -34,34 +34,16 @@
 package info.magnolia.ui.admincentral;
 
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ComponentProviders;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MutableComponentProvider;
-import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
-import info.magnolia.ui.admincentral.dialog.builder.VaadinDialogBuilder;
-import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.admincentral.embedded.view.EmbeddedView;
-import info.magnolia.ui.admincentral.embedded.view.EmbeddedViewImpl;
-import info.magnolia.ui.admincentral.navigation.NavigationView;
-import info.magnolia.ui.admincentral.navigation.NavigationViewImpl;
-import info.magnolia.ui.admincentral.navigation.action.NavigationActionFactory;
-import info.magnolia.ui.admincentral.navigation.activity.NavigationActivity;
-import info.magnolia.ui.admincentral.navigation.activity.NavigationActivityMapper;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.event.SimpleEventBus;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
-import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchemaImpl;
-import info.magnolia.ui.model.navigation.registry.NavigationProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.ui.admincentral.configuration.AdminCentralComponentsConfigurationProvider;
 import info.magnolia.ui.model.settings.Direction;
 import info.magnolia.ui.model.settings.InputDevice;
 import info.magnolia.ui.model.settings.UISettings;
-import info.magnolia.ui.vaadin.integration.shell.ShellImpl;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +55,7 @@ import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 /**
  * Application class for AdminCentral. Provides a scoped IoC container and performs initialization of the UI.
  */
+@SuppressWarnings("serial")
 public class AdminCentralApplication extends Application implements HttpServletRequestListener {
 
     private MutableComponentProvider componentProvider;
@@ -89,40 +72,39 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
     private void createComponentProvider() {
 
-        componentProvider = ComponentProviders.createChild(Components.getComponentProvider());
+        final AdminCentralComponentsConfigurationProvider configurationProvider = Components.getComponent(AdminCentralComponentsConfigurationProvider.class);
+        final User user = MgnlContext.getUser();
+        final UISettings uiSettings = new UISettings(Direction.LTR, InputDevice.MOUSE);
 
+        final ComponentProviderConfiguration configuration = configurationProvider.getConfiguration(user, uiSettings);
 
-        componentProvider.registerConfiguredComponent(NavigationProvider.class, ContentRepository.CONFIG, "/modules/admin-central/components/navigationProvider", false);
-
-        componentProvider.registerInstance(ComponentProvider.class, componentProvider);
-
+        // now create the ui componentProvider
+        componentProvider = ComponentProviders.createChild(Components.getComponentProvider(), configuration);
         componentProvider.registerInstance(Application.class, this);
-        componentProvider.registerImplementation(AdminCentralView.class, AdminCentralViewImpl.class);
-        componentProvider.registerImplementation(AdminCentralPresenter.class, AdminCentralPresenter.class);
-        componentProvider.registerImplementation(MainActivityMapper.class, MainActivityMapper.class);
+        componentProvider.registerInstance(User.class, user);
+        componentProvider.registerInstance(UISettings.class, uiSettings);
 
-        componentProvider.registerImplementation(DialogBuilder.class, VaadinDialogBuilder.class);
-        componentProvider.registerImplementation(DialogPresenter.class, DialogPresenter.class);
-
-        componentProvider.registerImplementation(NavigationView.class, NavigationViewImpl.class);
-        componentProvider.registerImplementation(NavigationPermissionSchema.class, NavigationPermissionSchemaImpl.class);
-        componentProvider.registerImplementation(NavigationActivityMapper.class, NavigationActivityMapper.class);
-        componentProvider.registerImplementation(NavigationActivity.class, NavigationActivity.class);
-
-        componentProvider.registerImplementation(EmbeddedView.class, EmbeddedViewImpl.class);
-
-        componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);
-        componentProvider.registerImplementation(Shell.class, ShellImpl.class);
-        componentProvider.registerImplementation(PlaceController.class, PlaceController.class);
-        componentProvider.registerImplementation(NavigationActionFactory.class, NavigationActionFactory.class);
-
-        componentProvider.registerInstance(User.class, MgnlContext.getUser());
-
-        // TODO do it dynamic
-        componentProvider.registerInstance(UISettings.class, new UISettings(Direction.LTR, InputDevice.MOUSE));
-
-        // TODO how do we find and register classes from other modules that will be used by AdminCentral
-        // TODO maybe configured in the module descriptors with scopes specified
+// TODO remove, but kept if something with the configuration goes wrong
+//        componentProvider.registerConfiguredComponent(NavigationProvider.class, ContentRepository.CONFIG, "/modules/admin-central/components/navigationProvider", false);
+//
+//        componentProvider.registerImplementation(AdminCentralView.class, AdminCentralViewImpl.class);
+//        componentProvider.registerImplementation(AdminCentralPresenter.class, AdminCentralPresenter.class);
+//        componentProvider.registerImplementation(MainActivityMapper.class, MainActivityMapper.class);
+//
+//        componentProvider.registerImplementation(DialogBuilder.class, VaadinDialogBuilder.class);
+//        componentProvider.registerImplementation(DialogPresenter.class, DialogPresenter.class);
+//
+//        componentProvider.registerImplementation(NavigationView.class, NavigationViewImpl.class);
+//        componentProvider.registerImplementation(NavigationPermissionSchema.class, NavigationPermissionSchemaImpl.class);
+//        componentProvider.registerImplementation(NavigationActivityMapper.class, NavigationActivityMapper.class);
+//        componentProvider.registerImplementation(NavigationActivity.class, NavigationActivity.class);
+//        componentProvider.registerImplementation(NavigationActionFactory.class, NavigationActionFactory.class);
+//
+//        componentProvider.registerImplementation(EmbeddedView.class, EmbeddedViewImpl.class);
+//
+//        componentProvider.registerImplementation(Shell.class, ShellImpl.class);
+//        componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);
+//        componentProvider.registerImplementation(PlaceController.class, PlaceController.class);
     }
 
     public void onRequestStart(HttpServletRequest request, HttpServletResponse response) {

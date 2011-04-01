@@ -69,7 +69,7 @@ public abstract class AbstractHierarchicalContainer implements Container.Hierarc
     }
 
     /**
-     * Implementation of item set change event.
+     * ImplementationConfiguration of item set change event.
      */
     protected class ItemSetChangeEvent implements Container.ItemSetChangeEvent {
 

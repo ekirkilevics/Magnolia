@@ -31,19 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.navigation.registry;
+package info.magnolia.ui.admincentral.configuration;
 
-import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
-
+import info.magnolia.cms.security.User;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.ui.model.settings.UISettings;
 
 /**
- * ImplementationConfiguration of {@link NavigationPermissionSchema}.
+ * Provides the {@link ComponentProviderConfiguration} for the current UI.
  */
-public class NavigationPermissionSchemaImpl implements NavigationPermissionSchema {
+public interface AdminCentralComponentsConfigurationProvider {
 
-    // TODO real implementation
-    public boolean hasPermission(MenuItemDefinition item) {
-        return true;
-    }
+    ComponentProviderConfiguration getConfiguration(User user, UISettings uiSettings);
 
 }

@@ -84,7 +84,6 @@ public abstract class AbstractMVPSubContainer<A extends Activity> extends Abstra
 
     public void start(ViewPort viewPort, EventBus outerEventBus) {
 
-        componentProvider.registerInstance(ComponentProvider.class, componentProvider);
         componentProvider.registerImplementation(EventBus.class, SimpleEventBus.class);
         // TODO use IoC with parameters instead? newInstance(SubShell.class, id)
         componentProvider.registerInstance(Shell.class, shell.createSubShell(id));
