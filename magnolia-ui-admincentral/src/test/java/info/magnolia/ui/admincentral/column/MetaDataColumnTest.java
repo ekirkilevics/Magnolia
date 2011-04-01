@@ -49,6 +49,8 @@ import org.apache.commons.lang.time.FastDateFormat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.ui.Label;
+
 /**
  * Tests for MetaDataColumn.
  *
@@ -71,7 +73,8 @@ public class MetaDataColumnTest {
         Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
         metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
         MetaDataColumn column = new MetaDataColumn(new MetaDataColumnDefinition());
-        Object result = column.getComponent(node);
+        Object result = ((Label)column.getComponent(node)).getValue();
+        Object first = dateFormat.format(now);
         assertEquals(dateFormat.format(now), result);
     }
 }
