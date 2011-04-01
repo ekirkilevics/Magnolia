@@ -65,3 +65,10 @@
 	border-top: 1px solid #B6BBBC;
 	border-left: 1px solid #B6BBBC;
 }
+/**
+* FIXME this is a hack to show the label which is a div inline with the preceding icons. It probably breaks on IE as it uses inline-block.
+*/
+
+.m-inline-div {
+	display: inline-block;
+}

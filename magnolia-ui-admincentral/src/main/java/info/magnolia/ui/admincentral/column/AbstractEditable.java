@@ -132,6 +132,8 @@ public abstract class AbstractEditable extends CustomComponent {
         layout.setSizeFull();
         setCompositionRoot(layout);
         setSizeFull();
+        //FIXME this is a hack to show the label which is a div inline with the preceding icons. It probably breaks on IE as it uses display: inline-block.
+        addStyleName("m-inline-div");
     }
 
     protected void onCancel() {
