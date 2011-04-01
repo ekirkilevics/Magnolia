@@ -35,10 +35,6 @@ package info.magnolia.ui.admincentral.jcr;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-
-import info.magnolia.context.MgnlContext;
 
 /**
  * JCR Utilities.
@@ -48,10 +44,6 @@ import info.magnolia.context.MgnlContext;
 public class JCRUtil {
 
     public static final String PATH_SEPARATOR = "/";
-
-    public static Workspace getWorkspace(String workspaceId) {
-        return MgnlContext.getHierarchyManager(workspaceId).getWorkspace();
-    }
 
     public static String getRelativePathToRoot(String fullPath) {
         if (!fullPath.startsWith(PATH_SEPARATOR)) {
@@ -115,13 +107,6 @@ public class JCRUtil {
             }
         }
         return (base + ++cnt);
-    }
-
-    /**
-     * @deprecated - use MgnlContext#getJCRSession(String) instead
-     */
-    public static Session getSession(String workspaceId) {
-        return getWorkspace(workspaceId).getSession();
     }
 
     public static String getPropertyString(Node node, String propertyName) throws RepositoryException {

@@ -33,16 +33,13 @@
  */
 package info.magnolia.ui.admincentral.dialog.activity;
 
-import java.util.List;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
 import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.framework.editor.EditorError;
@@ -50,6 +47,11 @@ import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.registry.DialogRegistry;
+
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Activity for dialogs.
@@ -96,7 +98,7 @@ public class DialogActivity extends AbstractActivity implements DialogView.Prese
     }
 
     private Node getNode() throws RepositoryException {
-        return (Node) JCRUtil.getSession("users").getItem(this.place.getPath());
+        return (Node) MgnlContext.getJCRSession(ContentRepository.USERS).getItem(this.place.getPath());
     }
 
     public String mayStop() {

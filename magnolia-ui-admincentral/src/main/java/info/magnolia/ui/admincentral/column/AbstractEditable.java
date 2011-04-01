@@ -33,6 +33,10 @@
  */
 package info.magnolia.ui.admincentral.column;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
+import info.magnolia.ui.framework.editor.Editor;
+
 import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -43,9 +47,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import info.magnolia.exception.RuntimeRepositoryException;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
-import info.magnolia.ui.framework.editor.Editor;
 
 /**
  * UI component that displays a label and on double click opens it for editing by switching the label to save text field.
@@ -160,7 +161,7 @@ public abstract class AbstractEditable extends CustomComponent {
     protected abstract ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException;
 
     private Item getItem() throws RepositoryException {
-        Node node = JCRUtil.getSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);
+        Node node = MgnlContext.getJCRSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);
         if (propertyName != null)
             return node.getProperty(propertyName);
         return node;

@@ -33,16 +33,16 @@
  */
 package info.magnolia.ui.admincentral.dialog.view;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
+import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.dialog.builder.DialogBuilder;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.framework.editor.ContentDriver;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.registry.DialogRegistry;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Window for creating or editing content using a dialog.
@@ -112,7 +112,7 @@ public class DialogPresenter implements DialogView.Presenter {
     }
 
     private Node getNode() throws RepositoryException {
-        return JCRUtil.getSession(workspace).getNode(path);
+        return MgnlContext.getJCRSession(workspace).getNode(path);
     }
 
     public void onCancel() {
