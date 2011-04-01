@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,29 +25,42 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.objectfactory;
-
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+package info.magnolia.objectfactory.configuration;
 
 /**
- * A {@link ComponentProvider} on which we can register implementations and instances.
+ * A configuration providing a concrete instance.
+ * @param <T> the type
  */
-public interface MutableComponentProvider extends ComponentProvider {
+public class InstanceConfiguration<T> {
 
-    public abstract <T> void registerConfiguredComponent(Class<T> type, String workspace, String path, boolean observed);
+    private Class<T> type;
 
-    public abstract <T> void registerImplementation(Class<T> type, Class< ? extends T> implementationType);
+    private T instance;
 
-    public abstract <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory);
+    public InstanceConfiguration(Class<T> type, T instance) {
+        this.type = type;
+        this.instance = instance;
+    }
 
-    public abstract <T> void registerInstance(Class<T> type, T instance);
+    public Class<T> getType() {
+        return type;
+    }
 
-    public abstract void configure(ComponentProviderConfiguration configuration);
+    public void setType(Class<T> type) {
+        this.type = type;
+    }
 
+    public T getInstance() {
+        return instance;
+    }
+
+    public void setInstance(T instance) {
+        this.instance = instance;
+    }
 }

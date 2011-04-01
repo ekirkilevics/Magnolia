@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,29 +25,47 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.objectfactory;
-
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+package info.magnolia.objectfactory.configuration;
 
 /**
- * A {@link ComponentProvider} on which we can register implementations and instances.
+ * A simple type mapping.
+ * @param <T> the type
  */
-public interface MutableComponentProvider extends ComponentProvider {
+public class ImplementationConfiguration<T> {
 
-    public abstract <T> void registerConfiguredComponent(Class<T> type, String workspace, String path, boolean observed);
+    private Class<T> type;
 
-    public abstract <T> void registerImplementation(Class<T> type, Class< ? extends T> implementationType);
+    private Class<? extends T> implementation;
 
-    public abstract <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory);
+    public ImplementationConfiguration() {
+    }
 
-    public abstract <T> void registerInstance(Class<T> type, T instance);
+    public ImplementationConfiguration(Class<T> type, Class<? extends T> implementation) {
+        this.type = type;
+        this.implementation = implementation;
+    }
 
-    public abstract void configure(ComponentProviderConfiguration configuration);
+    public Class<T> getType() {
+        return type;
+    }
+
+    public Class<? extends T> getImplementation() {
+        return implementation;
+    }
+
+    // content2bean
+    public void setType(Class<T> type) {
+        this.type = type;
+    }
+
+    public void setImplementation(Class<? extends T> implementation) {
+        this.implementation = implementation;
+    }
 
 }

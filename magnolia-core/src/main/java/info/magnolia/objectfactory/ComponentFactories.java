@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,7 +25,7 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
@@ -33,21 +33,28 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 
 /**
- * A {@link ComponentProvider} on which we can register implementations and instances.
+ * Util method to work with {@link ComponentFactory}s.
  */
-public interface MutableComponentProvider extends ComponentProvider {
+public class ComponentFactories {
 
-    public abstract <T> void registerConfiguredComponent(Class<T> type, String workspace, String path, boolean observed);
+    /**
+     * Uses the empty constructor or passes the {@link ComponentProvider} such a constructor exists.
+     */
+    public static ComponentFactory< ? > createFactory(Class<? extends ComponentFactory<?>> factoryClass, ComponentProvider componentProvider) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException{
+        Constructor< ? extends ComponentFactory< ? >> constructor;
+        try {
+            constructor = factoryClass.getConstructor(ComponentProvider.class);
+            return  constructor.newInstance(componentProvider);
+        }
+        catch (NoSuchMethodException e) {
+            return factoryClass.newInstance();
+        }
 
-    public abstract <T> void registerImplementation(Class<T> type, Class< ? extends T> implementationType);
-
-    public abstract <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory);
-
-    public abstract <T> void registerInstance(Class<T> type, T instance);
-
-    public abstract void configure(ComponentProviderConfiguration configuration);
+    }
 
 }

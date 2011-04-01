@@ -33,6 +33,10 @@
  */
 package info.magnolia.objectfactory;
 
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
+import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
+
 import java.util.Map;
 import java.util.Properties;
 
@@ -67,6 +71,7 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
     }
 
     public <T> void parseConfiguration(Properties mappings) {
+        final ComponentProviderConfiguration config = new ComponentProviderConfiguration();
 
         for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
             String key = (String) entry.getKey();
@@ -79,16 +84,17 @@ public class PropertiesComponentProvider extends AbstractComponentProvider {
             }
             if (ComponentConfigurationPath.isComponentConfigurationPath(value)) {
                 ComponentConfigurationPath path = new ComponentConfigurationPath(value);
-                registerObservedComponent(type, path.getRepository(), path.getPath());
+                config.addConfigured(new ConfiguredComponentConfiguration(type, path.getRepository(), path.getPath(), true));
             } else {
                 Class<? extends T> valueType = (Class<? extends T>) classForName(value);
                 if (valueType == null) {
                     log.debug("{} does not seem to resolve a class or a configuration path. (property key: {})", value, key);
                 } else {
-                    registerImplementation(type, valueType);
+                    config.addImplementation(new ImplementationConfiguration(type, valueType));
                 }
             }
         }
+        configure(config);
     }
 
     protected Class<?> classForName(String value) {

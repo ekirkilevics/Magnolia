@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,29 +25,51 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.objectfactory;
+package info.magnolia.objectfactory.configuration;
 
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.ComponentFactory;
+
+
 
 /**
- * A {@link ComponentProvider} on which we can register implementations and instances.
+ * Configuration for {@link ComponentFactory}s.
+ * @param <T> the type
  */
-public interface MutableComponentProvider extends ComponentProvider {
+public class ComponentFactoryConfiguration<T> {
 
-    public abstract <T> void registerConfiguredComponent(Class<T> type, String workspace, String path, boolean observed);
+    private Class<T> type;
 
-    public abstract <T> void registerImplementation(Class<T> type, Class< ? extends T> implementationType);
+    private Class<? extends ComponentFactory<T>>  factoryClass;
 
-    public abstract <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory);
+    // content2bean
+    public ComponentFactoryConfiguration() {
+    }
 
-    public abstract <T> void registerInstance(Class<T> type, T instance);
+    public ComponentFactoryConfiguration(Class<T> type, Class<? extends ComponentFactory<T>> factoryClass) {
+        this.type = type;
+        this.factoryClass = factoryClass;
+    }
 
-    public abstract void configure(ComponentProviderConfiguration configuration);
+    public Class<T> getType() {
+        return type;
+    }
+
+    public void setType(Class<T> type) {
+        this.type = type;
+    }
+
+    public Class<? extends ComponentFactory<T>> getFactoryClass() {
+        return factoryClass;
+    }
+
+    public void setFactoryClass(Class<? extends ComponentFactory<T>> factoryClass) {
+        this.factoryClass = factoryClass;
+    }
 
 }

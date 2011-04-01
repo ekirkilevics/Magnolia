@@ -41,6 +41,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.util.DeprecationUtil;
+import info.magnolia.objectfactory.configuration.ComponentFactoryConfiguration;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
+import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
+import info.magnolia.objectfactory.configuration.InstanceConfiguration;
 
 /**
  * Abstract ComponentProvider that supports component factories. Subclasses are responsible for registering components
@@ -115,6 +120,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     }
 
     protected AbstractComponentProvider(HierarchicalComponentProvider parent) {
+        this();
         this.parent = parent;
     }
 
@@ -187,8 +193,32 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         return definition.getImplementationType();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void configure(ComponentProviderConfiguration configuration) {
+        for (ImplementationConfiguration config : configuration.getImplementations()) {
+            registerImplementation(config.getType(), config.getImplementation());
+        }
+        for (InstanceConfiguration config : configuration.getInstances()) {
+            registerInstance(config.getType(), config.getInstance());
+        }
+        for (ComponentFactoryConfiguration config : configuration.getFactories()) {
+            ComponentFactory< ? > factory;
+            try {
+                factory = ComponentFactories.createFactory(config.getFactoryClass(), this);
+                registerComponentFactory(config.getType(), factory);
+            }
+            catch (Exception e) {
+                throw new RuntimeException("Can't instantiate factory: " + config.getFactoryClass().getName(), e);
+            }
+        }
+        for (ConfiguredComponentConfiguration config : configuration.getConfigured()) {
+            registerConfiguredComponent(config.getType(), config.getWorkspace(), config.getPath(), config.isObserved());
+        }
+
+    };
+
     public synchronized <T> void registerConfiguredComponent(Class<T> type, final String workspace, final String path, boolean observed) {
-        final ComponentFactory factory;
+        final ComponentFactory<T> factory;
         if(observed){
             factory = new LazyObservedComponentFactory<T>(workspace, path, type, this);
         }
@@ -199,16 +229,12 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 
     }
 
-    public synchronized <T> void registerObservedComponent(Class<T> type, String workspace, String path) {
-        registerComponentFactory(type, new LazyObservedComponentFactory<T>(workspace, path, type, this));
-    }
-
     @SuppressWarnings("unchecked")
     public synchronized <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
         if (definitions.containsKey(type))
             throw new MgnlInstantiationException("Component already registered for type " + type.getName());
         if (!Classes.isConcrete(implementationType)) {
-            throw new MgnlInstantiationException("Implementation type is not a concrete class for type" + type);
+            throw new MgnlInstantiationException("ImplementationConfiguration type is not a concrete class for type" + type);
         }
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             ComponentDefinition<T> definition = new ComponentDefinition<T>();
@@ -266,7 +292,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
     }
 
     public boolean isConfiguredFor(Class<?> type) {
-        ComponentDefinition definition = getComponentDefinition(type);
+        ComponentDefinition<?> definition = getComponentDefinition(type);
         if (definition != null)
             return true;
         if (parent != null)

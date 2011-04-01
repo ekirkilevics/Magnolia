@@ -33,9 +33,9 @@
  */
 package info.magnolia.objectfactory.pico;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import info.magnolia.objectfactory.ComponentFactories;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 
@@ -83,14 +83,7 @@ public class ComponentFactoryProviderAdapter extends ProviderAdapter {
         // TODO -- well this is completely wrong for now, those should be cached
         try {
             if (this.factory == null) {
-                Constructor< ? extends ComponentFactory< ? >> constructor;
-                try {
-                    constructor = factoryClass.getConstructor(ComponentProvider.class);
-                    this.factory = constructor.newInstance(componentProvider);
-                }
-                catch (NoSuchMethodException e) {
-                    this.factory = factoryClass.newInstance();
-                }
+                this.factory = ComponentFactories.createFactory(factoryClass, componentProvider);
             }
             return this.factory.newInstance();
         } catch (InstantiationException e) {
