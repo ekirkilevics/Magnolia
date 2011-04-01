@@ -105,9 +105,13 @@ public class JCRMetadataUtil {
     }
 
 
+    /**
+     * @return the lastModification or null it it was not set in JCR.
+     */
     public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
         Node meta = node.getNode(MetaData.DEFAULT_META_NODE);
-        return meta.getProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED).getDate();
+        String lastMod = ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED;
+        return (meta.hasProperty(lastMod)) ? meta.getProperty(lastMod).getDate() : null;
     }
 
 }

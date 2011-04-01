@@ -33,13 +33,18 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import javax.jcr.RepositoryException;
-
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
-import static org.junit.Assert.*;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for LabelColumn.
@@ -49,14 +54,22 @@ import static org.junit.Assert.*;
  */
 public class LabelColumnTest {
 
+    @Before
+    public void initJCR() throws Exception {
+        MockUtil.initMockContext();
+        MockUtil.createAndSetHierarchyManager(ContentRepository.WEBSITE,
+                getClass().getResourceAsStream("sample-website.properties"));
+    }
+
     @Test
     public void testGetValue() throws RepositoryException {
-        MockNode mock = new MockNode();
-        String original = "Beckenbauer";
-        mock.setName(original);
-        mock.setProperty("name", original);
+        Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        Node node = session.getNode("/parent");
         LabelColumn column = new LabelColumn(new LabelColumnDefinition(), null, null, null);
-        Object result = column.getComponent(mock);
+        EditableText component = ((EditableText) column.getComponent(node));
+        Object result = component.getLabelText(node);
+
+        String original = "parent";
         assertEquals(original, result);
     }
 }

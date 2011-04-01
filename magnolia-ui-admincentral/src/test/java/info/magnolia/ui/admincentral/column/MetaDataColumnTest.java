@@ -35,15 +35,17 @@ package info.magnolia.ui.admincentral.column;
 
 import static junit.framework.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.JCRMetadataUtil;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.time.FastDateFormat;
 import org.junit.Before;
@@ -58,23 +60,27 @@ import com.vaadin.ui.Label;
  * @version $Id$
  */
 public class MetaDataColumnTest {
-    private Calendar cal = Calendar.getInstance();
-    private FastDateFormat dateFormat = FastDateFormat.getInstance(UIUtil.DEFAULT_DATE_PATTERN);
-    private Date now = new Date();
 
     @Before
-    public void setUp (){
-        cal.setTime(now);
+    public void initJCR() throws Exception {
+        MockUtil.initMockContext();
+        MockUtil.createAndSetHierarchyManager(ContentRepository.WEBSITE,
+                getClass().getResourceAsStream("sample-website.properties"));
     }
 
     @Test
     public void testGetValue() throws RepositoryException {
-        Node node = new MockNode();
-        Node metaData = node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(ContentRepository.NAMESPACE_PREFIX + ":" + MetaData.CREATION_DATE, cal);
+        Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
+        Node node = session.getNode("/parent");
+
+        Calendar cal = JCRMetadataUtil.getMetaData(node).getCreationDate();
+
         MetaDataColumn column = new MetaDataColumn(new MetaDataColumnDefinition());
-        Object result = ((Label)column.getComponent(node)).getValue();
-        Object first = dateFormat.format(now);
-        assertEquals(dateFormat.format(now), result);
+        Object result = ((Label) column.getComponent(node)).getValue();
+
+        FastDateFormat format = FastDateFormat.getInstance(UIUtil.DEFAULT_DATE_PATTERN);
+        String dateAsString = format.format(cal.getTime());
+
+        assertEquals(dateAsString, result);
     }
 }
