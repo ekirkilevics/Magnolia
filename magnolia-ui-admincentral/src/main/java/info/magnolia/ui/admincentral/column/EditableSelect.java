@@ -37,8 +37,7 @@ import java.util.Map;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
-import com.vaadin.event.FieldEvents;
-import com.vaadin.ui.Select;
+import com.vaadin.ui.NativeSelect;
 import info.magnolia.ui.framework.editor.ValueEditor;
 
 /**
@@ -57,7 +56,7 @@ public abstract class EditableSelect extends AbstractEditable {
         this.options = options;
     }
 
-    private static class SelectEditor extends Select implements ValueEditor {
+    private static class SelectEditor extends NativeSelect implements ValueEditor {
 
         private String path;
 
@@ -85,14 +84,14 @@ public abstract class EditableSelect extends AbstractEditable {
         select.focus();
         select.setImmediate(true);
         select.setInvalidAllowed(false);
-
+/*
         select.addListener(new FieldEvents.BlurListener() {
 
             public void blur(FieldEvents.BlurEvent event) {
                     onSave();
             }
         });
-
+*/
         select.setSizeFull();
 
         return new ComponentAndEditor(select, select);
