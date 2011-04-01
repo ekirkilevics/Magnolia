@@ -88,7 +88,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         }
 
         /**
-         * The implementation type is unknown for components created by ComponentFactories.
+         * The implementation type is unknown for components created by ComponentFactoryUtil.
          */
         public Class<? extends T> getImplementationType() {
             return implementationType;
@@ -204,7 +204,7 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
         for (ComponentFactoryConfiguration config : configuration.getFactories()) {
             ComponentFactory< ? > factory;
             try {
-                factory = ComponentFactories.createFactory(config.getFactoryClass(), this);
+                factory = ComponentFactoryUtil.createFactory(config.getFactoryClass(), this);
                 registerComponentFactory(config.getType(), factory);
             }
             catch (Exception e) {

@@ -39,11 +39,11 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 /**
  * Util class to for manipulating {@link ComponentProvider}s.
  */
-public class ComponentProviders {
+public class ComponentProviderUtil {
 
     public static MutableComponentProvider createChild(ComponentProvider componentProvider){
         if(!(componentProvider instanceof HierarchicalComponentProvider)){
-            throw new IllegalArgumentException("Only ComponentProviders of type HierarchicalComponentProvider can be extended");
+            throw new IllegalArgumentException("Only ComponentProviderUtil of type HierarchicalComponentProvider can be extended");
         }
         final MutableComponentProvider child = ((HierarchicalComponentProvider)componentProvider).createChild();
         child.registerInstance(ComponentProvider.class, child);

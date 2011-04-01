@@ -35,7 +35,7 @@ package info.magnolia.objectfactory.pico;
 
 import java.lang.reflect.InvocationTargetException;
 
-import info.magnolia.objectfactory.ComponentFactories;
+import info.magnolia.objectfactory.ComponentFactoryUtil;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.ComponentProvider;
 
@@ -83,7 +83,7 @@ public class ComponentFactoryProviderAdapter extends ProviderAdapter {
         // TODO -- well this is completely wrong for now, those should be cached
         try {
             if (this.factory == null) {
-                this.factory = ComponentFactories.createFactory(factoryClass, componentProvider);
+                this.factory = ComponentFactoryUtil.createFactory(factoryClass, componentProvider);
             }
             return this.factory.newInstance();
         } catch (InstantiationException e) {

@@ -58,6 +58,9 @@ final class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
 
     public T newInstance() {
         final Content node = ContentUtil.getContent(workspace, path);
+        if(node == null){
+            throw new NullPointerException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
+        }
         try {
             return (T) Content2BeanUtil.toBean(node, true, componentProvider);
         }

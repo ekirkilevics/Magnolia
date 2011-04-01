@@ -40,7 +40,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Util method to work with {@link ComponentFactory}s.
  */
-public class ComponentFactories {
+public class ComponentFactoryUtil {
 
     /**
      * Uses the empty constructor or passes the {@link ComponentProvider} such a constructor exists.
