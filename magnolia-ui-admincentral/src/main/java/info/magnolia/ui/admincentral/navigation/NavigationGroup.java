@@ -35,6 +35,8 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
 import info.magnolia.ui.model.navigation.registry.NavigationPermissionSchema;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
@@ -42,6 +44,7 @@ import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +79,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
     private Collection<NavigationItemDefinition> navigationItemDefs;
     private NavigationPermissionSchema permissions;
     private Presenter presenter;
+    private NavigationWorkArea navigationWorkarea;
 
     public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
         setCompositionRoot(accordion);
@@ -147,6 +151,14 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
         return new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon());
     }
 
+    public void setNavigationWorkarea(NavigationWorkArea navigationWorkarea) {
+        this.navigationWorkarea = navigationWorkarea;
+    }
+
+    public NavigationWorkArea getNavigationWorkarea() {
+        return navigationWorkarea;
+    }
+
     /**
      * Menu item button implementation.
      *
@@ -171,8 +183,6 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
                 setIcon(icon);
             }
             setCaption(NavigationGroup.this.getLabel(item));
-            log.debug("Attaching NavigationItem: {}", getCaption());
-
             setStyleName(BaseTheme.BUTTON_LINK);
             setHeight(20f, Button.UNITS_PIXELS);
 
@@ -205,5 +215,21 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
 
     public Component asVaadinComponent() {
         return this;
+    }
+
+    public void update(Place place) {
+        if(!(place instanceof WorkbenchPlace)){
+            return;
+        }
+        WorkbenchPlace currentPlace = (WorkbenchPlace) place;
+        String workbenchName = currentPlace.getWorkbenchName();
+        for(Entry<Tab, NavigationItemDefinition> entry:navigationItems.entrySet()){
+            if(entry.getValue().getName().equals(workbenchName)){
+                accordion.setSelectedTab(entry.getKey().getComponent());
+                navigationWorkarea.setVisible(true);
+                log.debug("selected tab {}", entry.getValue().getName());
+                break;
+            }
+        }
     }
 }

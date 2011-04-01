@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
@@ -52,5 +53,7 @@ public interface NavigationView extends View {
     public static interface Presenter{
         void onMenuSelection(MenuItemDefinition menuItem);
     }
+
+    void update(Place place);
 
 }

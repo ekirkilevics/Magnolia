@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition;
 import info.magnolia.ui.model.navigation.definition.NavigationWorkareaDefinition;
@@ -117,7 +118,16 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
                 navigationGroup.setPresenter(presenter);
             }
         }
+    }
 
+    public void update(Place place) {
+        for(NavigationWorkArea workarea: registeredNavigationAreas.values()){
+            //the navigation group will set the correct navigation  area as visible
+            workarea.setVisible(false);
+            for(NavigationGroup group: workarea.getNavigationGroup()){
+                group.update(place);
+            }
+        }
     }
 
     public Component asVaadinComponent() {
@@ -140,8 +150,8 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
                     for(NavigationWorkArea navigationWorkArea : registeredNavigationAreas.values()){
                         navigationWorkArea.setVisible(false);
                     }
-                    NavigationWorkArea selected = registeredNavigationAreas.get(event.getButton());
-                    selected.setVisible(true);
+                    NavigationWorkArea selectedNavigationWorkarea = registeredNavigationAreas.get(event.getButton());
+                    selectedNavigationWorkarea.setVisible(true);
                     presenter.onMenuSelection(definition);
                 }
             });

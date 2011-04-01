@@ -56,6 +56,7 @@ public class NavigationWorkArea extends CustomComponent {
 
         for(NavigationGroup group: navigationGroupView){
             container.addComponent(group);
+            group.setNavigationWorkarea(this);
         }
 
         //all work areas start not visible
