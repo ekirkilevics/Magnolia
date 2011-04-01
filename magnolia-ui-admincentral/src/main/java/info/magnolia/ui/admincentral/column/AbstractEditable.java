@@ -39,7 +39,6 @@ import info.magnolia.ui.framework.editor.Editor;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
-import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import com.vaadin.event.LayoutEvents;
@@ -101,8 +100,8 @@ public abstract class AbstractEditable extends CustomComponent {
         this.presenter = presenter;
 
         this.workspace = item.getSession().getWorkspace().getName();
-        this.nodeIdentifier = item instanceof Node ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
-        this.propertyName = item instanceof Property ? (item).getName() : null;
+        this.nodeIdentifier = item.isNode() ? ((Node) item).getIdentifier() : item.getParent().getIdentifier();
+        this.propertyName = item.isNode() ? null: item.getName();
 
         this.layout = new HorizontalLayout();
 
@@ -161,9 +160,7 @@ public abstract class AbstractEditable extends CustomComponent {
     protected abstract ComponentAndEditor getComponentAndEditor(Item item) throws RepositoryException;
 
     private Item getItem() throws RepositoryException {
-        Node node = MgnlContext.getJCRSession(this.workspace).getNodeByIdentifier(this.nodeIdentifier);
-        if (propertyName != null)
-            return node.getProperty(propertyName);
-        return node;
+        Node node = MgnlContext.getJCRSession(workspace).getNodeByIdentifier(nodeIdentifier);
+        return propertyName == null ? node : node.getProperty(propertyName);
     }
 }

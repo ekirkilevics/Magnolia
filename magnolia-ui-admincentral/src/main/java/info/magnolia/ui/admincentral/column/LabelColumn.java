@@ -33,16 +33,17 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.io.Serializable;
-import javax.jcr.Item;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import com.vaadin.ui.Component;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.LabelColumnDefinition;
+
+import java.io.Serializable;
+
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
 
 /**
  * Describes a column that contains the label of the item.
@@ -59,7 +60,7 @@ public class LabelColumn extends AbstractEditableColumn<LabelColumnDefinition> i
     @Override
     public Component getComponent(Item item) throws RepositoryException {
 
-        String path = item instanceof Node ? "@name" : item.getName() + "@name";
+        String path = item.isNode() ? "@name" : item.getName() + "@name";
 
         return new EditableText(item, new PresenterImpl(), path) {
 
