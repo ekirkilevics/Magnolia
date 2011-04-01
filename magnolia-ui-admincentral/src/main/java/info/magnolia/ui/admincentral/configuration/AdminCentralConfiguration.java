@@ -33,15 +33,41 @@
  */
 package info.magnolia.ui.admincentral.configuration;
 
-import info.magnolia.cms.security.User;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.ui.model.settings.UISettings;
+import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
+
 
 /**
- * Provides the {@link ComponentProviderConfiguration} for the current UI.
+ * Configuration of the AdminCentral.
  */
-public interface AdminCentralComponentsConfigurationProvider {
+public class AdminCentralConfiguration {
 
-    ComponentProviderConfiguration getConfiguration(User user, UISettings uiSettings);
+    private ApplicationConfiguration application;
 
+    private WorkbenchConfiguration workbench;
+
+    private NavigationDefinition navigation;
+
+    public ApplicationConfiguration getApplication() {
+        return application;
+    }
+
+    public void setApplication(ApplicationConfiguration application) {
+        this.application = application;
+    }
+
+    public WorkbenchConfiguration getWorkbench() {
+        return workbench;
+    }
+
+    public void setWorkbench(WorkbenchConfiguration workbench) {
+        this.workbench = workbench;
+    }
+
+    public NavigationDefinition getNavigation() {
+        return navigation;
+    }
+
+    public void setNavigation(NavigationDefinition navigation) {
+        this.navigation = navigation;
+    }
 }

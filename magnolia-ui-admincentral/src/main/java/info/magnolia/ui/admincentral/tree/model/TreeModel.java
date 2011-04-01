@@ -52,7 +52,7 @@ import com.vaadin.ui.Component;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.tree.container.JcrContainerSource;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
@@ -67,11 +67,11 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  */
 public class TreeModel implements JcrContainerSource {
 
-    private EditWorkspaceActionFactory actionFactory;
+    private WorkbenchActionFactory actionFactory;
     private WorkbenchDefinition workbenchDefinition;
     private Map<String, Column<?>> columns;
 
-    public TreeModel(WorkbenchDefinition workbenchDefinition, Map<String, Column<?>> columns, EditWorkspaceActionFactory actionFactory) {
+    public TreeModel(WorkbenchDefinition workbenchDefinition, Map<String, Column<?>> columns, WorkbenchActionFactory actionFactory) {
         this.workbenchDefinition = workbenchDefinition;
         this.actionFactory = actionFactory;
         this.columns = columns;

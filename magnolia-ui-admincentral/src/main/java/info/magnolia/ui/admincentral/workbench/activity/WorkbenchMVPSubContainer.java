@@ -34,16 +34,12 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.MutableComponentProvider;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
-import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
-import info.magnolia.ui.admincentral.workbench.view.WorkbenchViewImpl;
 import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.shell.Shell;
@@ -58,11 +54,13 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
 
     private WorkbenchPlace place;
     private WorkbenchRegistry workbenchRegistry;
+    private AdminCentralConfiguration adminCentralConfiguration;
 
-    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, Shell shell, ComponentProvider componentProvider) {
+    public WorkbenchMVPSubContainer(WorkbenchPlace place, WorkbenchRegistry workbenchRegistry, AdminCentralConfiguration adminCentralConfiguration, Shell shell, ComponentProvider componentProvider) {
         super("workbench-" + place.getWorkbenchName(), shell, componentProvider);
         this.place = place;
         this.workbenchRegistry = workbenchRegistry;
+        this.adminCentralConfiguration = adminCentralConfiguration;
 
     }
 
@@ -79,18 +77,16 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
     @Override
     protected void configureComponentProvider(MutableComponentProvider componentProvider) {
 
-        componentProvider.registerInstance(WorkbenchDefinition.class, workbenchRegistry.getWorkbench(place.getWorkbenchName()));
+        final ComponentProviderConfiguration defaultComponentsConfiguration = adminCentralConfiguration.getWorkbench().getComponents();
+        componentProvider.configure(defaultComponentsConfiguration);
 
-        componentProvider.registerImplementation(WorkbenchView.class, WorkbenchViewImpl.class);
-        componentProvider.registerImplementation(EditWorkspaceActionFactory.class, EditWorkspaceActionFactory.class);
+        // load the workbench specific configuration if existing
+        final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(place.getWorkbenchName());
+        if(workbenchDefinition.getComponents() != null){
+            componentProvider.configure(workbenchDefinition.getComponents());
+        }
 
-        componentProvider.registerImplementation(ItemListActivityMapper.class, ItemListActivityMapper.class);
-        componentProvider.registerImplementation(TreeActivity.class, TreeActivity.class);
-
-        componentProvider.registerImplementation(DetailViewActivityMapper.class, DetailViewActivityMapper.class);
-        componentProvider.registerImplementation(DetailViewActivity.class, DetailViewActivity.class);
-
-        componentProvider.registerConfiguredComponent(TreeBuilderProvider.class, ContentRepository.CONFIG, "/modules/admin-central/components/treeBuilderProvider", false);
+        componentProvider.registerInstance(WorkbenchDefinition.class, workbenchDefinition);
     }
 
     @Override

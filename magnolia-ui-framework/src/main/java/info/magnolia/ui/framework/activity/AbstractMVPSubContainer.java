@@ -34,7 +34,7 @@
 package info.magnolia.ui.framework.activity;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.ComponentProviders;
+import info.magnolia.objectfactory.ComponentProviderUtil;
 import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.event.HandlerRegistration;
@@ -79,7 +79,7 @@ public abstract class AbstractMVPSubContainer<A extends Activity> extends Abstra
     public AbstractMVPSubContainer(String id, Shell shell, ComponentProvider parentComponentProvider) {
         this.id = id;
         this.shell = shell;
-        this.componentProvider = ComponentProviders.createChild(parentComponentProvider);
+        this.componentProvider = ComponentProviderUtil.createChild(parentComponentProvider);
     }
 
     public void start(ViewPort viewPort, EventBus outerEventBus) {

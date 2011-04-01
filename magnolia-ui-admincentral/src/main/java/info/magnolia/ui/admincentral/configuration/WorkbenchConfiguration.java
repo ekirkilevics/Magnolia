@@ -31,25 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.navigation.registry;
+package info.magnolia.ui.admincentral.configuration;
 
-import info.magnolia.ui.model.navigation.definition.NavigationDefinition;
-import info.magnolia.ui.model.navigation.registry.NavigationProvider;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 
 /**
- * Binds the navigation configuration to the AdminCentral configuration.
+ * Default configuration of workbenches.
  */
-public class ConfiguredNavigationProvider implements NavigationProvider {
+public class WorkbenchConfiguration {
 
-    private NavigationDefinition navigation;
+    private ComponentProviderConfiguration components;
 
-    public NavigationDefinition getNavigation() {
-        return this.navigation;
+    public ComponentProviderConfiguration getComponents() {
+        return components;
     }
 
-    public void setNavigation(NavigationDefinition navigation) {
-        this.navigation = navigation;
+    public void setComponents(ComponentProviderConfiguration components) {
+        this.components = components;
     }
 
 }

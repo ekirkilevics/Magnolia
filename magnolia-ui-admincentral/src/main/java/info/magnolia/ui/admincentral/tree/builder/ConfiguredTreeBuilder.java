@@ -41,7 +41,7 @@ import java.util.Map;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
+import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
@@ -98,7 +98,7 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
             }
         }
 
-        EditWorkspaceActionFactory actionFactory = new EditWorkspaceActionFactory(componentProvider);
+        WorkbenchActionFactory actionFactory = new WorkbenchActionFactory(componentProvider);
 
         // FIXME the model should be set by the presenter
         TreeModel treeModel = new TreeModel(workbenchDefinition, columns, actionFactory);

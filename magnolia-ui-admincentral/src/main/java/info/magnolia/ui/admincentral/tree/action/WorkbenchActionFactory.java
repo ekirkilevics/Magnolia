@@ -44,9 +44,9 @@ import javax.jcr.Item;
 /**
  * Creates an action based on an {@link ActionDefinition}.
  */
-public class EditWorkspaceActionFactory extends FactoryBase<ActionDefinition, Action> {
+public class WorkbenchActionFactory extends FactoryBase<ActionDefinition, Action> {
 
-    public EditWorkspaceActionFactory(ComponentProvider componentProvider) {
+    public WorkbenchActionFactory(ComponentProvider componentProvider) {
         super(componentProvider);
 
         // TODO this should be configured

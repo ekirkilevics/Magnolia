@@ -36,11 +36,12 @@ package info.magnolia.ui.admincentral;
 
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.ComponentProviders;
+import info.magnolia.objectfactory.ComponentProviderUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.ui.admincentral.configuration.AdminCentralComponentsConfigurationProvider;
+import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
+import info.magnolia.ui.admincentral.configuration.AdminCentralConfigurationProvider;
 import info.magnolia.ui.model.settings.Direction;
 import info.magnolia.ui.model.settings.InputDevice;
 import info.magnolia.ui.model.settings.UISettings;
@@ -72,17 +73,20 @@ public class AdminCentralApplication extends Application implements HttpServletR
 
     private void createComponentProvider() {
 
-        final AdminCentralComponentsConfigurationProvider configurationProvider = Components.getComponent(AdminCentralComponentsConfigurationProvider.class);
+        final AdminCentralConfigurationProvider configurationProvider = Components.getComponent(AdminCentralConfigurationProvider.class);
         final User user = MgnlContext.getUser();
         final UISettings uiSettings = new UISettings(Direction.LTR, InputDevice.MOUSE);
 
-        final ComponentProviderConfiguration configuration = configurationProvider.getConfiguration(user, uiSettings);
+        final AdminCentralConfiguration configuration = configurationProvider.getConfiguration(user, uiSettings);
+        final ComponentProviderConfiguration componentsConfiguration = configuration.getApplication().getComponents();
 
         // now create the ui componentProvider
-        componentProvider = ComponentProviders.createChild(Components.getComponentProvider(), configuration);
+        componentProvider = ComponentProviderUtil.createChild(Components.getComponentProvider(), componentsConfiguration);
         componentProvider.registerInstance(Application.class, this);
         componentProvider.registerInstance(User.class, user);
         componentProvider.registerInstance(UISettings.class, uiSettings);
+        componentProvider.registerInstance(AdminCentralConfiguration.class, configuration);
+
 
 // TODO remove, but kept if something with the configuration goes wrong
 //        componentProvider.registerConfiguredComponent(NavigationProvider.class, ContentRepository.CONFIG, "/modules/admin-central/components/navigationProvider", false);

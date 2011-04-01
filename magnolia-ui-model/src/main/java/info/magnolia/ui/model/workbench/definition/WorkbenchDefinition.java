@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.model.workbench.definition;
 
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.ui.model.column.definition.ColumnDefinition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
@@ -56,6 +57,8 @@ public class WorkbenchDefinition implements Serializable {
     private String workspace;
 
     private String path;
+
+    private ComponentProviderConfiguration components;
 
     private Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();
 
@@ -121,5 +124,13 @@ public class WorkbenchDefinition implements Serializable {
 
     public boolean addMenuItem(MenuItemDefinition menuItem) {
         return menuItems.add(menuItem);
+    }
+
+    public ComponentProviderConfiguration getComponents() {
+        return components;
+    }
+
+    public void setComponents(ComponentProviderConfiguration components) {
+        this.components = components;
     }
 }

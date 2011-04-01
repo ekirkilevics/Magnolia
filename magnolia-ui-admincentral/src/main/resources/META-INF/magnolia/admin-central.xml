@@ -30,8 +30,8 @@
       <value>info.magnolia.ui.model.tree.registry.ConfiguredTreeManager</value>
     </property>
     <property>
-      <name>info.magnolia.ui.admincentral.configuration.AdminCentralComponentsConfigurationProvider</name>
-      <value>/modules/admin-central/components/adminCentralComponentsConfigurationProvider</value>
+      <name>info.magnolia.ui.admincentral.configuration.AdminCentralConfigurationProvider</name>
+      <value>info.magnolia.ui.admincentral.configuration.AdminCentralConfigurationProviderImpl</value>
     </property>
     <property>
       <name>info.magnolia.ui.model.navigation.definition.NavigationDefinition</name>

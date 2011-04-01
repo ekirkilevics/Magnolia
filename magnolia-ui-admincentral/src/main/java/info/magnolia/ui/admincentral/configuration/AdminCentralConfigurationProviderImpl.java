@@ -34,36 +34,23 @@
 package info.magnolia.ui.admincentral.configuration;
 
 import info.magnolia.cms.security.User;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.ui.admincentral.module.AdminCentralModule;
 import info.magnolia.ui.model.settings.UISettings;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 /**
- * Has a set of {@link ComponentProviderConfiguration}s.
+ * Gets the {@link AdminCentralConfiguration} from the {@link AdminCentralModule}.
  */
-public class ConfiguredAdminCentralComponentsConfigurationProvider implements AdminCentralComponentsConfigurationProvider{
+public class AdminCentralConfigurationProviderImpl implements AdminCentralConfigurationProvider{
 
-    // content2bean
-    private Map<String, ComponentProviderConfiguration> configurations = new HashMap<String, ComponentProviderConfiguration>();
+    private AdminCentralModule module;
 
-    public Map<String, ComponentProviderConfiguration> getConfigurations() {
-        return configurations;
+    public AdminCentralConfigurationProviderImpl(AdminCentralModule module) {
+        this.module = module;
     }
 
-    public void setConfigurations(Map<String, ComponentProviderConfiguration> configurations) {
-        this.configurations = configurations;
-    }
-
-    public void addConfiguration(String name, ComponentProviderConfiguration configuration){
-        this.configurations.put(name, configuration);
-    }
-
-    public ComponentProviderConfiguration getConfiguration(User user, UISettings uiSettings) {
-        // TODO add the decition logic about what configuration to use
-        return configurations.get("default");
+    public AdminCentralConfiguration getConfiguration(User user, UISettings uiSettings) {
+        // TODO will need a kind of mechanism for that
+        return module.getConfigurations().get("default");
     }
 
 }
