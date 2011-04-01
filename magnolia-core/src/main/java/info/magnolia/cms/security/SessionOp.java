@@ -62,7 +62,7 @@ public abstract class SessionOp<R> implements Op<R, RepositoryException> {
         Session session = null;
         try {
             // if you need to access repo before all is initialized use OnInitSessionOp instead
-            session = MgnlContext.getSession(repository);
+            session = MgnlContext.getJCRSession(repository);
         } catch (RepositoryException e) {
             log.error("failed to retrieve repository " + repository + " with " + e.getMessage(), e);
         }

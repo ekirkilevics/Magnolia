@@ -98,7 +98,7 @@ public class URISecurityFilter extends BaseSecurityFilter {
         }
         final String uri = MgnlContext.getAggregationState().getCurrentURI();
         try {
-            MgnlContext.getSession("uri").checkPermission(uri, permission);
+            MgnlContext.getJCRSession("uri").checkPermission(uri, permission);
             log.debug("user {} has been granted permission {} to access uri {}", new Object[] {MgnlContext.getUser().getName(), permission, uri});
             return true;
         } catch (AccessControlException ade) {

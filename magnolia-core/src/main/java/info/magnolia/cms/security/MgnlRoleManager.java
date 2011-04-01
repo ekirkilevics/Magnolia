@@ -66,7 +66,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
 
     public Role getRole(String name) {
         try {
-            return newRoleInstance(findPrincipalNode(name, MgnlContext.getSession(getRepositoryName())));
+            return newRoleInstance(findPrincipalNode(name, MgnlContext.getJCRSession(getRepositoryName())));
         }
         catch (Exception e) {
             log.debug("can't find role [" + name + "]", e);
@@ -104,7 +104,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
 
     public void removePermission(Role role, String repository, String path, long permission) {
         try {
-            Session session = MgnlContext.getSession(ContentRepository.REPOSITORY_USER);
+            Session session = MgnlContext.getJCRSession(ContentRepository.REPOSITORY_USER);
             Node roleNode = session.getNodeByIdentifier(role.getId());
             Node aclNode = getAclNode(roleNode, repository);
             NodeIterator children = aclNode.getNodes();
@@ -159,7 +159,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
 
     public void addPermission(Role role, String repository, String path, long permission) {
         try {
-            Session session = MgnlContext.getSession(getRepositoryName());
+            Session session = MgnlContext.getJCRSession(getRepositoryName());
             Node roleNode = session.getNodeByIdentifier(role.getId());
             Node aclNode = getAclNode(roleNode, repository);
             if (!this.existsPermission(aclNode, path, permission)) {

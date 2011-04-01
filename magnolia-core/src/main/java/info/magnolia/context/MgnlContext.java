@@ -505,7 +505,13 @@ public class MgnlContext {
         }
     }
 
-    public static Session getSession(String repository) throws LoginException, RepositoryException {
+    /**
+     * Note: this is the way to go, if you no longer want to rely on the Content-API.
+     *
+     * @param repository - repository to get session for
+     * @return a JCR session to the provided repository
+     */
+    public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
         return getInstance().getSession(repository, repository);
     }
 }

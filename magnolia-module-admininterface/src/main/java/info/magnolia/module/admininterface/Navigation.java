@@ -154,7 +154,7 @@ public class Navigation {
      */
     protected boolean isMenuPointRendered(Content mp) {
         try {
-            return MgnlContext.getSession(ContentRepository.CONFIG).hasPermission(mp.getHandle(), Session.ACTION_READ);
+            return MgnlContext.getJCRSession(ContentRepository.CONFIG).hasPermission(mp.getHandle(), Session.ACTION_READ);
         } catch (RepositoryException e) {
             log.debug("Failed to read navigation permission", e);
             return false;
