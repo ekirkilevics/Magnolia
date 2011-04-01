@@ -39,6 +39,7 @@ import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -86,8 +87,8 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
         actionList.showActions(contextMenuItems);
     }
 
-    public void showDetails(Node node) {
-        detailForm.showDetails(node);
+    public void showDetails(javax.jcr.Item item) {
+        detailForm.showDetails(item);
     }
 
     /**
@@ -147,15 +148,15 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
         private static final String LAST_MOD = "LastMod";
 
         public DetailForm() {
-            TextField uuid = new TextField(UUID);
-            uuid.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
-            uuid.setEnabled(false);
-            addField(UUID, uuid);
-
             TextField pathField = new TextField(PATH);
             pathField.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
             pathField.setEnabled(false);
             addField(PATH, pathField);
+
+            TextField uuid = new TextField(UUID);
+            uuid.setWidth(DEFAULT_FIELD_WIDTH, Sizeable.UNITS_PIXELS);
+            uuid.setEnabled(false);
+            addField(UUID, uuid);
 
             DateField lastMod = new DateField(LAST_MOD);
             lastMod.setDateFormat(UIUtil.DEFAULT_DATE_PATTERN);
@@ -168,15 +169,21 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
             addField(STATUS, statusField);
         }
 
-        public void showDetails(Node node) {
+        public void showDetails(javax.jcr.Item item) {
             try {
-                getField(UUID).setValue(node.getIdentifier());
-                getField(PATH).setValue(node.getPath());
+                getField(PATH).setValue(item.getPath());
+                if (item.isNode()) {
+                    Node node = (Node) item;
+                    getField(UUID).setValue(node.getIdentifier());
 
-                getField(LAST_MOD).setValue(JCRMetadataUtil.getLastModification(node).getTime());
+                    Calendar lastMod = JCRMetadataUtil.getLastModification(node);
+                    if (lastMod != null) {
+                        getField(LAST_MOD).setValue(JCRMetadataUtil.getLastModification(node).getTime());
+                    }
 
-                getField(STATUS).setIcon(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
-                getField(STATUS).setValue(JCRMetadataUtil.getMetaData(node).getActivationStatus());
+                    getField(STATUS).setIcon(new ExternalResource(UIUtil.getActivationStatusIconURL(node)));
+                    getField(STATUS).setValue(JCRMetadataUtil.getMetaData(node).getActivationStatus());
+                }
             } catch (RepositoryException e) {
                 // TODO proper ExceptionHandling
                 throw new RuntimeException(e);

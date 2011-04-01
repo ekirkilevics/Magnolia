@@ -33,9 +33,7 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.admincentral.jcr.JCRUtil;
 import info.magnolia.ui.admincentral.tree.action.EditWorkspaceActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.view.DetailView;
@@ -52,7 +50,6 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import java.util.List;
 
 import javax.jcr.Item;
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 /**
@@ -81,20 +78,21 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
 
     private void showItem(ItemSelectedPlace place) {
         String path = place.getPath();
-        final Content content;
+        final Item item;
         try {
-            content = MgnlContext.getHierarchyManager(place.getWorkspace()).getContent(path);
+            String normalizedPath = (workbenchDefinition.getPath() + path).replaceAll("//", "/");
+            item = MgnlContext.getJCRSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
+
         } catch (RepositoryException e) {
             shell.showError("Exception trying to access " + path, e);
             return;
         }
-        Node node = content.getJCRNode();
         // Displaying commands for the root node makes no sense
         if (!"/".equals(path)) {
             this.path = path;
             // FIXME should be dependent on the item type
             detailView.showActions(workbenchDefinition.getMenuItems());
-            detailView.showDetails(node);
+            detailView.showDetails(item);
         }
     }
 
@@ -106,7 +104,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
             final Item item;
             try {
                 String normalizedPath = (workbenchDefinition.getPath() + path).replaceAll("//", "/");
-                item = JCRUtil.getSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
+                item = MgnlContext.getJCRSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
                 if (menuItemDefinition.getName().equals(commandName)) {
                     final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
                     try {

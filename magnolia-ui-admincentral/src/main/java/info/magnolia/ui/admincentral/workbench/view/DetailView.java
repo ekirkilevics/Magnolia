@@ -38,7 +38,7 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 import java.util.List;
 
-import javax.jcr.Node;
+import javax.jcr.Item;
 /**
  * The detail view showing the list of available actions and some detail information.
  */
@@ -52,5 +52,5 @@ public interface DetailView extends View{
 
     void showActions(List<MenuItemDefinition> contextMenuItems);
 
-    void showDetails(Node node);
+    void showDetails(Item item);
 }

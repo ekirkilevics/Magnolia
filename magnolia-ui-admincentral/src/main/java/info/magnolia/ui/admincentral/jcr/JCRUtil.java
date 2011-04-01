@@ -117,6 +117,9 @@ public class JCRUtil {
         return (base + ++cnt);
     }
 
+    /**
+     * @deprecated - use MgnlContext#getJCRSession(String) instead
+     */
     public static Session getSession(String workspaceId) {
         return getWorkspace(workspaceId).getSession();
     }
