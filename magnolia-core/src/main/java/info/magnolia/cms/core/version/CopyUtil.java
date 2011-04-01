@@ -383,7 +383,7 @@ public final class CopyUtil {
      * @throws LoginException
      */
     private Session getSession() throws LoginException, RepositoryException {
-        return MgnlContext.getSession(VersionManager.VERSION_WORKSPACE);
+        return MgnlContext.getJCRSession(VersionManager.VERSION_WORKSPACE);
     }
 
     /**
@@ -393,7 +393,7 @@ public final class CopyUtil {
      * @throws LoginException
      */
     private Session getSession(String workspaceId) throws LoginException, RepositoryException {
-        return MgnlContext.getSession(workspaceId);
+        return MgnlContext.getJCRSession(workspaceId);
     }
 
     /**

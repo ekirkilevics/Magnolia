@@ -522,6 +522,6 @@ public abstract class BaseVersionManager {
      * @throws LoginException
      */
     protected Session getSession() throws LoginException, RepositoryException {
-        return MgnlContext.getSession(VersionManager.VERSION_WORKSPACE);
+        return MgnlContext.getJCRSession(VersionManager.VERSION_WORKSPACE);
     }
 }

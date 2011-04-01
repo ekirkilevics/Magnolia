@@ -71,7 +71,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
     }
 
     public void testCreateAndRestoreVersion() throws RepositoryException{
-        Session session = MgnlContext.getSession(ContentRepository.WEBSITE);
+        Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
         Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
         node.addNode("paragraph", ItemType.CONTENTNODE.getSystemName());
@@ -107,7 +107,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
         repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
 
-        Session session = MgnlContext.getSession(ContentRepository.WEBSITE);
+        Session session = MgnlContext.getJCRSession(ContentRepository.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
         Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
 
