@@ -197,7 +197,7 @@ public class ContentVersion extends DefaultContent {
         this.setNode(this.state.getNode(ItemType.JCR_FROZENNODE));
         try {
             if (!StringUtils.equalsIgnoreCase(this.state.getName(), VersionManager.ROOT_VERSION)) {
-                this.rule = VersionManager.getInstance().getUsedFilter(this);
+                this.rule = VersionManager.getInstance().getUsedFilter(this.getJCRNode());
             }
         }
         catch (Exception e) {
@@ -242,7 +242,7 @@ public class ContentVersion extends DefaultContent {
     @Override
     public String getName() {
         try {
-            return VersionManager.getInstance().getSystemNode(this).getNodeData(NAME).getString();
+            return VersionManager.getInstance().getSystemNode(this.getJCRNode()).getProperty(NAME).getString();
         }
         catch (RepositoryException re) {
             log.error("Failed to retrieve name from version system node", re);
@@ -255,7 +255,7 @@ public class ContentVersion extends DefaultContent {
      */
     public String getUserName() {
         try {
-            return VersionManager.getInstance().getSystemNode(this).getNodeData(VERSION_USER).getString();
+            return VersionManager.getInstance().getSystemNode(this.getJCRNode()).getProperty(VERSION_USER).getString();
         }
         catch (RepositoryException re) {
             log.error("Failed to retrieve user from version system node", re);
