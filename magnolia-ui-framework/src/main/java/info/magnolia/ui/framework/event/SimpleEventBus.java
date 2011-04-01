@@ -50,44 +50,39 @@ public class SimpleEventBus implements EventBus {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleEventBus.class);
 
-    private final Multimap<Class<? extends Event>, EventHandler> eventHandlers;
+    private final Multimap<Class<? extends Event>, EventHandler> eventHandlers = ArrayListMultimap.create();
 
-    public SimpleEventBus() {
-        eventHandlers = ArrayListMultimap.create();
-    }
-
-    public synchronized <H extends EventHandler> HandlerRegistration addHandler(final Class<? extends Event<H>> eventClass, final H handler) {
+    public <H extends EventHandler> HandlerRegistration addHandler(final Class<? extends Event<H>> eventClass, final H handler) {
         log.debug("Adding handler {} for events of class {}", handler, eventClass);
-        if (eventHandlers.containsEntry(eventClass, handler)) {
-            return new HandlerRegistration() {
-                public void removeHandler() {
-                    synchronized (SimpleEventBus.this) {
-                        eventHandlers.remove(eventClass, handler);
-                    }
-                }
-            };
-        }
-
-        eventHandlers.put(eventClass, handler);
-
+        internalAddHandler(eventClass, handler);
         return new HandlerRegistration() {
             public void removeHandler() {
-                synchronized (SimpleEventBus.this) {
-                    eventHandlers.remove(eventClass, handler);
-                }
+                internalRemoveHandler(eventClass, handler);
             }
         };
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public void fireEvent(Event event) {
-        Collection<EventHandler> eventHandlersSnapshot;
-        synchronized (this) {
-            eventHandlersSnapshot = new ArrayList<EventHandler>(eventHandlers.get(event.getClass()));
-        }
-        for (EventHandler eventHandler : eventHandlersSnapshot) {
+    public <H extends EventHandler> void fireEvent(Event<H> event) {
+        for (H eventHandler : internalGetHandlers(event)) {
             log.debug("Dispatch event {} with handler {}", event, eventHandler);
             event.dispatch(eventHandler);
         }
+    }
+
+    // Internal atomic operations
+
+    private synchronized <H extends EventHandler> void internalAddHandler(Class<? extends Event<H>> eventClass, H handler) {
+        if (!eventHandlers.containsEntry(eventClass, handler)) {
+            eventHandlers.put(eventClass, handler);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private synchronized <H extends EventHandler> Collection<H> internalGetHandlers(Event<H> event) {
+        return new ArrayList<H>((Collection<H>) eventHandlers.get(event.getClass()));
+    }
+
+    private synchronized <H extends EventHandler> void internalRemoveHandler(Class<? extends Event<H>> eventClass, H handler) {
+        eventHandlers.remove(eventClass, handler);
     }
 }

@@ -59,13 +59,12 @@ public class ResettableEventBus implements EventBus {
                 synchronized (ResettableEventBus.this) {
                     registration.removeHandler();
                     registrations.remove(registration);
-
                 }
             }
         };
     }
 
-    public void fireEvent(Event<?> event) {
+    public <H extends EventHandler> void fireEvent(Event<H> event) {
         wrapped.fireEvent(event);
     }
 

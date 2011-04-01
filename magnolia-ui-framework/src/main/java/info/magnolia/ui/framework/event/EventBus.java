@@ -38,8 +38,8 @@ package info.magnolia.ui.framework.event;
  */
 public interface EventBus  {
 
-    public <H extends EventHandler> HandlerRegistration addHandler(Class<? extends Event<H>> eventClass, H handler);
+    <H extends EventHandler> HandlerRegistration addHandler(Class<? extends Event<H>> eventClass, H handler);
 
-    public void fireEvent(Event<? extends EventHandler> event);
+    <H extends EventHandler> void fireEvent(Event<H> event);
 
 }
