@@ -222,6 +222,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
             return;
         }
         WorkbenchPlace currentPlace = (WorkbenchPlace) place;
+        //FIXME find a better way to get hold of the correct menu item to select.
         String workbenchName = currentPlace.getWorkbenchName();
         for(Entry<Tab, NavigationItemDefinition> entry:navigationItems.entrySet()){
             if(entry.getValue().getName().equals(workbenchName)){
