@@ -33,14 +33,12 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.column.definition.MetaDataColumnDefinition;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.jcr.Item;
@@ -49,6 +47,9 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
+
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 
 /**
  * Column that displays a property for a nodes MetaData. Used to display the modification date of
@@ -69,7 +70,7 @@ public class MetaDataColumn extends AbstractColumn<MetaDataColumnDefinition> imp
             Calendar date = JCRMetadataUtil.getMetaData(node).getCreationDate();
             final String pattern = StringUtils.isNotBlank(datePattern) ? datePattern : UIUtil.DEFAULT_DATE_PATTERN;
             final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance(pattern);
-            return date != null ? new Label(DATE_FORMAT.format(date.getTime())) : new Label("");
+            return  new Label( date != null ? DATE_FORMAT.format(date.getTime()) : "");
         }
         return new Label();
     }

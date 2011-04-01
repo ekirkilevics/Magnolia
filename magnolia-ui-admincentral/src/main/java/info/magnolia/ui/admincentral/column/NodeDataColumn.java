@@ -46,8 +46,7 @@ import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
 
 /**
- * A column that displays a NodeData value when viewing a content node. Used in the website tree for
- * the 'Title' column.
+ * A column that displays a NodeData value when viewing a content node. Used in the website tree for the 'Title' column.
  * FIXME this is a PropertyColumn, NodeData is a Content API term we have to avoid
  */
 public class NodeDataColumn extends AbstractEditableColumn<NodeDataColumnDefinition> implements Serializable {
@@ -67,23 +66,16 @@ public class NodeDataColumn extends AbstractEditableColumn<NodeDataColumnDefinit
     @Override
     public Component getComponent(Item item) throws RepositoryException {
 
-        if (item instanceof Node) {
-
-            return new EditableText(item, new PresenterImpl(), definition.getNodeDataName()) {
-
-                @Override
-                protected String getLabelText(Item item) throws RepositoryException {
-                    return getInternal((Node) item);
-                }
-            };
+        if (!item.isNode()) {
+            return new Label();
         }
-        return new Label();
-    }
 
-    private String getInternal(Node node) throws RepositoryException {
-        if (node.hasProperty(getNodeDataName())) {
-            return node.getProperty(getNodeDataName()).getString();
-        } else
-            return "";
+        return new EditableText(item, new PresenterImpl(), definition.getNodeDataName()) {
+            @Override
+            protected String getLabelText(Item item) throws RepositoryException {
+                Node node = (Node) item;
+                return node.hasProperty(getNodeDataName()) ? node.getProperty(getNodeDataName()).getString() : "";
+            }
+        };
     }
 }
