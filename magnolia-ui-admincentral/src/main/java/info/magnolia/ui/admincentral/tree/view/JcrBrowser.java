@@ -257,6 +257,8 @@ public class JcrBrowser extends TreeTable {
             setCollapsed(parent, false);
             parent = container.getParent(parent);
         }
+        //finally expand the root else children won't be visibile.
+        setCollapsed(parent, false);
 
         // Select the item
         select(itemId);
