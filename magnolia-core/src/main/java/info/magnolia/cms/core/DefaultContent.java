@@ -479,11 +479,11 @@ public class DefaultContent extends AbstractContent {
     }
 
     public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return VersionManager.getInstance().addVersion(this);
+        return VersionManager.getInstance().addVersion(this.getJCRNode());
     }
 
     public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
-        return VersionManager.getInstance().addVersion(this, rule);
+        return VersionManager.getInstance().addVersion(this.getJCRNode(), rule);
     }
 
     /**
@@ -509,15 +509,15 @@ public class DefaultContent extends AbstractContent {
     }
 
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return VersionManager.getInstance().getVersionHistory(this);
+        return VersionManager.getInstance().getVersionHistory(this.getJCRNode());
     }
 
     public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return VersionManager.getInstance().getAllVersions(this);
+        return VersionManager.getInstance().getAllVersions(this.getJCRNode());
     }
 
     public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return new ContentVersion(VersionManager.getInstance().getBaseVersion(this), this);
+        return new ContentVersion(VersionManager.getInstance().getBaseVersion(this.getJCRNode()), this);
     }
 
     public ContentVersion getVersionedContent(Version version) throws RepositoryException {
@@ -525,7 +525,7 @@ public class DefaultContent extends AbstractContent {
     }
 
     public ContentVersion getVersionedContent(String versionName) throws RepositoryException {
-        return new ContentVersion(VersionManager.getInstance().getVersion(this, versionName), this);
+        return new ContentVersion(VersionManager.getInstance().getVersion(this.getJCRNode(), versionName), this);
     }
 
     public void removeVersionHistory() throws AccessDeniedException, RepositoryException {

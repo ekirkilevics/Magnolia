@@ -34,17 +34,20 @@
 package info.magnolia.cms.core.version;
 
 import java.io.ByteArrayInputStream;
+import java.util.Collections;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.version.Version;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockContext;
 
 /**
  * @author philipp
@@ -52,29 +55,46 @@ import info.magnolia.test.RepositoryTestCase;
  */
 public class BaseVersionManagerTest extends RepositoryTestCase {
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        MockContext ctx = (MockContext) MgnlContext.getSystemContext();
+        ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP));
+        //MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("superuser.properties"));
+        //DataTransporter.importXmlStream(getClass().getResourceAsStream("/mgnl-bootstrap/core/users.system.superuser.xml"), ContentRepository.USERS, "/system", "superuser", false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW, true, true);
+
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
     public void testCreateAndRestoreVersion() throws RepositoryException{
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-        Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());
-        node.createContent("paragraph", ItemType.CONTENTNODE.getSystemName());
-        hm.save();
-        Version version = node.addVersion();
+        Session session = MgnlContext.getSession(ContentRepository.WEBSITE);
+        VersionManager versionMan = VersionManager.getInstance();
+        Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
+        node.addNode("paragraph", ItemType.CONTENTNODE.getSystemName());
+        session.save();
+        Version version = versionMan.addVersion(node);
         assertFalse("Original node should not have mixin", node.isNodeType(ItemType.MIX_VERSIONABLE));
 
-        Content nodeInVersionWS = VersionManager.getInstance().getVersionedNode(node);
+        Node nodeInVersionWS =versionMan.getVersionedNode(node);
         assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(ItemType.MIX_VERSIONABLE));
 
         // assert that the the paragraph was versioned
-        Content versionedNode = node.getVersionedContent(version.getName());
-        assertTrue("Versioned content must include the paragraph", versionedNode.hasContent("paragraph"));
+        Node versionedNode = versionMan.getVersion(node, version.getName());
+        assertTrue("Versioned content must include the paragraph", versionedNode.hasNode("paragraph"));
 
         // now delete the paragraph
-        node.delete("paragraph");
+        node.getNode("paragraph").remove();
         node.save();
-        assertFalse("Paragraph should be deleted", node.hasContent("paragraph"));
+        assertFalse("Paragraph should be deleted", node.hasNode("paragraph"));
 
         // restore
+        //FIXME: wrap all nodes returned by the session (except for mgnlVersion) in the wrapper that delegates restore call to the version manager ...
         node.restore(version.getName(), true);
-        assertTrue("Paragraph should be restored", node.hasContent("paragraph"));
+        assertTrue("Paragraph should be restored", node.hasNode("paragraph"));
     }
 
     public void testCreateAndRestoreDeletedVersion() throws RepositoryException {
@@ -87,26 +107,27 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
         repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
 
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-        Content node = hm.createContent("/", "page", ItemType.CONTENT.getSystemName());
+        Session session = MgnlContext.getSession(ContentRepository.WEBSITE);
+        VersionManager versionMan = VersionManager.getInstance();
+        Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
 
         // add deleted mixin
         node.addMixin(ItemType.DELETED_NODE_MIXIN);
 
-        hm.save();
-        Version version = node.addVersion();
+        session.save();
+        Version version = versionMan.addVersion(node);
 
-        Content nodeInVersionWS = VersionManager.getInstance().getVersionedNode(node);
+        Node nodeInVersionWS = versionMan.getVersionedNode(node);
         assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
 
         node.removeMixin(ItemType.DELETED_NODE_MIXIN);
-        hm.save();
+        session.save();
 
         assertFalse("Node in website workspace should not have mixin", node.isNodeType(ItemType.DELETED_NODE_MIXIN));
 
         // add version w/o mixin
-        node.addVersion();
-        nodeInVersionWS = VersionManager.getInstance().getVersionedNode(node);
+        versionMan.addVersion(node);
+        nodeInVersionWS = versionMan.getVersionedNode(node);
 
         assertFalse("Node in mgnlVersion workspace should not have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
     }

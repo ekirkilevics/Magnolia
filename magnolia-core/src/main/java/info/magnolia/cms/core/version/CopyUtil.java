@@ -33,33 +33,34 @@
  */
 package info.magnolia.cms.core.version;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.cms.core.HierarchyManager;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.LoginException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,13 +93,13 @@ public final class CopyUtil {
      * @param source
      * @param filter
      */
-    void copyToversion(Content source, Content.ContentFilter filter) throws RepositoryException {
+    void copyToversion(Node source, Predicate filter) throws RepositoryException {
         // first check if the node already exist
-        Content root;
+        Node root;
         try {
-            root = this.getHierarchyManager().getContentByUUID(source.getUUID());
+            root = this.getSession().getNodeByIdentifier(source.getUUID());
             if (root.getParent().getName().equalsIgnoreCase(VersionManager.TMP_REFERENCED_NODES)) {
-                root.getJCRNode().getSession().move(root.getHandle(), "/" + root.getName());
+                root.getSession().move(root.getPath(), "/" + root.getName());
             }
             this.removeProperties(root);
             // copy root properties
@@ -110,27 +111,27 @@ public final class CopyUtil {
         catch (ItemNotFoundException e) {
             // create root for this versionable node
             try {
-                this.importNode(this.getHierarchyManager().getRoot(), source);
+                this.importNode(this.getSession().getRootNode(), source);
             }
             catch (IOException ioe) {
                 throw new RepositoryException("Failed to import node in magnolia version store : " + ioe.getMessage());
             }
-            root = this.getHierarchyManager().getContentByUUID(source.getUUID());
+            root = this.getSession().getNodeByIdentifier(source.getUUID());
             // copy root properties
             // this.updateProperties(source, root);
             // save parent node since this node is newly created
-            getHierarchyManager().getRoot().save();
+            getSession().getRootNode().save();
         }
         // copy all child nodes
-        Iterator children = source.getChildren(filter).iterator();
+        NodeIterator children = new FilteringNodeIterator(source.getNodes(), filter);
         while (children.hasNext()) {
-            Content child = (Content) children.next();
+            Node child = children.nextNode();
             this.clone(child, root, filter, true);
         }
         this.removeNonExistingChildNodes(source, root, filter);
     }
 
-    private void updateNodeTypes(Content source, Content root) throws RepositoryException {
+    private void updateNodeTypes(Node source, Node root) throws RepositoryException {
         List<String> targetNodeTypes = new ArrayList<String>();
         for (NodeType t : root.getMixinNodeTypes()) {
             targetNodeTypes.add(t.getName());
@@ -155,7 +156,7 @@ public final class CopyUtil {
      * @param destination which needs to be restored
      * @param filter this must be the same filter as used while creating this version
      */
-    void copyFromVersion(Content source, Content destination, Content.ContentFilter filter) throws RepositoryException {
+    void copyFromVersion(Node source, Node destination, Predicate filter) throws RepositoryException {
         // merge top node properties
         this.removeProperties(destination);
         this.updateProperties(source, destination);
@@ -167,7 +168,7 @@ public final class CopyUtil {
         this.removeNonExistingMixins(source, destination);
     }
 
-    private void removeNonExistingMixins(Content source, Content destination) throws RepositoryException {
+    private void removeNonExistingMixins(Node source, Node destination) throws RepositoryException {
         List<String> destNodeTypes = new ArrayList<String>();
         // has to match mixin names as mixin instances to not equal()
         for (NodeType nt : destination.getMixinNodeTypes()) {
@@ -186,23 +187,23 @@ public final class CopyUtil {
     /**
      * Recursively removes all child nodes from node using specified filter.
      */
-    private void removeNonExistingChildNodes(Content source, Content destination, Content.ContentFilter filter)
+    private void removeNonExistingChildNodes(Node source, Node destination, Predicate filter)
     throws RepositoryException {
         // collect all uuids from the source node hierarchy using the given filter
-        Iterator children = destination.getChildren(filter).iterator();
+        NodeIterator children = new FilteringNodeIterator(destination.getNodes(), filter);
         while (children.hasNext()) {
-            Content child = (Content) children.next();
+            Node child = children.nextNode();
             // check if this child exist in source, if not remove it
-            if (child.getJCRNode().getDefinition().isAutoCreated()) {
+            if (child.getDefinition().isAutoCreated()) {
                 continue;
             }
             try {
-                source.getJCRNode().getSession().getNodeByUUID(child.getUUID());
+                source.getSession().getNodeByUUID(child.getUUID());
                 // if exist its ok, recursively remove all sub nodes
                 this.removeNonExistingChildNodes(source, child, filter);
             }
             catch (ItemNotFoundException e) {
-                PropertyIterator referencedProperties = child.getJCRNode().getReferences();
+                PropertyIterator referencedProperties = child.getReferences();
                 if (referencedProperties.getSize() > 0) {
                     // remove all referenced properties, its safe since source workspace cannot have these
                     // properties if node with this UUID does not exist
@@ -210,7 +211,7 @@ public final class CopyUtil {
                         referencedProperties.nextProperty().remove();
                     }
                 }
-                child.delete();
+                child.remove();
             }
         }
     }
@@ -218,35 +219,34 @@ public final class CopyUtil {
     /**
      * Copy all child nodes from node1 to node2.
      */
-    private void copyAllChildNodes(Content node1, Content node2, Content.ContentFilter filter)
+    private void copyAllChildNodes(Node node1, Node node2, Predicate filter)
     throws RepositoryException {
-        Iterator children = node1.getChildren(filter).iterator();
+        NodeIterator children = new FilteringNodeIterator(node1.getNodes(), filter);
         while (children.hasNext()) {
-            Content child = (Content) children.next();
+            Node child = children.nextNode();
             this.clone(child, node2, filter, false);
         }
     }
 
-    public void clone(Content node, Content parent, Content.ContentFilter filter, boolean removeExisting)
+    public void clone(Node node, Node parent, Predicate filter, boolean removeExisting)
     throws RepositoryException {
         try {
             // it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
             // exist, "removeExisting" has no effect
             // if node exist with the same UUID, simply update non propected properties
-            String workspaceName = ContentRepository.getInternalWorkspaceName(parent.getWorkspace().getName());
-            Content existingNode = getHierarchyManager(workspaceName)
-            .getContentByUUID(node.getUUID());
+            String workspaceName = ContentRepository.getInternalWorkspaceName(parent.getSession().getWorkspace().getName());
+            Node existingNode = getSession(workspaceName).getNodeByIdentifier(node.getUUID());
             if (removeExisting) {
-                existingNode.delete();
+                existingNode.remove();
                 parent.save();
                 this.clone(node, parent);
                 return;
             }
             this.removeProperties(existingNode);
             this.updateProperties(node, existingNode);
-            Iterator children = node.getChildren(filter).iterator();
+            NodeIterator children = new FilteringNodeIterator(node.getNodes(), filter);
             while (children.hasNext()) {
-                this.clone((Content) children.next(), existingNode, filter, removeExisting);
+                this.clone(children.nextNode(), existingNode, filter, removeExisting);
             }
         }
         catch (ItemNotFoundException e) {
@@ -255,17 +255,17 @@ public final class CopyUtil {
         }
     }
 
-    private void clone(Content node, Content parent) throws RepositoryException {
-        if (node.getJCRNode().getDefinition().isAutoCreated()) {
-            Content destination = parent.getContent(node.getName());
+    private void clone(Node node, Node parent) throws RepositoryException {
+        if (node.getDefinition().isAutoCreated()) {
+            Node destination = parent.getNode(node.getName());
             this.removeProperties(destination);
             this.updateProperties(node, destination);
         }
         else {
-            String parH = parent.getHandle();
-            parent.getWorkspace().clone(
-                    node.getWorkspace().getName(),
-                    node.getHandle(),
+            String parH = parent.getPath();
+            parent.getSession().getWorkspace().clone(
+                    node.getSession().getWorkspace().getName(),
+                    node.getPath(),
                     parH + (parH != null && parH.endsWith("/") ? "" :"/") + node.getName(),
                     true);
         }
@@ -274,8 +274,8 @@ public final class CopyUtil {
     /**
      * Remove all properties under the given node.
      */
-    private void removeProperties(Content node) throws RepositoryException {
-        PropertyIterator properties = node.getJCRNode().getProperties();
+    private void removeProperties(Node node) throws RepositoryException {
+        PropertyIterator properties = node.getProperties();
         while (properties.hasNext()) {
             Property property = properties.nextProperty();
             if (property.getDefinition().isProtected() || property.getDefinition().isMandatory()) {
@@ -299,15 +299,15 @@ public final class CopyUtil {
      * @throws RepositoryException
      * @throws IOException if failed to import or export
      */
-    private void importNode(Content parent, Content node) throws RepositoryException, IOException {
+    private void importNode(Node parent, Node node) throws RepositoryException, IOException {
         File file = File.createTempFile("mgnl", null, Path.getTempDirectory());
         FileOutputStream outStream = new FileOutputStream(file);
-        node.getWorkspace().getSession().exportSystemView(node.getHandle(), outStream, false, true);
+        node.getSession().getWorkspace().getSession().exportSystemView(node.getPath(), outStream, false, true);
         outStream.flush();
         IOUtils.closeQuietly(outStream);
         FileInputStream inStream = new FileInputStream(file);
-        parent.getWorkspace().getSession().importXML(
-                parent.getHandle(),
+        parent.getSession().getWorkspace().getSession().importXML(
+                parent.getPath(),
                 inStream,
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inStream);
@@ -317,10 +317,8 @@ public final class CopyUtil {
     /**
      * Merge all non reserved properties.
      */
-    private void updateProperties(Content source, Content destination) throws RepositoryException {
-        Node sourceNode = source.getJCRNode();
-        Node destinationNode = destination.getJCRNode();
-        PropertyIterator properties = sourceNode.getProperties();
+    private void updateProperties(Node source, Node destination) throws RepositoryException {
+        PropertyIterator properties = source.getProperties();
         while (properties.hasNext()) {
             Property property = properties.nextProperty();
             // exclude system property Rule and Version specific properties which were created on version
@@ -341,22 +339,22 @@ public final class CopyUtil {
                 if (property.getType() == PropertyType.REFERENCE) {
                     // first check for the referenced node existence
                     try {
-                        getHierarchyManager(destination.getWorkspace().getName())
-                        .getContentByUUID(property.getString());
+                        getSession(destination.getSession().getWorkspace().getName())
+                        .getNodeByIdentifier(property.getString());
                     }
                     catch (ItemNotFoundException e) {
                         if (!StringUtils.equalsIgnoreCase(
-                                destination.getWorkspace().getName(),
+                                destination.getSession().getWorkspace().getName(),
                                 VersionManager.VERSION_WORKSPACE)) {
                             throw e;
                         }
                         // get referenced node under temporary store
                         // use jcr import, there is no other way to get a node without sub hierarchy
-                        Content referencedNode = getHierarchyManager(source.getWorkspace().getName()).getContentByUUID(
+                        Node referencedNode = getSession(source.getSession().getWorkspace().getName()).getNodeByIdentifier(
                                 property.getString());
                         try {
                             this.importNode(getTemporaryPath(), referencedNode);
-                            this.removeProperties(getHierarchyManager().getContentByUUID(property.getString()));
+                            this.removeProperties(getSession().getNodeByIdentifier(property.getString()));
                             getTemporaryPath().save();
                         }
                         catch (IOException ioe) {
@@ -365,10 +363,10 @@ public final class CopyUtil {
                     }
                 }
                 if (property.getDefinition().isMultiple()) {
-                    destinationNode.setProperty(property.getName(), property.getValues());
+                    destination.setProperty(property.getName(), property.getValues());
                 }
                 else {
-                    destinationNode.setProperty(property.getName(), property.getValue());
+                    destination.setProperty(property.getName(), property.getValue());
                 }
             }
             catch (ConstraintViolationException e) {
@@ -380,24 +378,28 @@ public final class CopyUtil {
     }
 
     /**
-     * Get version store hierarchy manager.
+     * Get version store session.
+     * @throws RepositoryException
+     * @throws LoginException
      */
-    private HierarchyManager getHierarchyManager() {
-        return MgnlContext.getHierarchyManager(VersionManager.VERSION_WORKSPACE);
+    private Session getSession() throws LoginException, RepositoryException {
+        return MgnlContext.getSession(VersionManager.VERSION_WORKSPACE);
     }
 
     /**
-     * Get hierarchy manager of the specified workspace.
+     * Get session of the specified workspace.
      * @param workspaceId
+     * @throws RepositoryException
+     * @throws LoginException
      */
-    private HierarchyManager getHierarchyManager(String workspaceId) {
-        return MgnlContext.getHierarchyManager(workspaceId);
+    private Session getSession(String workspaceId) throws LoginException, RepositoryException {
+        return MgnlContext.getSession(workspaceId);
     }
 
     /**
      * Get temporary node.
      */
-    private Content getTemporaryPath() throws RepositoryException {
-        return getHierarchyManager().getContent("/" + VersionManager.TMP_REFERENCED_NODES);
+    private Node getTemporaryPath() throws RepositoryException {
+        return getSession().getNode("/" + VersionManager.TMP_REFERENCED_NODES);
     }
 }

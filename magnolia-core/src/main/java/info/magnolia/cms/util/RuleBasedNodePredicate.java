@@ -33,41 +33,41 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.JCRUtil;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
  * A {@link ContentFilter} using a {@link Rule}.
- * @version $Revision$ ($Author$)
- * @deprecated since 5.0 use {@link RuleBasedNodePredicate} instead
+ * @version $Revision: 41135 $ ($Author: gjoseph $)
  */
-@Deprecated
-public class RuleBasedContentFilter implements Content.ContentFilter {
+public class RuleBasedNodePredicate implements Predicate {
 
-    private static Logger log = LoggerFactory.getLogger(RuleBasedContentFilter.class);
+    private static Logger log = LoggerFactory.getLogger(RuleBasedNodePredicate.class);
 
     /**
      * Rule on which this filter works.
      */
     private final Rule rule;
 
-    public RuleBasedContentFilter(Rule rule) {
+    public RuleBasedNodePredicate(Rule rule) {
         this.rule = rule;
     }
 
-    /**
-     * Test if this content should be included in a resultant collection.
-     * @return if true this will be a part of collection
-     */
-    public boolean accept(Content content) {
+    public boolean evaluate(Object object) {
+        if (!(object instanceof Node)) {
+            return false;
+        }
+        Node content = (Node) object;
         String nodeType = "";
         try {
-            nodeType = content.getNodeTypeName();
+            nodeType = JCRUtil.getNodeTypeName(content);
         }
         catch (RepositoryException re) {
             if (log.isDebugEnabled()) {

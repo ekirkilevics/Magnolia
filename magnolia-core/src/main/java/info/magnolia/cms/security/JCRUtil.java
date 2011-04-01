@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
@@ -47,6 +48,9 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * Various utility methods to collect data from JCR repository.
  * @author had
  * @version $Id: $
- * @deprecated reintegrate this code back in the Context!
+ * @deprecated reintegrate this code back in some other utils or move it to proper place!
  */
 @Deprecated
 public class JCRUtil {
@@ -109,4 +113,31 @@ public class JCRUtil {
                 return null;
             }});
     }
+
+    /**
+     * from default content.
+     */
+    public static boolean hasMixin(Node node, String mixinName) throws RepositoryException {
+        if (StringUtils.isBlank(mixinName)) {
+            throw new IllegalArgumentException("Mixin name can't be empty.");
+        }
+        for (NodeType type : node.getMixinNodeTypes()) {
+            if (mixinName.equals(type.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * from default content.
+     */
+    public static String getNodeTypeName(Node node) throws RepositoryException {
+
+        if (node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+            return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+        }
+        return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+    }
+
 }

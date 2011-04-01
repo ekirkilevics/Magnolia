@@ -34,6 +34,7 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.User;
 import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.SystemContext;
 
@@ -44,6 +45,8 @@ import info.magnolia.context.SystemContext;
  *
  */
 public class MockContext extends AbstractMapBasedContext implements SystemContext{
+
+    private User user;
 
     public MockContext() {
         this.setRepositoryStrategy(new MockRepositoryAcquiringStrategy());
@@ -57,4 +60,21 @@ public class MockContext extends AbstractMapBasedContext implements SystemContex
         ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addSession(repositoryId, session);
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public User getUser() {
+        if (this.user != null) {
+            return this.user;
+        }
+        return super.getUser();
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.user = null;
+    }
 }
