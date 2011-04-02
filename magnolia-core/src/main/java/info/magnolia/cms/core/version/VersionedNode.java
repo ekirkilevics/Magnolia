@@ -59,6 +59,10 @@ public class VersionedNode extends DelegateNodeWrapper implements Node, Version 
         this.frozenNode = versionedNode.getNode("jcr:frozenNode");
     }
 
+    public Version unwrap() {
+        return version;
+    }
+
     @Override
     public Node getWrappedNode() {
         return this.frozenNode;
@@ -91,5 +95,4 @@ public class VersionedNode extends DelegateNodeWrapper implements Node, Version 
     public Version[] getSuccessors() throws RepositoryException {
         return version.getSuccessors();
     }
-
 }

@@ -39,6 +39,7 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
+import info.magnolia.cms.core.version.MgnlVersioningSession;
 import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
@@ -137,7 +138,12 @@ public class WorkspaceAccessUtil {
     public Session createRepositorySession(Credentials credentials,
             Repository repository,
             String workspaceName) throws LoginException, NoSuchWorkspaceException, RepositoryException {
-        return repository.login(credentials, ContentRepository.getMappedWorkspaceName(workspaceName));
+        Session session = repository.login(credentials, ContentRepository.getMappedWorkspaceName(workspaceName));
+        if (ContentRepository.VERSION_STORE.equals(workspaceName)) {
+            //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
+            return session;
+        }
+        return new MgnlVersioningSession(session);
     }
 
     /**

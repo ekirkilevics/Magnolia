@@ -378,11 +378,18 @@ public abstract class BaseVersionManager {
      * @throws javax.jcr.RepositoryException if an error occurs
      * @throws javax.jcr.version.VersionException
      */
-    public synchronized void restore(final Node node, final Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+    public synchronized void restore(final Node node, Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
         // get the cloned node from version store
         final Node versionedNode = this.getVersionedNode(node);
 
-        versionedNode.restore(version, removeExisting);
+        final Version unwrappedVersion;
+        if (version instanceof VersionedNode) {
+            unwrappedVersion = ((VersionedNode) version).unwrap();
+        } else {
+            unwrappedVersion = version;
+        }
+
+        versionedNode.restore(unwrappedVersion, removeExisting);
         versionedNode.checkout();
         MgnlContext.doInSystemContext(new SessionOp<Void>(versionedNode.getSession().getWorkspace().getName()) {
 
@@ -390,7 +397,7 @@ public abstract class BaseVersionManager {
             public Void exec(Session session) throws RepositoryException {
                 //mixins are NOT restored automatically
                 List<String> mixins = new ArrayList<String>();
-                for (Value v: version.getNode("jcr:frozenNode").getProperty("jcr:frozenMixinTypes").getValues()) {
+                for (Value v: unwrappedVersion.getNode("jcr:frozenNode").getProperty("jcr:frozenMixinTypes").getValues()) {
                     mixins.add(v.getString());
                 }
 
