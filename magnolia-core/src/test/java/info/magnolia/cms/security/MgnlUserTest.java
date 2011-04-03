@@ -100,9 +100,6 @@ public class MgnlUserTest extends TestCase {
 
     public void testGetAllGroupsReturnsDirectAndInheritedGroups() {
         final Collection<String> groups = uman.getUser("georges").getAllGroups();
-        for (String name : groups) {
-            System.out.println("G:" + name);
-        }
         assertEquals(4, groups.size());
         assertTrue(groups.contains("groupA"));
         assertTrue(groups.contains("groupB"));
