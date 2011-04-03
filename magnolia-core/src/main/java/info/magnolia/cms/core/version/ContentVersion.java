@@ -41,15 +41,10 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.ContentWrapper;
-import info.magnolia.cms.util.HierarchyManagerWrapper;
 import info.magnolia.cms.util.NodeDataWrapper;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.util.SimpleUrlPattern;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -162,30 +157,36 @@ public class ContentVersion extends DefaultContent {
         if (thisVersion == null) {
             throw new RepositoryException("Failed to get ContentVersion, version does not exist");
         }
-        this.state = thisVersion;
+        if (thisVersion instanceof VersionedNode) {
+            this.state = ((VersionedNode) thisVersion).unwrap();
+        } else {
+            this.state = thisVersion;
+        }
         this.base = base;
 
-        this.hierarchyManager = new HierarchyManagerWrapper(base.getHierarchyManager()) {
-            private AccessManagerImpl accessManager;
+        //setting permissions should be no longer necessary as it is handled by jcr itself
 
-            {
-                // child nodes (and metaData if nothing else) depends on this to have access when root access is restricted for given user
-                List<Permission> permissions = new ArrayList<Permission>(getWrappedHierarchyManager().getAccessManager().getPermissionList());
-                PermissionImpl p = new PermissionImpl();
-                p.setPattern(new SimpleUrlPattern("/jcr:system/jcr:versionStorage/*"));
-                // read only
-                p.setPermissions(8);
-                permissions.add(p);
-                // use dedicated AM and not the one base share with its parent
-                accessManager = new AccessManagerImpl();
-                accessManager.setPermissionList(permissions);
-            }
-
-            @Override
-            public AccessManager getAccessManager() {
-                return accessManager;
-            }
-        };
+        //        this.hierarchyManager = new HierarchyManagerWrapper(base.getHierarchyManager()) {
+        //            private AccessManagerImpl accessManager;
+        //
+        //            {
+        //                // child nodes (and metaData if nothing else) depends on this to have access when root access is restricted for given user
+        //                List<Permission> permissions = new ArrayList<Permission>(getWrappedHierarchyManager().getAccessManager().getPermissionList());
+        //                PermissionImpl p = new PermissionImpl();
+        //                p.setPattern(new SimpleUrlPattern("/jcr:system/jcr:versionStorage/*"));
+        //                // read only
+        //                p.setPermissions(8);
+        //                permissions.add(p);
+        //                // use dedicated AM and not the one base share with its parent
+        //                accessManager = new AccessManagerImpl();
+        //                accessManager.setPermissionList(permissions);
+        //            }
+        //
+        //            @Override
+        //            public AccessManager getAccessManager() {
+        //                return accessManager;
+        //            }
+        //        };
         this.init();
     }
 

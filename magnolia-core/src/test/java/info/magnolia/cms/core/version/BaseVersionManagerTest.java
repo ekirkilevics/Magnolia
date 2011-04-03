@@ -58,16 +58,10 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        // context is then cleared automatically on teardown by RepoTestCase(MgnlTestCase)
         MockContext ctx = (MockContext) MgnlContext.getSystemContext();
         ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP));
-        //MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("superuser.properties"));
-        //DataTransporter.importXmlStream(getClass().getResourceAsStream("/mgnl-bootstrap/core/users.system.superuser.xml"), ContentRepository.USERS, "/system", "superuser", false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW, true, true);
 
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
     public void testCreateAndRestoreVersion() throws RepositoryException{

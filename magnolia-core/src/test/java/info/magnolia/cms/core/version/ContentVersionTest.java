@@ -42,12 +42,15 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockContext;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collections;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
@@ -61,6 +64,14 @@ public class ContentVersionTest extends RepositoryTestCase {
 
     private static final String NOT_VERSIONED = "after versioning";
     private static final String VERSIONED = "before versioning";
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        // context is then cleared automatically on teardown by RepoTestCase(MgnlTestCase)
+        MockContext ctx = (MockContext) MgnlContext.getSystemContext();
+        ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP));
+    }
 
     public void testBasics() throws RepositoryException{
         final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
