@@ -34,7 +34,6 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.SilentSessionOp;
 import info.magnolia.cms.util.ObservationUtil;
@@ -145,7 +144,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
             @Override
             public Void doExec(Session session) throws RepositoryException {
                 // create hm from session
-                HierarchyManager hm = new DefaultHierarchyManager(session.getUserID(), session, null);
+                HierarchyManager hm = MgnlContext.getHierarchyManager(session.getWorkspace().getName());
                 if (session.nodeExists(path)) {
                     try {
                         // TODO: change this once c2b is n2b ...
@@ -163,7 +162,7 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
 
             @Override
             public String toString() {
-                return " load repotisory [" + repository + "] path [" + path + "].";
+                return " load repository [" + repository + "] path [" + path + "].";
             }
         });
     }

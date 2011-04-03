@@ -225,7 +225,7 @@ public class MockSession implements Session {
     }
 
     public boolean nodeExists(String absPath) throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented");
+        return this.mockHM.isExist(absPath);
     }
 
     public boolean propertyExists(String absPath) throws RepositoryException {

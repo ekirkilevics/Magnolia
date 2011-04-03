@@ -350,7 +350,7 @@ public final class ContentRepository {
      * @throws ClassNotFoundException
      */
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
-        InstantiationException, IllegalAccessException, ClassNotFoundException {
+    InstantiationException, IllegalAccessException, ClassNotFoundException {
         log.info("Loading JCR {}", map.getName()); //$NON-NLS-1$
         Provider handlerClass = Classes.newInstance(map.getProvider());
         handlerClass.init(map);
@@ -390,7 +390,7 @@ public final class ContentRepository {
      * Load hierarchy manager for the specified repository and workspace.
      */
     private static void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
-        Provider provider) {
+            Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
             Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, repository, wspID);
@@ -431,7 +431,7 @@ public final class ContentRepository {
                 return map.getRepositoryName();
             }
         }
-        throw new RepositoryException("No mapping found for this repository in magnolia repositories.xml");
+        throw new RepositoryException("No mapping found for "+workspaceName+" repository in magnolia repositories.xml");
     }
 
     /**
@@ -476,7 +476,9 @@ public final class ContentRepository {
      * @param workspaceName
      */
     public static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
-        if (StringUtils.isEmpty(workspaceName)) workspaceName = name;
+        if (StringUtils.isEmpty(workspaceName)) {
+            workspaceName = name;
+        }
         RepositoryNameMap nameMap = new RepositoryNameMap(repositoryName, workspaceName);
         repositoryNameMap.put(name, nameMap);
     }
@@ -574,7 +576,9 @@ public final class ContentRepository {
         while (keys.hasNext()) {
             String key = (String) keys.next();
             RepositoryNameMap nameMap = (RepositoryNameMap) repositoryNameMap.get(key);
-            if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) return key;
+            if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
+                return key;
+            }
         }
         log.error("No Repository/Workspace name mapping defined for "+workspaceName);
         return workspaceName;

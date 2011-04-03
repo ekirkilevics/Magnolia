@@ -69,14 +69,16 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     private final MockSession session;
 
-    private String name;
+    private String name = "TestMockHierarchyManager";
 
     public MockHierarchyManager() {
-        this("TestMockHierarchyManager");
+        this(null);
     }
 
     public MockHierarchyManager(String name) {
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        }
         this.session = new MockSession(this);
         this.root = new MockContent("jcr:root");
         root.setUUID("jcr:root");
