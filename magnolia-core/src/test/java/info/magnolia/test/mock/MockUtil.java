@@ -106,6 +106,10 @@ public class MockUtil {
         return ctx;
     }
 
+    public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
+        return createHierarchyManager(null, propertiesStream);
+    }
+
     public static MockHierarchyManager createHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager(repository);
         Content root = hm.getRoot();

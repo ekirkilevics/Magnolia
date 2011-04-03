@@ -54,6 +54,7 @@ import junit.framework.TestCase;
  */
 public class MockUtilTest extends TestCase {
 
+    @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
@@ -161,7 +162,7 @@ public class MockUtilTest extends TestCase {
     }
 
     protected HierarchyManager initTestData() throws IOException, RepositoryException {
-        return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("testcontent.properties"));
+        return MockUtil.createHierarchyManager(ContentRepository.CONFIG, this.getClass().getResourceAsStream("testcontent.properties"));
     }
 
 
