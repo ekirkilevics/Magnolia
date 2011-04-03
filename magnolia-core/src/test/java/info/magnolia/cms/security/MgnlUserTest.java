@@ -56,6 +56,7 @@ public class MgnlUserTest extends TestCase {
         super.setUp();
         final SecuritySupportImpl sec = new SecuritySupportImpl();
         sec.setGroupManager(new MgnlGroupManager());
+        sec.setRoleManager(new MgnlRoleManager());
         ComponentsTestUtil.setInstance(SecuritySupport.class, sec);
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
@@ -86,9 +87,6 @@ public class MgnlUserTest extends TestCase {
 
     public void testGetGroupsReturnsOnlyDirectGroups() {
         final Collection<String> g = uman.getUser("julien").getGroups();
-        for (String name : g) {
-            System.out.println("G:" + name);
-        }
         assertEquals(1, g.size());
         assertEquals("groupC", g.iterator().next());
     }
@@ -102,6 +100,9 @@ public class MgnlUserTest extends TestCase {
 
     public void testGetAllGroupsReturnsDirectAndInheritedGroups() {
         final Collection<String> groups = uman.getUser("georges").getAllGroups();
+        for (String name : groups) {
+            System.out.println("G:" + name);
+        }
         assertEquals(4, groups.size());
         assertTrue(groups.contains("groupA"));
         assertTrue(groups.contains("groupB"));

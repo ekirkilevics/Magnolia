@@ -285,11 +285,12 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         // FYI: can't initialize upfront as the instance of the user class needs to be created BEFORE repo is ready
         GroupManager man = SecuritySupport.Factory.getInstance().getGroupManager();
 
-        // add all direct user groups
-        allGroups.addAll(groups);
-
         // add all subbroups
         addSubgroups(allGroups, man, groups);
+
+        // and only now add all direct user groups
+        allGroups.addAll(groups);
+
         return allGroups;
     }
 
@@ -355,15 +356,18 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         this.path = path;
     }
 
+    /**
+     * Any group from the groups is checked for the subgroups only if it is not in the allGroups yet. This is to prevent infinite loops in case of cyclic group assignment.
+     */
     private void addSubgroups(final Set<String> allGroups, GroupManager man, Collection<String> groups) {
         for (String group : groups) {
             // check if this group was not already added to prevent infinite loops
             if (!allGroups.contains(group)) {
                 try {
                     Collection<String> subgroups = man.getGroup(group).getGroups();
-                    allGroups.addAll(subgroups);
                     // and recursively add more subgroups
                     addSubgroups(allGroups, man, subgroups);
+                    allGroups.addAll(subgroups);
                 } catch (AccessDeniedException e) {
                     log.debug("Skipping denied group " + group + " for user " + getName(), e);
                 } catch (UnsupportedOperationException e) {
