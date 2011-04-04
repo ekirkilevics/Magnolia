@@ -35,6 +35,9 @@ package info.magnolia.ui.admincentral.navigation;
 
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
+import info.magnolia.ui.admincentral.navigation.action.EmbeddedActionDefinition;
+import info.magnolia.ui.admincentral.navigation.action.WorkbenchActionDefinition;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.model.navigation.definition.NavigationItemDefinition;
@@ -216,20 +219,35 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
     public Component asVaadinComponent() {
         return this;
     }
-
+    //TODO need to handle submenu actions
     public void update(Place place) {
-        if(!(place instanceof WorkbenchPlace)){
-            return;
-        }
-        WorkbenchPlace currentPlace = (WorkbenchPlace) place;
-        //FIXME find a better way to get hold of the correct menu item to select.
-        String workbenchName = currentPlace.getWorkbenchName();
-        for(Entry<Tab, NavigationItemDefinition> entry:navigationItems.entrySet()){
-            if(entry.getValue().getName().equals(workbenchName)){
-                accordion.setSelectedTab(entry.getKey().getComponent());
-                navigationWorkarea.setVisible(true);
-                log.debug("selected tab {}", entry.getValue().getName());
-                break;
+        if((place instanceof WorkbenchPlace)){
+            final WorkbenchPlace currentPlace = (WorkbenchPlace) place;
+            for(Entry<Tab, NavigationItemDefinition> entry:navigationItems.entrySet()){
+                if(!(entry.getValue().getActionDefinition() instanceof WorkbenchActionDefinition)){
+                    continue;
+                }
+                final WorkbenchActionDefinition definition = (WorkbenchActionDefinition) entry.getValue().getActionDefinition();
+                if(definition.getPlace().equals(currentPlace)){
+                    accordion.setSelectedTab(entry.getKey().getComponent());
+                    navigationWorkarea.setVisible(true);
+                    log.debug("selected tab {}", entry.getValue().getName());
+                    break;
+                }
+            }
+        } else if(place instanceof EmbeddedPlace) {
+            final EmbeddedPlace currentPlace = (EmbeddedPlace) place;
+            for(Entry<Tab, NavigationItemDefinition> entry:navigationItems.entrySet()){
+                if(!(entry.getValue().getActionDefinition() instanceof EmbeddedActionDefinition)){
+                    continue;
+                }
+                final EmbeddedActionDefinition definition = (EmbeddedActionDefinition) entry.getValue().getActionDefinition();
+                if(definition.getPlace().equals(currentPlace)){
+                    accordion.setSelectedTab(entry.getKey().getComponent());
+                    navigationWorkarea.setVisible(true);
+                    log.debug("selected tab {}", entry.getValue().getName());
+                    break;
+                }
             }
         }
     }
