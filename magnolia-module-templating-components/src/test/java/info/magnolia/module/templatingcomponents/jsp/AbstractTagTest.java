@@ -36,13 +36,15 @@ package info.magnolia.module.templatingcomponents.jsp;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import junit.framework.TestCase;
 
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.servlet.jsp.JspException;
+
+import junit.framework.TestCase;
 
 /**
  *

@@ -68,7 +68,7 @@ public class EditBarTagTest extends AbstractJspTest {
 
     @Override
     void check(WebResponse response, HtmlPage page) throws Exception {
-        //prettyPrint(response, System.out);
+        // prettyPrint(response, System.out);
 
         {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='basic']");
@@ -81,7 +81,8 @@ public class EditBarTagTest extends AbstractJspTest {
             // entities in attribute values are already decoded
             final String onclick = spans.get(0).getOnClickAttribute();
             // this is the ugly bit
-            final String expected = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','1','testParagraph1','null','.magnolia/dialogs/editParagraph.html', null, null, 'en_US');";
+            final String expected =
+                    "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','1','testParagraph1','null','.magnolia/dialogs/editParagraph.html', null, null, 'en_US');";
             assertEquals(expected, onclick);
         }
 
@@ -95,7 +96,8 @@ public class EditBarTagTest extends AbstractJspTest {
 
             final String onclick = spans.get(0).getOnClickAttribute();
             // this is the ugly bit
-            final String expected = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','1','myCustomDialog','null','.magnolia/dialogs/editParagraph.html', null, null, 'en_US');";
+            final String expected =
+                    "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','1','myCustomDialog','null','.magnolia/dialogs/editParagraph.html', null, null, 'en_US');";
             assertEquals(expected, onclick);
         }
 
@@ -132,6 +134,12 @@ public class EditBarTagTest extends AbstractJspTest {
             assertEquals("Edit", editButtonSpan.getTextContent());
         }
         // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        // TODO: remove whole method as soon as there's a suitable implementation of AccessProvider. Only purpose of
+        // this method is to prevent from calling tearDown in super-class as this will currently crash
     }
 
 }

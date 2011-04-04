@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -46,17 +49,18 @@ import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.RepositoryException;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
