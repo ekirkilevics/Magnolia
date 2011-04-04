@@ -55,8 +55,6 @@ import static info.magnolia.nodebuilder.Ops.addProperty;
 
 import javax.jcr.RepositoryException;
 
-import org.junit.Ignore;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,7 +64,6 @@ import static org.easymock.classextension.EasyMock.*;
  * A test class for WorkflowModuleVersionHandler.
  * @author had
  */
-@Ignore //FIXME skipping these failing tests for M3 release
 public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private RoleManager roleManager;
     private Role role;
