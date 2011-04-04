@@ -252,19 +252,22 @@ public class JcrBrowser extends TreeTable {
 
         ContainerItemId itemId = container.getItemByPath(path);
 
-        ContainerItemId parent = itemId;
-        while (!container.isRoot(parent)) {
+        if(!container.isRoot(itemId)){
+            ContainerItemId parent = container.getParent(itemId);
+            while (!container.isRoot(parent)) {
+                setCollapsed(parent, false);
+                parent = container.getParent(parent);
+            }
+            //finally expand the root else children won't be visibile.
             setCollapsed(parent, false);
-            parent = container.getParent(parent);
         }
-        //finally expand the root else children won't be visibile.
-        setCollapsed(parent, false);
 
         // Select the item
         select(itemId);
 
         // Make sure its in view
-        setCurrentPageFirstItemId(itemId);
+        // TODO commented out to avoid flicker on selection via place controller while this should definitely be called when navigated by the history
+        // setCurrentPageFirstItemId(itemId);
     }
 
     public void refresh() {
