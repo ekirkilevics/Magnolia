@@ -33,21 +33,39 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
+import info.magnolia.cms.gui.misc.Sources;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.AbstractFreemarkerTestCase;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.MockUtil;
+import org.apache.commons.lang.StringUtils;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import static org.easymock.EasyMock.*;
 
 /**
  * Provides setup/teardown for testing Directives.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision: $ ($Author: $) 
  */
 public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCase {
     private WebContext ctx;
@@ -59,74 +77,72 @@ public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCa
     public void setUp() throws Exception {
         super.setUp();
 
-        // TODO: to be uncommented and fixed as soon as there's a suitable implementation of AccessProvider
-//        hm = MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
-//                "/foo/bar@type=mgnl:content",
-//                "/foo/bar/MetaData@type=mgnl:metadata",
-//                "/foo/bar/MetaData/mgnl\\:template=testPageTemplate",
-//                "/foo/bar/paragraphs@type=mgnl:contentNode",
-//                "/foo/bar/paragraphs/0@type=mgnl:contentNode",
-//                "/foo/bar/paragraphs/0/text=hello 0",
-//                "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
-//                "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
-//                "/foo/bar/paragraphs/1@type=mgnl:contentNode",
-//                "/foo/bar/paragraphs/1/text=hello 1",
-//                "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
-//                "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
-//                "/foo/bar/paragraphs/2@type=mgnl:contentNode",
-//                "/foo/bar/paragraphs/2/text=hello 2",
-//                "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
-//                "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
-//                ""
-//        ), "\n"));
-//        accessManager = createMock(AccessManager.class);
-//        // for finer-but-not-too-verbose checks, use the contains() constraint
-//        expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
-//        hm.setAccessManager(accessManager);
-//
-//        final AggregationState aggState = new AggregationState();
-//        // depending on tests, we'll set the main content and current content to the same or a different node
-//        aggState.setMainContent(hm.getContent("/foo/bar"));
-//        aggState.setCurrentContent(hm.getContent("/foo/bar/paragraphs/1"));
-//
-//        // let's make sure we render stuff on an author instance
-//        aggState.setPreviewMode(false);
-//        final ServerConfiguration serverCfg = new ServerConfiguration();
-//        serverCfg.setAdmin(true);
-//        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
-//        // register some default components used internally
-//        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
-//        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-//        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
-//
-//        ctx = createMock(WebContext.class);
-//        expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
-//        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
-//        expect(ctx.getContextPath()).andReturn("/lol").anyTimes();
-//        expect(ctx.getServletContext()).andStubReturn(createMock(ServletContext.class));
-//        req = createMock(HttpServletRequest.class);
-//        expect(ctx.getRequest()).andReturn(req).anyTimes();
-//        expect(ctx.getResponse()).andReturn(null).anyTimes();
-//        expect(req.getAttribute(Sources.REQUEST_LINKS_DRAWN)).andReturn(Boolean.FALSE).times(0, 1);
-//        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
-//        expectLastCall().times(0, 1);
-//        expect(req.getContextPath()).andReturn("/ctx-path-from-req").anyTimes();
-//
-//        setupExpectations(ctx, req, accessManager);
-//
-//        MgnlContext.setInstance(ctx);
-//        replay(accessManager, ctx, req);
+        hm = MockUtil.createHierarchyManager(StringUtils.join(Arrays.asList(
+                "/foo/bar@type=mgnl:content",
+                "/foo/bar/MetaData@type=mgnl:metadata",
+                "/foo/bar/MetaData/mgnl\\:template=testPageTemplate",
+                "/foo/bar/paragraphs@type=mgnl:contentNode",
+                "/foo/bar/paragraphs/0@type=mgnl:contentNode",
+                "/foo/bar/paragraphs/0/text=hello 0",
+                "/foo/bar/paragraphs/0/MetaData@type=mgnl:metadata",
+                "/foo/bar/paragraphs/0/MetaData/mgnl\\:template=testParagraph0",
+                "/foo/bar/paragraphs/1@type=mgnl:contentNode",
+                "/foo/bar/paragraphs/1/text=hello 1",
+                "/foo/bar/paragraphs/1/MetaData@type=mgnl:metadata",
+                "/foo/bar/paragraphs/1/MetaData/mgnl\\:template=testParagraph1",
+                "/foo/bar/paragraphs/2@type=mgnl:contentNode",
+                "/foo/bar/paragraphs/2/text=hello 2",
+                "/foo/bar/paragraphs/2/MetaData@type=mgnl:metadata",
+                "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
+                ""
+        ), "\n"));
+        accessManager = createMock(AccessManager.class);
+        // for finer-but-not-too-verbose checks, use the contains() constraint
+        expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
+        hm.setAccessManager(accessManager);
+
+        final AggregationState aggState = new AggregationState();
+        // depending on tests, we'll set the main content and current content to the same or a different node
+        aggState.setMainContent(hm.getContent("/foo/bar"));
+        aggState.setCurrentContent(hm.getContent("/foo/bar/paragraphs/1"));
+
+        // let's make sure we render stuff on an author instance
+        aggState.setPreviewMode(false);
+        final ServerConfiguration serverCfg = new ServerConfiguration();
+        serverCfg.setAdmin(true);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+        // register some default components used internally
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+
+        ctx = createMock(WebContext.class);
+        expect(ctx.getAggregationState()).andReturn(aggState).anyTimes();
+        expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
+        expect(ctx.getContextPath()).andReturn("/lol").anyTimes();
+        expect(ctx.getServletContext()).andStubReturn(createMock(ServletContext.class));
+        req = createMock(HttpServletRequest.class);
+        expect(ctx.getRequest()).andReturn(req).anyTimes();
+        expect(ctx.getResponse()).andReturn(null).anyTimes();
+        expect(req.getAttribute(Sources.REQUEST_LINKS_DRAWN)).andReturn(Boolean.FALSE).times(0, 1);
+        req.setAttribute(Sources.REQUEST_LINKS_DRAWN, Boolean.TRUE);
+        expectLastCall().times(0, 1);
+        expect(req.getContextPath()).andReturn("/ctx-path-from-req").anyTimes();
+
+        setupExpectations(ctx, req, accessManager);
+
+        MgnlContext.setInstance(ctx);
+        replay(accessManager, ctx, req);
     }
 
     protected abstract void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager);
 
     @Override
     public void tearDown() throws Exception {
-        // TODO: to be uncommented and fixed as soon as there's a suitable implementation of AccessProvider
-//        verify(accessManager, ctx, req);
-//        ComponentsTestUtil.clear();
-//        MgnlContext.setInstance(null);
-//        SystemProperty.clear();
+        verify(accessManager, ctx, req);
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        SystemProperty.clear();
         super.tearDown();
     }
 

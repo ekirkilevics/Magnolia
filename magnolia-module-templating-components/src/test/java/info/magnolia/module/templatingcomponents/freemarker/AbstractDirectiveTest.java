@@ -33,20 +33,19 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
-
-import junit.framework.TestCase;
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
+import junit.framework.TestCase;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * Tests for AbstractDirective's utility methods.

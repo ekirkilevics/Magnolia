@@ -33,13 +33,16 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
-import static org.easymock.EasyMock.anyLong;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.StringWebResponse;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HTMLParser;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.HttpUnitOptions;
+import com.meterware.httpunit.WebRequest;
+import com.meterware.httpunit.WebResponse;
+import com.meterware.servletunit.ServletRunner;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -62,7 +65,14 @@ import info.magnolia.module.templatingcomponents.components.AbstractAuthoringUiC
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import junit.framework.TestCase;
+import net.sourceforge.openutils.testing4web.TestServletOptions;
+import org.apache.commons.lang.StringUtils;
+import org.w3c.tidy.Tidy;
 
+import javax.jcr.RepositoryException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -72,27 +82,14 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Locale;
 
-import javax.jcr.RepositoryException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import junit.framework.TestCase;
-import net.sourceforge.openutils.testing4web.TestServletOptions;
-
-import org.apache.commons.lang.StringUtils;
-import org.w3c.tidy.Tidy;
-
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.meterware.httpunit.HttpUnitOptions;
-import com.meterware.httpunit.WebResponse;
-import com.meterware.servletunit.ServletRunner;
+import static org.easymock.EasyMock.*;
 
 /**
  * Subclass this and create a corresponding .jsp
  * (i.e for info.magnolia.module.templatingcomponents.jsp.FooBarTest.java, create a info/magnolia/templatingcomponents/jsp/FooBarTest.jsp)
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision: $ ($Author: $) 
  */
 public abstract class AbstractJspTest extends TestCase {
     protected static final String CONTEXT = "/test-context";
@@ -109,26 +106,25 @@ public abstract class AbstractJspTest extends TestCase {
     abstract void check(WebResponse response, HtmlPage page) throws Exception;
 
     public void testDo() throws Exception {
-        // TODO: to be uncommented and fixed as soon as there's a suitable implementation of AccessProvider
-//        final String jspPath = getClass().getName().replace('.', '/') + ".jsp";
-//        final String jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
-//
-//        final WebRequest request = new GetMethodWebRequest(jspUrl);
-//
-//        final WebResponse response = runner.getResponse(request);
-//
-//        final String responseStr = response.getText();
-//        // preliminary sanity check
-//        assertFalse(responseStr.contains("<ui:"));
-//        assertFalse(responseStr.contains("<cms:"));
-//        assertFalse(responseStr.contains("<cmsu:"));
-//
-//        // now switch to HtmlUnit
-//        final StringWebResponse res = new StringWebResponse(responseStr, new URL(jspUrl));
-//        final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
-//        final HtmlPage page = HTMLParser.parseHtml(res, webClient.getCurrentWindow());
-//
-//        check(response, page);
+        final String jspPath = getClass().getName().replace('.', '/') + ".jsp";
+        final String jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
+
+        final WebRequest request = new GetMethodWebRequest(jspUrl);
+
+        final WebResponse response = runner.getResponse(request);
+
+        final String responseStr = response.getText();
+        // preliminary sanity check
+        assertFalse(responseStr.contains("<ui:"));
+        assertFalse(responseStr.contains("<cms:"));
+        assertFalse(responseStr.contains("<cmsu:"));
+
+        // now switch to HtmlUnit
+        final StringWebResponse res = new StringWebResponse(responseStr, new URL(jspUrl));
+        final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
+        final HtmlPage page = HTMLParser.parseHtml(res, webClient.getCurrentWindow());
+
+        check(response, page);
     }
 
     public void setUp() throws Exception {
@@ -189,9 +185,7 @@ public abstract class AbstractJspTest extends TestCase {
         accessManager = createMock(AccessManager.class);
         // for finer-but-not-too-verbose checks, use the contains() constraint
         expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
-
-        // TODO: to be uncommented and fixed as soon as there's a suitable implementation of AccessProvider
-        //websiteHM.setAccessManager(accessManager);
+        websiteHM.setAccessManager(accessManager);
 
         final AggregationState aggState = new AggregationState();
         setupAggregationState(aggState);
