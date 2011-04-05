@@ -61,11 +61,13 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
     private List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>>();
 
     private ComponentProvider componentProvider;
+    private WorkbenchActionFactory workbenchActionFactory;
 
     // TODO: why is WorkbenchRegistry handed over here?
-    public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry) {
+    public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
         super(componentProvider);
         this.componentProvider = componentProvider;
+        this.workbenchActionFactory = workbenchActionFactory;
     }
 
     public List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> getDefinitionToImplementationMappings() {
@@ -98,10 +100,8 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
             }
         }
 
-        WorkbenchActionFactory actionFactory = new WorkbenchActionFactory(componentProvider);
-
         // FIXME the model should be set by the presenter
-        TreeModel treeModel = new TreeModel(workbenchDefinition, columns, actionFactory);
+        TreeModel treeModel = new TreeModel(workbenchDefinition, columns, workbenchActionFactory);
         return componentProvider.newInstance(TreeViewImpl.class, workbenchDefinition, treeModel);
     }
 }

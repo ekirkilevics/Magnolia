@@ -48,7 +48,7 @@ public class DeleteItemAction extends RepositoryOperationAction<DeleteItemAction
     }
 
     @Override
-    void onExecute(Item item) throws RepositoryException {
+    protected void onExecute(Item item) throws RepositoryException {
         item.remove();
     }
 }

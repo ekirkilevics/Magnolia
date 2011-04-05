@@ -50,7 +50,7 @@ public class AddPropertyAction extends RepositoryOperationAction<AddPropertyActi
     }
 
     @Override
-    void onExecute(Node node) throws RepositoryException {
+    protected void onExecute(Node node) throws RepositoryException {
         String name = JCRUtil.getUniqueLabel(node, "untitled");
         node.setProperty(name, "");
     }

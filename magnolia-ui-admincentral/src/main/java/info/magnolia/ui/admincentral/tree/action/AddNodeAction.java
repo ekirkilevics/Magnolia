@@ -56,7 +56,7 @@ public class AddNodeAction extends RepositoryOperationAction<AddNodeActionDefini
     }
 
     @Override
-    void onExecute(Node node) throws RepositoryException {
+    protected void onExecute(Node node) throws RepositoryException {
         String name = JCRUtil.getUniqueLabel(node, "untitled");
         Node newNode = node.addNode(name, getDefinition().getNodeType());
         postProcessNode(newNode);

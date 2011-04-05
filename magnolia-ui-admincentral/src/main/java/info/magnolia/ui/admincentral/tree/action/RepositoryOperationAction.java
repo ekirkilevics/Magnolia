@@ -76,6 +76,6 @@ public abstract class RepositoryOperationAction<D extends ActionDefinition, T ex
         }
     }
 
-    abstract void onExecute(T item) throws RepositoryException;
+    protected abstract void onExecute(T item) throws RepositoryException;
 
 }
