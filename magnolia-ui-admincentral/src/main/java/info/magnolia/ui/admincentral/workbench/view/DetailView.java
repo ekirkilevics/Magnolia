@@ -42,11 +42,12 @@ import javax.jcr.Item;
 /**
  * The detail view showing the list of available actions and some detail information.
  */
-public interface DetailView extends View{
+public interface DetailView extends View {
     /**
      * Presenter that is called when the user selects a command.
      */
     public interface Presenter {
+        // TODO this isn't a command, its a menu item name
         void onCommandSelected(String commandName);
     }
 

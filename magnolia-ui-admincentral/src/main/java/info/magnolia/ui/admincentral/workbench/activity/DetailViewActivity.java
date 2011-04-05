@@ -34,10 +34,10 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.view.DetailView;
-import info.magnolia.ui.admincentral.workbench.view.DetailViewImpl;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;
@@ -63,12 +63,12 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private Shell shell;
     private WorkbenchDefinition workbenchDefinition;
 
-    public DetailViewActivity(ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition,
+    public DetailViewActivity(ComponentProvider componentProvider, ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition,
             WorkbenchActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.shell = shell;
         this.workbenchDefinition = workbenchDefinition;
-        detailView = new DetailViewImpl(this);
+        detailView = componentProvider.newInstance(DetailView.class, this);
         showItem(place);
     }
 
