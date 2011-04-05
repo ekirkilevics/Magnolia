@@ -217,6 +217,6 @@ public interface Context extends org.apache.commons.chain.Context {
      * @param repository
      * @return
      */
-    public Session getSession(String repository, String workspace) throws LoginException, RepositoryException ;
+    public Session getJCRSession(String repository, String workspace) throws LoginException, RepositoryException ;
 
 }

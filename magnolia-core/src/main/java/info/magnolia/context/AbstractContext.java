@@ -127,7 +127,7 @@ public abstract class AbstractContext implements Context, Serializable {
         return getRepositoryStrategy().getQueryManager(repositoryId, workspaceId);
     }
 
-    public Session getSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException {
+    public Session getJCRSession(String repositoryId, String workspaceId) throws LoginException, RepositoryException {
         return getRepositoryStrategy().getSession(repositoryId,  workspaceId);
     }
 

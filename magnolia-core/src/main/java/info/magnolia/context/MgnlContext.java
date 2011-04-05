@@ -512,6 +512,6 @@ public class MgnlContext {
      * @return a JCR session to the provided repository
      */
     public static Session getJCRSession(String repository) throws LoginException, RepositoryException {
-        return getInstance().getSession(repository, repository);
+        return getInstance().getJCRSession(repository, repository);
     }
 }
