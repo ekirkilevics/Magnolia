@@ -122,6 +122,11 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     @Override
     public <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
         super.registerImplementation(type, implementationType);
+
+        // If already registered remove, TODO this should work for all register- methods.
+        if (pico.getComponentAdapter(type) != null)
+            pico.removeComponent(type);
+
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory<?>>) implementationType, this));
         } else {

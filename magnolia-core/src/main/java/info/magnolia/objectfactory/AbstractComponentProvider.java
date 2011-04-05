@@ -231,8 +231,11 @@ public abstract class AbstractComponentProvider implements MutableComponentProvi
 
     @SuppressWarnings("unchecked")
     public synchronized <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
-        if (definitions.containsKey(type))
-            throw new MgnlInstantiationException("Component already registered for type " + type.getName());
+
+//      Allow changing implementations TODO this should work for all register- methods.
+//        if (definitions.containsKey(type))
+//            throw new MgnlInstantiationException("Component already registered for type " + type.getName());
+
         if (!Classes.isConcrete(implementationType)) {
             throw new MgnlInstantiationException("ImplementationConfiguration type is not a concrete class for type" + type);
         }
