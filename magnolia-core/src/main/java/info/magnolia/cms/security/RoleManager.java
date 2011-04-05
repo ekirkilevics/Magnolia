@@ -55,19 +55,24 @@ public interface RoleManager {
     public Role getRole(String name) throws UnsupportedOperationException;
 
     /**
-     * Obtains list of ACLs defined for specified role.
+     * Obtain list of ACLs defined for specified role.
      * @throws UnsupportedOperationException in case the role manager does not support this operation
      */
     public Map<String, ACL> getACLs(String role) throws UnsupportedOperationException;
 
     /**
-     * Adds permission to the specified roles, assuming current user has enough rights to perform such operation.
+     * Add permission to the specified role, assuming current user has enough rights to perform such operation.
      */
     public void addPermission(Role role, String workspaceName, String path, long permission);
 
 
     /**
-     * Retrieves role name by its identifier.
+     * Remove permission from the specified role.
+     */
+    public void removePermission(Role role, String workspace, String path, long permission);
+
+    /**
+     * Retrieve role name by its identifier.
      */
     public String getRoleNameById(String string);
 
