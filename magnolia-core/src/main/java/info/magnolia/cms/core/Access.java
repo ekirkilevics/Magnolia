@@ -85,8 +85,7 @@ public final class Access {
     }
 
     /**
-     * Checks whether given session has requested permission on provided path. Throws an exception if permission is not granted on given path.
-     * @throws AccessDeniedException when permission is not granted.
+     * Return whether given session has requested permission on provided path.
      */
     public static boolean isGranted(Session jcrSession, String path, String action) {
         try {
