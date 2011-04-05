@@ -36,7 +36,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.JCRUtil;
-import info.magnolia.cms.security.SessionOp;
+import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedNodePredicate;
@@ -114,7 +114,7 @@ public abstract class BaseVersionManager {
      * @throws RepositoryException if unable to create magnolia system structure
      */
     protected void createInitialStructure() throws RepositoryException {
-        MgnlContext.doInSystemContext(new SessionOp<Void>(VERSION_WORKSPACE) {
+        MgnlContext.doInSystemContext(new JCRSessionOp<Void>(VERSION_WORKSPACE) {
 
             @Override
             public Void exec(Session session) throws RepositoryException {
@@ -164,7 +164,7 @@ public abstract class BaseVersionManager {
      */
     public synchronized Version addVersion(final Node node, final Rule rule) throws UnsupportedRepositoryOperationException,
     RepositoryException {
-        MgnlContext.doInSystemContext(new SessionOp<Version>(node.getSession().getWorkspace().getName()) {
+        MgnlContext.doInSystemContext(new JCRSessionOp<Version>(node.getSession().getWorkspace().getName()) {
 
             @Override
             public Version exec(Session session) throws RepositoryException {
@@ -391,7 +391,7 @@ public abstract class BaseVersionManager {
 
         versionedNode.restore(unwrappedVersion, removeExisting);
         versionedNode.checkout();
-        MgnlContext.doInSystemContext(new SessionOp<Void>(versionedNode.getSession().getWorkspace().getName()) {
+        MgnlContext.doInSystemContext(new JCRSessionOp<Void>(versionedNode.getSession().getWorkspace().getName()) {
 
             @Override
             public Void exec(Session session) throws RepositoryException {
@@ -447,7 +447,7 @@ public abstract class BaseVersionManager {
      * @throws RepositoryException if fails to remove versioned node from the version store
      */
     public synchronized void removeVersionHistory(final String uuid) throws RepositoryException {
-        MgnlContext.doInSystemContext(new SessionOp<Void>(VersionManager.VERSION_WORKSPACE) {
+        MgnlContext.doInSystemContext(new JCRSessionOp<Void>(VersionManager.VERSION_WORKSPACE) {
 
             @Override
             public Void exec(Session session) throws RepositoryException {

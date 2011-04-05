@@ -48,13 +48,13 @@ import info.magnolia.context.MgnlContext.Op;
  * @version $Id: $
  * @param <R>
  */
-public abstract class SessionOp<R> implements Op<R, RepositoryException> {
+public abstract class JCRSessionOp<R> implements Op<R, RepositoryException> {
 
-    protected static final Logger log = LoggerFactory.getLogger(SessionOp.class);
+    protected static final Logger log = LoggerFactory.getLogger(JCRSessionOp.class);
 
     private final String repository;
 
-    public SessionOp(String repository) {
+    public JCRSessionOp(String repository) {
         this.repository = repository;
     }
 

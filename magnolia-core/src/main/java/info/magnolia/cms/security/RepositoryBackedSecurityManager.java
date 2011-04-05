@@ -84,7 +84,7 @@ public abstract class RepositoryBackedSecurityManager {
 
             // this is an original code from old ***Managers.
             // TODO: If you ever need to speed it up, turn it around - retrieve group or role by its name and read its ID, then loop through IDs this user has assigned to find out if he has that one or not.
-            final Collection<String> groupsOrRoles = MgnlContext.doInSystemContext(new SessionOp<Collection<String>>(getRepositoryName()) {
+            final Collection<String> groupsOrRoles = MgnlContext.doInSystemContext(new JCRSessionOp<Collection<String>>(getRepositoryName()) {
 
                 @Override
                 public Collection<String> exec(Session session) throws RepositoryException {
@@ -108,7 +108,7 @@ public abstract class RepositoryBackedSecurityManager {
 
 
             // check if any of the assigned IDs match the requested name
-            return MgnlContext.doInSystemContext(new SessionOp<Boolean>(sessionName) {
+            return MgnlContext.doInSystemContext(new JCRSessionOp<Boolean>(sessionName) {
 
                 @Override
                 public Boolean exec(Session session) throws RepositoryException {

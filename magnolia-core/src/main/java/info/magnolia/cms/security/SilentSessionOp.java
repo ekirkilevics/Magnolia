@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class SilentSessionOp<R> implements Op<R, RuntimeException> {
 
-    protected static final Logger log = LoggerFactory.getLogger(SessionOp.class);
+    protected static final Logger log = LoggerFactory.getLogger(JCRSessionOp.class);
 
     private final String repository;
 
