@@ -34,33 +34,10 @@
 package info.magnolia.ui.admincentral;
 
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.dialog.activity.DialogActivity;
-import info.magnolia.ui.admincentral.dialog.place.DialogPlace;
-import info.magnolia.ui.admincentral.embedded.activity.EmbeddedActivity;
-import info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace;
-import info.magnolia.ui.admincentral.workbench.activity.WorkbenchMVPSubContainer;
-import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
-import info.magnolia.ui.framework.activity.Activity;
 import info.magnolia.ui.framework.activity.ActivityMapper;
-import info.magnolia.ui.framework.place.Place;
-import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
  * Maps the main places to main activities.
- * TODO make configurable
  */
-public class MainActivityMapper extends FactoryBase<Place, Activity> implements ActivityMapper {
-
-    public MainActivityMapper(ComponentProvider componentProvider) {
-        super(componentProvider);
-
-        addMapping(WorkbenchPlace.class, WorkbenchMVPSubContainer.class);
-        addMapping(EmbeddedPlace.class, EmbeddedActivity.class);
-        addMapping(DialogPlace.class, DialogActivity.class);
-    }
-
-    public Activity getActivity(final Place place) {
-        return create(place);
-    }
+public interface MainActivityMapper extends ActivityMapper {
 }
