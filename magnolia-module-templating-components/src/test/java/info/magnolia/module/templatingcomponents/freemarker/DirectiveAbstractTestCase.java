@@ -33,6 +33,11 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -43,33 +48,31 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.AbstractFreemarkerTestCase;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Provides setup/teardown for testing Directives.
- *
+ * 
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCase {
     private WebContext ctx;
-    private AccessManager accessManager;
     protected MockHierarchyManager hm;
     private HttpServletRequest req;
 
@@ -96,10 +99,6 @@ public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCa
                 "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
                 ""
         ), "\n"));
-        accessManager = createMock(AccessManager.class);
-        // for finer-but-not-too-verbose checks, use the contains() constraint
-        expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
-        hm.setAccessManager(accessManager);
 
         final AggregationState aggState = new AggregationState();
         // depending on tests, we'll set the main content and current content to the same or a different node
@@ -129,17 +128,17 @@ public abstract class DirectiveAbstractTestCase extends AbstractFreemarkerTestCa
         expectLastCall().times(0, 1);
         expect(req.getContextPath()).andReturn("/ctx-path-from-req").anyTimes();
 
-        setupExpectations(ctx, req, accessManager);
+        setupExpectations(ctx, req);
 
         MgnlContext.setInstance(ctx);
-        replay(accessManager, ctx, req);
+        replay(ctx, req);
     }
 
-    protected abstract void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager);
+    protected abstract void setupExpectations(WebContext ctx, HttpServletRequest req);
 
     @Override
     public void tearDown() throws Exception {
-        verify(accessManager, ctx, req);
+        verify(ctx, req);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();

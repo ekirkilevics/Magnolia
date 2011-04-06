@@ -33,15 +33,15 @@
  */
 package info.magnolia.test.mock;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jcr.Session;
-
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.RepositoryAcquiringStrategy;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.jcr.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +93,7 @@ public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrat
         return sessions.get(repositoryId);
     }
 
-    public void addSession(String repositoryId, MockSession session) {
+    public void addSession(String repositoryId, Session session) {
         sessions.put(repositoryId, session);
     }
 }

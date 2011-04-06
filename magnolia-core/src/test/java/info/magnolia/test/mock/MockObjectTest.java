@@ -36,14 +36,17 @@ package info.magnolia.test.mock;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
-import junit.framework.TestCase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.GregorianCalendar;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import java.util.GregorianCalendar;
+
+import junit.framework.TestCase;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -58,7 +61,7 @@ public class MockObjectTest extends TestCase {
      */
     private static Logger log = LoggerFactory.getLogger(MockObjectTest.class);
 
-    public void testRootNodeOfHierarchyManger() {
+    public void testRootNodeOfHierarchyManger() throws RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content root = hm.getRoot();
         assertEquals(root.getName(), "jcr:root");

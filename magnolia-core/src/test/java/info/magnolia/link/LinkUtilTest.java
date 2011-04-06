@@ -41,11 +41,11 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 
+import java.io.IOException;
+
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-
-import java.io.IOException;
 
 /**
  * @author gjoseph
@@ -228,7 +228,7 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals("/parent/sub", absolutePath);
     }
 
-    public void testMakeCompleteURL() throws LinkException {
+    public void testMakeCompleteURL() throws LinkException, RepositoryException {
         ServerConfiguration serverConfiguration = Components.getSingleton(ServerConfiguration.class);
         String base = serverConfiguration.getDefaultBaseUrl();
         serverConfiguration.setDefaultBaseUrl("http://some.site/yay/");

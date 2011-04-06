@@ -33,16 +33,11 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.StringWebResponse;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HTMLParser;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.meterware.httpunit.GetMethodWebRequest;
-import com.meterware.httpunit.HttpUnitOptions;
-import com.meterware.httpunit.WebRequest;
-import com.meterware.httpunit.WebResponse;
-import com.meterware.servletunit.ServletRunner;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -54,7 +49,6 @@ import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.LocaleDefinition;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.Template;
@@ -65,14 +59,7 @@ import info.magnolia.module.templatingcomponents.components.AbstractAuthoringUiC
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
-import net.sourceforge.openutils.testing4web.TestServletOptions;
-import org.apache.commons.lang.StringUtils;
-import org.w3c.tidy.Tidy;
 
-import javax.jcr.RepositoryException;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,20 +69,38 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Locale;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.RepositoryException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import junit.framework.TestCase;
+import net.sourceforge.openutils.testing4web.TestServletOptions;
+
+import org.apache.commons.lang.StringUtils;
+import org.w3c.tidy.Tidy;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.StringWebResponse;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HTMLParser;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.HttpUnitOptions;
+import com.meterware.httpunit.WebRequest;
+import com.meterware.httpunit.WebResponse;
+import com.meterware.servletunit.ServletRunner;
 
 /**
- * Subclass this and create a corresponding .jsp
- * (i.e for info.magnolia.module.templatingcomponents.jsp.FooBarTest.java, create a info/magnolia/templatingcomponents/jsp/FooBarTest.jsp)
+ * Subclass this and create a corresponding .jsp (i.e for info.magnolia.module.templatingcomponents.jsp.FooBarTest.java,
+ * create a info/magnolia/templatingcomponents/jsp/FooBarTest.jsp)
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractJspTest extends TestCase {
     protected static final String CONTEXT = "/test-context";
     protected ServletRunner runner;
     private WebContext ctx;
-    private AccessManager accessManager;
     protected MockHierarchyManager websiteHM;
     private HttpServletRequest req;
 
@@ -182,10 +187,6 @@ public abstract class AbstractJspTest extends TestCase {
                 "/foo/bar/paragraphs/2/MetaData/mgnl\\:template=testParagraph2",
                 ""
         ), "\n"));
-        accessManager = createMock(AccessManager.class);
-        // for finer-but-not-too-verbose checks, use the contains() constraint
-        expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
-        websiteHM.setAccessManager(accessManager);
 
         final AggregationState aggState = new AggregationState();
         setupAggregationState(aggState);
@@ -232,20 +233,20 @@ public abstract class AbstractJspTest extends TestCase {
         expect(ctx.getRequest()).andStubReturn(req);
         MgnlContext.setInstance(ctx);
 
-        setupExpectations(ctx, websiteHM, req, accessManager);
+        setupExpectations(ctx, websiteHM, req);
 
-        replay(ctx, req, accessManager);
+        replay(ctx, req);
     }
 
     // depending on tests, we'll set the main content and current content to the same or a different node
 
     protected abstract void setupAggregationState(AggregationState aggState) throws RepositoryException;
 
-    protected abstract void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager);
+    protected abstract void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req);
 
     @Override
     public void tearDown() throws Exception {
-        verify(ctx, req, accessManager);
+        verify(ctx, req);
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();

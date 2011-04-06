@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class PageEditBarDirectiveTest extends DirectiveAbstractTestCase {
     @Override
-    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
     }
 
     public void testBasicRendering() throws Exception {

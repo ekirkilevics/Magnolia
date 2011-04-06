@@ -74,15 +74,15 @@ import org.xml.sax.SAXException;
  * @version $Id$
  *
  */
-public class MockSession implements Session {
+public class MockJCRSession implements Session {
 
-    private static Logger log = LoggerFactory.getLogger(MockSession.class);
+    private static Logger log = LoggerFactory.getLogger(MockJCRSession.class);
 
     private Workspace workspace;
 
     private final MockHierarchyManager mockHM;
 
-    public MockSession(MockHierarchyManager mockHierarchyManager) {
+    public MockJCRSession(MockHierarchyManager mockHierarchyManager) {
         this.mockHM = mockHierarchyManager;
         workspace = new MockWorkspace(mockHM.getName(), this, mockHM);
     }
@@ -236,7 +236,8 @@ public class MockSession implements Session {
     }
 
     public boolean hasPermission(String absPath, String actions) throws RepositoryException {
-        throw new UnsupportedOperationException("Not implemented");
+        // constantly return true - use dynamic mock if you need different behaviour...
+        return true;
     }
 
     public boolean hasCapability(String methodName, Object target, Object[] arguments) throws RepositoryException {

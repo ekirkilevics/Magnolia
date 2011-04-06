@@ -33,8 +33,10 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.core.InvalidReferenceException;
-import freemarker.template.TemplateException;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -56,7 +58,6 @@ import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.model.Color;
 import info.magnolia.test.model.Pair;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -66,7 +67,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.RepositoryException;
+
+import freemarker.core.InvalidReferenceException;
+import freemarker.template.TemplateException;
 
 /**
  * @author gjoseph
@@ -273,7 +277,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         assertRendereredContent("1,234,567,890,123,456,789 , 12,345,678.901", c, "test.ftl");
     }
 
-    public void testReferenceProperties() throws TemplateException, IOException {
+    public void testReferenceProperties() throws TemplateException, IOException, RepositoryException {
         final MockContent foo = new MockContent("foo");
         final MockContent bar = new MockContent("bar");
         foo.addNodeData(new MockNodeData("some-ref", bar));
@@ -700,7 +704,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         page.setUUID(SOME_UUID);
         root.addContent(bar);
         bar.addContent(page);
-        final MockHierarchyManager hm = new MockHierarchyManager();
+        MockHierarchyManager hm = new MockHierarchyManager();
         hm.getRoot().addContent(root);
         return hm;
     }

@@ -38,7 +38,6 @@ import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.ContentUtil;
 
 import java.util.HashMap;
@@ -48,6 +47,7 @@ import java.util.Map;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 import org.apache.commons.lang.StringUtils;
@@ -65,9 +65,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     private final Map nodes = new HashMap();
 
-    private final MockContent root ;
-
-    private final MockSession session;
+    private final MockContent root;
 
     private String name = "TestMockHierarchyManager";
 
@@ -76,19 +74,27 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     }
 
     public MockHierarchyManager(String name) {
+        super();
         if (name != null) {
             this.name = name;
         }
-        this.session = new MockSession(this);
+        setJcrSession(new MockJCRSession(this));
         this.root = new MockContent("jcr:root");
         root.setUUID("jcr:root");
         root.setHierarchyManager(this);
     }
 
+    /**
+     * Expose internal JCR session to outside world
+     */
+    public Session getJcrSession() {
+        return super.getJcrSession();
+    }
+
     @Override
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content c = (Content) nodes.get(path);
-        if( c == null){
+        if (c == null) {
             if ("/".equals(path)) {
                 return root;
             }
@@ -98,9 +104,9 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         return c;
     }
 
-    protected void cacheContent(Content node){
+    protected void cacheContent(Content node) {
         nodes.put(node.getHandle(), node);
-        ((MockContent)node).setHierarchyManager(this);
+        ((MockContent) node).setHierarchyManager(this);
     }
 
     void removedCachedNode(MockContent node) {
@@ -126,14 +132,14 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     }
 
     protected Content getContentByUUID(Content node, final String uuid) {
-        if(uuid.equals(node.getUUID())){
+        if (uuid.equals(node.getUUID())) {
             return node;
         }
 
         for (Iterator iter = ContentUtil.getAllChildren(node).iterator(); iter.hasNext();) {
             Content child = (Content) iter.next();
             Content found = getContentByUUID(child, uuid);
-            if(found != null){
+            if (found != null) {
                 return found;
             }
         }
@@ -155,12 +161,10 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         try {
             this.getContent(path);
             return true;
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             try {
                 return this.isNodeData(path);
-            }
-            catch (RepositoryException e1) {
+            } catch (RepositoryException e1) {
                 return false;
             }
         }
@@ -171,8 +175,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         try {
             Content node = getContent(StringUtils.substringBeforeLast(path, "/"));
             return node.hasNodeData(StringUtils.substringAfterLast(path, "/"));
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             return false;
         }
     }
@@ -187,23 +190,22 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     public String toString() {
         final StringBuffer str = new StringBuffer();
         try {
-            ContentUtil.visit(getRoot(), new ContentUtil.Visitor(){
+            ContentUtil.visit(getRoot(), new ContentUtil.Visitor() {
                 public void visit(Content node) throws Exception {
                     String prefix = "";
-                    for(int i =1 ; i <= node.getLevel(); i++){
+                    for (int i = 1; i <= node.getLevel(); i++) {
                         prefix += "  ";
                     }
                     str.append(prefix).append(node.getName()).append("\n");
                     prefix += "  ";
 
-                    for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-                        NodeData nd = (NodeData) iter.next();
+                    for (Iterator<NodeData> iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
+                        NodeData nd = iter.next();
                         str.append(prefix).append(nd.getName()).append(" = ").append(nd.getString()).append("\n");
                     }
                 }
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("can't print content", e);
         }
 
@@ -212,34 +214,19 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     @Override
     public Workspace getWorkspace() {
-        return this.session.getWorkspace();
+        return getJcrSession().getWorkspace();
     }
 
     /**
-     * Set mock workspace if observation or similar things are needed
+     * Set mock workspace if observation or similar things are needed. Will only work when using a MockSession.
      */
     public void setWorkspace(Workspace workspace) {
-        this.session.setWorkspace(workspace);
+        ((MockJCRSession) getJcrSession()).setWorkspace(workspace);
     }
-
-    /**
-     * Set access manager for this hierarchy
-     * @param accessManager
-     */
-    @Override
-    public void setAccessManager(AccessManager accessManager) {
-        super.setAccessManager(accessManager);
-    }
-
-
 
     @Override
     public String getName() {
         return this.name;
-    }
-
-    public MockSession getSession() {
-        return this.session;
     }
 
     /**
@@ -251,6 +238,6 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     @Override
     public void save() throws RepositoryException {
-        this.session.save();
+        getJcrSession().save();
     }
 }

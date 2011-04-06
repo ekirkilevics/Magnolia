@@ -38,6 +38,8 @@ import info.magnolia.cms.security.User;
 import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.SystemContext;
 
+import javax.jcr.Session;
+
 /**
  * A mock context where you can set a mocked hierarchy manger on it.
  * @author philipp
@@ -56,7 +58,7 @@ public class MockContext extends AbstractMapBasedContext implements SystemContex
         ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addHierarchyManager(repositoryId, hm);
     }
 
-    public void addSession(String repositoryId, MockSession session) {
+    public void addSession(String repositoryId, Session session) {
         ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addSession(repositoryId, session);
     }
 

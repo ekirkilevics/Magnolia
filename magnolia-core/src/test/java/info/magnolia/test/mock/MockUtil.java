@@ -33,30 +33,37 @@
  */
 package info.magnolia.test.mock;
 
+import static org.easymock.EasyMock.anyBoolean;
+import static org.easymock.EasyMock.anyInt;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.importexport.PropertiesImportExport;
-import org.apache.commons.collections.OrderedMap;
-import org.apache.commons.collections.map.ListOrderedMap;
-import static org.easymock.EasyMock.*;
+import info.magnolia.test.ComponentsTestUtil;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Workspace;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Properties;
+
+import org.apache.commons.collections.OrderedMap;
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -126,11 +133,11 @@ public class MockUtil {
         MockHierarchyManager hm = createHierarchyManager(repository, propertiesStream);
         MockContext ctx = getMockContext(true);
         ctx.addHierarchyManager(repository, hm);
-        ctx.addSession(repository, hm.getSession());
+        ctx.addSession(repository, hm.getJcrSession());
 
         MockContext sysCtx = getSystemMockContext(true);
         sysCtx.addHierarchyManager(repository, hm);
-        sysCtx.addSession(repository, hm.getSession());
+        sysCtx.addSession(repository, hm.getJcrSession());
         hm.save();
         return hm;
     }

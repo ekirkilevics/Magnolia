@@ -33,13 +33,8 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
-import com.gargoylesoftware.htmlunit.html.DomNodeList;
-import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.meterware.httpunit.WebResponse;
+import static org.easymock.EasyMock.expect;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templatingcomponents.components.SingletonParagraphBar;
@@ -48,7 +43,11 @@ import info.magnolia.test.mock.MockHierarchyManager;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
-import static org.easymock.EasyMock.expect;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.meterware.httpunit.WebResponse;
 
 /**
  * @author gjoseph
@@ -62,7 +61,7 @@ public class EditBarTagTest extends AbstractJspTest {
     }
 
     @Override
-    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
         expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).times(6);
     }
 

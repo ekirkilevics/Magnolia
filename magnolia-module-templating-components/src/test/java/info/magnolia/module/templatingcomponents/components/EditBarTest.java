@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -42,19 +45,17 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
 import java.io.StringWriter;
 import java.util.Locale;
 
-import static org.easymock.EasyMock.*;
+import junit.framework.TestCase;
 
 /**
  * @author gjoseph
@@ -63,10 +64,6 @@ import static org.easymock.EasyMock.*;
 public class EditBarTest extends TestCase {
     public void testPathNodeCollectionNameEtc() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
-        AccessManager accessManager = createMock(AccessManager.class);
-        // for finer-but-not-too-verbose checks, use the contains() constraint
-        expect(accessManager.isGranted(isA(String.class), anyLong())).andReturn(true).anyTimes();
-        hm.setAccessManager(accessManager);
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(hm.getContent("/foo/bar/baz"));
@@ -76,7 +73,7 @@ public class EditBarTest extends TestCase {
         expect(ctx.getLocale()).andReturn(Locale.US).anyTimes();
         expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).anyTimes();
         MgnlContext.setInstance(ctx);
-        replay(accessManager, ctx);
+        replay(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
         serverCfg.setAdmin(true);

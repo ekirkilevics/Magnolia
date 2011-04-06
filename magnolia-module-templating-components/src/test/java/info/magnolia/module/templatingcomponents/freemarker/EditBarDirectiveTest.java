@@ -33,14 +33,13 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import static org.easymock.EasyMock.expect;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templatingcomponents.components.SingletonParagraphBar;
 
 import javax.servlet.http.HttpServletRequest;
-import static org.easymock.EasyMock.*;
 
 /**
  * @author gjoseph
@@ -48,7 +47,7 @@ import static org.easymock.EasyMock.*;
  */
 public class EditBarDirectiveTest extends DirectiveAbstractTestCase {
     @Override
-    protected void setupExpectations(WebContext ctx, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
         expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).once();
     }
 

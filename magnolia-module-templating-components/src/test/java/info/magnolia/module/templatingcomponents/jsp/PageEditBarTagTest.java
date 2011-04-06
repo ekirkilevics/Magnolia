@@ -33,19 +33,20 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockHierarchyManager;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.WebResponse;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.context.WebContext;
-import info.magnolia.test.mock.MockHierarchyManager;
-import org.apache.commons.lang.StringEscapeUtils;
-
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -63,7 +64,7 @@ public class PageEditBarTagTest extends AbstractJspTest {
     }
 
     @Override
-    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
     }
 
     @Override

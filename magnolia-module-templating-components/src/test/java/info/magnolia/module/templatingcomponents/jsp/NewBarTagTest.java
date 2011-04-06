@@ -33,18 +33,18 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
-import com.gargoylesoftware.htmlunit.html.DomNodeList;
-import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.meterware.httpunit.WebResponse;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.meterware.httpunit.WebResponse;
 
 /**
  *
@@ -61,7 +61,7 @@ public class NewBarTagTest extends AbstractJspTest {
     }
 
     @Override
-    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req, AccessManager accessManager) {
+    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
     }
 
     @Override

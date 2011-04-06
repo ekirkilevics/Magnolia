@@ -33,24 +33,24 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.logging.AuditLoggingUtil;
 
-import java.util.Collection;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
+import java.util.Collection;
 
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.Node;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
-import javax.jcr.ItemNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -172,11 +172,15 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         return this.rootNode;
     }
 
-    private Session getJcrSession() {
+    protected Session getJcrSession() {
         if (null == this.jcrSession) {
             reInitialize();
         }
         return this.jcrSession;
+    }
+
+    protected void setJcrSession(Session jcrSession) {
+        this.jcrSession = jcrSession;
     }
 
     /**
