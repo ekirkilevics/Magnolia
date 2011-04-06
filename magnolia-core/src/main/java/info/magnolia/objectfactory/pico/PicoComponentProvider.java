@@ -34,16 +34,15 @@
 package info.magnolia.objectfactory.pico;
 
 
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
+
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.PropertiesComponentProvider;
 
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-import org.picocontainer.PicoContainer;
-
 /**
- * A {@link ComponentProvider} using PicoContainer.
+ * A {@link info.magnolia.objectfactory.ComponentProvider} using PicoContainer.
  * The getComponent() method simply delegates to the container, while the newInstance()
  * method creates a temporary container as a child of the current container,
  * registers the needed component and fetches it from there, so that any required dependencies
@@ -70,7 +69,7 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    public <T> T getComponent(Class<T> type) {
+    public synchronized <T> T getComponent(Class<T> type) {
         try {
             final T found = pico.getComponent(type);
             log.debug("Looking for {}, found {}", type, found);
@@ -115,12 +114,8 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
         return adhocContainer.getComponent(type);
     }
 
-    public PicoContainer getContainer() {
-        return pico;
-    }
-
     @Override
-    public <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
+    public synchronized <T> void registerImplementation(Class<T> type, Class<? extends T> implementationType) {
         super.registerImplementation(type, implementationType);
 
         // If already registered remove, TODO this should work for all register- methods.
@@ -135,20 +130,20 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
     }
 
     @Override
-    public <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
+    public synchronized <T> void registerComponentFactory(Class<T> type, ComponentFactory<T> componentFactory) {
         super.registerComponentFactory(type, componentFactory);
         pico.addAdapter(new ComponentFactoryProviderAdapter(type, componentFactory));
     }
 
     @Override
-    public <T> void registerInstance(Class<T> type, T instance) {
+    public synchronized <T> void registerInstance(Class<T> type, T instance) {
         super.registerInstance(type, instance);
         pico.addComponent(type, instance);
     }
 
     @Override
-    public PicoComponentProvider createChild() {
-        PicoBuilder builder = new PicoBuilder(getContainer()).withConstructorInjection().withCaching();
+    public synchronized PicoComponentProvider createChild() {
+        PicoBuilder builder = new PicoBuilder(pico).withConstructorInjection().withCaching();
 
         final MutablePicoContainer container = builder.build();
 
