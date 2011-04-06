@@ -33,6 +33,10 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+import java.util.List;
+import javax.jcr.Item;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
@@ -47,11 +51,6 @@ import info.magnolia.ui.model.action.ActionExecutionException;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
-import java.util.List;
-
-import javax.jcr.Item;
-import javax.jcr.RepositoryException;
-
 /**
  * Shows the detail view and command list.
  */
@@ -64,7 +63,7 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
     private WorkbenchDefinition workbenchDefinition;
 
     public DetailViewActivity(ComponentProvider componentProvider, ItemSelectedPlace place, WorkbenchDefinition workbenchDefinition,
-            WorkbenchActionFactory actionFactory, Shell shell) {
+                              WorkbenchActionFactory actionFactory, Shell shell) {
         this.actionFactory = actionFactory;
         this.shell = shell;
         this.workbenchDefinition = workbenchDefinition;
@@ -96,26 +95,30 @@ public class DetailViewActivity extends AbstractActivity implements DetailView.P
         }
     }
 
-    public void onCommandSelected(String commandName) {
-        // TODO we should inject the tree definition or something more abstract
-        final List<MenuItemDefinition> contextMenuItems = workbenchDefinition.getMenuItems();
-        // TODO should this be a map to avoid such iterations?
-        for (MenuItemDefinition menuItemDefinition : contextMenuItems) {
-            final Item item;
+    public void onMenuItemSelected(String menuItemName) {
+        MenuItemDefinition menuItemDefinition = getMenuItemDefinition(menuItemName);
+        try {
+            String normalizedPath = (workbenchDefinition.getPath() + path).replaceAll("//", "/");
+            Item item = MgnlContext.getJCRSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
+            Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
             try {
-                String normalizedPath = (workbenchDefinition.getPath() + path).replaceAll("//", "/");
-                item = MgnlContext.getJCRSession(workbenchDefinition.getWorkspace()).getItem(normalizedPath);
-                if (menuItemDefinition.getName().equals(commandName)) {
-                    final Action action = actionFactory.createAction(menuItemDefinition.getActionDefinition(), item);
-                    try {
-                        action.execute();
-                    } catch (ActionExecutionException e) {
-                        shell.showError("Can't execute action.", e);
-                    }
-                }
-            } catch (RepositoryException e) {
-                shell.showError("Can't access content.", e);
+                action.execute();
+            } catch (ActionExecutionException e) {
+                shell.showError("Can't execute action.", e);
+            }
+        } catch (RepositoryException e) {
+            shell.showError("Can't access content.", e);
+        }
+    }
+
+    private MenuItemDefinition getMenuItemDefinition(String menuItemName) {
+        // TODO should this be a map to avoid such iterations?
+        List<MenuItemDefinition> contextMenuItems = workbenchDefinition.getMenuItems();
+        for (MenuItemDefinition menuItemDefinition : contextMenuItems) {
+            if (menuItemDefinition.getName().equals(menuItemName)) {
+                return menuItemDefinition;
             }
         }
+        return null;
     }
 }

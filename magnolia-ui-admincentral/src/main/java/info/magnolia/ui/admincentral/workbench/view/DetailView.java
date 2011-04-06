@@ -47,8 +47,8 @@ public interface DetailView extends View {
      * Presenter that is called when the user selects a command.
      */
     public interface Presenter {
-        // TODO this isn't a command, its a menu item name
-        void onCommandSelected(String commandName);
+
+        void onMenuItemSelected(String menuItemName);
     }
 
     void showActions(List<MenuItemDefinition> contextMenuItems);

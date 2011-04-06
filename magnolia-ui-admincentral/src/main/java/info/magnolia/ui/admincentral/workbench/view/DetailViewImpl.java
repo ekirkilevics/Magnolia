@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.workbench.view;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.ui.admincentral.util.UIUtil;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
@@ -107,8 +108,8 @@ public class DetailViewImpl implements IsVaadinComponent, DetailView {
             addListener(new ItemClickEvent.ItemClickListener() {
 
                 public void itemClick(ItemClickEvent event) {
-                    if (presenter != null) {
-                        presenter.onCommandSelected((String) event.getItemId());
+                    if (presenter != null && !event.isDoubleClick()) {
+                        presenter.onMenuItemSelected((String) event.getItemId());
                     }
                 }
             });
@@ -186,8 +187,7 @@ public class DetailViewImpl implements IsVaadinComponent, DetailView {
                     getField(STATUS).setValue(JCRMetadataUtil.getMetaData(node).getActivationStatus());
                 }
             } catch (RepositoryException e) {
-                // TODO proper ExceptionHandling
-                throw new RuntimeException(e);
+                throw new RuntimeRepositoryException(e);
             }
         }
     }
