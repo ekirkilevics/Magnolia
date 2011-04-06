@@ -82,12 +82,12 @@ public class NavigationGroup implements NavigationView, IsVaadinComponent{
     private CustomComponent customComponent;
 
     public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
-        customComponent = new CustomComponent(){ {setCompositionRoot(accordion);}};
+        customComponent = new CustomComponent(){{setCompositionRoot(accordion);}};
         customComponent.setSizeFull();
         this.navigationItemDefs = navigationItemDefs;
         this.permissions = permissions;
 
-        for(NavigationItemDefinition navigationItemDef:  this.navigationItemDefs) {
+        for(NavigationItemDefinition navigationItemDef : this.navigationItemDefs) {
             if(this.permissions.hasPermission(navigationItemDef)){
                 // register new top level menu
                 addTab(navigationItemDef, this.permissions);
