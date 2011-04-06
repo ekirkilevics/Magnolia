@@ -119,13 +119,13 @@
         <sv:value>a5f114b8-9eac-49c9-b515-3638e6f9fb7d</sv:value>
       </sv:property>
       <sv:property sv:name="activity" sv:type="String">
-        <sv:value>info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace</sv:value>
-      </sv:property>
-      <sv:property sv:name="implementation" sv:type="String">
         <sv:value>info.magnolia.ui.admincentral.embedded.activity.EmbeddedActivity</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
+      </sv:property>
+      <sv:property sv:name="place" sv:type="String">
+        <sv:value>info.magnolia.ui.admincentral.embedded.place.EmbeddedPlace</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -144,7 +144,7 @@
           <sv:value>2011-03-16T16:07:46.823+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2011-04-06T19:11:51.455+02:00</sv:value>
+          <sv:value>2011-04-06T20:33:59.958+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
