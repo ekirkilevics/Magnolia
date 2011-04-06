@@ -67,12 +67,12 @@ public class BootstrapUtil {
 
     public static void bootstrap(String[] resourceNames, int importUUIDBehavior) throws IOException, RepositoryException {
         // sort by length --> import parent node first
-        List list = new ArrayList(Arrays.asList(resourceNames));
+        List<String> list = new ArrayList<String>(Arrays.asList(resourceNames));
 
         Collections.sort(list, new StringLengthComparator());
 
-        for (Iterator iter = list.iterator(); iter.hasNext();) {
-            String resourceName = (String) iter.next();
+        for (Iterator<String> iter = list.iterator(); iter.hasNext();) {
+            String resourceName = iter.next();
 
             // windows again
             resourceName = StringUtils.replace(resourceName, "\\", "/");

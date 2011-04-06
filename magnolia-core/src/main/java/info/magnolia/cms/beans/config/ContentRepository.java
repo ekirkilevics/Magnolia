@@ -45,6 +45,19 @@ import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNameMap;
 import info.magnolia.repository.RepositoryNotInitializedException;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
@@ -52,17 +65,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -142,23 +144,23 @@ public final class ContentRepository {
     /**
      * All available repositories store.
      */
-    private static Map repositories = new Hashtable();
+    private static Map<String, Repository> repositories = new Hashtable<String, Repository>();
 
     /**
      * JCR providers as mapped in repositories.xml.
      */
-    private static Map repositoryProviders = new Hashtable();
+    private static Map<String, Provider> repositoryProviders = new Hashtable<String, Provider>();
 
     /**
      * Repositories configuration as defined in repositories mapping file via attribute
      * <code>magnolia.repositories.config</code>.
      */
-    private static Map repositoryMapping = new Hashtable();
+    private static Map<String, RepositoryMapping> repositoryMapping = new Hashtable<String, RepositoryMapping>();
 
     /**
      * holds all repository names as configured in repositories.xml.
      */
-    private static Map repositoryNameMap = new Hashtable();
+    private static Map<String, RepositoryNameMap> repositoryNameMap = new Hashtable<String, RepositoryNameMap>();
 
     /**
      * Utility class, don't instantiate.
@@ -204,9 +206,9 @@ public final class ContentRepository {
      */
     public static void shutdown() {
         log.info("Shutting down JCR");
-        final Iterator providers = repositoryProviders.values().iterator();
+        final Iterator<Provider> providers = repositoryProviders.values().iterator();
         while (providers.hasNext()) {
-            final Provider provider = (Provider) providers.next();
+            final Provider provider = providers.next();
             provider.shutdownRepository();
         }
         repositoryProviders.clear();
@@ -224,9 +226,9 @@ public final class ContentRepository {
      * @throws RepositoryException exception while accessing the repository
      */
     public static boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
-        Iterator repositoryNames = getAllRepositoryNames();
+        Iterator<String> repositoryNames = getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
-            String repository = (String) repositoryNames.next();
+            String repository = repositoryNames.next();
             if (checkIfInitialized(repository)) {
                 return true;
             }
@@ -250,7 +252,7 @@ public final class ContentRepository {
         Content startPage = hm.getRoot();
 
         // return any kind of children
-        Collection children = startPage.getChildren(new Content.ContentFilter(){
+        Collection<Content> children = startPage.getChildren(new Content.ContentFilter() {
             public boolean accept(Content content) {
                 return (!content.getName().startsWith("jcr:") && !content.getName().startsWith("rep:"));
             }
@@ -359,9 +361,9 @@ public final class ContentRepository {
         repositoryProviders.put(map.getName(), handlerClass);
         if (map.isLoadOnStartup()) {
             // load hierarchy managers for each workspace
-            Iterator workspaces = map.getWorkspaces().iterator();
+            Iterator<String> workspaces = map.getWorkspaces().iterator();
             while (workspaces.hasNext()) {
-                String wspID = (String) workspaces.next();
+                String wspID = workspaces.next();
                 registerNameSpacesAndNodeTypes(repository, wspID, map, handlerClass);
             }
         }
@@ -424,9 +426,9 @@ public final class ContentRepository {
      * within <Repository/>.
      * */
     public static String getParentRepositoryName(String workspaceName) throws RepositoryException {
-        Iterator values = repositoryNameMap.values().iterator();
+        Iterator<RepositoryNameMap> values = repositoryNameMap.values().iterator();
         while (values.hasNext()) {
-            RepositoryNameMap map = (RepositoryNameMap) values.next();
+            RepositoryNameMap map = values.next();
             if (workspaceName.equalsIgnoreCase(map.getWorkspaceName())) {
                 return map.getRepositoryName();
             }
@@ -440,7 +442,7 @@ public final class ContentRepository {
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public static String getMappedRepositoryName(String name) {
-        RepositoryNameMap nameMap = (RepositoryNameMap) repositoryNameMap.get(name);
+        RepositoryNameMap nameMap = repositoryNameMap.get(name);
         if(nameMap==null){
             return name;
         }
@@ -453,7 +455,7 @@ public final class ContentRepository {
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public static String getMappedWorkspaceName(String name) {
-        RepositoryNameMap nameMap = (RepositoryNameMap) repositoryNameMap.get(name);
+        RepositoryNameMap nameMap = repositoryNameMap.get(name);
         if (nameMap == null) {
             return name;
         }
@@ -493,7 +495,7 @@ public final class ContentRepository {
         if (mapping == null) {
             return DEFAULT_WORKSPACE;
         }
-        Collection workspaces = mapping.getWorkspaces();
+        Collection<String> workspaces = mapping.getWorkspaces();
         if (workspaces.contains(getMappedWorkspaceName(repositoryId))) {
             return repositoryId;
         }
@@ -504,11 +506,11 @@ public final class ContentRepository {
      * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Repository getRepository(String repositoryID) {
-        Repository repository = (Repository) repositories.get(repositoryID);
+        Repository repository = repositories.get(repositoryID);
         if (repository == null) {
             final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
             if (mappedRepositoryName != null) {
-                repository = (Repository) repositories.get(mappedRepositoryName);
+                repository = repositories.get(mappedRepositoryName);
             }
             if (repository == null) {
                 final String s = "Failed to retrieve repository '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
@@ -523,11 +525,11 @@ public final class ContentRepository {
      * Returns repository provider specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Provider getRepositoryProvider(String repositoryID) {
-        Provider provider = (Provider) repositoryProviders.get(repositoryID);
+        Provider provider = repositoryProviders.get(repositoryID);
         if (provider == null) {
             final String mappedRepositoryName = getMappedRepositoryName(repositoryID);
             if (mappedRepositoryName != null) {
-                provider = (Provider) repositoryProviders.get(mappedRepositoryName);
+                provider = repositoryProviders.get(mappedRepositoryName);
             }
             if (provider == null) {
                 final String s = "Failed to retrieve repository provider '" + repositoryID + "' (mapped as '" + mappedRepositoryName + "'). Your Magnolia instance might not have been initialized properly.";
@@ -544,7 +546,7 @@ public final class ContentRepository {
     public static RepositoryMapping getRepositoryMapping(String repositoryID) {
         String name = getMappedRepositoryName(repositoryID);
         if (name != null && repositoryMapping.containsKey(name)) {
-            return (RepositoryMapping) repositoryMapping.get(getMappedRepositoryName(repositoryID));
+            return repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
         log.debug("No mapping for the repository {}", repositoryID);
         return null;
@@ -562,7 +564,7 @@ public final class ContentRepository {
      * Gets repository names array as configured in repositories.xml.
      * @return repository names
      */
-    public static Iterator getAllRepositoryNames() {
+    public static Iterator<String> getAllRepositoryNames() {
         return repositoryNameMap.keySet().iterator();
     }
 
@@ -572,10 +574,10 @@ public final class ContentRepository {
      * @return workspace name as configured in magnolia repositories.xml
      * */
     public static String getInternalWorkspaceName(String workspaceName) {
-        Iterator keys = repositoryNameMap.keySet().iterator();
+        Iterator<String> keys = repositoryNameMap.keySet().iterator();
         while (keys.hasNext()) {
-            String key = (String) keys.next();
-            RepositoryNameMap nameMap = (RepositoryNameMap) repositoryNameMap.get(key);
+            String key = keys.next();
+            RepositoryNameMap nameMap = repositoryNameMap.get(key);
             if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) {
                 return key;
             }

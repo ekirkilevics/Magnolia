@@ -74,10 +74,10 @@ public class MBeanUtil {
     }
 
     public static MBeanServer getMBeanServer() {
-        final ArrayList list = MBeanServerFactory.findMBeanServer(null);
+        final ArrayList<MBeanServer> list = MBeanServerFactory.findMBeanServer(null);
         final MBeanServer mbeanServer;
         if (list != null && list.size() > 0) {
-            mbeanServer = (MBeanServer) list.get(0);
+            mbeanServer = list.get(0);
         } else {
             mbeanServer = MBeanServerFactory.createMBeanServer();
         }
