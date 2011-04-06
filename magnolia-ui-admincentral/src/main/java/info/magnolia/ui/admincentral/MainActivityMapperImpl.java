@@ -47,6 +47,12 @@ import info.magnolia.ui.model.builder.FactoryBase;
  */
 public class MainActivityMapperImpl extends FactoryBase<Place, Activity> implements MainActivityMapper {
 
+    /**
+     * Defines a mapping from a place to an activity.
+     *
+     * @param <P> type of the place
+     * @param <A> type of the activity
+     */
     public static class PlaceToActivityMapping<P, A> {
 
         private Class<P> place;
