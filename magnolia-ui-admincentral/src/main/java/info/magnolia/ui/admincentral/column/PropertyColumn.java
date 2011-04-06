@@ -43,24 +43,23 @@ import com.vaadin.ui.Label;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.column.definition.NodeDataColumnDefinition;
+import info.magnolia.ui.model.column.definition.PropertyColumnDefinition;
 
 /**
- * A column that displays a NodeData value when viewing a content node. Used in the website tree for the 'Title' column.
- * FIXME this is a PropertyColumn, NodeData is a Content API term we have to avoid
+ * A column that displays the value of a property when viewing a node.
  */
-public class NodeDataColumn extends AbstractEditableColumn<NodeDataColumnDefinition> implements Serializable {
+public class PropertyColumn extends AbstractEditableColumn<PropertyColumnDefinition> implements Serializable {
 
-    public NodeDataColumn(NodeDataColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
+    public PropertyColumn(PropertyColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
         super(def, eventBus, placeController, shell);
     }
 
-    public String getNodeDataName() {
-        return getDefinition().getNodeDataName();
+    public String getPropertyName() {
+        return getDefinition().getPropertyName();
     }
 
-    public void setNodeDataName(String nodeDataName) {
-        getDefinition().setNodeDataName(nodeDataName);
+    public void setPropertyName(String propertyName) {
+        getDefinition().setPropertyName(propertyName);
     }
 
     @Override
@@ -70,11 +69,11 @@ public class NodeDataColumn extends AbstractEditableColumn<NodeDataColumnDefinit
             return new Label();
         }
 
-        return new EditableText(item, new PresenterImpl(), definition.getNodeDataName()) {
+        return new EditableText(item, new PresenterImpl(), definition.getPropertyName()) {
             @Override
             protected String getLabelText(Item item) throws RepositoryException {
                 Node node = (Node) item;
-                return node.hasProperty(getNodeDataName()) ? node.getProperty(getNodeDataName()).getString() : "";
+                return node.hasProperty(getPropertyName()) ? node.getProperty(getPropertyName()).getString() : "";
             }
         };
     }

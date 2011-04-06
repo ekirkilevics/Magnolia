@@ -154,7 +154,7 @@
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="nodeData">
+    <sv:node sv:name="property">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -168,7 +168,7 @@
         <sv:value>.resources/icons/16/cube_green.gif</sv:value>
       </sv:property>
       <sv:property sv:name="itemType" sv:type="String">
-        <sv:value>nodeData</sv:value>
+        <sv:value>mgnl:property</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -282,7 +282,7 @@
         <sv:value>02e4fdea-1665-4d48-913e-664400924bc9</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition</sv:value>
+        <sv:value>info.magnolia.ui.model.column.definition.PropertyValueColumnDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -325,7 +325,7 @@
         <sv:value>2ec1362b-d345-4667-9308-454a4c1f76b0</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.model.column.definition.NodeDataTypeColumnDefinition</sv:value>
+        <sv:value>info.magnolia.ui.model.column.definition.PropertyTypeColumnDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>

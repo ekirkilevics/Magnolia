@@ -33,44 +33,33 @@
  */
 package info.magnolia.ui.admincentral.column;
 
-import java.io.Serializable;
-import javax.jcr.Item;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
-
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import info.magnolia.ui.framework.event.EventBus;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition;
+import info.magnolia.ui.model.column.definition.PropertyTypeColumnDefinition;
+
+import java.io.Serializable;
+
+import javax.jcr.Item;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 
 /**
- * Describes a column that displays the value of a NodeData. Used in the config tree when a row in
- * the TreeTable is a NodeData.
- *
- * @author dlipp
- * @author tmattsson
+ * Column that displays the type of a property.
  */
-public class NodeDataValueColumn extends AbstractEditableColumn<NodeDataValueColumnDefinition> implements Serializable {
+public class PropertyTypeColumn extends AbstractColumn<PropertyTypeColumnDefinition> implements Serializable {
 
-    public NodeDataValueColumn(NodeDataValueColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
-        super(def, eventBus, placeController, shell);
+    public PropertyTypeColumn(PropertyTypeColumnDefinition def) {
+        super(def);
     }
 
     @Override
     public Component getComponent(Item item) throws RepositoryException {
         if (item instanceof Property) {
-            return new EditableText(item, new PresenterImpl(), item.getName()) {
-
-                @Override
-                protected String getLabelText(Item item) throws RepositoryException {
-                    Property property = (Property) item;
-                    return property.getString();
-                }
-            };
+            Property property = (Property) item;
+            return new Label(PropertyType.nameFromValue(property.getType()));
         }
-        return new Label();
+        return new Label("");
     }
 }

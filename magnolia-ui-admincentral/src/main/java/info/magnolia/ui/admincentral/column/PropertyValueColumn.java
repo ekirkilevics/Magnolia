@@ -31,38 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.workbench.definition;
+package info.magnolia.ui.admincentral.column;
 
 import java.io.Serializable;
+import javax.jcr.Item;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
+
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.model.column.definition.PropertyValueColumnDefinition;
 
 /**
- * Configuration for inclusion of a certain item type in a tree.
+ * Definition for a column that displays the value of a property.
  *
- * @see info.magnolia.cms.core.ItemType
+ * @author dlipp
+ * @author tmattsson
  */
-public class ItemTypeDefinition implements Serializable {
+public class PropertyValueColumn extends AbstractEditableColumn<PropertyValueColumnDefinition> implements Serializable {
 
-    public static final String ITEM_TYPE_NODE_DATA = "mgnl:property";
-
-    /**
-     * The system name of the item type or 'nodeData' if it describes node data.
-     */
-    private String itemType;
-    private String icon;
-
-    public String getItemType() {
-        return itemType;
+    public PropertyValueColumn(PropertyValueColumnDefinition def, EventBus eventBus, PlaceController placeController, Shell shell) {
+        super(def, eventBus, placeController, shell);
     }
 
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
+    @Override
+    public Component getComponent(Item item) throws RepositoryException {
+        if (item instanceof Property) {
+            return new EditableText(item, new PresenterImpl(), item.getName()) {
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
+                @Override
+                protected String getLabelText(Item item) throws RepositoryException {
+                    Property property = (Property) item;
+                    return property.getString();
+                }
+            };
+        }
+        return new Label();
     }
 }

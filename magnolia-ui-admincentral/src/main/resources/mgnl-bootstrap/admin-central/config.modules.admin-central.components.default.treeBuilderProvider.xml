@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sv:node sv:name="treeBuilderProvider" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:content</sv:value>
+    <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
     <sv:value>mix:lockable</sv:value>
@@ -165,7 +165,7 @@
             </sv:property>
           </sv:node>
         </sv:node>
-        <sv:node sv:name="nodeData">
+        <sv:node sv:name="property">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
@@ -176,10 +176,10 @@
             <sv:value>832977dc-9b46-44ae-85ab-b50897345a18</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.column.definition.NodeDataColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.PropertyColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
-            <sv:value>info.magnolia.ui.admincentral.column.NodeDataColumn</sv:value>
+            <sv:value>info.magnolia.ui.admincentral.column.PropertyColumn</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -205,7 +205,7 @@
             </sv:property>
           </sv:node>
         </sv:node>
-        <sv:node sv:name="nodeDataValue">
+        <sv:node sv:name="propertyValue">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
@@ -216,10 +216,10 @@
             <sv:value>90b970a9-b530-4e5b-a693-638db8366c5a</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.column.definition.NodeDataValueColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.PropertyValueColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
-            <sv:value>info.magnolia.ui.admincentral.column.NodeDataValueColumn</sv:value>
+            <sv:value>info.magnolia.ui.admincentral.column.PropertyValueColumn</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>
@@ -245,7 +245,7 @@
             </sv:property>
           </sv:node>
         </sv:node>
-        <sv:node sv:name="nodeDataType">
+        <sv:node sv:name="propertyType">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:contentNode</sv:value>
           </sv:property>
@@ -256,10 +256,10 @@
             <sv:value>704db944-fe57-4650-a18c-fb2456b5a253</sv:value>
           </sv:property>
           <sv:property sv:name="definition" sv:type="String">
-            <sv:value>info.magnolia.ui.model.column.definition.NodeDataTypeColumnDefinition</sv:value>
+            <sv:value>info.magnolia.ui.model.column.definition.PropertyTypeColumnDefinition</sv:value>
           </sv:property>
           <sv:property sv:name="implementation" sv:type="String">
-            <sv:value>info.magnolia.ui.admincentral.column.NodeDataTypeColumn</sv:value>
+            <sv:value>info.magnolia.ui.admincentral.column.PropertyTypeColumn</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:createdBy" sv:type="String">
             <sv:value>admin</sv:value>

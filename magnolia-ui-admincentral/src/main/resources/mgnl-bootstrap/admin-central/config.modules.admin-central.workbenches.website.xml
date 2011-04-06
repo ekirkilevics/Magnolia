@@ -184,7 +184,7 @@
         <sv:value>1c46a23d-5f14-4165-96dc-cf7c718ceb0d</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.model.column.definition.NodeDataColumnDefinition</sv:value>
+        <sv:value>info.magnolia.ui.model.column.definition.PropertyColumnDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="editable" sv:type="String">
         <sv:value>true</sv:value>
@@ -195,7 +195,7 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>Title</sv:value>
       </sv:property>
-      <sv:property sv:name="nodeDataName" sv:type="String">
+      <sv:property sv:name="propertyName" sv:type="String">
         <sv:value>title</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">

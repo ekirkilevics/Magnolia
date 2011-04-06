@@ -34,12 +34,13 @@
 package info.magnolia.ui.model.column.definition;
 
 /**
- * Definition for NodeDataValueDataColumns.
+ * Definition for a column that shows the value of a property.
  *
  * @author dlipp
  */
-public class NodeDataValueColumnDefinition extends ColumnDefinition {
+public class PropertyColumnDefinition extends ColumnDefinition {
 
+    private String propertyName;
     private boolean editable = false;
 
     public boolean isEditable() {
@@ -49,4 +50,13 @@ public class NodeDataValueColumnDefinition extends ColumnDefinition {
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
 }

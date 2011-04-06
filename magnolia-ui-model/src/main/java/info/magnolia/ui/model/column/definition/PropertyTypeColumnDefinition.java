@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,42 +25,18 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.column;
-
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import info.magnolia.ui.model.column.definition.NodeDataTypeColumnDefinition;
-
-import java.io.Serializable;
-
-import javax.jcr.Item;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-
+package info.magnolia.ui.model.column.definition;
 
 /**
- * Column that displays the type of a NodeData. Used in the config tree when a row in the TreeTable
- * is a NodeData.
+ * Definition for column that shows the type of a property.
+ *
+ * @author dlipp
  */
-public class NodeDataTypeColumn extends AbstractColumn<NodeDataTypeColumnDefinition> implements Serializable {
-
-    public NodeDataTypeColumn(NodeDataTypeColumnDefinition def) {
-        super(def);
-    }
-
-    @Override
-    public Component getComponent(Item item) throws RepositoryException {
-        if (item instanceof Property) {
-            Property property = (Property) item;
-            return new Label(PropertyType.nameFromValue(property.getType()));
-        }
-        return new Label("");
-    }
+public class PropertyTypeColumnDefinition extends ColumnDefinition {
 }
