@@ -84,7 +84,7 @@ public class JcrBrowser extends TreeTable {
     public JcrBrowser(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) {
         this.workbenchDefinition = workbenchDefinition;
         this.treeModel = treeModel;
-        // TODO the view should not know the shell
+        // TODO the view should not know the shell (it's used to show errors)
         this.shell = shell;
 
         setSizeFull();
@@ -100,8 +100,10 @@ public class JcrBrowser extends TreeTable {
         this.container = new JcrContainer(treeModel);
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
-            super.setColumnExpandRatio(treeColumn.getLabel(), treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
-            container.addContainerProperty(treeColumn.getLabel(), Component.class, "");
+            String columnName = treeColumn.getDefinition().getName();
+            super.setColumnExpandRatio(columnName, treeColumn.getWidth() <= 0 ? 1 : treeColumn.getWidth());
+            container.addContainerProperty(columnName, Component.class, "");
+            super.setColumnHeader(columnName, treeColumn.getLabel());
         }
 
         setContainerDataSource(container);

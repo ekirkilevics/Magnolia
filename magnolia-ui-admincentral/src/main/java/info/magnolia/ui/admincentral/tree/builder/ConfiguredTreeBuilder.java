@@ -92,11 +92,10 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
     public TreeView build(WorkbenchDefinition workbenchDefinition) {
         Map<String, Column<?>> columns = new LinkedHashMap<String, Column<?>>();
         for (ColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
-            // FIXME use getName() not getLabel()
             Column<?> column = createTreeColumn(columnDefinition);
             // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
             if (column != null) {
-                columns.put(columnDefinition.getLabel(), column);
+                columns.put(columnDefinition.getName(), column);
             }
         }
 

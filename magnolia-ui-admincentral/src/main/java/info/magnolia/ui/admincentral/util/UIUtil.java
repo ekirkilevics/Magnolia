@@ -42,6 +42,8 @@ import javax.jcr.Node;
 /**
  * UI-Utilities for AdminCentral.
  *
+ * TODO do we really want to hard code these things? explicit configuration is more flexible even if we risk repeating ourselves
+ *
  * @author dlipp
  */
 public class UIUtil {

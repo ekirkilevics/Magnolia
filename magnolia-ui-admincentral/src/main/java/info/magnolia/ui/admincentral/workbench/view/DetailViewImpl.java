@@ -65,10 +65,10 @@ import com.vaadin.ui.VerticalSplitPanel;
  * @author fgrilli
  * @author tmattsson
  */
-// FIXME don't extend CustomComponent, make it composite.
-public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinComponent, DetailView {
+public class DetailViewImpl implements IsVaadinComponent, DetailView {
 
     private static final Logger log = LoggerFactory.getLogger(DetailViewImpl.class);
+    private VerticalSplitPanel panel;
     private ActionList actionList;
     private DetailForm detailForm;
     private Presenter presenter;
@@ -77,10 +77,11 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
         this.presenter = presenter;
         actionList = new ActionList();
         detailForm = new DetailForm();
-        setSizeFull();
+        panel = new VerticalSplitPanel();
+        panel.setSizeFull();
 
-        setFirstComponent(actionList);
-        setSecondComponent(detailForm);
+        panel.setFirstComponent(actionList);
+        panel.setSecondComponent(detailForm);
     }
 
     public void showActions(List<MenuItemDefinition> contextMenuItems) {
@@ -192,6 +193,6 @@ public class DetailViewImpl extends VerticalSplitPanel implements IsVaadinCompon
     }
 
     public Component asVaadinComponent() {
-        return this;
+        return panel;
     }
 }

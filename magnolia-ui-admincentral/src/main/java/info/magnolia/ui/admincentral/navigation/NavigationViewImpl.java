@@ -63,19 +63,21 @@ import com.vaadin.ui.VerticalLayout;
  * @author fgrilli
  *
  */
-// FIXME don't extend CustomComponent, make it composite.
-public class NavigationViewImpl extends CustomComponent implements NavigationView, IsVaadinComponent{
+public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
 
     private static final Logger log = LoggerFactory.getLogger(NavigationViewImpl.class);
 
+    private CustomComponent customComponent;
     private VerticalLayout outerNavigationContainer = new VerticalLayout();
     private Presenter presenter;
     private Map<WorkareaChooser, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkareaChooser, NavigationWorkArea>();
 
     //TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
-        setCompositionRoot(outerNavigationContainer);
-        setSizeFull();
+
+        // Wrapping in a custom component to make it appear in the top of the area
+        customComponent = new CustomComponent() {{setCompositionRoot(outerNavigationContainer);}};
+        customComponent.setSizeFull();
 
         final HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
@@ -131,12 +133,12 @@ public class NavigationViewImpl extends CustomComponent implements NavigationVie
     }
 
     public Component asVaadinComponent() {
-        return this;
+        return customComponent;
     }
 
     /**
      * WorkareaChooser.
-     * TODO naming?
+     * TODO naming?    Maybe selector? -Tobias
      * @author fgrilli
      *
      */

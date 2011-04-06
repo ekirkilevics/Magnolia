@@ -44,8 +44,7 @@ import javax.jcr.RepositoryException;
 /**
  * Opens a dialog for editing a nodeToEdit in a tree.
  *
- * TODO: add support for configuring supported itemTypes, maybe in base class where no config means
- * all
+ * TODO: add support for configuring supported itemTypes, maybe in base class where no config means all
  *
  * @author tmattsson
  */

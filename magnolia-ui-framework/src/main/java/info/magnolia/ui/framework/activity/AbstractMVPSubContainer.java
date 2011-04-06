@@ -52,7 +52,6 @@ import info.magnolia.ui.framework.view.ViewPort;
  * {@link EventBus}. {@link PlaceChangeEvent} events are fired to the outer {@link PlaceController}
  * and vice versa.
  *
- * TODO it is not clear how we would provide IoC here. it is comparable to a sub-conversion scope.
  * @param <A> the inner activity the container will delegate to.
  */
 public abstract class AbstractMVPSubContainer<A extends Activity> extends AbstractActivity {

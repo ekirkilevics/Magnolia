@@ -39,9 +39,18 @@ package info.magnolia.ui.model.column.definition;
  * @author dlipp
  */
 public abstract class ColumnDefinition {
-    private String label;
 
+    private String name;
+    private String label;
     private int width = 1;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getWidth() {
         return width;

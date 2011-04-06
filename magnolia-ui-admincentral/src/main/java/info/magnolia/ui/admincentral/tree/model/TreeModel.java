@@ -162,8 +162,8 @@ public class TreeModel implements JcrContainerSource {
         return !getChildren(item).isEmpty();
     }
 
-    public Component getColumnComponent(String columnLabel, Item item) throws RepositoryException {
-        return getColumn(columnLabel).getComponent(item);
+    public Component getColumnComponent(String columnName, Item item) throws RepositoryException {
+        return getColumn(columnName).getComponent(item);
     }
 
     public String getItemIcon(Item item) throws RepositoryException {
@@ -283,8 +283,8 @@ public class TreeModel implements JcrContainerSource {
         return getSession().getNode(workbenchDefinition.getPath());
     }
 
-    private Column<?> getColumn(String columnLabel) {
-        return columns.get(columnLabel);
+    private Column<?> getColumn(String columnName) {
+        return columns.get(columnName);
     }
 
     private String getPathInWorkspace(String pathInTree) {
