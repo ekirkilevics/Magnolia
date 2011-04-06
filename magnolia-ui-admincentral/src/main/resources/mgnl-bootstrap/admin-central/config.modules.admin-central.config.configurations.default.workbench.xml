@@ -135,46 +135,6 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="WorkbenchActionFactory">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:contentNode</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
-          <sv:value>mix:lockable</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>b51d310e-eb44-4818-aacc-cf89e5b64d14</sv:value>
-        </sv:property>
-        <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:createdBy" sv:type="String">
-          <sv:value>admin</sv:value>
-        </sv:property>
-        <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory</sv:value>
-        </sv:property>
-        <sv:node sv:name="MetaData">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:metaData</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:createdBy" sv:type="String">
-            <sv:value>admin</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-            <sv:value>false</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:authorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
-          </sv:property>
-          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-04-01T12:54:05.744+02:00</sv:value>
-          </sv:property>
-        </sv:node>
-      </sv:node>
       <sv:node sv:name="ItemListActivityMapper">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
@@ -443,6 +403,46 @@
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
             <sv:value>2011-04-01T12:57:36.532+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="WorkbenchActionFactory">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name" sv:multiple="true">
+          <sv:value>mix:lockable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>8cd3ba70-979c-4dcb-b718-d2215061958c</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:createdBy" sv:type="String">
+          <sv:value>admin</sv:value>
+        </sv:property>
+        <sv:property sv:name="path" sv:type="String">
+          <sv:value>/modules/admin-central/components/default/WorkbenchActionFactory</sv:value>
+        </sv:property>
+        <sv:property sv:name="type" sv:type="String">
+          <sv:value>info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:createdBy" sv:type="String">
+            <sv:value>admin</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+            <sv:value>false</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2011-03-31T14:37:29.560+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2011-04-06T13:33:01.828+02:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>

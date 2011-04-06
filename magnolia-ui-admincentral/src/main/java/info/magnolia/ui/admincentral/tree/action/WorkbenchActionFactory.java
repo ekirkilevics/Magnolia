@@ -33,34 +33,15 @@
  */
 package info.magnolia.ui.admincentral.tree.action;
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.model.action.Action;
-import info.magnolia.ui.model.action.ActionDefinition;
-import info.magnolia.ui.model.builder.FactoryBase;
-
 import javax.jcr.Item;
 
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
 
 /**
  * Creates an action based on an {@link ActionDefinition}.
  */
-public class WorkbenchActionFactory extends FactoryBase<ActionDefinition, Action> {
+public interface WorkbenchActionFactory {
 
-    public WorkbenchActionFactory(ComponentProvider componentProvider) {
-        super(componentProvider);
-
-        // TODO this should be configured
-        addMapping(AddNodeActionDefinition.class, AddNodeAction.class);
-        addMapping(AddPageActionDefinition.class, AddPageAction.class);
-        addMapping(AddPropertyActionDefinition.class, AddPropertyAction.class);
-        addMapping(DeleteItemActionDefinition.class, DeleteItemAction.class);
-
-        addMapping(OpenEditDialogActionDefinition.class, OpenEditDialogAction.class);
-        addMapping(OpenPageActionDefinition.class, OpenPageAction.class);
-    }
-
-    public Action createAction(ActionDefinition actionDefinition, Item item) {
-        return create(actionDefinition, item);
-    }
-
+    Action createAction(ActionDefinition actionDefinition, Item item);
 }
