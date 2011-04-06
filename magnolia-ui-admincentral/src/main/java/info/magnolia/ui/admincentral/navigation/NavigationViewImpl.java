@@ -70,7 +70,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
     private CustomComponent customComponent;
     private VerticalLayout outerNavigationContainer = new VerticalLayout();
     private Presenter presenter;
-    private Map<WorkareaChooser, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkareaChooser, NavigationWorkArea>();
+    private Map<WorkareaSelector, NavigationWorkArea> registeredNavigationAreas = new HashMap<WorkareaSelector, NavigationWorkArea>();
 
     //TODO don't pass the registry but the navigation itself
     public NavigationViewImpl(NavigationProvider navigationProvider, NavigationPermissionSchema permissions) {
@@ -98,7 +98,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
                 groups.add(new NavigationGroup(group.getItems(), permissions));
             }
 
-            final WorkareaChooser button = new WorkareaChooser(definition);
+            final WorkareaSelector button = new WorkareaSelector(definition);
             buttons.addComponent(button);
 
             final NavigationWorkArea navigationWorkArea = new NavigationWorkArea(groups);
@@ -107,7 +107,7 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
                 navigationWorkArea.setVisible(true);
             }
             registeredNavigationAreas.put(button, navigationWorkArea);
-            navigationWorkareaContainer.addComponent(navigationWorkArea);
+            navigationWorkareaContainer.addComponent(navigationWorkArea.asVaadinComponent());
         }
         outerNavigationContainer.addComponent(buttons);
         outerNavigationContainer.addComponent(navigationWorkareaContainer);
@@ -137,14 +137,13 @@ public class NavigationViewImpl implements NavigationView, IsVaadinComponent{
     }
 
     /**
-     * WorkareaChooser.
-     * TODO naming?    Maybe selector? -Tobias
+     * WorkareaSelector.
      * @author fgrilli
      *
      */
-    protected class WorkareaChooser extends Button {
+    protected class WorkareaSelector extends Button {
 
-        public WorkareaChooser(final NavigationWorkareaDefinition definition) {
+        public WorkareaSelector(final NavigationWorkareaDefinition definition) {
 
             addListener(new ClickListener() {
 

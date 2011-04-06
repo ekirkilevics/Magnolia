@@ -69,7 +69,7 @@ import com.vaadin.ui.themes.BaseTheme;
  *
  * @author fgrilli
  */
-public class NavigationGroup extends CustomComponent implements NavigationView, IsVaadinComponent{
+public class NavigationGroup implements NavigationView, IsVaadinComponent{
 
     private static final Logger log = LoggerFactory.getLogger(NavigationGroup.class);
 
@@ -79,10 +79,11 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
     private NavigationPermissionSchema permissions;
     private Presenter presenter;
     private NavigationWorkArea navigationWorkarea;
+    private CustomComponent customComponent;
 
     public NavigationGroup(Collection<NavigationItemDefinition> navigationItemDefs, NavigationPermissionSchema permissions) {
-        setCompositionRoot(accordion);
-        setSizeFull();
+        customComponent = new CustomComponent(){ {setCompositionRoot(accordion);}};
+        customComponent.setSizeFull();
         this.navigationItemDefs = navigationItemDefs;
         this.permissions = permissions;
 
@@ -217,7 +218,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
     }
 
     public Component asVaadinComponent() {
-        return this;
+        return customComponent;
     }
 
     public void update(Place place) {

@@ -33,8 +33,11 @@
  */
 package info.magnolia.ui.admincentral.navigation;
 
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
 import java.util.List;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.VerticalLayout;
 
@@ -44,26 +47,35 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author fgrilli
  */
-public class NavigationWorkArea extends CustomComponent {
+public class NavigationWorkArea implements IsVaadinComponent {
 
     private List<NavigationGroup> navigationGroupView;
     private VerticalLayout container = new VerticalLayout();
+    private CustomComponent customComponent;
 
     public NavigationWorkArea(List<NavigationGroup> navigationGroupView) {
-        setCompositionRoot(container);
-        setSizeFull();
+        customComponent = new CustomComponent(){{setCompositionRoot(container);}};
+        customComponent.setSizeFull();
         this.navigationGroupView = navigationGroupView;
 
         for(NavigationGroup group: navigationGroupView){
-            container.addComponent(group);
+            container.addComponent(group.asVaadinComponent());
             group.setNavigationWorkarea(this);
         }
 
         //all work areas start not visible
-        setVisible(false);
+        customComponent.setVisible(false);
     }
 
     public List<NavigationGroup> getNavigationGroup() {
         return navigationGroupView;
+    }
+
+    public Component asVaadinComponent() {
+        return customComponent;
+    }
+
+    public void setVisible(boolean visible){
+        customComponent.setVisible(visible);
     }
 }
