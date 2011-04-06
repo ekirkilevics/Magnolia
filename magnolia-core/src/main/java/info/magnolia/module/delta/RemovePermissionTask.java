@@ -4,7 +4,7 @@
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
@@ -70,8 +70,8 @@ public class RemovePermissionTask extends AbstractRepositoryTask {
             final Role role = roleManager.getRole(roleName);
 
             if (role != null) {
-                role.removePermission(workspaceName, pathToRemove, permission);
-                role.removePermission(workspaceName, pathToRemove + "/*", permission);
+                roleManager.removePermission(role, workspaceName, pathToRemove, permission);
+                roleManager.removePermission(role, workspaceName, pathToRemove + "/*", permission);
             } else {
                 ctx.warn("Role \"" + roleName + "\" not found, can't remove its ACL permission.");
             }

@@ -41,6 +41,7 @@ import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
+import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.importexport.Bootstrapper;
@@ -52,7 +53,7 @@ import javax.jcr.RepositoryException;
 
 /**
  * Bootstrap empty repositories for the current module. (loading is already performed before install tasks)
- * 
+ *
  * @author gjoseph
  * @version $Revision$ ($Author$)
  */
@@ -93,8 +94,9 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
 
     private void grantRepositoryToSuperuser(String workspace) {
         // grant repository to superuser - TODO : maybe this shouldn't use the RoleManager, as we shouldn't assume it's ready yet.
-        final Role superuser = Security.getRoleManager().getRole("superuser");
-        superuser.addPermission(workspace, "/*", Permission.ALL);
+        RoleManager roleMan = Security.getRoleManager();
+        final Role superuser = roleMan.getRole("superuser");
+        roleMan.addPermission(superuser, workspace, "/*", Permission.ALL);
     }
 
     /**
