@@ -33,6 +33,12 @@
  */
 package info.magnolia.module.workflow.setup;
 
+import static info.magnolia.nodebuilder.Ops.addNode;
+import static info.magnolia.nodebuilder.Ops.addProperty;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -43,22 +49,18 @@ import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
 import info.magnolia.nodebuilder.NodeBuilder;
-import static info.magnolia.nodebuilder.Ops.addNode;
-import static info.magnolia.nodebuilder.Ops.addProperty;
-
-import javax.jcr.RepositoryException;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.classextension.EasyMock.*;
+import javax.jcr.RepositoryException;
 
 /**
  * A test class for WorkflowModuleVersionHandler.
@@ -89,16 +91,18 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         super.setUp();
         // setup security
         SecuritySupportImpl securitySupport = new SecuritySupportImpl();
-        roleManager = createStrictMock(RoleManager.class);
-        role = createStrictMock(Role.class);
+        roleManager = createMock(RoleManager.class);
+        role = createMock(Role.class);
 
         expect(roleManager.getRole("workflow-base")).andReturn(role).anyTimes();
-        role.addPermission("config", "/modules/workflow/config/flows", Permission.READ);
-        role.addPermission("config", "/modules/workflow/config/flows/*", Permission.READ);
+        String testPath = "/modules/workflow/config/flows";
+        roleManager.addPermission(role, "config", testPath, Permission.READ);
+        roleManager.addPermission(role, "config", testPath + "/*", Permission.READ);
 
         // 4.3
-        role.removePermission("userroles", "/workflow-base", Permission.READ);
-        role.removePermission("userroles", "/workflow-base/*", Permission.READ);
+        String otherTestPath = "/workflow-base";
+        roleManager.removePermission(role, "userroles", otherTestPath, Permission.READ);
+        roleManager.removePermission(role, "userroles", otherTestPath + "/*", Permission.READ);
 
         securitySupport.setRoleManager(roleManager);
         replay(roleManager, role);
