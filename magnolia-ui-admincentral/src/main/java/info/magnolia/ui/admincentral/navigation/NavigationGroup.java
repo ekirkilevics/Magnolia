@@ -71,10 +71,9 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class NavigationGroup extends CustomComponent implements NavigationView, IsVaadinComponent{
 
-
     private static final Logger log = LoggerFactory.getLogger(NavigationGroup.class);
 
-    private final Map<Tab, NavigationItemDefinition> navigationItems = new HashMap<Tab, NavigationItemDefinition>();
+    private Map<Component, NavigationItemDefinition> navigationItems = new HashMap<Component, NavigationItemDefinition>();
     private Accordion accordion = new Accordion();
     private Collection<NavigationItemDefinition> navigationItemDefs;
     private NavigationPermissionSchema permissions;
@@ -112,7 +111,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
         Component subNavigation = addSubNavigationItems(navigationItemDef, permissions);
         Tab tab = accordion.addTab(subNavigation == null ? new Label() : subNavigation, getLabel(navigationItemDef), getIcon(navigationItemDef));
         // store tab reference
-        this.navigationItems.put(tab, navigationItemDef);
+        this.navigationItems.put(tab.getComponent(), navigationItemDef);
     }
 
     /**
@@ -130,7 +129,10 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
         // sub menu items (2 levels only)
         for (NavigationItemDefinition sub :  navigationItemDef.getItems()) {
             if (permissions.hasPermission(sub)) {
-                layout.addComponent(new NavigationItem(sub));
+                NavigationItem submenuItem = new NavigationItem(sub);
+                layout.addComponent(submenuItem);
+                // store submenu reference
+                this.navigationItems.put(submenuItem, sub);
             }
         }
 
@@ -189,7 +191,8 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
             this.addListener(new ClickListener() {
 
                 public void buttonClick(ClickEvent event) {
-                    presenter.onMenuSelection(item);
+                    NavigationItemDefinition menuConfig = navigationItems.get(event.getComponent());
+                    presenter.onMenuSelection(menuConfig);
                 }
             });
        }
@@ -207,7 +210,7 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
             Tab tab = tabsheet.getTab(tabsheet.getSelectedTab());
 
             if (tab != null) {
-                NavigationItemDefinition menuConfig = navigationItems.get(tab);
+                NavigationItemDefinition menuConfig = navigationItems.get(tab.getComponent());
                 presenter.onMenuSelection(menuConfig);
             }
         }
@@ -216,15 +219,15 @@ public class NavigationGroup extends CustomComponent implements NavigationView, 
     public Component asVaadinComponent() {
         return this;
     }
-    //TODO need to handle submenu actions
+
     public void update(Place place) {
-        for(Entry<Tab, NavigationItemDefinition> entry:navigationItems.entrySet()){
+        for(Entry<Component, NavigationItemDefinition> entry : navigationItems.entrySet()){
             if(!(entry.getValue().getActionDefinition() instanceof PlaceChangeActionDefinition)){
                 continue;
             }
             final PlaceChangeActionDefinition definition = (PlaceChangeActionDefinition) entry.getValue().getActionDefinition();
             if(definition.getPlace().equals(place)){
-                accordion.setSelectedTab(entry.getKey().getComponent());
+                accordion.setSelectedTab(entry.getKey());
                 navigationWorkarea.setVisible(true);
                 log.debug("selected tab {}", entry.getValue().getName());
                 break;

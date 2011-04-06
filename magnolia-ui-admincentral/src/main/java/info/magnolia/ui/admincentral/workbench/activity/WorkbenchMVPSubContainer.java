@@ -82,7 +82,12 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
 
         // load the workbench specific configuration if existing
         final WorkbenchDefinition workbenchDefinition = workbenchRegistry.getWorkbench(place.getWorkbenchName());
-        if(workbenchDefinition.getComponents() != null){
+
+        if(workbenchDefinition == null){
+            throw new IllegalStateException("No definition could be found for workbench [" + place.getWorkbenchName() + "]");
+        }
+
+        if(workbenchDefinition.getComponents() != null) {
             componentProvider.configure(workbenchDefinition.getComponents());
         }
 
