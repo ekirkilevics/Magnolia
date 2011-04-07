@@ -43,6 +43,7 @@ import javax.jcr.Node;
 
 /**
  * Wrapper for collections of content where collections of nodes are expected.
+ * 
  * @author had
  * @version $Id: $
  */
@@ -79,7 +80,7 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         if (arg0 == null) {
             return false;
         }
-        Collection<Object> test = new ArrayList(arg0);
+        Collection<Object> test = new ArrayList<Object>(arg0);
         for (Content c : col) {
             test.remove(c.getJCRNode());
         }
@@ -108,24 +109,26 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return false;
     }
 
-    public boolean removeAll(Collection<?> arg0) {
-        Collection<Content> test = new ArrayList<Content>();
-        for (Content c : col) {
-            if (c.getJCRNode().equals(arg0)) {
-                test.add(c);
-            }
-        }
-        return col.removeAll(test);
+    public boolean removeAll(Collection<?> nodesToRemove) {
+        Collection<Content> contentToRemove = createCollectionOfContainedContent(nodesToRemove);
+        return col.removeAll(contentToRemove);
     }
 
-    public boolean retainAll(Collection<?> arg0) {
+    private Collection<Content> createCollectionOfContainedContent(Collection<?> nodesToRemove) {
         Collection<Content> test = new ArrayList<Content>();
-        for (Content c : col) {
-            if (c.getJCRNode().equals(arg0)) {
-                test.add(c);
+        for (Object o : nodesToRemove) {
+            for (Content c : col) {
+                if (c.getJCRNode().equals(o)) {
+                    test.add(c);
+                }
             }
         }
-        return col.retainAll(test);
+        return test;
+    }
+
+    public boolean retainAll(Collection<?> nodesToRetain) {
+        Collection<Content> contentToRetain = createCollectionOfContainedContent(nodesToRetain);
+        return col.retainAll(contentToRetain);
     }
 
     public int size() {
