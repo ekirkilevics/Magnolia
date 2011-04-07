@@ -65,6 +65,7 @@ import java.util.Map;
 public class ModuleManagerImplTest extends TestCase {
     private ModuleRegistry moduleRegistry;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         moduleRegistry = new ModuleRegistryImpl();
@@ -75,6 +76,7 @@ public class ModuleManagerImplTest extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
         ComponentsTestUtil.clear();
@@ -88,7 +90,7 @@ public class ModuleManagerImplTest extends TestCase {
         ModuleManager.ModuleAndDeltas mad = new ModuleManager.ModuleAndDeltas(mod, Version.parseVersion("1.0"), Arrays.asList(d1, d2));
         assertEquals("ModuleAndDeltas for foo: current version is 1.0.0, updating to 2.3.4 with 2 deltas.", mad.toString());
     }
-    
+
     public void testCheckModuleAndDeltasToStringForInstall() {
         final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
         final Delta d1 = DeltaBuilder.update("1.1", "New version").addTask(new WarnTask("t1", "test 1")).addTask(new WarnTask("t2", "test 2"));
@@ -285,7 +287,7 @@ public class ModuleManagerImplTest extends TestCase {
         assertEquals(false, moduleManager.getStatus().needsUpdateOrInstall());
         assertEquals(InstallStatus.installDone, ctx.getStatus());
         assertEquals(1, ctx.getMessages().size());
-        final List msgs = (List) ctx.getMessages().get(mod1.toString());
+        final List msgs = ctx.getMessages().get(mod1.toString());
         assertEquals(2, msgs.size());
         assertEquals("t1 executing", ((InstallContext.Message) msgs.get(0)).getMessage());
         assertEquals("t1 executed", ((InstallContext.Message) msgs.get(1)).getMessage());
@@ -320,6 +322,7 @@ public class ModuleManagerImplTest extends TestCase {
             this.moduleVersionHandlers = moduleVersionHandlers;
         }
 
+        @Override
         protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
             return moduleVersionHandlers.get(module.getName());
         }
