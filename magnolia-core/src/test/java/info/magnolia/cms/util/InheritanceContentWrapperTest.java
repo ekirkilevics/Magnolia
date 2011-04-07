@@ -33,19 +33,16 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.test.mock.MockUtil;
+
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.ArrayUtils;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
 
@@ -145,22 +142,6 @@ public class InheritanceContentWrapperTest extends TestCase {
         assertEquals("para12", col3.get(1).getName());
         assertTrue(((InheritanceContentWrapper)col3.get(1)).isInherited());
 
-    }
-
-    private void assertEquals(Collection col, String[] names) {
-        final String msg = "wrong set of paragraphs found. expected <" + ArrayUtils.toString(names)+ "> actual:<" + col + ">";
-
-        if(col.size() != names.length){
-            fail(msg);
-        }
-        int i = 0;
-        for (Iterator iterator = col.iterator(); iterator.hasNext();) {
-            Content found = (Content) iterator.next();
-            if(!found.getName().equals(names[i])){
-                fail(msg);
-            }
-            i++;
-        }
     }
 
     private InheritanceContentWrapper getWrapped(String path) throws RepositoryException {
