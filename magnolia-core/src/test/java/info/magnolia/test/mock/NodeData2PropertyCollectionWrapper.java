@@ -109,25 +109,28 @@ public class NodeData2PropertyCollectionWrapper implements Collection<Property> 
         return false;
     }
 
-    public boolean removeAll(Collection<?> arg0) {
-        Collection<NodeData> test = new ArrayList<NodeData>();
-        for (NodeData c : col) {
-            if (c.getJCRProperty().equals(arg0)) {
-                test.add(c);
-            }
-        }
-        return col.removeAll(test);
+    public boolean removeAll(Collection<?> propertiesToRemove) {
+        Collection<NodeData> nodeDataToRemove = createCollectionOfContainedNodeData(propertiesToRemove);
+        return col.removeAll(nodeDataToRemove);
     }
 
-    public boolean retainAll(Collection<?> arg0) {
+    public boolean retainAll(Collection<?> propertiesToRetain) {
+        Collection<NodeData> nodeDataToRetain = createCollectionOfContainedNodeData(propertiesToRetain);
+        return col.retainAll(nodeDataToRetain);
+    }
+
+    private Collection<NodeData> createCollectionOfContainedNodeData(Collection<?> propertiesToRemove) {
         Collection<NodeData> test = new ArrayList<NodeData>();
-        for (NodeData c : col) {
-            if (c.getJCRProperty().equals(arg0)) {
-                test.add(c);
+        for (Object o : propertiesToRemove) {
+            for (NodeData c : col) {
+                if (c.getJCRProperty().equals(o)) {
+                    test.add(c);
+                }
             }
         }
-        return col.retainAll(test);
+        return test;
     }
+
 
     public int size() {
         return col.size();

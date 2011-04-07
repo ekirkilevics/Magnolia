@@ -252,4 +252,29 @@ public class MockJCRProperty implements Property {
     public boolean isMultiple() throws RepositoryException {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((mockNodeData == null) ? 0 : mockNodeData.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MockJCRProperty other = (MockJCRProperty) obj;
+        if (mockNodeData == null) {
+            if (other.mockNodeData != null)
+                return false;
+        } else if (!mockNodeData.equals(other.mockNodeData))
+            return false;
+        return true;
+    }
 }
