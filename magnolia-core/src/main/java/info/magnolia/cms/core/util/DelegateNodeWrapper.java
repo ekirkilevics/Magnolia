@@ -77,33 +77,33 @@ import javax.jcr.version.VersionHistory;
 public abstract class DelegateNodeWrapper implements Node {
 
     public void addMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        this.getWrappedNode().addMixin(mixinName);
+        getWrappedNode().addMixin(mixinName);
     }
 
     public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException,
     RepositoryException {
-        return this.getWrappedNode().addNode(relPath);
+        return getWrappedNode().addNode(relPath);
     }
 
     public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException,
     VersionException, ConstraintViolationException, RepositoryException {
-        return this.getWrappedNode().addNode(relPath, primaryNodeTypeName);
+        return getWrappedNode().addNode(relPath, primaryNodeTypeName);
     }
 
     public boolean canAddMixin(String mixinName) throws NoSuchNodeTypeException, RepositoryException {
-        return this.getWrappedNode().canAddMixin(mixinName);
+        return getWrappedNode().canAddMixin(mixinName);
     }
 
     public void cancelMerge(Version version) throws VersionException, InvalidItemStateException, UnsupportedRepositoryOperationException, RepositoryException {
-        this.getWrappedNode().cancelMerge(version);
+        getWrappedNode().cancelMerge(version);
     }
 
     public Version checkin() throws VersionException, UnsupportedRepositoryOperationException, InvalidItemStateException, LockException, RepositoryException {
-        return this.getWrappedNode().checkin();
+        return getWrappedNode().checkin();
     }
 
     public void checkout() throws UnsupportedRepositoryOperationException, LockException, ActivityViolationException, RepositoryException {
-        this.getWrappedNode().checkout();
+        getWrappedNode().checkout();
     }
 
     public void doneMerge(Version version) throws VersionException, InvalidItemStateException, UnsupportedRepositoryOperationException, RepositoryException {
@@ -112,72 +112,72 @@ public abstract class DelegateNodeWrapper implements Node {
 
     public void followLifecycleTransition(String transition) throws UnsupportedRepositoryOperationException, InvalidLifecycleTransitionException,
     RepositoryException {
-        this.getWrappedNode().followLifecycleTransition(transition);
+        getWrappedNode().followLifecycleTransition(transition);
     }
 
     public String[] getAllowedLifecycleTransistions() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.getWrappedNode().getAllowedLifecycleTransistions();
+        return getWrappedNode().getAllowedLifecycleTransistions();
     }
 
     public Version getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.getWrappedNode().getBaseVersion();
+        return getWrappedNode().getBaseVersion();
     }
 
     public String getCorrespondingNodePath(String workspaceName) throws ItemNotFoundException, NoSuchWorkspaceException, AccessDeniedException,
     RepositoryException {
-        return this.getWrappedNode().getCorrespondingNodePath(workspaceName);
+        return getWrappedNode().getCorrespondingNodePath(workspaceName);
     }
 
     public NodeDefinition getDefinition() throws RepositoryException {
-        return this.getWrappedNode().getDefinition();
+        return getWrappedNode().getDefinition();
     }
 
     public String getIdentifier() throws RepositoryException {
-        return this.getWrappedNode().getIdentifier();
+        return getWrappedNode().getIdentifier();
     }
 
     public int getIndex() throws RepositoryException {
-        return this.getWrappedNode().getIndex();
+        return getWrappedNode().getIndex();
     }
 
     public Lock getLock() throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, RepositoryException {
-        return this.getWrappedNode().getLock();
+        return getWrappedNode().getLock();
     }
 
     public NodeType[] getMixinNodeTypes() throws RepositoryException {
-        return this.getWrappedNode().getMixinNodeTypes();
+        return getWrappedNode().getMixinNodeTypes();
     }
 
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        return this.getWrappedNode().getNode(relPath);
+        return getWrappedNode().getNode(relPath);
     }
 
     public NodeIterator getNodes() throws RepositoryException {
-        return this.getWrappedNode().getNodes();
+        return getWrappedNode().getNodes();
     }
 
     public NodeIterator getNodes(String namePattern) throws RepositoryException {
-        return this.getWrappedNode().getNodes(namePattern);
+        return getWrappedNode().getNodes(namePattern);
     }
 
     public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
-        return this.getWrappedNode().getNodes(nameGlobs);
+        return getWrappedNode().getNodes(nameGlobs);
     }
 
     public Item getPrimaryItem() throws ItemNotFoundException, RepositoryException {
-        return this.getWrappedNode().getPrimaryItem();
+        return getWrappedNode().getPrimaryItem();
     }
 
     public NodeType getPrimaryNodeType() throws RepositoryException {
-        return this.getWrappedNode().getPrimaryNodeType();
+        return getWrappedNode().getPrimaryNodeType();
     }
 
     public PropertyIterator getProperties() throws RepositoryException {
-        return this.getWrappedNode().getProperties();
+        return getWrappedNode().getProperties();
     }
 
     public PropertyIterator getProperties(String namePattern) throws RepositoryException {
-        return this.getWrappedNode().getProperties(namePattern);
+        return getWrappedNode().getProperties(namePattern);
     }
 
     public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
@@ -185,185 +185,185 @@ public abstract class DelegateNodeWrapper implements Node {
     }
 
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        return this.getWrappedNode().getProperty(relPath);
+        return getWrappedNode().getProperty(relPath);
     }
 
     public PropertyIterator getReferences() throws RepositoryException {
-        return this.getWrappedNode().getReferences();
+        return getWrappedNode().getReferences();
     }
 
     public PropertyIterator getReferences(String name) throws RepositoryException {
-        return this.getWrappedNode().getReferences(name);
+        return getWrappedNode().getReferences(name);
     }
 
     public NodeIterator getSharedSet() throws RepositoryException {
-        return this.getWrappedNode().getSharedSet();
+        return getWrappedNode().getSharedSet();
     }
 
     public String getUUID() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.getWrappedNode().getUUID();
+        return getWrappedNode().getUUID();
     }
 
     public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
-        return this.getWrappedNode().getVersionHistory();
+        return getWrappedNode().getVersionHistory();
     }
 
     public PropertyIterator getWeakReferences() throws RepositoryException {
-        return this.getWrappedNode().getWeakReferences();
+        return getWrappedNode().getWeakReferences();
     }
 
     public PropertyIterator getWeakReferences(String name) throws RepositoryException {
-        return this.getWrappedNode().getWeakReferences(name);
+        return getWrappedNode().getWeakReferences(name);
     }
 
     public boolean hasNode(String relPath) throws RepositoryException {
-        return this.getWrappedNode().hasNode(relPath);
+        return getWrappedNode().hasNode(relPath);
     }
 
     public boolean hasNodes() throws RepositoryException {
-        return this.getWrappedNode().hasNodes();
+        return getWrappedNode().hasNodes();
     }
 
     public boolean hasProperties() throws RepositoryException {
-        return this.getWrappedNode().hasProperties();
+        return getWrappedNode().hasProperties();
     }
 
     public boolean hasProperty(String relPath) throws RepositoryException {
-        return this.getWrappedNode().hasProperty(relPath);
+        return getWrappedNode().hasProperty(relPath);
     }
 
     public boolean holdsLock() throws RepositoryException {
-        return this.getWrappedNode().holdsLock();
+        return getWrappedNode().holdsLock();
     }
 
     public boolean isCheckedOut() throws RepositoryException {
-        return this.getWrappedNode().isCheckedOut();
+        return getWrappedNode().isCheckedOut();
     }
 
     public boolean isLocked() throws RepositoryException {
-        return this.getWrappedNode().isLocked();
+        return getWrappedNode().isLocked();
     }
 
     public boolean isNodeType(String nodeTypeName) throws RepositoryException {
-        return this.getWrappedNode().isNodeType(nodeTypeName);
+        return getWrappedNode().isNodeType(nodeTypeName);
     }
 
     public Lock lock(boolean isDeep, boolean isSessionScoped) throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException,
     InvalidItemStateException, RepositoryException {
-        return this.getWrappedNode().lock(isDeep, isSessionScoped);
+        return getWrappedNode().lock(isDeep, isSessionScoped);
     }
 
     public NodeIterator merge(String srcWorkspace, boolean bestEffort) throws NoSuchWorkspaceException, AccessDeniedException, MergeException, LockException,
     InvalidItemStateException, RepositoryException {
-        return this.getWrappedNode().merge(srcWorkspace, bestEffort);
+        return getWrappedNode().merge(srcWorkspace, bestEffort);
     }
 
     public void orderBefore(String srcChildRelPath, String destChildRelPath) throws UnsupportedRepositoryOperationException, VersionException,
     ConstraintViolationException, ItemNotFoundException, LockException, RepositoryException {
-        this.getWrappedNode().orderBefore(srcChildRelPath, destChildRelPath);
+        getWrappedNode().orderBefore(srcChildRelPath, destChildRelPath);
     }
 
     public void removeMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException,
     RepositoryException {
-        this.getWrappedNode().removeMixin(mixinName);
+        getWrappedNode().removeMixin(mixinName);
     }
 
     public void removeShare() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
-        this.getWrappedNode().removeShare();
+        getWrappedNode().removeShare();
     }
 
     public void removeSharedSet() throws VersionException, LockException, ConstraintViolationException, RepositoryException {
-        this.getWrappedNode().removeSharedSet();
+        getWrappedNode().removeSharedSet();
     }
 
     public void restore(String versionName, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException,
     LockException, InvalidItemStateException, RepositoryException {
-        this.getWrappedNode().restore(versionName, removeExisting);
+        getWrappedNode().restore(versionName, removeExisting);
     }
 
     public void restore(Version version, boolean removeExisting) throws VersionException, ItemExistsException, InvalidItemStateException,
     UnsupportedRepositoryOperationException, LockException, RepositoryException {
-        this.getWrappedNode().restore(version, removeExisting);
+        getWrappedNode().restore(version, removeExisting);
     }
 
     public void restore(Version version, String relPath, boolean removeExisting) throws PathNotFoundException, ItemExistsException, VersionException,
     ConstraintViolationException, UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
-        this.getWrappedNode().restore(version, relPath, removeExisting);
+        getWrappedNode().restore(version, relPath, removeExisting);
     }
 
     public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, ItemExistsException,
     UnsupportedRepositoryOperationException, LockException, InvalidItemStateException, RepositoryException {
-        this.getWrappedNode().restoreByLabel(versionLabel, removeExisting);
+        getWrappedNode().restoreByLabel(versionLabel, removeExisting);
     }
 
     public void setPrimaryType(String nodeTypeName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException,
     RepositoryException {
-        this.getWrappedNode().setPrimaryType(nodeTypeName);
+        getWrappedNode().setPrimaryType(nodeTypeName);
     }
 
     public Property setProperty(String name, Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, values);
+        return getWrappedNode().setProperty(name, values);
     }
 
     public Property setProperty(String name, String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, values);
+        return getWrappedNode().setProperty(name, values);
     }
 
     public Property setProperty(String name, String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value);
+        return getWrappedNode().setProperty(name, value);
     }
 
     public Property setProperty(String name, Value value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException,
     RepositoryException {
-        return this.getWrappedNode().setProperty(name, value, type);
+        return getWrappedNode().setProperty(name, value, type);
     }
 
     public Property setProperty(String name, Value[] values, int type) throws ValueFormatException, VersionException, LockException,
@@ -373,78 +373,78 @@ public abstract class DelegateNodeWrapper implements Node {
 
     public Property setProperty(String name, String[] values, int type) throws ValueFormatException, VersionException, LockException,
     ConstraintViolationException, RepositoryException {
-        return this.getWrappedNode().setProperty(name, values, type);
+        return getWrappedNode().setProperty(name, values, type);
     }
 
     public Property setProperty(String name, String value, int type) throws ValueFormatException, VersionException, LockException,
     ConstraintViolationException, RepositoryException {
-        return this.getWrappedNode().setProperty(name, value, type);
+        return getWrappedNode().setProperty(name, value, type);
     }
 
     public void unlock() throws UnsupportedRepositoryOperationException, LockException, AccessDeniedException, InvalidItemStateException, RepositoryException {
-        this.getWrappedNode().unlock();
+        getWrappedNode().unlock();
     }
 
     public void update(String srcWorkspace) throws NoSuchWorkspaceException, AccessDeniedException, LockException, InvalidItemStateException,
     RepositoryException {
-        this.getWrappedNode().update(srcWorkspace);
+        getWrappedNode().update(srcWorkspace);
     }
 
     public void accept(ItemVisitor visitor) throws RepositoryException {
-        this.getWrappedNode().accept(visitor);
+        getWrappedNode().accept(visitor);
     }
 
     public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-        return this.getWrappedNode().getAncestor(depth);
+        return getWrappedNode().getAncestor(depth);
     }
 
     public int getDepth() throws RepositoryException {
-        return this.getWrappedNode().getDepth();
+        return getWrappedNode().getDepth();
     }
 
     public String getName() throws RepositoryException {
-        return this.getWrappedNode().getName();
+        return getWrappedNode().getName();
     }
 
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-        return this.getWrappedNode().getParent();
+        return getWrappedNode().getParent();
     }
 
     public String getPath() throws RepositoryException {
-        return this.getWrappedNode().getPath();
+        return getWrappedNode().getPath();
     }
 
     public Session getSession() throws RepositoryException {
-        return this.getWrappedNode().getSession();
+        return getWrappedNode().getSession();
     }
 
     public boolean isModified() {
-        return this.getWrappedNode().isModified();
+        return getWrappedNode().isModified();
     }
 
     public boolean isNew() {
-        return this.getWrappedNode().isNew();
+        return getWrappedNode().isNew();
     }
 
     public boolean isNode() {
-        return this.getWrappedNode().isNode();
+        return getWrappedNode().isNode();
     }
 
     public boolean isSame(Item otherItem) throws RepositoryException {
-        return this.getWrappedNode().isSame(otherItem);
+        return getWrappedNode().isSame(otherItem);
     }
 
     public void refresh(boolean keepChanges) throws InvalidItemStateException, RepositoryException {
-        this.getWrappedNode().refresh(keepChanges);
+        getWrappedNode().refresh(keepChanges);
     }
 
     public void remove() throws VersionException, LockException, ConstraintViolationException, AccessDeniedException, RepositoryException {
-        this.getWrappedNode().remove();
+        getWrappedNode().remove();
     }
 
     public void save() throws AccessDeniedException, ItemExistsException, ConstraintViolationException, InvalidItemStateException,
     ReferentialIntegrityException, VersionException, LockException, NoSuchNodeTypeException, RepositoryException {
-        this.getWrappedNode().save();
+        getWrappedNode().save();
     }
 
     public abstract Node getWrappedNode();
