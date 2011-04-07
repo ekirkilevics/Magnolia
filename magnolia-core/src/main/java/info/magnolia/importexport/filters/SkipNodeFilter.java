@@ -59,7 +59,7 @@ public abstract class SkipNodeFilter extends XMLFilterImpl {
 
     public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         if (!skipping) {
-            ignorableWhitespace(ch, start, length);
+            super.ignorableWhitespace(ch, start, length);
         }
     }
 
