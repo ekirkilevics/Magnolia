@@ -45,7 +45,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests
+ * Tests.
  * 
  * @author dlipp
  */
@@ -79,9 +79,9 @@ public class Content2NodeCollectionWrapperTest {
 
     @Test
     public void testRetainAll() {
-        Collection<Node> nodeToRetain = new ArrayList<Node>(2);
-        nodeToRetain.add(content1.getJCRNode());
-        wrapper.retainAll(nodeToRetain);
+        Collection<Node> nodesToRetain = new ArrayList<Node>(2);
+        nodesToRetain.add(content1.getJCRNode());
+        wrapper.retainAll(nodesToRetain);
 
         assertEquals(1, wrapper.size());
         assertEquals(content1.getJCRNode(), wrapper.iterator().next());

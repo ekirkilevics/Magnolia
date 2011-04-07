@@ -114,6 +114,11 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return col.removeAll(contentToRemove);
     }
 
+    public boolean retainAll(Collection<?> nodesToRetain) {
+        Collection<Content> contentToRetain = createCollectionOfContainedContent(nodesToRetain);
+        return col.retainAll(contentToRetain);
+    }
+
     private Collection<Content> createCollectionOfContainedContent(Collection<?> nodesToRemove) {
         Collection<Content> test = new ArrayList<Content>();
         for (Object o : nodesToRemove) {
@@ -126,10 +131,6 @@ public class Content2NodeCollectionWrapper implements Collection<Node> {
         return test;
     }
 
-    public boolean retainAll(Collection<?> nodesToRetain) {
-        Collection<Content> contentToRetain = createCollectionOfContainedContent(nodesToRetain);
-        return col.retainAll(contentToRetain);
-    }
 
     public int size() {
         return col.size();
