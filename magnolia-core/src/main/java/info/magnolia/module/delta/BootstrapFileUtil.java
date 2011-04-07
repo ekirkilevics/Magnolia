@@ -77,7 +77,7 @@ public class BootstrapFileUtil {
 
             final XPath xpath = XPath.newInstance(xpathExpr);
             // must add the namespace and use it: there is no default namespace otherwise
-            List namespaces = new ArrayList();
+            List<Namespace> namespaces = new ArrayList<Namespace>();
             namespaces.add(doc.getRootElement().getNamespace());
             List additionalNs = doc.getRootElement().getAdditionalNamespaces();
             for (int i=0; i < additionalNs.size(); i++) {
@@ -125,29 +125,29 @@ public class BootstrapFileUtil {
 
     public static String getXPathNodeQueryString(String path) {
 
-        String xpathExpr = "";
+        StringBuilder xpathExpr = new StringBuilder();
 
         String[] slices = path.split("/");
         for(int i=0; i < slices.length; i++) {
             if(slices[i] != null && slices[i].length() > 0) {
-                xpathExpr += "/sv:node[@sv:name='" + slices[i] + "']";
+                xpathExpr.append("/sv:node[@sv:name='").append(slices[i]).append("']");
             }
         }
-        return xpathExpr;
+        return xpathExpr.toString();
 
     }
 
     protected static String getXpathPropertyQueryString(String path) {
-        String xpathExpr = "";
+        StringBuilder xpathExpr = new StringBuilder();
 
         String[] slices = path.split("/");
         for(int i=0; i < slices.length - 1; i++) {
             if(slices[i] != null && slices[i].length()  > 0) {
-                xpathExpr += "/sv:node[@sv:name='" + slices[i] + "']";
+                xpathExpr.append("/sv:node[@sv:name='").append(slices[i]).append("']");
             }
         }
-        xpathExpr += "/sv:property[@sv:name='" + slices[slices.length -1] + "']";
+        xpathExpr.append("/sv:property[@sv:name='").append(slices[slices.length - 1]).append("']");
 
-        return xpathExpr;
+        return xpathExpr.toString();
     }
 }

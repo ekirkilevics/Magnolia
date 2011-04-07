@@ -38,6 +38,7 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.AbstractI18nContentSupport;
 import info.magnolia.context.MgnlContext;
 
 import java.io.UnsupportedEncodingException;
@@ -206,18 +207,18 @@ public class LinkUtil {
             pos++;
         }
 
-        String rel = "";
+        StringBuilder rel = new StringBuilder();
         for(int i=pos; i < fromDirectories.length; i++ ){
-            rel += "../";
+            rel.append("../");
         }
 
         for(int i=pos; i < toDirectories.length; i++ ){
-            rel = rel + toDirectories[i] + "/";
+            rel.append(toDirectories[i] + "/");
         }
 
-        rel += StringUtils.substringAfterLast(absolutePath, "/");
+        rel.append(StringUtils.substringAfterLast(absolutePath, "/"));
 
-        return rel;
+        return rel.toString();
     }
 
     /**

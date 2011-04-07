@@ -35,15 +35,6 @@ package info.magnolia.importexport;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.XMLTestCase;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,6 +45,16 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.custommonkey.xmlunit.DetailedDiff;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -122,5 +123,11 @@ public class DataTransporterTest extends XMLTestCase {
         assertFalse("'removeme' namespace still found in output file", StringUtils.contains(result, "xmlns:removeme"));
         assertTrue("'sv' namespace not found in output file", StringUtils.contains(result, "xmlns:sv"));
         assertTrue("'xsi' namespace not found in output file", StringUtils.contains(result, "xmlns:xsi"));
+    }
+
+    public void testEncodePath() {
+        String pathName = "www.testme.ch/test/me&now";
+        String encodedPath = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
+        assertEquals("www.testme.ch%2Ftest%2Fme%26now", encodedPath);
     }
 }

@@ -188,20 +188,21 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     @Override
     public String toString() {
-        final StringBuffer str = new StringBuffer();
+        final StringBuilder str = new StringBuilder();
         try {
             ContentUtil.visit(getRoot(), new ContentUtil.Visitor() {
                 public void visit(Content node) throws Exception {
-                    String prefix = "";
+                    StringBuilder prefix = new StringBuilder();
                     for (int i = 1; i <= node.getLevel(); i++) {
-                        prefix += "  ";
+                        prefix.append("  ");
                     }
-                    str.append(prefix).append(node.getName()).append("\n");
-                    prefix += "  ";
+                    str.append(prefix.toString()).append(node.getName()).append("\n");
+                    prefix.append("  ");
 
                     for (Iterator<NodeData> iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
                         NodeData nd = iter.next();
-                        str.append(prefix).append(nd.getName()).append(" = ").append(nd.getString()).append("\n");
+                        str.append(prefix.toString()).append(nd.getName()).append(" = ").append(nd.getString())
+                                .append("\n");
                     }
                 }
             });

@@ -46,28 +46,7 @@ import info.magnolia.importexport.filters.MagnoliaV2Filter;
 import info.magnolia.importexport.filters.MetadataUuidFilter;
 import info.magnolia.importexport.filters.RemoveMixversionableFilter;
 import info.magnolia.importexport.filters.VersionFilter;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -86,6 +65,29 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -527,7 +529,7 @@ public class DataTransporter {
      */
     public static String encodePath(String path, String separator, String enc)
     {
-        String pathEncoded = StringUtils.EMPTY;
+        StringBuilder pathEncoded = new StringBuilder();
         try
         {
             if (!StringUtils.contains(path, separator))
@@ -539,13 +541,13 @@ public class DataTransporter {
             {
                 if (j == 0 && StringUtils.startsWith(path, separator))
                 {
-                    pathEncoded += separator;
+                    pathEncoded.append(separator);
                 }
-                pathEncoded += URLEncoder.encode(tokens[j], enc);
+                pathEncoded.append(URLEncoder.encode(tokens[j], enc));
 
                 if ((j == tokens.length - 1 && StringUtils.endsWith(path, separator)) || j < tokens.length - 1)
                 {
-                    pathEncoded += separator;
+                    pathEncoded.append(separator);
                 }
 
             }
@@ -554,7 +556,7 @@ public class DataTransporter {
         {
             return path;
         }
-        return pathEncoded;
+        return pathEncoded.toString();
     }
 
     /**

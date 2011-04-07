@@ -94,24 +94,24 @@ public class AuditLoggingManager {
     }
 
     public void log(String action, String[] data) {
-        String message = "";
+        StringBuilder message = new StringBuilder();
         try {
             LogConfiguration trail = this.getLogConfiguration(action);
             String separator = defaultSeparator;
             if(!StringUtils.isEmpty(trail.getSeparator())) {
                 separator = trail.getSeparator();
             }
-            message += separator + action;
+            message.append(separator).append(action);
             if (trail.isActive()) {
                 for (int i = 0; i < data.length; i++) {
                     if (StringUtils.isNotEmpty(data[i])) {
-                      message += separator + data[i];
+                        message.append(separator).append(data[i]);
                     }
 
                 }
 
                 org.apache.log4j.Logger.getLogger(trail.getLogName()).log(
-                        LoggingLevel.AUDIT_TRAIL, message);
+LoggingLevel.AUDIT_TRAIL, message.toString());
             }
 
         } catch (Exception e) {
