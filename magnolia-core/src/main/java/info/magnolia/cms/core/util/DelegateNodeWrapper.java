@@ -181,7 +181,7 @@ public abstract class DelegateNodeWrapper implements Node {
     }
 
     public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
-        return getProperties(nameGlobs);
+        return getWrappedNode().getProperties(nameGlobs);
     }
 
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
