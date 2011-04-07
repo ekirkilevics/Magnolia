@@ -67,11 +67,11 @@ public class MgnlNode implements Node {
         this.mnode = mnode;
     }
 
-    public Iterator getProperties() throws JcrException {
+    public Iterator<MgnlProperty> getProperties() throws JcrException {
         return new MgnlPropertyIterator(mnode);
     }
 
-    public Iterator getNodes() throws JcrException {
+    public Iterator<MgnlNode> getNodes() throws JcrException {
         return new MgnlNodeIterator(mnode);
     }
 
@@ -209,11 +209,11 @@ public class MgnlNode implements Node {
     /**
      * Wraps an iterator of the given node's child nodes.
      */
-    class MgnlNodeIterator implements Iterator {
+    class MgnlNodeIterator implements Iterator<MgnlNode> {
 
         Content node;
 
-        private Iterator internalIterator;
+        private Iterator<Content> internalIterator;
 
         public MgnlNodeIterator(Content node) {
             this.node = node;
@@ -228,19 +228,19 @@ public class MgnlNode implements Node {
             return internalIterator.hasNext();
         }
 
-        public Object next() {
-            return new MgnlNode((Content) internalIterator.next());
+        public MgnlNode next() {
+            return new MgnlNode(internalIterator.next());
         }
     }
 
     /**
      * Wraps an iterator of the given node's properties.
      */
-    class MgnlPropertyIterator implements Iterator {
+    class MgnlPropertyIterator implements Iterator<MgnlProperty> {
 
         private Content mnode;
 
-        private Iterator internalIterator;
+        private Iterator<NodeData> internalIterator;
 
         public MgnlPropertyIterator(Content mnode) {
             this.mnode = mnode;
@@ -255,8 +255,8 @@ public class MgnlNode implements Node {
             return internalIterator.hasNext();
         }
 
-        public Object next() {
-            return new MgnlProperty(new MgnlNode(mnode), (NodeData) internalIterator.next());
+        public MgnlProperty next() {
+            return new MgnlProperty(new MgnlNode(mnode), internalIterator.next());
         }
     }
 
