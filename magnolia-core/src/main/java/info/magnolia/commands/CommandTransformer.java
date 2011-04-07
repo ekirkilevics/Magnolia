@@ -41,15 +41,17 @@ import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.objectfactory.Classes;
+
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
-
-import javax.jcr.RepositoryException;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Command to transform old "impl" reference to implementing class to new "class" node data name for references.
@@ -128,10 +130,10 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
         // support chains
         if(state.getCurrentBean() instanceof Chain){
             Chain chain = (Chain) state.getCurrentBean();
-            for (Iterator iter = values.keySet().iterator(); iter.hasNext();) {
-                String name = (String) iter.next();
-                if(values.get(name) instanceof Command){
-                    Command command = (Command) values.get(name);
+            for (Iterator iter = values.entrySet().iterator(); iter.hasNext();) {
+                Object value = iter.next();
+                if (value instanceof Command) {
+                    Command command = (Command) value;
                     if(!(command instanceof MgnlCommand) || ((MgnlCommand)command).isEnabled()){
                         chain.addCommand(command);
                     }
