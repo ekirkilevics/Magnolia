@@ -183,7 +183,9 @@ public class DataTransporter {
 
         if (xmlFile.getName().endsWith(PROPERTIES)) {
             Properties properties = new Properties();
-            properties.load(new FileInputStream(xmlFile));
+            FileInputStream stream = new FileInputStream(xmlFile);
+            properties.load(stream);
+            stream.close();
             importProperties(properties, repositoryName);
         } else {
             DataTransporter.importFile(xmlFile, repositoryName, basepath, false, BOOTSTRAP_IMPORT_MODE, true, true);
