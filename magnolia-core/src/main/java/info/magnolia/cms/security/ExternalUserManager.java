@@ -103,4 +103,8 @@ public class ExternalUserManager implements UserManager {
     public Map<String,ACL> getACLs(User user) {
         throw new UnsupportedOperationException("not implemented yet");
     }
+
+    public User addRole(User user, String roleName) {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
 }

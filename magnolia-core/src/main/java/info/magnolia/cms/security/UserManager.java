@@ -110,6 +110,12 @@ public interface UserManager {
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException;
 
     /**
+     * Grants user role.
+     * @return user object with the role already granted.
+     */
+    public User addRole(User user, String roleName);
+
+    /**
      * Updates last access timestamp for the user.
      * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      */
@@ -129,5 +135,6 @@ public interface UserManager {
      * @return
      */
     public Map<String, ACL> getACLs(User user);
+
 
 }

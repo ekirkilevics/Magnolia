@@ -147,7 +147,7 @@ public class MgnlRoleManager extends RepositoryBackedSecurityManager implements 
         NodeIterator children = aclNode.getNodes();
         while(children.hasNext()) {
             Node child = children.nextNode();
-            if (child.getProperty("path").getString().equals(path)) {
+            if (child.hasProperty("path") && child.getProperty("path").getString().equals(path)) {
                 if (permission == MgnlRole.PERMISSION_ANY
                         || child.getProperty("permissions").getLong() == permission) {
                     return true;

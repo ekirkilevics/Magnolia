@@ -40,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
+import static info.magnolia.cms.security.SecurityConstants.*;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -445,5 +446,10 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             return null;
         }
         return super.getACLs(user.getName());
+    }
+
+    public User addRole(User user, String roleName) {
+        super.add(user.getName(), roleName, NODE_ROLES);
+        return getUser(user.getName());
     }
 }

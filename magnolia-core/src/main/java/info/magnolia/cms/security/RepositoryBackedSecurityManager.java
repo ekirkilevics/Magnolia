@@ -145,22 +145,17 @@ public abstract class RepositoryBackedSecurityManager {
             final String nodeID = getLinkedResourceId(resourceName, resourceTypeName);
 
             if (!hasAny(principalName, resourceName, resourceTypeName)) {
-                MgnlContext.doInSystemContext(new SilentSessionOp<VoidOp>(getRepositoryName()) {
-
-                    @Override
-                    public VoidOp doExec(Session session) throws RepositoryException {
-                        Node principalNode = findPrincipalNode(principalName, session);
-                        if (!principalNode.hasNode(resourceTypeName)) {
-                            principalNode.addNode(resourceTypeName, ItemType.CONTENTNODE.getSystemName());
-                        }
-                        Node node = principalNode.getNode(resourceTypeName);
-                        // add corresponding ID
-                        // used only to get the unique label
-                        String newName = Path.getUniqueLabel(session, node.getPath(), "0");
-                        node.setProperty(newName, nodeID);
-                        session.save();
-                        return null;
-                    }});
+                Session session = MgnlContext.getJCRSession(getRepositoryName());
+                Node principalNode = findPrincipalNode(principalName, session);
+                if (!principalNode.hasNode(resourceTypeName)) {
+                    principalNode.addNode(resourceTypeName, ItemType.CONTENTNODE.getSystemName());
+                }
+                Node node = principalNode.getNode(resourceTypeName);
+                // add corresponding ID
+                // used only to get the unique label
+                String newName = Path.getUniqueLabel(session, node.getPath(), "0");
+                node.setProperty(newName, nodeID);
+                session.save();
             }
         }
         catch (RepositoryException e) {

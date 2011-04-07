@@ -163,4 +163,12 @@ public class DelegatingUserManager implements UserManager {
             }
         });
     }
+
+    public User addRole(final User user, final String roleName) {
+        return delegateUntilSupported(new Op<User>() {
+            public User delegate(UserManager um) {
+                return um.addRole(user, roleName);
+            }
+        });
+    }
 }
