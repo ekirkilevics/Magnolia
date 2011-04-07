@@ -310,7 +310,6 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("Why, Hello !", result.getFoobar());
         assertNotNull(result.getSample());
         assertTrue(result.getSample().getClass().isEnum());
-        assertTrue(result.getSample() instanceof SampleEnum);
         assertEquals(SampleEnum.two, result.getSample());
 
     }

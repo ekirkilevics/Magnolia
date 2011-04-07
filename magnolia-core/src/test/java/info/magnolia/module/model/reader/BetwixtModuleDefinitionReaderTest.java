@@ -41,12 +41,13 @@ import info.magnolia.module.model.ServletDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 import info.magnolia.module.model.VersionTest;
-import junit.framework.TestCase;
 
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * @author gjoseph
@@ -95,7 +96,6 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
                 "  <version>1.0</version>\n" +
                 "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
-        assertTrue(mod.getClassName() instanceof String);
         assertEquals("java.lang.Integer", mod.getClassName());
     }
 
@@ -204,7 +204,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("dummy", m.getName());
         assertEquals("dummy module", m.getDisplayName());
         assertEquals("a dummy module descriptor for tests", m.getDescription());
-        // this dummy module descriptor uses random classes that we know are there when running the test 
+        // this dummy module descriptor uses random classes that we know are there when running the test
         assertEquals(BetwixtModuleDefinitionReaderTest.class.getName(), m.getClassName());
         assertEquals(DependencyCheckerImplTest.class, m.getVersionHandler());
         assertEquals("7.8.9", m.getVersion().toString());
