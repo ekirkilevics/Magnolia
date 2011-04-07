@@ -35,15 +35,6 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import junit.framework.TestCase;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -53,10 +44,20 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+
 /**
- *
+ * 
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class MockContentTest extends TestCase {
 
@@ -176,15 +177,15 @@ public class MockContentTest extends TestCase {
         assertEquals("some-data", IOUtils.toString(bin.getStream()));
         assertEquals("some-data", bin.getString());
     }
-    
+
     public void testOrderBefore() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
-            "/node/b\n" + 
+ "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("c", "b");
-        Collection result = node.getChildren();
+        Collection<Content> result = node.getChildren();
         // transform to collection of names
         CollectionUtils.transform(result, new Transformer() {
             public Object transform(Object childObj) {
@@ -197,11 +198,11 @@ public class MockContentTest extends TestCase {
     public void testOrderBefore2() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
-            "/node/b\n" + 
+ "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("a", "c");
-        Collection result = node.getChildren();
+        Collection<Content> result = node.getChildren();
         // transform to collection of names
         CollectionUtils.transform(result, new Transformer() {
             public Object transform(Object childObj) {
@@ -214,11 +215,11 @@ public class MockContentTest extends TestCase {
     public void testOrderBeforeFirstNode() throws RepositoryException, IOException{
         MockHierarchyManager hm = MockUtil.createHierarchyManager(
             "/node/a\n" +
-            "/node/b\n" + 
+ "/node/b\n" +
             "/node/c\n");
         Content node = hm.getContent("/node");
         node.orderBefore("c", "a");
-        Collection result = node.getChildren();
+        Collection<Content> result = node.getChildren();
         // transform to collection of names
         CollectionUtils.transform(result, new Transformer() {
             public Object transform(Object childObj) {
@@ -228,4 +229,11 @@ public class MockContentTest extends TestCase {
         assertEquals(Arrays.asList(new String[]{"c", "a","b"}), result);
     }
 
+    public void testGetAncestor() throws RepositoryException, IOException {
+        MockHierarchyManager hm =
+                MockUtil.createHierarchyManager("/level0\n" + "/level0/level1\n" + "/level0/level1/level2\n");
+        Content node = hm.getContent("/level0/level1/level2");
+        Collection<Content> ancestors = node.getAncestors();
+        assertEquals(3, ancestors.size());
+    }
 }

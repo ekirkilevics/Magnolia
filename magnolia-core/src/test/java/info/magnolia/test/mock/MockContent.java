@@ -406,7 +406,7 @@ public class MockContent extends AbstractContent {
         Content parent = getParent();
         while(parent != null){
             ancestors.add(parent);
-            parent.getParent();
+            parent = parent.getParent();
         }
         return ancestors;
     }
