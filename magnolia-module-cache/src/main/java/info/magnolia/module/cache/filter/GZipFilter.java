@@ -37,13 +37,13 @@ import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.module.cache.util.GZipUtil;
 
+import java.io.IOException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 /**
  * This GZipFilter does not take care of the Accept-Encoding request header. The CacheFilter will
@@ -105,7 +105,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
      * Detects if the response has the "Content-Encoding" header set. If so it will stream it through.
      * @version $Id$
      */
-    private final class GZipCacheResponseWrapper extends CacheResponseWrapper {
+    private static final class GZipCacheResponseWrapper extends CacheResponseWrapper {
 
         private final HttpServletResponse response;
 

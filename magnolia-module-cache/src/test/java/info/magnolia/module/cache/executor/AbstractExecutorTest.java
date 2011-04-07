@@ -33,16 +33,21 @@
  */
 package info.magnolia.module.cache.executor;
 
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
+
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import junit.framework.TestCase;
 
 
 /**
@@ -109,7 +114,7 @@ public class AbstractExecutorTest extends TestCase {
     /**
      * No-op implementation purely here so we can test abstract methods.
      */
-    class TestExecutor extends AbstractExecutor {
+    static class TestExecutor extends AbstractExecutor {
 
         public void processCacheRequest(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Cache cache, CachePolicyResult cachePolicyResult) throws IOException, ServletException {
             // do nothing

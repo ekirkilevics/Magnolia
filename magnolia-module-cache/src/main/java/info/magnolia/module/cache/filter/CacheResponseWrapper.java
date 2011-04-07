@@ -208,11 +208,11 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setDateHeader(String name, long date) {
-        replaceHeader(name, new Long(date));
+        replaceHeader(name, Long.valueOf(date));
     }
 
     public void addDateHeader(String name, long date) {
-        appendHeader(name, new Long(date));
+        appendHeader(name, Long.valueOf(date));
     }
 
     public void setHeader(String name, String value) {
@@ -224,11 +224,11 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void setIntHeader(String name, int value) {
-        replaceHeader(name, new Integer(value));
+        replaceHeader(name, Integer.valueOf(value));
     }
 
     public void addIntHeader(String name, int value) {
-        appendHeader(name, new Integer(value));
+        appendHeader(name, Integer.valueOf(value));
     }
 
     @Override
