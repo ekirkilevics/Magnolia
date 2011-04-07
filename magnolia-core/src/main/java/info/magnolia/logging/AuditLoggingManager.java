@@ -33,11 +33,12 @@
  */
 package info.magnolia.logging;
 
+import info.magnolia.objectfactory.Components;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +102,7 @@ public class AuditLoggingManager {
                 separator = trail.getSeparator();
             }
             message += separator + action;
-            if (trail != null && trail.isActive()) {
+            if (trail.isActive()) {
                 for (int i = 0; i < data.length; i++) {
                     if (StringUtils.isNotEmpty(data[i])) {
                       message += separator + data[i];
