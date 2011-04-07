@@ -176,14 +176,14 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      */
     @Override
     protected Node findPrincipalNode(String name, Session session) throws RepositoryException {
-        String realm = getRealmName();
+        String realmName = getRealmName();
         final String where;
         // the all realm searches the repository
-        if (Realm.REALM_ALL.equals(realm)) {
+        if (Realm.REALM_ALL.getName().equals(realmName)) {
             where = "where name() = '" + name + "'";
         } else {
             // FIXME: DOUBLE CHECK THE QUERY FOR REALMS ... ISDESCENDANTNODE and NAME ....
-            where = "where name() = '" + name + "' and isdescendantnode(['/" + realm + "'])";
+            where = "where name() = '" + name + "' and isdescendantnode(['/" + realmName + "'])";
             //            where = "where [jcr:path] = '/" + realm + "/" + name + "'"
             //            + " or [jcr:path] like '/" + realm + "/%/" + name + "'";
         }
