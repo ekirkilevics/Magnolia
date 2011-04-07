@@ -85,18 +85,16 @@ public abstract class AbstractConditionalRepositoryTask extends AbstractReposito
                 + " requested in "
                 + this
                 + " not available. Task will not be performed");
+        } else {
+            try {
+                hm.getContent(tokens[1]);
+            } catch (PathNotFoundException e) {
+                // ok, this is expected
+                executeTask = true;
+            } catch (RepositoryException e) {
+                throw new TaskExecutionException("Could not execute task: " + e.getMessage(), e);
+            }
         }
-        try {
-            hm.getContent(tokens[1]);
-        }
-        catch (PathNotFoundException e) {
-            // ok, this is expected
-            executeTask = true;
-        }
-        catch (RepositoryException e) {
-            throw new TaskExecutionException("Could not execute task: " + e.getMessage(), e);
-        }
-
         if (executeTask) {
             try {
                 doExecute(ctx);
