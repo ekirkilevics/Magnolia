@@ -95,6 +95,5 @@ public class FactoryBaseTest {
 
         SuperclassOfImpl yetAnotherImpl = factoryBase.create(otherSubclassOfDef);
         assertNotNull(yetAnotherImpl);
-        assertTrue(yetAnotherImpl instanceof SuperclassOfImpl);
     }
 }
