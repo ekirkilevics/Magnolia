@@ -42,10 +42,16 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -58,15 +64,10 @@ import javax.jcr.ValueFormatException;
 import javax.jcr.query.Query;
 import javax.security.auth.Subject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -108,6 +109,10 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      */
     @Deprecated
     public void setName(String name) {
+        setRealName(name);
+    }
+
+    public void setRealName(String name) {
         this.realmName = name;
     }
 
