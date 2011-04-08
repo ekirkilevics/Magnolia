@@ -92,13 +92,13 @@ public class MockObjectTest extends TestCase {
     }
 
     public void testSetABooleanValueOnANodeData() {
-        MockNodeData nd = new MockNodeData("test", new Boolean(true));
+        MockNodeData nd = new MockNodeData("test", Boolean.TRUE);
         assertEquals(true, nd.getBoolean());
     }
 
     public void testSetAnObjectAndResolvePropertyType() {
-        MockNodeData ndBoolean = new MockNodeData("test", new Boolean(true));
-        MockNodeData ndLong = new MockNodeData("test", new Long(5));
+        MockNodeData ndBoolean = new MockNodeData("test", Boolean.TRUE);
+        MockNodeData ndLong = new MockNodeData("test", Long.valueOf(5));
         MockNodeData ndDate = new MockNodeData("test", new GregorianCalendar(2007, 2, 14));
 
         assertEquals(true, ndBoolean.getBoolean());

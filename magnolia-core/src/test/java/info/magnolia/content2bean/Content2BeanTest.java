@@ -264,8 +264,8 @@ public class Content2BeanTest extends MgnlTestCase {
     public void testJCRPropertiesTypes() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new Object[][]{
                 {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
-                {"integer", new Integer(5)},
-                {"bool", new Boolean(true)}
+                                {"integer", Integer.valueOf(5)},
+ {"bool", Boolean.TRUE}
         }, new Content[0]);
 
         BeanWithPrimitiveProperties bean = (BeanWithPrimitiveProperties) Content2BeanUtil.toBean(node, true);

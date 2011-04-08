@@ -1,19 +1,19 @@
 /**
  * This file Copyright (c) 2007-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
- * 
- * 
+ *
+ *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
- * 
+ *
  * This file is distributed in the hope that it will be
  * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
  * Redistribution, except as permitted by whichever of the GPL
  * or MNA you select, is prohibited.
- * 
+ *
  * 1. For the GPL license (GPL), you can redistribute and/or
  * modify this file under the terms of the GNU General
  * Public License, Version 3, as published by the Free Software
@@ -21,15 +21,15 @@
  * General Public License, Version 3 along with this program;
  * if not, write to the Free Software Foundation, Inc., 51
  * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
  * is available at http://www.magnolia-cms.com/mna.html
- * 
+ *
  * Any modifications to this file must keep this entire header
  * intact.
- * 
+ *
  */
 package info.magnolia.setup.for3_5;
 
@@ -55,8 +55,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Checks for modifications between current filter configuration and the 3.0 default configuration.
- * If there are some, a warning is displayed.
+ * Checks for modifications between current filter configuration and the 3.0 default configuration. If there are some, a
+ * warning is displayed.
  * 
  * Bypass configurations are transformed to the new format if that's the only change.
  * 
@@ -64,7 +64,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * @author vsteller
  * @version $Id$
- *
+ * 
  */
 public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperation {
     private static final String FILTER_INTERCEPT = "intercept";
@@ -74,47 +74,39 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
     private static final String FILTER_MULTIPART_REQUEST = "multipartRequest";
     private static final String FILTER_VIRTUAL_URI = "virtualURI";
     private static final String FILTER_CONTENT_TYPE = "contentType";
-    
+
     private final LinkedHashMap filterChain30 = new LinkedHashMap();
     private final String existingFiltersPath;
     private final String[] migratedFilters = new String[] { FILTER_CONTENT_TYPE, FILTER_VIRTUAL_URI, FILTER_MULTIPART_REQUEST, FILTER_CONTEXT, FILTER_CMS };
-    
+
     private final ArrayDelegateTask subtasks;
-    
+
     public CheckAndUpdateExistingFilters(String existingFiltersPath) {
-        super("Filters", "Installs or updates the new filter configuration.", ContentRepository.CONFIG, existingFiltersPath);
+        super("Filters", "Installs or updates the new filter configuration.", ContentRepository.CONFIG,
+                existingFiltersPath);
         this.subtasks = new ArrayDelegateTask("Filter updates");
         this.existingFiltersPath = existingFiltersPath;
 
         // filter chain that is bootstrapped with latest Magnolia 3.0.x
         filterChain30.put(FILTER_CONTENT_TYPE,
-            new Filter30("info.magnolia.cms.filters.ContentTypeFilter",
-                new Long(100)));
-        filterChain30.put(FILTER_SECURITY,
-            new Filter30("info.magnolia.cms.security.SecurityFilter",
-                new Long(200)));
+                new Filter30("info.magnolia.cms.filters.ContentTypeFilter", Long.valueOf(100)));
+        filterChain30
+                .put(FILTER_SECURITY, new Filter30("info.magnolia.cms.security.SecurityFilter", Long.valueOf(200)));
         filterChain30.put(FILTER_VIRTUAL_URI,
-            new Filter30("info.magnolia.cms.filters.MgnlVirtualUriFilter",
-                new Long(300)));
-        filterChain30.put(FILTER_MULTIPART_REQUEST,
-            new Filter30("info.magnolia.cms.filters.MultipartRequestFilter",
-                new Long(400)));
+                new Filter30("info.magnolia.cms.filters.MgnlVirtualUriFilter", Long.valueOf(300)));
+        filterChain30.put(FILTER_MULTIPART_REQUEST, new Filter30("info.magnolia.cms.filters.MultipartRequestFilter",
+                Long.valueOf(400)));
         filterChain30.put(FILTER_CONTEXT,
-            new Filter30("info.magnolia.cms.filters.MgnlContextFilter",
-                new Long(500)));
+                new Filter30("info.magnolia.cms.filters.MgnlContextFilter", Long.valueOf(500)));
         final HashMap interceptFilterParams = new HashMap();
         interceptFilterParams.put("test", "true");
         filterChain30.put(FILTER_INTERCEPT,
-            new Filter30("info.magnolia.cms.filters.MgnlInterceptFilter",
-                new Long(600),
-                null,
-                interceptFilterParams));
-        filterChain30.put(FILTER_CMS,
-            new Filter30("info.magnolia.cms.filters.MgnlCmsFilter",
-                new Long(800),
+                new Filter30("info.magnolia.cms.filters.MgnlInterceptFilter", Long.valueOf(600), null,
+                        interceptFilterParams));
+        filterChain30.put(FILTER_CMS, new Filter30("info.magnolia.cms.filters.MgnlCmsFilter", Long.valueOf(800),
                 "/.,/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler"));
     }
-    
+
     /**
      * Executes the AllChildrenNodesOperation and possibly added subtasks to update the configuration.
      */
@@ -125,19 +117,19 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
 
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException,
         TaskExecutionException {
-        
+
         try {
             final Map existingFilter = Content2BeanUtil.toPureMaps(node, true);
             final String currentFilter = node.getName();
             final CheckAndUpdateExistingFilters.Filter30 originalFilter = (CheckAndUpdateExistingFilters.Filter30) filterChain30.get(currentFilter);
-            
-            if (originalFilter == null || 
-                hasClassChanged(originalFilter, existingFilter) || 
-                hasPriorityChanged(originalFilter, existingFilter) || 
+
+            if (originalFilter == null || hasClassChanged(originalFilter, existingFilter)
+                    || hasPriorityChanged(originalFilter, existingFilter)
+                    ||
                 hasParamsChanged(originalFilter, existingFilter)) {
                 ctx.warn("Existing configuration of filter '" + currentFilter + "' has been modified or was not existing in original filter chain. Magnolia put a backup in " + existingFiltersPath + "/" + currentFilter + ". Please review the changes manually.");
-            } 
-            
+            }
+
             if (originalFilter != null && hasBypassChanged(originalFilter, existingFilter)) {
                 if (ArrayUtils.contains(migratedFilters, currentFilter)) {
                     ctx.info("Existing configuration of filter '" + currentFilter + "' has different bypass definitions. Magnolia put a backup in " + existingFiltersPath + "/" + currentFilter + ". Will update the bypasses to the new configuration automatically.");
@@ -165,7 +157,7 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
                 bypassName = "default";
             }
             final Class bypassClass = URIStartsWithVoter.class;
-            
+
             subtasks.addTask(new AddFilterBypassTask(filterPath, bypassName , bypassClass , bypassPattern));
         }
     }
@@ -173,7 +165,7 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
     private boolean hasClassChanged(final CheckAndUpdateExistingFilters.Filter30 originalFilter, final Map existingFilter) {
         return !originalFilter.clazz.equals(existingFilter.get("class"));
     }
-    
+
     private boolean hasBypassChanged(final CheckAndUpdateExistingFilters.Filter30 originalFilter, final Map existingFilter) {
         final String bypasses = getBypasses(existingFilter);
         return !originalFilter.equalBypasses(bypasses);
@@ -189,7 +181,7 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
 
     private boolean hasParamsChanged(final CheckAndUpdateExistingFilters.Filter30 originalFilter, final Map existingFilter) {
         final Map existingParameters = ((Map) existingFilter.get("params"));
-        return !originalFilter.equalParams(existingParameters); 
+        return !originalFilter.equalParams(existingParameters);
     }
 
     private boolean hasPriorityChanged(final CheckAndUpdateExistingFilters.Filter30 originalFilter, final Map existingFilter) {
@@ -201,13 +193,13 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
         private Long priority;
         private String bypasses;
         private Map params;
-        
+
         public Filter30(String clazz, Long priority) {
             super();
             this.clazz = clazz;
             this.priority = priority;
         }
-        
+
         public Filter30(String clazz, Long priority, String bypasses) {
             super();
             this.clazz = clazz;
@@ -235,7 +227,7 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
                 return false;
             if (params.size() != existingFilterParams.size())
                 return false;
-                
+
             final Iterator paramIterator = params.keySet().iterator();
             while (paramIterator.hasNext()) {
                 final String currentParam = (String) paramIterator.next();

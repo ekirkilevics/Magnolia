@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security;
 
+import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -40,7 +41,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
-import static info.magnolia.cms.security.SecurityConstants.*;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -274,7 +274,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 // read only access to the node itself
                 Node acl = acls.addNode(Path.getUniqueLabel(session, acls.getPath(), "0"), ItemType.CONTENTNODE.getSystemName());
                 acl.setProperty("path", handle);
-                acl.setProperty("permissions", new Long(Permission.READ));
+                acl.setProperty("permissions", Permission.READ);
                 // those who had access to their nodes should get access to their own props
                 addWrite(handle, PROPERTY_EMAIL, acls);
                 addWrite(handle, PROPERTY_LANGUAGE, acls);
@@ -379,7 +379,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     private Node addWrite(String parentPath, String property, Node acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Node acl = acls.addNode(Path.getUniqueLabel(acls.getSession(), acls.getPath(), "0"), ItemType.CONTENTNODE.getSystemName());
         acl.setProperty("path", parentPath + "/" + property);
-        acl.setProperty("permissions", new Long(Permission.ALL));
+        acl.setProperty("permissions", Permission.ALL);
         return acl;
     }
 

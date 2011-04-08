@@ -94,6 +94,6 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
     private void addPermission(Content uriRepoNode, String permNodeName, String path, long value) throws RepositoryException {
         final Content permNode = uriRepoNode.createContent(permNodeName, ItemType.CONTENTNODE);
         permNode.createNodeData("path", path);
-        permNode.createNodeData("permissions", new Long(value));
+        permNode.createNodeData("permissions", Long.valueOf(value));
     }
 }

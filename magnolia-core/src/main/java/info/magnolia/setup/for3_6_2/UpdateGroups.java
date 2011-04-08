@@ -86,7 +86,7 @@ public class UpdateGroups extends AllChildrenNodesOperation {
             if (!hasAccess) {
                 Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_GROUPS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
                 acl.createNodeData("path", handle);
-                acl.createNodeData("permissions", new Long(Permission.READ));
+                acl.createNodeData("permissions", Long.valueOf(Permission.READ));
                 acls.save();
             }
         } catch (RepositoryException e) {

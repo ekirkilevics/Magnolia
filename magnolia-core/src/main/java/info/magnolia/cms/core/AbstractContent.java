@@ -39,18 +39,20 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
-import org.apache.commons.lang.StringUtils;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.Workspace;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Comparator;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A base class by implementing some default behavior.
@@ -102,9 +104,9 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         case PropertyType.DATE:
             return setNodeData(name, Calendar.getInstance());
         case PropertyType.LONG:
-            return setNodeData(name, new Long(0));
+            return setNodeData(name, Long.valueOf(0));
         case PropertyType.DOUBLE:
-            return setNodeData(name, new Double(0.0));
+            return setNodeData(name, Double.valueOf(0.0));
         default:
             return newNodeDataInstance(name, type, true);
         }
@@ -288,7 +290,7 @@ public abstract class AbstractContent extends ContentHandler implements Content 
      */
     @Deprecated
     public Content getChildByName(String namePattern) {
-        Collection<Content> children = getChildren("nt:base", namePattern);;
+        Collection<Content> children = getChildren("nt:base", namePattern);
         if (!children.isEmpty()) {
             return children.iterator().next();
         }
@@ -355,9 +357,9 @@ public abstract class AbstractContent extends ContentHandler implements Content 
 
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(getHierarchyManager() == null ? "null" : getHierarchyManager().getName());
-        buffer.append(":" + getHandle());
+        StringBuilder builder = new StringBuilder();
+        builder.append(getHierarchyManager() == null ? "null" : getHierarchyManager().getName());
+        builder.append(':').append(getHandle());
         String type = "";
         try {
             type = getItemType().getSystemName();
@@ -365,11 +367,11 @@ public abstract class AbstractContent extends ContentHandler implements Content 
         catch (RepositoryException e) {
             // ignore
         }
-        buffer.append("[");
-        buffer.append(type);
-        buffer.append("]");
+        builder.append('[');
+        builder.append(type);
+        builder.append(']');
 
-        return buffer.toString();
+        return builder.toString();
     }
 
 

@@ -90,7 +90,7 @@ public class UpdateUsers extends AllChildrenNodesOperation {
                 if (!hasAccess) {
                     Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USERS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
                     acl.createNodeData("path", handle);
-                    acl.createNodeData("permissions", new Long(Permission.READ));
+                    acl.createNodeData("permissions", Long.valueOf(Permission.READ));
                     acls.save();
                 }
             }

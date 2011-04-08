@@ -108,7 +108,7 @@ public class UpdateUserPermissions extends AllChildrenNodesOperation {
     private Content addWrite(String parentPath, String property, Content acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content acl = acls.createContent(Path.getUniqueLabel(acls.getHierarchyManager(), acls.getHandle(), "0"), ItemType.CONTENTNODE);
         acl.setNodeData("path", parentPath + "/" + property);
-        acl.setNodeData("permissions", new Long(Permission.ALL));
+        acl.setNodeData("permissions", Long.valueOf(Permission.ALL));
         return acl;
     }
 }

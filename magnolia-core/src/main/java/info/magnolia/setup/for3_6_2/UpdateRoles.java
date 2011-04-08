@@ -111,7 +111,7 @@ public class UpdateRoles extends AllChildrenNodesOperation {
                         acl.save();
                         permission = acl.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_ROLES), acl.getHandle(), "0"), ItemType.CONTENTNODE);
                         permission.createNodeData("path", "/*");
-                        permission.createNodeData("permissions", new Long(Permission.NONE));
+                        permission.createNodeData("permissions", Long.valueOf(Permission.NONE));
                         acl.save();
                     }
                 }

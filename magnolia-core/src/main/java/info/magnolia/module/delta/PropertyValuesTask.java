@@ -37,8 +37,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.InstallContext;
 
-import javax.jcr.RepositoryException;
 import java.text.MessageFormat;
+
+import javax.jcr.RepositoryException;
 
 /**
  * A tasks that offers helper methods to check on certain properties.
@@ -62,7 +63,8 @@ public abstract class PropertyValuesTask extends AbstractTask {
             prop.setValue(newValue);
         } else {
             final String msg = format("Property \"{0}\" was expected to exist at {1} with value \"{2}\" but {3,choice,0#does not exist|1#has the value \"{4}\" instead}.",
-                    propertyName, node.getHandle(), expectedCurrentValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
+                            propertyName, node.getHandle(), expectedCurrentValue,
+                            Integer.valueOf(prop.isExist() ? 1 : 0), currentvalue);
             ctx.warn(msg);
         }
     }
@@ -73,7 +75,8 @@ public abstract class PropertyValuesTask extends AbstractTask {
             final String currentvalue = prop.getString();
             if (!currentvalue.equals(expectedValue)) {
                 final String msg = format("Property \"{0}\" was expected to exist at {1} with value \"{2}\" but {3,choice,0#does not exist|1#has the value \"{4}\" instead}.",
-                        propertyName, node.getHandle(), expectedValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
+                                propertyName, node.getHandle(), expectedValue, Integer.valueOf(prop.isExist() ? 1 : 0),
+                                currentvalue);
                 ctx.warn(msg);
             }
         } else {

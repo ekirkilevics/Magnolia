@@ -33,11 +33,30 @@
  */
 package info.magnolia.cms.filters;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.getCurrentArguments;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTestCase;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletInputStream;
@@ -51,15 +70,6 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-
-import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.MgnlTestCase;
-import static org.easymock.EasyMock.*;
 
 /**
  * @author Andreas Brenk
@@ -123,7 +133,7 @@ public class MultipartRequestFilterTest extends MgnlTestCase {
         expect(req.getHeader("Content-Type")).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getCharacterEncoding()).andReturn("UTF-8").anyTimes();
         expect(req.getQueryString()).andReturn("").anyTimes();
-        expect(req.getContentLength()).andReturn(new Integer((int) multipart.getContentLength())).anyTimes();
+        expect(req.getContentLength()).andReturn(Integer.valueOf((int) multipart.getContentLength())).anyTimes();
         expect(req.getInputStream()).andReturn(servletInputStream);
         req.setAttribute(eq(MultipartForm.REQUEST_ATTRIBUTE_NAME), isA(MultipartForm.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {

@@ -35,13 +35,13 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -211,9 +212,9 @@ public class NodeDataUtil {
             case (PropertyType.STRING):
                 return nd.getString();
             case (PropertyType.DOUBLE):
-                return new Double(nd.getDouble());
+                return Double.valueOf(nd.getDouble());
             case (PropertyType.LONG):
-                return new Long(nd.getLong());
+                return Long.valueOf(nd.getLong());
             case (PropertyType.BOOLEAN):
                 return Boolean.valueOf(nd.getBoolean());
             case (PropertyType.DATE):
@@ -406,7 +407,7 @@ public class NodeDataUtil {
     }
 
     public static NodeData getOrCreateAndSet(Content node, String name, long value) throws AccessDeniedException, RepositoryException {
-        return getOrCreateAndSet(node, name, new Long(value));
+        return getOrCreateAndSet(node, name, Long.valueOf(value));
     }
 
     public static NodeData getOrCreateAndSet(Content node, String name, Value[] value) throws AccessDeniedException, RepositoryException {
@@ -420,11 +421,11 @@ public class NodeDataUtil {
     }
 
     public static NodeData getOrCreateAndSet(Content node, String name, int value) throws AccessDeniedException, RepositoryException {
-        return getOrCreateAndSet(node, name, new Long(value));
+        return getOrCreateAndSet(node, name, Long.valueOf(value));
     }
 
     public static NodeData getOrCreateAndSet(Content node, String name, boolean value) throws AccessDeniedException, RepositoryException {
-        return getOrCreateAndSet(node, name, new Boolean(value));
+        return getOrCreateAndSet(node, name, Boolean.valueOf(value));
     }
 
     /**

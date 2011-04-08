@@ -40,12 +40,14 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Properties;
+
+import javax.jcr.RepositoryException;
+
+import junit.framework.TestCase;
 
 /**
  * @author gjoseph
@@ -74,7 +76,7 @@ public class PropertiesImportExportTest extends TestCase {
 
         assertEquals(Boolean.TRUE, pie.convertNodeDataStringToObject("boolean:true"));
         assertEquals(Boolean.FALSE, pie.convertNodeDataStringToObject("boolean:false"));
-        assertEquals(new Integer(5), pie.convertNodeDataStringToObject("integer:5"));
+        assertEquals(Integer.valueOf(5), pie.convertNodeDataStringToObject("integer:5"));
         final Object dateConvertedObject = pie.convertNodeDataStringToObject("date:2009-10-14T08:59:01.227-04:00");
         assertTrue(dateConvertedObject instanceof Calendar);
         assertEquals(1255525141227L, ((Calendar) dateConvertedObject).getTimeInMillis());
@@ -86,7 +88,7 @@ public class PropertiesImportExportTest extends TestCase {
     public void testCanUseIntShortcutForConvertingIntegers() {
         final PropertiesImportExport pie = new PropertiesImportExport();
 
-        assertEquals(new Integer(37), pie.convertNodeDataStringToObject("int:37"));
+        assertEquals(Integer.valueOf(37), pie.convertNodeDataStringToObject("int:37"));
     }
 
     // This test uses the import then immediately exports and makes sure that the number of properties

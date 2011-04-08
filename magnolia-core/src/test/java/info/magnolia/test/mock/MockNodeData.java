@@ -168,7 +168,7 @@ public class MockNodeData extends AbstractNodeData {
     }
 
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
-        this.value = new Double(value);
+        this.value = Double.valueOf(value);
     }
 
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
@@ -176,17 +176,17 @@ public class MockNodeData extends AbstractNodeData {
     }
 
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
-        this.value = new Integer(value);
+        this.value = Integer.valueOf(value);
     }
 
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
-        this.value = new Long(value);
+        this.value = Long.valueOf(value);
     }
 
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }
-    
+
     public void setValue(Content value) throws RepositoryException, AccessDeniedException {
         this.value = value;
     }

@@ -209,14 +209,11 @@ public class MgnlNode implements Node {
     /**
      * Wraps an iterator of the given node's child nodes.
      */
-    class MgnlNodeIterator implements Iterator<MgnlNode> {
-
-        Content node;
+    static class MgnlNodeIterator implements Iterator<MgnlNode> {
 
         private Iterator<Content> internalIterator;
 
         public MgnlNodeIterator(Content node) {
-            this.node = node;
             this.internalIterator = node.getChildren().iterator();
         }
 
@@ -236,9 +233,9 @@ public class MgnlNode implements Node {
     /**
      * Wraps an iterator of the given node's properties.
      */
-    class MgnlPropertyIterator implements Iterator<MgnlProperty> {
+    static class MgnlPropertyIterator implements Iterator<MgnlProperty> {
 
-        private Content mnode;
+        private final Content mnode;
 
         private Iterator<NodeData> internalIterator;
 

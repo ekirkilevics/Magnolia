@@ -130,6 +130,9 @@ public abstract class AbstractMessagesImpl implements Messages {
      * True if the basename and the locale are the same.
      */
     public boolean equals(Object arg0) {
+        if (arg0 == null || !(arg0 instanceof AbstractMessagesImpl)) {
+            return false;
+        }
         return StringUtils.equals(((AbstractMessagesImpl) arg0).basename, this.basename)
             && this.locale.equals(((AbstractMessagesImpl) arg0).locale);
     }

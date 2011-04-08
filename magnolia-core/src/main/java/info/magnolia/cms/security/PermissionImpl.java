@@ -54,15 +54,15 @@ public class PermissionImpl implements Permission, Serializable {
     private static Map<Long, String> nameStrings = new Hashtable<Long, String>();
 
     static {
-        nameStrings.put(new Long(0), "none");
-        nameStrings.put(new Long(Permission.ADD), Permission.PERMISSION_NAME_ADD);
-        nameStrings.put(new Long(Permission.SET), Permission.PERMISSION_NAME_SET);
-        nameStrings.put(new Long(Permission.REMOVE), Permission.PERMISSION_NAME_REMOVE);
-        nameStrings.put(new Long(Permission.READ), Permission.PERMISSION_NAME_READ);
-        nameStrings.put(new Long(Permission.EXECUTE), Permission.PERMISSION_NAME_EXECUTE);
-        nameStrings.put(new Long(Permission.SYNDICATE), Permission.PERMISSION_NAME_SYNDICATE);
-        nameStrings.put(new Long(Permission.ALL), Permission.PERMISSION_NAME_ALL);
-        nameStrings.put(new Long(Permission.WRITE), Permission.PERMISSION_NAME_WRITE);
+        nameStrings.put(Long.valueOf(0), "none");
+        nameStrings.put(Long.valueOf(Permission.ADD), Permission.PERMISSION_NAME_ADD);
+        nameStrings.put(Long.valueOf(Permission.SET), Permission.PERMISSION_NAME_SET);
+        nameStrings.put(Long.valueOf(Permission.REMOVE), Permission.PERMISSION_NAME_REMOVE);
+        nameStrings.put(Long.valueOf(Permission.READ), Permission.PERMISSION_NAME_READ);
+        nameStrings.put(Long.valueOf(Permission.EXECUTE), Permission.PERMISSION_NAME_EXECUTE);
+        nameStrings.put(Long.valueOf(Permission.SYNDICATE), Permission.PERMISSION_NAME_SYNDICATE);
+        nameStrings.put(Long.valueOf(Permission.ALL), Permission.PERMISSION_NAME_ALL);
+        nameStrings.put(Long.valueOf(Permission.WRITE), Permission.PERMISSION_NAME_WRITE);
     }
 
     private UrlPattern pattern;
@@ -94,7 +94,7 @@ public class PermissionImpl implements Permission, Serializable {
     }
 
     public static String getPermissionAsName(long permission) {
-        final String name = nameStrings.get(new Long(permission));
+        final String name = nameStrings.get(Long.valueOf(permission));
         if (name == null) {
             return "[unknown permission]";
         }
