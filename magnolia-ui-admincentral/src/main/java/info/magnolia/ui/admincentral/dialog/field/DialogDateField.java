@@ -35,6 +35,7 @@ package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
+import info.magnolia.ui.model.dialog.definition.DateFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
@@ -49,6 +50,12 @@ public class DialogDateField extends AbstractDialogField {
     }
 
     protected Field getField() {
-        return new DateField();
+        DateField dateField = new DateField();
+        DateFieldDefinition def = (DateFieldDefinition) getFieldDefinition();
+        if (def.isTime())
+            dateField.setResolution(DateField.RESOLUTION_MIN);
+        else
+            dateField.setResolution(DateField.RESOLUTION_DAY);
+        return dateField;
     }
 }

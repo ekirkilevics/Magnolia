@@ -35,12 +35,16 @@ package info.magnolia.ui.admincentral.dialog.field;
 
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Field;
+import info.magnolia.ui.model.dialog.definition.CheckboxFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * Dialog field for checkbox.
+ *
+ * Note: This is the equivalent of controlType=checkboxSwitch
+ *
  */
 public class DialogCheckboxField extends AbstractDialogField {
 
@@ -49,6 +53,9 @@ public class DialogCheckboxField extends AbstractDialogField {
     }
 
     protected Field getField() {
-        return new CheckBox();
+        CheckboxFieldDefinition def = (CheckboxFieldDefinition) getFieldDefinition();
+        CheckBox checkBox = new CheckBox();
+        checkBox.setValue(def.isDefaultValue());
+        return checkBox;
     }
 }

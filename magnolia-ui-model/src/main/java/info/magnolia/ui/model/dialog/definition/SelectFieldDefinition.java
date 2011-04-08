@@ -40,6 +40,14 @@ import java.util.Map;
  */
 public class SelectFieldDefinition extends FieldDefinition {
 
+    // TODO options should be configured in another fashion
+
+    // TODO support options from a path
+
+    // TODO support icons on options
+
+    // TODO see http://documentation.magnolia-cms.com/reference/controls.html#radiocheckboxandselect
+
     private Map<String, String> options;
 
     public Map<String, String> getOptions() {

@@ -52,10 +52,19 @@ public class DialogSelectField extends AbstractDialogField {
 
     protected Field getField() {
         NativeSelect select = new NativeSelect();
-        for (Map.Entry<String, String> entry : ((SelectFieldDefinition)getFieldDefinition()).getOptions().entrySet()) {
+        select.setNullSelectionAllowed(false);
+        select.setInvalidAllowed(false);
+        select.setMultiSelect(false);
+        select.setNewItemsAllowed(false);
+        select.setSizeFull();
+        Map<String, String> options = ((SelectFieldDefinition) getFieldDefinition()).getOptions();
+        for (Map.Entry<String, String> entry : options.entrySet()) {
             select.addItem(entry.getKey());
             select.setItemCaption(entry.getKey(), entry.getValue());
         }
+        // We can't leave the field without a value because it will render an extra, blank, option if we do
+        if (!options.isEmpty())
+            select.setValue(options.entrySet().iterator().next().getKey());
         return select;
     }
 }

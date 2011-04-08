@@ -49,6 +49,9 @@ public class DialogPasswordField extends AbstractDialogField {
     }
 
     protected Field getField() {
+
+        // TODO if definition.verification is true we should render a verification box and do validation
+
         return new PasswordField();
     }
 }
