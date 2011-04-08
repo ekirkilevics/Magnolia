@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
