@@ -34,6 +34,8 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 import info.magnolia.ui.admincentral.list.activity.ListActivity;
+import static info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity.TREE_VIEW_TYPE;
+import static info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity.LIST_VIEW_TYPE;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.Activity;
@@ -41,7 +43,7 @@ import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
 
 /**
- * Returns the {@link Activity} to perform when the current selected item on a tree has changed.
+ * Returns the {@link Activity} to perform when the current selected item on a tree or a list has changed.
  * @author fgrilli
  *
  */
@@ -56,12 +58,12 @@ public class ItemListActivityMapper implements ActivityMapper {
     }
 
     public Activity getActivity(final Place place) {
-        ItemSelectedPlace selectedPlace = (ItemSelectedPlace)place;
-        if("tree".equals(selectedPlace.getViewType())){
+        final ItemSelectedPlace selectedPlace = (ItemSelectedPlace)place;
+        if(TREE_VIEW_TYPE.equals(selectedPlace.getViewType())){
             treeActivity.update(selectedPlace);
             return treeActivity;
         }
-        if("list".equals(selectedPlace.getViewType())){
+        if(LIST_VIEW_TYPE.equals(selectedPlace.getViewType())){
             listActivity.update(selectedPlace);
             return listActivity;
         }
