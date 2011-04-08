@@ -33,6 +33,11 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.AccessDeniedException;
+
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Collection;
@@ -42,11 +47,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 
 
 /**
@@ -73,11 +73,11 @@ public abstract class NodeDataWrapper implements NodeData {
     }
 
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(getClass().getSimpleName());
-        buffer.append(" for ");
-        buffer.append(getWrappedNodeData().toString());
-        return buffer.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append(getClass().getSimpleName());
+        builder.append(" for ");
+        builder.append(getWrappedNodeData().toString());
+        return builder.toString();
     }
 
     // ---- below are only generated delegate methods
@@ -89,7 +89,7 @@ public abstract class NodeDataWrapper implements NodeData {
         return getWrappedNodeData().getAttribute(name);
     }
 
-    public Collection getAttributeNames() throws RepositoryException {
+    public Collection<String> getAttributeNames() throws RepositoryException {
         return getWrappedNodeData().getAttributeNames();
     }
 

@@ -102,7 +102,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
      * @see java.util.Map#containsKey(java.lang.Object)
      */
     public boolean containsKey(Object key) {
-        return this.getWrappedContent().getNodeData((String) key).isExist() || hasProperty((String) key);
+        return this.getWrappedContent().getNodeData((String) key).isExist() || hasProperty(key);
     }
 
     /**
@@ -124,7 +124,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
                 if ("uuid".equalsIgnoreCase((String) key)) {
                     key = "UUID";
                 }
-                if (hasProperty((String) key)) {
+                if (hasProperty(key)) {
                     try {
                         return PropertyUtils.getProperty(this.getWrappedContent(), (String) key);
                     }
@@ -221,11 +221,11 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#keySet()
      */
-    public Set keySet() {
-        Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
-        Set keys = new HashSet();
-        for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
-            keys.add(((NodeData) iter.next()).getName());
+    public Set<String> keySet() {
+        Collection<NodeData> nodeDataCollection = getWrappedContent().getNodeDataCollection();
+        Set<String> keys = new HashSet<String>();
+        for (Iterator<NodeData> iter = nodeDataCollection.iterator(); iter.hasNext();) {
+            keys.add(iter.next().getName());
         }
 
         return keys;
@@ -234,11 +234,11 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
     /**
      * @see java.util.Map#values()
      */
-    public Collection values() {
-        Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
-        Collection values = new ArrayList();
-        for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
-            values.add(((NodeData) iter.next()).getString());
+    public Collection<String> values() {
+        Collection<NodeData> nodeDataCollection = getWrappedContent().getNodeDataCollection();
+        Collection<String> values = new ArrayList<String>();
+        for (Iterator<NodeData> iter = nodeDataCollection.iterator(); iter.hasNext();) {
+            values.add((iter.next()).getString());
         }
 
         return values;
@@ -248,10 +248,10 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
      * @see java.util.Map#entrySet()
      */
     public Set entrySet() {
-        Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
-        Set keys = new HashSet();
-        for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
-            NodeData nd = (NodeData) iter.next();
+        Collection<NodeData> nodeDataCollection = getWrappedContent().getNodeDataCollection();
+        Set<Map.Entry> keys = new HashSet<Map.Entry>();
+        for (Iterator<NodeData> iter = nodeDataCollection.iterator(); iter.hasNext();) {
+            NodeData nd = iter.next();
             final String key = nd.getName();
             final String value = nd.getString();
             keys.add(new Map.Entry() {

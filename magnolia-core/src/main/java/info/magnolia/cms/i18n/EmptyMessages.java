@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.i18n;
 
-import org.apache.commons.collections.IteratorUtils;
-
 import java.util.Iterator;
+
+import org.apache.commons.collections.IteratorUtils;
 
 /**
  * A null-pattern implementation of the messages interface.
@@ -53,7 +53,7 @@ public class EmptyMessages extends AbstractMessagesImpl {
         return key;
     }
 
-    public Iterator keys() {
+    public Iterator<String> keys() {
         return IteratorUtils.EMPTY_ITERATOR;
     }
 

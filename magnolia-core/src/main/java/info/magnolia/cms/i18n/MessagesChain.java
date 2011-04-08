@@ -52,7 +52,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     /**
      * The chain.
      */
-    private final List chain = new ArrayList();
+    private final List<Messages> chain = new ArrayList<Messages>();
 
     /**
      * Create a chain passing the wrapped head of the chain.
@@ -75,8 +75,8 @@ public class MessagesChain extends AbstractMessagesImpl {
      * Get the string searching in the chain.
      */
     public String get(String key) {
-        for (Iterator iter = chain.iterator(); iter.hasNext();) {
-            Messages msgs = (Messages) iter.next();
+        for (Iterator<Messages> iter = chain.iterator(); iter.hasNext();) {
+            Messages msgs = iter.next();
             String str = msgs.get(key);
             if (!str.startsWith("???")) {
                 return str;
@@ -88,11 +88,11 @@ public class MessagesChain extends AbstractMessagesImpl {
     /**
      * Return all keys contained in this chain.
      */
-    public Iterator keys() {
-        Set keys = new HashSet();
-        for (Iterator iter = chain.iterator(); iter.hasNext();) {
-            Messages msgs = (Messages) iter.next();
-            List current = IteratorUtils.toList(msgs.keys());
+    public Iterator<String> keys() {
+        Set<String> keys = new HashSet<String>();
+        for (Iterator<Messages> iter = chain.iterator(); iter.hasNext();) {
+            Messages msgs = iter.next();
+            List<String> current = IteratorUtils.toList(msgs.keys());
             keys.addAll(current);
         }
         return keys.iterator();
@@ -102,8 +102,8 @@ public class MessagesChain extends AbstractMessagesImpl {
      * Reload the chain.
      */
     public void reload() throws Exception {
-        for (Iterator iter = chain.iterator(); iter.hasNext();) {
-            Messages msgs = (Messages) iter.next();
+        for (Iterator<Messages> iter = chain.iterator(); iter.hasNext();) {
+            Messages msgs = iter.next();
             msgs.reload();
         }
     }

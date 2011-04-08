@@ -89,7 +89,7 @@ public interface Messages {
      * Iterate over the keys.
      * @return iterator
      */
-    public Iterator keys();
+    public Iterator<String> keys();
 
     /**
      * Reload the messages.

@@ -45,8 +45,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -125,7 +125,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl implements Seriali
     /**
      * Iterate over the keys.
      */
-    public Iterator keys() {
+    public Iterator<String> keys() {
         ResourceBundle bundle = this.getBundle();
         if(bundle != null) {
             return IteratorUtils.asIterator(bundle.getKeys());
