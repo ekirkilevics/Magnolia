@@ -33,13 +33,13 @@
  */
 package info.magnolia.cms.link;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -75,15 +75,16 @@ public class AbsolutePathTransformer{
     public String transform(UUIDLink uuidLink) {
         String linkStr;
         if(useURI2RepositoryMapping){
-            Collection mappings = getURI2RepositoryManager().getMappings();
-            for (Iterator iter = mappings.iterator(); iter.hasNext();) {
-                URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
+            Collection<URI2RepositoryMapping> mappings = getURI2RepositoryManager().getMappings();
+            for (Iterator<URI2RepositoryMapping> iter = mappings.iterator(); iter.hasNext();) {
+                URI2RepositoryMapping mapping = iter.next();
                 if (StringUtils.equals(mapping.getRepository(), uuidLink.getRepository()) && uuidLink.getHandle().startsWith(mapping.getHandlePrefix())) {
                     return mapping.getURI(uuidLink.getHandle());
                 }
             }
             return getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink.getHandle());
         }
+
         else{
             linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink.getHandle());
         }

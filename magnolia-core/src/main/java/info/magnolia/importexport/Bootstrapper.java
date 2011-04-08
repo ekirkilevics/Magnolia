@@ -36,12 +36,6 @@ package info.magnolia.importexport;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +44,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -103,7 +104,7 @@ public final class Bootstrapper {
      * Bootstrap a specific repository.
      */
     public static boolean bootstrapRepository(String[] bootdirs, String repositoryName, BootstrapFilter filter) {
-        Set xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
+        Set<File> xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
 
         if (xmlfileset.isEmpty()) {
             log.debug("No bootstrap files found for repository [{}], skipping...", repositoryName); //$NON-NLS-1$
@@ -112,7 +113,7 @@ public final class Bootstrapper {
 
         log.info("Trying to import content from {} files into repository [{}]", Integer.toString(xmlfileset.size()), repositoryName);
 
-        final File[] files = (File[]) xmlfileset.toArray(new File[xmlfileset.size()]);
+        final File[] files = xmlfileset.toArray(new File[xmlfileset.size()]);
         return bootstrapFiles(repositoryName, files);
     }
 
@@ -149,8 +150,8 @@ public final class Bootstrapper {
      *
      * @return the sorted set
      */
-    private static SortedSet getBootstrapFiles(String[] bootdirs, final String repositoryName, final BootstrapFilter filter) {
-        SortedSet xmlfileset = new TreeSet(new BootstrapFilesComparator());
+    private static SortedSet<File> getBootstrapFiles(String[] bootdirs, final String repositoryName, final BootstrapFilter filter) {
+        SortedSet<File> xmlfileset = new TreeSet<File>(new BootstrapFilesComparator());
 
         for (int j = 0; j < bootdirs.length; j++) {
             String bootdir = bootdirs[j];
@@ -159,7 +160,8 @@ public final class Bootstrapper {
                 continue;
             }
 
-            Collection files = FileUtils.listFiles(xmldir, new IOFileFilter(){
+            @SuppressWarnings("unchecked")
+            Collection<File> files = FileUtils.listFiles(xmldir, new IOFileFilter() {
                 public boolean accept(File file) {
                     return accept(file.getParentFile(), file.getName());
                 }
