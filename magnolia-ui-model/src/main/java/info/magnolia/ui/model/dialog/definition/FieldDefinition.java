@@ -36,6 +36,10 @@ package info.magnolia.ui.model.dialog.definition;
 /**
  * Describes a field in a dialog.
  *
+ * TODO this should be abstract
+ *
+ * TODO we should be able to configure validators
+ *
  * @author tmattsson
  */
 public class FieldDefinition {
@@ -44,26 +48,21 @@ public class FieldDefinition {
     private String label;
     private String description; // not relevant for controlType=static
     private String i18nBasename;
+
+    // TODO we should not be using controlType any more
     private String controlType;
     private String type; // JCR Property type name see javax.jcr.PropertyType
 
-    private boolean required;
+    private boolean required; // Not relevant for checkbox
 
 /*
     private String requiredErrorMessage;
-    private int maxLength;
-
-    private boolean time;
-
-    private boolean rows;
-
-    private Map<String, String> options;
+    private String selectionText;
 
     private int min, max;
 
     private String defaultValue;
 
-    private String selectionText;
 */
 
     public String getName() {

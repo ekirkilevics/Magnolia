@@ -109,6 +109,9 @@ public abstract class AbstractEditableColumn<D extends ColumnDefinition> extends
         }
 
         public void onClick(Item item) throws RepositoryException {
+
+            // TODO ItemSelectedPlace wants a path relative to the tree root, not the jcr workspace absolute root
+
             placeController.goTo(new ItemSelectedPlace(item.getSession().getWorkspace().getName(), item.getPath()));
         }
     }

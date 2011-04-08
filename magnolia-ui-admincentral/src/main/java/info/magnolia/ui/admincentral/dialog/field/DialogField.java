@@ -31,18 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import com.vaadin.ui.Component;
+import info.magnolia.ui.framework.editor.Editor;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Dialog field.
  */
-public interface DialogBuilder {
+public interface DialogField {
 
-    DialogView build(DialogDefinition dialogDefinition);
+    Component getComponent();
 
+    Editor getEditor();
 }

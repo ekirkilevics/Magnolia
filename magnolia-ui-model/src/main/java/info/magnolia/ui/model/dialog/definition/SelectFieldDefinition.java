@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,18 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.model.dialog.definition;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import java.util.Map;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Field definition for a select field.
  */
-public interface DialogBuilder {
+public class SelectFieldDefinition extends FieldDefinition {
 
-    DialogView build(DialogDefinition dialogDefinition);
+    private Map<String, String> options;
 
+    public Map<String, String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Map<String, String> options) {
+        this.options = options;
+    }
 }

@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.tree.builder;
 
 /**
- * Defines a Mapping form a Definition to an specific implementation.
+ * Defines a Mapping from a Definition to an specific implementation.
  * @param <D> class of the definition
  * @param <I> class of the implementation
  *

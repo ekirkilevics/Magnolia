@@ -56,6 +56,7 @@ public class AddPageAction extends AddNodeAction {
     @Override
     protected void postProcessNode(Node newNode) throws RepositoryException {
         MetaData metaData = JCRMetadataUtil.getMetaData(newNode);
+        JCRMetadataUtil.updateMetaData(newNode);
         Template newTemplate = TemplateManager.getInstance().getDefaultTemplate(new HackContent(newNode));
         if (newTemplate != null) {
             metaData.setTemplate(newTemplate.getName());

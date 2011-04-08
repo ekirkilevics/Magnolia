@@ -31,14 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.admincentral.dialog.field;
 
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.vaadin.ui.Field;
-import info.magnolia.ui.admincentral.dialog.view.VaadinDialogField;
 import info.magnolia.ui.framework.editor.EditorDelegate;
 import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.editor.HasEditorDelegate;
@@ -58,13 +57,13 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     private FieldDefinition fieldDefinition;
     private EditorDelegate delegate;
     private Class<T> type;
-    private VaadinDialogField vaadinDialogField;
+    private AbstractDialogField abstractDialogField;
 
-    public VaadinEditorAdapter(Field field, FieldDefinition fieldDefinition, Class<T> type, VaadinDialogField vaadinDialogField) {
+    public VaadinEditorAdapter(Field field, FieldDefinition fieldDefinition, Class<T> type, AbstractDialogField abstractDialogField) {
         this.field = field;
         this.fieldDefinition = fieldDefinition;
         this.type = type;
-        this.vaadinDialogField = vaadinDialogField;
+        this.abstractDialogField = abstractDialogField;
     }
 
     public void setValue(T object) {
@@ -72,7 +71,7 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     }
 
     public T getValue() {
-        T value = (T)field.getValue();
+        T value = (T) field.getValue();
 
         // TODO This is very rudimentary validation
 
@@ -92,11 +91,11 @@ public class VaadinEditorAdapter<T> implements ValueEditor<T>, HasEditorDelegate
     public void showErrors(List<EditorError> errors) {
 
         // Clear any previous error
-        vaadinDialogField.setError(null);
+        abstractDialogField.setError(null);
 
         for (EditorError error : errors) {
             if (error.getEditor() == this) {
-                vaadinDialogField.setError(error.getMessage());
+                abstractDialogField.setError(error.getMessage());
                 error.setConsumed(true);
             }
         }

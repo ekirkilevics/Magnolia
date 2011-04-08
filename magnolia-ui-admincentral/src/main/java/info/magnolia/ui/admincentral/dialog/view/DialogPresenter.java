@@ -82,12 +82,11 @@ public class DialogPresenter implements DialogView.Presenter {
 
             DialogBuilder builder = componentProvider.newInstance(DialogBuilder.class);
             dialogView = builder.build(dialogDefinition);
+            dialogView.setPresenter(this);
 
             driver = new ContentDriver();
             driver.initialize(dialogView);
             driver.edit(node);
-
-            dialogView.setPresenter(this);
 
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);

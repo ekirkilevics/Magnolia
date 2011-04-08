@@ -33,26 +33,16 @@
  */
 package info.magnolia.ui.admincentral.dialog.builder;
 
-import java.util.Calendar;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.vaadin.Application;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.TextField;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.ui.admincentral.dialog.field.DialogField;
+import info.magnolia.ui.admincentral.dialog.field.DialogFieldFactory;
+import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
 import info.magnolia.ui.admincentral.dialog.view.DialogView;
 import info.magnolia.ui.admincentral.dialog.view.DialogViewImpl;
-import info.magnolia.ui.admincentral.dialog.view.VaadinDialogField;
-import info.magnolia.ui.framework.editor.ValueEditor;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.StaticFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
@@ -63,130 +53,60 @@ import info.magnolia.ui.model.dialog.definition.TabDefinition;
 public class VaadinDialogBuilder implements DialogBuilder {
 
     private Application application;
+    private DialogFieldFactory dialogFieldFactory;
 
-    public VaadinDialogBuilder(Application application) {
+    public VaadinDialogBuilder(Application application, DialogFieldFactory dialogFieldFactory) {
         this.application = application;
+        this.dialogFieldFactory = dialogFieldFactory;
     }
 
     public DialogView build(DialogDefinition dialogDefinition) {
-        // TODO: shouldn't we use IoC here?
+
+        // TODO: shouldn't we use IoC here? (Not really, this is all vaadin specific and that's why it has a hard dependency on DialogViewImpl)
         DialogViewImpl dialog = new DialogViewImpl();
 
-        application.getMainWindow().addWindow(dialog);
+        String label = DialogLocalizationUtil.getMessages(dialogDefinition).getWithDefault(dialogDefinition.getLabel(), dialogDefinition.getLabel());
 
-        dialog.setCaption(getMessages(dialogDefinition).getWithDefault(dialogDefinition.getLabel(), dialogDefinition.getLabel()));
+        dialog.setCaption(label);
 
         for (TabDefinition tabDefinition : dialogDefinition.getTabs()) {
 
-
             addTab(dialog, dialogDefinition, tabDefinition);
 
-            for (final FieldDefinition fieldDefinition : tabDefinition.getFields()) {
+            for (FieldDefinition fieldDefinition : tabDefinition.getFields()) {
 
-                // TODO it also needs to be give more explicit instructions like 'richText' and things like options.
-                // TODO some things might not be a good match with a java type, for instance nt:file
-                // TODO some dialog fields dont even have a type, controlType=static for instance
-
-                Class<?> type = getTypeFromDialogControl(fieldDefinition);
-
-                final ValueEditor<?> editor = addField(
-                        dialog,
-                        dialogDefinition,
-                        tabDefinition,
-                        fieldDefinition,
-                        type);
-
-                if (editor != null){
-                    //FIXME we add the field, so we could add the editor then?
-                    dialog.addEditor(tabDefinition, editor);
-                }
+                addField(dialog, dialogDefinition, tabDefinition, fieldDefinition);
             }
         }
+
+        // This shouldn't be in the builder
+        application.getMainWindow().addWindow(dialog);
+
         return dialog;
     }
 
-    private Class<?> getTypeFromDialogControl(FieldDefinition fieldDefinition) {
-        if (fieldDefinition.getControlType().equals("edit"))
-            return String.class;
-        if (fieldDefinition.getControlType().equals("date"))
-            return Calendar.class;
-        if (fieldDefinition.getControlType().equals("richText"))
-            return String.class;
-        if (fieldDefinition.getControlType().equals("password"))
-            return String.class;
-        if (fieldDefinition.getControlType().equals("checkboxSwitch"))
-            return Boolean.class;
-        return null;
-//        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
-    }
-
-    public void addTab(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition) {
-        Messages messages = getMessages(dialogDefinition, tabDefinition);
+    private void addTab(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition) {
+        Messages messages = DialogLocalizationUtil.getMessages(dialogDefinition, tabDefinition);
         String label = messages.getWithDefault(tabDefinition.getLabel(), tabDefinition.getLabel());
         dialog.addTab(tabDefinition.getName(), label);
     }
 
-    public ValueEditor<?> addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition, Class<?> type) {
-        Messages messages = getMessages(dialogDefinition, tabDefinition, fieldDefinition);
+    private void addField(DialogViewImpl dialog, DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
 
-        // TODO for controlType=static we need something completely different, it isnt even an editor...
-
-        if (fieldDefinition.getControlType().equals("static")) {
+        // Special case for StaticFieldDefinition
+        if (fieldDefinition instanceof StaticFieldDefinition) {
             dialog.addField(tabDefinition.getName(), fieldDefinition.getLabel());
-            return null;
+            return;
         }
 
-        Field field = createFieldForType(fieldDefinition, type);
+        DialogField dialogField = dialogFieldFactory.getDialogField(dialogDefinition, tabDefinition, fieldDefinition);
 
-        if (field == null) {
+        if (dialogField == null) {
             dialog.addField(tabDefinition.getName(), "Missing UI component for controlType=" + fieldDefinition.getControlType());
-            return null;
+            return;
         }
 
-        String label = messages.getWithDefault(fieldDefinition.getLabel(), fieldDefinition.getLabel());
-        String description = messages.getWithDefault(fieldDefinition.getDescription(), fieldDefinition.getDescription());
-        VaadinDialogField vaadinDialogField = dialog.addField(tabDefinition.getName(), fieldDefinition.getName(), label, description, field);
-
-        // XXX: the editor adapter has to keep references to more ui components than just the field because it needs to display error messages
-
-        return new VaadinEditorAdapter(field, fieldDefinition, type, vaadinDialogField);
-    }
-
-    private Field createFieldForType(FieldDefinition fieldDefinition, Class<?> type) {
-        if (fieldDefinition.getControlType().equals("edit"))
-            return new TextField();
-        if (fieldDefinition.getControlType().equals("date"))
-            return new DateField();
-        if (fieldDefinition.getControlType().equals("richText"))
-            return new RichTextArea();
-        if (fieldDefinition.getControlType().equals("password"))
-            return new PasswordField();
-        if (fieldDefinition.getControlType().equals("checkboxSwitch"))
-            return new CheckBox();
-        return null;
-    }
-
-    public Messages getMessages(DialogDefinition dialogDefinition) {
-        Messages messages = MessagesManager.getMessages();
-        if (StringUtils.isNotEmpty(dialogDefinition.getI18nBasename())) {
-            messages = MessagesUtil.chain(dialogDefinition.getI18nBasename(), messages);
-        }
-        return messages;
-    }
-
-    private Messages getMessages(DialogDefinition dialogDefinition, TabDefinition tabDefinition) {
-        Messages messages = getMessages(dialogDefinition);
-        if (StringUtils.isNotEmpty(tabDefinition.getI18nBasename())) {
-            messages = MessagesUtil.chain(tabDefinition.getI18nBasename(), messages);
-        }
-        return messages;
-    }
-
-    private Messages getMessages(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
-        Messages messages = getMessages(dialogDefinition, tabDefinition);
-        if (StringUtils.isNotEmpty(fieldDefinition.getI18nBasename())) {
-            messages = MessagesUtil.chain(fieldDefinition.getI18nBasename(), messages);
-        }
-        return messages;
+        dialog.addField(tabDefinition.getName(), dialogField.getComponent());
+        dialog.addEditor(tabDefinition, dialogField.getEditor());
     }
 }

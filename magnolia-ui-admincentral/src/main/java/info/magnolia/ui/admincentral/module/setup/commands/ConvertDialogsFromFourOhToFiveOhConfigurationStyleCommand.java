@@ -43,7 +43,14 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
+import info.magnolia.ui.model.dialog.definition.CheckboxFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.DateFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.EditFieldDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.PasswordFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.RichEditFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.SelectFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.StaticFieldDefinition;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -175,15 +182,34 @@ public class ConvertDialogsFromFourOhToFiveOhConfigurationStyleCommand extends M
 //            control.setNodeData("class", controlsMap.get(controlName));
 
             String controlType = control.getNodeData("controlType").getString();
-            if ("fckEdit".equals(controlType))
-                control.setNodeData("controlType", "richText");
 
-            control.setNodeData("class", FieldDefinition.class.getName());
+            Class<? extends FieldDefinition> definitionClass = getDefinitionFromControlType(controlType);
+            control.setNodeData("class", definitionClass.getName());
             control.save();
             // and again
             hm.save();
             hm.moveTo(control.getHandle(), fieldsCollection.getHandle() + "/" + control.getName());
         }
+    }
+
+    private Class<? extends FieldDefinition> getDefinitionFromControlType(String controlType) {
+
+        if ("edit".equals(controlType))
+            return EditFieldDefinition.class;
+        if ("password".equals(controlType))
+            return PasswordFieldDefinition.class;
+        if ("select".equals(controlType))
+            return SelectFieldDefinition.class;
+        if ("checkboxSwitch".equals(controlType))
+            return CheckboxFieldDefinition.class;
+        if ("date".equals(controlType))
+            return DateFieldDefinition.class;
+        if ("static".equals(controlType))
+            return StaticFieldDefinition.class;
+        if ("fckEdit".equals(controlType))
+            return RichEditFieldDefinition.class;
+
+        return FieldDefinition.class;
     }
 
     private Collection<Content> getTabs(Content newDialog) {

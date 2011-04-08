@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,18 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
-
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+package info.magnolia.ui.model.dialog.definition;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Field definition for a checkbox.
  */
-public interface DialogBuilder {
-
-    DialogView build(DialogDefinition dialogDefinition);
+public class CheckboxFieldDefinition extends FieldDefinition {
 
 }

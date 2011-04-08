@@ -31,18 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
+import java.util.Map;
+
+import com.vaadin.ui.Field;
+import com.vaadin.ui.NativeSelect;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.SelectFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Dialog field for select.
  */
-public interface DialogBuilder {
+public class DialogSelectField extends AbstractDialogField {
 
-    DialogView build(DialogDefinition dialogDefinition);
+    public DialogSelectField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, SelectFieldDefinition fieldDefinition) {
+        super(dialogDefinition, tabDefinition, fieldDefinition);
+    }
 
+    protected Field getField() {
+        NativeSelect select = new NativeSelect();
+        for (Map.Entry<String, String> entry : ((SelectFieldDefinition)getFieldDefinition()).getOptions().entrySet()) {
+            select.addItem(entry.getKey());
+            select.setItemCaption(entry.getKey(), entry.getValue());
+        }
+        return select;
+    }
 }

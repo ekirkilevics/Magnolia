@@ -31,7 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.view;
+package info.magnolia.ui.admincentral.dialog.field;
+
+import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -41,23 +43,44 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.ui.admincentral.dialog.support.DialogLocalizationUtil;
+import info.magnolia.ui.framework.editor.Editor;
+import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
  * UI component for a field in a dialog.
  *
  * @author tmattsson
  */
-public class VaadinDialogField extends CustomComponent {
+public abstract class AbstractDialogField extends CustomComponent implements DialogField {
 
     private String errorMessage;
     private Label errorLabel;
-    private Component field;
+    private Field field;
+    private Editor editor;
+    private DialogDefinition dialogDefinition;
+    private TabDefinition tabDefinition;
+    private FieldDefinition fieldDefinition;
+    private Messages messages;
 
-    public VaadinDialogField(String label, String description, Component field) {
-        this.field = field;
+    protected AbstractDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
+
+        this.dialogDefinition = dialogDefinition;
+        this.tabDefinition = tabDefinition;
+        this.fieldDefinition = fieldDefinition;
+        this.messages = DialogLocalizationUtil.getMessages(dialogDefinition, tabDefinition, fieldDefinition);
+
+        this.field = getField();
+
+        String label = messages.getWithDefault(fieldDefinition.getLabel(), fieldDefinition.getLabel());
+        String description = messages.getWithDefault(fieldDefinition.getDescription(), fieldDefinition.getDescription());
 
         Label labelLabel = new Label(label);
         errorLabel = new Label();
@@ -89,7 +112,13 @@ public class VaadinDialogField extends CustomComponent {
         box.setWidth("100%");
         box.addComponent(horizontalLayout);
         super.setCompositionRoot(box);
+
+        Class<?> type = getTypeFromDialogControl(fieldDefinition);
+
+        this.editor = new VaadinEditorAdapter(field, fieldDefinition, type, this);
     }
+
+    protected abstract Field getField();
 
     public void setError(String message) {
 
@@ -109,5 +138,47 @@ public class VaadinDialogField extends CustomComponent {
             }
         }
         requestRepaintAll();
+    }
+
+    public Component getComponent() {
+        return this;
+    }
+
+    public Editor getEditor() {
+        return this.editor;
+    }
+
+    private Class<?> getTypeFromDialogControl(FieldDefinition fieldDefinition) {
+
+        // TODO this should look at fieldDefinition.type instead
+
+        if ("edit".equals(fieldDefinition.getControlType()))
+            return String.class;
+        if ("date".equals(fieldDefinition.getControlType()))
+            return Calendar.class;
+        if ("richText".equals(fieldDefinition.getControlType()))
+            return String.class;
+        if ("password".equals(fieldDefinition.getControlType()))
+            return String.class;
+        if ("checkboxSwitch".equals(fieldDefinition.getControlType()))
+            return Boolean.class;
+        return null;
+//        throw new IllegalArgumentException("Unsupported type " + dialogControl.getClass());
+    }
+
+    public Messages getMessages() {
+        return messages;
+    }
+
+    public FieldDefinition getFieldDefinition() {
+        return fieldDefinition;
+    }
+
+    public TabDefinition getTabDefinition() {
+        return tabDefinition;
+    }
+
+    public DialogDefinition getDialogDefinition() {
+        return dialogDefinition;
     }
 }

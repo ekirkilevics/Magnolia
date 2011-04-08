@@ -67,5 +67,5 @@ public class OpenEditDialogAction extends ActionBase<OpenEditDialogActionDefinit
         catch (RepositoryException e) {
             throw new ActionExecutionException("Can't open dialog.", e);
         }
-    };
+    }
 }

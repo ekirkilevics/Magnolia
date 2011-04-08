@@ -31,18 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.PasswordField;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Dialog field for password.
  */
-public interface DialogBuilder {
+public class DialogPasswordField extends AbstractDialogField {
 
-    DialogView build(DialogDefinition dialogDefinition);
+    public DialogPasswordField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
+        super(dialogDefinition, tabDefinition, fieldDefinition);
+    }
 
+    protected Field getField() {
+        return new PasswordField();
+    }
 }

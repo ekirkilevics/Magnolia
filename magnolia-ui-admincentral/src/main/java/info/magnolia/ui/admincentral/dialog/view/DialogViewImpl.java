@@ -53,7 +53,6 @@ import info.magnolia.ui.framework.editor.Editor;
 import info.magnolia.ui.framework.editor.EditorError;
 import info.magnolia.ui.framework.editor.HasEditorErrors;
 import info.magnolia.ui.framework.editor.HasEditors;
-import info.magnolia.ui.framework.editor.ValueEditor;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
@@ -161,10 +160,8 @@ public class DialogViewImpl extends Window implements DialogView {
         tabs.put(name, new Tab(name));
     }
 
-    public VaadinDialogField addField(String tabName, String name, String label, String description, Component field) {
-        VaadinDialogField q = new VaadinDialogField(label, description, field);
-        ((Layout) tabSheet.getTab(tabName)).addComponent(q);
-        return q;
+    public void addField(String tabName, Component component) {
+        ((Layout) tabSheet.getTab(tabName)).addComponent(component);
     }
 
     public void addField(String tabName, String label) {
@@ -179,7 +176,7 @@ public class DialogViewImpl extends Window implements DialogView {
         return tabs.values();
     }
 
-    public void addEditor(TabDefinition tabDefinition, ValueEditor editor) {
+    public void addEditor(TabDefinition tabDefinition, Editor editor) {
         tabs.get(tabDefinition.getName()).addEditor(editor);
     }
 

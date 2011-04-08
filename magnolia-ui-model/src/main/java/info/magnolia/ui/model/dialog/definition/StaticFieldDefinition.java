@@ -31,18 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
-
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
-import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+package info.magnolia.ui.model.dialog.definition;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Describes a field which is shows with a simple text in the dialog. The displayed text is the label.
  */
-public interface DialogBuilder {
-
-    DialogView build(DialogDefinition dialogDefinition);
+public class StaticFieldDefinition extends FieldDefinition {
 
 }

@@ -31,18 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
+import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Factory for creating dialog fields based on definitions. Note that this is vaadin specific.
  */
-public interface DialogBuilder {
+public interface DialogFieldFactory {
 
-    DialogView build(DialogDefinition dialogDefinition);
-
+    DialogField getDialogField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition);
 }

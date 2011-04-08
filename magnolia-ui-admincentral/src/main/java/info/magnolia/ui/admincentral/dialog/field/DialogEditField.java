@@ -31,18 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.dialog.builder;
+package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.ui.admincentral.dialog.view.DialogView;
+import com.vaadin.ui.Field;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
+import info.magnolia.ui.model.dialog.definition.EditFieldDefinition;
+import info.magnolia.ui.model.dialog.definition.FieldDefinition;
+import info.magnolia.ui.model.dialog.definition.TabDefinition;
 
 /**
- * Builder for composing dialogs. Selects on its own an editor that is appropriate for the type being edited.
- *
- * @author tmattsson
+ * Dialog field for edit.
  */
-public interface DialogBuilder {
+public class DialogEditField extends AbstractDialogField {
 
-    DialogView build(DialogDefinition dialogDefinition);
+    public DialogEditField(DialogDefinition dialogDefinition, TabDefinition tabDefinition, FieldDefinition fieldDefinition) {
+        super(dialogDefinition, tabDefinition, fieldDefinition);
+    }
 
+    protected Field getField() {
+        EditFieldDefinition d = (EditFieldDefinition) getFieldDefinition();
+        if (d.getRows() > 1) {
+            TextArea textArea = new TextArea();
+            textArea.setRows(d.getRows());
+            return textArea;
+        }
+        return new TextField();
+    }
 }
