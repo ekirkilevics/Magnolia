@@ -73,7 +73,7 @@ public final class VirtualURIManager extends ObservedManager {
     /**
      * all cached data. <UrlPattern, String[target, pattern]>
      */
-    private final List cachedURImapping = new ArrayList();
+    private final List<VirtualURIMapping> cachedURImapping = new ArrayList<VirtualURIMapping>();
 
     /**
      * checks for the requested URI mapping in Server config : Servlet Specification 2.3 Section 10 "Mapping Requests to
@@ -81,12 +81,12 @@ public final class VirtualURIManager extends ObservedManager {
      * @return URI string mapping
      */
     public String getURIMapping(String uri) {
-        Iterator e = cachedURImapping.iterator();
+        Iterator<VirtualURIMapping> e = cachedURImapping.iterator();
         String mappedURI = StringUtils.EMPTY;
         int lastMatchedLevel = 0;
         while (e.hasNext()) {
             try{
-                VirtualURIMapping vm = (VirtualURIMapping) e.next();
+                VirtualURIMapping vm = e.next();
                 VirtualURIMapping.MappingResult result = vm.mapURI(uri);
                 if (result != null && lastMatchedLevel < result.getLevel()) {
                     lastMatchedLevel = result.getLevel();
@@ -122,7 +122,7 @@ public final class VirtualURIManager extends ObservedManager {
     }
 
     // TODO : should this really be public ?
-    public Collection getURIMappings() {
+    public Collection<VirtualURIMapping> getURIMappings() {
         return cachedURImapping;
     }
 

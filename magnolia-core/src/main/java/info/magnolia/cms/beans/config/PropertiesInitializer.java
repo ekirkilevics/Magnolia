@@ -153,7 +153,7 @@ public class PropertiesInitializer {
 
         Properties sysProps = SystemProperty.getProperties();
 
-        for (Iterator it = sysProps.keySet().iterator(); it.hasNext();) {
+        for (Iterator<Object> it = sysProps.keySet().iterator(); it.hasNext();) {
             String key = (String) it.next();
             String oldValue = (String) sysProps.get(key);
             String value = parseStringValue(oldValue, new HashSet<String>());
@@ -221,7 +221,7 @@ public class PropertiesInitializer {
                 IOUtils.closeQuietly(mgnlbeansStream);
             }
 
-            for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
+            for (Iterator<Object> iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
                 SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
             }
@@ -279,7 +279,7 @@ public class PropertiesInitializer {
      * Overload the properties with set system properties.
      */
     public void overloadWithSystemProperties() {
-        Iterator it = SystemProperty.getProperties().keySet().iterator();
+        Iterator<Object> it = SystemProperty.getProperties().keySet().iterator();
         while (it.hasNext()) {
             String key = (String) it.next();
             if (System.getProperties().containsKey(key)) {

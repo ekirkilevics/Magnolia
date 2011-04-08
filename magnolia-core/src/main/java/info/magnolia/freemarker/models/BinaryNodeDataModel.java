@@ -33,21 +33,24 @@
  */
 package info.magnolia.freemarker.models;
 
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.NodeData;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
-import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.core.NodeData;
-import org.apache.commons.lang.StringUtils;
-
-import javax.jcr.RepositoryException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * TODO : review this !
@@ -77,7 +80,7 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
     }
 
     public TemplateCollectionModel keys() throws TemplateModelException {
-        Iterator result = null;
+        Iterator<String> result = null;
         try {
             result = binaryNodeData.getAttributeNames().iterator();
         } catch (RepositoryException e) {
@@ -87,9 +90,9 @@ public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarM
     }
 
     public TemplateCollectionModel values() throws TemplateModelException {
-        ArrayList result = new ArrayList();
+        ArrayList<String> result = new ArrayList<String>();
         try {
-            Iterator iter = binaryNodeData.getAttributeNames().iterator();
+            Iterator<String> iter = binaryNodeData.getAttributeNames().iterator();
             while (iter.hasNext()) {
                 result.add(iter.next());
             }

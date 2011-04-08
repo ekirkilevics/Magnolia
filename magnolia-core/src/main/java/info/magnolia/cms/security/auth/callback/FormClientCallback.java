@@ -33,22 +33,22 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.security.auth.login.LoginException;
+import info.magnolia.cms.beans.config.MIMEMapping;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.auth.login.LoginResult;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import info.magnolia.freemarker.FreemarkerUtil;
-import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.security.auth.login.LoginResult;
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.ClassUtils;
 
 /**
  * Sends a login form.
@@ -91,10 +91,10 @@ public class FormClientCallback extends AbstractHttpClientCallback {
      * override this to pass more objects to the freemarker template.
      * @return an empty map
      */
-    protected Map<String, String> getMessages() {
+    protected Map<String, Object> getMessages() {
         LoginResult loginResult = LoginResult.getCurrentLoginResult();
         LoginException exception = loginResult.getLoginException();
-        Map<String, String> messages = new HashMap<String, String>();
+        Map<String, Object> messages = new HashMap<String, Object>();
         if (null != exception) {
             final String exName = ClassUtils.getShortClassName(exception, null);
             final Messages mm = MessagesManager.getMessages();

@@ -39,18 +39,20 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages mappings of file extensions with their MIME types and icon.
@@ -65,7 +67,7 @@ public class MIMEMapping {
     public static final String DEFAULT_ICON = ICONS_PATH + "general.png";
     private static final String NODEPATH = "/server/MIMEMapping"; //$NON-NLS-1$
 
-    private static Map cachedContent = new Hashtable();
+    private static Map<String, MIMEMappingItem> cachedContent = new Hashtable<String, MIMEMappingItem>();
     private static final String DEFAULT_CHAR_ENCODING = "UTF-8";
 
     /**
@@ -105,7 +107,7 @@ public class MIMEMapping {
         try {
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
-            Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); 
+            Collection<Content> mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE);
             MIMEMapping.cacheContent(mimeList);
             log.debug("MIMEMapping loaded from {}", NODEPATH); //$NON-NLS-1$
         } catch (PathNotFoundException e) {
@@ -137,10 +139,10 @@ public class MIMEMapping {
     /**
      * Cache all MIME types configured.
      */
-    private static void cacheContent(Collection mimeList) {
-        Iterator iterator = mimeList.iterator();
+    private static void cacheContent(Collection<Content> mimeList) {
+        Iterator<Content> iterator = mimeList.iterator();
         while (iterator.hasNext()) {
-            Content c = (Content) iterator.next();
+            Content c = iterator.next();
             try {
                 MIMEMappingItem item = new MIMEMappingItem();
                 item.ext = NodeDataUtil.getString(c, "extension", c.getName());//$NON-NLS-1$
@@ -167,7 +169,7 @@ public class MIMEMapping {
         // check that the cached content contains the key first to avoid NPE when accessing 'mime'
         String loweredKey = key.toLowerCase();
         if (MIMEMapping.cachedContent.containsKey(loweredKey)) {
-            return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
+            return MIMEMapping.cachedContent.get(loweredKey).mime;
         }
 
         // this is expected by the caller

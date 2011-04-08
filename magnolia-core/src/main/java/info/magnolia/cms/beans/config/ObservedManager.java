@@ -38,16 +38,18 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.context.MgnlContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -61,7 +63,7 @@ public abstract class ObservedManager {
     /**
      * UUIDs of the registered main nodes. They will get registered again after a change.
      */
-    protected Set registeredUUIDs = new HashSet();
+    protected Set<String> registeredUUIDs = new HashSet<String>();
 
     /**
      * Register a node. The uuid is cached and then onRegister() called.
@@ -99,10 +101,10 @@ public abstract class ObservedManager {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
         // copy to avoid ConcurrentModificationException since the list get changed during iteration
-        List uuids = new ArrayList(registeredUUIDs);
+        List<String> uuids = new ArrayList<String>(registeredUUIDs);
 
-        for (Iterator iter = uuids.iterator(); iter.hasNext();) {
-            String uuid = (String) iter.next();
+        for (Iterator<String> iter = uuids.iterator(); iter.hasNext();) {
+            String uuid = iter.next();
             try {
                 Content node = hm.getContentByUUID(uuid);
                 reload(node);

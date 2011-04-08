@@ -34,15 +34,16 @@
 package info.magnolia.freemarker;
 
 import info.magnolia.cms.util.AlertUtil;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A bunch of utility methods to render freemarker templates into Strings.
@@ -86,7 +87,7 @@ public class FreemarkerUtil {
      * @see #process(Object, String, String)
      */
     public static void process(Object thisObj, String classifier, String ext, Writer out) {
-        final Map data = new HashMap();
+        final Map<String, Object> data = new HashMap<String, Object>();
         data.put("this", thisObj);
         String template = createTemplateName(thisObj.getClass(), classifier, ext);
         process(template, data, out);
@@ -97,7 +98,7 @@ public class FreemarkerUtil {
      * Uses "html" as template filename extension.
      * Only used in AbstractSimpleSearchList and VersionsList.
      */
-    public static String process(Class klass, Object thisObj) {
+    public static String process(Class<?> klass, Object thisObj) {
         final Writer writer = new StringWriter();
         process(klass, thisObj, writer);
         return writer.toString();
@@ -106,8 +107,8 @@ public class FreemarkerUtil {
     /**
      * @see #process(Class, Object)
      */
-    public static void process(Class klass, Object thisObj, Writer out) {
-        final Map data = new HashMap();
+    public static void process(Class<?> klass, Object thisObj, Writer out) {
+        final Map<String, Object> data = new HashMap<String, Object>();
         data.put("this", thisObj);
         String template = createTemplateName(klass, "html");
         process(template, data, out);
@@ -116,7 +117,7 @@ public class FreemarkerUtil {
     /**
      * Process this template with the passed data and returns the result in a String.
      */
-    public static String process(String name, Map data) {
+    public static String process(String name, Map<String, Object> data) {
         final Writer writer = new StringWriter();
         process(name, data, writer);
         return writer.toString();
@@ -126,7 +127,7 @@ public class FreemarkerUtil {
      * Process the template with the data and writes the result to the writer.
      * TODO : move this to FreemarkerHelper
      */
-    public static void process(String name, Map data, Writer writer) {
+    public static void process(String name, Map<String, Object> data, Writer writer) {
         try {
             // add some useful default data
             if (AlertUtil.isMessageSet()) {
@@ -144,7 +145,7 @@ public class FreemarkerUtil {
      * Creates a template name based on the class name and adds the extension.
      * If the class is org.mydomain.TheClass the returned name is /org/mydomain/TheClass.html.
      */
-    public static String createTemplateName(Class klass, String ext) {
+    public static String createTemplateName(Class<?> klass, String ext) {
         return createTemplateName(klass, null, ext);
     }
 
@@ -152,7 +153,7 @@ public class FreemarkerUtil {
      * Same as {@link #createTemplateName(Class, String)} but adds the classifier between
      * the template name and the extension.
      */
-    public static String createTemplateName(Class klass, String classifier, String ext) {
+    public static String createTemplateName(Class<?> klass, String classifier, String ext) {
         classifier = (classifier != null) ? StringUtils.capitalize(classifier) : "";
         return "/" + StringUtils.replace(klass.getName(), ".", "/") + classifier + "." + ext;
     }

@@ -33,6 +33,18 @@
  */
 package info.magnolia.freemarker.models;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
+
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.Transformer;
+
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
@@ -43,15 +55,6 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateNodeModel;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentUtil;
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.collections.Transformer;
-
-import javax.jcr.RepositoryException;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * A wrapper for Content nodes. Exposes properties using an HashModel (.property, ?size, ...)
@@ -153,7 +156,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
      * This returns all children, except nodes or jcr: types and mgnl:metaData.
      */
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
-        final Collection children = ContentUtil.getAllChildren(content);
+        final Collection<Content> children = ContentUtil.getAllChildren(content);
         return (TemplateSequenceModel) wrapper.wrap(children);
     }
 

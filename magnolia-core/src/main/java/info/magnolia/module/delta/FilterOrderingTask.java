@@ -37,12 +37,13 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.module.InstallContext;
 
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 /**
  * Orders a filter after a given set of other filters.
@@ -56,7 +57,8 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
 
     /**
      * 
-     * @param requiredFiltersBefore an array of filter names that must appear <strong>before</strong> the filter specified as filterName.
+     * @param requiredFiltersBefore
+     *            an array of filter names that must appear <strong>before</strong> the filter specified as filterName.
      */
     public FilterOrderingTask(String filterName, String[] requiredFiltersBefore) {
         this(filterName, "Sets the new " + filterName + " in the proper place.", requiredFiltersBefore);
@@ -80,7 +82,7 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
         final Collection<Content> filters = filtersParent.getChildren();
         final Iterator<Content> it = filters.iterator();
         while (it.hasNext()) {
-            final Content filter = (Content) it.next();
+            final Content filter = it.next();
             final String filterName = filter.getName();
 
             // have we seen all filters yet ?

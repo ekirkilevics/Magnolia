@@ -34,11 +34,13 @@
 package info.magnolia.voting.voters;
 
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A voter which checks the content type set on the <strong>response</strong>
@@ -50,10 +52,10 @@ import java.util.List;
 public class ResponseContentTypeVoter extends AbstractBoolVoter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ResponseContentTypeVoter.class);
 
-    private final List allowed = new ArrayList();
-    private final List rejected = new ArrayList();
+    private final List<String> allowed = new ArrayList<String>();
+    private final List<String> rejected = new ArrayList<String>();
 
-    public List getAllowed() {
+    public List<String> getAllowed() {
         return allowed;
     }
 
@@ -61,7 +63,7 @@ public class ResponseContentTypeVoter extends AbstractBoolVoter {
         allowed.add(contentType);
     }
 
-    public List getRejected() {
+    public List<String> getRejected() {
         return rejected;
     }
 

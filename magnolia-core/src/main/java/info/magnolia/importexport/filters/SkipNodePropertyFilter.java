@@ -33,6 +33,9 @@
  */
 package info.magnolia.importexport.filters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -40,9 +43,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -64,7 +64,7 @@ public abstract class SkipNodePropertyFilter extends XMLFilterImpl {
 
     protected boolean invalue;
 
-    private List elementBuffer = new ArrayList();
+    private List<BufferedElement> elementBuffer = new ArrayList<BufferedElement>();
 
     /**
      * Instantiates a new filter.
@@ -111,7 +111,7 @@ public abstract class SkipNodePropertyFilter extends XMLFilterImpl {
 
                 if (!skip) {
                     while (!elementBuffer.isEmpty()) {
-                        BufferedElement be = (BufferedElement) elementBuffer.remove(0);
+                        BufferedElement be = elementBuffer.remove(0);
                         super.startElement(be.getUri(), be.getLocalName(), be.getQName(), be.getAtts());
                     }
                     super.characters(ch, start, length);

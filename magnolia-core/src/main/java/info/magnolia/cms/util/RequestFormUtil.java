@@ -36,13 +36,15 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -124,7 +126,7 @@ public class RequestFormUtil {
      * @return decoded value
      */
     public static String getURLParameterDecoded(HttpServletRequest request, String name, String charset) {
-        return (String) getURLParametersDecoded(request, charset).get(name);
+        return getURLParametersDecoded(request, charset).get(name);
     }
 
     /**
@@ -133,13 +135,13 @@ public class RequestFormUtil {
      * @param charset
      * @return decoded map of all values
      */
-    public static Map getURLParametersDecoded(HttpServletRequest request, String charset) {
+    public static Map<String, String> getURLParametersDecoded(HttpServletRequest request, String charset) {
 
         String queryString = request.getQueryString();
         if (queryString != null) {
             return getURLParametersDecoded(queryString, charset);
         }
-        return new HashMap();
+        return new HashMap<String, String>();
     }
 
     /**
@@ -147,8 +149,8 @@ public class RequestFormUtil {
      * @param queryString query string
      * @param charset charset (e.g UTF-8)
      */
-    public static Map getURLParametersDecoded(String queryString, String charset) {
-        Map map = new HashMap();
+    public static Map<String, String> getURLParametersDecoded(String queryString, String charset) {
+        Map<String, String> map = new HashMap<String, String>();
         String[] params = queryString.split("&");
         for (int i = 0; i < params.length; i++) {
             String name = StringUtils.substringBefore(params[i], "=");
