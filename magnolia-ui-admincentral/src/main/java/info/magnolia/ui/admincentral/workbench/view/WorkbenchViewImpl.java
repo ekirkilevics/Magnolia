@@ -45,7 +45,7 @@ import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * The view to edit a workspace. Provides slots for the tree and detail view.
+ * The view to edit a workspace. Provides slots for the tree/list and detail view.
  */
 public class WorkbenchViewImpl implements WorkbenchView{
 
@@ -57,14 +57,14 @@ public class WorkbenchViewImpl implements WorkbenchView{
     public WorkbenchViewImpl() {
 
         splitPanel = new HorizontalSplitPanel();
-        splitPanel.setSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
+        splitPanel.setSplitPosition(20, Sizeable.UNITS_PERCENTAGE, true);
         splitPanel.setSizeFull();
         splitPanel.addListener(new SplitterClickListener() {
 
             public void splitterClick(SplitterClickEvent event) {
                 if(event.isDoubleClick()){
                     HorizontalSplitPanel panel = (HorizontalSplitPanel)event.getSource();
-                    panel.setSplitPosition(panel.getSplitPosition() > 0 ? 0:15);
+                    panel.setSplitPosition(panel.getSplitPosition() > 0 ? 0 : 20, Sizeable.UNITS_PERCENTAGE, true);
                 }
             }
         });
@@ -88,7 +88,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
 
 
         //outerLayout.addComponent(searchForm);
-        outerLayout.addComponent(workbenchHeaderView);
+        outerLayout.addComponent(workbenchHeaderView.asVaadinComponent());
         outerLayout.addComponent(splitPanel);
 
         //outerLayout.setExpandRatio(searchForm, 1);

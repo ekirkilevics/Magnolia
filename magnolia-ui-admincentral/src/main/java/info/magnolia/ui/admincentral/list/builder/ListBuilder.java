@@ -31,25 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.activity;
+package info.magnolia.ui.admincentral.list.builder;
 
-
-import info.magnolia.ui.admincentral.list.builder.ListBuilderProvider;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
+import info.magnolia.ui.admincentral.tree.view.JcrView;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
- * Activity for displaying a tree view.
- *
- * @author tmattsson
+ * Used to transform list and column definitions into components.
  */
-public class TreeActivity extends JcrActivity{
+public interface ListBuilder {
 
-    public TreeActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
-        super(workbenchDefinition, treeBuilderProvider, listBuilderProvider, placeController, shell);
-        jcrView = treeBuilderProvider.getBuilder().build(workbenchDefinition);
-    }
-
+    JcrView build(WorkbenchDefinition workbenchDefinition);
 }

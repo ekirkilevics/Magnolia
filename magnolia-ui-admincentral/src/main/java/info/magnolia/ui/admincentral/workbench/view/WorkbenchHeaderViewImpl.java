@@ -33,11 +33,15 @@
  */
 package info.magnolia.ui.admincentral.workbench.view;
 
-import javax.jcr.Item;
+import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -47,9 +51,10 @@ import com.vaadin.ui.Label;
  * @author fgrilli
  *
  */
-public class WorkbenchHeaderViewImpl extends CustomComponent implements WorkbenchHeaderView, WorkbenchHeaderView.Presenter{
+public class WorkbenchHeaderViewImpl implements View, IsVaadinComponent{
 
     private GridLayout outerContainer;
+    private CustomComponent customComponent;
 
     public WorkbenchHeaderViewImpl() {
         outerContainer = new GridLayout(3,1);
@@ -57,11 +62,24 @@ public class WorkbenchHeaderViewImpl extends CustomComponent implements Workbenc
         outerContainer.addStyleName("m-workbench-header");
         outerContainer.setHeight(50, Sizeable.UNITS_PIXELS);
         outerContainer.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-        setCompositionRoot(outerContainer);
+        customComponent = new CustomComponent(){{ setCompositionRoot(outerContainer); }};
+
 
         final Label viewAsLabel = new Label("View as");
         final Button treeButton = new Button("Tree");
+        treeButton.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+            }
+        });
         final Button listButton = new Button("List");
+
+        listButton.addListener(new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+            }
+        });
+
         final GridLayout viewGroup = new GridLayout(3,1);
 
         viewGroup.addComponent(viewAsLabel, 0, 0);
@@ -109,14 +127,8 @@ public class WorkbenchHeaderViewImpl extends CustomComponent implements Workbenc
 
     }
 
-    public void onViewSelection(String viewName) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void onShowParents(Item item) {
-        // TODO Auto-generated method stub
-
+    public Component asVaadinComponent() {
+       return customComponent;
     }
 
 }

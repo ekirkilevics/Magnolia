@@ -31,7 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.builder;
+package info.magnolia.ui.admincentral.list.builder;
+
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.list.view.ListViewImpl;
+import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
+import info.magnolia.ui.admincentral.tree.builder.DefinitionToImplementationMapping;
+import info.magnolia.ui.admincentral.tree.model.TreeModel;
+import info.magnolia.ui.admincentral.tree.view.JcrView;
+import info.magnolia.ui.model.builder.FactoryBase;
+import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,21 +51,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.column.Column;
-import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
-import info.magnolia.ui.admincentral.tree.model.TreeModel;
-import info.magnolia.ui.admincentral.tree.view.JcrView;
-import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
-import info.magnolia.ui.model.builder.FactoryBase;
-import info.magnolia.ui.model.column.definition.ColumnDefinition;
-import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
-import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
-
 /**
- * TreeBuild configured via content to bean.
+ * ListBuilder configured via content to bean.
+ * TODO: how much can be extracted in a common base class to be extended by both Tree- and List builders?
  */
-public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<ColumnDefinition>> implements TreeBuilder, Serializable {
+public class ConfiguredListBuilder extends FactoryBase<ColumnDefinition, Column<ColumnDefinition>> implements ListBuilder, Serializable {
 
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
@@ -64,7 +66,7 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
     private WorkbenchActionFactory workbenchActionFactory;
 
     // TODO: why is WorkbenchRegistry handed over here?
-    public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
+    public ConfiguredListBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         this.workbenchActionFactory = workbenchActionFactory;
@@ -101,6 +103,6 @@ public class ConfiguredTreeBuilder extends FactoryBase<ColumnDefinition, Column<
 
         // FIXME the model should be set by the presenter
         TreeModel treeModel = new TreeModel(workbenchDefinition, columns, workbenchActionFactory);
-        return componentProvider.newInstance(TreeViewImpl.class, workbenchDefinition, treeModel);
+        return componentProvider.newInstance(ListViewImpl.class, workbenchDefinition, treeModel);
     }
 }

@@ -31,25 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.activity;
+package info.magnolia.ui.admincentral.tree.view;
 
+import info.magnolia.ui.framework.view.View;
 
-import info.magnolia.ui.admincentral.list.builder.ListBuilderProvider;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+import javax.jcr.Item;
 
 /**
- * Activity for displaying a tree view.
+ * UI component that displays a jcr workspace.
  *
- * @author tmattsson
+ * @author fgrilli
  */
-public class TreeActivity extends JcrActivity{
+public interface JcrView extends View {
 
-    public TreeActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
-        super(workbenchDefinition, treeBuilderProvider, listBuilderProvider, placeController, shell);
-        jcrView = treeBuilderProvider.getBuilder().build(workbenchDefinition);
+    /**
+     * Presenter for the JcrView.
+     *
+     * @author fgrilli
+     */
+    public interface Presenter {
+
+        void onItemSelection(Item tem);
     }
 
+    void setPresenter(Presenter presenter);
+
+    // TODO should we really ask view?
+    String getPathInTree(Item item);
+
+    void select(String path);
+
+    void refresh();
 }

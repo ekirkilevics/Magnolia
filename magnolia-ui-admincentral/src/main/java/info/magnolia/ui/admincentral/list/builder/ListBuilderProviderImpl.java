@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,33 +31,53 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.list.builder;
 
-import javax.jcr.Item;
+import info.magnolia.cms.security.User;
+import info.magnolia.ui.model.settings.UISettings;
 
-import info.magnolia.ui.framework.view.View;
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * TODO write javadoc.
- * @author fgrilli
- *
+ * Provides the ListBuilder defined in the AdminCentralModule.
  */
-public interface WorkbenchHeaderView extends View {
+public class ListBuilderProviderImpl implements ListBuilderProvider {
+
+    //injected
+    private User user;
+    private UISettings uiSettings;
+
+    // content2bean
+    private List<ListBuilder> listBuilders = new ArrayList<ListBuilder>();
+
+
     /**
-     *
-     * TODO write javadoc.
-     * @author fgrilli
-     *
+     * Is needed so that we can make a proxy (reloading configuration).
+     * TODO: is this really necessary?
      */
-    public interface Presenter {
-        /**
-         * Action performed when the user selects a view (i.e. structure/tree or list).
-         */
-        void onViewSelection(String viewName);
-        /**
-         * Action performed when the user selects an item to show its parents (only on list view).
-         */
-        void onShowParents(Item item);
+    protected ListBuilderProviderImpl() {
+    }
+
+    public ListBuilderProviderImpl(User user, UISettings uiSettings) {
+        this.user = user;
+        this.uiSettings = uiSettings;
+    }
+
+    public ListBuilder getBuilder() {
+        // FIXME: use user and uiSettings
+        return listBuilders.get(0);
+    }
+
+    public void setListBuilders(List<ListBuilder> listBuilders) {
+        this.listBuilders = listBuilders;
+    }
+
+    public List<ListBuilder> getListBuilders() {
+        return listBuilders;
+    }
+
+    public void addListBuilder(ListBuilder listBuilder) {
+        this.listBuilders.add(listBuilder);
     }
 }

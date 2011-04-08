@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+import info.magnolia.ui.admincentral.list.activity.ListActivity;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.Activity;
@@ -47,14 +48,24 @@ import info.magnolia.ui.framework.place.Place;
 public class ItemListActivityMapper implements ActivityMapper {
 
     private TreeActivity treeActivity;
+    private ListActivity listActivity;
 
-    public ItemListActivityMapper(TreeActivity treeActivity) {
+    public ItemListActivityMapper(TreeActivity treeActivity, ListActivity listActivity) {
         this.treeActivity = treeActivity;
+        this.listActivity = listActivity;
     }
 
     public Activity getActivity(final Place place) {
-        treeActivity.update((ItemSelectedPlace)place);
-        return treeActivity;
+        ItemSelectedPlace selectedPlace = (ItemSelectedPlace)place;
+        if("tree".equals(selectedPlace.getViewType())){
+            treeActivity.update(selectedPlace);
+            return treeActivity;
+        }
+        if("list".equals(selectedPlace.getViewType())){
+            listActivity.update(selectedPlace);
+            return listActivity;
+        }
+        throw new IllegalStateException("Could not associate a view type for selected place ["+selectedPlace.getPrefixValue()+"]");
     }
 
 }

@@ -44,6 +44,7 @@ import info.magnolia.ui.framework.place.Prefix;
  */
 @Prefix("item-selected")
 public class ItemSelectedPlace extends Place {
+
     /**
      * Tokenizer for ItemSelectedPlace.
      * @author fgrilli
@@ -53,14 +54,14 @@ public class ItemSelectedPlace extends Place {
 
         public ItemSelectedPlace getPlace(String token) {
             final String[] bits = token.split(":");
-            if(bits.length != 2){
+            if(bits.length != 3){
                 throw new IllegalArgumentException("Invalid token: " + token);
             }
-            return new ItemSelectedPlace(bits[0], bits[1]);
+            return new ItemSelectedPlace(bits[0], bits[1], bits[2]);
         }
 
         public String getToken(ItemSelectedPlace place) {
-            return place.getWorkspace() + ":" + place.getPath();
+            return place.getWorkspace() + ":" + place.getPath() + ":" + place.getViewType();
         }
     }
 
@@ -68,9 +69,12 @@ public class ItemSelectedPlace extends Place {
 
     private String path;
 
-    public ItemSelectedPlace(String workspace, String path) {
+    private String viewType;
+
+    public ItemSelectedPlace(String workspace, String path, String viewType) {
         this.workspace = workspace;
         this.path = path;
+        this.viewType = viewType;
     }
 
     public String getWorkspace() {
@@ -79,6 +83,10 @@ public class ItemSelectedPlace extends Place {
 
     public String getPath() {
         return path;
+    }
+
+    public String getViewType() {
+        return viewType;
     }
 
     @Override
@@ -92,6 +100,7 @@ public class ItemSelectedPlace extends Place {
         int result = 1;
         result = prime * result + ((path == null) ? 0 : path.hashCode());
         result = prime * result + ((workspace == null) ? 0 : workspace.hashCode());
+        result = prime * result + ((viewType == null) ? 0 : viewType.hashCode());
         return result;
     }
 
@@ -114,8 +123,12 @@ public class ItemSelectedPlace extends Place {
                 return false;
         } else if (!workspace.equals(other.workspace))
             return false;
+        if (viewType == null) {
+            if (other.viewType != null)
+                return false;
+        } else if (!viewType.equals(other.viewType))
+            return false;
         return true;
     }
-
 
 }

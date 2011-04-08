@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.tree.builder;
 
-import info.magnolia.ui.admincentral.tree.view.TreeView;
+import info.magnolia.ui.admincentral.tree.view.JcrView;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
@@ -41,5 +41,5 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  */
 public interface TreeBuilder {
 
-    TreeView build(WorkbenchDefinition workbenchDefinition);
+    JcrView build(WorkbenchDefinition workbenchDefinition);
 }

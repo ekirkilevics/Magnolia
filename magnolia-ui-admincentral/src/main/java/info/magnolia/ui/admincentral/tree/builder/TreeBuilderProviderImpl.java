@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Provides the TreeBuilder defined in the AdminCentralModule.
+ * Provides the ListBuilder defined in the AdminCentralModule.
  */
 public class TreeBuilderProviderImpl implements TreeBuilderProvider {
 

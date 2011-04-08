@@ -55,7 +55,7 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
 
     private JcrBrowser jcrBrowser;
 
-    private TreeView.Presenter presenter;
+    private JcrView.Presenter presenter;
 
     public TreeViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell) {
 
@@ -108,7 +108,7 @@ public class TreeViewImpl implements TreeView, IsVaadinComponent {
         return jcrBrowser;
     }
 
-    public void setPresenter(TreeView.Presenter presenter) {
+    public void setPresenter(JcrView.Presenter presenter) {
         this.presenter = presenter;
     }
 }

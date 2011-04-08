@@ -33,33 +33,11 @@
  */
 package info.magnolia.ui.admincentral.tree.view;
 
-import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
-
 /**
- * UI component that displays a tree.
+ * Tree view interface.
+ * @author fgrilli
  *
- * @author tmattsson
  */
-public interface TreeView extends View {
+public interface TreeView extends JcrView {
 
-    /**
-     * Presenter for the TreeView.
-     *
-     * @author tmattsson
-     */
-    public interface Presenter {
-
-        void onItemSelection(Item tem);
-    }
-
-    void setPresenter(Presenter presenter);
-
-    // TODO should we really ask view?
-    String getPathInTree(Item item);
-
-    void select(String path);
-
-    void refresh();
 }

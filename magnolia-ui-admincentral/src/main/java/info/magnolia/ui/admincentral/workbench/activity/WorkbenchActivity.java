@@ -64,10 +64,10 @@ public class WorkbenchActivity extends AbstractActivity {
 
     public void start(ViewPort display, EventBus eventBus) {
 
-        final ActivityManager treeActivityManager = new ActivityManager(itemListActivityMapper, eventBus);
+        final ActivityManager jcrActivityManager = new ActivityManager(itemListActivityMapper, eventBus);
         final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, eventBus);
 
-        treeActivityManager.setViewPort(view.getItemListViewPort());
+        jcrActivityManager.setViewPort(view.getItemListViewPort());
         detailViewActivityManager.setViewPort(view.getDetailViewPort());
 
         display.setView(view);
@@ -98,6 +98,5 @@ public class WorkbenchActivity extends AbstractActivity {
             return false;
         return true;
     }
-
 
 }

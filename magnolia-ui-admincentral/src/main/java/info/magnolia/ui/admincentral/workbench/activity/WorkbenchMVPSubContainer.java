@@ -38,6 +38,7 @@ import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
+import info.magnolia.ui.admincentral.tree.activity.JcrActivity;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
@@ -103,7 +104,7 @@ public class WorkbenchMVPSubContainer extends AbstractMVPSubContainer<WorkbenchA
 
     @Override
     protected Place getDefaultPlace() {
-        return new ItemSelectedPlace(place.getWorkbenchName(), "/");
+        return new ItemSelectedPlace(place.getWorkbenchName(), "/", JcrActivity.TREE_VIEW_TYPE);
     }
 
 }

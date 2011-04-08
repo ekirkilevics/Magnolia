@@ -112,7 +112,8 @@ public abstract class AbstractEditableColumn<D extends ColumnDefinition> extends
 
             // TODO ItemSelectedPlace wants a path relative to the tree root, not the jcr workspace absolute root
 
-            placeController.goTo(new ItemSelectedPlace(item.getSession().getWorkspace().getName(), item.getPath()));
+            final ItemSelectedPlace currentPlace = (ItemSelectedPlace) placeController.getWhere();
+            placeController.goTo(new ItemSelectedPlace(item.getSession().getWorkspace().getName(), item.getPath(), currentPlace.getViewType()));
         }
     }
 }

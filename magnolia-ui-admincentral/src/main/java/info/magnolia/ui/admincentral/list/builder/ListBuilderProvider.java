@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,25 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.activity;
-
-
-import info.magnolia.ui.admincentral.list.builder.ListBuilderProvider;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
-import info.magnolia.ui.framework.place.PlaceController;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
+package info.magnolia.ui.admincentral.list.builder;
 
 /**
- * Activity for displaying a tree view.
+ * Provides a list definition.
  *
- * @author tmattsson
+ * TODO: check whether this type should go to ui-model layer.
  */
-public class TreeActivity extends JcrActivity{
+public interface ListBuilderProvider {
 
-    public TreeActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
-        super(workbenchDefinition, treeBuilderProvider, listBuilderProvider, placeController, shell);
-        jcrView = treeBuilderProvider.getBuilder().build(workbenchDefinition);
-    }
-
+    ListBuilder getBuilder();
 }
