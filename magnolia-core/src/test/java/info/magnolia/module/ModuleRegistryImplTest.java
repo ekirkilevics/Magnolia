@@ -33,11 +33,13 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.DependencyCheckerImpl;
 import info.magnolia.setup.CoreModule;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.FixedModuleDefinitionReader;
 import junit.framework.TestCase;
 
@@ -49,6 +51,13 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleRegistryImplTest extends TestCase {
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testCanGetModuleByClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
         final CoreModule module = new CoreModule(null,null,null);

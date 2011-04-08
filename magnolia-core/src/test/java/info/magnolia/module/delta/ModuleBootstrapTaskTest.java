@@ -33,9 +33,11 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -45,6 +47,13 @@ import static org.easymock.EasyMock.*;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleBootstrapTaskTest extends TestCase {
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
 
     public void testShouldOnlyBootstrapFilesFromThisModule() {
         final ModuleDefinition modDef = new ModuleDefinition("test-module", Version.parseVersion("1.0"), null, null);

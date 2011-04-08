@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 /**
@@ -41,6 +43,13 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class RegexpVirtualURIMappingTest extends TestCase {
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
 
     public void testExample() {
         final RegexpVirtualURIMapping mapping = new RegexpVirtualURIMapping();

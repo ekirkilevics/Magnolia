@@ -65,6 +65,7 @@ import static org.easymock.EasyMock.*;
  */
 public class ModuleManagerWebUITest extends TestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // shunt log4j
@@ -79,7 +80,9 @@ public class ModuleManagerWebUITest extends TestCase {
         ComponentsTestUtil.setInstance(FreemarkerConfig.class, freemarkerConfig);
     }
 
+    @Override
     protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }
@@ -99,7 +102,7 @@ public class ModuleManagerWebUITest extends TestCase {
 
         assertEquals(1, ctx.getMessages().size());
         // "General messages" is the key used when adding message without a current module being set in the context
-        final List messagesForNoModule = ((List) ctx.getMessages().get("General messages"));
+        final List messagesForNoModule = (ctx.getMessages().get("General messages"));
         assertEquals(1, messagesForNoModule.size());
         final InstallContext.Message msg = (InstallContext.Message) messagesForNoModule.get(0);
         assertEquals("Could not perform installation: boo!", msg.getMessage());
@@ -131,7 +134,7 @@ public class ModuleManagerWebUITest extends TestCase {
         assertEquals("Could not perform installation of testmodule: boo!", msg.getMessage());
         assertEquals(InstallContext.MessagePriority.error, msg.getPriority());
     }
-    */
+     */
 
     public void testListTasksTemplate() throws ModuleManagementException {
         doTestTemplate("listTasks");
@@ -165,8 +168,8 @@ public class ModuleManagerWebUITest extends TestCase {
         final ModuleManager.ModuleManagementState state = new ModuleManager.ModuleManagementState();
         state.getList().add(new ModuleManager.ModuleAndDeltas(mod1, null, Arrays.<Delta>asList(
                 DeltaBuilder.install(Version.parseVersion("1.0"), "")
-                        .addTask(new WarnTask("a", ""))
-                        .addTask(new WarnTask("b", ""))
+                .addTask(new WarnTask("a", ""))
+                .addTask(new WarnTask("b", ""))
         )));
         state.getList().add(new ModuleManager.ModuleAndDeltas(mod2, null, Arrays.<Delta>asList(
                 DeltaBuilder.update("1.0", "").addTask(new WarnTask("q", "")),

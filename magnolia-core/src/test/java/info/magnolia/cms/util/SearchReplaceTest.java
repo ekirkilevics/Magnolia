@@ -34,6 +34,8 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
@@ -69,6 +71,14 @@ public class SearchReplaceTest extends TestCase {
                 "/top/bluh.regextest=This property contains what looks like [a-z] regex class"
         );
     }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
 
     public void testCaseInsensitive() throws Exception {
         assertEquals("maGnolia is Great", prop("/top/text"));

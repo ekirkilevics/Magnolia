@@ -43,6 +43,7 @@ import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManagerImpl;
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
@@ -65,12 +66,13 @@ import java.util.regex.Pattern;
  */
 public abstract class MgnlTestCase extends TestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // ignore mapping warnings
         org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(org.apache.log4j.Level.ERROR);
-
-        ComponentsTestUtil.clear();
+        // don't clear all here. tests should be allowed to set their own implementations, fix the tests that do not clean after themselves instead!
+        //ComponentsTestUtil.clear();
         setMagnoliaProperties();
         initDefaultImplementations();
         initContext();
@@ -80,6 +82,7 @@ public abstract class MgnlTestCase extends TestCase {
         MockUtil.initMockContext();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         SystemProperty.clear();
@@ -105,8 +108,10 @@ public abstract class MgnlTestCase extends TestCase {
 
     protected void initDefaultImplementations() throws IOException, ModuleManagementException {
         final List<ModuleDefinition> modules = getModuleDefinitionsForTests();
-        final ModuleRegistryImpl mr = new ModuleRegistryImpl();
-        final ModuleManagerImpl mm = new ModuleManagerImpl(null, new FixedModuleDefinitionReader(modules), mr, new DependencyCheckerImpl());
+        //        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        //        final ModuleRegistry mr = Components.getComponent(ModuleRegistry.class);
+        final ModuleRegistry mr = new ModuleRegistryImpl();
+        ModuleManagerImpl mm = new ModuleManagerImpl(null, new FixedModuleDefinitionReader(modules), mr, new DependencyCheckerImpl());
         mm.loadDefinitions();
         final PropertiesInitializer pi = new PropertiesInitializer(mr);
         pi.loadBeanProperties();
@@ -119,7 +124,7 @@ public abstract class MgnlTestCase extends TestCase {
                 new InitPathsPropertySource(new TestMagnoliaInitPaths())
         );
         SystemProperty.setMagnoliaConfigurationProperties(configurationProperties);
-        */
+         */
 
         // these are not in mgnl-beans.properties anymore at the moment, they are registered via info.magnolia.cms.servlets.MgnlServletContextListener#populateRootContainer
         final TypeMappingImpl typeMapping = new TypeMappingImpl();

@@ -48,6 +48,7 @@ import java.io.PrintWriter;
  * @version $Revision: $ ($Author: $)
  */
 public class WriterResponseWrapperTest extends TestCase {
+
     public void testCantUseWriterAfterOutputStream() throws IOException {
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final StringWriter out = new StringWriter();

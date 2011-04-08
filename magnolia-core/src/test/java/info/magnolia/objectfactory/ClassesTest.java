@@ -34,6 +34,8 @@
 package info.magnolia.objectfactory;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockComponentProvider;
 import junit.framework.TestCase;
@@ -45,9 +47,10 @@ import java.util.Date;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class ClassesTest extends TestCase {
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.clear();
@@ -56,10 +59,13 @@ public class ClassesTest extends TestCase {
         resetCFP();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         resetCFP();
         SystemProperty.clear();
         Components.setProvider(null);
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
         super.tearDown();
     }
 
@@ -87,7 +93,7 @@ public class ClassesTest extends TestCase {
         final ClassFactory cf = Classes.getClassFactory();
         assertTrue(cf instanceof TestClassFactory);
     }
-/*
+    /*
     public void testCanSetupADifferentClassFactoryThatNeedsComponents() throws ClassNotFoundException {
 
         // TODO This test is ignored for now since registering components via SystemProperty is no longer supported.
@@ -110,7 +116,7 @@ public class ClassesTest extends TestCase {
         then.setTime(cfc.getDate());
         assertEquals(now.get(Calendar.DAY_OF_YEAR), then.get(Calendar.DAY_OF_YEAR));
     }
-*/
+     */
     public static interface Whatever {
         int blah();
     }
@@ -122,7 +128,7 @@ public class ClassesTest extends TestCase {
     }
 
     /**
-     * forName only accepts test-specific names, and newInstance() implementations don't handle exceptions, don't check params/types and don't take any shortcut either. 
+     * forName only accepts test-specific names, and newInstance() implementations don't handle exceptions, don't check params/types and don't take any shortcut either.
      */
     public static class TestClassFactory implements ClassFactory {
         public TestClassFactory() {

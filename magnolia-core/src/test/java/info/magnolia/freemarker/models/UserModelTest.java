@@ -36,6 +36,8 @@ package info.magnolia.freemarker.models;
 import freemarker.template.TemplateModelException;
 import freemarker.template.utility.DeepUnwrap;
 import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 import static org.easymock.EasyMock.createMock;
@@ -43,9 +45,18 @@ import static org.easymock.EasyMock.createMock;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Revision: $ ($Author: $)
  */
 public class UserModelTest extends TestCase {
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
+
     public void testCanBeUnwrappedByDeepUnWrap() throws TemplateModelException {
         final User u = createMock(User.class);
         final UserModel model = new UserModel(u, new MagnoliaObjectWrapper(null /* not needed in the context of this test*/));

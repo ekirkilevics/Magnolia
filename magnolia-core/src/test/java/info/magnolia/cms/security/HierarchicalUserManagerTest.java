@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 /**
@@ -43,11 +45,20 @@ import junit.framework.TestCase;
 public class HierarchicalUserManagerTest extends TestCase {
     private HierarchicalUserManager hm;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         hm = new HierarchicalUserManager();
         hm.setName("test-realm");
     }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
 
     public void testParentPathIsRealmIfNameShorterThan3Chars() {
         assertEquals("/test-realm", hm.getParentPath("ab"));

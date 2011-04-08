@@ -33,6 +33,8 @@
  */
 package info.magnolia.init;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaInitPaths;
 import junit.framework.TestCase;
 
@@ -53,15 +55,19 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
     private ServletContext ctx;
     private MagnoliaInitPaths initPaths;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         ctx = createStrictMock(ServletContext.class);
         initPaths = new TestMagnoliaInitPaths("test-host-name", "/tmp/magnoliaTests", "magnoliaTests", "/test");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         verify(ctx);
         System.getProperties().remove("testProp");
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
         super.tearDown();
     }
 
@@ -73,7 +79,7 @@ public class DefaultMagnoliaPropertiesResolverTest extends TestCase {
                 "WEB-INF/config/test-host-name/magnolia.properties",
                 "WEB-INF/config/magnoliaTests/magnolia.properties",
                 "WEB-INF/config/default/magnolia.properties",
-                "WEB-INF/config/magnolia.properties");
+        "WEB-INF/config/magnolia.properties");
         assertEquals(5, locations.size());
         assertEquals(expected, locations);
     }

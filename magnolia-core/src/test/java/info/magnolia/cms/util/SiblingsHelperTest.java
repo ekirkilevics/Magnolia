@@ -34,6 +34,8 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
@@ -45,9 +47,17 @@ import junit.framework.TestCase;
 public class SiblingsHelperTest extends TestCase {
     private MockHierarchyManager hm;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         hm = MockUtil.createHierarchyManager(TEST_CONTENT);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     public void testCanTellPosition() throws Exception {
@@ -115,31 +125,31 @@ public class SiblingsHelperTest extends TestCase {
     }
 
     public static final String TEST_CONTENT = "" +
-            "parent@type = mgnl:test\n" +
-            "parent@uuid = ID-x\n" +
+    "parent@type = mgnl:test\n" +
+    "parent@uuid = ID-x\n" +
 
-            "parent/sub1@type = mgnl:test\n" +
-            "parent/sub1@uuid = ID-1\n" +
+    "parent/sub1@type = mgnl:test\n" +
+    "parent/sub1@uuid = ID-1\n" +
 
-            "parent/sub2@type = mgnl:test\n" +
-            "parent/sub2@uuid = ID-2\n" +
+    "parent/sub2@type = mgnl:test\n" +
+    "parent/sub2@uuid = ID-2\n" +
 
-            "parent/subother@type = mgnl:other\n" +
-            "parent/subother@uuid = ID-3\n" +
+    "parent/subother@type = mgnl:other\n" +
+    "parent/subother@uuid = ID-3\n" +
 
-            "parent/sub4@type = mgnl:test\n" +
-            "parent/sub4@uuid = ID-4\n" +
+    "parent/sub4@type = mgnl:test\n" +
+    "parent/sub4@uuid = ID-4\n" +
 
-            "parent/sub4/sub4_1@type = mgnl:test\n" +
-            "parent/sub4/sub4_1@uuid = ID-41\n" +
+    "parent/sub4/sub4_1@type = mgnl:test\n" +
+    "parent/sub4/sub4_1@uuid = ID-41\n" +
 
-            "parent/sub4/sub4_2@type = mgnl:test\n" +
-            "parent/sub4/sub4_2@uuid = ID-42\n" +
+    "parent/sub4/sub4_2@type = mgnl:test\n" +
+    "parent/sub4/sub4_2@uuid = ID-42\n" +
 
-            "parent/sub5@type = mgnl:test\n" +
-            "parent/sub5@uuid = ID-5\n" +
+    "parent/sub5@type = mgnl:test\n" +
+    "parent/sub5@uuid = ID-5\n" +
 
-            "parent/sub6@type = mgnl:other\n" +
-            "parent/sub6@uuid = ID-6\n";
+    "parent/sub6@type = mgnl:other\n" +
+    "parent/sub6@uuid = ID-6\n";
 
 }

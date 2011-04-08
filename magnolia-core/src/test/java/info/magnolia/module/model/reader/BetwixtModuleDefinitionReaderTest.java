@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.model.reader;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
@@ -41,6 +42,7 @@ import info.magnolia.module.model.ServletDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 import info.magnolia.module.model.VersionTest;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -55,6 +57,7 @@ import junit.framework.TestCase;
  */
 public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // shunt log4j
@@ -63,60 +66,67 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         org.apache.log4j.Logger.getLogger(org.apache.commons.digester.Digester.class).setLevel(org.apache.log4j.Level.OFF);
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testDisplayNameCanBeWrittenWithDashEventhoughThisIsDeprecated() throws Exception {
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<module>\n" +
-                "  <name>the name</name>\n" +
-                "  <display-name>The Display Name</display-name>" +
-                "  <class>foo</class>\n" +
-                "  <versionHandler>java.lang.String</versionHandler>\n" +
-                "  <version>1.0</version>\n" +
-                "</module>";
+        "<module>\n" +
+        "  <name>the name</name>\n" +
+        "  <display-name>The Display Name</display-name>" +
+        "  <class>foo</class>\n" +
+        "  <versionHandler>java.lang.String</versionHandler>\n" +
+        "  <version>1.0</version>\n" +
+        "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
     public void testDisplayNameShouldBeWrittenWithCapitalN() throws Exception {
         String xml = "<module>\n" +
-                "  <name>the name</name>\n" +
-                "  <displayName>The Display Name</displayName>\n" +
-                "  <class>foo</class>\n" +
-                "  <versionHandler>java.lang.String</versionHandler>\n" +
-                "  <version>1.0</version>\n" +
-                "</module>";
+        "  <name>the name</name>\n" +
+        "  <displayName>The Display Name</displayName>\n" +
+        "  <class>foo</class>\n" +
+        "  <versionHandler>java.lang.String</versionHandler>\n" +
+        "  <version>1.0</version>\n" +
+        "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
     public void testClassIsResolvedToClassNameAsAString() throws Exception {
         String xml = "<module>\n" +
-                "  <name>the name</name>\n" +
-                "  <class>java.lang.Integer</class>\n" +
-                "  <versionHandler>java.lang.String</versionHandler>\n" +
-                "  <version>1.0</version>\n" +
-                "</module>";
+        "  <name>the name</name>\n" +
+        "  <class>java.lang.Integer</class>\n" +
+        "  <versionHandler>java.lang.String</versionHandler>\n" +
+        "  <version>1.0</version>\n" +
+        "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("java.lang.Integer", mod.getClassName());
     }
 
     public void testVersionHandlerIsResolvedToAClass() throws Exception {
         String xml = "<module>\n" +
-                "  <name>the name</name>\n" +
-                "  <class>java.lang.Integer</class>\n" +
-                "  <versionHandler>java.lang.String</versionHandler>" +
-                "  <version>1.0</version>\n" +
-                "</module>";
+        "  <name>the name</name>\n" +
+        "  <class>java.lang.Integer</class>\n" +
+        "  <versionHandler>java.lang.String</versionHandler>" +
+        "  <version>1.0</version>\n" +
+        "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals(String.class, mod.getVersionHandler());
     }
 
     public void testModuleVersionIsProperlyRead() throws ModuleManagementException {
         String xml = "<module>\n" +
-                "  <name>the name</name>\n" +
-                "  <class>foo</class>\n" +
-                "  <versionHandler>java.lang.String</versionHandler>\n" +
-                "  <version>1.2.3</version>\n" +
-                "</module>";
+        "  <name>the name</name>\n" +
+        "  <class>foo</class>\n" +
+        "  <versionHandler>java.lang.String</versionHandler>\n" +
+        "  <version>1.2.3</version>\n" +
+        "</module>";
         final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
 
         final Version version = def.getVersion();
@@ -128,22 +138,22 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
     public void testDependenciesVersionAreProperlyRead() throws ModuleManagementException {
         //org.apache.log4j.Logger.getLogger("org.apache").setLevel(org.apache.log4j.Level.DEBUG);
         String xml = "<module>\n" +
-                "  <name>myName</name>\n" +
-                "  <class>foo</class>\n" +
-                "  <versionHandler>java.lang.String</versionHandler>\n" +
-                "  <version>1.2.3</version>\n" +
-                "  <dependencies>\n" +
-                "    <dependency>\n" +
-                "      <name>foo</name>\n" +
-                "      <version>2.3.4/*</version>\n" +
-                "      <optional>true</optional>\n" +
-                "    </dependency>\n" +
-                "    <dependency>\n" +
-                "      <name>bar</name>\n" +
-                "      <version>5.6.7/8.9.0</version>\n" +
-                "    </dependency>\n" +
-                "  </dependencies>\n" +
-                "</module>";
+        "  <name>myName</name>\n" +
+        "  <class>foo</class>\n" +
+        "  <versionHandler>java.lang.String</versionHandler>\n" +
+        "  <version>1.2.3</version>\n" +
+        "  <dependencies>\n" +
+        "    <dependency>\n" +
+        "      <name>foo</name>\n" +
+        "      <version>2.3.4/*</version>\n" +
+        "      <optional>true</optional>\n" +
+        "    </dependency>\n" +
+        "    <dependency>\n" +
+        "      <name>bar</name>\n" +
+        "      <version>5.6.7/8.9.0</version>\n" +
+        "    </dependency>\n" +
+        "  </dependencies>\n" +
+        "</module>";
         final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         final Collection deps = def.getDependencies();
         assertEquals(2, deps.size());
@@ -172,9 +182,9 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
     public void testInvalidXmlIsCheckedAgainstDTD() {
         String xmlWithVersionElementMisplaced = "<module>\n" +
-                "  <version>2.3.4</version>\n" +
-                "  <name>the name</name>\n" +
-                "</module>";
+        "  <version>2.3.4</version>\n" +
+        "  <name>the name</name>\n" +
+        "</module>";
         try {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
             fail("should have failed");
@@ -185,10 +195,10 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
     public void testGivenDtdIsIgnoredAndCheckedAgainstOurs() {
         String xmlWithWrongDtd = "<!DOCTYPE log4j:configuration SYSTEM \"log4j.dtd\">\n" +
-                "<module>\n" +
-                "  <version>2.3.4</version>\n" +
-                "  <name>the name</name>\n" +
-                "</module>";
+        "<module>\n" +
+        "  <version>2.3.4</version>\n" +
+        "  <name>the name</name>\n" +
+        "</module>";
         try {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithWrongDtd));
             fail("should have failed");

@@ -65,6 +65,7 @@ public class MgnlGroupTest extends TestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }

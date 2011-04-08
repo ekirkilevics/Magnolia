@@ -68,7 +68,10 @@ import static org.easymock.EasyMock.*;
  */
 public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
 
+    @Override
     protected void setUp() throws Exception {
+        //        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        //        assertNotNull(Components.getComponent(ModuleRegistry.class));
         super.setUp();
         // this should disable observation for audit logging (mgnl-beans.properties registers a path for this component)
         ComponentsTestUtil.setInstance(AuditLoggingManager.class, new AuditLoggingManager());
@@ -207,6 +210,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
             }
         };
         final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry, depCheck) {
+            @Override
             protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
                 assertEquals("this test doesn't behave as expected", moduleDefinition, module);
                 // wrap and delegate so that we control getCurrentlyInstalled()

@@ -35,6 +35,8 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.InputStream;
@@ -58,6 +60,13 @@ public class InheritanceContentWrapperTest extends TestCase {
         final String fileName = getClass().getSimpleName() + "." + testName + ".properties";
         final InputStream stream = getClass().getResourceAsStream(fileName);
         hm = MockUtil.createHierarchyManager(stream);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     public void testRoot() throws Exception {

@@ -33,6 +33,8 @@
  */
 package info.magnolia.init;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 import javax.servlet.ServletContext;
@@ -48,14 +50,18 @@ import static org.easymock.EasyMock.*;
 public class DefaultMagnoliaInitPathsTest extends TestCase {
     private ServletContext servletContext;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         servletContext = createStrictMock(ServletContext.class);
     }
 
+    @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
         verify(servletContext);
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     // TODO : test methods for retro-compat

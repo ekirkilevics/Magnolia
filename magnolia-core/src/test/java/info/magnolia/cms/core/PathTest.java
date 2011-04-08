@@ -34,6 +34,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -44,7 +45,9 @@ import java.io.File;
  */
 public class PathTest extends TestCase {
 
+    @Override
     protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }

@@ -33,6 +33,7 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
@@ -40,6 +41,7 @@ import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -59,6 +61,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     private Delta d5;
     private AbstractModuleVersionHandler versionHandler;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         d1 = createNiceMock(Delta.class);
@@ -88,6 +91,13 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         versionHandler.register(d3);
         versionHandler.register(d4);
         versionHandler.register(d5);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     public void testCantRegisterMultipleDeltasForSameVersion() {
@@ -198,7 +208,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatDoesNotHaveSpecificDeltaAndIsSnapshot() {
         doTestStoresModuleDescriptorVersion("2.2-SNAPSHOT", Version.parseVersion("1.0"));
     }
-    
+
     public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatDoesNotHaveSpecificDelta() {
         doTestStoresModuleDescriptorVersion("2.2", Version.parseVersion("1.0"));
     }
@@ -207,9 +217,9 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         doTestStoresModuleDescriptorVersion("2.0", Version.parseVersion("1.0"));
     }
 
-//    public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatHasSpecificDeltaButIsSnapshot() {
-//        doTestStoresModuleDescriptorVersion("2.0-SNAPSHOT", Version.parseVersion("1.0"));
-//    }
+    //    public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatHasSpecificDeltaButIsSnapshot() {
+    //        doTestStoresModuleDescriptorVersion("2.0-SNAPSHOT", Version.parseVersion("1.0"));
+    //    }
 
     public void testStoresTheModuleDescriptorVersionOnInstall() {
         doTestStoresModuleDescriptorVersion("2.2-SNAPSHOT", null);
@@ -221,6 +231,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "").addTask(nullTask).addTask(nullTask2);
 
         final AbstractModuleVersionHandler versionHandler = new AbstractModuleVersionHandler() {
+            @Override
             protected List getBasicInstallTasks(InstallContext installContext) {
                 return Collections.EMPTY_LIST;
             }
@@ -239,6 +250,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
 
     private AbstractModuleVersionHandler newTestModuleVersionHandler() {
         return new AbstractModuleVersionHandler() {
+            @Override
             protected List getBasicInstallTasks(InstallContext installContext) {
                 throw new IllegalStateException("test not supposed to go here.");
             }
@@ -246,7 +258,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     }
 
     private InstallContext makeInstallContext(String currentModuleCurrentVersion) {
-        final InstallContextImpl ctx = new InstallContextImpl(new ModuleRegistryImpl());
+        final InstallContextImpl ctx = new InstallContextImpl(new ModuleRegistryImpl());//Components.getComponent(ModuleRegistry.class));
         ModuleDefinition mod = new ModuleDefinition("test", Version.parseVersion(currentModuleCurrentVersion), null, null);
         ctx.setCurrentModule(mod);
         return ctx;

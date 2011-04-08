@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
@@ -63,6 +64,7 @@ public class UnicodeNormalizerTest extends TestCase {
         }
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         SystemProperty.clear();
@@ -71,9 +73,11 @@ public class UnicodeNormalizerTest extends TestCase {
         SystemProperty.setProperty("magnolia.utf8.enabled", "true");
     }
 
+    @Override
     protected void tearDown() throws Exception {
         SystemProperty.clear();
         ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
         super.tearDown();
     }
 

@@ -35,6 +35,7 @@ package info.magnolia.voting.voters;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -50,6 +51,7 @@ public class ResponseContentTypeVoterTest extends TestCase {
     private HttpServletResponse response;
     private WebContext ctx;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         voter = new ResponseContentTypeVoter();
@@ -59,10 +61,12 @@ public class ResponseContentTypeVoterTest extends TestCase {
         MgnlContext.setInstance(ctx);
 
         // shunt log4j
-        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);        
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
+    @Override
     protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }

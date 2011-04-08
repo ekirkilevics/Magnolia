@@ -37,6 +37,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
@@ -50,6 +52,13 @@ import java.util.Properties;
  * @version $Revision: $ ($Author: $)
  */
 public class PropertiesImportExportTest extends TestCase {
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
 
 
     public void testConvertsToStringByDefault() throws IOException, RepositoryException {
@@ -81,7 +90,7 @@ public class PropertiesImportExportTest extends TestCase {
     }
 
     // This test uses the import then immediately exports and makes sure that the number of properties
-    // at least matches. 
+    // at least matches.
 
     public void testPropertiesExport() throws Exception {
         final HierarchyManager hm = initHM();

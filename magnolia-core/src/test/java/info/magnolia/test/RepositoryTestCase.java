@@ -77,7 +77,10 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     private boolean quiet = true;
 
+    @Override
     protected void setUp() throws Exception {
+        //        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        //        ComponentsTestUtil.setInstance(PropertiesInitializer.class, new PropertiesInitializer(Components.getComponentProvider().getComponent(ModuleRegistry.class)));
         super.setUp();
 
         workaroundJCR1778();
@@ -92,6 +95,7 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
      * @deprecated - workaround until JCR-1778 is fixed
      * @see <a href="https://issues.apache.org/jira/browse/JCR-1778">JCR-1778</a>
      */
+    @Deprecated
     static void workaroundJCR1778() throws NoSuchFieldException, IllegalAccessException {
         final Field cacheField = BindableRepositoryFactory.class.getDeclaredField("cache");
         cacheField.setAccessible(true);
@@ -101,7 +105,7 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected void modifyContextesToUseRealRepository() {
         // create a mock web context with same repository acquiring strategy as the system context
-        SystemContext systemContext = (SystemContext) MgnlContext.getSystemContext();
+        SystemContext systemContext = MgnlContext.getSystemContext();
         SystemRepositoryStrategy repositoryStrategy = new SystemRepositoryStrategy(systemContext);
 
         //update the mock context
@@ -117,8 +121,8 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         }
 
         // why was this needed ?
-//        ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
-//        ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+        //        ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+        //        ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
         extractConfigFile(REPO_CONF_PROPERTY, getRepositoryConfigFileStream(), EXTRACTED_REPO_CONF_FILE);
         extractConfigFile(JACKRABBIT_REPO_CONF_PROPERTY, getJackrabbitRepositoryConfigFileStream(), EXTRACTED_JACKRABBIT_REPO_CONF_FILE);
@@ -167,6 +171,7 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         return jackrabbitRepositoryConfigFileName;
     }
 
+    @Override
     protected void tearDown() throws Exception {
         if (isAutoStart()) {
             shutdownRepository(true);

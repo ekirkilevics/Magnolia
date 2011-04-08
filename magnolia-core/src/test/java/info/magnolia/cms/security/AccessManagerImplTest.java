@@ -34,6 +34,8 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,12 @@ public class AccessManagerImplTest extends TestCase {
     private static final String TEST = "/admin/test";
     private static final String TEST_LANG = "/admin/test/language";
 
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
 
     public void testGetPermissions() {
         final Permission accessChildrenPermission = new PermissionImpl();

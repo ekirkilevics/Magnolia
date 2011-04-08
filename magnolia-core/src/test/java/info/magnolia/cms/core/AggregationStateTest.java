@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -46,6 +47,7 @@ public class AggregationStateTest extends TestCase {
     private WebContext webCtx;
     private AggregationState aggState;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         aggState = new AggregationState();
@@ -57,9 +59,11 @@ public class AggregationStateTest extends TestCase {
         replay(webCtx);
     }
 
+    @Override
     protected void tearDown() throws Exception {
         verify(webCtx);
 
+        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         super.tearDown();
     }

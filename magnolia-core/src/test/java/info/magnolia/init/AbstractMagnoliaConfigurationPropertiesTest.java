@@ -34,6 +34,8 @@
 package info.magnolia.init;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import junit.framework.TestCase;
 
@@ -46,14 +48,18 @@ public class AbstractMagnoliaConfigurationPropertiesTest extends TestCase {
 
     private MagnoliaConfigurationProperties p;
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         p = new TestMagnoliaConfigurationProperties(getClass().getResourceAsStream("/test-init.properties"));
     }
 
+    @Override
     protected void tearDown() throws Exception {
         SystemProperty.clear();
         System.getProperties().remove("testProp");
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
         super.tearDown();
     }
 

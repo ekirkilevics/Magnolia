@@ -65,6 +65,14 @@ implements Serializable {
     // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
 
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
+
     public void testLoginLogout() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpSession session = createMock(HttpSession.class);

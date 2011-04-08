@@ -55,6 +55,7 @@ public class MgnlContextTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
     }
 
     public void testCanDeclareCheckExceptionToBeThrownByDoInSystemContext() {

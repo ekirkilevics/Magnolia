@@ -33,9 +33,11 @@
  */
 package info.magnolia.init.properties;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.PropertyDefinition;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 
 /**
@@ -44,6 +46,14 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class ModulePropertiesSourceTest extends TestCase {
+
+    @Override
+    protected void tearDown() throws Exception {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testPropertiesCanBeOverriddenUsingDependencyOrderingOfModules() {
         final ModuleDefinition m1 = new ModuleDefinition("m1", null, null, null);
         final PropertyDefinition p1 = new PropertyDefinition();

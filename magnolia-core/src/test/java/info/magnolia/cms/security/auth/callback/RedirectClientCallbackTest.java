@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.ComponentsTestUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -48,16 +50,21 @@ public class RedirectClientCallbackTest extends TestCase {
     private HttpServletResponse response;
     private RedirectClientCallback callback;
 
+    @Override
     protected void setUp() throws Exception {
         request = createStrictMock(HttpServletRequest.class);
         response = createStrictMock(HttpServletResponse.class);
         callback = new RedirectClientCallback();
     }
 
+    @Override
     protected void tearDown() throws Exception {
         replay(request, response);
         callback.handle(request, response);
         verify(request, response);
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     public void testExternalUrlsArePassedAsIs() throws Exception {
