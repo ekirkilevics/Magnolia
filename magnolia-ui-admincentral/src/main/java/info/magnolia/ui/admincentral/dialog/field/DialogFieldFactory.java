@@ -33,7 +33,6 @@
  */
 package info.magnolia.ui.admincentral.dialog.field;
 
-import info.magnolia.ui.admincentral.dialog.field.DialogField;
 import info.magnolia.ui.model.dialog.definition.DialogDefinition;
 import info.magnolia.ui.model.dialog.definition.FieldDefinition;
 import info.magnolia.ui.model.dialog.definition.TabDefinition;
