@@ -34,12 +34,12 @@
 package info.magnolia.objectfactory.pico;
 
 
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
-
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.HierarchicalComponentProvider;
 import info.magnolia.objectfactory.PropertiesComponentProvider;
+
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.PicoBuilder;
 
 /**
  * A {@link info.magnolia.objectfactory.ComponentProvider} using PicoContainer.
@@ -119,8 +119,9 @@ public class PicoComponentProvider extends PropertiesComponentProvider {
         super.registerImplementation(type, implementationType);
 
         // If already registered remove, TODO this should work for all register- methods.
-        if (pico.getComponentAdapter(type) != null)
+        if (pico.getComponentAdapter(type) != null) {
             pico.removeComponent(type);
+        }
 
         if (ComponentFactory.class.isAssignableFrom(implementationType)) {
             pico.addAdapter(new ComponentFactoryProviderAdapter(type, (Class<ComponentFactory<?>>) implementationType, this));
