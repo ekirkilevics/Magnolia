@@ -52,7 +52,7 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
- * TODO write javadoc.
+ * Vaadin UI component that displays a list.
  * @author fgrilli
  *
  */

@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.list.activity;
 
 import info.magnolia.ui.admincentral.list.builder.ListBuilderProvider;
-import info.magnolia.ui.admincentral.tree.activity.JcrActivity;
+import info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity;
 import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
@@ -45,7 +45,7 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  * @author fgrilli
  *
  */
-public class ListActivity extends JcrActivity {
+public class ListActivity extends AbstractJcrActivity {
 
     public ListActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
         super(workbenchDefinition, treeBuilderProvider, listBuilderProvider, placeController, shell);

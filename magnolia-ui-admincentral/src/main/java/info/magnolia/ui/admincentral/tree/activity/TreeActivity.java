@@ -45,7 +45,7 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  *
  * @author tmattsson
  */
-public class TreeActivity extends JcrActivity{
+public class TreeActivity extends AbstractJcrActivity{
 
     public TreeActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
         super(workbenchDefinition, treeBuilderProvider, listBuilderProvider, placeController, shell);

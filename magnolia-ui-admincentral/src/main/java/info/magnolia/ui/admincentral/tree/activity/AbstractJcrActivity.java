@@ -54,7 +54,7 @@ import javax.jcr.RepositoryException;
  * @see TreeActivity
  * @see ListActivity
  */
-public abstract class JcrActivity extends AbstractActivity implements JcrView.Presenter, ContentChangedEvent.Handler {
+public abstract class AbstractJcrActivity extends AbstractActivity implements JcrView.Presenter, ContentChangedEvent.Handler {
 
     public static final String TREE_VIEW_TYPE = "tree";
     public static final String LIST_VIEW_TYPE = "list";
@@ -64,7 +64,7 @@ public abstract class JcrActivity extends AbstractActivity implements JcrView.Pr
     protected Shell shell;
     protected JcrView jcrView;
 
-    public JcrActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
+    public AbstractJcrActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
         this.shell = shell;
         this.placeController = placeController;
     }
