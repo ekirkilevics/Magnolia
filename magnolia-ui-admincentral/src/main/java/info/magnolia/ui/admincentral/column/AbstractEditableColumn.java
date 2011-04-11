@@ -49,7 +49,7 @@ import info.magnolia.ui.framework.editor.HasEditors;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 
 /**
  * Abstract base class for columns that use AbstractEditable. Provides selecting of items and tree refresh on modification.
@@ -57,7 +57,7 @@ import info.magnolia.ui.model.column.definition.ColumnDefinition;
  * @param <D>
  * @author tmattsson
  */
-public abstract class AbstractEditableColumn<D extends ColumnDefinition> extends AbstractColumn<D> {
+public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition> extends AbstractColumn<D> {
 
     private Shell shell;
     private EventBus eventBus;

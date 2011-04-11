@@ -38,7 +38,7 @@ package info.magnolia.ui.model.column.definition;
  *
  * @author dlipp
  */
-public class LabelColumnDefinition extends ColumnDefinition {
+public class LabelColumnDefinition extends AbstractColumnDefinition {
 
     private boolean editable = false;
 

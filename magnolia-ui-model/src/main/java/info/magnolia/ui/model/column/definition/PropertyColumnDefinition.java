@@ -38,7 +38,7 @@ package info.magnolia.ui.model.column.definition;
  *
  * @author dlipp
  */
-public class PropertyColumnDefinition extends ColumnDefinition {
+public class PropertyColumnDefinition extends AbstractColumnDefinition {
 
     private String propertyName;
     private boolean editable = false;

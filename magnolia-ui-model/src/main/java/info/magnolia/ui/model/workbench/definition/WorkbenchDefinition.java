@@ -34,7 +34,7 @@
 package info.magnolia.ui.model.workbench.definition;
 
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 import java.io.Serializable;
@@ -60,7 +60,7 @@ public class WorkbenchDefinition implements Serializable {
 
     private ComponentProviderConfiguration components;
 
-    private Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();
+    private Map<String, AbstractColumnDefinition> columns = new LinkedHashMap<String, AbstractColumnDefinition>();
 
     private List<MenuItemDefinition> menuItems = new ArrayList<MenuItemDefinition>();
 
@@ -102,15 +102,15 @@ public class WorkbenchDefinition implements Serializable {
         this.name = name;
     }
 
-    public ColumnDefinition getColumn(String columnId) {
+    public AbstractColumnDefinition getColumn(String columnId) {
         return columns.get(columnId);
     }
 
-    public Collection<ColumnDefinition> getColumns() {
+    public Collection<AbstractColumnDefinition> getColumns() {
         return columns.values();
     }
 
-    public void addColumn(ColumnDefinition treeColumn) {
+    public void addColumn(AbstractColumnDefinition treeColumn) {
         columns.put(treeColumn.getLabel(), treeColumn);
     }
 

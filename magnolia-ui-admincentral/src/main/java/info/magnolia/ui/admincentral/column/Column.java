@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.column;
 
 import com.vaadin.ui.Component;
-import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
@@ -46,7 +46,7 @@ import javax.jcr.RepositoryException;
  *            type of the definition for this column.
  * @author dlipp
  */
-public interface Column<D extends ColumnDefinition> {
+public interface Column<D extends AbstractColumnDefinition> {
 
     D getDefinition();
 

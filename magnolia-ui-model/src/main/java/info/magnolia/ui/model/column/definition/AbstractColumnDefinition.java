@@ -34,11 +34,13 @@
 package info.magnolia.ui.model.column.definition;
 
 /**
- * Base implementation for all special ColumnDefinitions.
- *
+ * Base implementation for all special ColumnDefinitions. Some subclass do not add additional behavior but still are
+ * required because in jcr we configure ColumnDefinition to Column mappings and only with specific Definitions we know
+ * what Column-Type to map to.
+ * 
  * @author dlipp
  */
-public abstract class ColumnDefinition {
+public abstract class AbstractColumnDefinition {
 
     private String name;
     private String label;

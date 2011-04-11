@@ -41,7 +41,7 @@ import info.magnolia.ui.admincentral.tree.builder.DefinitionToImplementationMapp
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
 import info.magnolia.ui.admincentral.tree.view.JcrView;
 import info.magnolia.ui.model.builder.FactoryBase;
-import info.magnolia.ui.model.column.definition.ColumnDefinition;
+import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 
@@ -55,12 +55,12 @@ import java.util.Map;
  * ListBuilder configured via content to bean.
  * TODO: how much can be extracted in a common base class to be extended by both Tree- and List builders?
  */
-public class ConfiguredListBuilder extends FactoryBase<ColumnDefinition, Column<ColumnDefinition>> implements ListBuilder, Serializable {
+public class ConfiguredListBuilder extends FactoryBase<AbstractColumnDefinition, Column<AbstractColumnDefinition>> implements ListBuilder, Serializable {
 
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
      */
-    private List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>>();
+    private List<DefinitionToImplementationMapping<AbstractColumnDefinition, Column<AbstractColumnDefinition>>> definitionToImplementationMappings = new ArrayList<DefinitionToImplementationMapping<AbstractColumnDefinition, Column<AbstractColumnDefinition>>>();
 
     private ComponentProvider componentProvider;
     private WorkbenchActionFactory workbenchActionFactory;
@@ -72,28 +72,28 @@ public class ConfiguredListBuilder extends FactoryBase<ColumnDefinition, Column<
         this.workbenchActionFactory = workbenchActionFactory;
     }
 
-    public List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> getDefinitionToImplementationMappings() {
+    public List<DefinitionToImplementationMapping<AbstractColumnDefinition, Column<AbstractColumnDefinition>>> getDefinitionToImplementationMappings() {
         return this.definitionToImplementationMappings;
     }
 
-    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>>> definitionToImplementationMappings) {
+    public void setDefinitionToImplementationMappings(List<DefinitionToImplementationMapping<AbstractColumnDefinition, Column<AbstractColumnDefinition>>> definitionToImplementationMappings) {
         this.definitionToImplementationMappings = definitionToImplementationMappings;
-        for (DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>> definitionToImplementationMapping : definitionToImplementationMappings) {
+        for (DefinitionToImplementationMapping<AbstractColumnDefinition, Column<AbstractColumnDefinition>> definitionToImplementationMapping : definitionToImplementationMappings) {
             addDefinitionToImplementationMapping(definitionToImplementationMapping);
         }
     }
 
-    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping<ColumnDefinition, Column<ColumnDefinition>> mapping) {
+    public void addDefinitionToImplementationMapping(DefinitionToImplementationMapping<AbstractColumnDefinition, Column<AbstractColumnDefinition>> mapping) {
         addMapping(mapping.getDefinition(), mapping.getImplementation());
     }
 
-    public Column<ColumnDefinition> createTreeColumn(ColumnDefinition definition) {
+    public Column<AbstractColumnDefinition> createTreeColumn(AbstractColumnDefinition definition) {
         return create(definition);
     }
 
     public JcrView build(WorkbenchDefinition workbenchDefinition) {
         Map<String, Column<?>> columns = new LinkedHashMap<String, Column<?>>();
-        for (ColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
+        for (AbstractColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
             Column<?> column = createTreeColumn(columnDefinition);
             // only add if not null - null meaning there's no definitionToImplementationMapping defined for that column.
             if (column != null) {

@@ -38,5 +38,5 @@ package info.magnolia.ui.model.column.definition;
  *
  * @author dlipp
  */
-public class MetaDataColumnDefinition extends ColumnDefinition {
+public class MetaDataColumnDefinition extends AbstractColumnDefinition {
 }
