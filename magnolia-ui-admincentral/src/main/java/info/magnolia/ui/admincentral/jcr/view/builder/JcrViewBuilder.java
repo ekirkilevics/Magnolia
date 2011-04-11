@@ -40,6 +40,12 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  * Used to transform tree and column definitions into components.
  */
 public interface JcrViewBuilder {
+    /**
+     *
+     * Enumeration for view types.
+     * @author fgrilli
+     *
+     */
     enum ViewType {TREE,LIST}
 
     JcrView build(WorkbenchDefinition workbenchDefinition, ViewType type);

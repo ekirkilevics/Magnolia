@@ -35,7 +35,6 @@ package info.magnolia.ui.admincentral.jcr.view.activity;
 
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
-import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
