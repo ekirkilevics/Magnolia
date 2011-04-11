@@ -38,7 +38,7 @@ import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.MutableComponentProvider;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.ui.admincentral.configuration.AdminCentralConfiguration;
-import info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity;
+import info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.framework.activity.AbstractMVPSubContainer;
