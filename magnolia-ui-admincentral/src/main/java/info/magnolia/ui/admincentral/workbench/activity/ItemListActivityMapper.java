@@ -34,8 +34,8 @@
 package info.magnolia.ui.admincentral.workbench.activity;
 
 import info.magnolia.ui.admincentral.list.activity.ListActivity;
-import static info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity.TREE_VIEW_TYPE;
-import static info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity.LIST_VIEW_TYPE;
+import static info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity.LIST_VIEW_TYPE;
+import static info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity.TREE_VIEW_TYPE;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.Activity;

@@ -38,7 +38,7 @@ import java.util.List;
 import javax.jcr.Item;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.ui.admincentral.tree.builder.DefinitionToImplementationMapping;
+import info.magnolia.ui.admincentral.jcr.view.builder.DefinitionToImplementationMapping;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
 import info.magnolia.ui.model.builder.FactoryBase;

@@ -33,7 +33,7 @@
  */
 package info.magnolia.ui.admincentral.list.view;
 
-import info.magnolia.ui.admincentral.tree.view.JcrView;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
 
 /**
  * List view interface.

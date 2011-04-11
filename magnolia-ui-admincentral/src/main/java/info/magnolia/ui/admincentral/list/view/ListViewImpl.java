@@ -43,10 +43,10 @@ import com.vaadin.ui.Table;
 
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.admincentral.tree.container.ContainerItemId;
 import info.magnolia.ui.admincentral.tree.container.JcrContainer;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
-import info.magnolia.ui.admincentral.tree.view.JcrView;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;

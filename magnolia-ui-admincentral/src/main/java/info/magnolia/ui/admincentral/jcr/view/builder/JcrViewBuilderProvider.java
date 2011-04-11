@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,46 +25,20 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.builder;
+package info.magnolia.ui.admincentral.jcr.view.builder;
 
 /**
- * Defines a Mapping from a Definition to an specific implementation.
- * @param <D> class of the definition
- * @param <I> class of the implementation
+ * Provides a tree definition.
  *
- * @author dlipp
+ * TODO: check whether this type should go to ui-model layer.
  */
-public class DefinitionToImplementationMapping<D,I> {
+public interface JcrViewBuilderProvider {
 
-    /**
-     * Class-name of definition.
-     */
-    private Class<D> definition;
-
-    /**
-     * Class-name of implementation.
-     */
-    private Class<I> implementation;
-
-    public void setDefinition(Class<D> definition) {
-        this.definition = definition;
-    }
-
-    public Class<D> getDefinition() {
-        return definition;
-    }
-
-    public void setImplementation(Class<I> implementation) {
-        this.implementation = implementation;
-    }
-
-    public Class<I> getImplementation() {
-        return implementation;
-    }
+    JcrViewBuilder getBuilder();
 }

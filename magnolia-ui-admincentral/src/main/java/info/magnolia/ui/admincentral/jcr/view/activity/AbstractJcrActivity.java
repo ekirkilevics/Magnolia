@@ -31,11 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.activity;
+package info.magnolia.ui.admincentral.jcr.view.activity;
 
-import info.magnolia.ui.admincentral.list.builder.ListBuilderProvider;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
-import info.magnolia.ui.admincentral.tree.view.JcrView;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
+import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
+import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
@@ -64,7 +64,7 @@ public abstract class AbstractJcrActivity extends AbstractActivity implements Jc
     protected Shell shell;
     protected JcrView jcrView;
 
-    public AbstractJcrActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
+    public AbstractJcrActivity(WorkbenchDefinition workbenchDefinition, JcrViewBuilderProvider jcrViewBuilderProvider, PlaceController placeController, Shell shell) {
         this.shell = shell;
         this.placeController = placeController;
     }

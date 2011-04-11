@@ -31,15 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.builder;
+package info.magnolia.ui.admincentral.jcr.view.builder;
 
-import info.magnolia.ui.admincentral.tree.view.JcrView;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
  * Used to transform tree and column definitions into components.
  */
-public interface TreeBuilder {
+public interface JcrViewBuilder {
+    enum ViewType {TREE,LIST}
 
-    JcrView build(WorkbenchDefinition workbenchDefinition);
+    JcrView build(WorkbenchDefinition workbenchDefinition, ViewType type);
 }

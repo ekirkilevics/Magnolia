@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,53 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.list.builder;
+package info.magnolia.ui.admincentral.jcr.view;
 
-import info.magnolia.cms.security.User;
-import info.magnolia.ui.model.settings.UISettings;
+import info.magnolia.ui.framework.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.jcr.Item;
 
 /**
- * Provides the ListBuilder defined in the AdminCentralModule.
+ * UI component that displays a jcr workspace.
+ *
+ * @author fgrilli
  */
-public class ListBuilderProviderImpl implements ListBuilderProvider {
-
-    //injected
-    private User user;
-    private UISettings uiSettings;
-
-    // content2bean
-    private List<ListBuilder> listBuilders = new ArrayList<ListBuilder>();
-
+public interface JcrView extends View {
 
     /**
-     * Is needed so that we can make a proxy (reloading configuration).
-     * TODO: is this really necessary?
+     * Presenter for the JcrView.
+     *
+     * @author fgrilli
      */
-    protected ListBuilderProviderImpl() {
+    public interface Presenter {
+
+        void onItemSelection(Item tem);
     }
 
-    public ListBuilderProviderImpl(User user, UISettings uiSettings) {
-        this.user = user;
-        this.uiSettings = uiSettings;
-    }
+    void setPresenter(Presenter presenter);
 
-    public ListBuilder getBuilder() {
-        // FIXME: use user and uiSettings
-        return listBuilders.get(0);
-    }
+    // TODO should we really ask view?
+    String getPathInTree(Item item);
 
-    public void setListBuilders(List<ListBuilder> listBuilders) {
-        this.listBuilders = listBuilders;
-    }
+    void select(String path);
 
-    public List<ListBuilder> getListBuilders() {
-        return listBuilders;
-    }
-
-    public void addListBuilder(ListBuilder listBuilder) {
-        this.listBuilders.add(listBuilder);
-    }
+    void refresh();
 }

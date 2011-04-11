@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.builder;
+package info.magnolia.ui.admincentral.jcr.view.builder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,9 +41,10 @@ import java.util.Map;
 
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.column.Column;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
+import info.magnolia.ui.admincentral.list.view.ListViewImpl;
 import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;
-import info.magnolia.ui.admincentral.tree.view.JcrView;
 import info.magnolia.ui.admincentral.tree.view.TreeViewImpl;
 import info.magnolia.ui.model.builder.FactoryBase;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
@@ -53,7 +54,7 @@ import info.magnolia.ui.model.workbench.registry.WorkbenchRegistry;
 /**
  * TreeBuild configured via content to bean.
  */
-public class ConfiguredTreeBuilder extends FactoryBase<AbstractColumnDefinition, Column<AbstractColumnDefinition>> implements TreeBuilder, Serializable {
+public class ConfiguredJcrViewBuilder extends FactoryBase<AbstractColumnDefinition, Column<AbstractColumnDefinition>> implements JcrViewBuilder, Serializable {
 
     /**
      * List as retrieved out of JCR-config (via Content2Bean).
@@ -64,7 +65,7 @@ public class ConfiguredTreeBuilder extends FactoryBase<AbstractColumnDefinition,
     private WorkbenchActionFactory workbenchActionFactory;
 
     // TODO: why is WorkbenchRegistry handed over here?
-    public ConfiguredTreeBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
+    public ConfiguredJcrViewBuilder(ComponentProvider componentProvider, WorkbenchRegistry workbenchRegistry, WorkbenchActionFactory workbenchActionFactory) {
         super(componentProvider);
         this.componentProvider = componentProvider;
         this.workbenchActionFactory = workbenchActionFactory;
@@ -89,7 +90,7 @@ public class ConfiguredTreeBuilder extends FactoryBase<AbstractColumnDefinition,
         return create(definition);
     }
 
-    public JcrView build(WorkbenchDefinition workbenchDefinition) {
+    public JcrView build(WorkbenchDefinition workbenchDefinition, ViewType type) {
         Map<String, Column<?>> columns = new LinkedHashMap<String, Column<?>>();
         for (AbstractColumnDefinition columnDefinition : workbenchDefinition.getColumns()) {
             Column<?> column = createTreeColumn(columnDefinition);
@@ -101,6 +102,10 @@ public class ConfiguredTreeBuilder extends FactoryBase<AbstractColumnDefinition,
 
         // FIXME the model should be set by the presenter
         TreeModel treeModel = new TreeModel(workbenchDefinition, columns, workbenchActionFactory);
-        return componentProvider.newInstance(TreeViewImpl.class, workbenchDefinition, treeModel);
+        if(type == ViewType.TREE) {
+            return componentProvider.newInstance(TreeViewImpl.class, workbenchDefinition, treeModel);
+        } else {
+            return componentProvider.newInstance(ListViewImpl.class, workbenchDefinition, treeModel);
+        }
     }
 }

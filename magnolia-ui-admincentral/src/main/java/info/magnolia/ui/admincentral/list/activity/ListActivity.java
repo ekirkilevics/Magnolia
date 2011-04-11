@@ -33,9 +33,9 @@
  */
 package info.magnolia.ui.admincentral.list.activity;
 
-import info.magnolia.ui.admincentral.list.builder.ListBuilderProvider;
-import info.magnolia.ui.admincentral.tree.activity.AbstractJcrActivity;
-import info.magnolia.ui.admincentral.tree.builder.TreeBuilderProvider;
+import info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity;
+import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
+import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilder.ViewType;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
@@ -47,8 +47,8 @@ import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
  */
 public class ListActivity extends AbstractJcrActivity {
 
-    public ListActivity(WorkbenchDefinition workbenchDefinition, TreeBuilderProvider treeBuilderProvider, ListBuilderProvider listBuilderProvider, PlaceController placeController, Shell shell) {
-        super(workbenchDefinition, treeBuilderProvider, listBuilderProvider, placeController, shell);
-        jcrView = listBuilderProvider.getBuilder().build(workbenchDefinition);
+    public ListActivity(WorkbenchDefinition workbenchDefinition, JcrViewBuilderProvider jcrViewBuilderProvider, PlaceController placeController, Shell shell) {
+        super(workbenchDefinition, jcrViewBuilderProvider, placeController, shell);
+        jcrView = jcrViewBuilderProvider.getBuilder().build(workbenchDefinition, ViewType.LIST);
     }
 }
