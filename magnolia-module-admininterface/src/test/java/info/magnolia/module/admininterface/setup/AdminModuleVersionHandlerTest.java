@@ -40,12 +40,16 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
+import info.magnolia.test.ComponentsTestUtil;
 
 import javax.jcr.RepositoryException;
 import java.util.Arrays;
@@ -59,6 +63,14 @@ import java.util.List;
 public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private static final String QUICKSTART = "redirect:/.magnolia/pages/quickstart.html";
     private static final String ADMIN_CENTRAL = "redirect:/.magnolia/pages/adminCentral.html";
+
+    @Override
+    protected void setUp() throws Exception {
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        ComponentsTestUtil.setImplementation(UnicodeNormalizer.Normalizer.class, "info.magnolia.cms.util.UnicodeNormalizer$NonNormalizer");
+
+        super.setUp();
+    }
 
     @Override
     public String getModuleDescriptorPath() {
