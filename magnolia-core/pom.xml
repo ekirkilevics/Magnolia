@@ -62,6 +62,17 @@
     <dependency>
       <groupId>org.openwfe</groupId>
       <artifactId>openwfe-jcr</artifactId>
+        <exclusions>
+          <!-- Excluded in favor of org.jdom:jdom -->
+          <exclusion>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -127,6 +138,17 @@
     <dependency>
       <groupId>jaxen</groupId>
       <artifactId>jaxen</artifactId>
+      <exclusions>
+        <!-- Excluded in favor of org.jdom:jdom -->
+        <exclusion>
+          <groupId>jdom</groupId>
+          <artifactId>jdom</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>servlets.com</groupId>
