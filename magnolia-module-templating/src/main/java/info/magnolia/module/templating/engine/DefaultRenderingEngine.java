@@ -159,12 +159,12 @@ public class DefaultRenderingEngine implements RenderingEngine {
 
         RenderableDefinition definition = helper.getDefinition(definitionName);
         if (definition == null) {
-            throw new RenderException("Can't find renderable definition " + definitionName);
+            throw new RenderException("Can't find renderable definition " + definitionName + " for content: " + content.getHandle());
         }
 
         Object renderer = helper.getRenderer(definition);
         if (renderer == null) {
-            throw new RenderException("Can't find renderer for type " + definition.getType());
+            throw new RenderException("Can't find renderer for type " + definition.getType() + " of content: " + content.getHandle());
         }
 
         try {
