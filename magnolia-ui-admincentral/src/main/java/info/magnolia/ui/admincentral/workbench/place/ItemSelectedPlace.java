@@ -39,6 +39,8 @@ import info.magnolia.ui.framework.place.Place;
 import info.magnolia.ui.framework.place.PlaceTokenizer;
 import info.magnolia.ui.framework.place.Prefix;
 
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
+
 /**
  * A sub-place of {@link WorkbenchPlace} if an item got selected.
  */
@@ -57,11 +59,11 @@ public class ItemSelectedPlace extends Place {
             if(bits.length != 3){
                 throw new IllegalArgumentException("Invalid token: " + token);
             }
-            return new ItemSelectedPlace(bits[0], bits[1], bits[2]);
+            return new ItemSelectedPlace(bits[0], bits[1], ViewType.fromString(bits[2]));
         }
 
         public String getToken(ItemSelectedPlace place) {
-            return place.getWorkspace() + ":" + place.getPath() + ":" + place.getViewType();
+            return place.getWorkspace() + ":" + place.getPath() + ":" + place.getViewType().getText();
         }
     }
 
@@ -69,9 +71,9 @@ public class ItemSelectedPlace extends Place {
 
     private String path;
 
-    private String viewType;
+    private ViewType viewType;
 
-    public ItemSelectedPlace(String workspace, String path, String viewType) {
+    public ItemSelectedPlace(String workspace, String path, ViewType viewType) {
         this.workspace = workspace;
         this.path = path;
         this.viewType = viewType;
@@ -85,7 +87,7 @@ public class ItemSelectedPlace extends Place {
         return path;
     }
 
-    public String getViewType() {
+    public ViewType getViewType() {
         return viewType;
     }
 
@@ -126,7 +128,7 @@ public class ItemSelectedPlace extends Place {
         if (viewType == null) {
             if (other.viewType != null)
                 return false;
-        } else if (!viewType.equals(other.viewType))
+        } else if (!(viewType == other.viewType))
             return false;
         return true;
     }

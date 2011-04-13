@@ -36,7 +36,7 @@ package info.magnolia.ui.admincentral.tree.activity;
 
 import info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity;
 import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
-import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilder.ViewType;
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;

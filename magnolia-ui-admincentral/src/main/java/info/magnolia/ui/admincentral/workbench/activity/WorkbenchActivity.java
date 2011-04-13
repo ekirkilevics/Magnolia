@@ -59,7 +59,8 @@ public class WorkbenchActivity extends AbstractActivity {
 
     @Override
     public String mayStop() {
-        return "Are you sure you want to leave this page?";
+        //return "Are you sure you want to leave this page?";
+        return null;
     }
 
     public void start(ViewPort display, EventBus eventBus) {

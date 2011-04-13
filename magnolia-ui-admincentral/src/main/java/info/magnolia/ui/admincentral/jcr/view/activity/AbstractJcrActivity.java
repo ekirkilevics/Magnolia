@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.jcr.view.activity;
 
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.admincentral.jcr.view.builder.JcrViewBuilderProvider;
 import info.magnolia.ui.admincentral.tree.view.TreeView;
 import info.magnolia.ui.admincentral.workbench.event.ContentChangedEvent;
@@ -54,9 +55,6 @@ import javax.jcr.RepositoryException;
  * @see ListActivity
  */
 public abstract class AbstractJcrActivity extends AbstractActivity implements JcrView.Presenter, ContentChangedEvent.Handler {
-
-    public static final String TREE_VIEW_TYPE = "tree";
-    public static final String LIST_VIEW_TYPE = "list";
 
     protected PlaceController placeController;
     protected String path = "/";
@@ -93,8 +91,8 @@ public abstract class AbstractJcrActivity extends AbstractActivity implements Jc
         }
     }
 
-    private String getViewType() {
-        return jcrView instanceof TreeView ? TREE_VIEW_TYPE: LIST_VIEW_TYPE;
+    private ViewType getViewType() {
+        return jcrView instanceof TreeView ? ViewType.TREE: ViewType.LIST;
     }
 
     public void onContentChanged(ContentChangedEvent event) {

@@ -42,6 +42,7 @@ import java.util.Map;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.admincentral.column.Column;
 import info.magnolia.ui.admincentral.jcr.view.JcrView;
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.admincentral.list.view.ListViewImpl;
 import info.magnolia.ui.admincentral.tree.action.WorkbenchActionFactory;
 import info.magnolia.ui.admincentral.tree.model.TreeModel;

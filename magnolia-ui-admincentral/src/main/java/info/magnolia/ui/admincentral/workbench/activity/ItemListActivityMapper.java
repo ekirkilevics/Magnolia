@@ -33,9 +33,8 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
 import info.magnolia.ui.admincentral.list.activity.ListActivity;
-import static info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity.LIST_VIEW_TYPE;
-import static info.magnolia.ui.admincentral.jcr.view.activity.AbstractJcrActivity.TREE_VIEW_TYPE;
 import info.magnolia.ui.admincentral.tree.activity.TreeActivity;
 import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.Activity;
@@ -59,11 +58,11 @@ public class ItemListActivityMapper implements ActivityMapper {
 
     public Activity getActivity(final Place place) {
         final ItemSelectedPlace selectedPlace = (ItemSelectedPlace)place;
-        if(TREE_VIEW_TYPE.equals(selectedPlace.getViewType())){
+        if(ViewType.TREE == selectedPlace.getViewType()){
             treeActivity.update(selectedPlace);
             return treeActivity;
         }
-        if(LIST_VIEW_TYPE.equals(selectedPlace.getViewType())){
+        if(ViewType.LIST == selectedPlace.getViewType()){
             listActivity.update(selectedPlace);
             return listActivity;
         }

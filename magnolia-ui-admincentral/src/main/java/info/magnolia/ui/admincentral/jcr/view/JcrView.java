@@ -45,6 +45,38 @@ import javax.jcr.Item;
 public interface JcrView extends View {
 
     /**
+     *
+     * Enumeration for view types.
+     * @author fgrilli
+     *
+     */
+    enum ViewType {
+        LIST("list"),
+        TREE("tree");
+
+        private String text;
+
+        ViewType(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return this.text;
+        }
+
+        public static ViewType fromString(String text) {
+            if (text != null) {
+                for (ViewType type : ViewType.values()) {
+                    if (text.equalsIgnoreCase(type.text)) {
+                        return type;
+                    }
+                }
+            }
+            throw new IllegalArgumentException("No view type could be found for " + text);
+        }
+    }
+
+    /**
      * Presenter for the JcrView.
      *
      * @author fgrilli
