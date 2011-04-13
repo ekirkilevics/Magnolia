@@ -66,8 +66,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     private static final String I18N_BASENAME = "info.magnolia.module.samples.messages";
 
     /**
-     * First thing is to back up the old module, configuration and templates.
-     * Then the new content is bootstraped.
+     * First thing is to back up the old module, configuration and templates. Then the new content is bootstrapped.
      */
     public SamplesVersionHandler() {
         register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
@@ -131,11 +130,10 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     }
 
     /**
-     * There are some tasks common to the update process and the new installation process
-     * that are not automatically bootstraped.
-     * Add new menu item, and three sub menu items and then set the new menu item in the proper place
-     * And then sets the default virtual URI on public instances
-     *
+     * There are some tasks common to the update process and the new installation process that are not automatically
+     * bootstrapped. Add new menu item, and three sub menu items and then set the new menu item in the proper place And
+     * then sets the default virtual URI on public instances
+     * 
      * @return
      */
     protected List<Task> getCommonTasks() {
@@ -159,8 +157,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     }
 
     /**
-     * Installation process will boostrap everything in the bootstrap folder, then
-     * we have to add some extra tasks.
+     * Installation process will bootstrap everything in the bootstrap folder, then we have to add some extra tasks.
      */
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         return getCommonTasks();
