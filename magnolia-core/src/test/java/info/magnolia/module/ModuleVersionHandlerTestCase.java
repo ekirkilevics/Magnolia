@@ -205,6 +205,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         final InstallContextImpl ctx = new InstallContextImpl(moduleRegistry) {
             @Override
             public void error(String message, Throwable th) {
+                th.printStackTrace();
                 // let's fail the test if we encounter a logged error, because ModuleManagerImpl.applyDeltas() swallows TaskExecutionException and RuntimeException and logs errors instead
                 fail(message);
             }
