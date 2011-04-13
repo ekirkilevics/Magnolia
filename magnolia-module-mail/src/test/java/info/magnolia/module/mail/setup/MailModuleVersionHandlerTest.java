@@ -33,13 +33,21 @@
  */
 package info.magnolia.module.mail.setup;
 
+import info.magnolia.cms.core.search.DefaultSearchFactory;
+import info.magnolia.cms.core.search.SearchFactory;
+import info.magnolia.cms.util.UnicodeNormalizer;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleRegistry;
+import info.magnolia.module.ModuleRegistryImpl;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.mail.commands.MailCommand;
 import info.magnolia.module.model.Version;
+import info.magnolia.test.ComponentsTestUtil;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,6 +62,18 @@ import static info.magnolia.module.mail.setup.MailModuleVersionHandler.MAIL_COMM
  */
 public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
 
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+    @Override
+    protected void initDefaultImplementations() throws IOException, ModuleManagementException {
+        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+        ComponentsTestUtil.setImplementation(UnicodeNormalizer.Normalizer.class, "info.magnolia.cms.util.UnicodeNormalizer$NonNormalizer");
+        ComponentsTestUtil.setInstance(SearchFactory.class, new DefaultSearchFactory());
+        super.initDefaultImplementations();
+    }
+    @Override
     protected String getModuleDescriptorPath() {
         return "/META-INF/magnolia/mail.xml";
     }
@@ -68,6 +88,7 @@ public class MailModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         );
     }
 
+    @Override
     protected ModuleVersionHandler newModuleVersionHandlerForTests() {
         return new MailModuleVersionHandler() {
             // cheat - the conditions needs web.xml. Can't be bothered to fake that here

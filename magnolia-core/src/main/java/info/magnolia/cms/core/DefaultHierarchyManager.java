@@ -38,6 +38,8 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -350,6 +352,9 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         }
         else {
             Node aNode = this.getRootNode().getNode(makeRelative(path));
+            if (aNode instanceof DelegateNodeWrapper) {
+                aNode = ((DelegateNodeWrapper) aNode).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+            }
             if (aNode.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
                 type = new ItemType(aNode.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString());
             }
