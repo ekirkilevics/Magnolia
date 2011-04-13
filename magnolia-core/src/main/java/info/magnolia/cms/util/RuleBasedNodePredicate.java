@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.security.JCRUtil;
+import info.magnolia.jcr.util.JCRUtil;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;

@@ -46,15 +46,8 @@ import javax.jcr.Session;
 public class MgnlVersioningSession extends NodeWrappingDelegateSessionWrapper implements Session {
 
 
-    private final Session wrapped;
-
     public MgnlVersioningSession(Session wrapped) {
-        this.wrapped = wrapped;
-    }
-
-    @Override
-    public Session getDelegate() {
-        return wrapped;
+        super(wrapped);
     }
 
     @Override

@@ -33,49 +33,23 @@
  */
 package info.magnolia.cms.util;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+
+import org.apache.jackrabbit.commons.predicate.Predicate;
 
 /**
- * Basic Node wrapper providing support for wrapping all children in whatever wrapper necessary.
+ * Filtering node wrapper with hardcoded predicate to simplify unwrapping when needed.
  * @author had
  * @version $Id: $
  */
-public abstract class NodeWrappingDelegateSessionWrapper extends DelegateSessionWrapper {
+public class JCRPropertiesFilteringNodeWrapper extends PropertiesFilteringNodeWrapper {
 
-    private final Session wrapped;
-
-    public NodeWrappingDelegateSessionWrapper(Session wrapped) {
-        this.wrapped = wrapped;
+    public JCRPropertiesFilteringNodeWrapper(Node wrapped) {
+        super(wrapped, new  JCRPropertyHidingPredicate());
     }
 
-    public abstract Node wrap(Node node);
-
-    @Override
-    public Session getDelegate() {
-        return wrapped;
-    }
-
-    @Override
-    public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
-        return wrap(super.getNode(absPath));
-    }
-
-    @Override
-    public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
-        return wrap(super.getNodeByIdentifier(id));
-    }
-
-    @Override
-    public Node getNodeByUUID(String uuid) throws ItemNotFoundException, RepositoryException {
-        return wrap(super.getNodeByUUID(uuid));
-    }
-
-    @Override
-    public Node getRootNode() throws RepositoryException {
-        return wrap(super.getRootNode());
+    public JCRPropertiesFilteringNodeWrapper(Node wrapped, Predicate predicate) {
+        // ignore passed in predicate. This init method exists only to allow automatic wrapping
+        super(wrapped, new  JCRPropertyHidingPredicate());
     }
 }

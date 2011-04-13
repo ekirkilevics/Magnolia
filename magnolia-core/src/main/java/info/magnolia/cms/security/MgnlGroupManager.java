@@ -152,7 +152,8 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         Node group = null;
         while (iter.hasNext()) {
             Node node = iter.nextNode();
-            if (node.isNodeType(ItemType.USER.getSystemName())) {
+            // unnecessarily redundant since query is already limited no?
+            if (node.isNodeType(ItemType.GROUP.getSystemName())) {
                 group = node;
                 break;
             }

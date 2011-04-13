@@ -35,12 +35,12 @@ package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.JCRUtil;
 import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedNodePredicate;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.JCRUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

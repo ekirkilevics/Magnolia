@@ -143,7 +143,7 @@ public class WorkspaceAccessUtil {
             //do not wrapp version store in versioning session or we get infinite redirect loop and stack overflow
             return session;
         }
-        return new MgnlVersioningSession(session);
+        return new JCRPropertyFilteringSessionWrapper(new MgnlVersioningSession(session));
     }
 
     /**

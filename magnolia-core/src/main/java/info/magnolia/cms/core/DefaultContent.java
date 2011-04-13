@@ -36,6 +36,8 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -159,7 +161,7 @@ public class DefaultContent extends AbstractContent {
         Access.tryPermission(rootNode.getSession(), Path.getAbsolutePath(rootNode.getPath(), path), Session.ACTION_SET_PROPERTY + "," + Session.ACTION_ADD_NODE + "," + Session.ACTION_REMOVE);
         this.setPath(path);
         this.setRootNode(rootNode);
-        this.node = this.rootNode.addNode(this.path, contentType);
+        this.setNode(this.rootNode.addNode(this.path, contentType));
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
@@ -171,7 +173,12 @@ public class DefaultContent extends AbstractContent {
      * @param node
      */
     protected void setNode(Node node) {
-        this.node = node;
+        if (node instanceof DelegateNodeWrapper) {
+            // Default content takes care of filtering jcr properties on its own
+            this.node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+        } else {
+            this.node = node;
+        }
     }
 
     /**
@@ -423,6 +430,9 @@ public class DefaultContent extends AbstractContent {
      * @param type
      */
     protected boolean isNodeType(Node node, String type) {
+        if (node instanceof DelegateNodeWrapper) {
+            node = ((DelegateNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+        }
         try {
             final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
             // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type

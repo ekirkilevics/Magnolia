@@ -35,39 +35,56 @@ package info.magnolia.cms.util;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
-import javax.jcr.version.VersionException;
 
+import org.apache.jackrabbit.commons.predicate.Predicate;
 
 /**
- * Wrapper providing support for wrapping all child nodes of the wrapped node incl those returned by the NodeIterators.
+ * Node wrapper passing on Predicate to its children to hide properties.
  * @author had
  * @version $Id: $
  */
-public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
+public class PropertiesFilteringNodeWrapper extends ChildWrappingNodeWrapper {
 
-    private final Class childWrappingClass;
+    private final Predicate predicate;
 
-    public ChildWrappingNodeWrapper(Node wrapped) {
-        super(wrapped);
-        childWrappingClass = this.getClass();
+    public PropertiesFilteringNodeWrapper(Node wrapped, Predicate predicate) {
+        super(wrapped, PropertiesFilteringNodeWrapper.class);
+        this.predicate = predicate;
     }
 
-    public ChildWrappingNodeWrapper(Node wrapped, Class childWrappingClass) {
-        super(wrapped);
-        this.childWrappingClass = childWrappingClass;
+    @Override
+    public PropertyIterator getProperties() throws RepositoryException {
+        return new FilteringPropertyIterator(super.getProperties(), predicate);
     }
 
+    @Override
+    public PropertyIterator getProperties(String namePattern) throws RepositoryException {
+        return  new FilteringPropertyIterator(super.getProperties(namePattern), predicate);
+    }
+
+    @Override
+    public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
+        return  new FilteringPropertyIterator(super.getProperties(nameGlobs), predicate);
+    }
+
+    @Override
+    public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
+        Property prop = super.getProperty(relPath);
+        if (predicate.evaluate(prop)) {
+            return prop;
+        }
+        throw new PathNotFoundException("Property " + relPath + " is not accesible via this wrapper.");
+    }
+
+    @Override
     public Node wrap(Node node) {
         try {
-            return (Node) childWrappingClass.getConstructor(Node.class).newInstance(node);
+            return this.getClass().getConstructor(Node.class, Predicate.class).newInstance(node, predicate);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         } catch (SecurityException e) {
@@ -83,35 +100,4 @@ public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper {
         }
     }
 
-    @Override
-    public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        return wrap(super.getNode(relPath));
-    }
-
-    @Override
-    public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException,
-    RepositoryException {
-        return wrap(super.addNode(relPath));
-    }
-
-    @Override
-    public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException,
-    VersionException, ConstraintViolationException, RepositoryException {
-        return wrap(super.addNode(relPath, primaryNodeTypeName));
-    }
-
-    @Override
-    public NodeIterator getNodes() throws RepositoryException {
-        return new WrappingNodesIterator(super.getNodes(), this);
-    }
-
-    @Override
-    public NodeIterator getNodes(String namePattern) throws RepositoryException {
-        return new WrappingNodesIterator(super.getNodes(namePattern), this);
-    }
-
-    @Override
-    public NodeIterator getNodes(String[] nameGlobs) throws RepositoryException {
-        return new WrappingNodesIterator(super.getNodes(nameGlobs), this);
-    }
 }

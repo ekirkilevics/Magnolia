@@ -35,7 +35,7 @@ package info.magnolia.cms.core.version;
 
 import java.util.Calendar;
 
-import info.magnolia.cms.core.util.DelegateNodeWrapper;
+import info.magnolia.cms.util.DelegateNodeWrapper;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -51,21 +51,15 @@ import javax.jcr.version.VersionHistory;
 public class VersionedNode extends DelegateNodeWrapper implements Node, Version {
 
 
-    private final Node frozenNode;
     private final Version version;
 
     public VersionedNode(Version versionedNode) throws PathNotFoundException, RepositoryException {
+        super(versionedNode.getNode("jcr:frozenNode"));
         this.version = versionedNode;
-        this.frozenNode = versionedNode.getNode("jcr:frozenNode");
     }
 
     public Version unwrap() {
         return version;
-    }
-
-    @Override
-    public Node getWrappedNode() {
-        return this.frozenNode;
     }
 
     public VersionHistory getContainingHistory() throws RepositoryException {
@@ -77,7 +71,7 @@ public class VersionedNode extends DelegateNodeWrapper implements Node, Version 
     }
 
     public Node getFrozenNode() throws RepositoryException {
-        return frozenNode;
+        return deepUnwrap(getClass());
     }
 
     public Version getLinearPredecessor() throws RepositoryException {

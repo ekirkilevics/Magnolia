@@ -33,49 +33,66 @@
  */
 package info.magnolia.cms.util;
 
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+
+import org.apache.jackrabbit.commons.predicate.Predicate;
 
 /**
- * Basic Node wrapper providing support for wrapping all children in whatever wrapper necessary.
+ * Property iterator hiding all properties that do not pass the predicate.
  * @author had
  * @version $Id: $
  */
-public abstract class NodeWrappingDelegateSessionWrapper extends DelegateSessionWrapper {
+public class FilteringPropertyIterator implements PropertyIterator {
 
-    private final Session wrapped;
+    private final PropertyIterator iterator;
+    private Property nextItem;
+    private final Predicate predicate;
 
-    public NodeWrappingDelegateSessionWrapper(Session wrapped) {
-        this.wrapped = wrapped;
+    public FilteringPropertyIterator(PropertyIterator iterator, Predicate predicate) {
+        this.iterator = iterator;
+        this.predicate = predicate;
+    }
+    public Property nextProperty() {
+        if (nextItem != null) {
+            Property temp = nextItem;
+            nextItem = null;
+            return temp;
+        }
+        return iterator.nextProperty();
     }
 
-    public abstract Node wrap(Node node);
-
-    @Override
-    public Session getDelegate() {
-        return wrapped;
+    public long getPosition() {
+        return iterator.getPosition();
     }
 
-    @Override
-    public Node getNode(String absPath) throws PathNotFoundException, RepositoryException {
-        return wrap(super.getNode(absPath));
+    public long getSize() {
+        return iterator.getSize();
     }
 
-    @Override
-    public Node getNodeByIdentifier(String id) throws ItemNotFoundException, RepositoryException {
-        return wrap(super.getNodeByIdentifier(id));
+    public void skip(long skipNum) {
+        iterator.skip(skipNum);
     }
 
-    @Override
-    public Node getNodeByUUID(String uuid) throws ItemNotFoundException, RepositoryException {
-        return wrap(super.getNodeByUUID(uuid));
+    public boolean hasNext() {
+        while (nextItem == null) {
+            if (!iterator.hasNext()) {
+                return false;
+            }
+            nextItem = iterator.nextProperty();
+            if (!predicate.evaluate(nextItem)) {
+                nextItem = null;
+            }
+        }
+        return true;
     }
 
-    @Override
-    public Node getRootNode() throws RepositoryException {
-        return wrap(super.getRootNode());
+    public Object next() {
+        return nextProperty();
     }
+
+    public void remove() {
+        iterator.remove();
+    }
+
 }

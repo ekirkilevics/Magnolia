@@ -60,6 +60,8 @@ import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
+import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -175,14 +177,12 @@ public abstract class RepositoryBackedSecurityManager {
     }
 
     protected String getResourceName(final String resourceId) {
-        return MgnlContext.doInSystemContext(new SilentSessionOp<String>(getRepositoryName()) {
-
-            @Override
-            public String doExec(Session session) throws Throwable {
-                return session.getNodeByIdentifier(resourceId).getName();
-            }
-
-        });
+        try {
+            return MgnlContext.getJCRSession(getRepositoryName()).getNodeByIdentifier(resourceId).getName();
+        } catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
     }
 
     protected void remove(final String principalName, final String resourceName, final String resourceTypeName) {
@@ -237,7 +237,7 @@ public abstract class RepositoryBackedSecurityManager {
 
     protected Map<String, ACL> getACLs(Node node) throws RepositoryException, ValueFormatException, PathNotFoundException {
         Map<String, ACL> principalList = new HashMap<String, ACL>();
-        NodeIterator it = node.getNodes(ItemType.CONTENTNODE.getSystemName());
+        NodeIterator it = new FilteringNodeIterator(node.getNodes(), new NodeTypePredicate(ItemType.CONTENTNODE.getSystemName(), true));
         while (it.hasNext()) {
             Node aclEntry = it.nextNode();
             if (!aclEntry.getName().startsWith("acl")) {
@@ -260,7 +260,7 @@ public abstract class RepositoryBackedSecurityManager {
 
             List<Permission> permissionList = new ArrayList<Permission>();
             // add acl
-            NodeIterator permissionIterator = aclEntry.getNodes();
+            NodeIterator permissionIterator = new FilteringNodeIterator(aclEntry.getNodes(), new NodeTypePredicate(ItemType.CONTENTNODE.getSystemName(), true));
             while (permissionIterator.hasNext()) {
                 Node map = permissionIterator.nextNode();
                 String path = map.getProperty("path").getString();

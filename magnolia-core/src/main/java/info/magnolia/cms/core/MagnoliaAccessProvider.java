@@ -33,9 +33,8 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.security.auth.GroupList;
-import info.magnolia.cms.security.auth.RoleList;
-
+import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.security.auth.PrincipalCollection;
 import java.security.Principal;
 import java.util.Iterator;
 import java.util.Map;
@@ -84,6 +83,32 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
     }
 
+    /**
+     * Permission based on user ACL for given workspace.
+     * @author had
+     * @version $Id: $
+     */
+    public class ACLBasedPermissions extends AbstractCompiledPermissions {
+
+        private final PrincipalCollection acls;
+
+        public ACLBasedPermissions(PrincipalCollection acls) {
+            this.acls = acls;
+        }
+
+        public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
+            log.error("IMPLEMENT CHECK FOR " + itemPath + " :: " + itemId);
+            return false;
+        }
+
+        @Override
+        protected Result buildResult(Path absPath) throws RepositoryException {
+            log.error("BUILD RESULT FOR " + absPath);
+            return null;
+        }
+
+    }
+
     private static final Logger log = LoggerFactory.getLogger(MagnoliaAccessProvider.class);
 
     @Override
@@ -108,6 +133,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     public CompiledPermissions compilePermissions(Set<Principal> principals) throws RepositoryException {
         log.debug("compile permissions for {} at {}", printUserNames(principals), session == null ? null : session.getWorkspace().getName());
         checkInitialized();
+        // superuser is also admin user!
         if (isAdminOrSystem(principals)) {
             // TODO: retrieve admin user name in configurable manner.
             if ("admin".equals(session.getUserID()) && "uri".equals(session.getWorkspace().getName())) {
@@ -120,22 +146,22 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         boolean hasSomePermissions = false;
         for  (Iterator<Principal> iter = principals.iterator(); iter.hasNext(); ) {
             Principal princ = iter.next();
-            //TODO: there are no longer group or role lists, just ACLs
-            if (princ instanceof GroupList) {
-                log.debug("found groups " + princ);
-                hasSomePermissions = true;
-            }
-            if (princ instanceof RoleList) {
-                log.debug("found roles " + princ);
-                hasSomePermissions = true;
+            if (princ instanceof PrincipalCollection) {
+                log.debug("found mgnl principal " + princ);
+                PrincipalCollection collection = (PrincipalCollection) princ;
+                if (collection.iterator().hasNext() && collection.iterator().next() instanceof ACL) {
+                    String name = super.session.getWorkspace().getName();
+                    //TODO: filter out only those permissions relevant to the given workspace!
+                    return getUserPermissions(collection);
+                }
             }
         }
-        if (hasSomePermissions) {
-            return getAdminPermissions();
-        } else {
-            // TODO: compile real permissions here. See what we can actually get from the principals set and whether we have access to user here!
-            return new DenyAllPermissions();
-        }
+        // it should never come to this, but if it does ... sorry ... no access
+        return new DenyAllPermissions();
+    }
+
+    private CompiledPermissions getUserPermissions(PrincipalCollection collection) {
+        return new ACLBasedPermissions(collection);
     }
 
     @Override

@@ -53,29 +53,25 @@ import javax.jcr.version.VersionException;
  */
 public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper implements Node {
 
-    private final Node wrapped;
     public MgnlVersioningNodeWrapper(Node wrapped) {
-        super(MgnlVersioningNodeWrapper.class);
-        this.wrapped = wrapped;
+        super(wrapped, MgnlVersioningNodeWrapper.class);
     }
-    @Override
-    public Node getWrappedNode() {
-        return wrapped;
-    }
+
 
     @Override
     public void restore(String versionName, boolean removeExisting) throws VersionException, ItemExistsException, UnsupportedRepositoryOperationException,
     LockException, InvalidItemStateException, RepositoryException {
         VersionManager versionMan = VersionManager.getInstance();
-        Version version = versionMan.getVersion(wrapped, versionName);
-        versionMan.restore(wrapped, version, removeExisting);
+        Node raw = deepUnwrap(getClass());
+        Version version = versionMan.getVersion(raw, versionName);
+        versionMan.restore(raw, version, removeExisting);
     }
 
     @Override
     public void restore(Version version, boolean removeExisting) throws VersionException, ItemExistsException, InvalidItemStateException,
     UnsupportedRepositoryOperationException, LockException, RepositoryException {
         VersionManager versionMan = VersionManager.getInstance();
-        versionMan.restore(wrapped, version, removeExisting);
+        versionMan.restore(deepUnwrap(getClass()), version, removeExisting);
     }
 
     @Override

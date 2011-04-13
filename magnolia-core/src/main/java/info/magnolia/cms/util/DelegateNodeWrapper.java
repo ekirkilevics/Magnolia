@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.util;
+package info.magnolia.cms.util;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -75,6 +75,12 @@ import javax.jcr.version.VersionHistory;
  * @version $Id: $
  */
 public abstract class DelegateNodeWrapper implements Node {
+
+    private Node wrapped;
+
+    public DelegateNodeWrapper(Node wrapped) {
+        this.wrapped = wrapped;
+    }
 
     public void addMixin(String mixinName) throws NoSuchNodeTypeException, VersionException, ConstraintViolationException, LockException, RepositoryException {
         getWrappedNode().addMixin(mixinName);
@@ -447,6 +453,22 @@ public abstract class DelegateNodeWrapper implements Node {
         getWrappedNode().save();
     }
 
-    public abstract Node getWrappedNode();
+    public Node getWrappedNode() {
+        return this.wrapped;
+    }
+
+
+    public Node deepUnwrap(Class wrapper) {
+        if (this.getClass().equals(wrapper)) {
+            return getWrappedNode();
+        }
+        if (getWrappedNode() instanceof DelegateNodeWrapper) {
+            // rewrap
+            this.wrapped = ((DelegateNodeWrapper) getWrappedNode()).deepUnwrap(wrapper);
+            return this;
+        }
+        // oh well, nothing to unwrap
+        return this;
+    }
 
 }

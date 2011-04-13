@@ -31,9 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.cms.security;
+package info.magnolia.jcr.util;
 
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.JCRSessionOp;
+import info.magnolia.cms.util.JCRPropertiesFilteringNodeWrapper;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
@@ -58,9 +60,7 @@ import org.slf4j.LoggerFactory;
  * Various utility methods to collect data from JCR repository.
  * @author had
  * @version $Id: $
- * @deprecated reintegrate this code back in some other utils or move it to proper place!
  */
-@Deprecated
 public class JCRUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JCRUtil.class);
@@ -133,6 +133,9 @@ public class JCRUtil {
      * from default content.
      */
     public static String getNodeTypeName(Node node) throws RepositoryException {
+        if (node instanceof JCRPropertiesFilteringNodeWrapper) {
+            node = ((JCRPropertiesFilteringNodeWrapper) node).deepUnwrap(JCRPropertiesFilteringNodeWrapper.class);
+        }
 
         if (node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
             return node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();

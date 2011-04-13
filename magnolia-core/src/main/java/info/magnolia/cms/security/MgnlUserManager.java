@@ -43,6 +43,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.JCRUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
