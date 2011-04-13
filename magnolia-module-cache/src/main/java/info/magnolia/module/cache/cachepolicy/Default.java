@@ -125,7 +125,11 @@ public class Default implements CachePolicy {
             uri = key.toString();
         }
         // true if voters vote positively
-        return voters.vote(uri) <= 0;
+        if (voters != null){
+            return voters.vote(uri) <= 0;
+        }
+        log.warn("No cache voter defined.");
+        return false;
     }
 
     public Object retrieveCacheKey(final AggregationState aggregationState) {
