@@ -48,6 +48,7 @@ import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,8 +138,8 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
      *
      * @return
      */
-    protected List getCommonTasks() {
-        final List commonTasks = new ArrayList();
+    protected List<Task> getCommonTasks() {
+        final List<Task> commonTasks = new ArrayList<Task>();
         // add the default uri task
         commonTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
@@ -161,7 +162,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
      * Installation process will boostrap everything in the bootstrap folder, then
      * we have to add some extra tasks.
      */
-    protected List getExtraInstallTasks(InstallContext installContext) {
+    protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         return getCommonTasks();
     }
 
