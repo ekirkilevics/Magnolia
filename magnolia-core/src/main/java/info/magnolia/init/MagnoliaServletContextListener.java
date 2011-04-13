@@ -373,7 +373,16 @@ public class MagnoliaServletContextListener implements ServletContextListener {
     protected ComponentMonitor makeComponentMonitor() {
         // TODO - different monitor(s) ? LifecycleComponentMonitor might be interesting to "summarize" all failures ?
         // (the PrefuseDependencyGraph might be interesting too)
-        return new Slf4jComponentMonitor(LoggerFactory.getLogger(Slf4jComponentMonitor.class));
+        return new Slf4jComponentMonitor(LoggerFactory.getLogger(Slf4jComponentMonitor.class)) {
+
+            @Override
+            public Object noComponentFound(MutablePicoContainer container, Object componentKey) {
+
+                // We don't log when pico can't find a dependency since we routinely query the container to test if it's been configured for a specific type or not
+
+                return null;
+            }
+        };
     }
 
     protected PicoLifecycleStrategy makeLifecycleStrategy(ComponentMonitor componentMonitor) {
