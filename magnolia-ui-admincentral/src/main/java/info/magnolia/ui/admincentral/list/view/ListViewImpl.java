@@ -101,18 +101,6 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
         return table;
     }
 
-    private void presenterOnItemSelection(ContainerItemId id) {
-        if (presenter != null) {
-            Item item = null;
-            try {
-                 item = container.getJcrItem(id);
-            } catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
-            }
-            presenter.onItemSelection(item);
-        }
-    }
-
     public String getPathInTree(Item jcrItem) {
         try {
             return treeModel.getPathInTree(jcrItem);
@@ -123,5 +111,17 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    private void presenterOnItemSelection(ContainerItemId id) {
+        if (presenter != null) {
+            Item item = null;
+            try {
+                item = container.getJcrItem(id);
+            } catch (RepositoryException e) {
+                throw new RuntimeRepositoryException(e);
+            }
+            presenter.onItemSelection(item);
+        }
     }
 }
