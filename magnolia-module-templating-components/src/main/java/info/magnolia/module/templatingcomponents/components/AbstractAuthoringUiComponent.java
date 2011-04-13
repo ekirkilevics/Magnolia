@@ -43,19 +43,21 @@ import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.List;
 
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 /**
- * Common subclass for ui components, provides utility methods and defaults.
- * Implementations should expose setter methods for their specific parameters (so that template-specific wrappers
- * can set parameters). (no need to clutter things up with getters). Implementation might also expose static factory
- * methods, which can take care of default values, i.e for labels.
- *
- *
+ * Common superclass for ui components, provides utility methods and defaults. Implementations should expose setter
+ * methods for their specific parameters (so that template-specific wrappers can set parameters). (no need to clutter
+ * things up with getters). Implementation might also expose static factory methods, which can take care of default
+ * values, i.e for labels.
+ * 
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
