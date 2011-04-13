@@ -34,7 +34,7 @@
 package info.magnolia.ui.admincentral.jcr.view.builder;
 
 /**
- * Provides a tree definition.
+ * Provides a JcrViewBuilder.
  *
  * TODO: check whether this type should go to ui-model layer.
  */

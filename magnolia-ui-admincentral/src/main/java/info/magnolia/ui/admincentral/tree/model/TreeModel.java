@@ -61,7 +61,7 @@ import info.magnolia.ui.model.workbench.definition.ItemTypeDefinition;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
- * Model class for tree. Serves as a source for operations by JcrContainer and executes
+ * Model class for tree. Serves as a source for operations by JcrContainer and executes them.
  *
  * @author tmattsson
  */

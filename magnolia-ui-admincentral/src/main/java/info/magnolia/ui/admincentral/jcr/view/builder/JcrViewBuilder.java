@@ -37,7 +37,7 @@ import info.magnolia.ui.admincentral.jcr.view.JcrView;
 import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
- * Used to transform tree and column definitions into components.
+ * Used to transform tree or list and column definitions into components.
  */
 public interface JcrViewBuilder {
     /**

@@ -42,7 +42,7 @@ import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
  *
- * Returns the {@link Activity} to perform when the current selected item on a tree has changed.
+ * Returns the {@link Activity} to perform when the current selected item on a tree or list has changed.
  * @author fgrilli
  *
  */
