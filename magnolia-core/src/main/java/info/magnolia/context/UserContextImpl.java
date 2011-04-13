@@ -83,7 +83,9 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     public void login(User user) {
         setLocaleFor(user);
-        setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
+        if(!user.getName().equals(Security.getAnonymousUser().getName())){
+            setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
+        }
         this.user = null;
     }
 

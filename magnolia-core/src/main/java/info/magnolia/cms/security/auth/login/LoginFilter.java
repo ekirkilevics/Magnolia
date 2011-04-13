@@ -70,6 +70,9 @@ public class LoginFilter extends AbstractMgnlFilter {
                 // do not continue with the filter chain
                 return;
             } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
+                if(request.getSession(false) != null){
+                    request.getSession().invalidate();
+                }
                 MgnlContext.login(loginResult.getUser());
             }
 
