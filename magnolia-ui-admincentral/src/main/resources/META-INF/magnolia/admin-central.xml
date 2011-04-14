@@ -80,11 +80,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <name>wcm</name>
-      <version>5.0/*</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <name>cache</name>
       <version>5.0/*</version>
       <optional>true</optional>

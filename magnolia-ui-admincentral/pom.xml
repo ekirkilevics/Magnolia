@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-project</artifactId>
@@ -38,18 +39,18 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-cache</artifactId>
       <version>${project.version}</version>
-      </dependency>
+    </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-ui-vaadin-integration</artifactId>
       <version>${project.version}</version>
-      </dependency>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
       <scope>test</scope>
@@ -67,10 +68,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>info.magnolia</groupId>
-    	<artifactId>magnolia-ui-model</artifactId>
-    	<version>5.0-SNAPSHOT</version>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-ui-model</artifactId>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
-
 </project>

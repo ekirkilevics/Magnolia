@@ -686,6 +686,7 @@ for Java Content Repositories (JCR).
     <module>magnolia-ui-vaadin-widgetset</module>
     <module>magnolia-ui-vaadin-integration</module>
     <module>magnolia-ui-admincentral</module>
+    <module>magnolia-module-wcm</module>
 
 	<!-- Templating -->
     <module>magnolia-module-templating-components</module>

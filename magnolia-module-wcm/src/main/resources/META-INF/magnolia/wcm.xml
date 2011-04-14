@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>wcm</name>
+  <displayName>Magnolia Web Content Management</displayName>
+  <description>Magnolia Web Content Management</description>
+  <class>info.magnolia.module.wcm.WcmModule</class>
+  <versionHandler>info.magnolia.module.wcm.setup.WcmVersionHandler</versionHandler>
+  <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>5.0/*</version>
+    </dependency>
+    <dependency>
+      <name>templating</name>
+      <version>5.0/*</version>
+    </dependency>
+    <dependency>
+      <name>admin-central</name>
+      <version>5.0/*</version>
+    </dependency>
+  </dependencies>
+</module>
