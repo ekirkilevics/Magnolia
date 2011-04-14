@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * This file Copyright (c) 2011 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,45 +25,28 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.action;
+package info.magnolia.module.wcm.action;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import info.magnolia.ui.model.action.ActionDefinition;
 
 
 /**
- * Opens the selected pageNode for pageNode editing.
+ * Opens a page to edit i.
  */
-public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
+public class OpenPageActionDefinition implements ActionDefinition {
+    private String windowName;
 
-    private Shell shell;
-
-    private Node pageNode;
-
-    public OpenPageAction(OpenPageActionDefinition definition, Shell shell, Node pageNode) {
-        super(definition);
-        this.shell =  shell;
-        this.pageNode = pageNode;
+    public String getWindowName() {
+        return windowName;
     }
 
-    public void execute() throws ActionExecutionException {
-        try {
-            String uri = MgnlContext.getContextPath() + pageNode.getPath() + ".html";
-            shell.openWindow(uri, getDefinition().getWindowName());
-        }
-        catch (RepositoryException e) {
-            throw new ActionExecutionException("Can't open page.", e);
-        }
+    public void setWindowName(String windowName) {
+        this.windowName = windowName;
     }
 }

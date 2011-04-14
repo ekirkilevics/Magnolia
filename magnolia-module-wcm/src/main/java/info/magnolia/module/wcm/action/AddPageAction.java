@@ -31,13 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.action;
+package info.magnolia.module.wcm.action;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.ui.admincentral.jcr.HackContent;
+import info.magnolia.ui.admincentral.tree.action.AddNodeAction;
+import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
 import info.magnolia.ui.framework.event.EventBus;
 
 import javax.jcr.Node;

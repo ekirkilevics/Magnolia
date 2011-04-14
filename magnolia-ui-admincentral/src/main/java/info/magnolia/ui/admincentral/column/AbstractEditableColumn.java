@@ -73,7 +73,7 @@ public abstract class AbstractEditableColumn<D extends AbstractColumnDefinition>
     /**
      * Presenter for AbstractEditable.
      */
-    protected class PresenterImpl implements AbstractEditable.Presenter {
+    public class PresenterImpl implements AbstractEditable.Presenter {
 
         private ContentDriver driver;
 

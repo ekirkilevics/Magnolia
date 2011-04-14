@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.column;
+package info.magnolia.module.wcm.column;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -46,11 +46,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
+import info.magnolia.ui.admincentral.column.AbstractEditableColumn;
+import info.magnolia.ui.admincentral.column.EditableSelect;
 import info.magnolia.ui.admincentral.jcr.TemporaryHackUtil;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.place.PlaceController;
 import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.column.definition.TemplateColumnDefinition;
 
 /**
  * A column that displays the currently selected template for a page and allows the editor to choose

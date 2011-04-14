@@ -31,17 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.tree.action;
+package info.magnolia.module.wcm.column;
 
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 
 /**
- * Adds a page (node).
+ * Definition for TemplateColumns.
+ *
+ * @author dlipp
  */
-public class AddPageActionDefinition extends AddNodeActionDefinition {
-
-    public AddPageActionDefinition() {
-        setNodeType(ItemType.CONTENT.getSystemName());
-    }
-
+public class TemplateColumnDefinition extends AbstractColumnDefinition {
 }
