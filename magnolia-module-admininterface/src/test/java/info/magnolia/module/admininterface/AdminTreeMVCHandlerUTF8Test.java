@@ -93,7 +93,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
 
     public static final String TEXT_SPECIAL = "utf8!?#{}$!\u00A3%()=@";
 
-    public static final String TEXT_SPECIAL_VALIDATED = "utf8---{}$-\u00A3-()=@";
+    public static final String TEXT_SPECIAL_VALIDATED = "utf8---{}$-\u00A3-()--";
 
     public static final String TEXT_ACCENTED = "citt\u00E0\u00E8\u00EC\u00F2\u00F9";
 
@@ -211,6 +211,7 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
     /**
      * test on save value
      * @throws Exception
+     */
     public void testSaveUTF8ValueCommandContext() throws Exception
     {
         String parentHandle = "/foo";
@@ -253,7 +254,6 @@ public class AdminTreeMVCHandlerUTF8Test extends TestCase
         verify(objs);
         assertEquals("value", view);
     }
-    */
 
     /**
      * Make sure path is set for <b>every</b> command.
