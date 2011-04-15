@@ -33,23 +33,27 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import junit.framework.TestCase;
 
-import javax.servlet.jsp.JspException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.servlet.jsp.JspException;
+
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AbstractTagTest extends TestCase {
+public class AbstractTagTest {
+    @Test
     public void testSplitSingleString() {
         final AbstractTag tag = new TestTag();
         final List<String> res = tag.split("hello");
@@ -57,18 +61,21 @@ public class AbstractTagTest extends TestCase {
         assertEquals(Arrays.asList("hello"), res);
     }
 
+    @Test
     public void testSplitNull() {
         final AbstractTag tag = new TestTag();
         final List<String> res = tag.split(null);
         assertEquals(0, res.size());
     }
 
+    @Test
     public void testSplitEmptyString() {
         final AbstractTag tag = new TestTag();
         final List<String> res = tag.split("");
         assertEquals(0, res.size());
     }
 
+    @Test
     public void testSplit() {
         final AbstractTag tag = new TestTag();
         final List<String> res = tag.split("hello,world");
@@ -76,6 +83,7 @@ public class AbstractTagTest extends TestCase {
         assertEquals(Arrays.asList("hello", "world"), res);
     }
 
+    @Test
     public void testSplitWithEmptyElements() {
         final AbstractTag tag = new TestTag();
         final List<String> res = tag.split("hello,,world");
@@ -83,6 +91,7 @@ public class AbstractTagTest extends TestCase {
         assertEquals(Arrays.asList("hello", "world"), res);
     }
 
+    @Test
     public void testToStringListFromStringArray() throws JspException {
         final NewBarTag tag = new NewBarTag();
         final List<String> res = tag.mandatoryStringList(new String[]{"hello", "world"}, null);
@@ -90,6 +99,7 @@ public class AbstractTagTest extends TestCase {
         assertEquals(Arrays.asList("hello", "world"), res);
     }
 
+    @Test
     public void testToStringListFromSet() throws JspException {
         final NewBarTag tag = new NewBarTag();
         final HashSet set = new HashSet();
@@ -100,6 +110,7 @@ public class AbstractTagTest extends TestCase {
         assertEquals(Arrays.asList("hello", "world"), res);
     }
 
+    @Test
     public void testToStringListFromCommaSeparatedString() throws JspException {
         final NewBarTag tag = new NewBarTag();
         final List<String> res = tag.mandatoryStringList("hello,world", null);

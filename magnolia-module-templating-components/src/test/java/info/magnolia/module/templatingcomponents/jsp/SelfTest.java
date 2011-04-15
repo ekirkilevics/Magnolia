@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.templatingcomponents.jsp;
 
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockHierarchyManager;

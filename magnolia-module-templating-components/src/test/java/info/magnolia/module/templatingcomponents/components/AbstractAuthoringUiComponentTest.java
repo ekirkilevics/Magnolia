@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -46,24 +50,26 @@ import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AbstractAuthoringUiComponentTest extends TestCase {
+public class AbstractAuthoringUiComponentTest {
     private static final String CONTENT = StringUtils.join(Arrays.asList(
             "/foo/bar@type=mgnl:content",
             "/foo/bar/MetaData@type=mgnl:metadata",
@@ -89,17 +95,15 @@ public class AbstractAuthoringUiComponentTest extends TestCase {
     ), "\n");
     private MockHierarchyManager hm;
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
 
         final Context ctx = createMock(WebContext.class);
@@ -131,32 +135,39 @@ public class AbstractAuthoringUiComponentTest extends TestCase {
         hm = MockUtil.createHierarchyManager(CONTENT);
     }
 
+    @Test
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
         doTestMessage("Incredibly custom Foo label", "/pouet/lol", "custom.foo.label");
     }
 
+    @Test
     public void testDefaultMessageFromCustomBundleWithPageTemplate() throws Exception {
         // the template's i18nBasename overrides a key from the the default bundle
         doTestMessage("Customized edit button", "/pouet/lol", "buttons.edit");
     }
 
+    @Test
     public void testGetsCustomMessageCustomBundleWithParagraph() throws Exception {
         doTestMessage("Incredibly custom Foo label", "/foo/bar/paragraphs/1", "custom.foo.label");
     }
 
+    @Test
     public void testDefaultMessageFromCustomBundleWithParagraph() throws Exception {
         doTestMessage("Customized edit button", "/foo/bar/paragraphs/1", "buttons.edit");
     }
 
+    @Test
     public void testUsesDefaultBundleIfNotSpecified() throws Exception {
         doTestMessage("Edit", "/foo/bar/paragraphs/0", "buttons.edit");
     }
 
+    @Test
     public void testUsesDefaultBundleIfNotRenderableDefinition() throws Exception {
         // testParagraph2 is not known by ParagraphManager
         doTestMessage("Edit", "/foo/bar/paragraphs/2", "buttons.edit");
     }
 
+    @Test
     public void testUsesDefaultBundleIfNoMetadata() throws Exception {
         doTestMessage("Edit", "/no/metadata/here", "buttons.edit");
     }

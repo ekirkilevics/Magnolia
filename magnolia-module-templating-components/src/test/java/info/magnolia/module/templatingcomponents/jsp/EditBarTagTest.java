@@ -34,6 +34,7 @@
 package info.magnolia.module.templatingcomponents.jsp;
 
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;

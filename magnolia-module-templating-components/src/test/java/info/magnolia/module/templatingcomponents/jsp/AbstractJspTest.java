@@ -38,6 +38,9 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -73,10 +76,12 @@ import javax.jcr.RepositoryException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import junit.framework.TestCase;
 import net.sourceforge.openutils.testing4web.TestServletOptions;
 
 import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.tidy.Tidy;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -97,7 +102,7 @@ import com.meterware.servletunit.ServletRunner;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public abstract class AbstractJspTest extends TestCase {
+public abstract class AbstractJspTest {
     protected static final String CONTEXT = "/test-context";
     protected ServletRunner runner;
     private WebContext ctx;
@@ -110,6 +115,7 @@ public abstract class AbstractJspTest extends TestCase {
      */
     abstract void check(WebResponse response, HtmlPage page) throws Exception;
 
+    @Test
     public void testDo() throws Exception {
         final String jspPath = getClass().getName().replace('.', '/') + ".jsp";
         final String jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
@@ -132,6 +138,7 @@ public abstract class AbstractJspTest extends TestCase {
         check(response, page);
     }
 
+    @Before
     public void setUp() throws Exception {
         // this was mainly copied from displaytag's org.displaytag.test.DisplaytagCase
 
@@ -244,7 +251,7 @@ public abstract class AbstractJspTest extends TestCase {
 
     protected abstract void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req);
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         verify(ctx, req);
         ComponentsTestUtil.clear();
@@ -253,7 +260,6 @@ public abstract class AbstractJspTest extends TestCase {
 
         runner.shutDown();
         runner = null;
-        super.tearDown();
     }
 
     protected void prettyPrint(WebResponse response, OutputStream out) throws IOException {
