@@ -39,19 +39,19 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.context.MgnlContext;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
+import javax.jcr.RepositoryException;
+
 /**
- * An hybrid between a new bar and an edit bar for non-moveable paragraphs: it's either added by the editor, edited, or removed.
- * This is currently meant to be used in conjunction with the regular edit bar component: if the request content is present,
- * wrappers should render their content (which should render said paragraph with an edit bar), and if not, this
- * renders a "new bar".
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * An hybrid between a new bar and an edit bar for non-moveable paragraphs: it's either added by the editor, edited, or
+ * removed. This is currently meant to be used in conjunction with the regular edit bar component: if the request
+ * content is present, wrappers should render their content (which should render said paragraph with an edit bar), and
+ * if not, this renders a "new bar".
+ * 
+ * @version $Id$
  */
 public class SingletonParagraphBar extends AbstractAuthoringUiComponent {
     private static final String DEFAULT_ENABLE_LABEL = "buttons.enable";

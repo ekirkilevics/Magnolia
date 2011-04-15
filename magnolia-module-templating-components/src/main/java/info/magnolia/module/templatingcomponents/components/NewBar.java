@@ -44,8 +44,8 @@ import java.util.List;
 
 /**
  * Builds a new bar UI component.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * 
+ * @version $Id$
  */
 public class NewBar extends AbstractAuthoringUiComponent {
     private static final String DEFAULT_NEW_LABEL = "buttons.new";

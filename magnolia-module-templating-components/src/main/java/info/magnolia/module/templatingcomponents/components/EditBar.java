@@ -40,16 +40,16 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
 
+import javax.jcr.RepositoryException;
+
 /**
- * This describes an "edit bar" for paragraphs. It typically displays edit, move and delete buttons.
- * The dialog to use is normally deduced from the given content node, but can be overridden by a specific one.
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * This describes an "edit bar" for paragraphs. It typically displays edit, move and delete buttons. The dialog to use
+ * is normally deduced from the given content node, but can be overridden by a specific one.
+ * 
+ * @version $Id$
  */
 public class EditBar extends AbstractAuthoringUiComponent {
     private static final String DEFAULT_MOVE_LABEL = "buttons.move";
@@ -90,7 +90,7 @@ public class EditBar extends AbstractAuthoringUiComponent {
             // force move to false for singletons
             bar.setEnableMoveButton(false);
         }
-        
+
         bar.setEnableDeleteButton(enableDeleteButton);
 
         return bar;

@@ -57,9 +57,7 @@ import org.apache.commons.lang.StringUtils;
  * things up with getters). Implementation might also expose static factory methods, which can take care of default
  * values, i.e for labels.
  * 
- * 
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public abstract class AbstractAuthoringUiComponent implements AuthoringUiComponent {
     private static final String DEFAULT_I18N_BASENAME = "info.magnolia.module.templatingcomponents.messages";
