@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * <code>/banner/image_01.jpg</code>, <code>/banner/image_02.jpg</code> or <code>/banner/image_03.jpg</code>
  * </p>
  * @author Fabrizio Giustina
- * @version $Id:$
+ * @version $Id$
  */
 public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
 
