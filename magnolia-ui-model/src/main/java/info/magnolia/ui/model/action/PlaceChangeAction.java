@@ -55,7 +55,7 @@ public class PlaceChangeAction extends ActionBase<PlaceChangeActionDefinition>  
         placeController.goTo(newPlace);
     }
 
-    public PlaceController getPlaceController() {
+    protected PlaceController getPlaceController() {
         return placeController;
     }
 
