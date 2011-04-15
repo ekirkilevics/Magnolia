@@ -36,7 +36,6 @@ package info.magnolia.ui.admincentral.search.view;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.ui.Component;
 
 /**
  * FIXME: how the hell does it work handling an enter key event on the search field?
@@ -45,18 +44,16 @@ import com.vaadin.ui.Component;
  *
  */
 public class SearchViewImpl implements SearchView, Handler {
+
     private static final Action ENTER_ACTION = new ShortcutAction("Default key", ShortcutAction.KeyCode.ENTER, null);
     private static final Action[] actions = {ENTER_ACTION};
+
     private SearchForm searchForm;
     private Presenter presenter;
 
     public SearchViewImpl() {
         searchForm = new SearchForm();
         searchForm.asVaadinComponent();
-    }
-
-    public Component asVaadinComponent() {
-        return searchForm.asVaadinComponent();
     }
 
     public void setPresenter(Presenter presenter) {

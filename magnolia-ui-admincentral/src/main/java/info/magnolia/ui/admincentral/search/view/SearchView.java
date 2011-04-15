@@ -34,14 +34,13 @@
 package info.magnolia.ui.admincentral.search.view;
 
 import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * TODO write javadoc.
  * @author fgrilli
  *
  */
-public interface SearchView extends View, IsVaadinComponent {
+public interface SearchView extends View {
 
     /**
      * Presenter interface for the search actions.
