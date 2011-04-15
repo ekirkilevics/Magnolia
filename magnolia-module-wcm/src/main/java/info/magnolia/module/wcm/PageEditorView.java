@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,39 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.action;
+package info.magnolia.module.wcm;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
+import com.vaadin.Application;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 /**
- * Opens the selected pageNode for pageNode editing.
+ * Main page editor view.
  */
-public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
+public class PageEditorView {
 
-    private Shell shell;
-
-    private Node pageNode;
-
-    public OpenPageAction(OpenPageActionDefinition definition, Shell shell, Node pageNode) {
-        super(definition);
-        this.shell =  shell;
-        this.pageNode = pageNode;
-    }
-
-    public void execute() throws ActionExecutionException {
-        try {
-            String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#" + pageNode.getPath() + ".html";
-            shell.openWindow(uri, getDefinition().getWindowName());
-        }
-        catch (RepositoryException e) {
-            throw new ActionExecutionException("Can't open page.", e);
-        }
+    public PageEditorView(Application application) {
+        VerticalLayout layout = new VerticalLayout();
+        Label label = new Label();
+        label.setCaption("Page Editor");
+        layout.addComponent(label);
+        layout.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+        application.setMainWindow(new Window("Page Editor", layout));
     }
 }

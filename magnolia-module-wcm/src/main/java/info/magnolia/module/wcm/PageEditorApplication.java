@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,39 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm.action;
+package info.magnolia.module.wcm;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.ui.framework.shell.Shell;
-import info.magnolia.ui.model.action.ActionBase;
-import info.magnolia.ui.model.action.ActionExecutionException;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
+import com.vaadin.Application;
+import info.magnolia.objectfactory.ComponentProviderUtil;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.MutableComponentProvider;
 
 /**
- * Opens the selected pageNode for pageNode editing.
+ * Note: This Application does not install its component provider as a scope in Components.
  */
-public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
+public class PageEditorApplication extends Application {
 
-    private Shell shell;
-
-    private Node pageNode;
-
-    public OpenPageAction(OpenPageActionDefinition definition, Shell shell, Node pageNode) {
-        super(definition);
-        this.shell =  shell;
-        this.pageNode = pageNode;
-    }
-
-    public void execute() throws ActionExecutionException {
-        try {
-            String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#" + pageNode.getPath() + ".html";
-            shell.openWindow(uri, getDefinition().getWindowName());
-        }
-        catch (RepositoryException e) {
-            throw new ActionExecutionException("Can't open page.", e);
-        }
+    @Override
+    public void init() {
+        MutableComponentProvider componentProvider = ComponentProviderUtil.createChild(Components.getComponentProvider());
+        componentProvider.registerInstance(Application.class, this);
+        componentProvider.newInstance(PageEditorView.class);
     }
 }
