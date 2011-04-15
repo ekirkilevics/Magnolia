@@ -33,19 +33,23 @@
  */
 package info.magnolia.module.templatingcomponents.freemarker;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
+
+import org.junit.Test;
+
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import junit.framework.TestCase;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
 
 /**
  * Tests for AbstractDirective's utility methods.
@@ -53,8 +57,9 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AbstractDirectiveTest extends TestCase {
+public class AbstractDirectiveTest {
 
+    @Test
     public void testBodyCheck() throws TemplateModelException {
         final TemplateDirectiveBody dummyDirBody = new TemplateDirectiveBody() {
             public void render(Writer out) throws TemplateException, IOException {

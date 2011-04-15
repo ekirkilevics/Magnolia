@@ -36,6 +36,7 @@ package info.magnolia.module.templatingcomponents.components;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
@@ -55,13 +56,15 @@ import info.magnolia.test.mock.MockUtil;
 import java.io.StringWriter;
 import java.util.Locale;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditBarTest extends TestCase {
+public class EditBarTest {
+    @Test
     public void testPathNodeCollectionNameEtc() throws Exception {
         final MockHierarchyManager hm = MockUtil.createHierarchyManager("/foo/bar/baz/paragraphs/01.text=dummy");
 
@@ -87,14 +90,16 @@ public class EditBarTest extends TestCase {
         final StringWriter out = new StringWriter();
         bar.doRender(out);
 
-        // TODO assertTrue(out.contains(....))
+        String outString = out.toString();
+
+        // TODO - add more stuff we expect here!
+        assertTrue(outString, outString.contains("buttons.edit"));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
         SystemProperty.clear();
-        super.tearDown();
     }
 }

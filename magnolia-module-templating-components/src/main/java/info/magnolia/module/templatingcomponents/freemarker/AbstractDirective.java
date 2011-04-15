@@ -171,10 +171,10 @@ public abstract class AbstractDirective implements TemplateDirectiveModel {
         final List<String> list = new ArrayList<String>();
         for (int i = 0; i < collAndSeq.size(); i++) {
             final TemplateModel tm = collAndSeq.get(i);
-            if (!(tm instanceof TemplateScalarModel)) {
-                throw new TemplateModelException("The '" + key + "' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
-            } else {
+            if (tm instanceof TemplateScalarModel) {
                 list.add(((TemplateScalarModel) tm).getAsString());
+            } else {
+                throw new TemplateModelException("The '" + key + "' attribute must be a String or a Collection of Strings. Found Collection of " + tm.getClass().getSimpleName() + ".");
             }
         }
         return list;
