@@ -853,6 +853,9 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>1bfc79a8-e840-4ede-bf7b-3981b45ee175</sv:value>
         </sv:property>
+        <sv:property sv:name="groupLabel" sv:type="String">
+          <sv:value>View as</sv:value>
+        </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
@@ -870,7 +873,7 @@
             <sv:value>2011-04-15T11:39:26.667+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2011-04-15T11:39:43.306+02:00</sv:value>
+            <sv:value>2011-04-15T15:51:33.421+02:00</sv:value>
           </sv:property>
         </sv:node>
         <sv:node sv:name="items">
