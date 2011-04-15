@@ -33,21 +33,22 @@
  */
 package info.magnolia.module.templating.freemarker;
 
-import freemarker.ext.util.ModelFactory;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import info.magnolia.module.templating.AbstractRenderable;
-import info.magnolia.module.templating.RenderableDefinition;
-import info.magnolia.module.templating.Paragraph;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
-import junit.framework.TestCase;
+import info.magnolia.module.templating.AbstractRenderable;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.RenderableDefinition;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import junit.framework.TestCase;
+import freemarker.ext.util.ModelFactory;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * These tests are a little larger than unit-level, since they actually test this model in
@@ -59,21 +60,21 @@ import java.util.Map;
 public class RenderableDefinitionModelTest extends TestCase {
 
     public void testRenderableDefinitionParametersAreAvailableAsTopLevelProperties() throws IOException, TemplateException {
-        final Map parameters = new HashMap();
+        final Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("foo", "bar");
 
         final AbstractRenderable def = new Paragraph();
         def.setName("myname");
         def.setParameters(parameters);
 
-        Map root = new HashMap();
+        Map<String, AbstractRenderable> root = new HashMap<String, AbstractRenderable>();
         root.put("def", def);
 
         doTestFreemarkerRendering(":myname:bar:", ":${def.name}:${def.foo}:", root);
     }
 
     public void testRenderableDefinitionPropertiesHaveHigherPriorityThanParameters() throws IOException, TemplateException {
-        final Map parameters = new HashMap();
+        final Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("foo", "bar");
         parameters.put("name", "should not appear");
 
@@ -81,14 +82,14 @@ public class RenderableDefinitionModelTest extends TestCase {
         def.setName("real name");
         def.setParameters(parameters);
 
-        final Map root = new HashMap();
+        final Map<String, AbstractRenderable> root = new HashMap<String, AbstractRenderable>();
         root.put("def", def);
 
         doTestFreemarkerRendering(":real name:bar:", ":${def.name}:${def.foo}:", root);
     }
 
     public void testRenderableDefinitionPropertiesAreStillAvailableIfReallyNeeded() throws IOException, TemplateException {
-        final Map parameters = new HashMap();
+        final Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("foo", "bar");
         parameters.put("name", "other name");
 
@@ -96,14 +97,14 @@ public class RenderableDefinitionModelTest extends TestCase {
         def.setName("real name");
         def.setParameters(parameters);
 
-        final Map root = new HashMap();
+        final Map<String, AbstractRenderable> root = new HashMap<String, AbstractRenderable>();
         root.put("def", def);
 
         doTestFreemarkerRendering(":real name:other name:", ":${def.name}:${def.parameters.name}:", root);
     }
 
     // TODO -- this could be moved elsewhere for reuse, if we let the model factory be a parameter of the test method for instance
-    public static void doTestFreemarkerRendering(String expectedResult, String testTemplate, Map root) throws TemplateException, IOException {
+    public static void doTestFreemarkerRendering(String expectedResult, String testTemplate, Map<String, AbstractRenderable> root) throws TemplateException, IOException {
         final MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(null /* not needed in the context of this test*/) {
             protected ModelFactory getModelFactory(Class clazz) {
                 if (RenderableDefinition.class.isAssignableFrom(clazz)) {
