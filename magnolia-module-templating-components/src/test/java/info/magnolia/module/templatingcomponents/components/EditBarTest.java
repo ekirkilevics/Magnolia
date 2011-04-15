@@ -93,7 +93,7 @@ public class EditBarTest {
         String outString = out.toString();
 
         // TODO - add more stuff we expect here!
-        assertTrue(outString, outString.contains("buttons.edit"));
+        assertTrue(outString, outString.contains(">Edit<"));
     }
 
     @After
