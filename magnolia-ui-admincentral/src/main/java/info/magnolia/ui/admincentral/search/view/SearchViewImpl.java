@@ -33,9 +33,12 @@
  */
 package info.magnolia.ui.admincentral.search.view;
 
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.ui.Component;
 
 /**
  * FIXME: how the hell does it work handling an enter key event on the search field?
@@ -43,7 +46,7 @@ import com.vaadin.event.ShortcutAction;
  * @author fgrilli
  *
  */
-public class SearchViewImpl implements SearchView, Handler {
+public class SearchViewImpl implements SearchView, IsVaadinComponent, Handler {
 
     private static final Action ENTER_ACTION = new ShortcutAction("Default key", ShortcutAction.KeyCode.ENTER, null);
     private static final Action[] actions = {ENTER_ACTION};
@@ -68,6 +71,10 @@ public class SearchViewImpl implements SearchView, Handler {
         if(action == ENTER_ACTION) {
             presenter.onSearch();
         }
+    }
+    //FIXME: we're implementing IsVaadinComponent in too many places in this case.
+    public Component asVaadinComponent() {
+        return searchForm.asVaadinComponent();
     }
 
 }
