@@ -46,6 +46,8 @@ import com.vaadin.ui.ComponentContainer;
  */
 public class ComponentContainerBasedViewPort implements ViewPort {
 
+    // TODO: why does it need an id?
+
     private String id;
 
     private ComponentContainer componentContainer;
@@ -65,5 +67,4 @@ public class ComponentContainerBasedViewPort implements ViewPort {
     public String getId() {
         return id;
     }
-
 }

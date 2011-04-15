@@ -33,14 +33,40 @@
  */
 package info.magnolia.module.wcm;
 
+import com.vaadin.Application;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 /**
  * Main page editor view.
  */
-public interface PageEditorView {
+public class PageEditorViewImpl implements PageEditorView {
 
-    void init();
+    private Application application;
+    private VerticalLayout layout;
 
-    ComponentContainer getMainContainer();
+    public PageEditorViewImpl(Application application) {
+        this.application = application;
+    }
+
+    public void init() {
+
+        Label label = new Label();
+        label.setCaption("Page Editor");
+
+        layout = new VerticalLayout();
+        layout.addComponent(label);
+        layout.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+
+        Window window = new Window("Page Editor", layout);
+
+        this.application.setMainWindow(window);
+    }
+
+    public ComponentContainer getMainContainer() {
+        return layout;
+    }
 }

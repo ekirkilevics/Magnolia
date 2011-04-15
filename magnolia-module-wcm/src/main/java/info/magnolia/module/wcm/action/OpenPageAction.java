@@ -33,13 +33,13 @@
  */
 package info.magnolia.module.wcm.action;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.model.action.ActionBase;
 import info.magnolia.ui.model.action.ActionExecutionException;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 
 /**
@@ -59,7 +59,7 @@ public class OpenPageAction extends ActionBase<OpenPageActionDefinition> {
 
     public void execute() throws ActionExecutionException {
         try {
-            String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#" + pageNode.getPath() + ".html";
+            String uri = MgnlContext.getContextPath() + "/.magnolia/page-editor#app:page:" + pageNode.getPath() + ".html";
             shell.openWindow(uri, getDefinition().getWindowName());
         }
         catch (RepositoryException e) {

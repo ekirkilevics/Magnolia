@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,35 +25,62 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.place;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.framework.place.PlaceTokenizer;
+import info.magnolia.ui.framework.place.Prefix;
 
 /**
- * Module class for WCM module.
+ * Place representation.
  */
-public class WcmModule implements ModuleLifecycle {
+@Prefix("page")
+public class PageEditorPlace extends Place {
 
-    private WcmModuleConfiguration configurations;
+    /**
+     * Tokenizer for PageEditorPlace.
+     */
+    public static class Tokenizer implements PlaceTokenizer<PageEditorPlace> {
 
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
+        public PageEditorPlace getPlace(String token) {
+            return new PageEditorPlace(token);
+        }
+
+        public String getToken(PageEditorPlace place) {
+            return place.getPath();
+        }
     }
 
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
+    private String path;
+
+    public PageEditorPlace(String path) {
+        this.path = path;
     }
 
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+    public String getPath() {
+        return path;
     }
 
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PageEditorPlace)) return false;
+
+        PageEditorPlace that = (PageEditorPlace) o;
+
+        if (path != null ? !path.equals(that.path) : that.path != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return path != null ? path.hashCode() : 0;
     }
 }

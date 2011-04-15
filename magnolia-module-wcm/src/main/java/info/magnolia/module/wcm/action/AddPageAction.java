@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.wcm.action;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.Template;
@@ -41,9 +44,6 @@ import info.magnolia.ui.admincentral.jcr.HackContent;
 import info.magnolia.ui.admincentral.tree.action.AddNodeAction;
 import info.magnolia.ui.admincentral.tree.action.AddNodeActionDefinition;
 import info.magnolia.ui.framework.event.EventBus;
-
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 
 /**
