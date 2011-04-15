@@ -35,14 +35,13 @@ package info.magnolia.ui.admincentral.toolbar.view;
 
 import info.magnolia.ui.framework.view.View;
 import info.magnolia.ui.model.toolbar.ToolbarItemDefinition;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
  * A toolbar for global functions (i.e. the clipboard, toggle view, etc.).
  * @author fgrilli
  *
  */
-public interface FunctionToolbarView extends View, IsVaadinComponent {
+public interface FunctionToolbarView extends View {
     /**
      * Presenter that is called when the user selects an item in the toolbar.
      */
