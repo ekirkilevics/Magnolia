@@ -5,6 +5,7 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>5.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-module-templating-components</artifactId>
@@ -14,7 +15,7 @@
     <taglib.shortname>ui</taglib.shortname>
     <taglib.uri>http://magnolia-cms.com/taglib/templating-components</taglib.uri>
   </properties>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -43,13 +44,11 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
       <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
     <!-- dependency
       TODO needed for ParagraphSelectDialog - but currently circular, so see note in info.magnolia.module.templatingcomponentsomponents.EditBar
@@ -62,7 +61,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-templating</artifactId>
       <version>5.0-SNAPSHOT</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
