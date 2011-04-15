@@ -53,6 +53,18 @@
       <name>info.magnolia.ui.model.navigation.definition.NavigationGroupDefinition</name>
       <value>info.magnolia.ui.model.navigation.definition.NavigationGroupDefinitionImpl</value>
     </property>
+    <property>
+      <name>info.magnolia.ui.model.toolbar.ToolbarDefinition</name>
+      <value>info.magnolia.ui.model.toolbar.ToolbarDefinitionImpl</value>
+    </property>
+    <property>
+      <name>info.magnolia.ui.model.toolbar.ToolbarItemGroupDefinition</name>
+      <value>info.magnolia.ui.model.toolbar.ToolbarItemGroupDefinitionImpl</value>
+    </property>
+    <property>
+      <name>info.magnolia.ui.model.toolbar.ToolbarItemDefinition</name>
+      <value>info.magnolia.ui.model.toolbar.ToolbarItemDefinitionImpl</value>
+    </property>
   </properties>
 
   <dependencies>

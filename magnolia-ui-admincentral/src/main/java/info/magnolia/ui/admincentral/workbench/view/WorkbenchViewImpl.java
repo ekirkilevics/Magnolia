@@ -45,7 +45,7 @@ import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list and detail view.
+ * The view to edit a workspace. Provides slots for the tree/list view, detail view and function toolbar.
  */
 public class WorkbenchViewImpl implements WorkbenchView{
 
@@ -53,6 +53,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
     private HorizontalSplitPanel splitPanel;
     private ComponentViewPort itemListViewPort;
     private ComponentViewPort detailViewPort;
+    private ComponentViewPort functionToolbarViewPort;
 
     public WorkbenchViewImpl() {
 
@@ -71,6 +72,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
 
         itemListViewPort = new ComponentViewPort();
         detailViewPort = new ComponentViewPort();
+        functionToolbarViewPort = new ComponentViewPort();
 
         itemListViewPort.setSizeFull();
         detailViewPort.setSizeFull();
@@ -79,23 +81,14 @@ public class WorkbenchViewImpl implements WorkbenchView{
         splitPanel.addComponent(detailViewPort);
         splitPanel.setSizeFull();
 
-        //SearchForm searchForm = new SearchForm();
-
         outerLayout = new  VerticalLayout();
         outerLayout.setSizeFull();
 
-        WorkbenchHeaderViewImpl workbenchHeaderView = new WorkbenchHeaderViewImpl();
-
-
-        //outerLayout.addComponent(searchForm);
-        outerLayout.addComponent(workbenchHeaderView.asVaadinComponent());
+        outerLayout.addComponent(functionToolbarViewPort);
         outerLayout.addComponent(splitPanel);
 
-        //outerLayout.setExpandRatio(searchForm, 1);
-        //outerLayout.setExpandRatio(workbenchHeaderView, 1);
         outerLayout.setExpandRatio(splitPanel, 1);
-        //outerLayout.setExpandRatio(searchForm, 1);
-        //outerLayout.setExpandRatio(splitPanel, 9);
+
     }
 
     public Component asVaadinComponent() {
@@ -108,6 +101,10 @@ public class WorkbenchViewImpl implements WorkbenchView{
 
     public ViewPort getDetailViewPort() {
         return detailViewPort;
+    }
+
+    public ViewPort getFunctionToolbarViewPort() {
+        return functionToolbarViewPort;
     }
 
 }

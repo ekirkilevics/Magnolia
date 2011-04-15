@@ -31,67 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr.view;
+package info.magnolia.ui.admincentral.navigation.action;
 
-import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
+import info.magnolia.ui.admincentral.jcr.view.JcrView;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
+import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 
 /**
- * UI component that displays a jcr workspace.
- *
+ * The definition for the action invoked when switching from different view types (i.e. tree view, list view) on a given workbench.
  * @author fgrilli
+ *
  */
-public interface JcrView extends View {
+public class ChangeViewActionDefinition implements PlaceChangeActionDefinition {
+    private String viewType;
+    private Place place;
 
-    /**
-     * Enumeration for view types.
-     * TODO: use lowercase elements and remove custom code so that C2B support "by name" could be leveraged?
-     * @author fgrilli
-     *
-     */
-    enum ViewType {
-        LIST("list"),
-        TREE("tree");
-
-        private String text;
-
-        ViewType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return this.text;
-        }
-
-        public static ViewType fromString(String text) {
-            if (text != null) {
-                for (ViewType type : ViewType.values()) {
-                    if (text.equalsIgnoreCase(type.text)) {
-                        return type;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("No view type could be found for " + text);
-        }
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
+    }
+    public String getViewType() {
+        return viewType;
     }
 
-    /**
-     * Presenter for the JcrView.
-     *
-     * @author fgrilli
-     */
-    public interface Presenter {
+    private String workbenchName;
 
-        void onItemSelection(Item tem);
+    public String getWorkbenchName() {
+        return workbenchName;
     }
 
-    void setPresenter(Presenter presenter);
+    public void setWorkbenchName(String workspace) {
+        this.workbenchName = workspace;
+    }
 
-    // TODO should we really ask view?
-    String getPathInTree(Item item);
+    public Place getPlace() {
+        if(place == null) {
+            return new ItemSelectedPlace(getWorkbenchName(), "/", JcrView.ViewType.fromString(viewType));
+        }
+        return place;
+    }
 
-    void select(String path);
-
-    void refresh();
 }

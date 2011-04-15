@@ -31,67 +31,26 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr.view;
+package info.magnolia.ui.admincentral.toolbar.registry;
 
-import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
+import info.magnolia.ui.model.toolbar.ToolbarDefinition;
+import info.magnolia.ui.model.toolbar.registry.ToolbarProvider;
+import info.magnolia.ui.model.workbench.definition.WorkbenchDefinition;
 
 /**
- * UI component that displays a jcr workspace.
  *
+ * Function toolbar provider. Function toolbars are configured per workbench, e.g. website, config, users, etc.
  * @author fgrilli
+ *
  */
-public interface JcrView extends View {
+public class FunctionToolbarProviderImpl implements ToolbarProvider {
+    private WorkbenchDefinition configuration;
 
-    /**
-     * Enumeration for view types.
-     * TODO: use lowercase elements and remove custom code so that C2B support "by name" could be leveraged?
-     * @author fgrilli
-     *
-     */
-    enum ViewType {
-        LIST("list"),
-        TREE("tree");
-
-        private String text;
-
-        ViewType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return this.text;
-        }
-
-        public static ViewType fromString(String text) {
-            if (text != null) {
-                for (ViewType type : ViewType.values()) {
-                    if (text.equalsIgnoreCase(type.text)) {
-                        return type;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("No view type could be found for " + text);
-        }
+    public FunctionToolbarProviderImpl(WorkbenchDefinition configuration) {
+        this.configuration = configuration;
     }
 
-    /**
-     * Presenter for the JcrView.
-     *
-     * @author fgrilli
-     */
-    public interface Presenter {
-
-        void onItemSelection(Item tem);
+    public ToolbarDefinition getToolbar() {
+        return configuration.getFunctionToolbar();
     }
-
-    void setPresenter(Presenter presenter);
-
-    // TODO should we really ask view?
-    String getPathInTree(Item item);
-
-    void select(String path);
-
-    void refresh();
 }

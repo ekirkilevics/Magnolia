@@ -31,67 +31,27 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr.view;
+package info.magnolia.ui.admincentral.toolbar.activity;
 
-import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
+import info.magnolia.ui.framework.activity.Activity;
+import info.magnolia.ui.framework.activity.ActivityMapper;
+import info.magnolia.ui.framework.place.Place;
 
 /**
- * UI component that displays a jcr workspace.
- *
+ * Returns a {@link FunctionToolbarActivity} for a given place.
  * @author fgrilli
+ *
  */
-public interface JcrView extends View {
+public class FunctionToolbarViewActivityMapper implements ActivityMapper {
 
-    /**
-     * Enumeration for view types.
-     * TODO: use lowercase elements and remove custom code so that C2B support "by name" could be leveraged?
-     * @author fgrilli
-     *
-     */
-    enum ViewType {
-        LIST("list"),
-        TREE("tree");
+    private FunctionToolbarActivity functionToolbarActivity;
 
-        private String text;
-
-        ViewType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return this.text;
-        }
-
-        public static ViewType fromString(String text) {
-            if (text != null) {
-                for (ViewType type : ViewType.values()) {
-                    if (text.equalsIgnoreCase(type.text)) {
-                        return type;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("No view type could be found for " + text);
-        }
+    public FunctionToolbarViewActivityMapper(FunctionToolbarActivity functionToolbarActivity) {
+        this.functionToolbarActivity = functionToolbarActivity;
     }
 
-    /**
-     * Presenter for the JcrView.
-     *
-     * @author fgrilli
-     */
-    public interface Presenter {
-
-        void onItemSelection(Item tem);
+    public Activity getActivity(Place place) {
+        return functionToolbarActivity;
     }
 
-    void setPresenter(Presenter presenter);
-
-    // TODO should we really ask view?
-    String getPathInTree(Item item);
-
-    void select(String path);
-
-    void refresh();
 }

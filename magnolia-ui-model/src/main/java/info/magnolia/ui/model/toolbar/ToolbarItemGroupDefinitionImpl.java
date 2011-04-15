@@ -31,67 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr.view;
+package info.magnolia.ui.model.toolbar;
 
-import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * UI component that displays a jcr workspace.
- *
+ * Implementation for {@link ToolbarItemGroupDefinition}.
  * @author fgrilli
+ *
  */
-public interface JcrView extends View {
+public class ToolbarItemGroupDefinitionImpl implements ToolbarItemGroupDefinition {
+    private String groupLabel;
+    private String name;
 
-    /**
-     * Enumeration for view types.
-     * TODO: use lowercase elements and remove custom code so that C2B support "by name" could be leveraged?
-     * @author fgrilli
-     *
-     */
-    enum ViewType {
-        LIST("list"),
-        TREE("tree");
+    private List<ToolbarItemDefinition> items = new ArrayList<ToolbarItemDefinition>();
 
-        private String text;
-
-        ViewType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return this.text;
-        }
-
-        public static ViewType fromString(String text) {
-            if (text != null) {
-                for (ViewType type : ViewType.values()) {
-                    if (text.equalsIgnoreCase(type.text)) {
-                        return type;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("No view type could be found for " + text);
-        }
+    public List<ToolbarItemDefinition> getItems() {
+       return Collections.unmodifiableList(items);
     }
 
-    /**
-     * Presenter for the JcrView.
-     *
-     * @author fgrilli
-     */
-    public interface Presenter {
-
-        void onItemSelection(Item tem);
+    public String getGroupLabel() {
+        return groupLabel;
     }
 
-    void setPresenter(Presenter presenter);
+    public void setGroupLabel(String groupLabel) {
+        this.groupLabel = groupLabel;
+    }
 
-    // TODO should we really ask view?
-    String getPathInTree(Item item);
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    void select(String path);
+    public String getName() {
+        return name;
+    }
 
-    void refresh();
+    public void addItem(ToolbarItemDefinition toolbarItem){
+        items.add(toolbarItem);
+    }
 }

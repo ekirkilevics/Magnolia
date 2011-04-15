@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,28 +25,21 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia-cms.com/mna.html
+ * is available at http://www.magnolia.info/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.model.toolbar.registry;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.security.PermissionSchema;
 
 
 /**
- * The view to edit a workspace. Provides slots for the item list, the detail view and the function toolbar.
+ * Checks whether a user can see a toolbar item or not.
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
-
-    ViewPort getItemListViewPort();
-
-    ViewPort getDetailViewPort();
-
-    ViewPort getFunctionToolbarViewPort();
+public interface ToolbarPermissionSchema extends PermissionSchema<MenuItemDefinition> {
 
 }

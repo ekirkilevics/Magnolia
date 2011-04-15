@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+import info.magnolia.ui.admincentral.toolbar.activity.FunctionToolbarViewActivityMapper;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
@@ -48,28 +49,26 @@ public class WorkbenchActivity extends AbstractActivity {
     private String workspace;
     private ItemListActivityMapper itemListActivityMapper;
     private DetailViewActivityMapper detailViewActivityMapper;
+    private FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper;
     private WorkbenchView view;
 
-    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, DetailViewActivityMapper detailViewActivityMapper) {
+    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, DetailViewActivityMapper detailViewActivityMapper, FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper) {
         this.workspace = place.getWorkbenchName();
         this.view = view;
         this.itemListActivityMapper = itemListActivityMapper;
         this.detailViewActivityMapper = detailViewActivityMapper;
-    }
-
-    @Override
-    public String mayStop() {
-        //return "Are you sure you want to leave this page?";
-        return null;
+        this.functionToolbarViewActivityMapper = functionToolbarViewActivityMapper;
     }
 
     public void start(ViewPort display, EventBus eventBus) {
 
         final ActivityManager jcrActivityManager = new ActivityManager(itemListActivityMapper, eventBus);
         final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, eventBus);
+        final ActivityManager functionToolbarViewActivityManager = new ActivityManager(functionToolbarViewActivityMapper, eventBus);
 
         jcrActivityManager.setViewPort(view.getItemListViewPort());
         detailViewActivityManager.setViewPort(view.getDetailViewPort());
+        functionToolbarViewActivityManager.setViewPort(view.getFunctionToolbarViewPort());
 
         display.setView(view);
     }

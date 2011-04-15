@@ -31,67 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.jcr.view;
+package info.magnolia.ui.admincentral.toolbar.activity;
 
-import info.magnolia.ui.framework.view.View;
-
-import javax.jcr.Item;
-
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.PlaceChangeAction;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import info.magnolia.ui.model.builder.FactoryBase;
 /**
- * UI component that displays a jcr workspace.
- *
+ * Action factory for the function toolbar.
  * @author fgrilli
+ *
  */
-public interface JcrView extends View {
+public class FunctionToolbarActionFactory extends FactoryBase<ActionDefinition, Action> {
 
-    /**
-     * Enumeration for view types.
-     * TODO: use lowercase elements and remove custom code so that C2B support "by name" could be leveraged?
-     * @author fgrilli
-     *
-     */
-    enum ViewType {
-        LIST("list"),
-        TREE("tree");
-
-        private String text;
-
-        ViewType(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return this.text;
-        }
-
-        public static ViewType fromString(String text) {
-            if (text != null) {
-                for (ViewType type : ViewType.values()) {
-                    if (text.equalsIgnoreCase(type.text)) {
-                        return type;
-                    }
-                }
-            }
-            throw new IllegalArgumentException("No view type could be found for " + text);
-        }
+    public FunctionToolbarActionFactory(ComponentProvider componentProvider) {
+        super(componentProvider);
+        addMapping(PlaceChangeActionDefinition.class, PlaceChangeAction.class);
     }
 
-    /**
-     * Presenter for the JcrView.
-     *
-     * @author fgrilli
-     */
-    public interface Presenter {
-
-        void onItemSelection(Item tem);
+    public Action createAction(ActionDefinition definition) {
+        return create(definition);
     }
 
-    void setPresenter(Presenter presenter);
-
-    // TODO should we really ask view?
-    String getPathInTree(Item item);
-
-    void select(String path);
-
-    void refresh();
 }

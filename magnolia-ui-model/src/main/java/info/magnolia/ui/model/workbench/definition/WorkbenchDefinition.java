@@ -36,6 +36,7 @@ package info.magnolia.ui.model.workbench.definition;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.ui.model.column.definition.AbstractColumnDefinition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.model.toolbar.ToolbarDefinition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -47,8 +48,7 @@ import java.util.Map;
 
 
 /**
- * Definition of a tree: A tree is a perennial woody plant. It is most often defined as a woody plant that has many secondary
- * branches supported clear of the ground on a single main stem or trunk with clear apical dominance.
+ * Contains all elements which define a workbench configuration.
  */
 public class WorkbenchDefinition implements Serializable {
 
@@ -65,6 +65,8 @@ public class WorkbenchDefinition implements Serializable {
     private List<MenuItemDefinition> menuItems = new ArrayList<MenuItemDefinition>();
 
     private List<ItemTypeDefinition> itemTypes = new ArrayList<ItemTypeDefinition>();
+
+    private ToolbarDefinition functionToolbar;
 
     public List<ItemTypeDefinition> getItemTypes() {
         return itemTypes;
@@ -126,6 +128,14 @@ public class WorkbenchDefinition implements Serializable {
         return menuItems.add(menuItem);
     }
 
+    public ToolbarDefinition getFunctionToolbar() {
+        return functionToolbar;
+    }
+
+    public void setFunctionToolbar(ToolbarDefinition functionToolbar) {
+        this.functionToolbar = functionToolbar;
+    }
+
     public ComponentProviderConfiguration getComponents() {
         return components;
     }
@@ -133,4 +143,5 @@ public class WorkbenchDefinition implements Serializable {
     public void setComponents(ComponentProviderConfiguration components) {
         this.components = components;
     }
+
 }
