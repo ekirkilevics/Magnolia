@@ -51,12 +51,12 @@ import org.slf4j.LoggerFactory;
  * <code>/banner/image_01.jpg</code>, <code>/banner/image_02.jpg</code> or <code>/banner/image_03.jpg</code>
  * </p>
  * @author Fabrizio Giustina
- * @version $Id: $
+ * @version $Id:$
  */
 public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
 
     private static final Logger log = LoggerFactory.getLogger(RotatingVirtualURIMapping.class);
-    
+
     /**
      * Placeholder that will be replaced by a random number.
      */
@@ -104,6 +104,7 @@ public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
     /**
      * {@inheritDoc}
      */
+    @Override
     public MappingResult mapURI(String uri) {
         // delegate the initial processing to RegexpVirtualURIMapping
         MappingResult mr = super.mapURI(uri);
@@ -115,7 +116,7 @@ public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
 
                 mr.setToURI(StringUtils.replace(mr.getToURI(), RANDOM_PLACEHOLDER, randomAsString));
             }else{
-               log.warn("End value must be greater than start value.");
+                log.warn("End value must be greater than start value.");
             }
         }
         return mr;
