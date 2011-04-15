@@ -31,13 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.toolbar.activity;
+package info.magnolia.ui.admincentral.toolbar.action;
 
 import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.admincentral.navigation.action.ChangeViewActionDefinition;
 import info.magnolia.ui.model.action.Action;
 import info.magnolia.ui.model.action.ActionDefinition;
-import info.magnolia.ui.model.action.PlaceChangeAction;
-import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
 import info.magnolia.ui.model.builder.FactoryBase;
 /**
  * Action factory for the function toolbar.
@@ -48,7 +47,7 @@ public class FunctionToolbarActionFactory extends FactoryBase<ActionDefinition, 
 
     public FunctionToolbarActionFactory(ComponentProvider componentProvider) {
         super(componentProvider);
-        addMapping(PlaceChangeActionDefinition.class, PlaceChangeAction.class);
+        addMapping(ChangeViewActionDefinition.class, ChangeViewAction.class);
     }
 
     public Action createAction(ActionDefinition definition) {

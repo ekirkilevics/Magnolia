@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.toolbar.activity;
 
+import info.magnolia.ui.admincentral.toolbar.action.FunctionToolbarActionFactory;
 import info.magnolia.ui.admincentral.toolbar.view.FunctionToolbarView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;

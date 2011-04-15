@@ -546,13 +546,13 @@
           <sv:value>9b98fdb6-c8a6-453e-a7ff-fb455d912da1</sv:value>
         </sv:property>
         <sv:property sv:name="implementation" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.toolbar.activity.FunctionToolbarActionFactory</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.toolbar.action.FunctionToolbarActionFactory</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
         </sv:property>
         <sv:property sv:name="type" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.toolbar.activity.FunctionToolbarActionFactory</sv:value>
+          <sv:value>info.magnolia.ui.admincentral.toolbar.action.FunctionToolbarActionFactory</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">

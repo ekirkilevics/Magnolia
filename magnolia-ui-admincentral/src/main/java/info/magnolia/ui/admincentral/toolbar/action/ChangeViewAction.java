@@ -31,32 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.ui.model.action;
+package info.magnolia.ui.admincentral.toolbar.action;
 
-import info.magnolia.ui.framework.place.Place;
+import info.magnolia.ui.admincentral.jcr.view.JcrView.ViewType;
+import info.magnolia.ui.admincentral.navigation.action.ChangeViewActionDefinition;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.place.PlaceController;
+import info.magnolia.ui.model.action.PlaceChangeAction;
 
 /**
- * Implements a place change action.
+ * Toggle a different kind of view (e.g. tree, list) for a certain place by keeping the currently selected path.
  * @author fgrilli
  *
  */
-public class PlaceChangeAction extends ActionBase<PlaceChangeActionDefinition>  {
+public class ChangeViewAction extends PlaceChangeAction {
 
-    private PlaceController placeController;
+    public ChangeViewAction(ChangeViewActionDefinition definition, PlaceController placeController) {
+        super(definition, placeController);
 
-    public PlaceChangeAction(final PlaceChangeActionDefinition definition, final PlaceController placeController) {
-        super(definition);
-        this.placeController = placeController;
     }
 
+    @Override
     public void execute() {
-        Place newPlace = getDefinition().getPlace();
-        placeController.goTo(newPlace);
-    }
-
-    public PlaceController getPlaceController() {
-        return placeController;
+        final ItemSelectedPlace currentPlace = (ItemSelectedPlace)getPlaceController().getWhere();
+        final ViewType viewType = ViewType.fromString(((ChangeViewActionDefinition)getDefinition()).getViewType());
+        final ItemSelectedPlace newPlace = new ItemSelectedPlace(currentPlace.getWorkspace(), currentPlace.getPath(), viewType);
+        getPlaceController().goTo(newPlace);
     }
 
 }
