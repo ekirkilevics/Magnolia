@@ -36,16 +36,17 @@ package info.magnolia.ui.model.navigation.definition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * TODO write javadoc.
+ * Implementation for {@link NavigationWorkareaDefinition}.
  * @author fgrilli
  *
  */
 public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl implements NavigationWorkareaDefinition {
 
-    private Collection<NavigationGroupDefinition> groups = new ArrayList<NavigationGroupDefinition>();
+    private List<NavigationGroupDefinition> groups = new ArrayList<NavigationGroupDefinition>();
     private String name;
     private boolean visible;
 
@@ -67,8 +68,8 @@ public class NavigationWorkareaDefinitionImpl extends MenuItemDefinitionImpl imp
         this.visible = visible;
     }
 
-    public Collection<NavigationGroupDefinition> getGroups() {
-        return groups;
+    public List<NavigationGroupDefinition> getGroups() {
+        return Collections.unmodifiableList(groups);
     }
 
     public void addGroup(NavigationGroupDefinition definition) {

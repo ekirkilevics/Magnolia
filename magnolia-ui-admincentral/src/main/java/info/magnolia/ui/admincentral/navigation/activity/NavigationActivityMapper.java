@@ -38,8 +38,7 @@ import info.magnolia.ui.framework.activity.ActivityMapper;
 import info.magnolia.ui.framework.place.Place;
 
 /**
- * TODO: write javadoc.
- * TODO: is this the right package?
+ * Returns a {@link NavigationActivity} for a given place.
  * @author fgrilli
  *
  */

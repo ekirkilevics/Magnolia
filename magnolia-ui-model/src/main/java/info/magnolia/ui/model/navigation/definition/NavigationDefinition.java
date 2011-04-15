@@ -33,13 +33,14 @@
  */
 package info.magnolia.ui.model.navigation.definition;
 
-import java.util.Collection;
+import java.util.List;
+
 
 
 /**
- * The definition of the navigation.
+ * The definition of the navigation. Navigation is structured by work areas (e.g. content, settings, personal, etc.).
  */
 public interface NavigationDefinition {
-    Collection<NavigationWorkareaDefinition> getWorkareas();
+    List<NavigationWorkareaDefinition> getWorkareas();
 
 }

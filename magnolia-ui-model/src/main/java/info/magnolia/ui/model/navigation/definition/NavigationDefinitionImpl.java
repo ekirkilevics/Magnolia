@@ -34,17 +34,18 @@
 package info.magnolia.ui.model.navigation.definition;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Simple implementation for {@link NavigationDefinition}.
  */
 public class NavigationDefinitionImpl implements NavigationDefinition {
 
-    private Collection<NavigationWorkareaDefinition> workareas = new ArrayList<NavigationWorkareaDefinition>();
+    private List<NavigationWorkareaDefinition> workareas = new ArrayList<NavigationWorkareaDefinition>();
 
-    public Collection<NavigationWorkareaDefinition> getWorkareas() {
-        return workareas;
+    public List<NavigationWorkareaDefinition> getWorkareas() {
+        return Collections.unmodifiableList(workareas);
     }
 
     public void addWorkarea(NavigationWorkareaDefinition navigationWorkareaDefinition){

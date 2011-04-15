@@ -45,8 +45,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
 /**
  * Contains all elements which define a workbench configuration.
  */

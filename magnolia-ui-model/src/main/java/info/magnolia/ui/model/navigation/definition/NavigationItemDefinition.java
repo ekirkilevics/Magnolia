@@ -33,9 +33,9 @@
  */
 package info.magnolia.ui.model.navigation.definition;
 
-import java.util.Collection;
-
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+
+import java.util.List;
 
 
 /**
@@ -43,7 +43,7 @@ import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
  */
 public interface NavigationItemDefinition extends MenuItemDefinition{
 
-    Collection<NavigationItemDefinition> getItems();
+    List<NavigationItemDefinition> getItems();
 
     /**
      * Set when added to a parent navigation item.

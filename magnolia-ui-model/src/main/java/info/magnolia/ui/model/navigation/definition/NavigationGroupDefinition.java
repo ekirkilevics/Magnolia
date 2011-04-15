@@ -33,14 +33,14 @@
  */
 package info.magnolia.ui.model.navigation.definition;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
- * TODO write javadoc.
+ * Navigation group definition. A group is essentially a menu with several items.
  * @author fgrilli
  *
  */
 public interface NavigationGroupDefinition {
-    Collection<NavigationItemDefinition> getItems();
+    List<NavigationItemDefinition> getItems();
     String getName();
 }

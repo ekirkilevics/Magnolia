@@ -36,7 +36,8 @@ package info.magnolia.ui.model.navigation.definition;
 import info.magnolia.ui.model.menu.definition.MenuItemDefinitionImpl;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -44,13 +45,13 @@ import java.util.Collection;
  */
 public class NavigationItemDefinitionImpl extends MenuItemDefinitionImpl implements NavigationItemDefinition {
 
-    private Collection<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
+    private List<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
 
     private NavigationItemDefinition parent;
 
     // interface
-    public Collection<NavigationItemDefinition> getItems() {
-        return items;
+    public List<NavigationItemDefinition> getItems() {
+        return Collections.unmodifiableList(items);
     }
 
     public NavigationItemDefinition getParent() {

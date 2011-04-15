@@ -35,15 +35,15 @@ package info.magnolia.ui.model.navigation.definition;
 
 import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
- * TODO write javadoc.
+ * A navigation workarea is made up by navigation groups where each group is basically a separated menu.
  * @author fgrilli
  *
  */
 public interface NavigationWorkareaDefinition extends MenuItemDefinition{
-    Collection<NavigationGroupDefinition> getGroups();
+    List<NavigationGroupDefinition> getGroups();
     String getName();
     boolean isVisible();
 }

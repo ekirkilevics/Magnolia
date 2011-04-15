@@ -34,19 +34,19 @@
 package info.magnolia.ui.model.navigation.definition;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
- * TODO write javadoc.
+ * Implementation for {@link NavigationGroupDefinition}.
  * @author fgrilli
  *
  */
 public class NavigationGroupDefinitionImpl implements NavigationGroupDefinition {
 
     private String name;
-    private Collection<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
+    private List<NavigationItemDefinition> items = new ArrayList<NavigationItemDefinition>();
 
-    public Collection<NavigationItemDefinition> getItems() {
+    public List<NavigationItemDefinition> getItems() {
         return items;
     }
     public void addItem(NavigationItemDefinition definition) {
