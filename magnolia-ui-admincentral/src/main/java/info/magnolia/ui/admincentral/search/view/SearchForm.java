@@ -31,15 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.search.view;
 
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
+
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Form;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
@@ -49,37 +54,38 @@ import com.vaadin.ui.TextField;
  * @author dlipp
  *
  * TODO: check where to move, make nice design, animate
- * TODO: move to a different package?
  */
-public class SearchForm extends Form {
+public class SearchForm implements IsVaadinComponent, Property.ValueChangeListener {
+
+    private CustomComponent customComponent;
 
     public SearchForm() {
         final GridLayout grid = new GridLayout(2, 1);
-        setLayout(grid);
 
         grid.setHeight(40, Sizeable.UNITS_PIXELS);
         grid.setWidth(100, Sizeable.UNITS_PERCENTAGE);
 
+        customComponent = new CustomComponent(){{ setCompositionRoot(grid); }};
+
         // Note: right now the only component in the first row - prepare for fading in the other stuff only after
         // someone started a search...
         TextField searchField = new TextField();
-        searchField.setValue("Search");
-        searchField.setHeight(25, UNITS_PIXELS);
-        searchField.setWidth(200, UNITS_PIXELS);
+        searchField.addListener(this);
+        searchField.setImmediate(false);
+        searchField.setInputPrompt("Search");
+        searchField.setWidth(200, Sizeable.UNITS_PIXELS);
         searchField.addStyleName("m-search-box");
 
         searchField.addListener(new FocusListener() {
 
             public void focus(FocusEvent event) {
                 ((TextField)event.getSource()).setValue("");
-
             }
         });
         searchField.addListener(new BlurListener() {
 
             public void blur(BlurEvent event) {
                 ((TextField)event.getSource()).setValue("Search");
-
             }
         });
 
@@ -108,6 +114,14 @@ public class SearchForm extends Form {
 
         grid.setColumnExpandRatio(0, 5);
         grid.setColumnExpandRatio(1, 1);
+    }
+
+    public void valueChange(ValueChangeEvent event) {
+        System.out.println(event.getProperty().getValue());
+    }
+
+    public Component asVaadinComponent() {
+        return customComponent;
     }
 
 }

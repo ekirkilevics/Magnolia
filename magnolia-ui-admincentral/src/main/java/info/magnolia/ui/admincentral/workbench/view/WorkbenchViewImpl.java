@@ -45,7 +45,7 @@ import com.vaadin.ui.VerticalLayout;
 
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view and function toolbar.
+ * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
  */
 public class WorkbenchViewImpl implements WorkbenchView{
 
@@ -54,6 +54,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
     private ComponentViewPort itemListViewPort;
     private ComponentViewPort detailViewPort;
     private ComponentViewPort functionToolbarViewPort;
+    private ComponentViewPort searchViewPort;
 
     public WorkbenchViewImpl() {
 
@@ -73,6 +74,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
         itemListViewPort = new ComponentViewPort();
         detailViewPort = new ComponentViewPort();
         functionToolbarViewPort = new ComponentViewPort();
+        searchViewPort = new ComponentViewPort();
 
         itemListViewPort.setSizeFull();
         detailViewPort.setSizeFull();
@@ -84,6 +86,7 @@ public class WorkbenchViewImpl implements WorkbenchView{
         outerLayout = new  VerticalLayout();
         outerLayout.setSizeFull();
 
+        outerLayout.addComponent(searchViewPort);
         outerLayout.addComponent(functionToolbarViewPort);
         outerLayout.addComponent(splitPanel);
 
@@ -105,6 +108,10 @@ public class WorkbenchViewImpl implements WorkbenchView{
 
     public ViewPort getFunctionToolbarViewPort() {
         return functionToolbarViewPort;
+    }
+
+    public ViewPort getSearchViewPort() {
+        return searchViewPort;
     }
 
 }

@@ -31,24 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.search.view;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
-
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.ui.Component;
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * FIXME: how the hell does it work handling an enter key event on the search field?
+ * TODO write javadoc.
+ * @author fgrilli
+ *
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public class SearchViewImpl implements SearchView, Handler {
+    private static final Action ENTER_ACTION = new ShortcutAction("Default key", ShortcutAction.KeyCode.ENTER, null);
+    private static final Action[] actions = {ENTER_ACTION};
+    private SearchForm searchForm;
+    private Presenter presenter;
 
-    ViewPort getItemListViewPort();
+    public SearchViewImpl() {
+        searchForm = new SearchForm();
+        searchForm.asVaadinComponent();
+    }
 
-    ViewPort getDetailViewPort();
+    public Component asVaadinComponent() {
+        return searchForm.asVaadinComponent();
+    }
 
-    ViewPort getFunctionToolbarViewPort();
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
 
-    ViewPort getSearchViewPort();
+    public Action[] getActions(Object target, Object sender) {
+        return actions;
+    }
+
+    public void handleAction(Action action, Object sender, Object target) {
+        if(action == ENTER_ACTION) {
+            presenter.onSearch();
+        }
+    }
 
 }

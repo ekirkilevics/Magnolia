@@ -31,24 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.search.activity;
 
-import info.magnolia.ui.framework.view.View;
+import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
+import info.magnolia.ui.admincentral.search.view.SearchView;
+import info.magnolia.ui.framework.activity.AbstractActivity;
+import info.magnolia.ui.framework.event.EventBus;
+import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
-
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * TODO write javadoc.
+ * @author fgrilli
+ *
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public class SearchActivity extends AbstractActivity implements SearchView.Presenter{
 
-    ViewPort getItemListViewPort();
+    private SearchView view;
+    private SearchActionFactory actionFactory;
+    private Shell shell;
 
-    ViewPort getDetailViewPort();
+    public SearchActivity(SearchView view, SearchActionFactory actionFactory, Shell shell) {
+        this.view = view;
+        this.actionFactory = actionFactory;
+        this.shell = shell;
+        this.view.setPresenter(this);
+    }
 
-    ViewPort getFunctionToolbarViewPort();
+    public void start(ViewPort viewPort, EventBus eventBus) {
+        viewPort.setView(view);
+    }
 
-    ViewPort getSearchViewPort();
+    public void onSearch() {
+        //TODO do the search!
+        shell.showNotification("Hi, one fine day you will see your search results");
+
+    }
 
 }

@@ -31,24 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.search.action;
 
-import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
-import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
-
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
+import info.magnolia.ui.model.action.PlaceChangeAction;
+import info.magnolia.ui.model.action.PlaceChangeActionDefinition;
+import info.magnolia.ui.model.builder.FactoryBase;
 
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * TODO write javadoc.
+ * @author fgrilli
+ *
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public class SearchActionFactory extends FactoryBase<ActionDefinition, Action> {
 
-    ViewPort getItemListViewPort();
+    public SearchActionFactory(ComponentProvider componentProvider) {
+        super(componentProvider);
+        addMapping(PlaceChangeActionDefinition.class, PlaceChangeAction.class);
+    }
 
-    ViewPort getDetailViewPort();
-
-    ViewPort getFunctionToolbarViewPort();
-
-    ViewPort getSearchViewPort();
+    public Action createAction(ActionDefinition definition) {
+        return create(definition);
+    }
 
 }

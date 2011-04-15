@@ -31,24 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.ui.admincentral.workbench.view;
+package info.magnolia.ui.admincentral.search.view;
 
 import info.magnolia.ui.framework.view.View;
-import info.magnolia.ui.framework.view.ViewPort;
 import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
-
 /**
- * The view to edit a workspace. Provides slots for the tree/list view, detail view, search view and function toolbar.
+ * TODO write javadoc.
+ * @author fgrilli
+ *
  */
-public interface WorkbenchView extends View, IsVaadinComponent{
+public interface SearchView extends View, IsVaadinComponent {
 
-    ViewPort getItemListViewPort();
+    /**
+     * Presenter interface for the search actions.
+     */
+    public interface Presenter {
 
-    ViewPort getDetailViewPort();
+        void onSearch();
+    }
 
-    ViewPort getFunctionToolbarViewPort();
-
-    ViewPort getSearchViewPort();
-
+    void setPresenter(Presenter presenter);
 }

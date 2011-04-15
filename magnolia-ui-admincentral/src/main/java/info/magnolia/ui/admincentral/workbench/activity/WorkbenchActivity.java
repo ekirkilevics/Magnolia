@@ -33,6 +33,7 @@
  */
 package info.magnolia.ui.admincentral.workbench.activity;
 
+import info.magnolia.ui.admincentral.search.activity.SearchViewActivityMapper;
 import info.magnolia.ui.admincentral.toolbar.activity.FunctionToolbarViewActivityMapper;
 import info.magnolia.ui.admincentral.workbench.place.WorkbenchPlace;
 import info.magnolia.ui.admincentral.workbench.view.WorkbenchView;
@@ -50,14 +51,16 @@ public class WorkbenchActivity extends AbstractActivity {
     private ItemListActivityMapper itemListActivityMapper;
     private DetailViewActivityMapper detailViewActivityMapper;
     private FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper;
+    private SearchViewActivityMapper searchViewActivityMapper;
     private WorkbenchView view;
 
-    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, DetailViewActivityMapper detailViewActivityMapper, FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper) {
+    public WorkbenchActivity(WorkbenchPlace place, WorkbenchView view, ItemListActivityMapper itemListActivityMapper, DetailViewActivityMapper detailViewActivityMapper, FunctionToolbarViewActivityMapper functionToolbarViewActivityMapper, SearchViewActivityMapper searchViewActivityMapper) {
         this.workspace = place.getWorkbenchName();
         this.view = view;
         this.itemListActivityMapper = itemListActivityMapper;
         this.detailViewActivityMapper = detailViewActivityMapper;
         this.functionToolbarViewActivityMapper = functionToolbarViewActivityMapper;
+        this.searchViewActivityMapper = searchViewActivityMapper;
     }
 
     public void start(ViewPort display, EventBus eventBus) {
@@ -65,10 +68,12 @@ public class WorkbenchActivity extends AbstractActivity {
         final ActivityManager jcrActivityManager = new ActivityManager(itemListActivityMapper, eventBus);
         final ActivityManager detailViewActivityManager = new ActivityManager(detailViewActivityMapper, eventBus);
         final ActivityManager functionToolbarViewActivityManager = new ActivityManager(functionToolbarViewActivityMapper, eventBus);
+        final ActivityManager searchViewViewActivityManager = new ActivityManager(searchViewActivityMapper, eventBus);
 
         jcrActivityManager.setViewPort(view.getItemListViewPort());
         detailViewActivityManager.setViewPort(view.getDetailViewPort());
         functionToolbarViewActivityManager.setViewPort(view.getFunctionToolbarViewPort());
+        searchViewViewActivityManager.setViewPort(view.getSearchViewPort());
 
         display.setView(view);
     }

@@ -54,7 +54,6 @@ import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.dialog.view.DialogPresenter;
-import info.magnolia.ui.admincentral.workbench.view.SearchForm;
 
 /**
  * Main application view layout.
@@ -104,8 +103,6 @@ public class AdminCentralViewImpl implements AdminCentralView {
         outerContainer.setSizeFull();
         outerContainer.addComponent(headerLayout);
 
-        final SearchForm searchForm = new SearchForm();
-        outerContainer.addComponent(searchForm);
         outerContainer.addComponent(innerContainer);
         outerContainer.setExpandRatio(headerLayout, 1.0f);
         outerContainer.setExpandRatio(innerContainer, 90.0f);
