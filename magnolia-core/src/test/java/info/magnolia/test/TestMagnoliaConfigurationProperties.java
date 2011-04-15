@@ -61,6 +61,15 @@ public class TestMagnoliaConfigurationProperties extends AbstractMagnoliaConfigu
         this(new Properties());
     }
 
+    /**
+     * If your component-under-test relies on a single property, this constructor will save you a pair of lines of code.
+     */
+    public TestMagnoliaConfigurationProperties(final String key, final String value) throws IOException {
+        this(new Properties() {{
+            put(key, value);
+        }});
+    }
+
     public TestMagnoliaConfigurationProperties(Properties p) throws IOException {
         this(new AbstractPropertySource(p) {
         });
