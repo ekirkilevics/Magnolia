@@ -92,8 +92,11 @@ public class EditBarTest {
 
         String outString = out.toString();
 
+        // Locale is US so we expect e.g. the message "buttons.edit" to be translated to Edit
+        assertTrue(outString, outString.contains("Edit"));
+        assertTrue(outString, outString.contains("Move"));
+        assertTrue(outString, outString.contains("Delete"));
         // TODO - add more stuff we expect here!
-        assertTrue(outString, outString.contains(">Edit<"));
     }
 
     @After
