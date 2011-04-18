@@ -31,39 +31,55 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.wcm.toolbox.ToolboxConfiguration;
+import java.util.ArrayList;
+import java.util.List;
+
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
 
 /**
- * Module class for WCM module.
+ * Toolbox configuration.
  */
-public class WcmModule implements ModuleLifecycle {
+public class ToolboxConfiguration {
 
-    private WcmModuleConfiguration configurations;
-    private ToolboxConfiguration toolboxConfiguration;
+    private List<MenuItemDefinition> page = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> paragraph = new ArrayList<MenuItemDefinition>();
+    private List<MenuItemDefinition> area = new ArrayList<MenuItemDefinition>();
 
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
+    public List<MenuItemDefinition> getPage() {
+        return page;
     }
 
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
+    public void setPage(List<MenuItemDefinition> page) {
+        this.page = page;
     }
 
-    public ToolboxConfiguration getToolboxConfiguration() {
-        return toolboxConfiguration;
+    public List<MenuItemDefinition> getParagraph() {
+        return paragraph;
     }
 
-    public void setToolboxConfiguration(ToolboxConfiguration toolboxConfiguration) {
-        this.toolboxConfiguration = toolboxConfiguration;
+    public void setParagraph(List<MenuItemDefinition> paragraph) {
+        this.paragraph = paragraph;
     }
 
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+    public List<MenuItemDefinition> getArea() {
+        return area;
     }
 
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+    public void setArea(List<MenuItemDefinition> area) {
+        this.area = area;
+    }
+
+    public boolean addPage(MenuItemDefinition menuItemDefinition) {
+        return page.add(menuItemDefinition);
+    }
+
+    public boolean addParagraph(MenuItemDefinition menuItemDefinition) {
+        return paragraph.add(menuItemDefinition);
+    }
+
+    public boolean addArea(MenuItemDefinition menuItemDefinition) {
+        return area.add(menuItemDefinition);
     }
 }

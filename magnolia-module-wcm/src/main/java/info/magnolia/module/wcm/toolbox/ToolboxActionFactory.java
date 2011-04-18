@@ -31,39 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.wcm.toolbox.ToolboxConfiguration;
+import javax.jcr.Item;
+
+import info.magnolia.ui.model.action.Action;
+import info.magnolia.ui.model.action.ActionDefinition;
 
 /**
- * Module class for WCM module.
+ * Creates actions for items defined in the toolbox.
  */
-public class WcmModule implements ModuleLifecycle {
+public interface ToolboxActionFactory {
 
-    private WcmModuleConfiguration configurations;
-    private ToolboxConfiguration toolboxConfiguration;
-
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
-    }
-
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
-    }
-
-    public ToolboxConfiguration getToolboxConfiguration() {
-        return toolboxConfiguration;
-    }
-
-    public void setToolboxConfiguration(ToolboxConfiguration toolboxConfiguration) {
-        this.toolboxConfiguration = toolboxConfiguration;
-    }
-
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
-    }
-
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-    }
+    Action createAction(ActionDefinition actionDefinition, Item item);
 }

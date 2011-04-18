@@ -31,39 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
+package info.magnolia.module.wcm.toolbox;
 
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.wcm.toolbox.ToolboxConfiguration;
+import com.vaadin.data.Item;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Table;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.wcm.WcmModule;
+import info.magnolia.ui.model.menu.definition.MenuItemDefinition;
+import info.magnolia.ui.vaadin.integration.view.IsVaadinComponent;
 
 /**
- * Module class for WCM module.
+ * View for the page editor toolbox.
  */
-public class WcmModule implements ModuleLifecycle {
+public class ToolboxViewImpl implements ToolboxView, IsVaadinComponent {
 
-    private WcmModuleConfiguration configurations;
-    private ToolboxConfiguration toolboxConfiguration;
+    private Table table;
 
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
+    public ToolboxViewImpl(WcmModule wcmModule) {
+        this.table = new Table();
+        this.table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
+        this.table.addContainerProperty("Command", String.class, "");
+        this.table.setSizeFull();
+        this.table.setSelectable(true);
+
+        for (MenuItemDefinition menuItem : wcmModule.getToolboxConfiguration().getPage()) {
+            Object itemId = menuItem.getName();
+            table.addItem(itemId);
+            Item commandItem = table.getItem(itemId);
+            commandItem.getItemProperty("Command").setValue(menuItem.getLabel());
+            table.setItemIcon(itemId, new ExternalResource(MgnlContext.getContextPath() + menuItem.getIcon()));
+        }
     }
 
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
-    }
-
-    public ToolboxConfiguration getToolboxConfiguration() {
-        return toolboxConfiguration;
-    }
-
-    public void setToolboxConfiguration(ToolboxConfiguration toolboxConfiguration) {
-        this.toolboxConfiguration = toolboxConfiguration;
-    }
-
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
-    }
-
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+    public Component asVaadinComponent() {
+        return table;
     }
 }

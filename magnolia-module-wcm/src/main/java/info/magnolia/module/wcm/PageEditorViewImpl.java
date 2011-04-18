@@ -34,11 +34,12 @@
 package info.magnolia.module.wcm;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Alignment;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Label;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import info.magnolia.module.wcm.toolbox.ToolboxViewImpl;
 
 /**
  * Main page editor view.
@@ -46,27 +47,37 @@ import com.vaadin.ui.Window;
 public class PageEditorViewImpl implements PageEditorView {
 
     private Application application;
-    private VerticalLayout layout;
+    private HorizontalLayout layout;
+    private VerticalLayout pageLayout;
+    private VerticalLayout toolboxLayout;
+    private WcmModule wcmModule;
 
-    public PageEditorViewImpl(Application application) {
+    public PageEditorViewImpl(Application application, WcmModule wcmModule) {
         this.application = application;
+        this.wcmModule = wcmModule;
     }
 
     public void init() {
 
-        Label label = new Label();
-        label.setCaption("Page Editor");
+        pageLayout = new VerticalLayout();
+        pageLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 
-        layout = new VerticalLayout();
-        layout.addComponent(label);
-        layout.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+        toolboxLayout = new VerticalLayout();
+        toolboxLayout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
+        toolboxLayout.addComponent(new ToolboxViewImpl(wcmModule).asVaadinComponent());
+
+        layout = new HorizontalLayout();
+        layout.setSizeFull();
+        layout.addComponent(pageLayout);
+        layout.addComponent(toolboxLayout);
+        layout.setExpandRatio(pageLayout, 5);
+        layout.setExpandRatio(toolboxLayout, 1);
 
         Window window = new Window("Page Editor", layout);
-
         this.application.setMainWindow(window);
     }
 
     public ComponentContainer getMainContainer() {
-        return layout;
+        return pageLayout;
     }
 }

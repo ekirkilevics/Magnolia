@@ -31,39 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.wcm;
-
-import info.magnolia.module.ModuleLifecycle;
-import info.magnolia.module.ModuleLifecycleContext;
-import info.magnolia.module.wcm.toolbox.ToolboxConfiguration;
+package info.magnolia.module.wcm.toolbox;
 
 /**
- * Module class for WCM module.
+ * View for the page editor toolbox.
  */
-public class WcmModule implements ModuleLifecycle {
+public interface ToolboxView {
 
-    private WcmModuleConfiguration configurations;
-    private ToolboxConfiguration toolboxConfiguration;
+    /**
+     * Presenter for toolbox.
+     */
+    public interface Presenter {
 
-    public WcmModuleConfiguration getConfigurations() {
-        return configurations;
-    }
-
-    public void setConfigurations(WcmModuleConfiguration configurations) {
-        this.configurations = configurations;
-    }
-
-    public ToolboxConfiguration getToolboxConfiguration() {
-        return toolboxConfiguration;
-    }
-
-    public void setToolboxConfiguration(ToolboxConfiguration toolboxConfiguration) {
-        this.toolboxConfiguration = toolboxConfiguration;
-    }
-
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
-    }
-
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
     }
 }
