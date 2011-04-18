@@ -109,7 +109,7 @@ public class SearchForm extends Form implements Handler {
             public void buttonClick(ClickEvent event) {
                 commit();
                 presenter.onSearch(searchParameters.getBean());
-                buttons.setVisible(true);
+                updateUI(true);
             }
         });
         this.addField("updateResults", updateResults);
