@@ -33,8 +33,10 @@
  */
 package info.magnolia.module.wcm.activity;
 
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
+import com.vaadin.ui.Embedded;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.wcm.place.PageEditorPlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
@@ -54,17 +56,21 @@ public class PageEditorActivity extends AbstractActivity {
     }
 
     public void start(ViewPort viewPort, EventBus eventBus) {
-        viewPort.setView(new Apa(place.getPath()));
+        viewPort.setView(new EditorView(place.getPath()));
     }
 
-    private static class Apa implements View, IsVaadinComponent {
+    private static class EditorView implements View, IsVaadinComponent {
 
         private String path;
         private Component component;
 
-        private Apa(String path) {
+        private EditorView(String path) {
             this.path = path;
-            component = new Label("Editing " + path);
+            Embedded embedded = new Embedded();
+            embedded.setType(Embedded.TYPE_BROWSER);
+            embedded.setSizeFull();
+            embedded.setSource(new ExternalResource(MgnlContext.getContextPath() + path));
+            component = embedded;
         }
 
         public Component asVaadinComponent() {
