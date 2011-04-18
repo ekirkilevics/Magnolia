@@ -95,37 +95,36 @@ public class SearchForm extends Form implements Handler {
 
         panel.addComponent(gridLayout);
 
-        SearchParameters params = new SearchParameters();
-        searchParameters = new BeanItem<SearchParameters>(params);
+        searchParameters = new BeanItem<SearchParameters>(new SearchParameters());
 
         setWriteThrough(false);
         setItemDataSource(searchParameters);
         setFormFieldFactory(new SearchFormFieldFactory());
         setVisibleItemProperties(Arrays.asList(new String[] { SEARCH_FIELD }));
 
-
         buttons.setSpacing(true);
         buttons.setMargin(true, false, false, false);
 
-        final Button updateResults = new Button("Update Results", new Button.ClickListener() {
+        final Button updateResults = new Button("Update results", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
+                commit();
                 presenter.onSearch(searchParameters.getBean());
                 buttons.setVisible(true);
             }
         });
-
         this.addField("updateResults", updateResults);
         buttons.addComponent(updateResults);
 
         final Button doneButton = new Button("Done", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                buttons.setVisible(false);
                 discard();
+                buttons.setVisible(false);
+                getField(SEARCH_FIELD).setValue("Search");
             }
         });
         this.addField("done", doneButton);
         buttons.addComponent(doneButton);
-        buttons.setComponentAlignment(doneButton, Alignment.MIDDLE_LEFT);
+
         buttons.setVisible(false);
 
         gridLayout.addComponent(buttons, 1, 1);
@@ -181,10 +180,14 @@ public class SearchForm extends Form implements Handler {
                         ((TextField)event.getSource()).setValue("");
                     }
                 });
+
                 searchField.addListener(new BlurListener() {
 
                     public void blur(BlurEvent event) {
-                        ((TextField)event.getSource()).setValue("Search");
+                        TextField text = ((TextField)event.getSource());
+                        if("".equals(text.getValue())){
+                            text.setValue("Search");
+                        }
                     }
                 });
                 return searchField;
