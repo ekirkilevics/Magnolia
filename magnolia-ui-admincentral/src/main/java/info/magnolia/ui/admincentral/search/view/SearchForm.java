@@ -118,19 +118,17 @@ public class SearchForm extends Form implements Handler {
         final Button doneButton = new Button("Done", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 discard();
-                buttons.setVisible(false);
-                getField(SEARCH_FIELD).setValue("Search");
+                updateUI(false);
             }
         });
         this.addField("done", doneButton);
         buttons.addComponent(doneButton);
 
-        buttons.setVisible(false);
-
         gridLayout.addComponent(buttons, 1, 1);
         gridLayout.setComponentAlignment(buttons, Alignment.MIDDLE_RIGHT);
 
         customComponent = new CustomComponent() {{setCompositionRoot(panel);}};
+        updateUI(false);
     }
 
     public Component asVaadinComponent() {
@@ -148,8 +146,8 @@ public class SearchForm extends Form implements Handler {
     public void handleAction(Action action, Object sender, Object target) {
         if(action == ENTER_ACTION){
             commit();
-            buttons.setVisible(true);
             presenter.onSearch(searchParameters.getBean());
+            updateUI(true);
         }
     }
 
@@ -158,6 +156,21 @@ public class SearchForm extends Form implements Handler {
         if(SEARCH_FIELD.equals(propertyId)) {
             gridLayout.addComponent(field, 1, 0);
             gridLayout.setComponentAlignment(field, Alignment.MIDDLE_RIGHT);
+        }
+    }
+
+    /**
+     * Updates the UI by showing or hiding search results and applying/removing styles.
+     * @param visible
+     */
+    protected void updateUI(boolean searchResultsVisible){
+        if(searchResultsVisible){
+            buttons.setVisible(true);
+            customComponent.addStyleName("m-search-form-expanded");
+        } else {
+            buttons.setVisible(false);
+            getField(SEARCH_FIELD).setValue("Search");
+            customComponent.removeStyleName("m-search-form-expanded");
         }
     }
     /**

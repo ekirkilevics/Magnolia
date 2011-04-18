@@ -48,11 +48,15 @@
 	-moz-border-radius: 15px;
 	border-radius: 15px;
 	padding-left: 20px !important;
-	padding-top: 4px !important;
-	background: #FFF url("img/magnifier.png") no-repeat 2px 5px;
+	padding-top: 2px !important;
+	padding-bottom: 2px !important;
+	background: #FFF url("img/magnifier.png") no-repeat 2px 4px;
 	color: #B6BBBC !important;
 }
-
+.m-search-form-expanded {
+	border-top: 1px solid #B6BBBC !important;
+	border-left: 1px solid #B6BBBC !important;
+}
 .m-search-box:focus {
 	color: #3B4B57 !important;
 }
@@ -66,7 +70,6 @@
     margin-top: 2px;
     margin-right: 5px;
 }
-
 .m-embedded-view {
 	border-top: 1px solid #B6BBBC;
 	border-left: 1px solid #B6BBBC;
