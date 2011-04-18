@@ -270,7 +270,7 @@
         <sv:value>8f7d3906-3b62-4fe6-9874-b99af3c4dbf7</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.ui.model.column.definition.TemplateColumnDefinition</sv:value>
+        <sv:value>info.magnolia.module.wcm.column.TemplateColumnDefinition</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:createdBy" sv:type="String">
         <sv:value>admin</sv:value>
@@ -417,7 +417,7 @@
           <sv:value>dc77bed1-6beb-49f2-a588-4a7590bfe530</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.OpenPageActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.action.OpenPageActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
@@ -494,7 +494,7 @@
           <sv:value>3e11c503-55bb-464f-8593-32a324eabbaf</sv:value>
         </sv:property>
         <sv:property sv:name="class" sv:type="String">
-          <sv:value>info.magnolia.ui.admincentral.tree.action.AddPageActionDefinition</sv:value>
+          <sv:value>info.magnolia.module.wcm.action.AddPageActionDefinition</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:createdBy" sv:type="String">
           <sv:value>admin</sv:value>
