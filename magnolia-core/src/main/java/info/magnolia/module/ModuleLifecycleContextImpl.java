@@ -43,10 +43,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * This default implementation of ModuleLifecycleContext allows the ModuleManager
- * to set the current "phase" of installation; other ModuleLifecycleContext clients
- * have read-only access to the phase. 
- *
+ * This default implementation of ModuleLifecycleContext allows the ModuleManager to set the current "phase" of
+ * installation; other ModuleLifecycleContext clients have read-only access to the phase.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -68,9 +67,8 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
         if (components.containsKey(nodeName)) {
             final Object currentObservedManager = components.get(nodeName);
             throw new IllegalStateException("ObservedManager " + currentObservedManager + " was already registered for nodes of name " + nodeName + ", " + component + " can't be registered.");
-        } else {
-            components.put(nodeName, component);
         }
+        components.put(nodeName, component);
     }
 
     /**
