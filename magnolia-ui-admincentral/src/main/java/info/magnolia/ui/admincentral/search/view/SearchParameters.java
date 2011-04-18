@@ -33,22 +33,21 @@
  */
 package info.magnolia.ui.admincentral.search.view;
 
-import info.magnolia.ui.framework.view.View;
-
 /**
- * Search view interface.
+ * A pojo (plain old java object) representing search parameters.
  * @author fgrilli
  *
  */
-public interface SearchView extends View {
+public class SearchParameters {
+    //FIXME this should not be hardcoded
+    private String query = "Search";
 
-    /**
-     * Presenter interface for the search actions.
-     */
-    public interface Presenter {
-
-        void onSearch(SearchParameters params);
+    public String getQuery() {
+        return query;
     }
 
-    void setPresenter(Presenter presenter);
+    public void setQuery(String query) {
+        this.query = query;
+    }
+    //TODO add filters
 }

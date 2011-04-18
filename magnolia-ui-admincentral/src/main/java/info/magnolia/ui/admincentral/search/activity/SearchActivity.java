@@ -34,6 +34,7 @@
 package info.magnolia.ui.admincentral.search.activity;
 
 import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
+import info.magnolia.ui.admincentral.search.view.SearchParameters;
 import info.magnolia.ui.admincentral.search.view.SearchView;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
@@ -62,10 +63,9 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
         viewPort.setView(view);
     }
 
-    public void onSearch() {
+    public void onSearch(SearchParameters params) {
         //TODO do the search!
-        shell.showNotification("Hi, one fine day you will see your search results");
-
+        shell.showNotification("Hi, one fine day you will see your search results for " + params.getQuery());
     }
 
 }
