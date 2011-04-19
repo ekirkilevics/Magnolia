@@ -45,7 +45,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.jcr.util.JCRMetadataUtil;
 import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.module.templating.RenderableDefinition;
@@ -56,10 +55,11 @@ import info.magnolia.module.templating.TemplateManager;
  * methods for their specific parameters (so that template-specific wrappers can set parameters). (no need to clutter
  * things up with getters). Implementation might also expose static factory methods, which can take care of default
  * values, i.e for labels.
- * 
+ *
  * @version $Id$
  */
 public abstract class AbstractAuthoringUiComponent implements AuthoringUiComponent {
+
     private static final String DEFAULT_I18N_BASENAME = "info.magnolia.module.templatingcomponents.messages";
 
     private final ServerConfiguration server;
@@ -119,7 +119,9 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
      * Override this method if the component needs to be rendered under different conditions.
      */
     protected boolean shouldRender() {
-        return (server.isAdmin() && aggregationState.getMainContent().isGranted(Permission.SET));
+        return server.isAdmin();
+        // FIXME implement proper security
+        // return (server.isAdmin() && aggregationState.getMainContent().isGranted(Permission.SET));
     }
 
     /**
@@ -162,4 +164,7 @@ public abstract class AbstractAuthoringUiComponent implements AuthoringUiCompone
         return StringUtils.join(strings, ',');
     }
 
+    protected void param(Appendable out, String name, String value) throws IOException {
+        out.append(" ").append(name).append("=\"").append(value).append("\"");
+    }
 }

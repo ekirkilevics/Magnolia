@@ -44,13 +44,13 @@ import info.magnolia.cms.core.AggregationState;
 
 /**
  * Outputs an edit bar.
+ *
+ * @version $Id: $
  */
 public class EditMarker extends AbstractContentComponent {
 
-    private static final String DEFAULT_FORMAT = "bar";
-
     private String dialog;
-    private String format = DEFAULT_FORMAT;
+    private String format;
 
     public EditMarker(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -59,18 +59,21 @@ public class EditMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->");
-        out.append("<cms:edit content=\"" + getNodePath(content) + "\" format=\"" + format + "\"");
+        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+        out.append("<cms:edit content=\"" + getNodePath(content) + "\"");
+        if (StringUtils.isNotEmpty(format)) {
+            out.append(" format=\"" + format + "\"");
+        }
         if (StringUtils.isNotEmpty(dialog)) {
             out.append(" dialog=\"" + dialog + "\"");
         }
-        out.append(">");
+        out.append(">").append(LINEBREAK);
     }
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->");
+        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
     }
 
     public String getDialog() {

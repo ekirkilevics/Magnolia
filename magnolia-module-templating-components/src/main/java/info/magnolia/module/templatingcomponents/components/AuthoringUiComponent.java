@@ -40,10 +40,11 @@ import javax.jcr.RepositoryException;
  * Implementations of AuthoringUiComponent render specific "components" in templates.
  * They're usually exposed to templating engines via a specific wrapper; see the freemarker and jsp subpackages for examples.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $) 
+ * @version $Id: $
  */
 public interface AuthoringUiComponent {
+
+    // TODO these names should be aligned, begin/end or pre/post
 
     void render(Appendable out) throws IOException;
 

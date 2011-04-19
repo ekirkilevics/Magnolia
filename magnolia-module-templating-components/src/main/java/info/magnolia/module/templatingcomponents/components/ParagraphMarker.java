@@ -41,9 +41,13 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 
 /**
- * Outputs a paragraph.
+ * Renders a paragraph and outputs the associated edit bar.
+ *
+ * @version $Id: $
  */
 public class ParagraphMarker extends AbstractContentComponent {
+
+    private boolean editable;
 
     public ParagraphMarker(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -52,12 +56,26 @@ public class ParagraphMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->");
+        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+
+        // TODO there's no way of configuring bar vs button here
+        out.append("<cms:edit content=\"" + getNodePath(content) + "\"").append(">").append(LINEBREAK);
+
+        // TODO render the target content
+        // TODO not sure how to pass editable
     }
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->");
+        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }

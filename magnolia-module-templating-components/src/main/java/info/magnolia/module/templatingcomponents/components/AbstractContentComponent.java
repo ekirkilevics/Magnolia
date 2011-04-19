@@ -44,9 +44,14 @@ import info.magnolia.context.MgnlContext;
 
 /**
  * Abstract base class for components that operate on a specified piece of content.
+ *
+ * @version $Id: $
  */
 public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {
 
+    protected static final String LINEBREAK = "\r\n";
+
+    // TODO should also support a JSP ContentMap
     private Node content;
     private String workspace;
     private String uuid;
@@ -57,7 +62,7 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
     }
 
     protected String getNodePath(Node content) throws RepositoryException {
-        return content.getSession().getWorkspace() + ":" + content.getPath();
+        return content.getSession().getWorkspace().getName() + ":" + content.getPath();
     }
 
     protected Node getTargetContent() throws RepositoryException {
@@ -67,8 +72,9 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
 
         // TODO we can safely keep the node around after we've resolved it
 
-        if (content != null)
+        if (content != null) {
             return content;
+        }
         if (StringUtils.isNotEmpty(workspace)) {
             if (StringUtils.isNotEmpty(uuid)) {
                 return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(uuid);
@@ -78,6 +84,9 @@ public abstract class AbstractContentComponent extends AbstractAuthoringUiCompon
             }
             throw new IllegalArgumentException("Need to specify either uuid or path in combination with workspace");
         }
+
+        // TODO this default might not be suitable for render and paragraph, why would they render the current content again by default?
+
         return currentContent();
     }
 

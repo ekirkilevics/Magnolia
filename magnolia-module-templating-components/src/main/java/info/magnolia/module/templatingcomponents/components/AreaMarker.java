@@ -37,22 +37,28 @@ import java.io.IOException;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templating.Area;
 
 /**
  * Outputs an area.
+ *
+ * @version $Id: $
  */
 public class AreaMarker extends AbstractContentComponent {
 
     private String name;
     private Area area;
     private String paragraphs;
+    private Boolean singleton;
+    private String dialog;
+
+    // TODO implement support for script and placeholderScript
     //    private String script;
     //    private String placeholderScript;
-    private boolean singleton;
-    private String dialog;
 
     public AreaMarker(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -61,15 +67,29 @@ public class AreaMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->");
-        out.append("<cms:area content=\"").append(getNodePath(content)).append("\"");
-        out.append(" name=\"name\" paragraphs=\"textImage, ...\" singleton=\"false\" dialog=\"areas/main\">");
+        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+        out.append("<cms:area");
+        param(out, "content", getNodePath(content));
+        param(out, "name", name != null ? name : area.getName());
+        if (StringUtils.isNotEmpty(paragraphs)) {
+            param(out, "paragraphs", paragraphs);
+        }
+        if (singleton != null) {
+            param(out, "singleton", String.valueOf(singleton));
+        }
+        if (StringUtils.isNotEmpty(dialog)) {
+            param(out, "dialog", dialog);
+        }
+        out.append(">").append(LINEBREAK);
     }
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->");
+
+        // TODO call RenderingEngine and render the area
+
+        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
     }
 
     public String getName() {
@@ -100,7 +120,7 @@ public class AreaMarker extends AbstractContentComponent {
         return singleton;
     }
 
-    public void setSingleton(boolean singleton) {
+    public void setSingleton(Boolean singleton) {
         this.singleton = singleton;
     }
 

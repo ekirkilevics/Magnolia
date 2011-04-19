@@ -41,9 +41,14 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 
 /**
- * Renders.
+ * Renders a piece of content.
+ *
+ * @version $Id: $
  */
 public class RenderMarker extends AbstractContentComponent {
+
+    private boolean editable;
+    private String template;
 
     public RenderMarker(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -51,13 +56,29 @@ public class RenderMarker extends AbstractContentComponent {
 
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
-        Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->");
     }
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->");
+
+        // TODO render the target content
+        // TODO not sure how to pass editable
+    }
+
+    public boolean getEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 }

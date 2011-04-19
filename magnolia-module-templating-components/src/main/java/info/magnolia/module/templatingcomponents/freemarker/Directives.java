@@ -1,6 +1,6 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * This file Copyright (c) 2010-2011 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,53 +25,34 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.components;
+package info.magnolia.module.templatingcomponents.freemarker;
 
-import java.io.IOException;
-import javax.jcr.RepositoryException;
+import java.util.HashMap;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
+import freemarker.template.TemplateModel;
 
 /**
- * Sets a context attribute, used as a sub to ui:render.
+ * A map with freemarker directives specific to Magnolia.
+ *
+ * TODO should be renamed since its no longer just directives
  *
  * @version $Id: $
  */
-public class ContextAttributeMarker extends AbstractAuthoringUiComponent {
+public class Directives extends HashMap<String, TemplateModel> {
+    public Directives() {
+        super();
+        put("edit", new EditDirective());
+        put("contextAttribute", new ContextAttributeDirective());
+        put("paragraph", new ParagraphDirective());
+        put("render", new RenderDirective());
+        put("area", new AreaDirective());
 
-    private String name;
-    private Object value;
-
-    public ContextAttributeMarker(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
-    }
-
-    @Override
-    protected void doRender(Appendable out) throws IOException, RepositoryException {
-        MgnlContext.setAttribute(name, value);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
+        put("asJcrNode", new AsJcrNodeMethod());
     }
 }

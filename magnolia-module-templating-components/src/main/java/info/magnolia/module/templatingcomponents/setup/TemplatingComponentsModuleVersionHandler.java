@@ -54,6 +54,7 @@ import static info.magnolia.nodebuilder.Ops.*;
  */
 public class TemplatingComponentsModuleVersionHandler extends DefaultModuleVersionHandler {
 
+    // TODO ui should be removed as an update task
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
@@ -64,6 +65,9 @@ public class TemplatingComponentsModuleVersionHandler extends DefaultModuleVersi
                 getNode("sharedVariables").then(
                         addNode("ui", ItemType.CONTENTNODE).then(
                                 addProperty("class", Directives.class.getName())
+                        ),
+                        addNode("cms", ItemType.CONTENTNODE).then(
+                                addProperty("class", info.magnolia.module.templatingcomponents.freemarker.Directives.class.getName())
                         )
                 )
         ));

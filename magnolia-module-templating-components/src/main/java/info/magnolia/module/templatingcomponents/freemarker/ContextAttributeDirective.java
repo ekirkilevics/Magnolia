@@ -1,6 +1,6 @@
 /**
  * This file Copyright (c) 2011 Magnolia International
- * Ltd.  (http://www.magnolia.info). All rights reserved.
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
@@ -25,53 +25,44 @@
  * 2. For the Magnolia Network Agreement (MNA), this file
  * and the accompanying materials are made available under the
  * terms of the MNA which accompanies this distribution, and
- * is available at http://www.magnolia.info/mna.html
+ * is available at http://www.magnolia-cms.com/mna.html
  *
  * Any modifications to this file must keep this entire header
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.components;
+package info.magnolia.module.templatingcomponents.freemarker;
 
 import java.io.IOException;
-import javax.jcr.RepositoryException;
+import java.util.Map;
 
+import freemarker.core.Environment;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templatingcomponents.components.AuthoringUiComponent;
+import info.magnolia.module.templatingcomponents.components.ContextAttributeMarker;
 
 /**
- * Sets a context attribute, used as a sub to ui:render.
+ * A freemarker directive for setting a context attribute.
  *
  * @version $Id: $
  */
-public class ContextAttributeMarker extends AbstractAuthoringUiComponent {
-
-    private String name;
-    private Object value;
-
-    public ContextAttributeMarker(ServerConfiguration server, AggregationState aggregationState) {
-        super(server, aggregationState);
-    }
+public class ContextAttributeDirective extends AbstractDirective {
 
     @Override
-    protected void doRender(Appendable out) throws IOException, RepositoryException {
-        MgnlContext.setAttribute(name, value);
-    }
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+        checkBody(body, false);
 
-    public String getName() {
-        return name;
-    }
+        String name = mandatoryString(params, "name");
+        Object value = mandatoryObject(params, "value");
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        ContextAttributeMarker marker = new ContextAttributeMarker(serverCfg, aggState);
+        marker.setName(name);
+        marker.setValue(value);
 
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
+        return marker;
     }
 }
