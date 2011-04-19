@@ -76,7 +76,8 @@ import com.vaadin.ui.themes.Runo;
 public class SearchForm extends Form implements Handler {
 
     private static final Action SEARCH_ACTION = new ShortcutAction("", ShortcutAction.KeyCode.ENTER, null);
-    private static final Action[] actions = { SEARCH_ACTION };
+    private static final Action DISMISS_FORM_ACTION = new ShortcutAction("", ShortcutAction.KeyCode.ESCAPE, null);
+    private static final Action[] actions = { SEARCH_ACTION, DISMISS_FORM_ACTION };
     private static final String SEARCH_FIELD = "query";
     private static final String SEARCH = "Search";
 
@@ -158,6 +159,9 @@ public class SearchForm extends Form implements Handler {
             commit();
             final SearchResult result = presenter.onSearch(searchParameters.getBean());
             updateUI(true, result);
+        } else if (action == DISMISS_FORM_ACTION){
+            discard();
+            updateUI(false, null);
         }
     }
 
