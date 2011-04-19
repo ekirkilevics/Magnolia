@@ -33,30 +33,45 @@
  */
 package info.magnolia.ui.admincentral.search.activity;
 
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+
+import org.apache.jackrabbit.core.query.QueryImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.admincentral.search.action.SearchActionFactory;
 import info.magnolia.ui.admincentral.search.view.SearchParameters;
 import info.magnolia.ui.admincentral.search.view.SearchResult;
 import info.magnolia.ui.admincentral.search.view.SearchView;
+import info.magnolia.ui.admincentral.workbench.place.ItemSelectedPlace;
 import info.magnolia.ui.framework.activity.AbstractActivity;
 import info.magnolia.ui.framework.event.EventBus;
 import info.magnolia.ui.framework.shell.Shell;
 import info.magnolia.ui.framework.view.ViewPort;
 
 /**
- * TODO write javadoc.
+ * The search activity.
  * @author fgrilli
  *
  */
 public class SearchActivity extends AbstractActivity implements SearchView.Presenter{
-
+    private static final Logger log = LoggerFactory.getLogger(SearchActivity.class);
     private SearchView view;
     private SearchActionFactory actionFactory;
     private Shell shell;
+    private ItemSelectedPlace place;
 
-    public SearchActivity(SearchView view, SearchActionFactory actionFactory, Shell shell) {
+    public SearchActivity(SearchView view, SearchActionFactory actionFactory, ItemSelectedPlace place, Shell shell) {
         this.view = view;
         this.actionFactory = actionFactory;
         this.shell = shell;
+        this.place = place;
         this.view.setPresenter(this);
     }
 
@@ -65,8 +80,28 @@ public class SearchActivity extends AbstractActivity implements SearchView.Prese
     }
 
     public SearchResult onSearch(SearchParameters params) {
-        //TODO do the real search!
-        return new SearchResult(params.getQuery(), 5);
+        //FIXME do it right.
+        long foundItems = 0;
+        try {
+            final Session jcrSession = MgnlContext.getJCRSession(place.getWorkspace());
+            final QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
+
+            final String stmt = "//*[jcr:contains(@*,'*"+params.getQuery()+"*') and @jcr:primaryType='mgnl:content']";
+            final QueryImpl query = (QueryImpl) jcrQueryManager.createQuery(stmt , Query.XPATH);
+
+            log.debug("executing query against searching workspace [{}] with statement [{}] ", place.getWorkspace(), stmt);
+            final QueryResult queryResult = query.execute();
+            foundItems = queryResult.getRows().getSize();
+
+            log.debug("query returned {} rows", foundItems);
+        } catch (LoginException e) {
+            log.error(e.getMessage());
+            shell.showNotification(e.getMessage());
+        } catch (RepositoryException e) {
+            shell.showNotification(e.getMessage());
+            log.error(e.getMessage());
+        }
+        return new SearchResult(params.getQuery(), foundItems);
     }
 
     public void onAddFilter() {

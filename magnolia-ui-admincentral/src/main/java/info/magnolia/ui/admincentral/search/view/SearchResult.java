@@ -40,9 +40,9 @@ package info.magnolia.ui.admincentral.search.view;
  */
 public class SearchResult {
     private String queryTerm;
-    private int itemsFound;
+    private long itemsFound;
 
-    public SearchResult(String queryTerm, int itemsFound) {
+    public SearchResult(String queryTerm, long itemsFound) {
         this.queryTerm = queryTerm;
         this.itemsFound = itemsFound;
     }
@@ -51,7 +51,7 @@ public class SearchResult {
         return queryTerm;
     }
 
-    public int getItemsFound() {
+    public long getItemsFound() {
         return itemsFound;
     }
 
