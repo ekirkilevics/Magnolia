@@ -33,6 +33,8 @@
  */
 package info.magnolia.ui.admincentral.dialog.view;
 
+import java.io.Serializable;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.exception.RuntimeRepositoryException;
 import info.magnolia.objectfactory.ComponentProvider;
@@ -48,10 +50,10 @@ import javax.jcr.RepositoryException;
  * Window for creating or editing content using a dialog.
  * TODO should this be merged with {@link info.magnolia.ui.admincentral.dialog.activity.DialogActivity}
  */
-public class DialogPresenter implements DialogView.Presenter {
+public class DialogPresenter implements DialogView.Presenter, Serializable {
 
-    private DialogRegistry dialogRegistry;
-    private ComponentProvider componentProvider;
+    private final DialogRegistry dialogRegistry;
+    private final ComponentProvider componentProvider;
 
     private String workspace;
     private String path;
@@ -76,7 +78,7 @@ public class DialogPresenter implements DialogView.Presenter {
         this.path = path;
 
         try {
-//            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
+            //            setCaption(storageNode != null ? "Edit paragraph" : "New paragraph");
 
             Node node = getNode();
 
@@ -98,8 +100,8 @@ public class DialogPresenter implements DialogView.Presenter {
             driver.flush(getNode());
 
             if (driver.hasErrors()) {
-                    // TODO should check if there are unconsumed errors and display them
-//                super.getApplication().getMainWindow().showNotification("You have errors");
+                // TODO should check if there are unconsumed errors and display them
+                //                super.getApplication().getMainWindow().showNotification("You have errors");
             } else {
                 dialogView.close();
                 // TODO we should fire a tree update event so changes are reflected in the tree view
