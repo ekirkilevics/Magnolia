@@ -31,37 +31,35 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.jspx;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.ServerConfiguration;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
-import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.EditBar;
+import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockHierarchyManager;
 
-import java.io.IOException;
-import java.util.Map;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.meterware.httpunit.WebResponse;
 
 /**
- * A freemarker directive for the edit bar UI component.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditBarDirective extends AbstractDirective {
+public class SelfTest extends AbstractJspTest {
+    @Override
+    protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
+    }
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, false);
-        final String editButtonLabel = string(params, "editLabel", null);
-        final boolean enableMoveButton = bool(params, "move", true);
-        final boolean enableDeleteButton = bool(params, "delete", true);
-        final String specificDialogName = string(params, "dialog", null);
-        final Content target = content(params, "content", null);
+    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
+    }
 
-        return EditBar.make(serverCfg, aggState, target, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
+    public void check(WebResponse response, HtmlPage page) throws Exception {
+        final String txt = response.getText();
+        assertTrue(txt.contains("Hello world!"));
     }
 }

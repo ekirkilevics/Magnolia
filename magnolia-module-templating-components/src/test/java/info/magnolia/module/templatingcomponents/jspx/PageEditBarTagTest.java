@@ -31,18 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jsp;
+package info.magnolia.module.templatingcomponents.jspx;
 
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templatingcomponents.components.SingletonParagraphBar;
 import info.magnolia.test.mock.MockHierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 import com.gargoylesoftware.htmlunit.html.DomNodeList;
 import com.gargoylesoftware.htmlunit.html.HtmlDivision;
@@ -51,87 +50,87 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.meterware.httpunit.WebResponse;
 
 /**
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class EditBarTagTest extends AbstractJspTest {
+public class PageEditBarTagTest extends AbstractJspTest {
+    private static final String EXPECTED_ONCLICK_FMT = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','','','%s','null',null, null, null, 'en_US');";
+    private static final String DEFAULT_PREVIEW_LABEL = StringEscapeUtils.unescapeHtml("&laquo;") + " Preview";
+
     @Override
     protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
         aggState.setMainContent(websiteHM.getContent("/foo/bar"));
-        aggState.setCurrentContent(websiteHM.getContent("/foo/bar/paragraphs/1"));
+        aggState.setCurrentContent(websiteHM.getContent("/foo/bar"));
     }
 
     @Override
     protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
-        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).times(6);
     }
 
     @Override
     void check(WebResponse response, HtmlPage page) throws Exception {
-        //prettyPrint(response, System.out);
-
+        // prettyPrint(response, System.out);
+        // System.out.println("response.getText() = " + response.getText());
         {
             final HtmlDivision div = page.getFirstByXPath("//div[@id='basic']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(3, spans.size());
-            assertEquals("Edit", spans.get(0).getTextContent());
-            assertEquals("Move", spans.get(1).getTextContent());
-            assertEquals("Delete", spans.get(2).getTextContent());
+
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
+            assertEquals("AdminCentral", spans.get(1).getTextContent());
+            assertEquals("Properties", spans.get(2).getTextContent());
 
             // entities in attribute values are already decoded
-            final String onclick = spans.get(0).getOnClickAttribute();
+            final String onclick = spans.get(2).getOnClickAttribute();
             // this is the ugly bit
-            final String expected = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','1','testParagraph1','null','.magnolia/dialogs/editParagraph.html', null, null, 'en_US');";
+            final String expected = String.format(EXPECTED_ONCLICK_FMT, "myDialog");
             assertEquals(expected, onclick);
         }
 
         {
-            final HtmlDivision div = page.getFirstByXPath("//div[@id='customDialog']");
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='customLabel']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(3, spans.size());
-            assertEquals("Edit", spans.get(0).getTextContent());
-            assertEquals("Move", spans.get(1).getTextContent());
-            assertEquals("Delete", spans.get(2).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
+            assertEquals("AdminCentral", spans.get(1).getTextContent());
+            assertEquals("Incredibly custom Foo label", spans.get(2).getTextContent());
 
-            final String onclick = spans.get(0).getOnClickAttribute();
+            // entities in attribute values are already decoded
+            final String onclick = spans.get(2).getOnClickAttribute();
             // this is the ugly bit
-            final String expected = "mgnlShiftPushButtonClick(this);mgnlOpenDialog('/foo/bar','paragraphs','1','myCustomDialog','null','.magnolia/dialogs/editParagraph.html', null, null, 'en_US');";
+            final String expected = String.format(EXPECTED_ONCLICK_FMT, "myDialog");
             assertEquals(expected, onclick);
         }
 
         {
-            final HtmlDivision div = page.getFirstByXPath("//div[@id='customEditLabel']");
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='dialogFromDef']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(3, spans.size());
-            assertEquals("custom edit label", spans.get(0).getTextContent());
-            assertEquals("Move", spans.get(1).getTextContent());
-            assertEquals("Delete", spans.get(2).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
+            assertEquals("AdminCentral", spans.get(1).getTextContent());
+            assertEquals("Properties", spans.get(2).getTextContent());
+
+            // entities in attribute values are already decoded
+            final String onclick = spans.get(2).getOnClickAttribute();
+            // this is the ugly bit
+            final String expected = String.format(EXPECTED_ONCLICK_FMT, "dialogFromDef");
+            assertEquals(expected, onclick);
         }
 
         {
-            final HtmlDivision div = page.getFirstByXPath("//div[@id='noMove']");
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='noDialog']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(2, spans.size());
-            assertEquals("Edit", spans.get(0).getTextContent());
-            assertEquals("Delete", spans.get(1).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
+            assertEquals("AdminCentral", spans.get(1).getTextContent());
         }
-
         {
-            final HtmlDivision div = page.getFirstByXPath("//div[@id='noDelete']");
+            final HtmlDivision div = page.getFirstByXPath("//div[@id='dialogFromIncompleTpl']");
             final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
             assertEquals(2, spans.size());
-            assertEquals("Edit", spans.get(0).getTextContent());
-            assertEquals("Move", spans.get(1).getTextContent());
+            assertEquals(DEFAULT_PREVIEW_LABEL, spans.get(0).getTextContent());
+            assertEquals("AdminCentral", spans.get(1).getTextContent());
         }
-
-        {
-            final HtmlDivision div = page.getFirstByXPath("//div[@id='onlyEdit']");
-            final DomNodeList<HtmlElement> spans = div.getElementsByTagName("span");
-            assertEquals(1, spans.size());
-            final HtmlElement editButtonSpan = spans.get(0);
-            assertEquals("Edit", editButtonSpan.getTextContent());
-        }
-        // TODO - how to setup the rendering context attribute (which Jsp*Renderer do) such as content etc
     }
-
 }

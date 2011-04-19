@@ -38,7 +38,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.templatingcomponents.freemarker.Directives;
+import info.magnolia.module.templatingcomponents.freemarkerx.Directives;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
 

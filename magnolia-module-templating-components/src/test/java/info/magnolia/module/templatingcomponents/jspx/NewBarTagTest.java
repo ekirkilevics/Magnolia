@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jsp;
+package info.magnolia.module.templatingcomponents.jspx;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.AggregationState;

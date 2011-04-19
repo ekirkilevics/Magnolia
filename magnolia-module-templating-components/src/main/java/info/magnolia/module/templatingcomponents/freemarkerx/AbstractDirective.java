@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.freemarkerx;
 
 import freemarker.core.CollectionAndSequence;
 import freemarker.core.Environment;

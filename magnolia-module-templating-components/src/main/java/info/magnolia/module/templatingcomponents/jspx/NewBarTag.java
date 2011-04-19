@@ -31,45 +31,62 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.jspx;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.NewBar;
+import info.magnolia.module.templatingcomponents.componentsx.NewBar;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+
+import javax.servlet.jsp.JspException;
+
 
 /**
- * A freemarker directive for the new bar UI component.
+ * Jsp tag which renders a new bar UI component.
+ * @jsp.tag name="new" body-content="empty"
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewBarDirective extends AbstractDirective {
+public class NewBarTag extends AbstractTag {
+    private String newButtonLabel;
+    private String containerName;
+    private Object allowedParagraphs;
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setNewLabel(String newButtonLabel) {
+        this.newButtonLabel = newButtonLabel;
+    }
+
+    /**
+     * @jsp.attribute required="true" rtexprvalue="true"
+     */
+    public void setContainer(String containerName) {
+        this.containerName = containerName;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Object"
+     */
+    public void setParagraphs(Object allowedParagraphs) {
+        this.allowedParagraphs = allowedParagraphs;
+    }
 
     @Override
-    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, false);
-        final String newButtonLabel = string(params, "newLabel", null);
-        /*
-        final Content target = content(params, "target", null);
-        final String containerName = string(params, "container", null);
-        if (target == null && containerName == null) {
+    protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
+        /* if (content == null && containerName == null) {
             // TODO check
-            throw new TemplateModelException("At least target or container must be specified.");
-        }
-        */
+            throw new JspException("At least content or container must be specified.");
+        }*/
 
-        final String containerName = mandatoryString(params, "container") ;
-        final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
+        final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
 
-        return NewBar.make(serverCfg, aggState, containerName, allowedParagraphs, newButtonLabel);
+        return NewBar.make(serverCfg, aggState, containerName, paraList, newButtonLabel);
     }
 
 }

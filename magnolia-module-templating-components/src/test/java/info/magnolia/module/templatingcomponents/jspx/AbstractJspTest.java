@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jsp;
+package info.magnolia.module.templatingcomponents.jspx;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
@@ -58,7 +58,7 @@ import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.module.templating.engine.DefaultRenderingEngine;
 import info.magnolia.module.templating.engine.RenderingEngine;
-import info.magnolia.module.templatingcomponents.components.AbstractAuthoringUiComponentTest;
+import info.magnolia.module.templatingcomponents.componentsx.AbstractAuthoringUiComponentTest;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;

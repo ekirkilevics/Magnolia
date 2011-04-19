@@ -31,35 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jsp;
+package info.magnolia.module.templatingcomponents.freemarkerx;
 
-import static org.junit.Assert.assertTrue;
-import info.magnolia.cms.core.AggregationState;
+import freemarker.template.TemplateModelException;
 import info.magnolia.context.WebContext;
-import info.magnolia.test.mock.MockHierarchyManager;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.meterware.httpunit.WebResponse;
-
 /**
- * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SelfTest extends AbstractJspTest {
+public class NewBarDirectiveTest extends DirectiveAbstractTestCase {
     @Override
-    protected void setupAggregationState(AggregationState aggState) throws RepositoryException {
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
     }
 
-    @Override
-    protected void setupExpectations(WebContext ctx, MockHierarchyManager hm, HttpServletRequest req) {
+    public void testRenderSimpleBar() throws Exception {
+        final String result = renderForTest("[@ui.new container='paragraphs' paragraphs=['foo', 'bar']/]");
+        // TODO assertEquals("..not testing yet..", result);
     }
 
-    public void check(WebResponse response, HtmlPage page) throws Exception {
-        final String txt = response.getText();
-        assertTrue(txt.contains("Hello world!"));
+    public void testCanPassASingleParagraphName() throws Exception {
+        final String s = renderForTest("[@ui.new container='paragraphs' paragraphs='foo' /]");
+        // TODO assertEquals("..not testing yet..", s);
+    }
+
+    public void testParagraphsParamIsCurrentlyMandatory() throws Exception {
+        try {
+            renderForTest("[@ui.new container='foobar' /]");
+            fail("should have failed");
+        } catch (TemplateModelException e) {
+            assertEquals("The 'paragraphs' parameter is mandatory.", e.getMessage());
+        }
     }
 }

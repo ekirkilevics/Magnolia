@@ -31,10 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.freemarkerx;
 
+import static org.easymock.EasyMock.expect;
 import freemarker.template.TemplateModelException;
+import info.magnolia.context.Context;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templatingcomponents.componentsx.SingletonParagraphBar;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,27 +45,40 @@ import javax.servlet.http.HttpServletRequest;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NewBarDirectiveTest extends DirectiveAbstractTestCase {
+public class EditBarDirectiveTest extends DirectiveAbstractTestCase {
     @Override
     protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
+        expect(ctx.getAttribute(SingletonParagraphBar.class.getName(), Context.LOCAL_SCOPE)).andReturn(null).once();
     }
 
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@ui.new container='paragraphs' paragraphs=['foo', 'bar']/]");
+        final String result = renderForTest("[@ui.edit /]");
+
         // TODO assertEquals("..not testing yet..", result);
     }
 
-    public void testCanPassASingleParagraphName() throws Exception {
-        final String s = renderForTest("[@ui.new container='paragraphs' paragraphs='foo' /]");
-        // TODO assertEquals("..not testing yet..", s);
+    public void testRenderWithSpecificDialog() throws Exception {
+        final String result = renderForTest("[@ui.edit dialog='myDialog' /]");
+
+        // TODO assertEquals("..not testing yet..", result);
     }
 
-    public void testParagraphsParamIsCurrentlyMandatory() throws Exception {
+    public void testRenderWithEditLabelAndNoOtherButtons() throws Exception {
+        final String result = renderForTest("[@ui.edit editLabel='edit my paragraph' move=false delete=false /]");
+
+        // TODO assertEquals("..not testing yet..", result);
+
+        // TODO - also validate error messages such as The 'move' parameter must be a TemplateBooleanModel and is a SimpleScalar.
+        // TODO re:the above - maybe we want to support SimpleScalar as well for booleans (move='false' instead of move=false) .. for ease of use ?
+    }
+
+    public void testThrowsExceptionForUnknownParameters() throws Exception {
         try {
-            renderForTest("[@ui.new container='foobar' /]");
+            renderForTest("[@ui.edit fake='lol' /]");
             fail("should have failed");
         } catch (TemplateModelException e) {
-            assertEquals("The 'paragraphs' parameter is mandatory.", e.getMessage());
+            assertEquals("Unsupported parameter(s): {fake=lol}", e.getMessage());
         }
     }
+
 }

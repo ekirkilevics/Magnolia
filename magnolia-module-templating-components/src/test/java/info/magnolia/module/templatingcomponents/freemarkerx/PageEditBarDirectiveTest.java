@@ -31,23 +31,38 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.freemarkerx;
 
-import freemarker.template.TemplateDirectiveModel;
+import info.magnolia.context.WebContext;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * A map with freemarker directives specific to Magnolia.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class Directives extends HashMap<String, TemplateDirectiveModel> {
-    public Directives() {
-        super();
-        put("page", new PageEditBarDirective());
-        put("new", new NewBarDirective());
-        put("edit", new EditBarDirective());
-        put("singleton", new SingletonParagraphBarDirective());
+public class PageEditBarDirectiveTest extends DirectiveAbstractTestCase {
+    @Override
+    protected void setupExpectations(WebContext ctx, HttpServletRequest req) {
+    }
+
+    public void testBasicRendering() throws Exception {
+        final String s = renderForTest("[@ui.page dialog='myDialog' /]");
+        // TODO assertEquals("... not testing yet... ", s);
+    }
+
+    public void testCustomLabel() throws Exception {
+        final String s = renderForTest("[@ui.page dialog='myDialog' editLabel='Edit this!' /]");
+        assertEquals(true, s.contains("Edit this!"));
+        assertEquals(false, s.contains("buttons.properties")); // the default button label
+        assertEquals(false, s.contains("Properties")); // the i18n'd default button label
+        // TODO assertEquals("... not testing yet... ", s);
+    }
+
+    public void testNoDialogButton() throws Exception {
+        // usecase: [@ui.main dialog=def.dialog! /] - if you want to support templates which might not have a dialog defined.
+        final String s = renderForTest("[@ui.page dialog=someVar! editLabel='should not appear' /]");
+        assertEquals(false, s.contains("should not appear"));
+        // TODO assertEquals("... not testing yet... ", s);
     }
 }

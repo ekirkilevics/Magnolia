@@ -31,56 +31,70 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jsp;
+package info.magnolia.module.templatingcomponents.jspx;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.SingletonParagraphBar;
+import info.magnolia.module.templatingcomponents.componentsx.EditBar;
+
+import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
-import java.io.IOException;
-import java.util.List;
+
 
 /**
- * Jsp tag which renders a singleton paragraph bar UI component.
- * @jsp.tag name="singleton" body-content="scriptless"
+ * Jsp tag which renders an edit bar UI component.
+ * @jsp.tag name="edit" body-content="empty"
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SingletonParagraphBarTag extends AbstractTag {
-
-    private String contentName;
-    private Object allowedParagraphs;
-    private String enableButtonLabel;
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true"
-     */
-    public void setContent(String contentName) {
-        this.contentName = contentName;
-    }
-
-    /**
-     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Object"
-     */
-    public void setParagraphs(Object allowedParagraphs) {
-        this.allowedParagraphs = allowedParagraphs;
-    }
+public class EditBarTag extends AbstractTag {
+    private String editButtonLabel;
+    private boolean enableMoveButton = true;
+    private boolean enableDeleteButton = true;
+    private String specificDialogName;
+    private Content content;
 
     /**
      * @jsp.attribute required="false" rtexprvalue="true"
      */
-    public void setEnableLabel(String enableButtonLabel) {
-        this.enableButtonLabel = enableButtonLabel;
+    public void setEditLabel(String editLabel) {
+        this.editButtonLabel = editLabel;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setMove(boolean move) {
+        this.enableMoveButton = move;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setDelete(boolean delete) {
+        this.enableDeleteButton = delete;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setDialog(String dialog) {
+        this.specificDialogName = dialog;
+    }
+
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
+     */
+    public void setContent(Content content) {
+        this.content = content;
     }
 
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState) throws JspException, IOException {
-        final List<String> paraList = mandatoryStringList(allowedParagraphs, "paragraphs");
-
-        return SingletonParagraphBar.make(serverCfg, aggState, contentName, paraList, enableButtonLabel);
+        return EditBar.make(serverCfg, aggState, content, specificDialogName, editButtonLabel, enableMoveButton, enableDeleteButton);
     }
-
 }

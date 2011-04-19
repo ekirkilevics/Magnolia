@@ -31,17 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.jsp;
+package info.magnolia.module.templatingcomponents.jspx;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import org.apache.commons.collections.EnumerationUtils;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.JspFragment;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +45,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.JspFragment;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+import org.apache.commons.collections.EnumerationUtils;
+;
 
 /**
  * Base class for jsp tags. Subclasses need to implement the {@link AbstractTag#prepareUIComponent(ServerConfiguration, AggregationState)} method.

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.freemarkerx;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;

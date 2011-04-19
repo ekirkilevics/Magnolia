@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templatingcomponents.freemarker;
+package info.magnolia.module.templatingcomponents.freemarkerx;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -40,35 +40,36 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.module.templatingcomponents.AuthoringUiComponent;
-import info.magnolia.module.templatingcomponents.components.SingletonParagraphBar;
+import info.magnolia.module.templatingcomponents.componentsx.NewBar;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A freemarker directive for the singleton paragraph bar UI component.
+ * A freemarker directive for the new bar UI component.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SingletonParagraphBarDirective extends AbstractDirective {
+public class NewBarDirective extends AbstractDirective {
+
     @Override
     protected AuthoringUiComponent prepareUIComponent(ServerConfiguration serverCfg, AggregationState aggState, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, true);
-        final String enableButtonLabel = string(params, "enableLabel", null);
+        checkBody(body, false);
+        final String newButtonLabel = string(params, "newLabel", null);
         /*
         final Content target = content(params, "target", null);
-        final String containerNodeName = string(params, "container", null);
-        if (target == null && containerNodeName == null) {
+        final String containerName = string(params, "container", null);
+        if (target == null && containerName == null) {
             // TODO check
             throw new TemplateModelException("At least target or container must be specified.");
         }
         */
-        final String contentName = string(params, "content", null);
+
+        final String containerName = mandatoryString(params, "container") ;
         final List<String> allowedParagraphs = mandatoryStringList(params, "paragraphs");
 
-        return SingletonParagraphBar.make(serverCfg, aggState, contentName, allowedParagraphs, enableButtonLabel);
-
+        return NewBar.make(serverCfg, aggState, containerName, allowedParagraphs, newButtonLabel);
     }
 
 }
