@@ -50,6 +50,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DefaultFieldFactory;
@@ -57,8 +58,11 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Runo;
 
 /**
@@ -71,13 +75,15 @@ import com.vaadin.ui.themes.Runo;
  */
 public class SearchForm extends Form implements Handler {
 
-    private static final Action ENTER_ACTION = new ShortcutAction("", ShortcutAction.KeyCode.ENTER, null);
-    private static final Action[] actions = {ENTER_ACTION};
-    private  static final String SEARCH_FIELD = "query";
+    private static final Action SEARCH_ACTION = new ShortcutAction("", ShortcutAction.KeyCode.ENTER, null);
+    private static final Action[] actions = { SEARCH_ACTION };
+    private static final String SEARCH_FIELD = "query";
+    private static final String SEARCH = "Search";
+
     private CustomComponent customComponent;
     private GridLayout gridLayout;
-   // The done / update results buttons
     private HorizontalLayout buttons = new HorizontalLayout();
+    private VerticalLayout expandedForm = new VerticalLayout();
     private Presenter presenter;
     private BeanItem<SearchParameters> searchParameters;
 
@@ -87,12 +93,9 @@ public class SearchForm extends Form implements Handler {
         panel.addActionHandler(this);
         panel.addStyleName(Runo.PANEL_LIGHT);
 
-        gridLayout = new GridLayout(2, 2);
+        gridLayout = new GridLayout(2, 3);
         gridLayout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         gridLayout.setMargin(false, true, false, false);
-        gridLayout.setColumnExpandRatio(0, 5);
-        gridLayout.setColumnExpandRatio(1, 1);
-
         panel.addComponent(gridLayout);
 
         searchParameters = new BeanItem<SearchParameters>(new SearchParameters());
@@ -102,14 +105,15 @@ public class SearchForm extends Form implements Handler {
         setFormFieldFactory(new SearchFormFieldFactory());
         setVisibleItemProperties(Arrays.asList(new String[] { SEARCH_FIELD }));
 
-        buttons.setSpacing(true);
-        buttons.setMargin(true, false, false, false);
+        expandedForm.addComponent(new SearchFormRow());
+        gridLayout.addComponent(expandedForm,0,1);
+        gridLayout.setColumnExpandRatio(0, 5);
 
         final Button updateResults = new Button("Update results", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 commit();
-                presenter.onSearch(searchParameters.getBean());
-                updateUI(true);
+                final SearchResult result = presenter.onSearch(searchParameters.getBean());
+                updateUI(true, result);
             }
         });
         buttons.addComponent(updateResults);
@@ -117,16 +121,19 @@ public class SearchForm extends Form implements Handler {
         final Button doneButton = new Button("Done", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 discard();
-                updateUI(false);
+                updateUI(false, null);
             }
         });
+
+        buttons.setSpacing(true);
+        buttons.setMargin(true, false, false, false);
         buttons.addComponent(doneButton);
-        getFooter().addComponent(buttons);
-        gridLayout.addComponent(buttons, 1, 1);
+        gridLayout.addComponent(buttons, 1, 2);
         gridLayout.setComponentAlignment(buttons, Alignment.MIDDLE_RIGHT);
+        gridLayout.setColumnExpandRatio(1, 1);
 
         customComponent = new CustomComponent() {{setCompositionRoot(panel);}};
-        updateUI(false);
+        updateUI(false, null);
     }
 
     public Component asVaadinComponent() {
@@ -142,10 +149,10 @@ public class SearchForm extends Form implements Handler {
     }
 
     public void handleAction(Action action, Object sender, Object target) {
-        if(action == ENTER_ACTION){
+        if(action == SEARCH_ACTION){
             commit();
-            presenter.onSearch(searchParameters.getBean());
-            updateUI(true);
+            final SearchResult result = presenter.onSearch(searchParameters.getBean());
+            updateUI(true, result);
         }
     }
 
@@ -159,15 +166,22 @@ public class SearchForm extends Form implements Handler {
 
     /**
      * Updates the UI by showing or hiding search results and applying/removing styles.
+     * @param result
      * @param visible
      */
-    protected void updateUI(boolean searchResultsVisible){
+    protected void updateUI(boolean searchResultsVisible, SearchResult result){
         if(searchResultsVisible){
             buttons.setVisible(true);
+            expandedForm.setVisible(true);
             customComponent.addStyleName("m-search-form-expanded");
+            if(result != null){
+                //TODO need to be i18nized
+                ((SearchFormRow)expandedForm.getComponent(0)).getResultsArea().setValue(result.getItemsFound() + " items found containing the text " + result.getQueryTerm() + " in ");
+            }
         } else {
             buttons.setVisible(false);
-            getField(SEARCH_FIELD).setValue("Search");
+            expandedForm.setVisible(false);
+            getField(SEARCH_FIELD).setValue(SEARCH);
             customComponent.removeStyleName("m-search-form-expanded");
         }
     }
@@ -177,11 +191,12 @@ public class SearchForm extends Form implements Handler {
      *
      */
     protected class SearchFormFieldFactory extends DefaultFieldFactory {
+
         @Override
         public Field createField(Item item, Object propertyId, Component uiContext) {
             if(SEARCH_FIELD.equals(propertyId)) {
                 final TextField searchField = new TextField();
-                searchField.setInputPrompt("Search");
+                searchField.setInputPrompt(SEARCH);
                 searchField.setWidth(200, Sizeable.UNITS_PIXELS);
                 searchField.addStyleName("m-search-box");
 
@@ -197,13 +212,67 @@ public class SearchForm extends Form implements Handler {
                     public void blur(BlurEvent event) {
                         TextField text = ((TextField)event.getSource());
                         if("".equals(text.getValue())){
-                            text.setValue("Search");
+                            text.setValue(SEARCH);
                         }
                     }
                 });
                 return searchField;
             }
             return null;
+        }
+    }
+    /**
+     * Represents a row in the search form. It is typically composed by a label, a filter (in the form of a select) and a button for adding further filters.
+     * FIXME filter is hardcoded.
+     * @author fgrilli
+     *
+     */
+    protected class SearchFormRow extends CustomComponent {
+        final Label resultsArea = new Label("");
+        final Select filter = new Select();
+        final Button addFilterButton = new Button("+");
+        final GridLayout gridLayout = new GridLayout(3,1);
+
+        public SearchFormRow() {
+            gridLayout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            setCompositionRoot(gridLayout);
+            gridLayout.addComponent(resultsArea, 0, 0);
+            gridLayout.setComponentAlignment(resultsArea, Alignment.MIDDLE_LEFT);
+            gridLayout.setColumnExpandRatio(0, 5f);
+
+            filter.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            String defaultSelection = "all pages and resources";
+            filter.addItem(defaultSelection);
+            filter.addItem("pages only");
+            filter.addItem("resources only");
+            filter.select(defaultSelection);
+
+            gridLayout.addComponent(filter, 1, 0);
+            gridLayout.setComponentAlignment(filter, Alignment.MIDDLE_LEFT);
+            gridLayout.setColumnExpandRatio(1, 4f);
+
+            addFilterButton.addListener(new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    presenter.onAddFilter();
+
+                }
+            });
+            gridLayout.addComponent(addFilterButton, 2, 0);
+            gridLayout.setComponentAlignment(addFilterButton, Alignment.MIDDLE_LEFT);
+            gridLayout.setColumnExpandRatio(2, 1f);
+
+        }
+        public Label getResultsArea() {
+            return resultsArea;
+        }
+
+        public Select getFilter() {
+            return filter;
+        }
+
+        public Button getAddFilterButton() {
+            return addFilterButton;
         }
     }
 }

@@ -33,24 +33,26 @@
  */
 package info.magnolia.ui.admincentral.search.view;
 
-import info.magnolia.ui.framework.view.View;
-
 /**
- * Search view interface.
+ * A simple pojo representing search results.
  * @author fgrilli
  *
  */
-public interface SearchView extends View {
+public class SearchResult {
+    private String queryTerm;
+    private int itemsFound;
 
-    /**
-     * Presenter interface for the search actions.
-     */
-    public interface Presenter {
-
-        SearchResult onSearch(SearchParameters params);
-
-        void onAddFilter();
+    public SearchResult(String queryTerm, int itemsFound) {
+        this.queryTerm = queryTerm;
+        this.itemsFound = itemsFound;
     }
 
-    void setPresenter(Presenter presenter);
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public int getItemsFound() {
+        return itemsFound;
+    }
+
 }
