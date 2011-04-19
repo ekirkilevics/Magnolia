@@ -59,23 +59,25 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
 
     private Set<ItemSetChangeListener> itemSetChangeListeners;
 
-    private JcrContainerSource jcrContainerSource;
+    private final JcrContainerSource jcrContainerSource;
 
     public JcrContainer(JcrContainerSource jcrContainerSource) {
         this.jcrContainerSource = jcrContainerSource;
     }
 
     public void addListener(ItemSetChangeListener listener) {
-        if (itemSetChangeListeners == null)
+        if (itemSetChangeListeners == null) {
             itemSetChangeListeners = new LinkedHashSet<ItemSetChangeListener>();
+        }
         itemSetChangeListeners.add(listener);
     }
 
     public void removeListener(ItemSetChangeListener listener) {
         if (itemSetChangeListeners != null) {
             itemSetChangeListeners.remove(listener);
-            if (itemSetChangeListeners.isEmpty())
+            if (itemSetChangeListeners.isEmpty()) {
                 itemSetChangeListeners = null;
+            }
         }
     }
 
@@ -116,7 +118,8 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public int size() {
-        return 0;
+        // cache the value if this gets too slow
+        return getItemIds().size();
     }
 
     public boolean containsId(Object itemId) {
@@ -154,8 +157,9 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     public ContainerItemId getParent(Object itemId) {
         try {
             javax.jcr.Item item = getJcrItem((ContainerItemId) itemId);
-            if (item instanceof javax.jcr.Property)
+            if (item instanceof javax.jcr.Property) {
                 return createContainerId(item.getParent());
+            }
             Node node = (Node) item;
             return node.getDepth() > 0 ? createContainerId(node.getParent()) : null;
         } catch (RepositoryException e) {
@@ -217,11 +221,13 @@ public class JcrContainer extends AbstractHierarchicalContainer implements Conta
     }
 
     public javax.jcr.Item getJcrItem(ContainerItemId containerItemId) throws RepositoryException {
-        if (containerItemId == null)
+        if (containerItemId == null) {
             return null;
+        }
         Node node = jcrContainerSource.getNodeByIdentifier(containerItemId.getNodeIdentifier());
-        if (containerItemId.isProperty())
+        if (containerItemId.isProperty()) {
             return node.getProperty(containerItemId.getPropertyName());
+        }
         return node;
     }
 

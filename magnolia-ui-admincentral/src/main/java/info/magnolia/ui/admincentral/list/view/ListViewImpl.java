@@ -36,8 +36,10 @@ package info.magnolia.ui.admincentral.list.view;
 import javax.jcr.Item;
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 
@@ -60,17 +62,45 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
     private JcrView.Presenter presenter;
 
-    private Table table;
+    private final Table table;
 
-    private JcrContainer container;
+    private final JcrContainer container;
 
-    private TreeModel treeModel;
+    private final TreeModel treeModel;
+
+    private final WorkbenchDefinition workbenchDefinition;
+
+    private final Logger log = LoggerFactory.getLogger(ListViewImpl.class);
 
     public ListViewImpl(WorkbenchDefinition workbenchDefinition, TreeModel treeModel, Shell shell){
         this.treeModel = treeModel;
-        this.container = new JcrContainer(treeModel);
         table = new Table();
         table.setSizeFull();
+        // next two lines are required to make the browser (Table) react on selection change via mouse
+        table.setImmediate(true);
+        table.setNullSelectionAllowed(false);
+        
+        table.addListener(new ItemClickEvent.ItemClickListener() {
+
+            public void itemClick(ItemClickEvent event) {
+                if (event.isDoubleClick()) {
+                    openChildren((ContainerItemId) event.getItemId());
+                }
+                // TODO JcrBrowser should have a click event of its own that sends a JCR item instead of a ContainerItemId
+                presenterOnItemSelection((ContainerItemId) event.getItemId());
+            }
+        });
+
+        this.workbenchDefinition = workbenchDefinition;
+
+        table.setEditable(false);
+        table.setSelectable(true);
+        table.setColumnCollapsingAllowed(true);
+
+        // TODO: check Ticket http://dev.vaadin.com/ticket/5453
+        table.setColumnReorderingAllowed(true);
+
+        this.container = new JcrContainer(treeModel);
 
         for (Column<?> treeColumn : treeModel.getColumns().values()) {
             String columnName = treeColumn.getDefinition().getName();
@@ -78,14 +108,14 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
             container.addContainerProperty(columnName, Component.class, "");
             table.setColumnHeader(columnName, treeColumn.getLabel());
         }
+
         table.setContainerDataSource(container);
+        table.setPageLength(900);
+    }
 
-        table.addListener(new ItemClickListener() {
-
-            public void itemClick(ItemClickEvent event) {
-                presenterOnItemSelection((ContainerItemId) event.getItemId());
-            }
-        });
+    private void openChildren(ContainerItemId itemId) {
+        log.debug("opening folder "+ itemId);
+        // TODO: reinitialize table with children on double click
     }
 
     public void select(String path) {
@@ -95,6 +125,7 @@ public class ListViewImpl implements ListView, IsVaadinComponent {
 
     public void refresh() {
         container.fireItemSetChange();
+        table.requestRepaintAll();
     }
 
     public Component asVaadinComponent() {
