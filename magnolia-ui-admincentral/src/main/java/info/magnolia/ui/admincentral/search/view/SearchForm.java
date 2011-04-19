@@ -84,8 +84,9 @@ public class SearchForm extends Form implements Handler {
     private GridLayout gridLayout;
     private HorizontalLayout buttons = new HorizontalLayout();
     private VerticalLayout expandedForm = new VerticalLayout();
-    private Presenter presenter;
     private BeanItem<SearchParameters> searchParameters;
+    private Label searchFormLabel = new Label("Basic search");
+    private Presenter presenter;
 
     public SearchForm() {
         //need to wrap into a Panel in order to react on enter key
@@ -104,6 +105,10 @@ public class SearchForm extends Form implements Handler {
         setItemDataSource(searchParameters);
         setFormFieldFactory(new SearchFormFieldFactory());
         setVisibleItemProperties(Arrays.asList(new String[] { SEARCH_FIELD }));
+
+        searchFormLabel.setVisible(false);
+        searchFormLabel.addStyleName("m-search-form-label");
+        gridLayout.addComponent(searchFormLabel,0,0);
 
         expandedForm.addComponent(new SearchFormRow());
         gridLayout.addComponent(expandedForm,0,1);
@@ -173,6 +178,7 @@ public class SearchForm extends Form implements Handler {
         if(searchResultsVisible){
             buttons.setVisible(true);
             expandedForm.setVisible(true);
+            searchFormLabel.setVisible(true);
             customComponent.addStyleName("m-search-form-expanded");
             if(result != null){
                 //TODO need to be i18nized
@@ -181,6 +187,7 @@ public class SearchForm extends Form implements Handler {
         } else {
             buttons.setVisible(false);
             expandedForm.setVisible(false);
+            searchFormLabel.setVisible(false);
             getField(SEARCH_FIELD).setValue(SEARCH);
             customComponent.removeStyleName("m-search-form-expanded");
         }

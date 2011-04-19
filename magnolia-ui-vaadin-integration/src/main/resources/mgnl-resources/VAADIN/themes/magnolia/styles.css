@@ -60,6 +60,9 @@
 .m-search-box:focus {
 	color: #3B4B57 !important;
 }
+.m-search-form-label {
+	font-weight: bold;
+}
 .v-treetable-treespacer{
 	float: left;
 	margin-top: 2px;
