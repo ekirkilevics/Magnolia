@@ -112,7 +112,6 @@ public class SearchForm extends Form implements Handler {
                 updateUI(true);
             }
         });
-        this.addField("updateResults", updateResults);
         buttons.addComponent(updateResults);
 
         final Button doneButton = new Button("Done", new Button.ClickListener() {
@@ -121,9 +120,8 @@ public class SearchForm extends Form implements Handler {
                 updateUI(false);
             }
         });
-        this.addField("done", doneButton);
         buttons.addComponent(doneButton);
-
+        getFooter().addComponent(buttons);
         gridLayout.addComponent(buttons, 1, 1);
         gridLayout.setComponentAlignment(buttons, Alignment.MIDDLE_RIGHT);
 
