@@ -33,12 +33,13 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
-import java.io.IOException;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+
+import java.io.IOException;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Renders a paragraph and outputs the associated edit bar.
@@ -56,10 +57,11 @@ public class ParagraphMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
+                .append(LINEBREAK);
 
         // TODO there's no way of configuring bar vs button here
-        out.append("<cms:edit content=\"" + getNodePath(content) + "\"").append(">").append(LINEBREAK);
+        out.append("<cms:edit content=\"" + getNodePath(content)).append(QUOTE).append(GREATER_THAN).append(LINEBREAK);
 
         // TODO render the target content
         // TODO not sure how to pass editable
@@ -68,7 +70,10 @@ public class ParagraphMarker extends AbstractContentComponent {
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+
+        // TODO call RenderingEngine and render the paragraph
+        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
+                .append(LINEBREAK);
     }
 
     public boolean isEditable() {
