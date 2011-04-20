@@ -49,7 +49,25 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractContentComponent extends AbstractAuthoringUiComponent {
 
-    protected static final String LINEBREAK = "\r\n";
+    public static final String LINEBREAK = "\r\n";
+    public static final String GREATER_THAN = ">";
+    public static final String LESS_THAN = "<";
+    public static final String EQUALS = "=";
+    public static final String SPACE = " ";
+    public static final String QUOTE = "\"";
+
+    public static final String XML_BEGINN_COMMENT = LESS_THAN + "!--" + SPACE;
+    public static final String XML_END_COMMENT = SPACE + "--" + GREATER_THAN;
+
+    public static final String CMS_BEGIN_CONTENT = "cms:begin cms:content";
+    public static final String CMS_END_CONTENT = "cms:end cms:content";
+
+    public static final String CMS_BEGIN_CONTENT_COMMENT = XML_BEGINN_COMMENT + CMS_BEGIN_CONTENT + EQUALS + QUOTE;
+
+    public static final String CMS_END_CONTENT_COMMENT = XML_BEGINN_COMMENT + CMS_END_CONTENT + EQUALS + QUOTE;
+
+    public static final String FORMAT = SPACE + "format";
+    public static final String DIALOG = SPACE + "dialog";
 
     // TODO should also support a JSP ContentMap
     private Node content;

@@ -33,14 +33,15 @@
  */
 package info.magnolia.module.templatingcomponents.components;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+
 import java.io.IOException;
+
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 
 /**
  * Outputs an edit bar.
@@ -48,6 +49,8 @@ import info.magnolia.cms.core.AggregationState;
  * @version $Id$
  */
 public class EditMarker extends AbstractContentComponent {
+
+    public static final String CMS_EDIT_CONTENT = LESS_THAN + "cms:edit content=";
 
     private String dialog;
     private String format;
@@ -59,21 +62,23 @@ public class EditMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
-        out.append("<cms:edit content=\"" + getNodePath(content) + "\"");
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE)
+                .append(XML_END_COMMENT).append(LINEBREAK);
+        out.append(CMS_EDIT_CONTENT).append(QUOTE).append(getNodePath(content)).append(QUOTE);
         if (StringUtils.isNotEmpty(format)) {
-            out.append(" format=\"" + format + "\"");
+            out.append(" format=").append(QUOTE).append(" format ").append(QUOTE);
         }
         if (StringUtils.isNotEmpty(dialog)) {
-            out.append(" dialog=\"" + dialog + "\"");
+            out.append(" dialog=").append(QUOTE).append(" dialog ").append(QUOTE);
         }
-        out.append(">").append(LINEBREAK);
+        out.append(GREATER_THAN).append(LINEBREAK);
     }
 
     @Override
     public void postRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+        out.append(XML_BEGINN_COMMENT).append(CMS_EDIT_CONTENT).append(QUOTE).append(getNodePath(content)).append(QUOTE)
+                .append(XML_END_COMMENT).append(LINEBREAK);
     }
 
     public String getDialog() {

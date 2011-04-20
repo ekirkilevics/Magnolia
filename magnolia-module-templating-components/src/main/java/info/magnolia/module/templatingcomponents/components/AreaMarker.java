@@ -51,6 +51,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AreaMarker extends AbstractContentComponent {
 
+    public static final String CMS_AREA = LESS_THAN + "cms:area";
+
     private String name;
     private Area area;
     private String paragraphs;
@@ -58,8 +60,8 @@ public class AreaMarker extends AbstractContentComponent {
     private String dialog;
 
     // TODO implement support for script and placeholderScript
-    //    private String script;
-    //    private String placeholderScript;
+    // private String script;
+    // private String placeholderScript;
 
     public AreaMarker(ServerConfiguration server, AggregationState aggregationState) {
         super(server, aggregationState);
@@ -68,9 +70,11 @@ public class AreaMarker extends AbstractContentComponent {
     @Override
     protected void doRender(Appendable out) throws IOException, RepositoryException {
         Node content = getTargetContent();
-        out.append("<!-- cms:begin cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
-        out.append("<cms:area");
+        out.append(CMS_BEGIN_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
+                .append(LINEBREAK);
+        out.append(CMS_AREA);
         param(out, "content", getNodePath(content));
+        // TODO NPE when area == null - something we should take care of?
         param(out, "name", name != null ? name : area.getName());
         if (StringUtils.isNotEmpty(paragraphs)) {
             param(out, "paragraphs", paragraphs);
@@ -81,7 +85,7 @@ public class AreaMarker extends AbstractContentComponent {
         if (StringUtils.isNotEmpty(dialog)) {
             param(out, "dialog", dialog);
         }
-        out.append(">").append(LINEBREAK);
+        out.append(GREATER_THAN).append(LINEBREAK);
     }
 
     @Override
@@ -89,8 +93,8 @@ public class AreaMarker extends AbstractContentComponent {
         Node content = getTargetContent();
 
         // TODO call RenderingEngine and render the area
-
-        out.append("<!-- cms:end cms:content=\"" + getNodePath(content) + "\" -->").append(LINEBREAK);
+        out.append(CMS_END_CONTENT_COMMENT).append(getNodePath(content)).append(QUOTE).append(XML_END_COMMENT)
+                .append(LINEBREAK);
     }
 
     public String getName() {
